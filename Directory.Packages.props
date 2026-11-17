@@ -23,6 +23,8 @@
         <!-- Gallery source generator (build-time only). -->
         <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="5.9.0" />
         <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="5.9.0" />
+        <!-- Tracks each package's public API in PublicAPI.Shipped.txt / PublicAPI.Unshipped.txt (#146). -->
+        <PackageVersion Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" Version="5.6.0" />
         <!-- Tests -->
         <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
         <PackageVersion Include="xunit.v3" Version="3.2.2" />

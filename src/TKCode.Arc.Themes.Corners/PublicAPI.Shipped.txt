@@ -1,0 +1,20 @@
+#nullable enable
+TKCode.Arc.Themes.Corners.ArcCornerPresets
+TKCode.Arc.Themes.Corners.ArcCornerStyle
+TKCode.Arc.Themes.Corners.ArcCornerStyle.ArcCornerStyle() -> void
+TKCode.Arc.Themes.Corners.ArcCornerStyle.Equals(TKCode.Arc.Themes.Corners.ArcCornerStyle other) -> bool
+TKCode.Arc.Themes.Corners.ArcCornersBuilderExtensions
+const TKCode.Arc.Themes.Corners.ArcCornerPresets.Slot = "ArcCorners" -> string!
+override TKCode.Arc.Themes.Corners.ArcCornerStyle.GetHashCode() -> int
+static TKCode.Arc.Themes.Corners.ArcCornerPresets.Create(TKCode.Arc.Themes.Corners.ArcCornerStyle style) -> TKCode.Arc.ArcThemePreset!
+static TKCode.Arc.Themes.Corners.ArcCornerPresets.Half.get -> TKCode.Arc.ArcThemePreset!
+static TKCode.Arc.Themes.Corners.ArcCornerPresets.Square.get -> TKCode.Arc.ArcThemePreset!
+static TKCode.Arc.Themes.Corners.ArcCornerStyle.Default.get -> TKCode.Arc.Themes.Corners.ArcCornerStyle
+static TKCode.Arc.Themes.Corners.ArcCornerStyle.Scale(double factor) -> TKCode.Arc.Themes.Corners.ArcCornerStyle
+static TKCode.Arc.Themes.Corners.ArcCornerStyle.Square.get -> TKCode.Arc.Themes.Corners.ArcCornerStyle
+static TKCode.Arc.Themes.Corners.ArcCornerStyle.operator !=(TKCode.Arc.Themes.Corners.ArcCornerStyle left, TKCode.Arc.Themes.Corners.ArcCornerStyle right) -> bool
+static TKCode.Arc.Themes.Corners.ArcCornerStyle.operator ==(TKCode.Arc.Themes.Corners.ArcCornerStyle left, TKCode.Arc.Themes.Corners.ArcCornerStyle right) -> bool
+static TKCode.Arc.Themes.Corners.ArcCornersBuilderExtensions.Corners(this TKCode.Arc.ArcThemeBuilder! theme, TKCode.Arc.Themes.Corners.ArcCornerStyle style) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.Themes.Corners.ArcCornersBuilderExtensions.UseArcCorners(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+~override TKCode.Arc.Themes.Corners.ArcCornerStyle.Equals(object obj) -> bool
+~override TKCode.Arc.Themes.Corners.ArcCornerStyle.ToString() -> string

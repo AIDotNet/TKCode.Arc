@@ -1,0 +1,3 @@
+#nullable enable
+TKCode.Arc.ArcAudioNativeBuilderExtensions
+static TKCode.Arc.ArcAudioNativeBuilderExtensions.UseArcAudioNative(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

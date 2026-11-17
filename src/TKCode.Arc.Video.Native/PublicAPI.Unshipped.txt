@@ -1,0 +1,3 @@
+#nullable enable
+TKCode.Arc.ArcVideoNativeBuilderExtensions
+static TKCode.Arc.ArcVideoNativeBuilderExtensions.UseArcVideoNative(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

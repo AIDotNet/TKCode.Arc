@@ -1,0 +1,13 @@
+#nullable enable
+TKCode.Arc.Themes.Pixel.ArcPixelBuilderExtensions
+TKCode.Arc.Themes.Pixel.ArcPixelPresets
+TKCode.Arc.Themes.Pixel.ArcPixelRendering
+const TKCode.Arc.Themes.Pixel.ArcPixelPresets.Name = "ArcPixel" -> string!
+const TKCode.Arc.Themes.Pixel.ArcPixelPresets.PixelDisplayFontStack = "fonts:ArcPixel#Silkscreen, fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" -> string!
+const TKCode.Arc.Themes.Pixel.ArcPixelPresets.PixelFontStack = "fonts:ArcPixel#VT323, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, Courier New, $Default" -> string!
+const TKCode.Arc.Themes.Pixel.ArcPixelPresets.Slot = "ArcStyle" -> string!
+static TKCode.Arc.Themes.Pixel.ArcPixelBuilderExtensions.Pixel(this TKCode.Arc.ArcThemeBuilder! theme) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.Themes.Pixel.ArcPixelBuilderExtensions.UseArcPixelTheme(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.Themes.Pixel.ArcPixelPresets.Pixel.get -> TKCode.Arc.ArcThemePreset!
+static TKCode.Arc.Themes.Pixel.ArcPixelRendering.Apply(Avalonia.Visual! root, bool on) -> void
+static TKCode.Arc.Themes.Pixel.ArcPixelRendering.ApplyToApplication(bool on) -> void

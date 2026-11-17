@@ -1,0 +1,95 @@
+#nullable enable
+TKCode.Arc.ArcAudio
+TKCode.Arc.AudioErrorEventArgs
+TKCode.Arc.AudioErrorEventArgs.AudioErrorEventArgs(string! message, System.Exception? exception = null) -> void
+TKCode.Arc.AudioErrorEventArgs.Exception.get -> System.Exception?
+TKCode.Arc.AudioErrorEventArgs.Message.get -> string!
+TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Ended = 4 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Failed = 5 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Idle = 0 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Loading = 1 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Paused = 2 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlaybackState.Playing = 3 -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlayerBase
+TKCode.Arc.AudioPlayerBase.AudioPlayerBase() -> void
+TKCode.Arc.AudioPlayerBase.Dispose() -> void
+TKCode.Arc.AudioPlayerBase.Duration.get -> System.TimeSpan
+TKCode.Arc.AudioPlayerBase.DurationChanged -> System.EventHandler?
+TKCode.Arc.AudioPlayerBase.EffectiveGain.get -> double
+TKCode.Arc.AudioPlayerBase.Fail(string! message, System.Exception? exception = null) -> void
+TKCode.Arc.AudioPlayerBase.Failed -> System.EventHandler<TKCode.Arc.AudioErrorEventArgs!>?
+TKCode.Arc.AudioPlayerBase.IsDisposed.get -> bool
+TKCode.Arc.AudioPlayerBase.IsLooping.get -> bool
+TKCode.Arc.AudioPlayerBase.IsLooping.set -> void
+TKCode.Arc.AudioPlayerBase.IsMuted.get -> bool
+TKCode.Arc.AudioPlayerBase.IsMuted.set -> void
+TKCode.Arc.AudioPlayerBase.PositionChanged -> System.EventHandler?
+TKCode.Arc.AudioPlayerBase.Post(System.Action! action) -> void
+TKCode.Arc.AudioPlayerBase.RaisePositionChanged() -> void
+TKCode.Arc.AudioPlayerBase.SetDuration(System.TimeSpan duration) -> void
+TKCode.Arc.AudioPlayerBase.SetState(TKCode.Arc.AudioPlaybackState state) -> void
+TKCode.Arc.AudioPlayerBase.State.get -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.AudioPlayerBase.StateChanged -> System.EventHandler?
+TKCode.Arc.AudioPlayerBase.Volume.get -> double
+TKCode.Arc.AudioPlayerBase.Volume.set -> void
+TKCode.Arc.AudioSource
+TKCode.Arc.BytesAudioSource
+TKCode.Arc.BytesAudioSource.Data.get -> System.ReadOnlyMemory<byte>
+TKCode.Arc.BytesAudioSource.MediaType.get -> string!
+TKCode.Arc.IAudioBackend
+TKCode.Arc.IAudioBackend.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
+TKCode.Arc.IAudioBackend.IsAudible.get -> bool
+TKCode.Arc.IAudioBackend.Name.get -> string!
+TKCode.Arc.IAudioPlayer
+TKCode.Arc.IAudioPlayer.Duration.get -> System.TimeSpan
+TKCode.Arc.IAudioPlayer.DurationChanged -> System.EventHandler?
+TKCode.Arc.IAudioPlayer.Failed -> System.EventHandler<TKCode.Arc.AudioErrorEventArgs!>?
+TKCode.Arc.IAudioPlayer.IsLooping.get -> bool
+TKCode.Arc.IAudioPlayer.IsLooping.set -> void
+TKCode.Arc.IAudioPlayer.IsMuted.get -> bool
+TKCode.Arc.IAudioPlayer.IsMuted.set -> void
+TKCode.Arc.IAudioPlayer.LoadAsync(TKCode.Arc.AudioSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+TKCode.Arc.IAudioPlayer.Pause() -> void
+TKCode.Arc.IAudioPlayer.Play() -> void
+TKCode.Arc.IAudioPlayer.Position.get -> System.TimeSpan
+TKCode.Arc.IAudioPlayer.PositionChanged -> System.EventHandler?
+TKCode.Arc.IAudioPlayer.Seek(System.TimeSpan position) -> void
+TKCode.Arc.IAudioPlayer.State.get -> TKCode.Arc.AudioPlaybackState
+TKCode.Arc.IAudioPlayer.StateChanged -> System.EventHandler?
+TKCode.Arc.IAudioPlayer.Volume.get -> double
+TKCode.Arc.IAudioPlayer.Volume.set -> void
+TKCode.Arc.SimulatedAudioBackend
+TKCode.Arc.SimulatedAudioBackend.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
+TKCode.Arc.SimulatedAudioBackend.IsAudible.get -> bool
+TKCode.Arc.SimulatedAudioBackend.Name.get -> string!
+TKCode.Arc.SimulatedAudioBackend.SimulatedAudioBackend() -> void
+TKCode.Arc.SimulatedAudioPlayer
+TKCode.Arc.SimulatedAudioPlayer.SimulatedAudioPlayer() -> void
+TKCode.Arc.UriAudioSource
+TKCode.Arc.UriAudioSource.Uri.get -> System.Uri!
+TKCode.Arc.WavFile
+abstract TKCode.Arc.AudioPlayerBase.LoadAsync(TKCode.Arc.AudioSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+abstract TKCode.Arc.AudioPlayerBase.Pause() -> void
+abstract TKCode.Arc.AudioPlayerBase.Play() -> void
+abstract TKCode.Arc.AudioPlayerBase.Position.get -> System.TimeSpan
+abstract TKCode.Arc.AudioPlayerBase.Seek(System.TimeSpan position) -> void
+override TKCode.Arc.SimulatedAudioPlayer.LoadAsync(TKCode.Arc.AudioSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override TKCode.Arc.SimulatedAudioPlayer.Pause() -> void
+override TKCode.Arc.SimulatedAudioPlayer.Play() -> void
+override TKCode.Arc.SimulatedAudioPlayer.Position.get -> System.TimeSpan
+override TKCode.Arc.SimulatedAudioPlayer.Seek(System.TimeSpan position) -> void
+static TKCode.Arc.ArcAudio.Backend.get -> TKCode.Arc.IAudioBackend!
+static TKCode.Arc.ArcAudio.Backend.set -> void
+static TKCode.Arc.ArcAudio.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
+static TKCode.Arc.AudioSource.FromBytes(System.ReadOnlyMemory<byte> data, string! mediaType = "audio/wav") -> TKCode.Arc.AudioSource!
+static TKCode.Arc.AudioSource.FromFile(string! path) -> TKCode.Arc.AudioSource!
+static TKCode.Arc.AudioSource.FromUri(System.Uri! uri) -> TKCode.Arc.AudioSource!
+static TKCode.Arc.SimulatedAudioBackend.FallbackDuration.get -> System.TimeSpan
+static TKCode.Arc.SimulatedAudioBackend.FallbackDuration.set -> void
+static TKCode.Arc.SimulatedAudioBackend.Instance.get -> TKCode.Arc.SimulatedAudioBackend!
+static TKCode.Arc.WavFile.Encode(System.ReadOnlySpan<float> samples, int sampleRate, int channels = 1) -> byte[]!
+static TKCode.Arc.WavFile.TryGetDuration(System.ReadOnlySpan<byte> data) -> System.TimeSpan?
+virtual TKCode.Arc.AudioPlayerBase.Dispose(bool disposing) -> void
+virtual TKCode.Arc.AudioPlayerBase.OnLoopingChanged() -> void
+virtual TKCode.Arc.AudioPlayerBase.OnOutputGainChanged() -> void

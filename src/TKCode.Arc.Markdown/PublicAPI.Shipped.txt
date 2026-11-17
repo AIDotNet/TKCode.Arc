@@ -1,0 +1,462 @@
+#nullable enable
+TKCode.Arc.ArcMarkdownBuilderExtensions
+TKCode.Arc.ChatAttachment
+TKCode.Arc.ChatAttachment.Alt.get -> string?
+TKCode.Arc.ChatAttachment.Alt.set -> void
+TKCode.Arc.ChatAttachment.ChatAttachment() -> void
+TKCode.Arc.ChatAttachment.ChatAttachment(string! id, string! name, TKCode.Arc.ChatAttachmentKind kind, string? url = null) -> void
+TKCode.Arc.ChatAttachment.File.get -> Avalonia.Platform.Storage.IStorageFile?
+TKCode.Arc.ChatAttachment.File.set -> void
+TKCode.Arc.ChatAttachment.Height.get -> double?
+TKCode.Arc.ChatAttachment.Height.set -> void
+TKCode.Arc.ChatAttachment.Id.get -> string!
+TKCode.Arc.ChatAttachment.Id.set -> void
+TKCode.Arc.ChatAttachment.Kind.get -> TKCode.Arc.ChatAttachmentKind
+TKCode.Arc.ChatAttachment.Kind.set -> void
+TKCode.Arc.ChatAttachment.Name.get -> string!
+TKCode.Arc.ChatAttachment.Name.set -> void
+TKCode.Arc.ChatAttachment.Size.get -> long?
+TKCode.Arc.ChatAttachment.Size.set -> void
+TKCode.Arc.ChatAttachment.Url.get -> string?
+TKCode.Arc.ChatAttachment.Url.set -> void
+TKCode.Arc.ChatAttachment.Width.get -> double?
+TKCode.Arc.ChatAttachment.Width.set -> void
+TKCode.Arc.ChatAttachmentEventArgs
+TKCode.Arc.ChatAttachmentEventArgs.Attachment.get -> TKCode.Arc.ChatAttachment!
+TKCode.Arc.ChatAttachmentEventArgs.ChatAttachmentEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.ChatAttachment! attachment) -> void
+TKCode.Arc.ChatAttachmentKind
+TKCode.Arc.ChatAttachmentKind.File = 1 -> TKCode.Arc.ChatAttachmentKind
+TKCode.Arc.ChatAttachmentKind.Image = 0 -> TKCode.Arc.ChatAttachmentKind
+TKCode.Arc.ChatComposer
+TKCode.Arc.ChatComposer.AcceptedFileTypes.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.FilePickerFileType!>?
+TKCode.Arc.ChatComposer.AcceptedFileTypes.set -> void
+TKCode.Arc.ChatComposer.AddFilesAsync(System.Collections.Generic.IEnumerable<Avalonia.Platform.Storage.IStorageItem!>! items) -> System.Threading.Tasks.Task!
+TKCode.Arc.ChatComposer.BrowseAsync() -> System.Threading.Tasks.Task!
+TKCode.Arc.ChatComposer.ChatComposer() -> void
+TKCode.Arc.ChatComposer.Files.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ChatComposerFile!>!
+TKCode.Arc.ChatComposer.FocusInput() -> void
+TKCode.Arc.ChatComposer.HasFiles.get -> bool
+TKCode.Arc.ChatComposer.IsAttachmentEnabled.get -> bool
+TKCode.Arc.ChatComposer.IsAttachmentEnabled.set -> void
+TKCode.Arc.ChatComposer.IsDragOver.get -> bool
+TKCode.Arc.ChatComposer.IsReady.get -> bool
+TKCode.Arc.ChatComposer.Labels.get -> TKCode.Arc.ChatComposerLabels!
+TKCode.Arc.ChatComposer.Labels.set -> void
+TKCode.Arc.ChatComposer.Placeholder.get -> string?
+TKCode.Arc.ChatComposer.Placeholder.set -> void
+TKCode.Arc.ChatComposer.RemoveFile(TKCode.Arc.ChatComposerFile! file) -> void
+TKCode.Arc.ChatComposer.Send() -> bool
+TKCode.Arc.ChatComposer.Sent -> System.EventHandler<TKCode.Arc.ChatSendEventArgs!>?
+TKCode.Arc.ChatComposer.Text.get -> string?
+TKCode.Arc.ChatComposer.Text.set -> void
+TKCode.Arc.ChatComposerFile
+TKCode.Arc.ChatComposerFile.File.get -> Avalonia.Platform.Storage.IStorageFile!
+TKCode.Arc.ChatComposerFile.Id.get -> string!
+TKCode.Arc.ChatComposerFile.IsImage.get -> bool
+TKCode.Arc.ChatComposerFile.Name.get -> string!
+TKCode.Arc.ChatComposerFile.Size.get -> long?
+TKCode.Arc.ChatComposerLabels
+TKCode.Arc.ChatComposerLabels.Attach.get -> string!
+TKCode.Arc.ChatComposerLabels.Attach.set -> void
+TKCode.Arc.ChatComposerLabels.Attachments.get -> string!
+TKCode.Arc.ChatComposerLabels.Attachments.set -> void
+TKCode.Arc.ChatComposerLabels.ChatComposerLabels() -> void
+TKCode.Arc.ChatComposerLabels.RemoveFile.get -> System.Func<string!, string!>!
+TKCode.Arc.ChatComposerLabels.RemoveFile.set -> void
+TKCode.Arc.ChatComposerLabels.Send.get -> string!
+TKCode.Arc.ChatComposerLabels.Send.set -> void
+TKCode.Arc.ChatDraft
+TKCode.Arc.ChatDraft.Attachments.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ChatAttachment!>!
+TKCode.Arc.ChatDraft.ChatDraft(string! text, System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.IStorageFile!>! files, System.Collections.Generic.IReadOnlyList<TKCode.Arc.ChatAttachment!>! attachments) -> void
+TKCode.Arc.ChatDraft.Files.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.IStorageFile!>!
+TKCode.Arc.ChatDraft.Text.get -> string!
+TKCode.Arc.ChatMessage
+TKCode.Arc.ChatMessage.Attachments.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ChatAttachment!>?
+TKCode.Arc.ChatMessage.Attachments.set -> void
+TKCode.Arc.ChatMessage.AuthorId.get -> string!
+TKCode.Arc.ChatMessage.AuthorId.set -> void
+TKCode.Arc.ChatMessage.ChatMessage() -> void
+TKCode.Arc.ChatMessage.ChatMessage(string! id, string! authorId, string? text, System.DateTimeOffset createdAt) -> void
+TKCode.Arc.ChatMessage.CreatedAt.get -> System.DateTimeOffset
+TKCode.Arc.ChatMessage.CreatedAt.set -> void
+TKCode.Arc.ChatMessage.Format.get -> TKCode.Arc.ChatMessageFormat?
+TKCode.Arc.ChatMessage.Format.set -> void
+TKCode.Arc.ChatMessage.Id.get -> string!
+TKCode.Arc.ChatMessage.Id.set -> void
+TKCode.Arc.ChatMessage.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler?
+TKCode.Arc.ChatMessage.Reactions.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ChatReaction!>?
+TKCode.Arc.ChatMessage.Reactions.set -> void
+TKCode.Arc.ChatMessage.Status.get -> TKCode.Arc.ChatMessageStatus?
+TKCode.Arc.ChatMessage.Status.set -> void
+TKCode.Arc.ChatMessage.Text.get -> string?
+TKCode.Arc.ChatMessage.Text.set -> void
+TKCode.Arc.ChatMessageFormat
+TKCode.Arc.ChatMessageFormat.Markdown = 1 -> TKCode.Arc.ChatMessageFormat
+TKCode.Arc.ChatMessageFormat.PlainText = 0 -> TKCode.Arc.ChatMessageFormat
+TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatMessageStatus.Delivered = 2 -> TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatMessageStatus.Failed = 4 -> TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatMessageStatus.Read = 3 -> TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatMessageStatus.Sending = 0 -> TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatMessageStatus.Sent = 1 -> TKCode.Arc.ChatMessageStatus
+TKCode.Arc.ChatParticipant
+TKCode.Arc.ChatParticipant.Avatar.get -> string?
+TKCode.Arc.ChatParticipant.Avatar.set -> void
+TKCode.Arc.ChatParticipant.ChatParticipant() -> void
+TKCode.Arc.ChatParticipant.ChatParticipant(string! id, string! name, string? avatar = null) -> void
+TKCode.Arc.ChatParticipant.Id.get -> string!
+TKCode.Arc.ChatParticipant.Id.set -> void
+TKCode.Arc.ChatParticipant.Name.get -> string!
+TKCode.Arc.ChatParticipant.Name.set -> void
+TKCode.Arc.ChatReaction
+TKCode.Arc.ChatReaction.<Clone>$() -> TKCode.Arc.ChatReaction!
+TKCode.Arc.ChatReaction.ChatReaction(string! Emoji, int Count, bool Mine = false) -> void
+TKCode.Arc.ChatReaction.Count.get -> int
+TKCode.Arc.ChatReaction.Count.init -> void
+TKCode.Arc.ChatReaction.Deconstruct(out string! Emoji, out int Count, out bool Mine) -> void
+TKCode.Arc.ChatReaction.Emoji.get -> string!
+TKCode.Arc.ChatReaction.Emoji.init -> void
+TKCode.Arc.ChatReaction.Equals(TKCode.Arc.ChatReaction? other) -> bool
+TKCode.Arc.ChatReaction.Mine.get -> bool
+TKCode.Arc.ChatReaction.Mine.init -> void
+TKCode.Arc.ChatReactionToggledEventArgs
+TKCode.Arc.ChatReactionToggledEventArgs.ChatReactionToggledEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.ChatMessage! message, string! emoji) -> void
+TKCode.Arc.ChatReactionToggledEventArgs.Emoji.get -> string!
+TKCode.Arc.ChatReactionToggledEventArgs.Message.get -> TKCode.Arc.ChatMessage!
+TKCode.Arc.ChatRetryEventArgs
+TKCode.Arc.ChatRetryEventArgs.ChatRetryEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.ChatMessage! message) -> void
+TKCode.Arc.ChatRetryEventArgs.Message.get -> TKCode.Arc.ChatMessage!
+TKCode.Arc.ChatSendEventArgs
+TKCode.Arc.ChatSendEventArgs.ChatSendEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.ChatDraft! draft) -> void
+TKCode.Arc.ChatSendEventArgs.Draft.get -> TKCode.Arc.ChatDraft!
+TKCode.Arc.ChatThread
+TKCode.Arc.ChatThread.AcceptedFileTypes.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.FilePickerFileType!>?
+TKCode.Arc.ChatThread.AcceptedFileTypes.set -> void
+TKCode.Arc.ChatThread.AppendToMessage(string! messageId, string! text) -> bool
+TKCode.Arc.ChatThread.AttachmentClicked -> System.EventHandler<TKCode.Arc.ChatAttachmentEventArgs!>?
+TKCode.Arc.ChatThread.ChatThread() -> void
+TKCode.Arc.ChatThread.CompleteMessage(string! messageId) -> bool
+TKCode.Arc.ChatThread.Culture.get -> System.Globalization.CultureInfo?
+TKCode.Arc.ChatThread.Culture.set -> void
+TKCode.Arc.ChatThread.CurrentUserId.get -> string?
+TKCode.Arc.ChatThread.CurrentUserId.set -> void
+TKCode.Arc.ChatThread.FocusComposer() -> void
+TKCode.Arc.ChatThread.GroupWindow.get -> System.TimeSpan
+TKCode.Arc.ChatThread.GroupWindow.set -> void
+TKCode.Arc.ChatThread.IsAttachmentEnabled.get -> bool
+TKCode.Arc.ChatThread.IsAttachmentEnabled.set -> void
+TKCode.Arc.ChatThread.IsComposerVisible.get -> bool
+TKCode.Arc.ChatThread.IsComposerVisible.set -> void
+TKCode.Arc.ChatThread.IsMessageStreaming(string! messageId) -> bool
+TKCode.Arc.ChatThread.IsPinned.get -> bool
+TKCode.Arc.ChatThread.Label.get -> string!
+TKCode.Arc.ChatThread.Label.set -> void
+TKCode.Arc.ChatThread.Labels.get -> TKCode.Arc.ChatThreadLabels!
+TKCode.Arc.ChatThread.Labels.set -> void
+TKCode.Arc.ChatThread.MarkdownServices.get -> StreamMark.Avalonia.Extensions.MarkdownServices?
+TKCode.Arc.ChatThread.MarkdownServices.set -> void
+TKCode.Arc.ChatThread.MessageFormat.get -> TKCode.Arc.ChatMessageFormat
+TKCode.Arc.ChatThread.MessageFormat.set -> void
+TKCode.Arc.ChatThread.Participants.get -> System.Collections.Generic.IEnumerable<TKCode.Arc.ChatParticipant!>?
+TKCode.Arc.ChatThread.Participants.set -> void
+TKCode.Arc.ChatThread.Placeholder.get -> string?
+TKCode.Arc.ChatThread.Placeholder.set -> void
+TKCode.Arc.ChatThread.ReactionToggled -> System.EventHandler<TKCode.Arc.ChatReactionToggledEventArgs!>?
+TKCode.Arc.ChatThread.Reactions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.ChatThread.Reactions.set -> void
+TKCode.Arc.ChatThread.ReadBy.get -> System.Collections.Generic.IReadOnlyDictionary<string!, string!>?
+TKCode.Arc.ChatThread.ReadBy.set -> void
+TKCode.Arc.ChatThread.RetryCommand.get -> System.Windows.Input.ICommand?
+TKCode.Arc.ChatThread.RetryCommand.set -> void
+TKCode.Arc.ChatThread.RetryRequested -> System.EventHandler<TKCode.Arc.ChatRetryEventArgs!>?
+TKCode.Arc.ChatThread.ScrollToBottom(bool smooth = true) -> void
+TKCode.Arc.ChatThread.SendRequested -> System.EventHandler<TKCode.Arc.ChatSendEventArgs!>?
+TKCode.Arc.ChatThread.TimeZone.get -> System.TimeZoneInfo?
+TKCode.Arc.ChatThread.TimeZone.set -> void
+TKCode.Arc.ChatThread.TypingParticipantIds.get -> System.Collections.Generic.IEnumerable<string!>?
+TKCode.Arc.ChatThread.TypingParticipantIds.set -> void
+TKCode.Arc.ChatThread.UnreadCount.get -> int
+TKCode.Arc.ChatThreadLabels
+TKCode.Arc.ChatThreadLabels.AddReaction.get -> string!
+TKCode.Arc.ChatThreadLabels.AddReaction.set -> void
+TKCode.Arc.ChatThreadLabels.ChatThreadLabels() -> void
+TKCode.Arc.ChatThreadLabels.Delivered.get -> string!
+TKCode.Arc.ChatThreadLabels.Delivered.set -> void
+TKCode.Arc.ChatThreadLabels.Failed.get -> string!
+TKCode.Arc.ChatThreadLabels.Failed.set -> void
+TKCode.Arc.ChatThreadLabels.JumpToLatest.get -> string!
+TKCode.Arc.ChatThreadLabels.JumpToLatest.set -> void
+TKCode.Arc.ChatThreadLabels.NewMessages.get -> System.Func<int, string!>!
+TKCode.Arc.ChatThreadLabels.NewMessages.set -> void
+TKCode.Arc.ChatThreadLabels.ReactWith.get -> System.Func<string!, string!>!
+TKCode.Arc.ChatThreadLabels.ReactWith.set -> void
+TKCode.Arc.ChatThreadLabels.ReactionCount.get -> System.Func<string!, int, bool, string!>!
+TKCode.Arc.ChatThreadLabels.ReactionCount.set -> void
+TKCode.Arc.ChatThreadLabels.Reactions.get -> string!
+TKCode.Arc.ChatThreadLabels.Reactions.set -> void
+TKCode.Arc.ChatThreadLabels.Read.get -> string!
+TKCode.Arc.ChatThreadLabels.Read.set -> void
+TKCode.Arc.ChatThreadLabels.ReadBy.get -> System.Func<System.Collections.Generic.IReadOnlyList<string!>!, string!>!
+TKCode.Arc.ChatThreadLabels.ReadBy.set -> void
+TKCode.Arc.ChatThreadLabels.Retry.get -> string!
+TKCode.Arc.ChatThreadLabels.Retry.set -> void
+TKCode.Arc.ChatThreadLabels.Sending.get -> string!
+TKCode.Arc.ChatThreadLabels.Sending.set -> void
+TKCode.Arc.ChatThreadLabels.Sent.get -> string!
+TKCode.Arc.ChatThreadLabels.Sent.set -> void
+TKCode.Arc.ChatThreadLabels.Today.get -> string!
+TKCode.Arc.ChatThreadLabels.Today.set -> void
+TKCode.Arc.ChatThreadLabels.Typing.get -> System.Func<System.Collections.Generic.IReadOnlyList<string!>!, string!>!
+TKCode.Arc.ChatThreadLabels.Typing.set -> void
+TKCode.Arc.ChatThreadLabels.UnknownAuthor.get -> string!
+TKCode.Arc.ChatThreadLabels.UnknownAuthor.set -> void
+TKCode.Arc.ChatThreadLabels.Yesterday.get -> string!
+TKCode.Arc.ChatThreadLabels.Yesterday.set -> void
+TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.AttachGlyphSize = 3 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.AttachSize = 2 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.BoxRadius = 4 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.ComposerPadding = 0 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.FieldMaxHeight = 8 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.FieldRadius = 5 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.FileTileWidth = 14 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.InputGap = 1 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.RemoveMargin = 17 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.RemoveSize = 16 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.SendMargin = 10 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.SendSize = 9 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TextLineHeight = 7 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TextPadding = 6 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TileRadius = 15 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TileSize = 13 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TrayGap = 12 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenKind.TrayPadding = 11 -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension.ChatComposerTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension.ChatComposerTokenResourceExtension(TKCode.Arc.DesignTokens.ChatComposerTokenKind kind) -> void
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.ChatComposerTokenKind
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.ChatComposerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.ChatComposerTokens
+TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.AfterDayMargin = 5 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubbleBlockSpacing = 21 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubbleFill = 22 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubbleLineHeight = 20 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubblePadding = 19 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubbleRadius = 16 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.BubbleTightRadius = 18 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ContentPadding = 0 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ContentPaddingNarrow = 1 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.DayGap = 42 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.DayPadding = 40 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.DayPaddingFirst = 41 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.EmojiButtonSize = 46 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.EmojiFontSize = 47 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.FaceSize = 15 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.FailedOpacity = 23 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.FileGap = 31 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.FilePadding = 29 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.FileRadius = 30 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GalleryGap = 25 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GalleryRadius = 26 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GalleryTileRadius = 27 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GalleryWidth = 24 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GroupMargin = 4 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.GutterWidth = 6 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.LineGap = 14 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.MetaGap = 13 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.MetaMargin = 12 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.MoreScrim = 28 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.NarrowWidth = 2 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PickerGap = 49 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PickerOffset = 50 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PickerPadding = 48 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PillGap = 53 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PillHeight = 51 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PillMargin = 54 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.PillPadding = 52 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReactButtonSize = 45 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReactionsMargin = 32 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReactionsPadding = 33 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReactionsPaddingMine = 34 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReaderOverlap = 38 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReaderSize = 37 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReceiptsGap = 36 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.ReceiptsPadding = 35 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.RetryPadding = 39 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.RowGap = 7 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.RowMargin = 3 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.StackGap = 11 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.StackMaxRatio = 8 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.StackMaxRatioNarrow = 9 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.StackMaxWidth = 10 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.TypingHeight = 43 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.TypingPadding = 44 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenKind.TypingRadius = 17 -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension.ChatThreadTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension.ChatThreadTokenResourceExtension(TKCode.Arc.DesignTokens.ChatThreadTokenKind kind) -> void
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.ChatThreadTokenKind
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.ChatThreadTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.ChatThreadTokens
+TKCode.Arc.DesignTokens.MarkdownTokenKind
+TKCode.Arc.DesignTokens.MarkdownTokenKind.BlockGap = 1 -> TKCode.Arc.DesignTokens.MarkdownTokenKind
+TKCode.Arc.DesignTokens.MarkdownTokenKind.BodyLeading = 0 -> TKCode.Arc.DesignTokens.MarkdownTokenKind
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.MarkdownTokenKind
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension.MarkdownTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension.MarkdownTokenResourceExtension(TKCode.Arc.DesignTokens.MarkdownTokenKind kind) -> void
+TKCode.Arc.DesignTokens.MarkdownTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.MarkdownTokens
+TKCode.Arc.Markdown
+TKCode.Arc.Markdown.Append(string! text) -> void
+TKCode.Arc.Markdown.BlockSpacing.get -> double
+TKCode.Arc.Markdown.BlockSpacing.set -> void
+TKCode.Arc.Markdown.ClearSearch() -> void
+TKCode.Arc.Markdown.Complete() -> void
+TKCode.Arc.Markdown.CopySelectionAsync(bool asMarkdown = false) -> System.Threading.Tasks.Task!
+TKCode.Arc.Markdown.CurrentMatchIndex.get -> int
+TKCode.Arc.Markdown.DocumentReady -> System.EventHandler?
+TKCode.Arc.Markdown.Find(string? query, bool matchCase = false) -> int
+TKCode.Arc.Markdown.FindAt(int index) -> void
+TKCode.Arc.Markdown.FindNext() -> void
+TKCode.Arc.Markdown.FindPrevious() -> void
+TKCode.Arc.Markdown.GetOutline() -> System.Collections.Generic.IReadOnlyList<StreamMark.Avalonia.Selection.OutlineItem!>!
+TKCode.Arc.Markdown.GetSelectedMarkdown() -> string!
+TKCode.Arc.Markdown.GetSelectedText() -> string!
+TKCode.Arc.Markdown.HasSelection.get -> bool
+TKCode.Arc.Markdown.IsDocumentReady.get -> bool
+TKCode.Arc.Markdown.IsPaced.get -> bool
+TKCode.Arc.Markdown.IsPaced.set -> void
+TKCode.Arc.Markdown.IsStreaming.get -> bool
+TKCode.Arc.Markdown.LineHeight.get -> double
+TKCode.Arc.Markdown.LineHeight.set -> void
+TKCode.Arc.Markdown.LinkClicked -> System.EventHandler<StreamMark.Avalonia.Rendering.LinkClickedEventArgs!>?
+TKCode.Arc.Markdown.Markdown() -> void
+TKCode.Arc.Markdown.MatchCount.get -> int
+TKCode.Arc.Markdown.OpensLinks.get -> bool
+TKCode.Arc.Markdown.OpensLinks.set -> void
+TKCode.Arc.Markdown.RevealFadeDuration.get -> System.TimeSpan?
+TKCode.Arc.Markdown.RevealFadeDuration.set -> void
+TKCode.Arc.Markdown.RevealFadeInReducedMotion.get -> bool
+TKCode.Arc.Markdown.RevealFadeInReducedMotion.set -> void
+TKCode.Arc.Markdown.ScrollToAnchor(string? anchor) -> bool
+TKCode.Arc.Markdown.ScrollToBlock(int blockKey) -> bool
+TKCode.Arc.Markdown.ScrollToPoint(StreamMark.Avalonia.Selection.TextPoint point) -> bool
+TKCode.Arc.Markdown.SearchChanged -> System.EventHandler?
+TKCode.Arc.Markdown.SelectAll() -> void
+TKCode.Arc.Markdown.SelectionChanged -> System.EventHandler?
+TKCode.Arc.Markdown.Services.get -> StreamMark.Avalonia.Extensions.MarkdownServices?
+TKCode.Arc.Markdown.Services.set -> void
+TKCode.Arc.Markdown.Stream.get -> StreamMark.Avalonia.MarkdownStream?
+TKCode.Arc.Markdown.Stream.set -> void
+TKCode.Arc.Markdown.Text.get -> string?
+TKCode.Arc.Markdown.Text.set -> void
+TKCode.Arc.MarkdownHighlightPlugin
+TKCode.Arc.MarkdownHighlightPlugin.Configure(StreamMark.Avalonia.Plugins.MarkdownPluginBuilder! builder) -> void
+TKCode.Arc.MarkdownHighlightPlugin.Highlighter.get -> StreamMark.Core.Highlighting.ISyntaxHighlighter!
+TKCode.Arc.MarkdownHighlightPlugin.MarkdownHighlightPlugin(params string![]! prewarm) -> void
+TKCode.Arc.MarkdownHighlightPlugin.Name.get -> string!
+const TKCode.Arc.ChatComposer.AttachPart = "PART_Attach" -> string!
+const TKCode.Arc.ChatComposer.DraggingPseudoClass = ":dragging" -> string!
+const TKCode.Arc.ChatComposer.MaxFilesPerAdd = 10 -> int
+const TKCode.Arc.ChatComposer.ReadyPseudoClass = ":ready" -> string!
+const TKCode.Arc.ChatComposer.SendPart = "PART_Send" -> string!
+const TKCode.Arc.ChatComposer.TextBoxPart = "PART_TextBox" -> string!
+const TKCode.Arc.ChatComposer.TrayHostPart = "PART_TrayHost" -> string!
+const TKCode.Arc.ChatComposer.TrayPart = "PART_Tray" -> string!
+const TKCode.Arc.ChatThread.ComposerPart = "PART_Composer" -> string!
+const TKCode.Arc.ChatThread.ListPart = "PART_List" -> string!
+const TKCode.Arc.ChatThread.LogRegionPart = "PART_LogRegion" -> string!
+const TKCode.Arc.ChatThread.NarrowPseudoClass = ":narrow" -> string!
+const TKCode.Arc.ChatThread.PillHostPart = "PART_PillHost" -> string!
+const TKCode.Arc.ChatThread.PillPart = "PART_Pill" -> string!
+const TKCode.Arc.ChatThread.PinnedPseudoClass = ":pinned" -> string!
+const TKCode.Arc.ChatThread.ScrollViewerPart = "PART_ScrollViewer" -> string!
+const TKCode.Arc.ChatThread.TypingRegionPart = "PART_TypingRegion" -> string!
+const TKCode.Arc.DesignTokens.ChatComposerTokens.Identity = "ChatComposer" -> string!
+const TKCode.Arc.DesignTokens.ChatThreadTokens.Identity = "ChatThread" -> string!
+const TKCode.Arc.DesignTokens.MarkdownTokens.Identity = "Markdown" -> string!
+const TKCode.Arc.Markdown.StreamingPseudoClass = ":streaming" -> string!
+const TKCode.Arc.Markdown.ViewPart = "PART_View" -> string!
+override TKCode.Arc.ChatComposer.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.ChatComposer.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.ChatReaction.Equals(object? obj) -> bool
+override TKCode.Arc.ChatReaction.GetHashCode() -> int
+override TKCode.Arc.ChatReaction.ToString() -> string!
+override TKCode.Arc.ChatThread.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.ChatThread.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.ChatThread.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.ChatThread.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.ChatThread.OnLoaded(Avalonia.Interactivity.RoutedEventArgs! e) -> void
+override TKCode.Arc.ChatThread.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.ChatThread.OnSizeChanged(Avalonia.Controls.SizeChangedEventArgs! e) -> void
+override TKCode.Arc.Markdown.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Markdown.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Markdown.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Markdown.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+static TKCode.Arc.ArcMarkdownBuilderExtensions.UseArcMarkdown(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.ChatReaction.operator !=(TKCode.Arc.ChatReaction? left, TKCode.Arc.ChatReaction? right) -> bool
+static TKCode.Arc.ChatReaction.operator ==(TKCode.Arc.ChatReaction? left, TKCode.Arc.ChatReaction? right) -> bool
+static TKCode.Arc.ChatThread.DefaultMarkdownServices.get -> StreamMark.Avalonia.Extensions.MarkdownServices!
+static TKCode.Arc.ChatThread.DefaultReactions.get -> System.Collections.Generic.IReadOnlyList<string!>!
+static TKCode.Arc.DesignTokens.ChatComposerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.ChatComposerTokens.Key(TKCode.Arc.DesignTokens.ChatComposerTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.ChatThreadTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.ChatThreadTokens.Key(TKCode.Arc.DesignTokens.ChatThreadTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.MarkdownTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.MarkdownTokens.Key(TKCode.Arc.DesignTokens.MarkdownTokenKind kind) -> object!
+static TKCode.Arc.Markdown.DefaultServices.get -> StreamMark.Avalonia.Extensions.MarkdownServices!
+static readonly TKCode.Arc.ChatComposer.AcceptedFileTypesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.FilePickerFileType!>?>!
+static readonly TKCode.Arc.ChatComposer.HasFilesProperty -> Avalonia.DirectProperty<TKCode.Arc.ChatComposer!, bool>!
+static readonly TKCode.Arc.ChatComposer.IsAttachmentEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ChatComposer.IsDragOverProperty -> Avalonia.DirectProperty<TKCode.Arc.ChatComposer!, bool>!
+static readonly TKCode.Arc.ChatComposer.IsReadyProperty -> Avalonia.DirectProperty<TKCode.Arc.ChatComposer!, bool>!
+static readonly TKCode.Arc.ChatComposer.LabelsProperty -> Avalonia.StyledProperty<TKCode.Arc.ChatComposerLabels!>!
+static readonly TKCode.Arc.ChatComposer.PlaceholderProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ChatComposer.SentEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.ChatSendEventArgs!>!
+static readonly TKCode.Arc.ChatComposer.TextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ChatParticipant.AvatarProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ChatParticipant.IdProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.ChatParticipant.NameProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.ChatThread.AcceptedFileTypesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<Avalonia.Platform.Storage.FilePickerFileType!>?>!
+static readonly TKCode.Arc.ChatThread.AttachmentClickedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.ChatAttachmentEventArgs!>!
+static readonly TKCode.Arc.ChatThread.CultureProperty -> Avalonia.StyledProperty<System.Globalization.CultureInfo?>!
+static readonly TKCode.Arc.ChatThread.CurrentUserIdProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ChatThread.GroupWindowProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.ChatThread.IsAttachmentEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ChatThread.IsComposerVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ChatThread.IsPinnedProperty -> Avalonia.DirectProperty<TKCode.Arc.ChatThread!, bool>!
+static readonly TKCode.Arc.ChatThread.LabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.ChatThread.LabelsProperty -> Avalonia.StyledProperty<TKCode.Arc.ChatThreadLabels!>!
+static readonly TKCode.Arc.ChatThread.MarkdownServicesProperty -> Avalonia.StyledProperty<StreamMark.Avalonia.Extensions.MarkdownServices?>!
+static readonly TKCode.Arc.ChatThread.MessageFormatProperty -> Avalonia.StyledProperty<TKCode.Arc.ChatMessageFormat>!
+static readonly TKCode.Arc.ChatThread.ParticipantsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IEnumerable<TKCode.Arc.ChatParticipant!>?>!
+static readonly TKCode.Arc.ChatThread.PlaceholderProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ChatThread.ReactionToggledEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.ChatReactionToggledEventArgs!>!
+static readonly TKCode.Arc.ChatThread.ReactionsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>!>!
+static readonly TKCode.Arc.ChatThread.ReadByProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyDictionary<string!, string!>?>!
+static readonly TKCode.Arc.ChatThread.RetryCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.ChatThread.RetryRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.ChatRetryEventArgs!>!
+static readonly TKCode.Arc.ChatThread.SendRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.ChatSendEventArgs!>!
+static readonly TKCode.Arc.ChatThread.TimeZoneProperty -> Avalonia.StyledProperty<System.TimeZoneInfo?>!
+static readonly TKCode.Arc.ChatThread.TypingParticipantIdsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IEnumerable<string!>?>!
+static readonly TKCode.Arc.ChatThread.UnreadCountProperty -> Avalonia.DirectProperty<TKCode.Arc.ChatThread!, int>!
+static readonly TKCode.Arc.Markdown.BlockSpacingProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Markdown.CurrentMatchIndexProperty -> Avalonia.DirectProperty<TKCode.Arc.Markdown!, int>!
+static readonly TKCode.Arc.Markdown.HasSelectionProperty -> Avalonia.DirectProperty<TKCode.Arc.Markdown!, bool>!
+static readonly TKCode.Arc.Markdown.IsDocumentReadyProperty -> Avalonia.DirectProperty<TKCode.Arc.Markdown!, bool>!
+static readonly TKCode.Arc.Markdown.IsPacedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Markdown.IsStreamingProperty -> Avalonia.DirectProperty<TKCode.Arc.Markdown!, bool>!
+static readonly TKCode.Arc.Markdown.LineHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Markdown.LinkClickedEvent -> Avalonia.Interactivity.RoutedEvent<StreamMark.Avalonia.Rendering.LinkClickedEventArgs!>!
+static readonly TKCode.Arc.Markdown.MatchCountProperty -> Avalonia.DirectProperty<TKCode.Arc.Markdown!, int>!
+static readonly TKCode.Arc.Markdown.OpensLinksProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Markdown.RevealFadeDurationProperty -> Avalonia.StyledProperty<System.TimeSpan?>!
+static readonly TKCode.Arc.Markdown.RevealFadeInReducedMotionProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Markdown.ServicesProperty -> Avalonia.StyledProperty<StreamMark.Avalonia.Extensions.MarkdownServices?>!
+static readonly TKCode.Arc.Markdown.StreamProperty -> Avalonia.StyledProperty<StreamMark.Avalonia.MarkdownStream?>!
+static readonly TKCode.Arc.Markdown.TextProperty -> Avalonia.StyledProperty<string?>!

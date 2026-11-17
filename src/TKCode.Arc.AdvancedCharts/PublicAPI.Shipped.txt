@@ -1,0 +1,2002 @@
+#nullable enable
+TKCode.Arc.ActionsRenderer
+TKCode.Arc.ActionsRenderer.Actions.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DataGridCellAction!>!
+TKCode.Arc.ActionsRenderer.ActionsRenderer() -> void
+TKCode.Arc.ArcAdvancedChartsBuilderExtensions
+TKCode.Arc.BadgeRenderer
+TKCode.Arc.BadgeRenderer.BadgeRenderer() -> void
+TKCode.Arc.BadgeRenderer.DefaultTone.get -> TKCode.Arc.DataGridTone
+TKCode.Arc.BadgeRenderer.DefaultTone.set -> void
+TKCode.Arc.BadgeRenderer.ToneMap.get -> string?
+TKCode.Arc.BadgeRenderer.ToneMap.set -> void
+TKCode.Arc.BadgeRenderer.Tones.get -> System.Collections.Generic.IDictionary<string!, TKCode.Arc.DataGridTone>!
+TKCode.Arc.CheckboxRenderer
+TKCode.Arc.CheckboxRenderer.CheckboxRenderer() -> void
+TKCode.Arc.DataGrid
+TKCode.Arc.DataGrid.ActiveCell.get -> TKCode.Arc.DataGridCellAddress?
+TKCode.Arc.DataGrid.AddRow() -> object?
+TKCode.Arc.DataGrid.AutoFitColumn(string! key) -> void
+TKCode.Arc.DataGrid.AutoFitColumns() -> void
+TKCode.Arc.DataGrid.BeginEdit() -> void
+TKCode.Arc.DataGrid.BulkActionInvoked -> System.EventHandler<TKCode.Arc.DataGridBulkActionEventArgs!>?
+TKCode.Arc.DataGrid.BulkActions.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DataGridBulkAction!>!
+TKCode.Arc.DataGrid.CanDeleteRows.get -> bool
+TKCode.Arc.DataGrid.CanDeleteRows.set -> void
+TKCode.Arc.DataGrid.CanEditCell.get -> System.Func<TKCode.Arc.DataGridCellContext, bool>?
+TKCode.Arc.DataGrid.CanEditCell.set -> void
+TKCode.Arc.DataGrid.CanInsertRows.get -> bool
+TKCode.Arc.DataGrid.CanInsertRows.set -> void
+TKCode.Arc.DataGrid.CanRedo.get -> bool
+TKCode.Arc.DataGrid.CanUndo.get -> bool
+TKCode.Arc.DataGrid.CancelEdit() -> void
+TKCode.Arc.DataGrid.CellClick -> System.EventHandler<TKCode.Arc.DataGridCellEventArgs!>?
+TKCode.Arc.DataGrid.CellContextRequested -> System.EventHandler<TKCode.Arc.DataGridCellEventArgs!>?
+TKCode.Arc.DataGrid.CellDoubleClick -> System.EventHandler<TKCode.Arc.DataGridCellEventArgs!>?
+TKCode.Arc.DataGrid.CellEditEnding -> System.EventHandler<TKCode.Arc.DataGridCellEditEndingEventArgs!>?
+TKCode.Arc.DataGrid.CellInvoked -> System.EventHandler<TKCode.Arc.DataGridCellInvokedEventArgs!>?
+TKCode.Arc.DataGrid.CellStyleSelector.get -> System.Func<TKCode.Arc.DataGridCellContext, TKCode.Arc.DataGridCellStyle?>?
+TKCode.Arc.DataGrid.CellStyleSelector.set -> void
+TKCode.Arc.DataGrid.CellsChanged -> System.EventHandler<TKCode.Arc.DataGridCellsChangedEventArgs!>?
+TKCode.Arc.DataGrid.CheckedRowKeys.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.DataGrid.CheckedRowKeys.set -> void
+TKCode.Arc.DataGrid.ClearFilters() -> void
+TKCode.Arc.DataGrid.ClearHistory() -> void
+TKCode.Arc.DataGrid.CloseFind() -> void
+TKCode.Arc.DataGrid.ColumnOrder.get -> System.Collections.Generic.IReadOnlyList<string!>?
+TKCode.Arc.DataGrid.ColumnOrder.set -> void
+TKCode.Arc.DataGrid.ColumnWidths.get -> System.Collections.Generic.IReadOnlyDictionary<string!, double>?
+TKCode.Arc.DataGrid.ColumnWidths.set -> void
+TKCode.Arc.DataGrid.Columns.get -> TKCode.Arc.DataGridColumnCollection!
+TKCode.Arc.DataGrid.CommitEdit() -> bool
+TKCode.Arc.DataGrid.ContextMenuItems.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DataGridMenuItem!>!
+TKCode.Arc.DataGrid.ContextMenuOpening -> System.EventHandler<TKCode.Arc.DataGridContextMenuOpeningEventArgs!>?
+TKCode.Arc.DataGrid.CopySelectionAsync() -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.DataGrid.CopySelectionAsync(bool withHeaders) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.DataGrid.Culture.get -> System.Globalization.CultureInfo?
+TKCode.Arc.DataGrid.Culture.set -> void
+TKCode.Arc.DataGrid.DataGrid() -> void
+TKCode.Arc.DataGrid.DataSource.get -> TKCode.Arc.IDataGridDataSource?
+TKCode.Arc.DataGrid.DataSource.set -> void
+TKCode.Arc.DataGrid.Density.get -> TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGrid.Density.set -> void
+TKCode.Arc.DataGrid.EmptyMessage.get -> string?
+TKCode.Arc.DataGrid.EmptyMessage.set -> void
+TKCode.Arc.DataGrid.ErrorCount.get -> int
+TKCode.Arc.DataGrid.ExportAsync(TKCode.Arc.DataGridExportFormat format, bool checkedRowsOnly = false) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.DataGrid.ExportFileName.get -> string?
+TKCode.Arc.DataGrid.ExportFileName.set -> void
+TKCode.Arc.DataGrid.ExportFormats.get -> TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGrid.ExportFormats.set -> void
+TKCode.Arc.DataGrid.Exporting -> System.EventHandler<TKCode.Arc.DataGridExportingEventArgs!>?
+TKCode.Arc.DataGrid.Filters.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.DataGridFilter!>!
+TKCode.Arc.DataGrid.Filters.set -> void
+TKCode.Arc.DataGrid.FindMatchCase.get -> bool
+TKCode.Arc.DataGrid.FindMatchCase.set -> void
+TKCode.Arc.DataGrid.FindMatchCount.get -> int
+TKCode.Arc.DataGrid.FindMatchWholeCell.get -> bool
+TKCode.Arc.DataGrid.FindMatchWholeCell.set -> void
+TKCode.Arc.DataGrid.FindNext() -> bool
+TKCode.Arc.DataGrid.FindPrevious() -> bool
+TKCode.Arc.DataGrid.FindText.get -> string!
+TKCode.Arc.DataGrid.FindText.set -> void
+TKCode.Arc.DataGrid.GetErrors() -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridCellError>!
+TKCode.Arc.DataGrid.GetLayoutState() -> TKCode.Arc.DataGridLayoutState!
+TKCode.Arc.DataGrid.GroupBy.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.DataGrid.GroupBy.set -> void
+TKCode.Arc.DataGrid.HasErrors.get -> bool
+TKCode.Arc.DataGrid.HiddenColumns.get -> System.Collections.Generic.IReadOnlyList<string!>?
+TKCode.Arc.DataGrid.HiddenColumns.set -> void
+TKCode.Arc.DataGrid.InsertRow(bool below = true) -> object?
+TKCode.Arc.DataGrid.IsEditing.get -> bool
+TKCode.Arc.DataGrid.IsFilterRowOpen.get -> bool
+TKCode.Arc.DataGrid.IsFilterRowOpen.set -> void
+TKCode.Arc.DataGrid.IsFindOpen.get -> bool
+TKCode.Arc.DataGrid.IsFindOpen.set -> void
+TKCode.Arc.DataGrid.IsLoading.get -> bool
+TKCode.Arc.DataGrid.IsLoading.set -> void
+TKCode.Arc.DataGrid.IsRowCheckEnabled.get -> bool
+TKCode.Arc.DataGrid.IsRowCheckEnabled.set -> void
+TKCode.Arc.DataGrid.IsStriped.get -> bool
+TKCode.Arc.DataGrid.IsStriped.set -> void
+TKCode.Arc.DataGrid.ItemsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.DataGrid.ItemsSource.set -> void
+TKCode.Arc.DataGrid.Label.get -> string!
+TKCode.Arc.DataGrid.Label.set -> void
+TKCode.Arc.DataGrid.MaxPasteCells.get -> int
+TKCode.Arc.DataGrid.MaxPasteCells.set -> void
+TKCode.Arc.DataGrid.MaxViewportHeight.get -> double
+TKCode.Arc.DataGrid.MaxViewportHeight.set -> void
+TKCode.Arc.DataGrid.MoveColumn(string! key, int visibleIndex) -> void
+TKCode.Arc.DataGrid.NeutralizeCsvFormulas.get -> bool
+TKCode.Arc.DataGrid.NeutralizeCsvFormulas.set -> void
+TKCode.Arc.DataGrid.NextError() -> bool
+TKCode.Arc.DataGrid.OpenFind(bool replace = false) -> void
+TKCode.Arc.DataGrid.PasteOverflow.get -> TKCode.Arc.DataGridPasteOverflow
+TKCode.Arc.DataGrid.PasteOverflow.set -> void
+TKCode.Arc.DataGrid.PinnedColumns.get -> System.Collections.Generic.IReadOnlyList<string!>?
+TKCode.Arc.DataGrid.PinnedColumns.set -> void
+TKCode.Arc.DataGrid.Redo() -> void
+TKCode.Arc.DataGrid.ReplaceAll(string! replacement) -> int
+TKCode.Arc.DataGrid.ReplaceCurrent(string! replacement) -> bool
+TKCode.Arc.DataGrid.ResetColumnWidths() -> void
+TKCode.Arc.DataGrid.RowActivated -> System.EventHandler<TKCode.Arc.DataGridCellEventArgs!>?
+TKCode.Arc.DataGrid.RowFactory.get -> System.Func<object!>?
+TKCode.Arc.DataGrid.RowFactory.set -> void
+TKCode.Arc.DataGrid.RowKeySelector.get -> System.Func<object!, object!>?
+TKCode.Arc.DataGrid.RowKeySelector.set -> void
+TKCode.Arc.DataGrid.RowStyleSelector.get -> System.Func<object!, TKCode.Arc.DataGridTone?>?
+TKCode.Arc.DataGrid.RowStyleSelector.set -> void
+TKCode.Arc.DataGrid.RowsDeleted -> System.EventHandler<TKCode.Arc.DataGridRowsEventArgs!>?
+TKCode.Arc.DataGrid.RowsInserted -> System.EventHandler<TKCode.Arc.DataGridRowsEventArgs!>?
+TKCode.Arc.DataGrid.RowsRestored -> System.EventHandler<TKCode.Arc.DataGridRowsEventArgs!>?
+TKCode.Arc.DataGrid.ScrollIntoView(object! rowKey, string? columnKey = null) -> void
+TKCode.Arc.DataGrid.SearchText.get -> string!
+TKCode.Arc.DataGrid.SearchText.set -> void
+TKCode.Arc.DataGrid.SelectRange(TKCode.Arc.DataGridCellRange range) -> void
+TKCode.Arc.DataGrid.SelectedRange.get -> TKCode.Arc.DataGridCellRange?
+TKCode.Arc.DataGrid.SetLayoutState(TKCode.Arc.DataGridLayoutState! state) -> void
+TKCode.Arc.DataGrid.ShowContextMenu.get -> bool
+TKCode.Arc.DataGrid.ShowContextMenu.set -> void
+TKCode.Arc.DataGrid.ShowRowNumbers.get -> bool
+TKCode.Arc.DataGrid.ShowRowNumbers.set -> void
+TKCode.Arc.DataGrid.ShowSelectionStats.get -> bool
+TKCode.Arc.DataGrid.ShowSelectionStats.set -> void
+TKCode.Arc.DataGrid.ShowToolbar.get -> bool
+TKCode.Arc.DataGrid.ShowToolbar.set -> void
+TKCode.Arc.DataGrid.ShowTotals.get -> bool
+TKCode.Arc.DataGrid.ShowTotals.set -> void
+TKCode.Arc.DataGrid.SortDescriptions.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>!
+TKCode.Arc.DataGrid.SortDescriptions.set -> void
+TKCode.Arc.DataGrid.Undo() -> void
+TKCode.Arc.DataGrid.UndoLimit.get -> int
+TKCode.Arc.DataGrid.UndoLimit.set -> void
+TKCode.Arc.DataGrid.ValidateAll() -> int
+TKCode.Arc.DataGrid.ValidationMode.get -> TKCode.Arc.DataGridValidationMode
+TKCode.Arc.DataGrid.ValidationMode.set -> void
+TKCode.Arc.DataGrid.VisibleRowCount.get -> int
+TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.Average = 2 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.Count = 5 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.Max = 4 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.Min = 3 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.None = 0 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregate.Sum = 1 -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridAggregates
+TKCode.Arc.DataGridBulkAction
+TKCode.Arc.DataGridBulkAction.Command.get -> System.Windows.Input.ICommand?
+TKCode.Arc.DataGridBulkAction.Command.set -> void
+TKCode.Arc.DataGridBulkAction.DataGridBulkAction() -> void
+TKCode.Arc.DataGridBulkAction.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.DataGridBulkAction.Icon.set -> void
+TKCode.Arc.DataGridBulkAction.IsDanger.get -> bool
+TKCode.Arc.DataGridBulkAction.IsDanger.set -> void
+TKCode.Arc.DataGridBulkAction.Label.get -> string!
+TKCode.Arc.DataGridBulkAction.Label.set -> void
+TKCode.Arc.DataGridBulkActionEventArgs
+TKCode.Arc.DataGridBulkActionEventArgs.Action.get -> TKCode.Arc.DataGridBulkAction!
+TKCode.Arc.DataGridBulkActionEventArgs.DataGridBulkActionEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.DataGridBulkAction! action, System.Collections.Generic.IReadOnlyList<object!>! rows) -> void
+TKCode.Arc.DataGridBulkActionEventArgs.Rows.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.DataGridCellAction
+TKCode.Arc.DataGridCellAction.Command.get -> System.Windows.Input.ICommand?
+TKCode.Arc.DataGridCellAction.Command.set -> void
+TKCode.Arc.DataGridCellAction.DataGridCellAction() -> void
+TKCode.Arc.DataGridCellAction.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.DataGridCellAction.Icon.set -> void
+TKCode.Arc.DataGridCellAction.IsDanger.get -> bool
+TKCode.Arc.DataGridCellAction.IsDanger.set -> void
+TKCode.Arc.DataGridCellAction.Label.get -> string!
+TKCode.Arc.DataGridCellAction.Label.set -> void
+TKCode.Arc.DataGridCellAddress
+TKCode.Arc.DataGridCellAddress.Column.get -> int
+TKCode.Arc.DataGridCellAddress.Column.init -> void
+TKCode.Arc.DataGridCellAddress.DataGridCellAddress() -> void
+TKCode.Arc.DataGridCellAddress.DataGridCellAddress(int Row, int Column) -> void
+TKCode.Arc.DataGridCellAddress.Deconstruct(out int Row, out int Column) -> void
+TKCode.Arc.DataGridCellAddress.Equals(TKCode.Arc.DataGridCellAddress other) -> bool
+TKCode.Arc.DataGridCellAddress.Row.get -> int
+TKCode.Arc.DataGridCellAddress.Row.init -> void
+TKCode.Arc.DataGridCellChange
+TKCode.Arc.DataGridCellChange.<Clone>$() -> TKCode.Arc.DataGridCellChange!
+TKCode.Arc.DataGridCellChange.ColumnKey.get -> string!
+TKCode.Arc.DataGridCellChange.ColumnKey.init -> void
+TKCode.Arc.DataGridCellChange.DataGridCellChange(object! Row, object! RowKey, string! ColumnKey, object? OldValue, object? NewValue) -> void
+TKCode.Arc.DataGridCellChange.Deconstruct(out object! Row, out object! RowKey, out string! ColumnKey, out object? OldValue, out object? NewValue) -> void
+TKCode.Arc.DataGridCellChange.Equals(TKCode.Arc.DataGridCellChange? other) -> bool
+TKCode.Arc.DataGridCellChange.NewValue.get -> object?
+TKCode.Arc.DataGridCellChange.NewValue.init -> void
+TKCode.Arc.DataGridCellChange.OldValue.get -> object?
+TKCode.Arc.DataGridCellChange.OldValue.init -> void
+TKCode.Arc.DataGridCellChange.Row.get -> object!
+TKCode.Arc.DataGridCellChange.Row.init -> void
+TKCode.Arc.DataGridCellChange.RowKey.get -> object!
+TKCode.Arc.DataGridCellChange.RowKey.init -> void
+TKCode.Arc.DataGridCellContext
+TKCode.Arc.DataGridCellContext.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellContext.Column.init -> void
+TKCode.Arc.DataGridCellContext.DataGridCellContext() -> void
+TKCode.Arc.DataGridCellContext.DataGridCellContext(object! Row, object! RowKey, TKCode.Arc.DataGridColumn! Column, object? Value) -> void
+TKCode.Arc.DataGridCellContext.Deconstruct(out object! Row, out object! RowKey, out TKCode.Arc.DataGridColumn! Column, out object? Value) -> void
+TKCode.Arc.DataGridCellContext.Equals(TKCode.Arc.DataGridCellContext other) -> bool
+TKCode.Arc.DataGridCellContext.Row.get -> object!
+TKCode.Arc.DataGridCellContext.Row.init -> void
+TKCode.Arc.DataGridCellContext.RowKey.get -> object!
+TKCode.Arc.DataGridCellContext.RowKey.init -> void
+TKCode.Arc.DataGridCellContext.Value.get -> object?
+TKCode.Arc.DataGridCellContext.Value.init -> void
+TKCode.Arc.DataGridCellEditEndingEventArgs
+TKCode.Arc.DataGridCellEditEndingEventArgs.Cancel.get -> bool
+TKCode.Arc.DataGridCellEditEndingEventArgs.Cancel.set -> void
+TKCode.Arc.DataGridCellEditEndingEventArgs.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellEditEndingEventArgs.DataGridCellEditEndingEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, object! row, object! rowKey, TKCode.Arc.DataGridColumn! column, object? oldValue, object? newValue) -> void
+TKCode.Arc.DataGridCellEditEndingEventArgs.ErrorMessage.get -> string?
+TKCode.Arc.DataGridCellEditEndingEventArgs.ErrorMessage.set -> void
+TKCode.Arc.DataGridCellEditEndingEventArgs.NewValue.get -> object?
+TKCode.Arc.DataGridCellEditEndingEventArgs.OldValue.get -> object?
+TKCode.Arc.DataGridCellEditEndingEventArgs.Row.get -> object!
+TKCode.Arc.DataGridCellEditEndingEventArgs.RowKey.get -> object!
+TKCode.Arc.DataGridCellError
+TKCode.Arc.DataGridCellError.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellError.Column.init -> void
+TKCode.Arc.DataGridCellError.DataGridCellError() -> void
+TKCode.Arc.DataGridCellError.DataGridCellError(object! Row, object! RowKey, TKCode.Arc.DataGridColumn! Column, string! Message) -> void
+TKCode.Arc.DataGridCellError.Deconstruct(out object! Row, out object! RowKey, out TKCode.Arc.DataGridColumn! Column, out string! Message) -> void
+TKCode.Arc.DataGridCellError.Equals(TKCode.Arc.DataGridCellError other) -> bool
+TKCode.Arc.DataGridCellError.Message.get -> string!
+TKCode.Arc.DataGridCellError.Message.init -> void
+TKCode.Arc.DataGridCellError.Row.get -> object!
+TKCode.Arc.DataGridCellError.Row.init -> void
+TKCode.Arc.DataGridCellError.RowKey.get -> object!
+TKCode.Arc.DataGridCellError.RowKey.init -> void
+TKCode.Arc.DataGridCellEventArgs
+TKCode.Arc.DataGridCellEventArgs.Address.get -> TKCode.Arc.DataGridCellAddress
+TKCode.Arc.DataGridCellEventArgs.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellEventArgs.KeyModifiers.get -> Avalonia.Input.KeyModifiers
+TKCode.Arc.DataGridCellEventArgs.PointerType.get -> Avalonia.Input.PointerType?
+TKCode.Arc.DataGridCellEventArgs.Row.get -> object!
+TKCode.Arc.DataGridCellEventArgs.RowKey.get -> object!
+TKCode.Arc.DataGridCellEventArgs.Value.get -> object?
+TKCode.Arc.DataGridCellFormat
+TKCode.Arc.DataGridCellFormat.CurrencySymbol.get -> string!
+TKCode.Arc.DataGridCellFormat.CurrencySymbol.init -> void
+TKCode.Arc.DataGridCellFormat.DataGridCellFormat() -> void
+TKCode.Arc.DataGridCellFormat.DataGridCellFormat(TKCode.Arc.DataGridColumnType Type, int Decimals = 0, string! CurrencySymbol = "$", string? DateFormat = null) -> void
+TKCode.Arc.DataGridCellFormat.DateFormat.get -> string?
+TKCode.Arc.DataGridCellFormat.DateFormat.init -> void
+TKCode.Arc.DataGridCellFormat.Decimals.get -> int
+TKCode.Arc.DataGridCellFormat.Decimals.init -> void
+TKCode.Arc.DataGridCellFormat.Deconstruct(out TKCode.Arc.DataGridColumnType Type, out int Decimals, out string! CurrencySymbol, out string? DateFormat) -> void
+TKCode.Arc.DataGridCellFormat.Equals(TKCode.Arc.DataGridCellFormat other) -> bool
+TKCode.Arc.DataGridCellFormat.IsNumeric.get -> bool
+TKCode.Arc.DataGridCellFormat.Type.get -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridCellFormat.Type.init -> void
+TKCode.Arc.DataGridCellInvokedEventArgs
+TKCode.Arc.DataGridCellInvokedEventArgs.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellInvokedEventArgs.Part.get -> string?
+TKCode.Arc.DataGridCellInvokedEventArgs.Row.get -> object!
+TKCode.Arc.DataGridCellInvokedEventArgs.RowKey.get -> object?
+TKCode.Arc.DataGridCellInvokedEventArgs.Value.get -> object?
+TKCode.Arc.DataGridCellPointerContext
+TKCode.Arc.DataGridCellPointerContext.Bounds.get -> Avalonia.Rect
+TKCode.Arc.DataGridCellPointerContext.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridCellPointerContext.Culture.get -> System.Globalization.CultureInfo!
+TKCode.Arc.DataGridCellPointerContext.DataGridCellPointerContext() -> void
+TKCode.Arc.DataGridCellPointerContext.FontSize.get -> double
+TKCode.Arc.DataGridCellPointerContext.Invoke(string? part = null) -> void
+TKCode.Arc.DataGridCellPointerContext.IsEditable.get -> bool
+TKCode.Arc.DataGridCellPointerContext.MeasureText(string! text, double maxWidth, bool medium = false, bool small = false, int part = 0) -> double
+TKCode.Arc.DataGridCellPointerContext.Position.get -> Avalonia.Point
+TKCode.Arc.DataGridCellPointerContext.Row.get -> object!
+TKCode.Arc.DataGridCellPointerContext.SetValue(object? value) -> bool
+TKCode.Arc.DataGridCellPointerContext.SmallFontSize.get -> double
+TKCode.Arc.DataGridCellPointerContext.Text.get -> string!
+TKCode.Arc.DataGridCellPointerContext.Value.get -> object?
+TKCode.Arc.DataGridCellRange
+TKCode.Arc.DataGridCellRange.CellCount.get -> int
+TKCode.Arc.DataGridCellRange.Column0.get -> int
+TKCode.Arc.DataGridCellRange.Column0.init -> void
+TKCode.Arc.DataGridCellRange.Column1.get -> int
+TKCode.Arc.DataGridCellRange.Column1.init -> void
+TKCode.Arc.DataGridCellRange.ColumnCount.get -> int
+TKCode.Arc.DataGridCellRange.Contains(int row, int column) -> bool
+TKCode.Arc.DataGridCellRange.DataGridCellRange() -> void
+TKCode.Arc.DataGridCellRange.DataGridCellRange(int Row0, int Column0, int Row1, int Column1) -> void
+TKCode.Arc.DataGridCellRange.Deconstruct(out int Row0, out int Column0, out int Row1, out int Column1) -> void
+TKCode.Arc.DataGridCellRange.Equals(TKCode.Arc.DataGridCellRange other) -> bool
+TKCode.Arc.DataGridCellRange.IsSingleCell.get -> bool
+TKCode.Arc.DataGridCellRange.Row0.get -> int
+TKCode.Arc.DataGridCellRange.Row0.init -> void
+TKCode.Arc.DataGridCellRange.Row1.get -> int
+TKCode.Arc.DataGridCellRange.Row1.init -> void
+TKCode.Arc.DataGridCellRange.RowCount.get -> int
+TKCode.Arc.DataGridCellRenderContext
+TKCode.Arc.DataGridCellRenderContext.Bounds.get -> Avalonia.Rect
+TKCode.Arc.DataGridCellRenderContext.Culture.get -> System.Globalization.CultureInfo!
+TKCode.Arc.DataGridCellRenderContext.DataGridCellRenderContext() -> void
+TKCode.Arc.DataGridCellRenderContext.DrawText(string! text, double x, double maxWidth, Avalonia.Media.IBrush! brush, bool medium = false, bool small = false, int part = 0) -> double
+TKCode.Arc.DataGridCellRenderContext.Drawing.get -> Avalonia.Media.DrawingContext!
+TKCode.Arc.DataGridCellRenderContext.FontSize.get -> double
+TKCode.Arc.DataGridCellRenderContext.IsEditable.get -> bool
+TKCode.Arc.DataGridCellRenderContext.MeasureText(string! text, double maxWidth, bool medium = false, bool small = false, int part = 0) -> double
+TKCode.Arc.DataGridCellRenderContext.Palette.get -> TKCode.Arc.DataGridRenderPalette!
+TKCode.Arc.DataGridCellRenderContext.Pointer.get -> Avalonia.Point?
+TKCode.Arc.DataGridCellRenderContext.Row.get -> object!
+TKCode.Arc.DataGridCellRenderContext.SmallFontSize.get -> double
+TKCode.Arc.DataGridCellRenderContext.Text.get -> string!
+TKCode.Arc.DataGridCellRenderContext.Value.get -> object?
+TKCode.Arc.DataGridCellRenderer
+TKCode.Arc.DataGridCellRenderer.DataGridCellRenderer() -> void
+TKCode.Arc.DataGridCellRenderer.NotifyChanged() -> void
+TKCode.Arc.DataGridCellStyle
+TKCode.Arc.DataGridCellStyle.Bold.get -> bool
+TKCode.Arc.DataGridCellStyle.Bold.init -> void
+TKCode.Arc.DataGridCellStyle.DataGridCellStyle() -> void
+TKCode.Arc.DataGridCellStyle.DataGridCellStyle(TKCode.Arc.DataGridTone Tone, bool Bold = false) -> void
+TKCode.Arc.DataGridCellStyle.Deconstruct(out TKCode.Arc.DataGridTone Tone, out bool Bold) -> void
+TKCode.Arc.DataGridCellStyle.Equals(TKCode.Arc.DataGridCellStyle other) -> bool
+TKCode.Arc.DataGridCellStyle.Tone.get -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridCellStyle.Tone.init -> void
+TKCode.Arc.DataGridCellsChangedEventArgs
+TKCode.Arc.DataGridCellsChangedEventArgs.Changes.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridCellChange!>!
+TKCode.Arc.DataGridCellsChangedEventArgs.DataGridCellsChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridCellChange!>! changes, TKCode.Arc.DataGridChangeReason reason) -> void
+TKCode.Arc.DataGridCellsChangedEventArgs.Reason.get -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Clear = 3 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Cut = 2 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Edit = 0 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Fill = 4 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.FillDown = 5 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Paste = 1 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Redo = 7 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Replace = 8 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridChangeReason.Undo = 6 -> TKCode.Arc.DataGridChangeReason
+TKCode.Arc.DataGridClipboardText
+TKCode.Arc.DataGridColumn
+TKCode.Arc.DataGridColumn.Aggregate.get -> TKCode.Arc.DataGridAggregate?
+TKCode.Arc.DataGridColumn.Aggregate.set -> void
+TKCode.Arc.DataGridColumn.Binding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.DataGridColumn.Binding.set -> void
+TKCode.Arc.DataGridColumn.CellFormat.get -> TKCode.Arc.DataGridCellFormat
+TKCode.Arc.DataGridColumn.CurrencySymbol.get -> string!
+TKCode.Arc.DataGridColumn.CurrencySymbol.set -> void
+TKCode.Arc.DataGridColumn.DataGridColumn() -> void
+TKCode.Arc.DataGridColumn.DataGridColumn(string! key, string! header, TKCode.Arc.DataGridColumnType type = TKCode.Arc.DataGridColumnType.Text) -> void
+TKCode.Arc.DataGridColumn.DateFormat.get -> string?
+TKCode.Arc.DataGridColumn.DateFormat.set -> void
+TKCode.Arc.DataGridColumn.Decimals.get -> int
+TKCode.Arc.DataGridColumn.Decimals.set -> void
+TKCode.Arc.DataGridColumn.EditTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.DataGridColumn.EditTemplate.set -> void
+TKCode.Arc.DataGridColumn.EffectiveAggregate.get -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridColumn.EffectiveIsGroupable.get -> bool
+TKCode.Arc.DataGridColumn.FormatRules.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DataGridFormatRule!>!
+TKCode.Arc.DataGridColumn.Header.get -> string!
+TKCode.Arc.DataGridColumn.Header.set -> void
+TKCode.Arc.DataGridColumn.IsEditable.get -> bool
+TKCode.Arc.DataGridColumn.IsEditable.set -> void
+TKCode.Arc.DataGridColumn.IsFilterable.get -> bool
+TKCode.Arc.DataGridColumn.IsFilterable.set -> void
+TKCode.Arc.DataGridColumn.IsGroupable.get -> bool?
+TKCode.Arc.DataGridColumn.IsGroupable.set -> void
+TKCode.Arc.DataGridColumn.IsHidden.get -> bool
+TKCode.Arc.DataGridColumn.IsHidden.set -> void
+TKCode.Arc.DataGridColumn.IsNumeric.get -> bool
+TKCode.Arc.DataGridColumn.IsPinned.get -> bool?
+TKCode.Arc.DataGridColumn.IsPinned.set -> void
+TKCode.Arc.DataGridColumn.IsSortable.get -> bool
+TKCode.Arc.DataGridColumn.IsSortable.set -> void
+TKCode.Arc.DataGridColumn.Key.get -> string!
+TKCode.Arc.DataGridColumn.Key.set -> void
+TKCode.Arc.DataGridColumn.MinWidth.get -> double
+TKCode.Arc.DataGridColumn.MinWidth.set -> void
+TKCode.Arc.DataGridColumn.Options.get -> System.Collections.Generic.IList<string!>?
+TKCode.Arc.DataGridColumn.Options.set -> void
+TKCode.Arc.DataGridColumn.Renderer.get -> TKCode.Arc.DataGridCellRenderer?
+TKCode.Arc.DataGridColumn.Renderer.set -> void
+TKCode.Arc.DataGridColumn.Rules.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DataGridRule!>!
+TKCode.Arc.DataGridColumn.Type.get -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumn.Type.set -> void
+TKCode.Arc.DataGridColumn.ValueGetter.get -> System.Func<object!, object?>?
+TKCode.Arc.DataGridColumn.ValueGetter.set -> void
+TKCode.Arc.DataGridColumn.ValueSetter.get -> System.Action<object!, object?>?
+TKCode.Arc.DataGridColumn.ValueSetter.set -> void
+TKCode.Arc.DataGridColumn.Width.get -> double
+TKCode.Arc.DataGridColumn.Width.set -> void
+TKCode.Arc.DataGridColumnCollection
+TKCode.Arc.DataGridColumnCollection.DataGridColumnCollection() -> void
+TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Boolean = 6 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Currency = 2 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Date = 5 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Number = 1 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Percent = 3 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Select = 4 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridColumnType.Text = 0 -> TKCode.Arc.DataGridColumnType
+TKCode.Arc.DataGridCompactNumber
+TKCode.Arc.DataGridCompactNumber.DataGridCompactNumber() -> void
+TKCode.Arc.DataGridCompactNumber.DataGridCompactNumber(decimal Value, int Decimals, string! Unit) -> void
+TKCode.Arc.DataGridCompactNumber.Decimals.get -> int
+TKCode.Arc.DataGridCompactNumber.Decimals.init -> void
+TKCode.Arc.DataGridCompactNumber.Deconstruct(out decimal Value, out int Decimals, out string! Unit) -> void
+TKCode.Arc.DataGridCompactNumber.Equals(TKCode.Arc.DataGridCompactNumber other) -> bool
+TKCode.Arc.DataGridCompactNumber.Unit.get -> string!
+TKCode.Arc.DataGridCompactNumber.Unit.init -> void
+TKCode.Arc.DataGridCompactNumber.Value.get -> decimal
+TKCode.Arc.DataGridCompactNumber.Value.init -> void
+TKCode.Arc.DataGridContextMenuOpeningEventArgs
+TKCode.Arc.DataGridContextMenuOpeningEventArgs.Cancel.get -> bool
+TKCode.Arc.DataGridContextMenuOpeningEventArgs.Cancel.set -> void
+TKCode.Arc.DataGridContextMenuOpeningEventArgs.Cell.get -> TKCode.Arc.DataGridCellEventArgs!
+TKCode.Arc.DataGridContextMenuOpeningEventArgs.Items.get -> System.Collections.Generic.List<TKCode.Arc.DataGridMenuItem!>!
+TKCode.Arc.DataGridCsv
+TKCode.Arc.DataGridCsvOptions
+TKCode.Arc.DataGridCsvOptions.DataGridCsvOptions() -> void
+TKCode.Arc.DataGridCsvOptions.NeutralizeFormulas.get -> bool
+TKCode.Arc.DataGridCsvOptions.NeutralizeFormulas.init -> void
+TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGridDensity.Comfortable = 2 -> TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGridDensity.Compact = 0 -> TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGridDensity.Standard = 1 -> TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGridEditContext
+TKCode.Arc.DataGridEditContext.Cancel() -> void
+TKCode.Arc.DataGridEditContext.Column.get -> TKCode.Arc.DataGridColumn!
+TKCode.Arc.DataGridEditContext.Commit() -> bool
+TKCode.Arc.DataGridEditContext.ErrorMessage.get -> string?
+TKCode.Arc.DataGridEditContext.ErrorMessage.set -> void
+TKCode.Arc.DataGridEditContext.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler?
+TKCode.Arc.DataGridEditContext.Row.get -> object!
+TKCode.Arc.DataGridEditContext.Text.get -> string!
+TKCode.Arc.DataGridEditContext.Value.get -> object?
+TKCode.Arc.DataGridEditContext.Value.set -> void
+TKCode.Arc.DataGridExportFormat
+TKCode.Arc.DataGridExportFormat.Csv = 0 -> TKCode.Arc.DataGridExportFormat
+TKCode.Arc.DataGridExportFormat.Xlsx = 1 -> TKCode.Arc.DataGridExportFormat
+TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGridExportFormats.All = TKCode.Arc.DataGridExportFormats.Csv | TKCode.Arc.DataGridExportFormats.Xlsx -> TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGridExportFormats.Csv = 1 -> TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGridExportFormats.None = 0 -> TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGridExportFormats.Xlsx = 2 -> TKCode.Arc.DataGridExportFormats
+TKCode.Arc.DataGridExportNode
+TKCode.Arc.DataGridExportNode.Children.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridExportNode!>?
+TKCode.Arc.DataGridExportNode.IsGroup.get -> bool
+TKCode.Arc.DataGridExportNode.Label.get -> string?
+TKCode.Arc.DataGridExportNode.Values.get -> System.Collections.Generic.IReadOnlyList<object?>?
+TKCode.Arc.DataGridExportingEventArgs
+TKCode.Arc.DataGridExportingEventArgs.Cancel.get -> bool
+TKCode.Arc.DataGridExportingEventArgs.Cancel.set -> void
+TKCode.Arc.DataGridExportingEventArgs.DataGridExportingEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.DataGridExportFormat format, System.Collections.Generic.IReadOnlyList<object!>! rows, string! fileName) -> void
+TKCode.Arc.DataGridExportingEventArgs.FileName.get -> string!
+TKCode.Arc.DataGridExportingEventArgs.FileName.set -> void
+TKCode.Arc.DataGridExportingEventArgs.Format.get -> TKCode.Arc.DataGridExportFormat
+TKCode.Arc.DataGridExportingEventArgs.Rows.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.DataGridFillSeries
+TKCode.Arc.DataGridFilter
+TKCode.Arc.DataGridFilter.Equals(TKCode.Arc.DataGridFilter? other) -> bool
+TKCode.Arc.DataGridFilter.Expression.get -> string?
+TKCode.Arc.DataGridFilter.Values.get -> System.Collections.Generic.IReadOnlyList<string!>?
+TKCode.Arc.DataGridFilterExpression
+TKCode.Arc.DataGridFilterState
+TKCode.Arc.DataGridFilterState.DataGridFilterState() -> void
+TKCode.Arc.DataGridFilterState.Expression.get -> string?
+TKCode.Arc.DataGridFilterState.Expression.set -> void
+TKCode.Arc.DataGridFilterState.Values.get -> System.Collections.Generic.List<string!>?
+TKCode.Arc.DataGridFilterState.Values.set -> void
+TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.Between = 6 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.Contains = 7 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.Equal = 4 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.GreaterThan = 0 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.GreaterThanOrEqual = 1 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.IsEmpty = 8 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.IsNotEmpty = 9 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.LessThan = 2 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.LessThanOrEqual = 3 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.Negative = 10 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatCondition.NotEqual = 5 -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatRule
+TKCode.Arc.DataGridFormatRule.Bold.get -> bool
+TKCode.Arc.DataGridFormatRule.Bold.set -> void
+TKCode.Arc.DataGridFormatRule.Condition.get -> TKCode.Arc.DataGridFormatCondition
+TKCode.Arc.DataGridFormatRule.Condition.set -> void
+TKCode.Arc.DataGridFormatRule.DataGridFormatRule() -> void
+TKCode.Arc.DataGridFormatRule.Tone.get -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridFormatRule.Tone.set -> void
+TKCode.Arc.DataGridFormatRule.Value.get -> string?
+TKCode.Arc.DataGridFormatRule.Value.set -> void
+TKCode.Arc.DataGridFormatRule.Value2.get -> string?
+TKCode.Arc.DataGridFormatRule.Value2.set -> void
+TKCode.Arc.DataGridLayoutState
+TKCode.Arc.DataGridLayoutState.ColumnOrder.get -> System.Collections.Generic.List<string!>?
+TKCode.Arc.DataGridLayoutState.ColumnOrder.set -> void
+TKCode.Arc.DataGridLayoutState.ColumnWidths.get -> System.Collections.Generic.Dictionary<string!, double>?
+TKCode.Arc.DataGridLayoutState.ColumnWidths.set -> void
+TKCode.Arc.DataGridLayoutState.DataGridLayoutState() -> void
+TKCode.Arc.DataGridLayoutState.Density.get -> TKCode.Arc.DataGridDensity
+TKCode.Arc.DataGridLayoutState.Density.set -> void
+TKCode.Arc.DataGridLayoutState.Filters.get -> System.Collections.Generic.Dictionary<string!, TKCode.Arc.DataGridFilterState!>!
+TKCode.Arc.DataGridLayoutState.Filters.set -> void
+TKCode.Arc.DataGridLayoutState.GroupBy.get -> System.Collections.Generic.List<string!>!
+TKCode.Arc.DataGridLayoutState.GroupBy.set -> void
+TKCode.Arc.DataGridLayoutState.HiddenColumns.get -> System.Collections.Generic.List<string!>?
+TKCode.Arc.DataGridLayoutState.HiddenColumns.set -> void
+TKCode.Arc.DataGridLayoutState.PinnedColumns.get -> System.Collections.Generic.List<string!>?
+TKCode.Arc.DataGridLayoutState.PinnedColumns.set -> void
+TKCode.Arc.DataGridLayoutState.SortDescriptions.get -> System.Collections.Generic.List<TKCode.Arc.DataGridSort>!
+TKCode.Arc.DataGridLayoutState.SortDescriptions.set -> void
+TKCode.Arc.DataGridLayoutState.ToJson() -> string!
+TKCode.Arc.DataGridLayoutState.Version.get -> int
+TKCode.Arc.DataGridLayoutState.Version.set -> void
+TKCode.Arc.DataGridMenuItem
+TKCode.Arc.DataGridMenuItem.Command.get -> System.Windows.Input.ICommand?
+TKCode.Arc.DataGridMenuItem.Command.set -> void
+TKCode.Arc.DataGridMenuItem.DataGridMenuItem() -> void
+TKCode.Arc.DataGridMenuItem.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.DataGridMenuItem.Icon.set -> void
+TKCode.Arc.DataGridMenuItem.Label.get -> string!
+TKCode.Arc.DataGridMenuItem.Label.set -> void
+TKCode.Arc.DataGridPasteOverflow
+TKCode.Arc.DataGridPasteOverflow.AppendRows = 1 -> TKCode.Arc.DataGridPasteOverflow
+TKCode.Arc.DataGridPasteOverflow.Truncate = 0 -> TKCode.Arc.DataGridPasteOverflow
+TKCode.Arc.DataGridRenderPalette
+TKCode.Arc.DataGridRenderPalette.Accent.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridRenderPalette.AccentLine.get -> Avalonia.Media.IPen!
+TKCode.Arc.DataGridRenderPalette.AccentLineSubtle.get -> Avalonia.Media.IPen!
+TKCode.Arc.DataGridRenderPalette.Foreground.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridRenderPalette.IconStroke.get -> Avalonia.Media.IPen!
+TKCode.Arc.DataGridRenderPalette.MutedForeground.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridRenderPalette.SecondaryForeground.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridRenderPalette.SurfaceMuted.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridRenderPalette.Tone(TKCode.Arc.DataGridTone tone) -> TKCode.Arc.DataGridToneBrushes
+TKCode.Arc.DataGridRow
+TKCode.Arc.DataGridRow.Add(string! field, object? value) -> void
+TKCode.Arc.DataGridRow.Clone() -> TKCode.Arc.DataGridRow!
+TKCode.Arc.DataGridRow.DataGridRow(string! key) -> void
+TKCode.Arc.DataGridRow.Fields.get -> System.Collections.Generic.IReadOnlyCollection<string!>!
+TKCode.Arc.DataGridRow.GetEnumerator() -> System.Collections.Generic.IEnumerator<System.Collections.Generic.KeyValuePair<string!, object?>>!
+TKCode.Arc.DataGridRow.Key.get -> string!
+TKCode.Arc.DataGridRow.PropertyChanged -> System.ComponentModel.PropertyChangedEventHandler?
+TKCode.Arc.DataGridRow.this[string! field].get -> object?
+TKCode.Arc.DataGridRow.this[string! field].set -> void
+TKCode.Arc.DataGridRowsEventArgs
+TKCode.Arc.DataGridRowsEventArgs.DataGridRowsEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.Collections.Generic.IReadOnlyList<object!>! rows, System.Collections.Generic.IReadOnlyList<int>! indices) -> void
+TKCode.Arc.DataGridRowsEventArgs.Indices.get -> System.Collections.Generic.IReadOnlyList<int>!
+TKCode.Arc.DataGridRowsEventArgs.Rows.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.DataGridRowsRequest
+TKCode.Arc.DataGridRowsRequest.<Clone>$() -> TKCode.Arc.DataGridRowsRequest!
+TKCode.Arc.DataGridRowsRequest.DataGridRowsRequest(int Start, int End, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>! Sort, System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.DataGridFilter!>! Filters, string! Search) -> void
+TKCode.Arc.DataGridRowsRequest.Deconstruct(out int Start, out int End, out System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>! Sort, out System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.DataGridFilter!>! Filters, out string! Search) -> void
+TKCode.Arc.DataGridRowsRequest.End.get -> int
+TKCode.Arc.DataGridRowsRequest.End.init -> void
+TKCode.Arc.DataGridRowsRequest.Equals(TKCode.Arc.DataGridRowsRequest? other) -> bool
+TKCode.Arc.DataGridRowsRequest.Filters.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.DataGridFilter!>!
+TKCode.Arc.DataGridRowsRequest.Filters.init -> void
+TKCode.Arc.DataGridRowsRequest.Search.get -> string!
+TKCode.Arc.DataGridRowsRequest.Search.init -> void
+TKCode.Arc.DataGridRowsRequest.Sort.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>!
+TKCode.Arc.DataGridRowsRequest.Sort.init -> void
+TKCode.Arc.DataGridRowsRequest.Start.get -> int
+TKCode.Arc.DataGridRowsRequest.Start.init -> void
+TKCode.Arc.DataGridRowsResult
+TKCode.Arc.DataGridRowsResult.<Clone>$() -> TKCode.Arc.DataGridRowsResult!
+TKCode.Arc.DataGridRowsResult.DataGridRowsResult(System.Collections.Generic.IReadOnlyList<object!>! Rows, int RowCount, System.Collections.Generic.IReadOnlyDictionary<string!, decimal?>? Totals = null) -> void
+TKCode.Arc.DataGridRowsResult.Deconstruct(out System.Collections.Generic.IReadOnlyList<object!>! Rows, out int RowCount, out System.Collections.Generic.IReadOnlyDictionary<string!, decimal?>? Totals) -> void
+TKCode.Arc.DataGridRowsResult.Equals(TKCode.Arc.DataGridRowsResult? other) -> bool
+TKCode.Arc.DataGridRowsResult.RowCount.get -> int
+TKCode.Arc.DataGridRowsResult.RowCount.init -> void
+TKCode.Arc.DataGridRowsResult.Rows.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.DataGridRowsResult.Rows.init -> void
+TKCode.Arc.DataGridRowsResult.Totals.get -> System.Collections.Generic.IReadOnlyDictionary<string!, decimal?>?
+TKCode.Arc.DataGridRowsResult.Totals.init -> void
+TKCode.Arc.DataGridRule
+TKCode.Arc.DataGridRule.DataGridRule() -> void
+TKCode.Arc.DataGridRule.Fail(string! builtIn) -> string!
+TKCode.Arc.DataGridRule.Message.get -> string?
+TKCode.Arc.DataGridRule.Message.set -> void
+TKCode.Arc.DataGridSort
+TKCode.Arc.DataGridSort.DataGridSort() -> void
+TKCode.Arc.DataGridSort.DataGridSort(string! Key, TKCode.Arc.DataGridSortDirection Direction = TKCode.Arc.DataGridSortDirection.Ascending) -> void
+TKCode.Arc.DataGridSort.Deconstruct(out string! Key, out TKCode.Arc.DataGridSortDirection Direction) -> void
+TKCode.Arc.DataGridSort.Direction.get -> TKCode.Arc.DataGridSortDirection
+TKCode.Arc.DataGridSort.Direction.init -> void
+TKCode.Arc.DataGridSort.Equals(TKCode.Arc.DataGridSort other) -> bool
+TKCode.Arc.DataGridSort.Key.get -> string!
+TKCode.Arc.DataGridSort.Key.init -> void
+TKCode.Arc.DataGridSortDirection
+TKCode.Arc.DataGridSortDirection.Ascending = 0 -> TKCode.Arc.DataGridSortDirection
+TKCode.Arc.DataGridSortDirection.Descending = 1 -> TKCode.Arc.DataGridSortDirection
+TKCode.Arc.DataGridSorting
+TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridTone.Accent = 1 -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridTone.Danger = 4 -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridTone.Neutral = 0 -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridTone.Success = 2 -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridTone.Warning = 3 -> TKCode.Arc.DataGridTone
+TKCode.Arc.DataGridToneBrushes
+TKCode.Arc.DataGridToneBrushes.Border.get -> Avalonia.Media.IPen!
+TKCode.Arc.DataGridToneBrushes.Border.init -> void
+TKCode.Arc.DataGridToneBrushes.DataGridToneBrushes() -> void
+TKCode.Arc.DataGridToneBrushes.DataGridToneBrushes(Avalonia.Media.IBrush! Fill, Avalonia.Media.IBrush! Foreground, Avalonia.Media.IPen! Border, Avalonia.Media.IPen! Stroke) -> void
+TKCode.Arc.DataGridToneBrushes.Deconstruct(out Avalonia.Media.IBrush! Fill, out Avalonia.Media.IBrush! Foreground, out Avalonia.Media.IPen! Border, out Avalonia.Media.IPen! Stroke) -> void
+TKCode.Arc.DataGridToneBrushes.Equals(TKCode.Arc.DataGridToneBrushes other) -> bool
+TKCode.Arc.DataGridToneBrushes.Fill.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridToneBrushes.Fill.init -> void
+TKCode.Arc.DataGridToneBrushes.Foreground.get -> Avalonia.Media.IBrush!
+TKCode.Arc.DataGridToneBrushes.Foreground.init -> void
+TKCode.Arc.DataGridToneBrushes.Stroke.get -> Avalonia.Media.IPen!
+TKCode.Arc.DataGridToneBrushes.Stroke.init -> void
+TKCode.Arc.DataGridValidationMode
+TKCode.Arc.DataGridValidationMode.Block = 0 -> TKCode.Arc.DataGridValidationMode
+TKCode.Arc.DataGridValidationMode.Flag = 1 -> TKCode.Arc.DataGridValidationMode
+TKCode.Arc.DataGridValueFormat
+TKCode.Arc.DataGridValueParser
+TKCode.Arc.DataGridXlsx
+TKCode.Arc.DataGridXlsxColumn
+TKCode.Arc.DataGridXlsxColumn.<Clone>$() -> TKCode.Arc.DataGridXlsxColumn!
+TKCode.Arc.DataGridXlsxColumn.Aggregate.get -> TKCode.Arc.DataGridAggregate
+TKCode.Arc.DataGridXlsxColumn.Aggregate.init -> void
+TKCode.Arc.DataGridXlsxColumn.DataGridXlsxColumn(string! Header, TKCode.Arc.DataGridCellFormat Format, TKCode.Arc.DataGridAggregate Aggregate = TKCode.Arc.DataGridAggregate.None, double Width = 140) -> void
+TKCode.Arc.DataGridXlsxColumn.Deconstruct(out string! Header, out TKCode.Arc.DataGridCellFormat Format, out TKCode.Arc.DataGridAggregate Aggregate, out double Width) -> void
+TKCode.Arc.DataGridXlsxColumn.Equals(TKCode.Arc.DataGridXlsxColumn? other) -> bool
+TKCode.Arc.DataGridXlsxColumn.Format.get -> TKCode.Arc.DataGridCellFormat
+TKCode.Arc.DataGridXlsxColumn.Format.init -> void
+TKCode.Arc.DataGridXlsxColumn.Header.get -> string!
+TKCode.Arc.DataGridXlsxColumn.Header.init -> void
+TKCode.Arc.DataGridXlsxColumn.Width.get -> double
+TKCode.Arc.DataGridXlsxColumn.Width.init -> void
+TKCode.Arc.DataGridXlsxOptions
+TKCode.Arc.DataGridXlsxOptions.<Clone>$() -> TKCode.Arc.DataGridXlsxOptions!
+TKCode.Arc.DataGridXlsxOptions.DataGridXlsxOptions() -> void
+TKCode.Arc.DataGridXlsxOptions.Equals(TKCode.Arc.DataGridXlsxOptions? other) -> bool
+TKCode.Arc.DataGridXlsxOptions.FreezeColumns.get -> int
+TKCode.Arc.DataGridXlsxOptions.FreezeColumns.init -> void
+TKCode.Arc.DataGridXlsxOptions.SheetName.get -> string!
+TKCode.Arc.DataGridXlsxOptions.SheetName.init -> void
+TKCode.Arc.DataGridXlsxOptions.TotalLabel.get -> string!
+TKCode.Arc.DataGridXlsxOptions.TotalLabel.init -> void
+TKCode.Arc.DataGridXlsxOptions.Totals.get -> bool
+TKCode.Arc.DataGridXlsxOptions.Totals.init -> void
+TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.ActiveCellRingWidth = 12 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.CellInlinePadding = 18 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.CheckedRowFillOpacity = 15 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.ColumnMaxWidth = 8 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.ColumnResizeStep = 9 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.CompactCellFontSize = 19 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.FillHandleSize = 11 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.FilterRowHeight = 4 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.GroupIndent = 24 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.GutterWidth = 6 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.GutterWidthNarrow = 7 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.HeaderRowHeight = 3 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.PinnedColumnMinWidth = 10 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.PinnedEdgeShadowWidth = 17 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.RowHeightComfortable = 2 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.RowHeightCompact = 0 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.RowHeightStandard = 1 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.SearchWidth = 22 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.SelectionCornerRadius = 13 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.SelectionFillOpacity = 14 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.SortSlideWindow = 26 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.StatusActionDuration = 28 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.StatusBarHeight = 23 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.StatusMessageDuration = 27 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.StripeCellBackground = 29 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.StripeGutterBackground = 30 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.ToolButtonHeight = 21 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.ToolbarHeight = 20 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.TotalsRowHeight = 5 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.WashDuration = 25 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenKind.WashOpacity = 16 -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension.DataGridTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension.DataGridTokenResourceExtension(TKCode.Arc.DesignTokens.DataGridTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DataGridTokenKind
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DataGridTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DataGridTokens
+TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenKind.DotRadius = 3 -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenKind.HeaderGap = 2 -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenKind.HighlightRadius = 4 -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenKind.SplitGap = 0 -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenKind.VerticalRowHeight = 1 -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension.FunnelChartTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension.FunnelChartTokenResourceExtension(TKCode.Arc.DesignTokens.FunnelChartTokenKind kind) -> void
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.FunnelChartTokenKind
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.FunnelChartTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.FunnelChartTokens
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.AxisHeight = 4 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.BarGap = 1 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.BarHeight = 0 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.BarRadius = 2 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.NameColumnWidth = 3 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.NarrowWidth = 6 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.TickSpacing = 5 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenKind.TimelineHeight = 7 -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RaceBarChartTokenKind
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension.RaceBarChartTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RaceBarChartTokenResourceExtension.RaceBarChartTokenResourceExtension(TKCode.Arc.DesignTokens.RaceBarChartTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RaceBarChartTokens
+TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.CompactLabelGap = 1 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.CompactLabelWidth = 3 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.LabelGap = 0 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.LabelWidth = 2 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.LegendGap = 7 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.LineKeyWidth = 6 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.MarkerRadius = 5 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.StrokeThickness = 4 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenKind.TooltipGap = 8 -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RadarChartTokenKind
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension.RadarChartTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RadarChartTokenResourceExtension.RadarChartTokenResourceExtension(TKCode.Arc.DesignTokens.RadarChartTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RadarChartTokens
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.Gutter = 0 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.HeaderGap = 6 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.LineThickness = 4 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.MarkerRadius = 5 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.NarrowGutter = 1 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.TimeAxisHeight = 2 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenKind.TimeLabelGap = 3 -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RealtimeStreamTokenKind
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension.RealtimeStreamTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RealtimeStreamTokenResourceExtension.RealtimeStreamTokenResourceExtension(TKCode.Arc.DesignTokens.RealtimeStreamTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RealtimeStreamTokens
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind.FigureGap = 4 -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind.NodeGap = 1 -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind.NodeRadius = 2 -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind.NodeThickness = 0 -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenKind.ParticleRadius = 3 -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.SankeyFlowTokenKind
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension.SankeyFlowTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.SankeyFlowTokenResourceExtension.SankeyFlowTokenResourceExtension(TKCode.Arc.DesignTokens.SankeyFlowTokenKind kind) -> void
+TKCode.Arc.DesignTokens.SankeyFlowTokens
+TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.FigureGap = 0 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.HoleRatio = 1 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.LegendGap = 4 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.LegendMaxWidth = 6 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.LegendMinWidth = 5 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.LegendRowHeight = 7 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.LegendRowRadius = 8 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.SegmentCorner = 3 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenKind.SegmentGap = 2 -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.SunburstTokenKind
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension.SunburstTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.SunburstTokenResourceExtension.SunburstTokenResourceExtension(TKCode.Arc.DesignTokens.SunburstTokenKind kind) -> void
+TKCode.Arc.DesignTokens.SunburstTokens
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.CompactLabelGap = 1 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.HoleRatio = 2 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.LabelGap = 0 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.LegendGap = 6 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.SectorFill = 3 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.SegmentCorner = 5 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.SegmentGap = 4 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenKind.TooltipGap = 7 -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.WindRoseChartTokenKind
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension.WindRoseChartTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.WindRoseChartTokenResourceExtension.WindRoseChartTokenResourceExtension(TKCode.Arc.DesignTokens.WindRoseChartTokenKind kind) -> void
+TKCode.Arc.DesignTokens.WindRoseChartTokens
+TKCode.Arc.FunnelActiveIndexChangedEventArgs
+TKCode.Arc.FunnelActiveIndexChangedEventArgs.Count.get -> double
+TKCode.Arc.FunnelActiveIndexChangedEventArgs.Index.get -> int?
+TKCode.Arc.FunnelActiveIndexChangedEventArgs.RetentionFromFirst.get -> double
+TKCode.Arc.FunnelActiveIndexChangedEventArgs.RetentionFromPrevious.get -> double
+TKCode.Arc.FunnelActiveIndexChangedEventArgs.Stage.get -> TKCode.Arc.FunnelStage?
+TKCode.Arc.FunnelChart
+TKCode.Arc.FunnelChart.ActiveIndex.get -> int?
+TKCode.Arc.FunnelChart.ActiveIndex.set -> void
+TKCode.Arc.FunnelChart.ActiveIndexChanged -> System.EventHandler<TKCode.Arc.FunnelActiveIndexChangedEventArgs!>?
+TKCode.Arc.FunnelChart.BandHeight.get -> double
+TKCode.Arc.FunnelChart.BandHeight.set -> void
+TKCode.Arc.FunnelChart.EmptyLabel.get -> string!
+TKCode.Arc.FunnelChart.EmptyLabel.set -> void
+TKCode.Arc.FunnelChart.FunnelChart() -> void
+TKCode.Arc.FunnelChart.IsFlowEnabled.get -> bool
+TKCode.Arc.FunnelChart.IsFlowEnabled.set -> void
+TKCode.Arc.FunnelChart.Label.get -> string?
+TKCode.Arc.FunnelChart.Label.set -> void
+TKCode.Arc.FunnelChart.Orientation.get -> TKCode.Arc.FunnelOrientation
+TKCode.Arc.FunnelChart.Orientation.set -> void
+TKCode.Arc.FunnelChart.Segments.get -> System.Collections.Generic.IList<TKCode.Arc.FunnelSegment!>!
+TKCode.Arc.FunnelChart.Segments.set -> void
+TKCode.Arc.FunnelChart.Stages.get -> System.Collections.Generic.IList<TKCode.Arc.FunnelStage!>!
+TKCode.Arc.FunnelChart.Stages.set -> void
+TKCode.Arc.FunnelChart.Summary.get -> string!
+TKCode.Arc.FunnelChart.Unit.get -> string!
+TKCode.Arc.FunnelChart.Unit.set -> void
+TKCode.Arc.FunnelChart.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.FunnelChart.ValueFormatter.set -> void
+TKCode.Arc.FunnelChart.View.get -> string!
+TKCode.Arc.FunnelChart.View.set -> void
+TKCode.Arc.FunnelOrientation
+TKCode.Arc.FunnelOrientation.Auto = 0 -> TKCode.Arc.FunnelOrientation
+TKCode.Arc.FunnelOrientation.Horizontal = 1 -> TKCode.Arc.FunnelOrientation
+TKCode.Arc.FunnelOrientation.Vertical = 2 -> TKCode.Arc.FunnelOrientation
+TKCode.Arc.FunnelSegment
+TKCode.Arc.FunnelSegment.FunnelSegment() -> void
+TKCode.Arc.FunnelSegment.FunnelSegment(string! key, string! label) -> void
+TKCode.Arc.FunnelSegment.Key.get -> string!
+TKCode.Arc.FunnelSegment.Key.set -> void
+TKCode.Arc.FunnelSegment.Label.get -> string!
+TKCode.Arc.FunnelSegment.Label.set -> void
+TKCode.Arc.FunnelStage
+TKCode.Arc.FunnelStage.FunnelStage() -> void
+TKCode.Arc.FunnelStage.FunnelStage(string! key, string! label, double value) -> void
+TKCode.Arc.FunnelStage.FunnelStage(string! key, string! label, params double[]! values) -> void
+TKCode.Arc.FunnelStage.Key.get -> string!
+TKCode.Arc.FunnelStage.Key.set -> void
+TKCode.Arc.FunnelStage.Label.get -> string!
+TKCode.Arc.FunnelStage.Label.set -> void
+TKCode.Arc.FunnelStage.Value.get -> double
+TKCode.Arc.FunnelStage.Value.set -> void
+TKCode.Arc.FunnelStage.Values.get -> Avalonia.Collections.AvaloniaList<double>?
+TKCode.Arc.FunnelStage.Values.set -> void
+TKCode.Arc.IDataGridDataSource
+TKCode.Arc.IDataGridDataSource.BlockSize.get -> int
+TKCode.Arc.IDataGridDataSource.GetRowsAsync(TKCode.Arc.DataGridRowsRequest! request, System.Threading.CancellationToken cancellation) -> System.Threading.Tasks.Task<TKCode.Arc.DataGridRowsResult!>!
+TKCode.Arc.IconTextRenderer
+TKCode.Arc.IconTextRenderer.DefaultIcon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.IconTextRenderer.DefaultIcon.set -> void
+TKCode.Arc.IconTextRenderer.IconTextRenderer() -> void
+TKCode.Arc.IconTextRenderer.Icons.get -> System.Collections.Generic.IDictionary<string!, Avalonia.Media.Geometry!>!
+TKCode.Arc.IconTextRenderer.ShowText.get -> bool
+TKCode.Arc.IconTextRenderer.ShowText.set -> void
+TKCode.Arc.IconTextRenderer.Tones.get -> System.Collections.Generic.IDictionary<string!, TKCode.Arc.DataGridTone>!
+TKCode.Arc.LinkRenderer
+TKCode.Arc.LinkRenderer.LinkRenderer() -> void
+TKCode.Arc.LinkRenderer.Part.get -> string?
+TKCode.Arc.LinkRenderer.Part.set -> void
+TKCode.Arc.Localization.DataGridLangResourceExtension
+TKCode.Arc.Localization.DataGridLangResourceExtension.DataGridLangResourceExtension() -> void
+TKCode.Arc.Localization.DataGridLangResourceExtension.DataGridLangResourceExtension(TKCode.Arc.Localization.DataGridLangResourceKind kind) -> void
+TKCode.Arc.Localization.DataGridLangResourceExtension.Kind.get -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.DataGridLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AddRow = 146 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AggregateAverage = 76 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AggregateCount = 79 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AggregateMax = 78 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AggregateMin = 77 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.AggregateSum = 75 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CalendarLabel = 71 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CellAddress = 74 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CellAnnouncement = 73 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CellReadOnly = 147 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CellSet = 140 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CheckedCount = 24 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CheckedRowsOne = 131 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CheckedRowsOther = 132 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearAllFilters = 48 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearContents = 160 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearFilters = 61 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearRowSelection = 23 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearSearch = 3 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearSort = 30 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearValues = 57 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearedCellsOne = 97 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ClearedCellsOther = 98 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CloseFind = 169 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Collapse = 67 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CollapseAllGroups = 18 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CollapsedAllGroups = 138 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ColumnMoved = 158 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ColumnOptions = 27 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ColumnReadOnly = 96 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ColumnValues = 58 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Columns = 10 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopiedCellsOne = 100 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopiedCellsOther = 101 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopiedRowsOne = 102 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopiedRowsOther = 103 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Copy = 25 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopyFailed = 104 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.CopyWithHeaders = 161 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Cut = 162 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DatePlaceholder = 72 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Delete = 26 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DeleteRowsOfSelection = 163 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DeletedRowsOne = 121 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DeletedRowsOther = 122 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DensityComfortable = 16 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DensityCompact = 14 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DensityLabel = 13 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.DensityStandard = 15 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.EditorLabel = 69 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.EmptyNoMatch = 60 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.EmptyNoRows = 59 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.EmptyValue = 53 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.EmptyWord = 141 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ErrorsOne = 148 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ErrorsOther = 149 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Expand = 66 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExpandAllGroups = 17 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExpandedAllGroups = 139 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Export = 19 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportCsv = 20 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportFailed = 120 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportFormatLabel = 22 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportXlsx = 21 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportedRowsOne = 118 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ExportedRowsOther = 119 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FillDownAction = 164 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FillDownNeedsRows = 117 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilledCellsOne = 112 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilledCellsOther = 113 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilledDownOne = 114 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilledDownOther = 115 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Filter = 9 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterAll = 49 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterByValue = 165 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterContains = 42 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterDateHint = 47 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterDatePlaceholder = 44 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterLabel = 45 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterNone = 50 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterNumberHint = 46 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterNumberPlaceholder = 43 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterSelectLabel = 52 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FilterSomeOf = 51 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FiltersCleared = 123 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindCount = 170 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindMatchCase = 171 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindNext = 172 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindNoMatches = 173 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindPlaceholder = 174 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindPrevious = 175 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FindWholeCell = 176 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.FitColumnWidth = 159 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GridName = 0 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GridReadOnly = 95 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GroupByColumn = 31 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GroupFallback = 63 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GroupToggleOne = 64 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GroupToggleOther = 65 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.GroupedBy = 136 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.HideColumn = 35 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.InsertRowAbove = 166 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.InsertRowBelow = 167 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Loading = 62 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NeedsDate = 143 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NeedsNumber = 144 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NeedsOption = 142 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NoErrors = 150 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NoMatch = 68 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NoMatchingValues = 55 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToClear = 99 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToFill = 116 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToPaste = 111 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToRedo = 94 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToReplace = 177 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.NothingToUndo = 93 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.OptionsLabel = 70 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Paste = 168 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PasteOverflow = 109 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PasteSkippedOne = 107 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PasteSkippedOther = 108 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PasteTooLarge = 110 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PastedCellsOne = 105 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PastedCellsOther = 106 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.PinColumn = 33 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Pinned = 12 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Redo = 8 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Redone = 92 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ReplaceAll = 178 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ReplaceOne = 179 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ReplacePlaceholder = 180 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ReplacedCellsOne = 181 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ReplacedCellsOther = 182 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ResizeHint = 40 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowAdded = 151 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowCountFiltered = 6 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowCountOne = 4 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowCountOther = 5 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowSelectionCleared = 135 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RowsLoadFailed = 145 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RuleMaxLength = 152 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RulePattern = 153 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RuleRangeBetween = 154 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RuleRangeMax = 155 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RuleRangeMin = 156 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.RuleRequired = 157 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SearchLabel = 2 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SearchPlaceholder = 1 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SearchValues = 54 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SelectAll = 56 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SelectAllRows = 41 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SelectedAllCellsOne = 129 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SelectedAllCellsOther = 130 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SelectionAddress = 87 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ShowAllColumns = 11 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortAscending = 28 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortCleared = 128 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortDescending = 29 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortHint = 39 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortJoin = 125 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortKeyAscending = 126 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortKeyDescending = 127 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortPriority = 38 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortedAscending = 36 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortedBy = 124 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SortedDescending = 37 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SpokenAverage = 81 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SpokenCount = 84 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SpokenMax = 83 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SpokenMin = 82 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.SpokenSum = 80 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.StatAverage = 89 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.StatCount = 90 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.StatSum = 88 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.StopGrouping = 32 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.StoppedGroupingBy = 137 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.ToggleReplace = 183 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.TotalCellLabel = 85 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.TotalRow = 86 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.UncheckedRowsOne = 133 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.UncheckedRowsOther = 134 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Undo = 7 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.Undone = 91 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResourceKind.UnpinColumn = 34 -> TKCode.Arc.Localization.DataGridLangResourceKind
+TKCode.Arc.Localization.DataGridLangResources
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension.Kind.get -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension.WindRoseChartLangResourceExtension() -> void
+TKCode.Arc.Localization.WindRoseChartLangResourceExtension.WindRoseChartLangResourceExtension(TKCode.Arc.Localization.WindRoseChartLangResourceKind kind) -> void
+TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.Calm = 32 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.E = 8 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.ENE = 6 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.ESE = 10 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.EbN = 7 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.EbS = 9 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.N = 0 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NE = 4 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NEbE = 5 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NEbN = 3 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NNE = 2 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NNW = 30 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NW = 28 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NWbN = 29 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NWbW = 27 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NbE = 1 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.NbW = 31 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.S = 16 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SE = 12 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SEbE = 11 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SEbS = 13 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SSE = 14 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SSW = 18 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SW = 20 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SWbS = 19 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SWbW = 21 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SbE = 15 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.SbW = 17 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.Total = 33 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.W = 24 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.WNW = 26 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.WSW = 22 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.WbN = 25 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResourceKind.WbS = 23 -> TKCode.Arc.Localization.WindRoseChartLangResourceKind
+TKCode.Arc.Localization.WindRoseChartLangResources
+TKCode.Arc.MaxLengthRule
+TKCode.Arc.MaxLengthRule.Length.get -> int
+TKCode.Arc.MaxLengthRule.Length.set -> void
+TKCode.Arc.MaxLengthRule.MaxLengthRule() -> void
+TKCode.Arc.PatternRule
+TKCode.Arc.PatternRule.Pattern.get -> string!
+TKCode.Arc.PatternRule.Pattern.set -> void
+TKCode.Arc.PatternRule.PatternRule() -> void
+TKCode.Arc.ProgressRenderer
+TKCode.Arc.ProgressRenderer.Maximum.get -> double
+TKCode.Arc.ProgressRenderer.Maximum.set -> void
+TKCode.Arc.ProgressRenderer.Minimum.get -> double
+TKCode.Arc.ProgressRenderer.Minimum.set -> void
+TKCode.Arc.ProgressRenderer.ProgressRenderer() -> void
+TKCode.Arc.ProgressRenderer.ShowText.get -> bool
+TKCode.Arc.ProgressRenderer.ShowText.set -> void
+TKCode.Arc.ProgressRenderer.Tone.get -> TKCode.Arc.DataGridTone
+TKCode.Arc.ProgressRenderer.Tone.set -> void
+TKCode.Arc.RaceBarChart
+TKCode.Arc.RaceBarChart.BarCount.get -> int
+TKCode.Arc.RaceBarChart.BarCount.set -> void
+TKCode.Arc.RaceBarChart.EmptyLabel.get -> string!
+TKCode.Arc.RaceBarChart.EmptyLabel.set -> void
+TKCode.Arc.RaceBarChart.FrameChanged -> System.EventHandler<TKCode.Arc.RaceBarFrameChangedEventArgs!>?
+TKCode.Arc.RaceBarChart.FrameDuration.get -> System.TimeSpan
+TKCode.Arc.RaceBarChart.FrameDuration.set -> void
+TKCode.Arc.RaceBarChart.FrameIndex.get -> int
+TKCode.Arc.RaceBarChart.FrameIndex.set -> void
+TKCode.Arc.RaceBarChart.Frames.get -> System.Collections.Generic.IList<TKCode.Arc.RaceBarFrame!>?
+TKCode.Arc.RaceBarChart.Frames.set -> void
+TKCode.Arc.RaceBarChart.Groups.get -> System.Collections.Generic.IList<TKCode.Arc.RaceBarGroup!>?
+TKCode.Arc.RaceBarChart.Groups.set -> void
+TKCode.Arc.RaceBarChart.HighlightId.get -> string?
+TKCode.Arc.RaceBarChart.HighlightId.set -> void
+TKCode.Arc.RaceBarChart.IsAutoPlay.get -> bool
+TKCode.Arc.RaceBarChart.IsAutoPlay.set -> void
+TKCode.Arc.RaceBarChart.IsLooping.get -> bool
+TKCode.Arc.RaceBarChart.IsLooping.set -> void
+TKCode.Arc.RaceBarChart.IsPlaying.get -> bool
+TKCode.Arc.RaceBarChart.IsPlaying.set -> void
+TKCode.Arc.RaceBarChart.Items.get -> System.Collections.Generic.IList<TKCode.Arc.RaceBarItem!>?
+TKCode.Arc.RaceBarChart.Items.set -> void
+TKCode.Arc.RaceBarChart.Label.get -> string?
+TKCode.Arc.RaceBarChart.Label.set -> void
+TKCode.Arc.RaceBarChart.Pause() -> void
+TKCode.Arc.RaceBarChart.Play() -> void
+TKCode.Arc.RaceBarChart.PlayingChanged -> System.EventHandler<TKCode.Arc.RaceBarPlayingChangedEventArgs!>?
+TKCode.Arc.RaceBarChart.RaceBarChart() -> void
+TKCode.Arc.RaceBarChart.Replay() -> void
+TKCode.Arc.RaceBarChart.TickFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.RaceBarChart.TickFormatter.set -> void
+TKCode.Arc.RaceBarChart.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.RaceBarChart.ValueFormatter.set -> void
+TKCode.Arc.RaceBarFrame
+TKCode.Arc.RaceBarFrame.Period.get -> string!
+TKCode.Arc.RaceBarFrame.Period.set -> void
+TKCode.Arc.RaceBarFrame.RaceBarFrame() -> void
+TKCode.Arc.RaceBarFrame.RaceBarFrame(string! period, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, double>>! values) -> void
+TKCode.Arc.RaceBarFrame.Values.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.RaceBarValue!>!
+TKCode.Arc.RaceBarFrameChangedEventArgs
+TKCode.Arc.RaceBarFrameChangedEventArgs.Index.get -> int
+TKCode.Arc.RaceBarFrameChangedEventArgs.Leader.get -> TKCode.Arc.RaceBarItem?
+TKCode.Arc.RaceBarFrameChangedEventArgs.Period.get -> string!
+TKCode.Arc.RaceBarFrameChangedEventArgs.PreviousIndex.get -> int
+TKCode.Arc.RaceBarGroup
+TKCode.Arc.RaceBarGroup.Id.get -> string!
+TKCode.Arc.RaceBarGroup.Id.set -> void
+TKCode.Arc.RaceBarGroup.Label.get -> string!
+TKCode.Arc.RaceBarGroup.Label.set -> void
+TKCode.Arc.RaceBarGroup.RaceBarGroup() -> void
+TKCode.Arc.RaceBarGroup.RaceBarGroup(string! id, string! label) -> void
+TKCode.Arc.RaceBarItem
+TKCode.Arc.RaceBarItem.Group.get -> string?
+TKCode.Arc.RaceBarItem.Group.set -> void
+TKCode.Arc.RaceBarItem.Id.get -> string!
+TKCode.Arc.RaceBarItem.Id.set -> void
+TKCode.Arc.RaceBarItem.Label.get -> string!
+TKCode.Arc.RaceBarItem.Label.set -> void
+TKCode.Arc.RaceBarItem.RaceBarItem() -> void
+TKCode.Arc.RaceBarItem.RaceBarItem(string! id, string! label, string? group = null) -> void
+TKCode.Arc.RaceBarPlayingChangedEventArgs
+TKCode.Arc.RaceBarPlayingChangedEventArgs.Index.get -> int
+TKCode.Arc.RaceBarPlayingChangedEventArgs.IsPlaying.get -> bool
+TKCode.Arc.RaceBarValue
+TKCode.Arc.RaceBarValue.Id.get -> string!
+TKCode.Arc.RaceBarValue.Id.set -> void
+TKCode.Arc.RaceBarValue.RaceBarValue() -> void
+TKCode.Arc.RaceBarValue.RaceBarValue(string! id, double value) -> void
+TKCode.Arc.RaceBarValue.Value.get -> double
+TKCode.Arc.RaceBarValue.Value.set -> void
+TKCode.Arc.RadarAxis
+TKCode.Arc.RadarAxis.Key.get -> string!
+TKCode.Arc.RadarAxis.Key.set -> void
+TKCode.Arc.RadarAxis.Label.get -> string!
+TKCode.Arc.RadarAxis.Label.set -> void
+TKCode.Arc.RadarAxis.Maximum.get -> double?
+TKCode.Arc.RadarAxis.Maximum.set -> void
+TKCode.Arc.RadarAxis.RadarAxis() -> void
+TKCode.Arc.RadarAxis.RadarAxis(string! key, string! label, double? maximum = null) -> void
+TKCode.Arc.RadarChart
+TKCode.Arc.RadarChart.ActiveAxis.get -> string?
+TKCode.Arc.RadarChart.ActiveAxis.set -> void
+TKCode.Arc.RadarChart.ActiveAxisChanged -> System.EventHandler<TKCode.Arc.RadarChartActiveAxisChangedEventArgs!>?
+TKCode.Arc.RadarChart.Axes.get -> System.Collections.Generic.IList<TKCode.Arc.RadarAxis!>?
+TKCode.Arc.RadarChart.Axes.set -> void
+TKCode.Arc.RadarChart.EmptyLabel.get -> string!
+TKCode.Arc.RadarChart.EmptyLabel.set -> void
+TKCode.Arc.RadarChart.FillOpacity.get -> double
+TKCode.Arc.RadarChart.FillOpacity.set -> void
+TKCode.Arc.RadarChart.GridShape.get -> TKCode.Arc.RadarGridShape
+TKCode.Arc.RadarChart.GridShape.set -> void
+TKCode.Arc.RadarChart.IsLegendVisible.get -> bool
+TKCode.Arc.RadarChart.IsLegendVisible.set -> void
+TKCode.Arc.RadarChart.Label.get -> string?
+TKCode.Arc.RadarChart.Label.set -> void
+TKCode.Arc.RadarChart.Maximum.get -> double
+TKCode.Arc.RadarChart.Maximum.set -> void
+TKCode.Arc.RadarChart.RadarChart() -> void
+TKCode.Arc.RadarChart.Rings.get -> int
+TKCode.Arc.RadarChart.Rings.set -> void
+TKCode.Arc.RadarChart.Series.get -> System.Collections.Generic.IList<TKCode.Arc.RadarSeries!>?
+TKCode.Arc.RadarChart.Series.set -> void
+TKCode.Arc.RadarChart.Size.get -> double
+TKCode.Arc.RadarChart.Size.set -> void
+TKCode.Arc.RadarChart.Summary.get -> string!
+TKCode.Arc.RadarChart.ValueFormatter.get -> System.Func<double, TKCode.Arc.RadarAxis!, string!>?
+TKCode.Arc.RadarChart.ValueFormatter.set -> void
+TKCode.Arc.RadarChartActiveAxisChangedEventArgs
+TKCode.Arc.RadarChartActiveAxisChangedEventArgs.Axis.get -> TKCode.Arc.RadarAxis?
+TKCode.Arc.RadarChartActiveAxisChangedEventArgs.Key.get -> string?
+TKCode.Arc.RadarGridShape
+TKCode.Arc.RadarGridShape.Circle = 0 -> TKCode.Arc.RadarGridShape
+TKCode.Arc.RadarGridShape.Polygon = 1 -> TKCode.Arc.RadarGridShape
+TKCode.Arc.RadarSeries
+TKCode.Arc.RadarSeries.Key.get -> string!
+TKCode.Arc.RadarSeries.Key.set -> void
+TKCode.Arc.RadarSeries.Label.get -> string!
+TKCode.Arc.RadarSeries.Label.set -> void
+TKCode.Arc.RadarSeries.RadarSeries() -> void
+TKCode.Arc.RadarSeries.RadarSeries(string! key, string! label, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string!, double>>! values) -> void
+TKCode.Arc.RadarSeries.ValueOf(string! axis) -> double
+TKCode.Arc.RadarSeries.Values.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.RadarValue!>!
+TKCode.Arc.RadarValue
+TKCode.Arc.RadarValue.Axis.get -> string!
+TKCode.Arc.RadarValue.Axis.set -> void
+TKCode.Arc.RadarValue.RadarValue() -> void
+TKCode.Arc.RadarValue.RadarValue(string! axis, double value) -> void
+TKCode.Arc.RadarValue.Value.get -> double
+TKCode.Arc.RadarValue.Value.set -> void
+TKCode.Arc.RangeRule
+TKCode.Arc.RangeRule.Maximum.get -> decimal?
+TKCode.Arc.RangeRule.Maximum.set -> void
+TKCode.Arc.RangeRule.Minimum.get -> decimal?
+TKCode.Arc.RangeRule.Minimum.set -> void
+TKCode.Arc.RangeRule.RangeRule() -> void
+TKCode.Arc.RealtimeStream
+TKCode.Arc.RealtimeStream.Append(System.DateTimeOffset time, double value, string? anomaly = null) -> void
+TKCode.Arc.RealtimeStream.Append(TKCode.Arc.RealtimeStreamPoint! point) -> void
+TKCode.Arc.RealtimeStream.Clear() -> void
+TKCode.Arc.RealtimeStream.EmptyLabel.get -> string!
+TKCode.Arc.RealtimeStream.EmptyLabel.set -> void
+TKCode.Arc.RealtimeStream.Interval.get -> System.TimeSpan
+TKCode.Arc.RealtimeStream.Interval.set -> void
+TKCode.Arc.RealtimeStream.IsHeld.get -> bool
+TKCode.Arc.RealtimeStream.IsPauseOnHover.get -> bool
+TKCode.Arc.RealtimeStream.IsPauseOnHover.set -> void
+TKCode.Arc.RealtimeStream.IsPaused.get -> bool
+TKCode.Arc.RealtimeStream.IsPaused.set -> void
+TKCode.Arc.RealtimeStream.Label.get -> string?
+TKCode.Arc.RealtimeStream.Label.set -> void
+TKCode.Arc.RealtimeStream.LiveLabel.get -> string!
+TKCode.Arc.RealtimeStream.LiveLabel.set -> void
+TKCode.Arc.RealtimeStream.Maximum.get -> double?
+TKCode.Arc.RealtimeStream.Maximum.set -> void
+TKCode.Arc.RealtimeStream.Minimum.get -> double?
+TKCode.Arc.RealtimeStream.Minimum.set -> void
+TKCode.Arc.RealtimeStream.PausedChanged -> System.EventHandler<TKCode.Arc.RealtimeStreamPausedChangedEventArgs!>?
+TKCode.Arc.RealtimeStream.PausedLabel.get -> string!
+TKCode.Arc.RealtimeStream.PausedLabel.set -> void
+TKCode.Arc.RealtimeStream.PlotHeight.get -> double
+TKCode.Arc.RealtimeStream.PlotHeight.set -> void
+TKCode.Arc.RealtimeStream.Points.get -> System.Collections.Generic.IEnumerable<TKCode.Arc.RealtimeStreamPoint!>?
+TKCode.Arc.RealtimeStream.Points.set -> void
+TKCode.Arc.RealtimeStream.RealtimeStream() -> void
+TKCode.Arc.RealtimeStream.TimeFormatter.get -> System.Func<System.DateTimeOffset, string!>?
+TKCode.Arc.RealtimeStream.TimeFormatter.set -> void
+TKCode.Arc.RealtimeStream.Unit.get -> string!
+TKCode.Arc.RealtimeStream.Unit.set -> void
+TKCode.Arc.RealtimeStream.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.RealtimeStream.ValueFormatter.set -> void
+TKCode.Arc.RealtimeStream.WindowDuration.get -> System.TimeSpan
+TKCode.Arc.RealtimeStream.WindowDuration.set -> void
+TKCode.Arc.RealtimeStreamHoldReason
+TKCode.Arc.RealtimeStreamHoldReason.Keyboard = 2 -> TKCode.Arc.RealtimeStreamHoldReason
+TKCode.Arc.RealtimeStreamHoldReason.Pointer = 1 -> TKCode.Arc.RealtimeStreamHoldReason
+TKCode.Arc.RealtimeStreamHoldReason.Request = 0 -> TKCode.Arc.RealtimeStreamHoldReason
+TKCode.Arc.RealtimeStreamPausedChangedEventArgs
+TKCode.Arc.RealtimeStreamPausedChangedEventArgs.IsPaused.get -> bool
+TKCode.Arc.RealtimeStreamPausedChangedEventArgs.Reason.get -> TKCode.Arc.RealtimeStreamHoldReason
+TKCode.Arc.RealtimeStreamPoint
+TKCode.Arc.RealtimeStreamPoint.Anomaly.get -> string?
+TKCode.Arc.RealtimeStreamPoint.Anomaly.set -> void
+TKCode.Arc.RealtimeStreamPoint.RealtimeStreamPoint() -> void
+TKCode.Arc.RealtimeStreamPoint.RealtimeStreamPoint(System.DateTimeOffset time, double value, string? anomaly = null) -> void
+TKCode.Arc.RealtimeStreamPoint.Time.get -> System.DateTimeOffset
+TKCode.Arc.RealtimeStreamPoint.Time.set -> void
+TKCode.Arc.RealtimeStreamPoint.Value.get -> double
+TKCode.Arc.RealtimeStreamPoint.Value.set -> void
+TKCode.Arc.RequiredRule
+TKCode.Arc.RequiredRule.RequiredRule() -> void
+TKCode.Arc.SankeyFlow
+TKCode.Arc.SankeyFlow.Columns.get -> System.Collections.Generic.IReadOnlyList<string!>?
+TKCode.Arc.SankeyFlow.Columns.set -> void
+TKCode.Arc.SankeyFlow.EmptyLabel.get -> string!
+TKCode.Arc.SankeyFlow.EmptyLabel.set -> void
+TKCode.Arc.SankeyFlow.IsParticleToggleVisible.get -> bool
+TKCode.Arc.SankeyFlow.IsParticleToggleVisible.set -> void
+TKCode.Arc.SankeyFlow.IsParticlesEnabled.get -> bool
+TKCode.Arc.SankeyFlow.IsParticlesEnabled.set -> void
+TKCode.Arc.SankeyFlow.Label.get -> string?
+TKCode.Arc.SankeyFlow.Label.set -> void
+TKCode.Arc.SankeyFlow.Links.get -> System.Collections.Generic.IList<TKCode.Arc.SankeyFlowLink!>?
+TKCode.Arc.SankeyFlow.Links.set -> void
+TKCode.Arc.SankeyFlow.Nodes.get -> System.Collections.Generic.IList<TKCode.Arc.SankeyFlowNode!>?
+TKCode.Arc.SankeyFlow.Nodes.set -> void
+TKCode.Arc.SankeyFlow.ParticleToggleLabel.get -> string!
+TKCode.Arc.SankeyFlow.ParticleToggleLabel.set -> void
+TKCode.Arc.SankeyFlow.ParticlesChanged -> System.EventHandler<TKCode.Arc.SankeyFlowParticlesChangedEventArgs!>?
+TKCode.Arc.SankeyFlow.PlotHeight.get -> double
+TKCode.Arc.SankeyFlow.PlotHeight.set -> void
+TKCode.Arc.SankeyFlow.SankeyFlow() -> void
+TKCode.Arc.SankeyFlow.Summary.get -> string!
+TKCode.Arc.SankeyFlow.TotalLabel.get -> string!
+TKCode.Arc.SankeyFlow.TotalLabel.set -> void
+TKCode.Arc.SankeyFlow.Unit.get -> string!
+TKCode.Arc.SankeyFlow.Unit.set -> void
+TKCode.Arc.SankeyFlow.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.SankeyFlow.ValueFormatter.set -> void
+TKCode.Arc.SankeyFlowLink
+TKCode.Arc.SankeyFlowLink.SankeyFlowLink() -> void
+TKCode.Arc.SankeyFlowLink.SankeyFlowLink(string! source, string! target, double value) -> void
+TKCode.Arc.SankeyFlowLink.Source.get -> string!
+TKCode.Arc.SankeyFlowLink.Source.set -> void
+TKCode.Arc.SankeyFlowLink.Target.get -> string!
+TKCode.Arc.SankeyFlowLink.Target.set -> void
+TKCode.Arc.SankeyFlowLink.Value.get -> double
+TKCode.Arc.SankeyFlowLink.Value.set -> void
+TKCode.Arc.SankeyFlowNode
+TKCode.Arc.SankeyFlowNode.Column.get -> int?
+TKCode.Arc.SankeyFlowNode.Column.set -> void
+TKCode.Arc.SankeyFlowNode.Id.get -> string!
+TKCode.Arc.SankeyFlowNode.Id.set -> void
+TKCode.Arc.SankeyFlowNode.Label.get -> string!
+TKCode.Arc.SankeyFlowNode.Label.set -> void
+TKCode.Arc.SankeyFlowNode.SankeyFlowNode() -> void
+TKCode.Arc.SankeyFlowNode.SankeyFlowNode(string! id, string! label, int? column = null) -> void
+TKCode.Arc.SankeyFlowParticlesChangedEventArgs
+TKCode.Arc.SankeyFlowParticlesChangedEventArgs.IsEnabled.get -> bool
+TKCode.Arc.Sunburst
+TKCode.Arc.Sunburst.Depth.get -> int
+TKCode.Arc.Sunburst.Depth.set -> void
+TKCode.Arc.Sunburst.EmptyLabel.get -> string!
+TKCode.Arc.Sunburst.EmptyLabel.set -> void
+TKCode.Arc.Sunburst.FocusedId.get -> string?
+TKCode.Arc.Sunburst.FocusedId.set -> void
+TKCode.Arc.Sunburst.FocusedIdChanged -> System.EventHandler<TKCode.Arc.SunburstFocusedIdChangedEventArgs!>?
+TKCode.Arc.Sunburst.IsLegendVisible.get -> bool
+TKCode.Arc.Sunburst.IsLegendVisible.set -> void
+TKCode.Arc.Sunburst.Items.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.SunburstNode!>!
+TKCode.Arc.Sunburst.Label.get -> string?
+TKCode.Arc.Sunburst.Label.set -> void
+TKCode.Arc.Sunburst.Root.get -> TKCode.Arc.SunburstNode?
+TKCode.Arc.Sunburst.Root.set -> void
+TKCode.Arc.Sunburst.Size.get -> double
+TKCode.Arc.Sunburst.Size.set -> void
+TKCode.Arc.Sunburst.Sunburst() -> void
+TKCode.Arc.Sunburst.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.Sunburst.ValueFormatter.set -> void
+TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusChangeSource.Breadcrumb = 2 -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusChangeSource.Center = 4 -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusChangeSource.Code = 0 -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusChangeSource.Legend = 3 -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusChangeSource.Segment = 1 -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusedIdChangedEventArgs
+TKCode.Arc.SunburstFocusedIdChangedEventArgs.ChangeSource.get -> TKCode.Arc.SunburstFocusChangeSource
+TKCode.Arc.SunburstFocusedIdChangedEventArgs.Id.get -> string!
+TKCode.Arc.SunburstFocusedIdChangedEventArgs.Node.get -> TKCode.Arc.SunburstNode!
+TKCode.Arc.SunburstFocusedIdChangedEventArgs.PreviousId.get -> string!
+TKCode.Arc.SunburstNode
+TKCode.Arc.SunburstNode.Children.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.SunburstNode!>!
+TKCode.Arc.SunburstNode.Id.get -> string!
+TKCode.Arc.SunburstNode.Id.set -> void
+TKCode.Arc.SunburstNode.Label.get -> string!
+TKCode.Arc.SunburstNode.Label.set -> void
+TKCode.Arc.SunburstNode.SunburstNode() -> void
+TKCode.Arc.SunburstNode.SunburstNode(string! id, string! label, double? value = null, System.Collections.Generic.IEnumerable<TKCode.Arc.SunburstNode!>? children = null) -> void
+TKCode.Arc.SunburstNode.Value.get -> double?
+TKCode.Arc.SunburstNode.Value.set -> void
+TKCode.Arc.WindObservation
+TKCode.Arc.WindObservation.Deconstruct(out double Direction, out double Speed) -> void
+TKCode.Arc.WindObservation.Direction.get -> double
+TKCode.Arc.WindObservation.Direction.init -> void
+TKCode.Arc.WindObservation.Equals(TKCode.Arc.WindObservation other) -> bool
+TKCode.Arc.WindObservation.Speed.get -> double
+TKCode.Arc.WindObservation.Speed.init -> void
+TKCode.Arc.WindObservation.WindObservation() -> void
+TKCode.Arc.WindObservation.WindObservation(double Direction, double Speed) -> void
+TKCode.Arc.WindRoseBin
+TKCode.Arc.WindRoseBin.Color.get -> Avalonia.Media.Color?
+TKCode.Arc.WindRoseBin.Color.set -> void
+TKCode.Arc.WindRoseBin.Label.get -> string?
+TKCode.Arc.WindRoseBin.Label.set -> void
+TKCode.Arc.WindRoseBin.Minimum.get -> double
+TKCode.Arc.WindRoseBin.Minimum.set -> void
+TKCode.Arc.WindRoseBin.WindRoseBin() -> void
+TKCode.Arc.WindRoseBin.WindRoseBin(double minimum, string? label = null, Avalonia.Media.Color? color = null) -> void
+TKCode.Arc.WindRoseBinning
+TKCode.Arc.WindRoseChart
+TKCode.Arc.WindRoseChart.ActiveIndex.get -> int
+TKCode.Arc.WindRoseChart.ActiveIndex.set -> void
+TKCode.Arc.WindRoseChart.BinMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.WindRoseChart.BinMemberBinding.set -> void
+TKCode.Arc.WindRoseChart.Bins.get -> System.Collections.Generic.IList<TKCode.Arc.WindRoseBin!>?
+TKCode.Arc.WindRoseChart.Bins.set -> void
+TKCode.Arc.WindRoseChart.Calm.get -> double
+TKCode.Arc.WindRoseChart.Calm.set -> void
+TKCode.Arc.WindRoseChart.DirectionLabels.get -> System.Collections.Generic.IList<string!>?
+TKCode.Arc.WindRoseChart.DirectionLabels.set -> void
+TKCode.Arc.WindRoseChart.DirectionMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.WindRoseChart.DirectionMemberBinding.set -> void
+TKCode.Arc.WindRoseChart.EmptyLabel.get -> string!
+TKCode.Arc.WindRoseChart.EmptyLabel.set -> void
+TKCode.Arc.WindRoseChart.IsLegendVisible.get -> bool
+TKCode.Arc.WindRoseChart.IsLegendVisible.set -> void
+TKCode.Arc.WindRoseChart.IsSelectionEnabled.get -> bool
+TKCode.Arc.WindRoseChart.IsSelectionEnabled.set -> void
+TKCode.Arc.WindRoseChart.ItemInvoked -> System.EventHandler<TKCode.Arc.WindRoseItemInvokedEventArgs!>?
+TKCode.Arc.WindRoseChart.Items.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.WindRoseRow!>!
+TKCode.Arc.WindRoseChart.ItemsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.WindRoseChart.ItemsSource.set -> void
+TKCode.Arc.WindRoseChart.Label.get -> string?
+TKCode.Arc.WindRoseChart.Label.set -> void
+TKCode.Arc.WindRoseChart.RadialAxis.get -> TKCode.Arc.WindRoseRadialAxis
+TKCode.Arc.WindRoseChart.RadialAxis.set -> void
+TKCode.Arc.WindRoseChart.RadialMaximum.get -> double
+TKCode.Arc.WindRoseChart.RadialMaximum.set -> void
+TKCode.Arc.WindRoseChart.RadialStep.get -> double
+TKCode.Arc.WindRoseChart.RadialStep.set -> void
+TKCode.Arc.WindRoseChart.SectorCount.get -> int
+TKCode.Arc.WindRoseChart.SectorCount.set -> void
+TKCode.Arc.WindRoseChart.Sectors.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WindRoseSector!>!
+TKCode.Arc.WindRoseChart.SelectedIndex.get -> int
+TKCode.Arc.WindRoseChart.SelectedIndex.set -> void
+TKCode.Arc.WindRoseChart.SelectionChanged -> System.EventHandler<TKCode.Arc.WindRoseSelectionChangedEventArgs!>?
+TKCode.Arc.WindRoseChart.Size.get -> double
+TKCode.Arc.WindRoseChart.Size.set -> void
+TKCode.Arc.WindRoseChart.StartAngle.get -> double
+TKCode.Arc.WindRoseChart.StartAngle.set -> void
+TKCode.Arc.WindRoseChart.Summary.get -> string!
+TKCode.Arc.WindRoseChart.SweepDirection.get -> Avalonia.Media.SweepDirection
+TKCode.Arc.WindRoseChart.SweepDirection.set -> void
+TKCode.Arc.WindRoseChart.Unit.get -> string!
+TKCode.Arc.WindRoseChart.Unit.set -> void
+TKCode.Arc.WindRoseChart.ValueFormatter.get -> System.Func<double, string!>?
+TKCode.Arc.WindRoseChart.ValueFormatter.set -> void
+TKCode.Arc.WindRoseChart.ValueMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.WindRoseChart.ValueMemberBinding.set -> void
+TKCode.Arc.WindRoseChart.ValuesMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.WindRoseChart.ValuesMemberBinding.set -> void
+TKCode.Arc.WindRoseChart.WindRoseChart() -> void
+TKCode.Arc.WindRoseData
+TKCode.Arc.WindRoseData.Calm.get -> double
+TKCode.Arc.WindRoseData.Rows.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WindRoseRow!>!
+TKCode.Arc.WindRoseData.Skipped.get -> int
+TKCode.Arc.WindRoseData.Total.get -> int
+TKCode.Arc.WindRoseItemInvokedEventArgs
+TKCode.Arc.WindRoseItemInvokedEventArgs.Bin.get -> int
+TKCode.Arc.WindRoseItemInvokedEventArgs.Index.get -> int
+TKCode.Arc.WindRoseItemInvokedEventArgs.Item.get -> TKCode.Arc.WindRoseSector!
+TKCode.Arc.WindRoseRadialAxis
+TKCode.Arc.WindRoseRadialAxis.Count = 1 -> TKCode.Arc.WindRoseRadialAxis
+TKCode.Arc.WindRoseRadialAxis.Percent = 0 -> TKCode.Arc.WindRoseRadialAxis
+TKCode.Arc.WindRoseRecord
+TKCode.Arc.WindRoseRecord.Bin.get -> int
+TKCode.Arc.WindRoseRecord.Bin.set -> void
+TKCode.Arc.WindRoseRecord.Direction.get -> object?
+TKCode.Arc.WindRoseRecord.Direction.set -> void
+TKCode.Arc.WindRoseRecord.Value.get -> double
+TKCode.Arc.WindRoseRecord.Value.set -> void
+TKCode.Arc.WindRoseRecord.WindRoseRecord() -> void
+TKCode.Arc.WindRoseRecord.WindRoseRecord(object? direction, int bin, double value) -> void
+TKCode.Arc.WindRoseRow
+TKCode.Arc.WindRoseRow.Direction.get -> object?
+TKCode.Arc.WindRoseRow.Direction.set -> void
+TKCode.Arc.WindRoseRow.Values.get -> Avalonia.Collections.AvaloniaList<double>!
+TKCode.Arc.WindRoseRow.Values.set -> void
+TKCode.Arc.WindRoseRow.WindRoseRow() -> void
+TKCode.Arc.WindRoseRow.WindRoseRow(double direction, params double[]! values) -> void
+TKCode.Arc.WindRoseRow.WindRoseRow(string! direction, params double[]! values) -> void
+TKCode.Arc.WindRoseSector
+TKCode.Arc.WindRoseSector.Direction.get -> double
+TKCode.Arc.WindRoseSector.From.get -> double
+TKCode.Arc.WindRoseSector.Index.get -> int
+TKCode.Arc.WindRoseSector.Label.get -> string!
+TKCode.Arc.WindRoseSector.Share.get -> double
+TKCode.Arc.WindRoseSector.To.get -> double
+TKCode.Arc.WindRoseSector.Total.get -> double
+TKCode.Arc.WindRoseSector.Values.get -> System.Collections.Generic.IReadOnlyList<double>!
+TKCode.Arc.WindRoseSelectionChangedEventArgs
+TKCode.Arc.WindRoseSelectionChangedEventArgs.NewIndex.get -> int
+TKCode.Arc.WindRoseSelectionChangedEventArgs.NewItem.get -> TKCode.Arc.WindRoseSector?
+TKCode.Arc.WindRoseSelectionChangedEventArgs.OldIndex.get -> int
+TKCode.Arc.WindRoseSelectionChangedEventArgs.OldItem.get -> TKCode.Arc.WindRoseSector?
+TKCode.Arc.WindRoseValuesConverter
+TKCode.Arc.WindRoseValuesConverter.WindRoseValuesConverter() -> void
+abstract TKCode.Arc.DataGridCellRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+abstract TKCode.Arc.DataGridRule.Validate(in TKCode.Arc.DataGridCellContext context) -> string?
+const TKCode.Arc.DataGrid.AnnouncerPart = "PART_Announcer" -> string!
+const TKCode.Arc.DataGrid.CheckedRowsPseudoClass = ":checked-rows" -> string!
+const TKCode.Arc.DataGrid.ComfortablePseudoClass = ":density-comfortable" -> string!
+const TKCode.Arc.DataGrid.CompactPseudoClass = ":density-compact" -> string!
+const TKCode.Arc.DataGrid.EditingPseudoClass = ":editing" -> string!
+const TKCode.Arc.DataGrid.EmptyPseudoClass = ":empty" -> string!
+const TKCode.Arc.DataGrid.FillPseudoClass = ":fill" -> string!
+const TKCode.Arc.DataGrid.FilteringPseudoClass = ":filtering" -> string!
+const TKCode.Arc.DataGrid.GroupedPseudoClass = ":grouped" -> string!
+const TKCode.Arc.DataGrid.LoadingPseudoClass = ":loading" -> string!
+const TKCode.Arc.DataGrid.ReadOnlyPseudoClass = ":read-only" -> string!
+const TKCode.Arc.DataGrid.ScrollViewerPart = "PART_ScrollViewer" -> string!
+const TKCode.Arc.DataGrid.ScrolledXPseudoClass = ":scrolled-x" -> string!
+const TKCode.Arc.DataGrid.StatusBarPart = "PART_StatusBar" -> string!
+const TKCode.Arc.DataGrid.StatusWrapPseudoClass = ":status-wrap" -> string!
+const TKCode.Arc.DataGrid.ToolbarCompactPseudoClass = ":toolbar-compact" -> string!
+const TKCode.Arc.DataGrid.ToolbarMinimalPseudoClass = ":toolbar-minimal" -> string!
+const TKCode.Arc.DataGrid.ToolbarPart = "PART_Toolbar" -> string!
+const TKCode.Arc.DataGridValueFormat.MinusSign = "−" -> string!
+const TKCode.Arc.DesignTokens.DataGridTokens.Identity = "DataGrid" -> string!
+const TKCode.Arc.DesignTokens.FunnelChartTokens.Identity = "FunnelChart" -> string!
+const TKCode.Arc.DesignTokens.RaceBarChartTokens.Identity = "RaceBarChart" -> string!
+const TKCode.Arc.DesignTokens.RadarChartTokens.Identity = "RadarChart" -> string!
+const TKCode.Arc.DesignTokens.RealtimeStreamTokens.Identity = "RealtimeStream" -> string!
+const TKCode.Arc.DesignTokens.SankeyFlowTokens.Identity = "SankeyFlow" -> string!
+const TKCode.Arc.DesignTokens.SunburstTokens.Identity = "Sunburst" -> string!
+const TKCode.Arc.DesignTokens.WindRoseChartTokens.Identity = "WindRoseChart" -> string!
+const TKCode.Arc.RealtimeStream.EmptyPseudoClass = ":empty" -> string!
+const TKCode.Arc.RealtimeStream.PausedPseudoClass = ":paused" -> string!
+const TKCode.Arc.WindRoseBinning.DefaultCalmThreshold = 0.5 -> double
+override TKCode.Arc.ActionsRenderer.GetText(object? value, TKCode.Arc.DataGridCellFormat format, System.Globalization.CultureInfo! culture) -> string!
+override TKCode.Arc.ActionsRenderer.IsInteractiveAt(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.ActionsRenderer.OnPointerPressed(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.ActionsRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.BadgeRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.CheckboxRenderer.IsInteractiveAt(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.CheckboxRenderer.OnPointerPressed(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.CheckboxRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.DataGrid.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.DataGrid.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.DataGrid.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.DataGrid.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.DataGrid.OnLoaded(Avalonia.Interactivity.RoutedEventArgs! e) -> void
+override TKCode.Arc.DataGrid.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.DataGridCellAddress.GetHashCode() -> int
+override TKCode.Arc.DataGridCellChange.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridCellChange.GetHashCode() -> int
+override TKCode.Arc.DataGridCellChange.ToString() -> string!
+override TKCode.Arc.DataGridCellContext.GetHashCode() -> int
+override TKCode.Arc.DataGridCellError.GetHashCode() -> int
+override TKCode.Arc.DataGridCellFormat.GetHashCode() -> int
+override TKCode.Arc.DataGridCellRange.GetHashCode() -> int
+override TKCode.Arc.DataGridCellStyle.GetHashCode() -> int
+override TKCode.Arc.DataGridColumn.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.DataGridColumn.ToString() -> string!
+override TKCode.Arc.DataGridCompactNumber.GetHashCode() -> int
+override TKCode.Arc.DataGridFilter.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridFilter.GetHashCode() -> int
+override TKCode.Arc.DataGridFilter.ToString() -> string!
+override TKCode.Arc.DataGridRow.ToString() -> string!
+override TKCode.Arc.DataGridRowsRequest.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridRowsRequest.GetHashCode() -> int
+override TKCode.Arc.DataGridRowsRequest.ToString() -> string!
+override TKCode.Arc.DataGridRowsResult.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridRowsResult.GetHashCode() -> int
+override TKCode.Arc.DataGridRowsResult.ToString() -> string!
+override TKCode.Arc.DataGridSort.GetHashCode() -> int
+override TKCode.Arc.DataGridToneBrushes.GetHashCode() -> int
+override TKCode.Arc.DataGridXlsxColumn.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridXlsxColumn.GetHashCode() -> int
+override TKCode.Arc.DataGridXlsxColumn.ToString() -> string!
+override TKCode.Arc.DataGridXlsxOptions.Equals(object? obj) -> bool
+override TKCode.Arc.DataGridXlsxOptions.GetHashCode() -> int
+override TKCode.Arc.DataGridXlsxOptions.ToString() -> string!
+override TKCode.Arc.FunnelChart.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.FunnelChart.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.FunnelChart.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.FunnelChart.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
+override TKCode.Arc.FunnelChart.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.FunnelChart.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.IconTextRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.LinkRenderer.IsInteractiveAt(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.LinkRenderer.OnPointerPressed(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+override TKCode.Arc.LinkRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.MaxLengthRule.Validate(in TKCode.Arc.DataGridCellContext context) -> string?
+override TKCode.Arc.PatternRule.Validate(in TKCode.Arc.DataGridCellContext context) -> string?
+override TKCode.Arc.ProgressRenderer.Render(in TKCode.Arc.DataGridCellRenderContext context) -> void
+override TKCode.Arc.RaceBarChart.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RaceBarChart.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RaceBarChart.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RaceBarChart.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.RaceBarChart.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RadarChart.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.RadarChart.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.RadarChart.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.RadarChart.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.RadarChart.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RadarChart.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.RangeRule.Validate(in TKCode.Arc.DataGridCellContext context) -> string?
+override TKCode.Arc.RealtimeStream.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RealtimeStream.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RealtimeStream.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RealtimeStream.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RequiredRule.Validate(in TKCode.Arc.DataGridCellContext context) -> string?
+override TKCode.Arc.SankeyFlow.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.SankeyFlow.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.SankeyFlow.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.SankeyFlow.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnLoaded(Avalonia.Interactivity.RoutedEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
+override TKCode.Arc.SankeyFlow.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.SankeyFlow.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Sunburst.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Sunburst.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Sunburst.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Sunburst.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.WindObservation.GetHashCode() -> int
+override TKCode.Arc.WindRoseChart.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.WindRoseChart.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.WindRoseChart.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.WindRoseChart.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
+override TKCode.Arc.WindRoseChart.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.WindRoseChart.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.WindRoseValuesConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Type! sourceType) -> bool
+override TKCode.Arc.WindRoseValuesConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object! value) -> object?
+static TKCode.Arc.ArcAdvancedChartsBuilderExtensions.UseArcAdvancedCharts(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DataGridAggregates.Compute(System.Collections.Generic.IEnumerable<object?>! values, TKCode.Arc.DataGridAggregate kind) -> decimal?
+static TKCode.Arc.DataGridAggregates.DefaultFor(TKCode.Arc.DataGridColumnType type) -> TKCode.Arc.DataGridAggregate
+static TKCode.Arc.DataGridCellAddress.operator !=(TKCode.Arc.DataGridCellAddress left, TKCode.Arc.DataGridCellAddress right) -> bool
+static TKCode.Arc.DataGridCellAddress.operator ==(TKCode.Arc.DataGridCellAddress left, TKCode.Arc.DataGridCellAddress right) -> bool
+static TKCode.Arc.DataGridCellChange.operator !=(TKCode.Arc.DataGridCellChange? left, TKCode.Arc.DataGridCellChange? right) -> bool
+static TKCode.Arc.DataGridCellChange.operator ==(TKCode.Arc.DataGridCellChange? left, TKCode.Arc.DataGridCellChange? right) -> bool
+static TKCode.Arc.DataGridCellContext.operator !=(TKCode.Arc.DataGridCellContext left, TKCode.Arc.DataGridCellContext right) -> bool
+static TKCode.Arc.DataGridCellContext.operator ==(TKCode.Arc.DataGridCellContext left, TKCode.Arc.DataGridCellContext right) -> bool
+static TKCode.Arc.DataGridCellError.operator !=(TKCode.Arc.DataGridCellError left, TKCode.Arc.DataGridCellError right) -> bool
+static TKCode.Arc.DataGridCellError.operator ==(TKCode.Arc.DataGridCellError left, TKCode.Arc.DataGridCellError right) -> bool
+static TKCode.Arc.DataGridCellFormat.operator !=(TKCode.Arc.DataGridCellFormat left, TKCode.Arc.DataGridCellFormat right) -> bool
+static TKCode.Arc.DataGridCellFormat.operator ==(TKCode.Arc.DataGridCellFormat left, TKCode.Arc.DataGridCellFormat right) -> bool
+static TKCode.Arc.DataGridCellRange.FromCorners(TKCode.Arc.DataGridCellAddress a, TKCode.Arc.DataGridCellAddress b) -> TKCode.Arc.DataGridCellRange
+static TKCode.Arc.DataGridCellRange.operator !=(TKCode.Arc.DataGridCellRange left, TKCode.Arc.DataGridCellRange right) -> bool
+static TKCode.Arc.DataGridCellRange.operator ==(TKCode.Arc.DataGridCellRange left, TKCode.Arc.DataGridCellRange right) -> bool
+static TKCode.Arc.DataGridCellStyle.operator !=(TKCode.Arc.DataGridCellStyle left, TKCode.Arc.DataGridCellStyle right) -> bool
+static TKCode.Arc.DataGridCellStyle.operator ==(TKCode.Arc.DataGridCellStyle left, TKCode.Arc.DataGridCellStyle right) -> bool
+static TKCode.Arc.DataGridClipboardText.ParseHtmlTable(string? html, int maxCells = 2147483647) -> System.Collections.Generic.List<System.Collections.Generic.List<string!>!>?
+static TKCode.Arc.DataGridClipboardText.ParseTsv(string? text, int maxCells = 2147483647) -> System.Collections.Generic.List<System.Collections.Generic.List<string!>!>!
+static TKCode.Arc.DataGridClipboardText.ToHtml(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<string!>!>! matrix) -> string!
+static TKCode.Arc.DataGridClipboardText.ToTsv(System.Collections.Generic.IReadOnlyList<System.Collections.Generic.IReadOnlyList<string!>!>! matrix) -> string!
+static TKCode.Arc.DataGridClipboardText.UnwrapCfHtml(string! payload) -> string!
+static TKCode.Arc.DataGridClipboardText.WrapCfHtml(string! fragment) -> string!
+static TKCode.Arc.DataGridColumn.Create<T>(string! key, string! header, System.Func<T, object?>! getter, System.Action<T, object?>? setter = null, TKCode.Arc.DataGridColumnType type = TKCode.Arc.DataGridColumnType.Text) -> TKCode.Arc.DataGridColumn!
+static TKCode.Arc.DataGridCompactNumber.operator !=(TKCode.Arc.DataGridCompactNumber left, TKCode.Arc.DataGridCompactNumber right) -> bool
+static TKCode.Arc.DataGridCompactNumber.operator ==(TKCode.Arc.DataGridCompactNumber left, TKCode.Arc.DataGridCompactNumber right) -> bool
+static TKCode.Arc.DataGridCsv.NeutralizeFormula(string! text) -> string!
+static TKCode.Arc.DataGridCsv.Raw(object? value) -> string!
+static TKCode.Arc.DataGridCsv.ToCsv(System.Collections.Generic.IReadOnlyList<string!>! headers, System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlyList<object?>!>! rows, TKCode.Arc.DataGridCsvOptions? options = null) -> string!
+static TKCode.Arc.DataGridCsv.Write(System.IO.Stream! stream, System.Collections.Generic.IReadOnlyList<string!>! headers, System.Collections.Generic.IEnumerable<System.Collections.Generic.IReadOnlyList<object?>!>! rows, TKCode.Arc.DataGridCsvOptions? options = null) -> void
+static TKCode.Arc.DataGridExportNode.Group(string! label, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridExportNode!>! children) -> TKCode.Arc.DataGridExportNode!
+static TKCode.Arc.DataGridExportNode.Row(System.Collections.Generic.IReadOnlyList<object?>! values) -> TKCode.Arc.DataGridExportNode!
+static TKCode.Arc.DataGridFillSeries.Extend(System.Collections.Generic.IReadOnlyList<object?>! source, int count, bool forward, TKCode.Arc.DataGridColumnType? type = null) -> System.Collections.Generic.IReadOnlyList<object?>!
+static TKCode.Arc.DataGridFilter.OneOf(System.Collections.Generic.IReadOnlyList<string!>! values) -> TKCode.Arc.DataGridFilter!
+static TKCode.Arc.DataGridFilter.Text(string! expression) -> TKCode.Arc.DataGridFilter!
+static TKCode.Arc.DataGridFilterExpression.CreateText(string? text, System.Globalization.CultureInfo? culture) -> System.Func<string!, bool>?
+static TKCode.Arc.DataGridFilterExpression.IsActive(TKCode.Arc.DataGridColumnType type, TKCode.Arc.DataGridFilter? filter, System.Globalization.CultureInfo? culture = null) -> bool
+static TKCode.Arc.DataGridFilterExpression.IsInvalid(TKCode.Arc.DataGridColumnType type, string? expression, System.Globalization.CultureInfo? culture = null) -> bool
+static TKCode.Arc.DataGridFilterExpression.TryParseDate(string? text, System.Globalization.CultureInfo? culture, out System.Func<System.DateOnly, bool>? predicate) -> bool
+static TKCode.Arc.DataGridFilterExpression.TryParseNumber(string? text, System.Globalization.CultureInfo? culture, out System.Func<decimal, bool>? predicate) -> bool
+static TKCode.Arc.DataGridLayoutState.FromJson(string? json) -> TKCode.Arc.DataGridLayoutState?
+static TKCode.Arc.DataGridRowsRequest.operator !=(TKCode.Arc.DataGridRowsRequest? left, TKCode.Arc.DataGridRowsRequest? right) -> bool
+static TKCode.Arc.DataGridRowsRequest.operator ==(TKCode.Arc.DataGridRowsRequest? left, TKCode.Arc.DataGridRowsRequest? right) -> bool
+static TKCode.Arc.DataGridRowsResult.operator !=(TKCode.Arc.DataGridRowsResult? left, TKCode.Arc.DataGridRowsResult? right) -> bool
+static TKCode.Arc.DataGridRowsResult.operator ==(TKCode.Arc.DataGridRowsResult? left, TKCode.Arc.DataGridRowsResult? right) -> bool
+static TKCode.Arc.DataGridRule.Custom(System.Func<TKCode.Arc.DataGridCellContext, string?>! validate) -> TKCode.Arc.DataGridRule!
+static TKCode.Arc.DataGridSort.Ascending(string! key) -> TKCode.Arc.DataGridSort
+static TKCode.Arc.DataGridSort.Descending(string! key) -> TKCode.Arc.DataGridSort
+static TKCode.Arc.DataGridSort.operator !=(TKCode.Arc.DataGridSort left, TKCode.Arc.DataGridSort right) -> bool
+static TKCode.Arc.DataGridSort.operator ==(TKCode.Arc.DataGridSort left, TKCode.Arc.DataGridSort right) -> bool
+static TKCode.Arc.DataGridSorting.Compare(object? a, object? b, System.Collections.Generic.IReadOnlyDictionary<string!, int>? optionOrder, System.Globalization.CultureInfo? culture = null) -> int
+static TKCode.Arc.DataGridSorting.IsEmpty(object? value) -> bool
+static TKCode.Arc.DataGridSorting.OptionOrder(System.Collections.Generic.IEnumerable<string!>! options) -> System.Collections.Generic.IReadOnlyDictionary<string!, int>!
+static TKCode.Arc.DataGridSorting.Sort<T>(System.Collections.Generic.IEnumerable<T>! rows, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>! keys, System.Func<T, string!, object?>! valueOf, System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Generic.IReadOnlyDictionary<string!, int>!>? optionOrders = null, System.Globalization.CultureInfo? culture = null) -> System.Collections.Generic.List<T>!
+static TKCode.Arc.DataGridToneBrushes.operator !=(TKCode.Arc.DataGridToneBrushes left, TKCode.Arc.DataGridToneBrushes right) -> bool
+static TKCode.Arc.DataGridToneBrushes.operator ==(TKCode.Arc.DataGridToneBrushes left, TKCode.Arc.DataGridToneBrushes right) -> bool
+static TKCode.Arc.DataGridValueFormat.ColumnLetters(int index) -> string!
+static TKCode.Arc.DataGridValueFormat.DefaultDatePattern(System.Globalization.CultureInfo! culture) -> string!
+static TKCode.Arc.DataGridValueFormat.Format(object? value, TKCode.Arc.DataGridCellFormat format, System.Globalization.CultureInfo? culture = null) -> string!
+static TKCode.Arc.DataGridValueFormat.FormatBoolean(bool value, System.Globalization.CultureInfo? culture = null) -> string!
+static TKCode.Arc.DataGridValueFormat.FormatCompact(decimal value, System.Globalization.CultureInfo? culture = null) -> TKCode.Arc.DataGridCompactNumber
+static TKCode.Arc.DataGridValueFormat.FormatDate(System.DateOnly date, string? pattern, System.Globalization.CultureInfo? culture = null) -> string!
+static TKCode.Arc.DataGridValueFormat.FormatNumber(decimal value, TKCode.Arc.DataGridCellFormat format, System.Globalization.CultureInfo? culture = null) -> string!
+static TKCode.Arc.DataGridValueParser.Normalize(object? raw, TKCode.Arc.DataGridColumnType type) -> object?
+static TKCode.Arc.DataGridValueParser.TryParse(string? text, TKCode.Arc.DataGridCellFormat format, System.Globalization.CultureInfo? culture, System.Collections.Generic.IReadOnlyList<string!>? options, out object? value) -> bool
+static TKCode.Arc.DataGridValueParser.TryParseBoolean(string? text, out bool value) -> bool
+static TKCode.Arc.DataGridValueParser.TryParseDate(string? text, System.Globalization.CultureInfo? culture, out System.DateOnly date) -> bool
+static TKCode.Arc.DataGridValueParser.TryParseIsoDay(string? text, out System.DateOnly date) -> bool
+static TKCode.Arc.DataGridValueParser.TryParseNumber(string? text, System.Globalization.CultureInfo? culture, string? currencySymbol, out decimal value) -> bool
+static TKCode.Arc.DataGridValueParser.TryToDecimal(object? raw, out decimal value) -> bool
+static TKCode.Arc.DataGridXlsx.NumberFormat(TKCode.Arc.DataGridCellFormat format, TKCode.Arc.DataGridAggregate aggregate = TKCode.Arc.DataGridAggregate.None) -> string?
+static TKCode.Arc.DataGridXlsx.ToBytes(System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridXlsxColumn!>! columns, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridExportNode!>! nodes, TKCode.Arc.DataGridXlsxOptions? options = null) -> byte[]!
+static TKCode.Arc.DataGridXlsx.Write(System.IO.Stream! stream, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridXlsxColumn!>! columns, System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridExportNode!>! nodes, TKCode.Arc.DataGridXlsxOptions? options = null) -> void
+static TKCode.Arc.DataGridXlsxColumn.operator !=(TKCode.Arc.DataGridXlsxColumn? left, TKCode.Arc.DataGridXlsxColumn? right) -> bool
+static TKCode.Arc.DataGridXlsxColumn.operator ==(TKCode.Arc.DataGridXlsxColumn? left, TKCode.Arc.DataGridXlsxColumn? right) -> bool
+static TKCode.Arc.DataGridXlsxOptions.operator !=(TKCode.Arc.DataGridXlsxOptions? left, TKCode.Arc.DataGridXlsxOptions? right) -> bool
+static TKCode.Arc.DataGridXlsxOptions.operator ==(TKCode.Arc.DataGridXlsxOptions? left, TKCode.Arc.DataGridXlsxOptions? right) -> bool
+static TKCode.Arc.DesignTokens.DataGridTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DataGridTokens.Key(TKCode.Arc.DesignTokens.DataGridTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.FunnelChartTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.FunnelChartTokens.Key(TKCode.Arc.DesignTokens.FunnelChartTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RaceBarChartTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RaceBarChartTokens.Key(TKCode.Arc.DesignTokens.RaceBarChartTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RadarChartTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RadarChartTokens.Key(TKCode.Arc.DesignTokens.RadarChartTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RealtimeStreamTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RealtimeStreamTokens.Key(TKCode.Arc.DesignTokens.RealtimeStreamTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.SankeyFlowTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.SankeyFlowTokens.Key(TKCode.Arc.DesignTokens.SankeyFlowTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.SunburstTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.SunburstTokens.Key(TKCode.Arc.DesignTokens.SunburstTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.WindRoseChartTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.WindRoseChartTokens.Key(TKCode.Arc.DesignTokens.WindRoseChartTokenKind kind) -> object!
+static TKCode.Arc.Localization.DataGridLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.DataGridLangResources.Format(TKCode.Arc.Localization.DataGridLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.DataGridLangResources.Get(TKCode.Arc.Localization.DataGridLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.DataGridLangResources.Index(TKCode.Arc.Localization.DataGridLangResourceKind kind) -> int
+static TKCode.Arc.Localization.DataGridLangResources.Key(TKCode.Arc.Localization.DataGridLangResourceKind kind) -> object!
+static TKCode.Arc.Localization.WindRoseChartLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.WindRoseChartLangResources.Format(TKCode.Arc.Localization.WindRoseChartLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.WindRoseChartLangResources.Get(TKCode.Arc.Localization.WindRoseChartLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.WindRoseChartLangResources.Index(TKCode.Arc.Localization.WindRoseChartLangResourceKind kind) -> int
+static TKCode.Arc.Localization.WindRoseChartLangResources.Key(TKCode.Arc.Localization.WindRoseChartLangResourceKind kind) -> object!
+static TKCode.Arc.WindObservation.operator !=(TKCode.Arc.WindObservation left, TKCode.Arc.WindObservation right) -> bool
+static TKCode.Arc.WindObservation.operator ==(TKCode.Arc.WindObservation left, TKCode.Arc.WindObservation right) -> bool
+static TKCode.Arc.WindRoseBinning.Bin(System.Collections.Generic.IEnumerable<TKCode.Arc.WindObservation>! observations, int sectorCount, System.Collections.Generic.IReadOnlyList<double>? binMinimums = null, double calmThreshold = 0.5) -> TKCode.Arc.WindRoseData!
+static TKCode.Arc.WindRoseBinning.Bin<T>(System.Collections.Generic.IEnumerable<T>! items, System.Func<T, double>! direction, System.Func<T, double>! speed, int sectorCount, System.Collections.Generic.IReadOnlyList<double>? binMinimums = null, double calmThreshold = 0.5) -> TKCode.Arc.WindRoseData!
+static TKCode.Arc.WindRoseBinning.BinOf(double speed, System.Collections.Generic.IReadOnlyList<double>! binMinimums) -> int
+static TKCode.Arc.WindRoseBinning.DefaultBinMinimums.get -> System.Collections.Generic.IReadOnlyList<double>!
+static TKCode.Arc.WindRoseBinning.SectorOf(double degrees, int sectorCount) -> int
+static TKCode.Arc.WindRoseValuesConverter.Parse(string! text) -> Avalonia.Collections.AvaloniaList<double>!
+static readonly TKCode.Arc.DataGrid.ActiveCellProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, TKCode.Arc.DataGridCellAddress?>!
+static readonly TKCode.Arc.DataGrid.BulkActionInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridBulkActionEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CanDeleteRowsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.CanEditCellProperty -> Avalonia.StyledProperty<System.Func<TKCode.Arc.DataGridCellContext, bool>?>!
+static readonly TKCode.Arc.DataGrid.CanInsertRowsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.CanRedoProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, bool>!
+static readonly TKCode.Arc.DataGrid.CanUndoProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, bool>!
+static readonly TKCode.Arc.DataGrid.CellClickEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CellContextRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CellDoubleClickEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CellEditEndingEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellEditEndingEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CellInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellInvokedEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CellStyleSelectorProperty -> Avalonia.StyledProperty<System.Func<TKCode.Arc.DataGridCellContext, TKCode.Arc.DataGridCellStyle?>?>!
+static readonly TKCode.Arc.DataGrid.CellsChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellsChangedEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CheckedRowKeysProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<object!>!>!
+static readonly TKCode.Arc.DataGrid.ColumnOrderProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>?>!
+static readonly TKCode.Arc.DataGrid.ColumnWidthsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyDictionary<string!, double>?>!
+static readonly TKCode.Arc.DataGrid.ContextMenuOpeningEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridContextMenuOpeningEventArgs!>!
+static readonly TKCode.Arc.DataGrid.CultureProperty -> Avalonia.StyledProperty<System.Globalization.CultureInfo?>!
+static readonly TKCode.Arc.DataGrid.DataSourceProperty -> Avalonia.StyledProperty<TKCode.Arc.IDataGridDataSource?>!
+static readonly TKCode.Arc.DataGrid.DensityProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridDensity>!
+static readonly TKCode.Arc.DataGrid.EmptyMessageProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.DataGrid.ErrorCountProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, int>!
+static readonly TKCode.Arc.DataGrid.ExportFileNameProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.DataGrid.ExportFormatsProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridExportFormats>!
+static readonly TKCode.Arc.DataGrid.ExportingEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridExportingEventArgs!>!
+static readonly TKCode.Arc.DataGrid.FiltersProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.DataGridFilter!>!>!
+static readonly TKCode.Arc.DataGrid.FindMatchCaseProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.FindMatchWholeCellProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.FindTextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGrid.GroupByProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>!>!
+static readonly TKCode.Arc.DataGrid.HiddenColumnsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>?>!
+static readonly TKCode.Arc.DataGrid.IsEditingProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, bool>!
+static readonly TKCode.Arc.DataGrid.IsFilterRowOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.IsFindOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.IsLoadingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.IsRowCheckEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.IsStripedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.DataGrid.LabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGrid.MaxPasteCellsProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.DataGrid.MaxViewportHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DataGrid.NeutralizeCsvFormulasProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.PasteOverflowProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridPasteOverflow>!
+static readonly TKCode.Arc.DataGrid.PinnedColumnsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>?>!
+static readonly TKCode.Arc.DataGrid.RowActivatedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridCellEventArgs!>!
+static readonly TKCode.Arc.DataGrid.RowFactoryProperty -> Avalonia.StyledProperty<System.Func<object!>?>!
+static readonly TKCode.Arc.DataGrid.RowKeySelectorProperty -> Avalonia.StyledProperty<System.Func<object!, object!>?>!
+static readonly TKCode.Arc.DataGrid.RowStyleSelectorProperty -> Avalonia.StyledProperty<System.Func<object!, TKCode.Arc.DataGridTone?>?>!
+static readonly TKCode.Arc.DataGrid.RowsDeletedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridRowsEventArgs!>!
+static readonly TKCode.Arc.DataGrid.RowsInsertedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridRowsEventArgs!>!
+static readonly TKCode.Arc.DataGrid.RowsRestoredEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DataGridRowsEventArgs!>!
+static readonly TKCode.Arc.DataGrid.SearchTextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGrid.SelectedRangeProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, TKCode.Arc.DataGridCellRange?>!
+static readonly TKCode.Arc.DataGrid.ShowContextMenuProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.ShowRowNumbersProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.ShowSelectionStatsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.ShowToolbarProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.ShowTotalsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGrid.SortDescriptionsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<TKCode.Arc.DataGridSort>!>!
+static readonly TKCode.Arc.DataGrid.UndoLimitProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.DataGrid.ValidationModeProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridValidationMode>!
+static readonly TKCode.Arc.DataGrid.VisibleRowCountProperty -> Avalonia.DirectProperty<TKCode.Arc.DataGrid!, int>!
+static readonly TKCode.Arc.DataGridBulkAction.CommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.DataGridBulkAction.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.DataGridBulkAction.IsDangerProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridBulkAction.LabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGridCellAction.CommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.DataGridCellAction.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.DataGridCellAction.IsDangerProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridCellAction.LabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGridColumn.AggregateProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridAggregate?>!
+static readonly TKCode.Arc.DataGridColumn.CurrencySymbolProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGridColumn.DateFormatProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.DataGridColumn.DecimalsProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.DataGridColumn.EditTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.DataGridColumn.HeaderProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGridColumn.IsEditableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridColumn.IsFilterableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridColumn.IsGroupableProperty -> Avalonia.StyledProperty<bool?>!
+static readonly TKCode.Arc.DataGridColumn.IsHiddenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridColumn.IsPinnedProperty -> Avalonia.StyledProperty<bool?>!
+static readonly TKCode.Arc.DataGridColumn.IsSortableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DataGridColumn.KeyProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DataGridColumn.MinWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DataGridColumn.OptionsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<string!>?>!
+static readonly TKCode.Arc.DataGridColumn.RendererProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridCellRenderer?>!
+static readonly TKCode.Arc.DataGridColumn.TypeProperty -> Avalonia.StyledProperty<TKCode.Arc.DataGridColumnType>!
+static readonly TKCode.Arc.DataGridColumn.WidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DataGridMenuItem.CommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.DataGridMenuItem.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.DataGridMenuItem.LabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.FunnelChart.ActiveIndexProperty -> Avalonia.StyledProperty<int?>!
+static readonly TKCode.Arc.FunnelChart.BandHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.FunnelChart.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.FunnelChart.IsFlowEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.FunnelChart.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.FunnelChart.OrientationProperty -> Avalonia.StyledProperty<TKCode.Arc.FunnelOrientation>!
+static readonly TKCode.Arc.FunnelChart.SegmentsProperty -> Avalonia.DirectProperty<TKCode.Arc.FunnelChart!, System.Collections.Generic.IList<TKCode.Arc.FunnelSegment!>!>!
+static readonly TKCode.Arc.FunnelChart.StagesProperty -> Avalonia.DirectProperty<TKCode.Arc.FunnelChart!, System.Collections.Generic.IList<TKCode.Arc.FunnelStage!>!>!
+static readonly TKCode.Arc.FunnelChart.UnitProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.FunnelChart.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.FunnelChart.ViewProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RaceBarChart.BarCountProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.RaceBarChart.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RaceBarChart.FrameDurationProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.RaceBarChart.FrameIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.RaceBarChart.FramesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.RaceBarFrame!>?>!
+static readonly TKCode.Arc.RaceBarChart.GroupsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.RaceBarGroup!>?>!
+static readonly TKCode.Arc.RaceBarChart.HighlightIdProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RaceBarChart.IsAutoPlayProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RaceBarChart.IsLoopingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RaceBarChart.IsPlayingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RaceBarChart.ItemsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.RaceBarItem!>?>!
+static readonly TKCode.Arc.RaceBarChart.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RaceBarChart.TickFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.RaceBarChart.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.RadarChart.ActiveAxisProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RadarChart.AxesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.RadarAxis!>?>!
+static readonly TKCode.Arc.RadarChart.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RadarChart.FillOpacityProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.RadarChart.GridShapeProperty -> Avalonia.StyledProperty<TKCode.Arc.RadarGridShape>!
+static readonly TKCode.Arc.RadarChart.IsLegendVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RadarChart.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RadarChart.MaximumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.RadarChart.RingsProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.RadarChart.SeriesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.RadarSeries!>?>!
+static readonly TKCode.Arc.RadarChart.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.RadarChart.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, TKCode.Arc.RadarAxis!, string!>?>!
+static readonly TKCode.Arc.RealtimeStream.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RealtimeStream.IntervalProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.RealtimeStream.IsHeldProperty -> Avalonia.DirectProperty<TKCode.Arc.RealtimeStream!, bool>!
+static readonly TKCode.Arc.RealtimeStream.IsPauseOnHoverProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RealtimeStream.IsPausedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RealtimeStream.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RealtimeStream.LiveLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RealtimeStream.MaximumProperty -> Avalonia.StyledProperty<double?>!
+static readonly TKCode.Arc.RealtimeStream.MinimumProperty -> Avalonia.StyledProperty<double?>!
+static readonly TKCode.Arc.RealtimeStream.PausedLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RealtimeStream.PlotHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.RealtimeStream.PointsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IEnumerable<TKCode.Arc.RealtimeStreamPoint!>?>!
+static readonly TKCode.Arc.RealtimeStream.TimeFormatterProperty -> Avalonia.StyledProperty<System.Func<System.DateTimeOffset, string!>?>!
+static readonly TKCode.Arc.RealtimeStream.UnitProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.RealtimeStream.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.RealtimeStream.WindowDurationProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.SankeyFlow.ColumnsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<string!>?>!
+static readonly TKCode.Arc.SankeyFlow.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.SankeyFlow.IsParticleToggleVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.SankeyFlow.IsParticlesEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.SankeyFlow.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.SankeyFlow.LinksProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.SankeyFlowLink!>?>!
+static readonly TKCode.Arc.SankeyFlow.NodesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.SankeyFlowNode!>?>!
+static readonly TKCode.Arc.SankeyFlow.ParticleToggleLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.SankeyFlow.PlotHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.SankeyFlow.TotalLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.SankeyFlow.UnitProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.SankeyFlow.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.Sunburst.DepthProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Sunburst.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Sunburst.FocusedIdProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sunburst.IsLegendVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Sunburst.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sunburst.RootProperty -> Avalonia.StyledProperty<TKCode.Arc.SunburstNode?>!
+static readonly TKCode.Arc.Sunburst.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Sunburst.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+static readonly TKCode.Arc.WindRoseChart.ActiveIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.WindRoseChart.BinsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.WindRoseBin!>?>!
+static readonly TKCode.Arc.WindRoseChart.CalmProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WindRoseChart.DirectionLabelsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<string!>?>!
+static readonly TKCode.Arc.WindRoseChart.EmptyLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.WindRoseChart.IsLegendVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WindRoseChart.IsSelectionEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WindRoseChart.ItemInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WindRoseItemInvokedEventArgs!>!
+static readonly TKCode.Arc.WindRoseChart.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.WindRoseChart.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WindRoseChart.RadialAxisProperty -> Avalonia.StyledProperty<TKCode.Arc.WindRoseRadialAxis>!
+static readonly TKCode.Arc.WindRoseChart.RadialMaximumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WindRoseChart.RadialStepProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WindRoseChart.SectorCountProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.WindRoseChart.SelectedIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.WindRoseChart.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WindRoseSelectionChangedEventArgs!>!
+static readonly TKCode.Arc.WindRoseChart.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WindRoseChart.StartAngleProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WindRoseChart.SweepDirectionProperty -> Avalonia.StyledProperty<Avalonia.Media.SweepDirection>!
+static readonly TKCode.Arc.WindRoseChart.UnitProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.WindRoseChart.ValueFormatterProperty -> Avalonia.StyledProperty<System.Func<double, string!>?>!
+virtual TKCode.Arc.DataGridCellRenderer.GetText(object? value, TKCode.Arc.DataGridCellFormat format, System.Globalization.CultureInfo! culture) -> string!
+virtual TKCode.Arc.DataGridCellRenderer.IsInteractiveAt(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+virtual TKCode.Arc.DataGridCellRenderer.OnPointerPressed(in TKCode.Arc.DataGridCellPointerContext context) -> bool
+~override TKCode.Arc.DataGridCellAddress.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellAddress.ToString() -> string
+~override TKCode.Arc.DataGridCellContext.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellContext.ToString() -> string
+~override TKCode.Arc.DataGridCellError.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellError.ToString() -> string
+~override TKCode.Arc.DataGridCellFormat.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellFormat.ToString() -> string
+~override TKCode.Arc.DataGridCellRange.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellRange.ToString() -> string
+~override TKCode.Arc.DataGridCellStyle.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCellStyle.ToString() -> string
+~override TKCode.Arc.DataGridCompactNumber.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridCompactNumber.ToString() -> string
+~override TKCode.Arc.DataGridSort.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridSort.ToString() -> string
+~override TKCode.Arc.DataGridToneBrushes.Equals(object obj) -> bool
+~override TKCode.Arc.DataGridToneBrushes.ToString() -> string
+~override TKCode.Arc.WindObservation.Equals(object obj) -> bool
+~override TKCode.Arc.WindObservation.ToString() -> string

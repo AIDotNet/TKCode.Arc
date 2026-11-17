@@ -1,0 +1,7 @@
+#nullable enable
+TKCode.Arc.ArcAudioNative
+TKCode.Arc.MiniaudioAudioBackend
+TKCode.Arc.MiniaudioAudioBackend.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
+TKCode.Arc.MiniaudioAudioBackend.IsAudible.get -> bool
+TKCode.Arc.MiniaudioAudioBackend.Name.get -> string!
+static TKCode.Arc.ArcAudioNative.Use() -> bool

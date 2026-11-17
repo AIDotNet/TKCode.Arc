@@ -1,0 +1,250 @@
+#nullable enable
+TKCode.Arc.AbstractControlDesignToken
+TKCode.Arc.AbstractControlDesignToken.AbstractControlDesignToken() -> void
+TKCode.Arc.AbstractControlDesignToken.EffectiveGlobalToken.get -> TKCode.Arc.ArcSeedToken!
+TKCode.Arc.ArcAppBuilderExtensions
+TKCode.Arc.ArcAppearance
+TKCode.Arc.ArcAppearance.Dark = 1 -> TKCode.Arc.ArcAppearance
+TKCode.Arc.ArcAppearance.Light = 0 -> TKCode.Arc.ArcAppearance
+TKCode.Arc.ArcAppearance.System = 2 -> TKCode.Arc.ArcAppearance
+TKCode.Arc.ArcBuilder
+TKCode.Arc.ArcBuilder.ArcBuilder() -> void
+TKCode.Arc.ArcBuilder.DefaultLanguage.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.ArcBuilder.IsEnabled(string! id) -> bool
+TKCode.Arc.ArcBuilder.Packages.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ArcPackageBuilder!>!
+TKCode.Arc.ArcBuilder.Presets.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.ArcThemePreset!>!
+TKCode.Arc.ArcBuilder.SupportedLanguages.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.LanguageTag!>!
+TKCode.Arc.ArcBuilder.ThemeLoading.get -> TKCode.Arc.ArcThemeLoading
+TKCode.Arc.ArcBuilder.UseLanguages(TKCode.Arc.Localization.LanguageTag! defaultLanguage, System.Collections.Generic.IEnumerable<TKCode.Arc.Localization.LanguageTag!>! supportedLanguages) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcBuilder.UsePackage(string! id, System.Action<TKCode.Arc.ArcPackageBuilder!>! define) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcBuilder.WithTheme(System.Action<TKCode.Arc.ArcThemeBuilder!>! configure) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcBuilder.WithThemeLoading(TKCode.Arc.ArcThemeLoading loading) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcPackageBuilder
+TKCode.Arc.ArcPackageBuilder.AddLanguages(System.Collections.Generic.IEnumerable<TKCode.Arc.Localization.ArcLanguageCatalog!>! catalogs) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.AddPresets(System.Collections.Generic.IEnumerable<TKCode.Arc.ArcThemePreset!>! presets) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.AddThemes(System.Collections.Generic.IEnumerable<TKCode.Arc.ArcThemeAsset!>! themes) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.AddTokens(System.Collections.Generic.IEnumerable<TKCode.Arc.ArcTokenDescriptor!>! tokens) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.DependsOn(System.Action<TKCode.Arc.ArcBuilder!>! use) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.Id.get -> string!
+TKCode.Arc.ArcPackageBuilder.OnCommit(System.Action<TKCode.Arc.ArcPackageContext!>! callback) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageBuilder.OnFirstUse(System.Action<TKCode.Arc.ArcPackageContext!>! callback) -> TKCode.Arc.ArcPackageBuilder!
+TKCode.Arc.ArcPackageContext
+TKCode.Arc.ArcPackageContext.Application.get -> Avalonia.Application!
+TKCode.Arc.ArcPackageContext.Own<T>(T disposable) -> T
+TKCode.Arc.ArcPackageContext.PackageId.get -> string!
+TKCode.Arc.ArcPackageContext.Theme.get -> TKCode.Arc.ArcThemeManager!
+TKCode.Arc.ArcResourceReference
+TKCode.Arc.ArcRuntime
+TKCode.Arc.ArcRuntime.Application.get -> Avalonia.Application!
+TKCode.Arc.ArcRuntime.Languages.get -> TKCode.Arc.Localization.ArcLanguageManager!
+TKCode.Arc.ArcRuntime.Packages.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.ArcRuntime.Presets.get -> System.Collections.Generic.IReadOnlyDictionary<string!, TKCode.Arc.ArcThemePreset!>!
+TKCode.Arc.ArcRuntime.Theme.get -> TKCode.Arc.ArcThemeManager!
+TKCode.Arc.ArcRuntime.Themes.get -> TKCode.Arc.ArcThemeProvider!
+TKCode.Arc.ArcRuntime.UsePackages(System.Action<TKCode.Arc.ArcBuilder!>! use) -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.ArcSeedToken
+TKCode.Arc.ArcSeedToken.ArcSeedToken(Avalonia.Media.Color colorPrimary, TKCode.Arc.Motion.ArcMotionLevel motionLevel) -> void
+TKCode.Arc.ArcSeedToken.ColorPrimary.get -> Avalonia.Media.Color
+TKCode.Arc.ArcSeedToken.EnableMotion.get -> bool
+TKCode.Arc.ArcSeedToken.MotionLevel.get -> TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.ArcTheme
+TKCode.Arc.ArcThemeAsset
+TKCode.Arc.ArcThemeAsset.ArcThemeAsset(string! id, object![]! keys, System.Func<Avalonia.Controls.ResourceDictionary!>! load) -> void
+TKCode.Arc.ArcThemeAsset.Id.get -> string!
+TKCode.Arc.ArcThemeAsset.Keys.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.ArcThemeAsset.Load.get -> System.Func<Avalonia.Controls.ResourceDictionary!>!
+TKCode.Arc.ArcThemeAssetLoadedEventArgs
+TKCode.Arc.ArcThemeAssetLoadedEventArgs.Asset.get -> TKCode.Arc.ArcThemeAsset!
+TKCode.Arc.ArcThemeAssetLoadedEventArgs.Duration.get -> System.TimeSpan
+TKCode.Arc.ArcThemeAssetLoadedEventArgs.Trigger.get -> object?
+TKCode.Arc.ArcThemeBuilder
+TKCode.Arc.ArcThemeBuilder.Accent(Avalonia.Media.Color seed) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.Appearance(TKCode.Arc.ArcAppearance appearance) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.ArcThemeBuilder(TKCode.Arc.ArcThemeState! from) -> void
+TKCode.Arc.ArcThemeBuilder.Build() -> TKCode.Arc.ArcThemeState!
+TKCode.Arc.ArcThemeBuilder.ClearPresets() -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.ClearTokens() -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.DefaultAccent() -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.MotionLevel(TKCode.Arc.Motion.ArcMotionLevel level) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.Preset(TKCode.Arc.ArcThemePreset! preset) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.RemovePreset(string! slot) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.Token(string! identity, string! name, string! value) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeBuilder.Token(string! name, string! value) -> TKCode.Arc.ArcThemeBuilder!
+TKCode.Arc.ArcThemeChangedEventArgs
+TKCode.Arc.ArcThemeChangedEventArgs.IsDark.get -> bool
+TKCode.Arc.ArcThemeChangedEventArgs.NewState.get -> TKCode.Arc.ArcThemeState!
+TKCode.Arc.ArcThemeChangedEventArgs.OldState.get -> TKCode.Arc.ArcThemeState!
+TKCode.Arc.ArcThemeChangedEventArgs.WasDark.get -> bool
+TKCode.Arc.ArcThemeException
+TKCode.Arc.ArcThemeException.ArcThemeException(System.Collections.Generic.IReadOnlyList<string!>! errors) -> void
+TKCode.Arc.ArcThemeException.Errors.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.ArcThemeLoading
+TKCode.Arc.ArcThemeLoading.Eager = 1 -> TKCode.Arc.ArcThemeLoading
+TKCode.Arc.ArcThemeLoading.Lazy = 0 -> TKCode.Arc.ArcThemeLoading
+TKCode.Arc.ArcThemeManager
+TKCode.Arc.ArcThemeManager.Apply(System.Action<TKCode.Arc.ArcThemeBuilder!>! configure) -> void
+TKCode.Arc.ArcThemeManager.Apply(TKCode.Arc.ArcThemeState! state) -> void
+TKCode.Arc.ArcThemeManager.ApplyAsync(System.Action<TKCode.Arc.ArcThemeBuilder!>! configure) -> System.Threading.Tasks.Task!
+TKCode.Arc.ArcThemeManager.Compute(TKCode.Arc.ArcThemeState! state, bool isDark) -> System.Collections.Generic.Dictionary<object!, object?>!
+TKCode.Arc.ArcThemeManager.Descriptors.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.ArcTokenDescriptor!>!
+TKCode.Arc.ArcThemeManager.IsDark.get -> bool
+TKCode.Arc.ArcThemeManager.LastComputeDuration.get -> System.TimeSpan
+TKCode.Arc.ArcThemeManager.LastPublishDuration.get -> System.TimeSpan
+TKCode.Arc.ArcThemeManager.LastPublishedCount.get -> int
+TKCode.Arc.ArcThemeManager.Resources.get -> Avalonia.Controls.ResourceDictionary!
+TKCode.Arc.ArcThemeManager.State.get -> TKCode.Arc.ArcThemeState!
+TKCode.Arc.ArcThemeManager.StateChanged -> System.EventHandler<TKCode.Arc.ArcThemeChangedEventArgs!>?
+TKCode.Arc.ArcThemeManager.SystemIsDark.get -> bool
+TKCode.Arc.ArcThemeManager.TokenCount.get -> int
+TKCode.Arc.ArcThemePreset
+TKCode.Arc.ArcThemePreset.DarkTokens.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Immutable.ImmutableDictionary<string!, string!>!>!
+TKCode.Arc.ArcThemePreset.IsEmpty.get -> bool
+TKCode.Arc.ArcThemePreset.LightTokens.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Immutable.ImmutableDictionary<string!, string!>!>!
+TKCode.Arc.ArcThemePreset.Name.get -> string!
+TKCode.Arc.ArcThemePreset.Slot.get -> string!
+TKCode.Arc.ArcThemePreset.TokensFor(bool isDark) -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Immutable.ImmutableDictionary<string!, string!>!>!
+TKCode.Arc.ArcThemePresetBuilder
+TKCode.Arc.ArcThemePresetBuilder.ForDark(System.Action<TKCode.Arc.ArcThemePresetBuilder!>! define) -> TKCode.Arc.ArcThemePresetBuilder!
+TKCode.Arc.ArcThemePresetBuilder.ForLight(System.Action<TKCode.Arc.ArcThemePresetBuilder!>! define) -> TKCode.Arc.ArcThemePresetBuilder!
+TKCode.Arc.ArcThemePresetBuilder.Include(TKCode.Arc.ArcThemePreset! preset) -> TKCode.Arc.ArcThemePresetBuilder!
+TKCode.Arc.ArcThemePresetBuilder.Token(string! identity, string! name, string! value) -> TKCode.Arc.ArcThemePresetBuilder!
+TKCode.Arc.ArcThemePresetBuilder.Token(string! name, string! value) -> TKCode.Arc.ArcThemePresetBuilder!
+TKCode.Arc.ArcThemeProvider
+TKCode.Arc.ArcThemeProvider.ArcThemeProvider() -> void
+TKCode.Arc.ArcThemeProvider.AssetCount.get -> int
+TKCode.Arc.ArcThemeProvider.AssetLoaded -> System.EventHandler<TKCode.Arc.ArcThemeAssetLoadedEventArgs!>?
+TKCode.Arc.ArcThemeProvider.Defines(object! key) -> bool
+TKCode.Arc.ArcThemeProvider.IsLoaded(string! assetId) -> bool
+TKCode.Arc.ArcThemeProvider.LoadAll() -> void
+TKCode.Arc.ArcThemeProvider.LoadedCount.get -> int
+TKCode.Arc.ArcThemeProvider.TotalLoadDuration.get -> System.TimeSpan
+TKCode.Arc.ArcThemeScope
+TKCode.Arc.ArcThemeState
+TKCode.Arc.ArcThemeState.Accent.get -> Avalonia.Media.Color?
+TKCode.Arc.ArcThemeState.Appearance.get -> TKCode.Arc.ArcAppearance
+TKCode.Arc.ArcThemeState.MotionLevel.get -> TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.ArcThemeState.Presets.get -> System.Collections.Immutable.ImmutableArray<TKCode.Arc.ArcThemePreset!>
+TKCode.Arc.ArcThemeState.ResolveIsDark(bool systemIsDark) -> bool
+TKCode.Arc.ArcThemeState.TokenOverrides.get -> System.Collections.Generic.IReadOnlyDictionary<string!, System.Collections.Immutable.ImmutableDictionary<string!, string!>!>!
+TKCode.Arc.ArcThemeState.With(System.Action<TKCode.Arc.ArcThemeBuilder!>! configure) -> TKCode.Arc.ArcThemeState!
+TKCode.Arc.ArcTokenDescriptor
+TKCode.Arc.ArcTokenDescriptor.ArcTokenDescriptor(string! identity, bool isGlobal, string![]! tokenNames, object![]! keys) -> void
+TKCode.Arc.ArcTokenDescriptor.Identity.get -> string!
+TKCode.Arc.ArcTokenDescriptor.InvalidValue(string! name, string! typeName, string! value) -> string!
+TKCode.Arc.ArcTokenDescriptor.IsGlobal.get -> bool
+TKCode.Arc.ArcTokenDescriptor.Keys.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.ArcTokenDescriptor.TokenNames.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.ArcTokenDescriptor.UnknownToken(string! name) -> string!
+TKCode.Arc.ArcTokenValueParser
+TKCode.Arc.ControlDesignTokenAttribute
+TKCode.Arc.ControlDesignTokenAttribute.ControlDesignTokenAttribute() -> void
+TKCode.Arc.ControlDesignTokenAttribute.Identity.get -> string?
+TKCode.Arc.ControlDesignTokenAttribute.Identity.set -> void
+TKCode.Arc.ControlDesignTokenAttribute.IsGlobal.get -> bool
+TKCode.Arc.ControlDesignTokenAttribute.IsGlobal.set -> void
+TKCode.Arc.Localization.ArcLanguage
+TKCode.Arc.Localization.ArcLanguageCatalog
+TKCode.Arc.Localization.ArcLanguageCatalog.ArcLanguageCatalog(string! id, TKCode.Arc.Localization.LanguageTag! sourceLanguage, System.Collections.Generic.IReadOnlyList<object!>! keys, System.Collections.Generic.IReadOnlyList<string!>! names, System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.ArcLanguageTable!>! tables) -> void
+TKCode.Arc.Localization.ArcLanguageCatalog.FindTable(TKCode.Arc.Localization.LanguageTag! language) -> TKCode.Arc.Localization.ArcLanguageTable?
+TKCode.Arc.Localization.ArcLanguageCatalog.Id.get -> string!
+TKCode.Arc.Localization.ArcLanguageCatalog.Keys.get -> System.Collections.Generic.IReadOnlyList<object!>!
+TKCode.Arc.Localization.ArcLanguageCatalog.Languages.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.LanguageTag!>!
+TKCode.Arc.Localization.ArcLanguageCatalog.Lookup(int index, TKCode.Arc.Localization.LanguageTag! language) -> string?
+TKCode.Arc.Localization.ArcLanguageCatalog.Names.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.Localization.ArcLanguageCatalog.Resolve(int index, TKCode.Arc.Localization.LanguageTag! language, TKCode.Arc.Localization.LanguageTag? fallback = null) -> string!
+TKCode.Arc.Localization.ArcLanguageCatalog.SourceLanguage.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.ArcLanguageCatalog.SourceText(int index) -> string!
+TKCode.Arc.Localization.ArcLanguageCatalog.Tables.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.ArcLanguageTable!>!
+TKCode.Arc.Localization.ArcLanguageManager
+TKCode.Arc.Localization.ArcLanguageManager.Catalogs.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.ArcLanguageCatalog!>!
+TKCode.Arc.Localization.ArcLanguageManager.Changed -> System.EventHandler<TKCode.Arc.Localization.LanguageChangedEventArgs!>?
+TKCode.Arc.Localization.ArcLanguageManager.Culture.get -> System.Globalization.CultureInfo!
+TKCode.Arc.Localization.ArcLanguageManager.DefaultLanguage.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.ArcLanguageManager.Get(TKCode.Arc.Localization.ArcLanguageCatalog! catalog, int index) -> string!
+TKCode.Arc.Localization.ArcLanguageManager.Language.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.ArcLanguageManager.Resources.get -> Avalonia.Controls.ResourceDictionary!
+TKCode.Arc.Localization.ArcLanguageManager.Set(TKCode.Arc.Localization.LanguageTag! language) -> void
+TKCode.Arc.Localization.ArcLanguageManager.SupportedLanguages.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.LanguageTag!>!
+TKCode.Arc.Localization.ArcLanguageTable
+TKCode.Arc.Localization.ArcLanguageTable.ArcLanguageTable(TKCode.Arc.Localization.LanguageTag! language, System.Collections.Generic.IReadOnlyList<string?>! texts) -> void
+TKCode.Arc.Localization.ArcLanguageTable.Language.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.ArcLanguageTable.Texts.get -> System.Collections.Generic.IReadOnlyList<string?>!
+TKCode.Arc.Localization.LanguageCatalogAttribute
+TKCode.Arc.Localization.LanguageCatalogAttribute.LanguageCatalogAttribute() -> void
+TKCode.Arc.Localization.LanguageChangedEventArgs
+TKCode.Arc.Localization.LanguageChangedEventArgs.LanguageChangedEventArgs(TKCode.Arc.Localization.LanguageTag! oldLanguage, TKCode.Arc.Localization.LanguageTag! newLanguage) -> void
+TKCode.Arc.Localization.LanguageChangedEventArgs.NewLanguage.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.LanguageChangedEventArgs.OldLanguage.get -> TKCode.Arc.Localization.LanguageTag!
+TKCode.Arc.Localization.LanguageTag
+TKCode.Arc.Localization.LanguageTag.Equals(TKCode.Arc.Localization.LanguageTag? other) -> bool
+TKCode.Arc.Localization.LanguageTag.Includes(TKCode.Arc.Localization.LanguageTag! other) -> bool
+TKCode.Arc.Localization.LanguageTag.Parent.get -> TKCode.Arc.Localization.LanguageTag?
+TKCode.Arc.Localization.LanguageTag.ToCulture() -> System.Globalization.CultureInfo!
+TKCode.Arc.Localization.LanguageTag.Value.get -> string!
+TKCode.Arc.Localization.LanguageTags
+TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.Motion.ArcMotionLevel.Full = 2 -> TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.Motion.ArcMotionLevel.Off = 0 -> TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.Motion.ArcMotionLevel.Reduced = 1 -> TKCode.Arc.Motion.ArcMotionLevel
+abstract TKCode.Arc.ArcTokenDescriptor.CreateToken() -> TKCode.Arc.AbstractControlDesignToken!
+abstract TKCode.Arc.ArcTokenDescriptor.TrySetToken(TKCode.Arc.AbstractControlDesignToken! token, string! name, string! value, out string? error) -> bool
+abstract TKCode.Arc.ArcTokenDescriptor.Write(TKCode.Arc.AbstractControlDesignToken! token, object?[]! values) -> void
+const TKCode.Arc.ArcThemePreset.GlobalIdentity = "" -> string!
+const TKCode.Arc.ArcThemeState.GlobalIdentity = "" -> string!
+override TKCode.Arc.ArcThemePreset.ToString() -> string!
+override TKCode.Arc.ArcThemeProvider.HasResources.get -> bool
+override TKCode.Arc.ArcThemeProvider.TryGetResource(object! key, Avalonia.Styling.ThemeVariant? theme, out object? value) -> bool
+override TKCode.Arc.Localization.ArcLanguageCatalog.ToString() -> string!
+override TKCode.Arc.Localization.LanguageTag.Equals(object? obj) -> bool
+override TKCode.Arc.Localization.LanguageTag.GetHashCode() -> int
+override TKCode.Arc.Localization.LanguageTag.ToString() -> string!
+static TKCode.Arc.ArcAppBuilderExtensions.UseArc(this Avalonia.AppBuilder! builder, System.Action<TKCode.Arc.ArcBuilder!>? configure = null) -> Avalonia.AppBuilder!
+static TKCode.Arc.ArcResourceReference.Create(object! key, System.IServiceProvider! serviceProvider) -> Avalonia.Data.BindingBase!
+static TKCode.Arc.ArcRuntime.Current.get -> TKCode.Arc.ArcRuntime?
+static TKCode.Arc.ArcRuntime.Find(Avalonia.Application! application) -> TKCode.Arc.ArcRuntime?
+static TKCode.Arc.ArcRuntime.Install(Avalonia.Application! application, TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcRuntime!
+static TKCode.Arc.ArcTheme.Apply(System.Action<TKCode.Arc.ArcThemeBuilder!>! configure) -> void
+static TKCode.Arc.ArcTheme.Manager.get -> TKCode.Arc.ArcThemeManager!
+static TKCode.Arc.ArcTheme.State.get -> TKCode.Arc.ArcThemeState!
+static TKCode.Arc.ArcThemeManager.Current.get -> TKCode.Arc.ArcThemeManager?
+static TKCode.Arc.ArcThemePreset.Create(string! name, System.Action<TKCode.Arc.ArcThemePresetBuilder!>! define, string? slot = null) -> TKCode.Arc.ArcThemePreset!
+static TKCode.Arc.ArcThemeScope.GetAppearance(Avalonia.StyledElement! element) -> TKCode.Arc.ArcAppearance?
+static TKCode.Arc.ArcThemeScope.GetRoot(Avalonia.StyledElement! element) -> Avalonia.StyledElement?
+static TKCode.Arc.ArcThemeScope.GetState(Avalonia.StyledElement! element) -> TKCode.Arc.ArcThemeState?
+static TKCode.Arc.ArcThemeScope.SetAppearance(Avalonia.StyledElement! element, TKCode.Arc.ArcAppearance? value) -> void
+static TKCode.Arc.ArcThemeScope.SetState(Avalonia.StyledElement! element, TKCode.Arc.ArcThemeState? value) -> void
+static TKCode.Arc.ArcThemeState.Default.get -> TKCode.Arc.ArcThemeState!
+static TKCode.Arc.ArcTokenValueParser.Brush(Avalonia.Media.Color color) -> object!
+static TKCode.Arc.ArcTokenValueParser.TryParseBoolean(string! text, out bool value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseBoxShadows(string! text, out Avalonia.Media.BoxShadows value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseColor(string! text, out Avalonia.Media.Color value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseCornerRadius(string! text, out Avalonia.CornerRadius value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseDouble(string! text, out double value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseEasing(string! text, out Avalonia.Animation.Easings.Easing! value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseFontFamily(string! text, out Avalonia.Media.FontFamily! value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseInt32(string! text, out int value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseThickness(string! text, out Avalonia.Thickness value) -> bool
+static TKCode.Arc.ArcTokenValueParser.TryParseTimeSpan(string! text, out System.TimeSpan value) -> bool
+static TKCode.Arc.Localization.ArcLanguage.Changed -> System.EventHandler<TKCode.Arc.Localization.LanguageChangedEventArgs!>?
+static TKCode.Arc.Localization.ArcLanguage.Culture.get -> System.Globalization.CultureInfo!
+static TKCode.Arc.Localization.ArcLanguage.Current.get -> TKCode.Arc.Localization.LanguageTag!
+static TKCode.Arc.Localization.ArcLanguage.Format(TKCode.Arc.Localization.ArcLanguageCatalog! catalog, int index, object?[]! arguments) -> string!
+static TKCode.Arc.Localization.ArcLanguage.Get(TKCode.Arc.Localization.ArcLanguageCatalog! catalog, int index) -> string!
+static TKCode.Arc.Localization.ArcLanguage.Manager.get -> TKCode.Arc.Localization.ArcLanguageManager?
+static TKCode.Arc.Localization.ArcLanguage.Set(TKCode.Arc.Localization.LanguageTag! language) -> void
+static TKCode.Arc.Localization.ArcLanguage.Set(string! tag) -> void
+static TKCode.Arc.Localization.ArcLanguageManager.Current.get -> TKCode.Arc.Localization.ArcLanguageManager?
+static TKCode.Arc.Localization.ArcLanguageManager.FindCoverageGaps(System.Collections.Generic.IReadOnlyList<TKCode.Arc.Localization.LanguageTag!>! supported, System.Collections.Generic.IEnumerable<(string! Package, TKCode.Arc.Localization.ArcLanguageCatalog! Catalog)>! catalogs) -> System.Collections.Generic.IReadOnlyList<string!>!
+static TKCode.Arc.Localization.LanguageTag.Parse(string! tag) -> TKCode.Arc.Localization.LanguageTag!
+static TKCode.Arc.Localization.LanguageTag.TryParse(string? tag, out TKCode.Arc.Localization.LanguageTag? result) -> bool
+static TKCode.Arc.Localization.LanguageTag.operator !=(TKCode.Arc.Localization.LanguageTag? left, TKCode.Arc.Localization.LanguageTag? right) -> bool
+static TKCode.Arc.Localization.LanguageTag.operator ==(TKCode.Arc.Localization.LanguageTag? left, TKCode.Arc.Localization.LanguageTag? right) -> bool
+static TKCode.Arc.Localization.LanguageTags.EnUS.get -> TKCode.Arc.Localization.LanguageTag!
+static TKCode.Arc.Localization.LanguageTags.ZhCN.get -> TKCode.Arc.Localization.LanguageTag!
+static TKCode.Arc.Localization.LanguageTags.ZhTW.get -> TKCode.Arc.Localization.LanguageTag!
+static readonly TKCode.Arc.ArcSeedToken.Default -> TKCode.Arc.ArcSeedToken!
+static readonly TKCode.Arc.ArcSeedToken.DefaultAccent -> Avalonia.Media.Color
+static readonly TKCode.Arc.ArcThemeScope.AppearanceProperty -> Avalonia.AttachedProperty<TKCode.Arc.ArcAppearance?>!
+static readonly TKCode.Arc.ArcThemeScope.RootProperty -> Avalonia.AttachedProperty<Avalonia.StyledElement?>!
+static readonly TKCode.Arc.ArcThemeScope.StateProperty -> Avalonia.AttachedProperty<TKCode.Arc.ArcThemeState?>!
+virtual TKCode.Arc.AbstractControlDesignToken.CalculateTokenValues(bool isDarkMode) -> void

@@ -1,0 +1,3 @@
+#nullable enable
+TKCode.Arc.ArcPdfNative
+static TKCode.Arc.ArcPdfNative.Use() -> bool

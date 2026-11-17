@@ -1,0 +1,8 @@
+#nullable enable
+TKCode.Arc.AndroidVideoBackend
+TKCode.Arc.AndroidVideoBackend.CanPlay(string! mediaType) -> TKCode.Arc.VideoSupport
+TKCode.Arc.AndroidVideoBackend.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+TKCode.Arc.AndroidVideoBackend.FrameKinds.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.AndroidVideoBackend.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.AndroidVideoBackend.IsReal.get -> bool
+TKCode.Arc.AndroidVideoBackend.Name.get -> string!
