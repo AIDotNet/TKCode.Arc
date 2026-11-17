@@ -8,13 +8,28 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.2.0-preview.1 - 2026-11-17
 
-`TerminalView` draws the rest of what the terminal core already captures: bold and italic faces, every underline style,
-grapheme clusters and emoji, box drawing and Powerline glyphs, and a blinking cursor
-([#139](https://github.com/AIDotNet/TKCode.Arc/issues/139)–[#143](https://github.com/AIDotNet/TKCode.Arc/issues/143)).
-Hosts can now add their own drawing and their own glyphs. Nothing is removed and no signature changes, but a terminal
-looks different after the upgrade; see Changed for how to get the old look back.
+The first preview of 1.2: the fixes from the architecture review
+([#157](https://github.com/AIDotNet/TKCode.Arc/issues/157)) and a richer `TerminalView`.
+
+- **Terminal.** `TerminalView` draws the rest of what the terminal core already captures: bold and italic faces, every
+  underline style, grapheme clusters and emoji, box drawing and Powerline glyphs, and a blinking cursor
+  ([#139](https://github.com/AIDotNet/TKCode.Arc/issues/139)–[#143](https://github.com/AIDotNet/TKCode.Arc/issues/143)).
+  Hosts can add their own drawing and glyphs.
+- **Dependencies.** `TKCode.Arc.Special` no longer pulls in StreamMark, Markdig or TextMate, and `TKCode.Arc.Blocks` no
+  longer pulls in TextMate. Call `UseArcHighlighting()` yourself to keep colored code.
+- **Backends.** The audio, video and PDF backends can be enabled from `UseArc(...)`, and controls follow a backend
+  that arrives late, as a browser's `UseAsync()` can.
+- **New helpers.** Fonts can be registered from `UseArc(...)`; Core adds `ArcColor` and `ArcFormatting.Bytes`.
+- **Public API is tracked.** Every package's public API is now listed in `PublicAPI.Shipped.txt` /
+  `PublicAPI.Unshipped.txt` and checked at build time.
+
+Nothing is removed and no signature changes. Some defaults do change:
+- `UseArcSpecial()` / `UseArcBlocks()` no longer enable highlighting;
+- `TerminalView` looks different, and its default font starts with Geist Mono.
+
+See Changed for both. Install it with `--version 1.2.0-preview.1` (or `--prerelease`).
 
 ### Added
 
