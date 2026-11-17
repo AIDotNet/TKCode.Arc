@@ -1,0 +1,12 @@
+#nullable enable
+TKCode.Arc.ArcVideoBrowser
+TKCode.Arc.BrowserVideoBackend
+TKCode.Arc.BrowserVideoBackend.CanPlay(string! mediaType) -> TKCode.Arc.VideoSupport
+TKCode.Arc.BrowserVideoBackend.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+TKCode.Arc.BrowserVideoBackend.CrossOrigin.get -> string?
+TKCode.Arc.BrowserVideoBackend.CrossOrigin.set -> void
+TKCode.Arc.BrowserVideoBackend.FrameKinds.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.BrowserVideoBackend.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.BrowserVideoBackend.IsReal.get -> bool
+TKCode.Arc.BrowserVideoBackend.Name.get -> string!
+static TKCode.Arc.ArcVideoBrowser.UseAsync() -> System.Threading.Tasks.Task<bool>!

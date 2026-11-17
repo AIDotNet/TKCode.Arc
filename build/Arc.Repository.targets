@@ -21,4 +21,21 @@
     </ItemGroup>
     <Import Project="$(ArcRepositoryRoot)src/TKCode.Arc.Icons.Lucide/buildTransitive/TKCode.Arc.Icons.Lucide.targets"
             Condition="'$(ArcLucideGenerator)' == 'true'" />
+    <!-- Public API tracking (#146): every packable library lists its public surface in PublicAPI.Shipped.txt (what released
+         packages contain) and PublicAPI.Unshipped.txt (added since). A public member missing from both, or listed but gone,
+         fails the build (RS0016, RS0017). At a stable release the Unshipped lines move to Shipped. -->
+    <PropertyGroup>
+        <ArcPublicApi Condition="'$(ArcPublicApi)' == '' And '$(IsPackable)' != 'false' And '$(IsTestProject)' != 'true' And '$(IsRoslynComponent)' != 'true' And '$(PackageType)' != 'Template'">true</ArcPublicApi>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(ArcPublicApi)' == 'true'">
+        <!-- Only the tracking: a public member missing from the files (RS0016) or listed but gone (RS0017). The analyzer's
+             design rules (optional parameters, oblivious types, constructors) are not what this is for. -->
+        <WarningsAsErrors>$(WarningsAsErrors);RS0016;RS0017</WarningsAsErrors>
+        <NoWarn>$(NoWarn);RS0022;RS0026;RS0027;RS0041</NoWarn>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(ArcPublicApi)' == 'true'">
+        <PackageReference Include="Microsoft.CodeAnalysis.PublicApiAnalyzers" PrivateAssets="all" />
+        <AdditionalFiles Include="$(MSBuildProjectDirectory)/PublicAPI.Shipped.txt" />
+        <AdditionalFiles Include="$(MSBuildProjectDirectory)/PublicAPI.Unshipped.txt" />
+    </ItemGroup>
 </Project>

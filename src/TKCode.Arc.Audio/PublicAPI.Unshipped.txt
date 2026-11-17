@@ -1,0 +1,2 @@
+#nullable enable
+static TKCode.Arc.ArcAudio.BackendChanged -> System.EventHandler?

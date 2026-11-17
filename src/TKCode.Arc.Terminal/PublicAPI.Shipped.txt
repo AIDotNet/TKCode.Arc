@@ -1,0 +1,911 @@
+#nullable enable
+TKCode.Terminal.Avalonia.CellMetrics
+TKCode.Terminal.Avalonia.CellMetrics.<Clone>$() -> TKCode.Terminal.Avalonia.CellMetrics!
+TKCode.Terminal.Avalonia.CellMetrics.BaselineY.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.BaselineY.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.CellHeight.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.CellHeight.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.CellMetrics(int CellWidth, int CellHeight, int BaselineY, int UnderlineThickness, double Scaling, double EmSizePx) -> void
+TKCode.Terminal.Avalonia.CellMetrics.CellWidth.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.CellWidth.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.Deconstruct(out int CellWidth, out int CellHeight, out int BaselineY, out int UnderlineThickness, out double Scaling, out double EmSizePx) -> void
+TKCode.Terminal.Avalonia.CellMetrics.EmSizePx.get -> double
+TKCode.Terminal.Avalonia.CellMetrics.EmSizePx.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.Equals(TKCode.Terminal.Avalonia.CellMetrics? other) -> bool
+TKCode.Terminal.Avalonia.CellMetrics.Scaling.get -> double
+TKCode.Terminal.Avalonia.CellMetrics.Scaling.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.UnderlineThickness.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.UnderlineThickness.init -> void
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs.Handled.get -> bool
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs.Handled.set -> void
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs.Input.get -> TKCode.Terminal.Core.KeyInput
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs.Modifiers.get -> Avalonia.Input.KeyModifiers
+TKCode.Terminal.Avalonia.TerminalKeyEventArgs.TerminalKeyEventArgs(TKCode.Terminal.Core.KeyInput input, Avalonia.Input.KeyModifiers modifiers) -> void
+TKCode.Terminal.Avalonia.TerminalKeys
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Cell.get -> TKCode.Terminal.Core.ViewportPoint
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Geometry.get -> TKCode.Terminal.Core.MouseGeometry
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Handled.get -> bool
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Handled.set -> void
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Kind.get -> TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.Mouse.get -> TKCode.Terminal.Core.MouseInput
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.TerminalPointerEventArgs(TKCode.Terminal.Avalonia.TerminalPointerKind kind, TKCode.Terminal.Core.ViewportPoint cell, TKCode.Terminal.Core.MouseInput mouse, TKCode.Terminal.Core.MouseGeometry geometry, double wheelDelta) -> void
+TKCode.Terminal.Avalonia.TerminalPointerEventArgs.WheelDelta.get -> double
+TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalPointerKind.Move = 2 -> TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalPointerKind.Press = 0 -> TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalPointerKind.Release = 1 -> TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalPointerKind.Wheel = 3 -> TKCode.Terminal.Avalonia.TerminalPointerKind
+TKCode.Terminal.Avalonia.TerminalView
+TKCode.Terminal.Avalonia.TerminalView.CursorRectangle.get -> Avalonia.Rect
+TKCode.Terminal.Avalonia.TerminalView.FontFamily.get -> Avalonia.Media.FontFamily!
+TKCode.Terminal.Avalonia.TerminalView.FontFamily.set -> void
+TKCode.Terminal.Avalonia.TerminalView.FontSize.get -> double
+TKCode.Terminal.Avalonia.TerminalView.FontSize.set -> void
+TKCode.Terminal.Avalonia.TerminalView.GridSizeFor(Avalonia.Size available) -> TKCode.Terminal.Core.TerminalSize
+TKCode.Terminal.Avalonia.TerminalView.KeyPressed -> System.EventHandler<TKCode.Terminal.Avalonia.TerminalKeyEventArgs!>?
+TKCode.Terminal.Avalonia.TerminalView.Metrics.get -> TKCode.Terminal.Avalonia.CellMetrics!
+TKCode.Terminal.Avalonia.TerminalView.Padding.get -> double
+TKCode.Terminal.Avalonia.TerminalView.Padding.set -> void
+TKCode.Terminal.Avalonia.TerminalView.PointerChanged -> System.EventHandler<TKCode.Terminal.Avalonia.TerminalPointerEventArgs!>?
+TKCode.Terminal.Avalonia.TerminalView.Preedit.get -> string?
+TKCode.Terminal.Avalonia.TerminalView.Snapshot.get -> TKCode.Terminal.Core.FrameSnapshot?
+TKCode.Terminal.Avalonia.TerminalView.Snapshot.set -> void
+TKCode.Terminal.Avalonia.TerminalView.TerminalView() -> void
+TKCode.Terminal.Avalonia.TerminalView.TextEntered -> System.EventHandler<string!>?
+TKCode.Terminal.Core.CellSpan
+TKCode.Terminal.Core.CellSpan.CellSpan() -> void
+TKCode.Terminal.Core.CellSpan.CellSpan(int Row, int StartColumn, int EndColumn) -> void
+TKCode.Terminal.Core.CellSpan.Deconstruct(out int Row, out int StartColumn, out int EndColumn) -> void
+TKCode.Terminal.Core.CellSpan.EndColumn.get -> int
+TKCode.Terminal.Core.CellSpan.EndColumn.init -> void
+TKCode.Terminal.Core.CellSpan.Equals(TKCode.Terminal.Core.CellSpan other) -> bool
+TKCode.Terminal.Core.CellSpan.Row.get -> int
+TKCode.Terminal.Core.CellSpan.Row.init -> void
+TKCode.Terminal.Core.CellSpan.StartColumn.get -> int
+TKCode.Terminal.Core.CellSpan.StartColumn.init -> void
+TKCode.Terminal.Core.CellWidth
+TKCode.Terminal.Core.CellWidth.Narrow = 0 -> TKCode.Terminal.Core.CellWidth
+TKCode.Terminal.Core.CellWidth.SpacerHead = 3 -> TKCode.Terminal.Core.CellWidth
+TKCode.Terminal.Core.CellWidth.SpacerTail = 2 -> TKCode.Terminal.Core.CellWidth
+TKCode.Terminal.Core.CellWidth.Wide = 1 -> TKCode.Terminal.Core.CellWidth
+TKCode.Terminal.Core.ClearTarget
+TKCode.Terminal.Core.ClearTarget.All = 2 -> TKCode.Terminal.Core.ClearTarget
+TKCode.Terminal.Core.ClearTarget.Screen = 0 -> TKCode.Terminal.Core.ClearTarget
+TKCode.Terminal.Core.ClearTarget.Scrollback = 1 -> TKCode.Terminal.Core.ClearTarget
+TKCode.Terminal.Core.ClipboardReadDecision
+TKCode.Terminal.Core.ClipboardReadDecision.Deferred = 1 -> TKCode.Terminal.Core.ClipboardReadDecision
+TKCode.Terminal.Core.ClipboardReadDecision.Denied = 0 -> TKCode.Terminal.Core.ClipboardReadDecision
+TKCode.Terminal.Core.ClipboardTarget
+TKCode.Terminal.Core.ClipboardTarget.Primary = 2 -> TKCode.Terminal.Core.ClipboardTarget
+TKCode.Terminal.Core.ClipboardTarget.Selection = 1 -> TKCode.Terminal.Core.ClipboardTarget
+TKCode.Terminal.Core.ClipboardTarget.Standard = 0 -> TKCode.Terminal.Core.ClipboardTarget
+TKCode.Terminal.Core.ClipboardWriteResult
+TKCode.Terminal.Core.ClipboardWriteResult.Denied = 1 -> TKCode.Terminal.Core.ClipboardWriteResult
+TKCode.Terminal.Core.ClipboardWriteResult.Success = 0 -> TKCode.Terminal.Core.ClipboardWriteResult
+TKCode.Terminal.Core.ColorScheme
+TKCode.Terminal.Core.ColorScheme.Dark = 0 -> TKCode.Terminal.Core.ColorScheme
+TKCode.Terminal.Core.ColorScheme.Light = 1 -> TKCode.Terminal.Core.ColorScheme
+TKCode.Terminal.Core.CommandRecord
+TKCode.Terminal.Core.CommandRecord.CommandLine.get -> string?
+TKCode.Terminal.Core.CommandRecord.CommandRecord() -> void
+TKCode.Terminal.Core.CommandRecord.EndedAt.get -> System.DateTimeOffset?
+TKCode.Terminal.Core.CommandRecord.ErrorText.get -> string?
+TKCode.Terminal.Core.CommandRecord.ExitCode.get -> int?
+TKCode.Terminal.Core.CommandRecord.Id.get -> long
+TKCode.Terminal.Core.CommandRecord.Id.init -> void
+TKCode.Terminal.Core.CommandRecord.PromptAt.get -> System.DateTimeOffset
+TKCode.Terminal.Core.CommandRecord.StartedAt.get -> System.DateTimeOffset?
+TKCode.Terminal.Core.CommandRecord.State.get -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState.Abandoned = 4 -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState.Finished = 3 -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState.Input = 1 -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState.Prompt = 0 -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandState.Running = 2 -> TKCode.Terminal.Core.CommandState
+TKCode.Terminal.Core.CommandTracker
+TKCode.Terminal.Core.CommandTracker.Current.get -> TKCode.Terminal.Core.CommandRecord?
+TKCode.Terminal.Core.CommandTracker.Dispose() -> void
+TKCode.Terminal.Core.CommandTracker.Osc633Nonce.get -> string?
+TKCode.Terminal.Core.CommandTracker.Osc633Nonce.set -> void
+TKCode.Terminal.Core.CommandTracker.ReadOutput(TKCode.Terminal.Core.CommandRecord! record, int maxChars = 262144) -> string?
+TKCode.Terminal.Core.CommandTracker.Records.get -> System.Collections.Generic.IReadOnlyList<TKCode.Terminal.Core.CommandRecord!>!
+TKCode.Terminal.Core.ConformanceMode
+TKCode.Terminal.Core.ConformanceMode.<Clone>$() -> TKCode.Terminal.Core.ConformanceMode!
+TKCode.Terminal.Core.ConformanceMode.ConformanceMode(byte XtChecksumExtension = 23) -> void
+TKCode.Terminal.Core.ConformanceMode.Deconstruct(out byte XtChecksumExtension) -> void
+TKCode.Terminal.Core.ConformanceMode.Equals(TKCode.Terminal.Core.ConformanceMode? other) -> bool
+TKCode.Terminal.Core.ConformanceMode.XtChecksumExtension.get -> byte
+TKCode.Terminal.Core.ConformanceMode.XtChecksumExtension.init -> void
+TKCode.Terminal.Core.CursorState
+TKCode.Terminal.Core.CursorState.Blinking.get -> bool
+TKCode.Terminal.Core.CursorState.Blinking.init -> void
+TKCode.Terminal.Core.CursorState.Column.get -> int
+TKCode.Terminal.Core.CursorState.Column.init -> void
+TKCode.Terminal.Core.CursorState.CursorState() -> void
+TKCode.Terminal.Core.CursorState.CursorState(int Column, int Row, bool Visible, TKCode.Terminal.Core.CursorStyle Style, bool Blinking = false, bool WideTail = false, bool PasswordInput = false) -> void
+TKCode.Terminal.Core.CursorState.Deconstruct(out int Column, out int Row, out bool Visible, out TKCode.Terminal.Core.CursorStyle Style, out bool Blinking, out bool WideTail, out bool PasswordInput) -> void
+TKCode.Terminal.Core.CursorState.Equals(TKCode.Terminal.Core.CursorState other) -> bool
+TKCode.Terminal.Core.CursorState.PasswordInput.get -> bool
+TKCode.Terminal.Core.CursorState.PasswordInput.init -> void
+TKCode.Terminal.Core.CursorState.Row.get -> int
+TKCode.Terminal.Core.CursorState.Row.init -> void
+TKCode.Terminal.Core.CursorState.Style.get -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.CursorState.Style.init -> void
+TKCode.Terminal.Core.CursorState.Visible.get -> bool
+TKCode.Terminal.Core.CursorState.Visible.init -> void
+TKCode.Terminal.Core.CursorState.WideTail.get -> bool
+TKCode.Terminal.Core.CursorState.WideTail.init -> void
+TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.CursorStyle.Bar = 0 -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.CursorStyle.Block = 1 -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.CursorStyle.BlockHollow = 3 -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.CursorStyle.Underline = 2 -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.FrameSnapshot
+TKCode.Terminal.Core.FrameSnapshot.Columns.get -> int
+TKCode.Terminal.Core.FrameSnapshot.Columns.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Cursor.get -> TKCode.Terminal.Core.CursorState
+TKCode.Terminal.Core.FrameSnapshot.Cursor.init -> void
+TKCode.Terminal.Core.FrameSnapshot.FrameSnapshot() -> void
+TKCode.Terminal.Core.FrameSnapshot.Generation.get -> long
+TKCode.Terminal.Core.FrameSnapshot.Generation.init -> void
+TKCode.Terminal.Core.FrameSnapshot.LinkOf(in TKCode.Terminal.Core.ResolvedStyle style) -> string?
+TKCode.Terminal.Core.FrameSnapshot.Links.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Terminal.Core.FrameSnapshot.Links.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Palette.get -> TKCode.Terminal.Core.TerminalPalette!
+TKCode.Terminal.Core.FrameSnapshot.Palette.init -> void
+TKCode.Terminal.Core.FrameSnapshot.RenderHeld.get -> bool
+TKCode.Terminal.Core.FrameSnapshot.RenderHeld.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Rows.get -> TKCode.Terminal.Core.RowSnapshot![]!
+TKCode.Terminal.Core.FrameSnapshot.Rows.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Scrollbar.get -> TKCode.Terminal.Core.ScrollbarState
+TKCode.Terminal.Core.FrameSnapshot.Scrollbar.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Search.get -> TKCode.Terminal.Core.SearchHighlights?
+TKCode.Terminal.Core.FrameSnapshot.Search.init -> void
+TKCode.Terminal.Core.FrameSnapshot.Selection.get -> TKCode.Terminal.Core.CellSpan[]!
+TKCode.Terminal.Core.FrameSnapshot.Selection.init -> void
+TKCode.Terminal.Core.GhosttyException
+TKCode.Terminal.Core.GhosttyException.Code.get -> int
+TKCode.Terminal.Core.GhosttyRuntime
+TKCode.Terminal.Core.ITerminalEffects
+TKCode.Terminal.Core.ITerminalEffects.Bell() -> void
+TKCode.Terminal.Core.ITerminalEffects.ClipboardRead(in TKCode.Terminal.Core.PendingClipboardRead request) -> TKCode.Terminal.Core.ClipboardReadDecision
+TKCode.Terminal.Core.ITerminalEffects.ClipboardWrite(TKCode.Terminal.Core.ClipboardTarget target, string! mime, System.ReadOnlySpan<byte> data) -> TKCode.Terminal.Core.ClipboardWriteResult
+TKCode.Terminal.Core.ITerminalEffects.FullReset() -> void
+TKCode.Terminal.Core.ITerminalEffects.Notification(string! title, string! body) -> void
+TKCode.Terminal.Core.ITerminalEffects.Progress(TKCode.Terminal.Core.ProgressState state, int? percent) -> void
+TKCode.Terminal.Core.ITerminalEffects.RenderHold(bool hold) -> void
+TKCode.Terminal.Core.ITerminalEffects.ResizeWindowRequested(int columns, int rows) -> void
+TKCode.Terminal.Core.ITerminalEffects.SemanticPrompt(in TKCode.Terminal.Core.SemanticPromptEvent e) -> void
+TKCode.Terminal.Core.ITerminalEffects.TitleChanged(string! title) -> void
+TKCode.Terminal.Core.ITerminalEffects.UnknownOsc(System.ReadOnlySpan<byte> payload, bool truncated) -> void
+TKCode.Terminal.Core.ITerminalEffects.WorkingDirectoryChanged(string! raw) -> void
+TKCode.Terminal.Core.ITerminalEffects.WriteToPty(System.ReadOnlySpan<byte> reply) -> void
+TKCode.Terminal.Core.InputEncoder
+TKCode.Terminal.Core.InputEncoder.Apply(in TKCode.Terminal.Core.InputModes modes) -> void
+TKCode.Terminal.Core.InputEncoder.Dispose() -> void
+TKCode.Terminal.Core.InputEncoder.EncodeKey(in TKCode.Terminal.Core.KeyInput key, System.Span<byte> destination) -> int
+TKCode.Terminal.Core.InputEncoder.EncodeMouse(in TKCode.Terminal.Core.MouseInput mouse, in TKCode.Terminal.Core.MouseGeometry geometry, bool anyButtonPressed, System.Span<byte> destination) -> int
+TKCode.Terminal.Core.InputEncoder.InputEncoder() -> void
+TKCode.Terminal.Core.InputEncoder.Modes.get -> TKCode.Terminal.Core.InputModes
+TKCode.Terminal.Core.InputEncoder.OptionAsAlt.get -> TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.InputEncoder.OptionAsAlt.set -> void
+TKCode.Terminal.Core.InputModes
+TKCode.Terminal.Core.InputModes.AltEscPrefix.get -> bool
+TKCode.Terminal.Core.InputModes.AltEscPrefix.init -> void
+TKCode.Terminal.Core.InputModes.AlternateScreen.get -> bool
+TKCode.Terminal.Core.InputModes.AlternateScreen.init -> void
+TKCode.Terminal.Core.InputModes.AlternateScroll.get -> bool
+TKCode.Terminal.Core.InputModes.AlternateScroll.init -> void
+TKCode.Terminal.Core.InputModes.BackarrowSendsBackspace.get -> bool
+TKCode.Terminal.Core.InputModes.BackarrowSendsBackspace.init -> void
+TKCode.Terminal.Core.InputModes.BracketedPaste.get -> bool
+TKCode.Terminal.Core.InputModes.BracketedPaste.init -> void
+TKCode.Terminal.Core.InputModes.CursorAtPrompt.get -> bool
+TKCode.Terminal.Core.InputModes.CursorAtPrompt.init -> void
+TKCode.Terminal.Core.InputModes.CursorKeyApplication.get -> bool
+TKCode.Terminal.Core.InputModes.CursorKeyApplication.init -> void
+TKCode.Terminal.Core.InputModes.Equals(TKCode.Terminal.Core.InputModes other) -> bool
+TKCode.Terminal.Core.InputModes.FocusEvents.get -> bool
+TKCode.Terminal.Core.InputModes.FocusEvents.init -> void
+TKCode.Terminal.Core.InputModes.GraphemeCluster.get -> bool
+TKCode.Terminal.Core.InputModes.GraphemeCluster.init -> void
+TKCode.Terminal.Core.InputModes.IgnoreKeypadWithNumLock.get -> bool
+TKCode.Terminal.Core.InputModes.IgnoreKeypadWithNumLock.init -> void
+TKCode.Terminal.Core.InputModes.InputModes() -> void
+TKCode.Terminal.Core.InputModes.KeypadApplication.get -> bool
+TKCode.Terminal.Core.InputModes.KeypadApplication.init -> void
+TKCode.Terminal.Core.InputModes.KittyFlags.get -> byte
+TKCode.Terminal.Core.InputModes.KittyFlags.init -> void
+TKCode.Terminal.Core.InputModes.ModifyOtherKeys2.get -> bool
+TKCode.Terminal.Core.InputModes.ModifyOtherKeys2.init -> void
+TKCode.Terminal.Core.InputModes.MouseFormat.get -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.InputModes.MouseFormat.init -> void
+TKCode.Terminal.Core.InputModes.MouseTracking.get -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.InputModes.MouseTracking.init -> void
+TKCode.Terminal.Core.InputModes.Win32Input.get -> bool
+TKCode.Terminal.Core.InputModes.Win32Input.init -> void
+TKCode.Terminal.Core.Interop.GhosttyAbiMismatchException
+TKCode.Terminal.Core.Interop.GhosttyAbiMismatchException.GhosttyAbiMismatchException(string! message) -> void
+TKCode.Terminal.Core.KeyAction
+TKCode.Terminal.Core.KeyAction.Press = 1 -> TKCode.Terminal.Core.KeyAction
+TKCode.Terminal.Core.KeyAction.Release = 0 -> TKCode.Terminal.Core.KeyAction
+TKCode.Terminal.Core.KeyAction.Repeat = 2 -> TKCode.Terminal.Core.KeyAction
+TKCode.Terminal.Core.KeyInput
+TKCode.Terminal.Core.KeyInput.Action.get -> TKCode.Terminal.Core.KeyAction
+TKCode.Terminal.Core.KeyInput.Action.init -> void
+TKCode.Terminal.Core.KeyInput.Composing.get -> bool
+TKCode.Terminal.Core.KeyInput.Composing.init -> void
+TKCode.Terminal.Core.KeyInput.ConsumedMods.get -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyInput.ConsumedMods.init -> void
+TKCode.Terminal.Core.KeyInput.Deconstruct(out TKCode.Terminal.Core.TerminalKey Key, out TKCode.Terminal.Core.KeyAction Action, out TKCode.Terminal.Core.KeyMods Mods, out string? Text, out TKCode.Terminal.Core.KeyMods ConsumedMods, out uint UnshiftedCodepoint, out bool Composing) -> void
+TKCode.Terminal.Core.KeyInput.Equals(TKCode.Terminal.Core.KeyInput other) -> bool
+TKCode.Terminal.Core.KeyInput.Key.get -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.KeyInput.Key.init -> void
+TKCode.Terminal.Core.KeyInput.KeyInput() -> void
+TKCode.Terminal.Core.KeyInput.KeyInput(TKCode.Terminal.Core.TerminalKey Key, TKCode.Terminal.Core.KeyAction Action, TKCode.Terminal.Core.KeyMods Mods, string? Text = null, TKCode.Terminal.Core.KeyMods ConsumedMods = TKCode.Terminal.Core.KeyMods.None, uint UnshiftedCodepoint = 0, bool Composing = false) -> void
+TKCode.Terminal.Core.KeyInput.Mods.get -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyInput.Mods.init -> void
+TKCode.Terminal.Core.KeyInput.Text.get -> string?
+TKCode.Terminal.Core.KeyInput.Text.init -> void
+TKCode.Terminal.Core.KeyInput.UnshiftedCodepoint.get -> uint
+TKCode.Terminal.Core.KeyInput.UnshiftedCodepoint.init -> void
+TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.Alt = 4 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.CapsLock = 16 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.Ctrl = 2 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.None = 0 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.NumLock = 32 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.RightAlt = 256 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.RightCtrl = 128 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.RightShift = 64 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.RightSuper = 512 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.Shift = 1 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.KeyMods.Super = 8 -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.MouseAction
+TKCode.Terminal.Core.MouseAction.Motion = 2 -> TKCode.Terminal.Core.MouseAction
+TKCode.Terminal.Core.MouseAction.Press = 0 -> TKCode.Terminal.Core.MouseAction
+TKCode.Terminal.Core.MouseAction.Release = 1 -> TKCode.Terminal.Core.MouseAction
+TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.Left = 1 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.Middle = 3 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.None = 0 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.Right = 2 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.WheelDown = 5 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.WheelLeft = 6 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.WheelRight = 7 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseButton.WheelUp = 4 -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseFormat.Sgr = 2 -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseFormat.SgrPixels = 4 -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseFormat.Urxvt = 3 -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseFormat.Utf8 = 1 -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseFormat.X10 = 0 -> TKCode.Terminal.Core.MouseFormat
+TKCode.Terminal.Core.MouseGeometry
+TKCode.Terminal.Core.MouseGeometry.CellHeight.get -> int
+TKCode.Terminal.Core.MouseGeometry.CellHeight.init -> void
+TKCode.Terminal.Core.MouseGeometry.CellWidth.get -> int
+TKCode.Terminal.Core.MouseGeometry.CellWidth.init -> void
+TKCode.Terminal.Core.MouseGeometry.Deconstruct(out int ScreenWidth, out int ScreenHeight, out int CellWidth, out int CellHeight, out int PaddingLeft, out int PaddingTop, out int PaddingRight, out int PaddingBottom) -> void
+TKCode.Terminal.Core.MouseGeometry.Equals(TKCode.Terminal.Core.MouseGeometry other) -> bool
+TKCode.Terminal.Core.MouseGeometry.MouseGeometry() -> void
+TKCode.Terminal.Core.MouseGeometry.MouseGeometry(int ScreenWidth, int ScreenHeight, int CellWidth, int CellHeight, int PaddingLeft, int PaddingTop, int PaddingRight, int PaddingBottom) -> void
+TKCode.Terminal.Core.MouseGeometry.PaddingBottom.get -> int
+TKCode.Terminal.Core.MouseGeometry.PaddingBottom.init -> void
+TKCode.Terminal.Core.MouseGeometry.PaddingLeft.get -> int
+TKCode.Terminal.Core.MouseGeometry.PaddingLeft.init -> void
+TKCode.Terminal.Core.MouseGeometry.PaddingRight.get -> int
+TKCode.Terminal.Core.MouseGeometry.PaddingRight.init -> void
+TKCode.Terminal.Core.MouseGeometry.PaddingTop.get -> int
+TKCode.Terminal.Core.MouseGeometry.PaddingTop.init -> void
+TKCode.Terminal.Core.MouseGeometry.ScreenHeight.get -> int
+TKCode.Terminal.Core.MouseGeometry.ScreenHeight.init -> void
+TKCode.Terminal.Core.MouseGeometry.ScreenWidth.get -> int
+TKCode.Terminal.Core.MouseGeometry.ScreenWidth.init -> void
+TKCode.Terminal.Core.MouseInput
+TKCode.Terminal.Core.MouseInput.Action.get -> TKCode.Terminal.Core.MouseAction
+TKCode.Terminal.Core.MouseInput.Action.init -> void
+TKCode.Terminal.Core.MouseInput.Button.get -> TKCode.Terminal.Core.MouseButton
+TKCode.Terminal.Core.MouseInput.Button.init -> void
+TKCode.Terminal.Core.MouseInput.Deconstruct(out TKCode.Terminal.Core.MouseAction Action, out TKCode.Terminal.Core.MouseButton Button, out TKCode.Terminal.Core.KeyMods Mods, out float X, out float Y) -> void
+TKCode.Terminal.Core.MouseInput.Equals(TKCode.Terminal.Core.MouseInput other) -> bool
+TKCode.Terminal.Core.MouseInput.Mods.get -> TKCode.Terminal.Core.KeyMods
+TKCode.Terminal.Core.MouseInput.Mods.init -> void
+TKCode.Terminal.Core.MouseInput.MouseInput() -> void
+TKCode.Terminal.Core.MouseInput.MouseInput(TKCode.Terminal.Core.MouseAction Action, TKCode.Terminal.Core.MouseButton Button, TKCode.Terminal.Core.KeyMods Mods, float X, float Y) -> void
+TKCode.Terminal.Core.MouseInput.X.get -> float
+TKCode.Terminal.Core.MouseInput.X.init -> void
+TKCode.Terminal.Core.MouseInput.Y.get -> float
+TKCode.Terminal.Core.MouseInput.Y.init -> void
+TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.MouseTracking.Any = 4 -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.MouseTracking.Button = 3 -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.MouseTracking.None = 0 -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.MouseTracking.Normal = 2 -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.MouseTracking.X10 = 1 -> TKCode.Terminal.Core.MouseTracking
+TKCode.Terminal.Core.NullTerminalEffects
+TKCode.Terminal.Core.NullTerminalEffects.NullTerminalEffects() -> void
+TKCode.Terminal.Core.NullTerminalEffects.WriteToPty(System.ReadOnlySpan<byte> reply) -> void
+TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.OptionAsAlt.Both = 1 -> TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.OptionAsAlt.Left = 2 -> TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.OptionAsAlt.None = 0 -> TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.OptionAsAlt.Right = 3 -> TKCode.Terminal.Core.OptionAsAlt
+TKCode.Terminal.Core.PasteEncoder
+TKCode.Terminal.Core.PasteOutcome
+TKCode.Terminal.Core.PasteOutcome.Empty = 1 -> TKCode.Terminal.Core.PasteOutcome
+TKCode.Terminal.Core.PasteOutcome.RequiresConfirmation = 2 -> TKCode.Terminal.Core.PasteOutcome
+TKCode.Terminal.Core.PasteOutcome.Written = 0 -> TKCode.Terminal.Core.PasteOutcome
+TKCode.Terminal.Core.PendingClipboardRead
+TKCode.Terminal.Core.PendingClipboardRead.BelTerminator.get -> bool
+TKCode.Terminal.Core.PendingClipboardRead.BelTerminator.init -> void
+TKCode.Terminal.Core.PendingClipboardRead.Deconstruct(out TKCode.Terminal.Core.ClipboardTarget Target, out bool BelTerminator) -> void
+TKCode.Terminal.Core.PendingClipboardRead.Equals(TKCode.Terminal.Core.PendingClipboardRead other) -> bool
+TKCode.Terminal.Core.PendingClipboardRead.PendingClipboardRead() -> void
+TKCode.Terminal.Core.PendingClipboardRead.PendingClipboardRead(TKCode.Terminal.Core.ClipboardTarget Target, bool BelTerminator) -> void
+TKCode.Terminal.Core.PendingClipboardRead.Target.get -> TKCode.Terminal.Core.ClipboardTarget
+TKCode.Terminal.Core.PendingClipboardRead.Target.init -> void
+TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ProgressState.Error = 2 -> TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ProgressState.Indeterminate = 3 -> TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ProgressState.Pause = 4 -> TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ProgressState.Remove = 0 -> TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ProgressState.Set = 1 -> TKCode.Terminal.Core.ProgressState
+TKCode.Terminal.Core.ResolvedStyle
+TKCode.Terminal.Core.ResolvedStyle.Background.get -> TKCode.Terminal.Core.TerminalColor
+TKCode.Terminal.Core.ResolvedStyle.Background.init -> void
+TKCode.Terminal.Core.ResolvedStyle.Deconstruct(out TKCode.Terminal.Core.TerminalColor Foreground, out TKCode.Terminal.Core.TerminalColor Background, out TKCode.Terminal.Core.TerminalColor UnderlineColor, out TKCode.Terminal.Core.StyleFlags Flags, out TKCode.Terminal.Core.UnderlineStyle Underline, out int HyperlinkId) -> void
+TKCode.Terminal.Core.ResolvedStyle.Equals(TKCode.Terminal.Core.ResolvedStyle other) -> bool
+TKCode.Terminal.Core.ResolvedStyle.Flags.get -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.ResolvedStyle.Flags.init -> void
+TKCode.Terminal.Core.ResolvedStyle.Foreground.get -> TKCode.Terminal.Core.TerminalColor
+TKCode.Terminal.Core.ResolvedStyle.Foreground.init -> void
+TKCode.Terminal.Core.ResolvedStyle.HyperlinkId.get -> int
+TKCode.Terminal.Core.ResolvedStyle.HyperlinkId.init -> void
+TKCode.Terminal.Core.ResolvedStyle.ResolvedStyle() -> void
+TKCode.Terminal.Core.ResolvedStyle.ResolvedStyle(TKCode.Terminal.Core.TerminalColor Foreground, TKCode.Terminal.Core.TerminalColor Background, TKCode.Terminal.Core.TerminalColor UnderlineColor, TKCode.Terminal.Core.StyleFlags Flags, TKCode.Terminal.Core.UnderlineStyle Underline, int HyperlinkId = 0) -> void
+TKCode.Terminal.Core.ResolvedStyle.Underline.get -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.ResolvedStyle.Underline.init -> void
+TKCode.Terminal.Core.ResolvedStyle.UnderlineColor.get -> TKCode.Terminal.Core.TerminalColor
+TKCode.Terminal.Core.ResolvedStyle.UnderlineColor.init -> void
+TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.HasHyperlink = 8 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.KittyPlaceholder = 16 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.None = 0 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.PromptLine = 4 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.SoftWrapped = 1 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowFlags.WrapContinuation = 2 -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowSnapshot
+TKCode.Terminal.Core.RowSnapshot.Cells.get -> ulong[]!
+TKCode.Terminal.Core.RowSnapshot.Cells.init -> void
+TKCode.Terminal.Core.RowSnapshot.ContentHash.get -> ulong
+TKCode.Terminal.Core.RowSnapshot.ContentHash.init -> void
+TKCode.Terminal.Core.RowSnapshot.Flags.get -> TKCode.Terminal.Core.RowFlags
+TKCode.Terminal.Core.RowSnapshot.Flags.init -> void
+TKCode.Terminal.Core.RowSnapshot.Graphemes.get -> System.Collections.Generic.IReadOnlyDictionary<int, int[]!>?
+TKCode.Terminal.Core.RowSnapshot.Graphemes.init -> void
+TKCode.Terminal.Core.RowSnapshot.RowId.get -> ulong
+TKCode.Terminal.Core.RowSnapshot.RowId.init -> void
+TKCode.Terminal.Core.RowSnapshot.RowSnapshot() -> void
+TKCode.Terminal.Core.RowSnapshot.Styles.get -> TKCode.Terminal.Core.ResolvedStyle[]!
+TKCode.Terminal.Core.RowSnapshot.Styles.init -> void
+TKCode.Terminal.Core.RowSnapshot.TextAt(int column) -> string?
+TKCode.Terminal.Core.RowSnapshot.Version.get -> int
+TKCode.Terminal.Core.RowSnapshot.Version.init -> void
+TKCode.Terminal.Core.ScrollbarState
+TKCode.Terminal.Core.ScrollbarState.Deconstruct(out long Total, out long Offset, out long Length) -> void
+TKCode.Terminal.Core.ScrollbarState.Equals(TKCode.Terminal.Core.ScrollbarState other) -> bool
+TKCode.Terminal.Core.ScrollbarState.Length.get -> long
+TKCode.Terminal.Core.ScrollbarState.Length.init -> void
+TKCode.Terminal.Core.ScrollbarState.Offset.get -> long
+TKCode.Terminal.Core.ScrollbarState.Offset.init -> void
+TKCode.Terminal.Core.ScrollbarState.ScrollbarState() -> void
+TKCode.Terminal.Core.ScrollbarState.ScrollbarState(long Total, long Offset, long Length) -> void
+TKCode.Terminal.Core.ScrollbarState.Total.get -> long
+TKCode.Terminal.Core.ScrollbarState.Total.init -> void
+TKCode.Terminal.Core.SearchHighlights
+TKCode.Terminal.Core.SearchHighlights.<Clone>$() -> TKCode.Terminal.Core.SearchHighlights!
+TKCode.Terminal.Core.SearchHighlights.Deconstruct(out TKCode.Terminal.Core.CellSpan[]! Matches, out TKCode.Terminal.Core.CellSpan[]! Selected, out long TotalMatches, out long? SelectedIndex) -> void
+TKCode.Terminal.Core.SearchHighlights.Equals(TKCode.Terminal.Core.SearchHighlights? other) -> bool
+TKCode.Terminal.Core.SearchHighlights.Matches.get -> TKCode.Terminal.Core.CellSpan[]!
+TKCode.Terminal.Core.SearchHighlights.Matches.init -> void
+TKCode.Terminal.Core.SearchHighlights.SearchHighlights(TKCode.Terminal.Core.CellSpan[]! Matches, TKCode.Terminal.Core.CellSpan[]! Selected, long TotalMatches, long? SelectedIndex) -> void
+TKCode.Terminal.Core.SearchHighlights.Selected.get -> TKCode.Terminal.Core.CellSpan[]!
+TKCode.Terminal.Core.SearchHighlights.Selected.init -> void
+TKCode.Terminal.Core.SearchHighlights.SelectedIndex.get -> long?
+TKCode.Terminal.Core.SearchHighlights.SelectedIndex.init -> void
+TKCode.Terminal.Core.SearchHighlights.TotalMatches.get -> long
+TKCode.Terminal.Core.SearchHighlights.TotalMatches.init -> void
+TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionKind.All = 3 -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionKind.CommandOutput = 4 -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionKind.Line = 2 -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionKind.Range = 0 -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionKind.Word = 1 -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionRequest
+TKCode.Terminal.Core.SelectionRequest.Deconstruct(out TKCode.Terminal.Core.SelectionKind Kind, out TKCode.Terminal.Core.ViewportPoint Start, out TKCode.Terminal.Core.ViewportPoint End, out bool Rectangle) -> void
+TKCode.Terminal.Core.SelectionRequest.End.get -> TKCode.Terminal.Core.ViewportPoint
+TKCode.Terminal.Core.SelectionRequest.End.init -> void
+TKCode.Terminal.Core.SelectionRequest.Equals(TKCode.Terminal.Core.SelectionRequest other) -> bool
+TKCode.Terminal.Core.SelectionRequest.Kind.get -> TKCode.Terminal.Core.SelectionKind
+TKCode.Terminal.Core.SelectionRequest.Kind.init -> void
+TKCode.Terminal.Core.SelectionRequest.Rectangle.get -> bool
+TKCode.Terminal.Core.SelectionRequest.Rectangle.init -> void
+TKCode.Terminal.Core.SelectionRequest.SelectionRequest() -> void
+TKCode.Terminal.Core.SelectionRequest.SelectionRequest(TKCode.Terminal.Core.SelectionKind Kind, TKCode.Terminal.Core.ViewportPoint Start, TKCode.Terminal.Core.ViewportPoint End = default(TKCode.Terminal.Core.ViewportPoint), bool Rectangle = false) -> void
+TKCode.Terminal.Core.SelectionRequest.Start.get -> TKCode.Terminal.Core.ViewportPoint
+TKCode.Terminal.Core.SelectionRequest.Start.init -> void
+TKCode.Terminal.Core.SemanticContent
+TKCode.Terminal.Core.SemanticContent.Input = 1 -> TKCode.Terminal.Core.SemanticContent
+TKCode.Terminal.Core.SemanticContent.Output = 0 -> TKCode.Terminal.Core.SemanticContent
+TKCode.Terminal.Core.SemanticContent.Prompt = 2 -> TKCode.Terminal.Core.SemanticContent
+TKCode.Terminal.Core.SemanticPromptEvent
+TKCode.Terminal.Core.SemanticPromptEvent.CommandLine.get -> string?
+TKCode.Terminal.Core.SemanticPromptEvent.CommandLine.init -> void
+TKCode.Terminal.Core.SemanticPromptEvent.Deconstruct(out TKCode.Terminal.Core.SemanticPromptKind Kind, out bool PrimaryPrompt, out int? ExitCode, out string? CommandLine, out string? Error) -> void
+TKCode.Terminal.Core.SemanticPromptEvent.Equals(TKCode.Terminal.Core.SemanticPromptEvent other) -> bool
+TKCode.Terminal.Core.SemanticPromptEvent.Error.get -> string?
+TKCode.Terminal.Core.SemanticPromptEvent.Error.init -> void
+TKCode.Terminal.Core.SemanticPromptEvent.ExitCode.get -> int?
+TKCode.Terminal.Core.SemanticPromptEvent.ExitCode.init -> void
+TKCode.Terminal.Core.SemanticPromptEvent.Kind.get -> TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.SemanticPromptEvent.Kind.init -> void
+TKCode.Terminal.Core.SemanticPromptEvent.PrimaryPrompt.get -> bool
+TKCode.Terminal.Core.SemanticPromptEvent.PrimaryPrompt.init -> void
+TKCode.Terminal.Core.SemanticPromptEvent.SemanticPromptEvent() -> void
+TKCode.Terminal.Core.SemanticPromptEvent.SemanticPromptEvent(TKCode.Terminal.Core.SemanticPromptKind Kind, bool PrimaryPrompt, int? ExitCode, string? CommandLine, string? Error) -> void
+TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.SemanticPromptKind.CommandEnd = 3 -> TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.SemanticPromptKind.InputStart = 1 -> TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.SemanticPromptKind.OutputStart = 2 -> TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.SemanticPromptKind.PromptStart = 0 -> TKCode.Terminal.Core.SemanticPromptKind
+TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Blink = 8 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Bold = 1 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Faint = 4 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Inverse = 16 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Invisible = 32 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Italic = 2 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.None = 0 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Overline = 128 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.StyleFlags.Strikethrough = 64 -> TKCode.Terminal.Core.StyleFlags
+TKCode.Terminal.Core.TCell
+TKCode.Terminal.Core.TerminalColor
+TKCode.Terminal.Core.TerminalColor.Deconstruct(out uint Raw) -> void
+TKCode.Terminal.Core.TerminalColor.Equals(TKCode.Terminal.Core.TerminalColor other) -> bool
+TKCode.Terminal.Core.TerminalColor.IsDefault.get -> bool
+TKCode.Terminal.Core.TerminalColor.IsPalette.get -> bool
+TKCode.Terminal.Core.TerminalColor.PaletteIndex.get -> byte
+TKCode.Terminal.Core.TerminalColor.Raw.get -> uint
+TKCode.Terminal.Core.TerminalColor.Raw.init -> void
+TKCode.Terminal.Core.TerminalColor.TerminalColor() -> void
+TKCode.Terminal.Core.TerminalColor.TerminalColor(uint Raw) -> void
+TKCode.Terminal.Core.TerminalColor.ToRgb() -> TKCode.Terminal.Core.TerminalRgb
+TKCode.Terminal.Core.TerminalCore
+TKCode.Terminal.Core.TerminalCore.ActiveSearch.get -> TKCode.Terminal.Core.TerminalSearch?
+TKCode.Terminal.Core.TerminalCore.CallbackFaults.get -> int
+TKCode.Terminal.Core.TerminalCore.CaptureFrame(bool force = false) -> TKCode.Terminal.Core.FrameSnapshot?
+TKCode.Terminal.Core.TerminalCore.Clear(TKCode.Terminal.Core.ClearTarget target) -> void
+TKCode.Terminal.Core.TerminalCore.ClearSelection() -> void
+TKCode.Terminal.Core.TerminalCore.Commands.get -> TKCode.Terminal.Core.CommandTracker!
+TKCode.Terminal.Core.TerminalCore.CompleteClipboardRead(in TKCode.Terminal.Core.PendingClipboardRead request, System.ReadOnlySpan<byte> data) -> void
+TKCode.Terminal.Core.TerminalCore.CreateSearch() -> TKCode.Terminal.Core.TerminalSearch!
+TKCode.Terminal.Core.TerminalCore.Cursor.get -> (int Column, int Row)
+TKCode.Terminal.Core.TerminalCore.CursorAtPrompt.get -> bool
+TKCode.Terminal.Core.TerminalCore.Dispose() -> void
+TKCode.Terminal.Core.TerminalCore.EncodePaste(string! text, bool allowUnsafe, System.Buffers.IBufferWriter<byte>! output) -> TKCode.Terminal.Core.PasteOutcome
+TKCode.Terminal.Core.TerminalCore.EncodeSnapshot() -> byte[]!
+TKCode.Terminal.Core.TerminalCore.EndSearch() -> void
+TKCode.Terminal.Core.TerminalCore.FormatPlainText() -> string!
+TKCode.Terminal.Core.TerminalCore.FormatVt() -> string!
+TKCode.Terminal.Core.TerminalCore.GetMode(int mode, bool ansi = false) -> bool
+TKCode.Terminal.Core.TerminalCore.GetSelectionText(TKCode.Terminal.Core.TextFormat format = TKCode.Terminal.Core.TextFormat.Plain) -> string?
+TKCode.Terminal.Core.TerminalCore.HasSelection.get -> bool
+TKCode.Terminal.Core.TerminalCore.HyperlinkAt(TKCode.Terminal.Core.ViewportPoint point) -> string?
+TKCode.Terminal.Core.TerminalCore.IsParserGround.get -> bool
+TKCode.Terminal.Core.TerminalCore.LastCallbackFault.get -> System.Exception?
+TKCode.Terminal.Core.TerminalCore.ModifyOtherKeys2.get -> bool
+TKCode.Terminal.Core.TerminalCore.ReadInputModes() -> TKCode.Terminal.Core.InputModes
+TKCode.Terminal.Core.TerminalCore.Reset() -> void
+TKCode.Terminal.Core.TerminalCore.Resize(TKCode.Terminal.Core.TerminalSize size) -> void
+TKCode.Terminal.Core.TerminalCore.ScrollViewport(TKCode.Terminal.Core.ViewportScroll scroll) -> void
+TKCode.Terminal.Core.TerminalCore.Select(in TKCode.Terminal.Core.SelectionRequest request) -> bool
+TKCode.Terminal.Core.TerminalCore.SetDefaultColors(TKCode.Terminal.Core.TerminalPalette! palette, TKCode.Terminal.Core.ColorScheme scheme) -> void
+TKCode.Terminal.Core.TerminalCore.Size.get -> TKCode.Terminal.Core.TerminalSize
+TKCode.Terminal.Core.TerminalCore.Title.get -> string!
+TKCode.Terminal.Core.TerminalCore.WorkingDirectoryRaw.get -> string!
+TKCode.Terminal.Core.TerminalCore.Write(System.ReadOnlySpan<byte> data) -> void
+TKCode.Terminal.Core.TerminalCoreOptions
+TKCode.Terminal.Core.TerminalCoreOptions.Conformance.get -> TKCode.Terminal.Core.ConformanceMode?
+TKCode.Terminal.Core.TerminalCoreOptions.Conformance.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.ContinuationMaxBytes.get -> long
+TKCode.Terminal.Core.TerminalCoreOptions.ContinuationMaxBytes.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.Deconstruct(out TKCode.Terminal.Core.TerminalSize Size) -> void
+TKCode.Terminal.Core.TerminalCoreOptions.DefaultCursorBlink.get -> bool
+TKCode.Terminal.Core.TerminalCoreOptions.DefaultCursorBlink.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.DefaultCursorStyle.get -> TKCode.Terminal.Core.CursorStyle
+TKCode.Terminal.Core.TerminalCoreOptions.DefaultCursorStyle.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.DeferClipboardRead.get -> bool
+TKCode.Terminal.Core.TerminalCoreOptions.DeferClipboardRead.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.Equals(TKCode.Terminal.Core.TerminalCoreOptions other) -> bool
+TKCode.Terminal.Core.TerminalCoreOptions.Replies.get -> TKCode.Terminal.Core.TerminalReplyProfile!
+TKCode.Terminal.Core.TerminalCoreOptions.Replies.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.ScrollbackMaxBytes.get -> long
+TKCode.Terminal.Core.TerminalCoreOptions.ScrollbackMaxBytes.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.ScrollbackMaxLines.get -> int?
+TKCode.Terminal.Core.TerminalCoreOptions.ScrollbackMaxLines.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.Size.get -> TKCode.Terminal.Core.TerminalSize
+TKCode.Terminal.Core.TerminalCoreOptions.Size.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.TerminalCoreOptions() -> void
+TKCode.Terminal.Core.TerminalCoreOptions.TerminalCoreOptions(TKCode.Terminal.Core.TerminalSize Size) -> void
+TKCode.Terminal.Core.TerminalCoreOptions.TerminfoName.get -> string!
+TKCode.Terminal.Core.TerminalCoreOptions.TerminfoName.init -> void
+TKCode.Terminal.Core.TerminalCoreOptions.Width.get -> TKCode.Terminal.Core.WidthPolicy
+TKCode.Terminal.Core.TerminalCoreOptions.Width.init -> void
+TKCode.Terminal.Core.TerminalPalette
+TKCode.Terminal.Core.TerminalPalette.<Clone>$() -> TKCode.Terminal.Core.TerminalPalette!
+TKCode.Terminal.Core.TerminalPalette.Background.get -> TKCode.Terminal.Core.TerminalRgb
+TKCode.Terminal.Core.TerminalPalette.Background.init -> void
+TKCode.Terminal.Core.TerminalPalette.Colors.get -> TKCode.Terminal.Core.TerminalRgb[]!
+TKCode.Terminal.Core.TerminalPalette.Colors.init -> void
+TKCode.Terminal.Core.TerminalPalette.Cursor.get -> TKCode.Terminal.Core.TerminalRgb?
+TKCode.Terminal.Core.TerminalPalette.Cursor.init -> void
+TKCode.Terminal.Core.TerminalPalette.Deconstruct(out TKCode.Terminal.Core.TerminalRgb Foreground, out TKCode.Terminal.Core.TerminalRgb Background, out TKCode.Terminal.Core.TerminalRgb? Cursor, out TKCode.Terminal.Core.TerminalRgb[]! Colors) -> void
+TKCode.Terminal.Core.TerminalPalette.Equals(TKCode.Terminal.Core.TerminalPalette? other) -> bool
+TKCode.Terminal.Core.TerminalPalette.Foreground.get -> TKCode.Terminal.Core.TerminalRgb
+TKCode.Terminal.Core.TerminalPalette.Foreground.init -> void
+TKCode.Terminal.Core.TerminalPalette.Resolve(TKCode.Terminal.Core.TerminalColor color, bool foreground) -> TKCode.Terminal.Core.TerminalRgb
+TKCode.Terminal.Core.TerminalPalette.TerminalPalette(TKCode.Terminal.Core.TerminalRgb Foreground, TKCode.Terminal.Core.TerminalRgb Background, TKCode.Terminal.Core.TerminalRgb? Cursor, TKCode.Terminal.Core.TerminalRgb[]! Colors) -> void
+TKCode.Terminal.Core.TerminalReplyProfile
+TKCode.Terminal.Core.TerminalReplyProfile.<Clone>$() -> TKCode.Terminal.Core.TerminalReplyProfile!
+TKCode.Terminal.Core.TerminalReplyProfile.AdvertiseOsc52.get -> bool
+TKCode.Terminal.Core.TerminalReplyProfile.AdvertiseOsc52.init -> void
+TKCode.Terminal.Core.TerminalReplyProfile.Deconstruct(out string! XtVersion, out bool AdvertiseOsc52, out TKCode.Terminal.Core.ColorScheme Scheme) -> void
+TKCode.Terminal.Core.TerminalReplyProfile.Equals(TKCode.Terminal.Core.TerminalReplyProfile? other) -> bool
+TKCode.Terminal.Core.TerminalReplyProfile.Scheme.get -> TKCode.Terminal.Core.ColorScheme
+TKCode.Terminal.Core.TerminalReplyProfile.Scheme.init -> void
+TKCode.Terminal.Core.TerminalReplyProfile.TerminalReplyProfile(string! XtVersion, bool AdvertiseOsc52, TKCode.Terminal.Core.ColorScheme Scheme) -> void
+TKCode.Terminal.Core.TerminalReplyProfile.XtVersion.get -> string!
+TKCode.Terminal.Core.TerminalReplyProfile.XtVersion.init -> void
+TKCode.Terminal.Core.TerminalRgb
+TKCode.Terminal.Core.TerminalRgb.B.get -> byte
+TKCode.Terminal.Core.TerminalRgb.B.init -> void
+TKCode.Terminal.Core.TerminalRgb.Deconstruct(out byte R, out byte G, out byte B) -> void
+TKCode.Terminal.Core.TerminalRgb.Equals(TKCode.Terminal.Core.TerminalRgb other) -> bool
+TKCode.Terminal.Core.TerminalRgb.G.get -> byte
+TKCode.Terminal.Core.TerminalRgb.G.init -> void
+TKCode.Terminal.Core.TerminalRgb.R.get -> byte
+TKCode.Terminal.Core.TerminalRgb.R.init -> void
+TKCode.Terminal.Core.TerminalRgb.TerminalRgb() -> void
+TKCode.Terminal.Core.TerminalRgb.TerminalRgb(byte R, byte G, byte B) -> void
+TKCode.Terminal.Core.TerminalSearch
+TKCode.Terminal.Core.TerminalSearch.Dispose() -> void
+TKCode.Terminal.Core.TerminalSearch.Needle.get -> string!
+TKCode.Terminal.Core.TerminalSearch.Needle.set -> void
+TKCode.Terminal.Core.TerminalSearch.Next() -> void
+TKCode.Terminal.Core.TerminalSearch.Previous() -> void
+TKCode.Terminal.Core.TerminalSearch.SelectedIndex.get -> long?
+TKCode.Terminal.Core.TerminalSearch.TotalMatches.get -> long
+TKCode.Terminal.Core.TerminalSearch.Update() -> void
+TKCode.Terminal.Core.TerminalSize
+TKCode.Terminal.Core.TerminalSize.CellHeight.get -> int
+TKCode.Terminal.Core.TerminalSize.CellHeight.init -> void
+TKCode.Terminal.Core.TerminalSize.CellWidth.get -> int
+TKCode.Terminal.Core.TerminalSize.CellWidth.init -> void
+TKCode.Terminal.Core.TerminalSize.Columns.get -> int
+TKCode.Terminal.Core.TerminalSize.Columns.init -> void
+TKCode.Terminal.Core.TerminalSize.Deconstruct(out int Columns, out int Rows, out int CellWidth, out int CellHeight) -> void
+TKCode.Terminal.Core.TerminalSize.Equals(TKCode.Terminal.Core.TerminalSize other) -> bool
+TKCode.Terminal.Core.TerminalSize.PixelHeight.get -> int
+TKCode.Terminal.Core.TerminalSize.PixelWidth.get -> int
+TKCode.Terminal.Core.TerminalSize.Rows.get -> int
+TKCode.Terminal.Core.TerminalSize.Rows.init -> void
+TKCode.Terminal.Core.TerminalSize.TerminalSize() -> void
+TKCode.Terminal.Core.TerminalSize.TerminalSize(int Columns, int Rows, int CellWidth, int CellHeight) -> void
+TKCode.Terminal.Core.Testing.Cast
+TKCode.Terminal.Core.Testing.CastEvent
+TKCode.Terminal.Core.Testing.CastEvent.CastEvent(TKCode.Terminal.Core.Testing.CastEvent! original) -> void
+TKCode.Terminal.Core.Testing.CastEvent.CastEvent(double Time) -> void
+TKCode.Terminal.Core.Testing.CastEvent.Deconstruct(out double Time) -> void
+TKCode.Terminal.Core.Testing.CastEvent.Time.get -> double
+TKCode.Terminal.Core.Testing.CastEvent.Time.init -> void
+TKCode.Terminal.Core.Testing.CastHeader
+TKCode.Terminal.Core.Testing.CastHeader.<Clone>$() -> TKCode.Terminal.Core.Testing.CastHeader!
+TKCode.Terminal.Core.Testing.CastHeader.CastHeader(int Width, int Height, int? Scrollback, TKCode.Terminal.Core.WidthPolicy? Width2027, string? Source) -> void
+TKCode.Terminal.Core.Testing.CastHeader.Deconstruct(out int Width, out int Height, out int? Scrollback, out TKCode.Terminal.Core.WidthPolicy? Width2027, out string? Source) -> void
+TKCode.Terminal.Core.Testing.CastHeader.Equals(TKCode.Terminal.Core.Testing.CastHeader? other) -> bool
+TKCode.Terminal.Core.Testing.CastHeader.Height.get -> int
+TKCode.Terminal.Core.Testing.CastHeader.Height.init -> void
+TKCode.Terminal.Core.Testing.CastHeader.Scrollback.get -> int?
+TKCode.Terminal.Core.Testing.CastHeader.Scrollback.init -> void
+TKCode.Terminal.Core.Testing.CastHeader.Source.get -> string?
+TKCode.Terminal.Core.Testing.CastHeader.Source.init -> void
+TKCode.Terminal.Core.Testing.CastHeader.Width.get -> int
+TKCode.Terminal.Core.Testing.CastHeader.Width.init -> void
+TKCode.Terminal.Core.Testing.CastHeader.Width2027.get -> TKCode.Terminal.Core.WidthPolicy?
+TKCode.Terminal.Core.Testing.CastHeader.Width2027.init -> void
+TKCode.Terminal.Core.Testing.CastMarker
+TKCode.Terminal.Core.Testing.CastMarker.CastMarker(double Time, string! Name) -> void
+TKCode.Terminal.Core.Testing.CastMarker.Deconstruct(out double Time, out string! Name) -> void
+TKCode.Terminal.Core.Testing.CastMarker.Equals(TKCode.Terminal.Core.Testing.CastMarker? other) -> bool
+TKCode.Terminal.Core.Testing.CastMarker.Name.get -> string!
+TKCode.Terminal.Core.Testing.CastMarker.Name.init -> void
+TKCode.Terminal.Core.Testing.CastOutput
+TKCode.Terminal.Core.Testing.CastOutput.CastOutput(double Time, byte[]! Data) -> void
+TKCode.Terminal.Core.Testing.CastOutput.Data.get -> byte[]!
+TKCode.Terminal.Core.Testing.CastOutput.Data.init -> void
+TKCode.Terminal.Core.Testing.CastOutput.Deconstruct(out double Time, out byte[]! Data) -> void
+TKCode.Terminal.Core.Testing.CastOutput.Equals(TKCode.Terminal.Core.Testing.CastOutput? other) -> bool
+TKCode.Terminal.Core.Testing.CastReset
+TKCode.Terminal.Core.Testing.CastReset.CastReset(double Time, bool Hard) -> void
+TKCode.Terminal.Core.Testing.CastReset.Deconstruct(out double Time, out bool Hard) -> void
+TKCode.Terminal.Core.Testing.CastReset.Equals(TKCode.Terminal.Core.Testing.CastReset? other) -> bool
+TKCode.Terminal.Core.Testing.CastReset.Hard.get -> bool
+TKCode.Terminal.Core.Testing.CastReset.Hard.init -> void
+TKCode.Terminal.Core.Testing.CastResize
+TKCode.Terminal.Core.Testing.CastResize.CastResize(double Time, int Columns, int Rows, int CellWidth, int CellHeight) -> void
+TKCode.Terminal.Core.Testing.CastResize.CellHeight.get -> int
+TKCode.Terminal.Core.Testing.CastResize.CellHeight.init -> void
+TKCode.Terminal.Core.Testing.CastResize.CellWidth.get -> int
+TKCode.Terminal.Core.Testing.CastResize.CellWidth.init -> void
+TKCode.Terminal.Core.Testing.CastResize.Columns.get -> int
+TKCode.Terminal.Core.Testing.CastResize.Columns.init -> void
+TKCode.Terminal.Core.Testing.CastResize.Deconstruct(out double Time, out int Columns, out int Rows, out int CellWidth, out int CellHeight) -> void
+TKCode.Terminal.Core.Testing.CastResize.Equals(TKCode.Terminal.Core.Testing.CastResize? other) -> bool
+TKCode.Terminal.Core.Testing.CastResize.Rows.get -> int
+TKCode.Terminal.Core.Testing.CastResize.Rows.init -> void
+TKCode.Terminal.Core.Testing.GridSnapshot
+TKCode.Terminal.Core.Testing.GridSnapshotOptions
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.<Clone>$() -> TKCode.Terminal.Core.Testing.GridSnapshotOptions!
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.Equals(TKCode.Terminal.Core.Testing.GridSnapshotOptions? other) -> bool
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.GridSnapshotOptions() -> void
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.IncludeState.get -> bool
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.IncludeState.init -> void
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.Scrollback.get -> int
+TKCode.Terminal.Core.Testing.GridSnapshotOptions.Scrollback.init -> void
+TKCode.Terminal.Core.TextFormat
+TKCode.Terminal.Core.TextFormat.Html = 2 -> TKCode.Terminal.Core.TextFormat
+TKCode.Terminal.Core.TextFormat.Plain = 0 -> TKCode.Terminal.Core.TextFormat
+TKCode.Terminal.Core.TextFormat.Vt = 1 -> TKCode.Terminal.Core.TextFormat
+TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.Curly = 3 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.Dashed = 5 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.Dotted = 4 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.Double = 2 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.None = 0 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.UnderlineStyle.Single = 1 -> TKCode.Terminal.Core.UnderlineStyle
+TKCode.Terminal.Core.ViewportPoint
+TKCode.Terminal.Core.ViewportPoint.Column.get -> int
+TKCode.Terminal.Core.ViewportPoint.Column.init -> void
+TKCode.Terminal.Core.ViewportPoint.Deconstruct(out int Column, out int Row) -> void
+TKCode.Terminal.Core.ViewportPoint.Equals(TKCode.Terminal.Core.ViewportPoint other) -> bool
+TKCode.Terminal.Core.ViewportPoint.Row.get -> int
+TKCode.Terminal.Core.ViewportPoint.Row.init -> void
+TKCode.Terminal.Core.ViewportPoint.ViewportPoint() -> void
+TKCode.Terminal.Core.ViewportPoint.ViewportPoint(int Column, int Row) -> void
+TKCode.Terminal.Core.ViewportScroll
+TKCode.Terminal.Core.ViewportScroll.Amount.get -> long
+TKCode.Terminal.Core.ViewportScroll.Amount.init -> void
+TKCode.Terminal.Core.ViewportScroll.Deconstruct(out TKCode.Terminal.Core.ViewportScrollKind Kind, out long Amount) -> void
+TKCode.Terminal.Core.ViewportScroll.Equals(TKCode.Terminal.Core.ViewportScroll other) -> bool
+TKCode.Terminal.Core.ViewportScroll.Kind.get -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScroll.Kind.init -> void
+TKCode.Terminal.Core.ViewportScroll.ViewportScroll() -> void
+TKCode.Terminal.Core.ViewportScroll.ViewportScroll(TKCode.Terminal.Core.ViewportScrollKind Kind, long Amount = 0) -> void
+TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScrollKind.Bottom = 1 -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScrollKind.Delta = 2 -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScrollKind.Prompt = 4 -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScrollKind.Row = 3 -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.ViewportScrollKind.Top = 0 -> TKCode.Terminal.Core.ViewportScrollKind
+TKCode.Terminal.Core.WidthPolicy
+TKCode.Terminal.Core.WidthPolicy.Compat = 0 -> TKCode.Terminal.Core.WidthPolicy
+TKCode.Terminal.Core.WidthPolicy.Grapheme = 1 -> TKCode.Terminal.Core.WidthPolicy
+abstract TKCode.Terminal.Core.Testing.CastEvent.<Clone>$() -> TKCode.Terminal.Core.Testing.CastEvent!
+const TKCode.Terminal.Core.CommandTracker.MaxRecords = 1000 -> int
+const TKCode.Terminal.Core.Testing.GridSnapshot.Header = "tkcode-grid 1" -> string!
+const TKCode.Terminal.Core.Testing.GridSnapshot.WideTail = '⁣' -> char
+override TKCode.Terminal.Avalonia.CellMetrics.Equals(object? obj) -> bool
+override TKCode.Terminal.Avalonia.CellMetrics.GetHashCode() -> int
+override TKCode.Terminal.Avalonia.CellMetrics.ToString() -> string!
+override TKCode.Terminal.Avalonia.TerminalView.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Terminal.Core.CellSpan.GetHashCode() -> int
+override TKCode.Terminal.Core.ConformanceMode.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.ConformanceMode.GetHashCode() -> int
+override TKCode.Terminal.Core.ConformanceMode.ToString() -> string!
+override TKCode.Terminal.Core.CursorState.GetHashCode() -> int
+override TKCode.Terminal.Core.InputModes.GetHashCode() -> int
+override TKCode.Terminal.Core.KeyInput.GetHashCode() -> int
+override TKCode.Terminal.Core.MouseGeometry.GetHashCode() -> int
+override TKCode.Terminal.Core.MouseInput.GetHashCode() -> int
+override TKCode.Terminal.Core.PendingClipboardRead.GetHashCode() -> int
+override TKCode.Terminal.Core.ResolvedStyle.GetHashCode() -> int
+override TKCode.Terminal.Core.ScrollbarState.GetHashCode() -> int
+override TKCode.Terminal.Core.SearchHighlights.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.SearchHighlights.GetHashCode() -> int
+override TKCode.Terminal.Core.SearchHighlights.ToString() -> string!
+override TKCode.Terminal.Core.SelectionRequest.GetHashCode() -> int
+override TKCode.Terminal.Core.SemanticPromptEvent.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalColor.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalCoreOptions.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalPalette.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.TerminalPalette.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalPalette.ToString() -> string!
+override TKCode.Terminal.Core.TerminalReplyProfile.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.TerminalReplyProfile.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalReplyProfile.ToString() -> string!
+override TKCode.Terminal.Core.TerminalRgb.GetHashCode() -> int
+override TKCode.Terminal.Core.TerminalSize.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastEvent.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastEvent.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastEvent.ToString() -> string!
+override TKCode.Terminal.Core.Testing.CastHeader.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastHeader.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastHeader.ToString() -> string!
+override TKCode.Terminal.Core.Testing.CastMarker.<Clone>$() -> TKCode.Terminal.Core.Testing.CastMarker!
+override TKCode.Terminal.Core.Testing.CastMarker.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastMarker.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastMarker.ToString() -> string!
+override TKCode.Terminal.Core.Testing.CastOutput.<Clone>$() -> TKCode.Terminal.Core.Testing.CastOutput!
+override TKCode.Terminal.Core.Testing.CastOutput.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastOutput.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastOutput.ToString() -> string!
+override TKCode.Terminal.Core.Testing.CastReset.<Clone>$() -> TKCode.Terminal.Core.Testing.CastReset!
+override TKCode.Terminal.Core.Testing.CastReset.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastReset.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastReset.ToString() -> string!
+override TKCode.Terminal.Core.Testing.CastResize.<Clone>$() -> TKCode.Terminal.Core.Testing.CastResize!
+override TKCode.Terminal.Core.Testing.CastResize.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.CastResize.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.CastResize.ToString() -> string!
+override TKCode.Terminal.Core.Testing.GridSnapshotOptions.Equals(object? obj) -> bool
+override TKCode.Terminal.Core.Testing.GridSnapshotOptions.GetHashCode() -> int
+override TKCode.Terminal.Core.Testing.GridSnapshotOptions.ToString() -> string!
+override TKCode.Terminal.Core.ViewportPoint.GetHashCode() -> int
+override TKCode.Terminal.Core.ViewportScroll.GetHashCode() -> int
+override sealed TKCode.Terminal.Core.Testing.CastMarker.Equals(TKCode.Terminal.Core.Testing.CastEvent? other) -> bool
+override sealed TKCode.Terminal.Core.Testing.CastOutput.Equals(TKCode.Terminal.Core.Testing.CastEvent? other) -> bool
+override sealed TKCode.Terminal.Core.Testing.CastReset.Equals(TKCode.Terminal.Core.Testing.CastEvent? other) -> bool
+override sealed TKCode.Terminal.Core.Testing.CastResize.Equals(TKCode.Terminal.Core.Testing.CastEvent? other) -> bool
+static TKCode.Terminal.Avalonia.CellMetrics.Compute(Avalonia.Media.GlyphTypeface! face, double emSizeDip, double scaling, double lineHeight = 1) -> TKCode.Terminal.Avalonia.CellMetrics!
+static TKCode.Terminal.Avalonia.CellMetrics.operator !=(TKCode.Terminal.Avalonia.CellMetrics? left, TKCode.Terminal.Avalonia.CellMetrics? right) -> bool
+static TKCode.Terminal.Avalonia.CellMetrics.operator ==(TKCode.Terminal.Avalonia.CellMetrics? left, TKCode.Terminal.Avalonia.CellMetrics? right) -> bool
+static TKCode.Terminal.Avalonia.TerminalKeys.Mods(Avalonia.Input.KeyModifiers modifiers) -> TKCode.Terminal.Core.KeyMods
+static TKCode.Terminal.Avalonia.TerminalKeys.ProducesText(Avalonia.Input.Key key, Avalonia.Input.KeyModifiers modifiers) -> bool
+static TKCode.Terminal.Avalonia.TerminalKeys.TryMap(Avalonia.Input.Key key, out TKCode.Terminal.Core.TerminalKey terminal) -> bool
+static TKCode.Terminal.Core.CellSpan.operator !=(TKCode.Terminal.Core.CellSpan left, TKCode.Terminal.Core.CellSpan right) -> bool
+static TKCode.Terminal.Core.CellSpan.operator ==(TKCode.Terminal.Core.CellSpan left, TKCode.Terminal.Core.CellSpan right) -> bool
+static TKCode.Terminal.Core.ConformanceMode.operator !=(TKCode.Terminal.Core.ConformanceMode? left, TKCode.Terminal.Core.ConformanceMode? right) -> bool
+static TKCode.Terminal.Core.ConformanceMode.operator ==(TKCode.Terminal.Core.ConformanceMode? left, TKCode.Terminal.Core.ConformanceMode? right) -> bool
+static TKCode.Terminal.Core.CursorState.operator !=(TKCode.Terminal.Core.CursorState left, TKCode.Terminal.Core.CursorState right) -> bool
+static TKCode.Terminal.Core.CursorState.operator ==(TKCode.Terminal.Core.CursorState left, TKCode.Terminal.Core.CursorState right) -> bool
+static TKCode.Terminal.Core.GhosttyRuntime.ComputeBuildId(string! libraryPath) -> string!
+static TKCode.Terminal.Core.GhosttyRuntime.EnsureInitialized() -> void
+static TKCode.Terminal.Core.GhosttyRuntime.SimdEnabled.get -> bool
+static TKCode.Terminal.Core.GhosttyRuntime.TypeManifestJson() -> string!
+static TKCode.Terminal.Core.GhosttyRuntime.Version.get -> string!
+static TKCode.Terminal.Core.InputEncoder.EncodeFocus(bool focused, System.Span<byte> destination) -> int
+static TKCode.Terminal.Core.InputModes.operator !=(TKCode.Terminal.Core.InputModes left, TKCode.Terminal.Core.InputModes right) -> bool
+static TKCode.Terminal.Core.InputModes.operator ==(TKCode.Terminal.Core.InputModes left, TKCode.Terminal.Core.InputModes right) -> bool
+static TKCode.Terminal.Core.KeyInput.operator !=(TKCode.Terminal.Core.KeyInput left, TKCode.Terminal.Core.KeyInput right) -> bool
+static TKCode.Terminal.Core.KeyInput.operator ==(TKCode.Terminal.Core.KeyInput left, TKCode.Terminal.Core.KeyInput right) -> bool
+static TKCode.Terminal.Core.MouseGeometry.operator !=(TKCode.Terminal.Core.MouseGeometry left, TKCode.Terminal.Core.MouseGeometry right) -> bool
+static TKCode.Terminal.Core.MouseGeometry.operator ==(TKCode.Terminal.Core.MouseGeometry left, TKCode.Terminal.Core.MouseGeometry right) -> bool
+static TKCode.Terminal.Core.MouseInput.operator !=(TKCode.Terminal.Core.MouseInput left, TKCode.Terminal.Core.MouseInput right) -> bool
+static TKCode.Terminal.Core.MouseInput.operator ==(TKCode.Terminal.Core.MouseInput left, TKCode.Terminal.Core.MouseInput right) -> bool
+static TKCode.Terminal.Core.PasteEncoder.Encode(System.ReadOnlySpan<byte> text, bool bracketed) -> byte[]!
+static TKCode.Terminal.Core.PasteEncoder.IsSafe(System.ReadOnlySpan<byte> text) -> bool
+static TKCode.Terminal.Core.PendingClipboardRead.operator !=(TKCode.Terminal.Core.PendingClipboardRead left, TKCode.Terminal.Core.PendingClipboardRead right) -> bool
+static TKCode.Terminal.Core.PendingClipboardRead.operator ==(TKCode.Terminal.Core.PendingClipboardRead left, TKCode.Terminal.Core.PendingClipboardRead right) -> bool
+static TKCode.Terminal.Core.ResolvedStyle.operator !=(TKCode.Terminal.Core.ResolvedStyle left, TKCode.Terminal.Core.ResolvedStyle right) -> bool
+static TKCode.Terminal.Core.ResolvedStyle.operator ==(TKCode.Terminal.Core.ResolvedStyle left, TKCode.Terminal.Core.ResolvedStyle right) -> bool
+static TKCode.Terminal.Core.ScrollbarState.operator !=(TKCode.Terminal.Core.ScrollbarState left, TKCode.Terminal.Core.ScrollbarState right) -> bool
+static TKCode.Terminal.Core.ScrollbarState.operator ==(TKCode.Terminal.Core.ScrollbarState left, TKCode.Terminal.Core.ScrollbarState right) -> bool
+static TKCode.Terminal.Core.SearchHighlights.operator !=(TKCode.Terminal.Core.SearchHighlights? left, TKCode.Terminal.Core.SearchHighlights? right) -> bool
+static TKCode.Terminal.Core.SearchHighlights.operator ==(TKCode.Terminal.Core.SearchHighlights? left, TKCode.Terminal.Core.SearchHighlights? right) -> bool
+static TKCode.Terminal.Core.SelectionRequest.All() -> TKCode.Terminal.Core.SelectionRequest
+static TKCode.Terminal.Core.SelectionRequest.CommandOutput(TKCode.Terminal.Core.ViewportPoint at) -> TKCode.Terminal.Core.SelectionRequest
+static TKCode.Terminal.Core.SelectionRequest.Line(TKCode.Terminal.Core.ViewportPoint at) -> TKCode.Terminal.Core.SelectionRequest
+static TKCode.Terminal.Core.SelectionRequest.Range(TKCode.Terminal.Core.ViewportPoint start, TKCode.Terminal.Core.ViewportPoint end, bool rectangle = false) -> TKCode.Terminal.Core.SelectionRequest
+static TKCode.Terminal.Core.SelectionRequest.Word(TKCode.Terminal.Core.ViewportPoint at) -> TKCode.Terminal.Core.SelectionRequest
+static TKCode.Terminal.Core.SelectionRequest.operator !=(TKCode.Terminal.Core.SelectionRequest left, TKCode.Terminal.Core.SelectionRequest right) -> bool
+static TKCode.Terminal.Core.SelectionRequest.operator ==(TKCode.Terminal.Core.SelectionRequest left, TKCode.Terminal.Core.SelectionRequest right) -> bool
+static TKCode.Terminal.Core.SemanticPromptEvent.operator !=(TKCode.Terminal.Core.SemanticPromptEvent left, TKCode.Terminal.Core.SemanticPromptEvent right) -> bool
+static TKCode.Terminal.Core.SemanticPromptEvent.operator ==(TKCode.Terminal.Core.SemanticPromptEvent left, TKCode.Terminal.Core.SemanticPromptEvent right) -> bool
+static TKCode.Terminal.Core.TCell.Codepoint(ulong cell) -> uint
+static TKCode.Terminal.Core.TCell.HasGrapheme(ulong cell) -> bool
+static TKCode.Terminal.Core.TCell.Hyperlink(ulong cell) -> bool
+static TKCode.Terminal.Core.TCell.Pack(uint codepoint, TKCode.Terminal.Core.CellWidth width, bool grapheme, int styleIndex, TKCode.Terminal.Core.SemanticContent semantic, bool hyperlink, bool kittyPlaceholder) -> ulong
+static TKCode.Terminal.Core.TCell.Semantic(ulong cell) -> TKCode.Terminal.Core.SemanticContent
+static TKCode.Terminal.Core.TCell.StyleIndex(ulong cell) -> int
+static TKCode.Terminal.Core.TCell.Width(ulong cell) -> TKCode.Terminal.Core.CellWidth
+static TKCode.Terminal.Core.TerminalColor.Palette(byte index) -> TKCode.Terminal.Core.TerminalColor
+static TKCode.Terminal.Core.TerminalColor.Rgb(byte r, byte g, byte b) -> TKCode.Terminal.Core.TerminalColor
+static TKCode.Terminal.Core.TerminalColor.operator !=(TKCode.Terminal.Core.TerminalColor left, TKCode.Terminal.Core.TerminalColor right) -> bool
+static TKCode.Terminal.Core.TerminalColor.operator ==(TKCode.Terminal.Core.TerminalColor left, TKCode.Terminal.Core.TerminalColor right) -> bool
+static TKCode.Terminal.Core.TerminalCore.Create(in TKCode.Terminal.Core.TerminalCoreOptions options, TKCode.Terminal.Core.ITerminalEffects? effects = null) -> TKCode.Terminal.Core.TerminalCore!
+static TKCode.Terminal.Core.TerminalCore.Restore(System.ReadOnlySpan<byte> snapshot, in TKCode.Terminal.Core.TerminalCoreOptions options, TKCode.Terminal.Core.ITerminalEffects? effects = null) -> TKCode.Terminal.Core.TerminalCore!
+static TKCode.Terminal.Core.TerminalCoreOptions.operator !=(TKCode.Terminal.Core.TerminalCoreOptions left, TKCode.Terminal.Core.TerminalCoreOptions right) -> bool
+static TKCode.Terminal.Core.TerminalCoreOptions.operator ==(TKCode.Terminal.Core.TerminalCoreOptions left, TKCode.Terminal.Core.TerminalCoreOptions right) -> bool
+static TKCode.Terminal.Core.TerminalPalette.operator !=(TKCode.Terminal.Core.TerminalPalette? left, TKCode.Terminal.Core.TerminalPalette? right) -> bool
+static TKCode.Terminal.Core.TerminalPalette.operator ==(TKCode.Terminal.Core.TerminalPalette? left, TKCode.Terminal.Core.TerminalPalette? right) -> bool
+static TKCode.Terminal.Core.TerminalReplyProfile.operator !=(TKCode.Terminal.Core.TerminalReplyProfile? left, TKCode.Terminal.Core.TerminalReplyProfile? right) -> bool
+static TKCode.Terminal.Core.TerminalReplyProfile.operator ==(TKCode.Terminal.Core.TerminalReplyProfile? left, TKCode.Terminal.Core.TerminalReplyProfile? right) -> bool
+static TKCode.Terminal.Core.TerminalRgb.operator !=(TKCode.Terminal.Core.TerminalRgb left, TKCode.Terminal.Core.TerminalRgb right) -> bool
+static TKCode.Terminal.Core.TerminalRgb.operator ==(TKCode.Terminal.Core.TerminalRgb left, TKCode.Terminal.Core.TerminalRgb right) -> bool
+static TKCode.Terminal.Core.TerminalSize.operator !=(TKCode.Terminal.Core.TerminalSize left, TKCode.Terminal.Core.TerminalSize right) -> bool
+static TKCode.Terminal.Core.TerminalSize.operator ==(TKCode.Terminal.Core.TerminalSize left, TKCode.Terminal.Core.TerminalSize right) -> bool
+static TKCode.Terminal.Core.Testing.Cast.CreateCore(TKCode.Terminal.Core.Testing.CastHeader! header, TKCode.Terminal.Core.ITerminalEffects? effects = null) -> TKCode.Terminal.Core.TerminalCore!
+static TKCode.Terminal.Core.Testing.Cast.Parse(string! text) -> (TKCode.Terminal.Core.Testing.CastHeader! Header, System.Collections.Generic.List<TKCode.Terminal.Core.Testing.CastEvent!>! Events)
+static TKCode.Terminal.Core.Testing.Cast.Replay(TKCode.Terminal.Core.TerminalCore! core, System.Collections.Generic.IEnumerable<TKCode.Terminal.Core.Testing.CastEvent!>! events, int? chunk = null, System.Random? random = null, System.Action<string!>? onMarker = null) -> void
+static TKCode.Terminal.Core.Testing.CastEvent.operator !=(TKCode.Terminal.Core.Testing.CastEvent? left, TKCode.Terminal.Core.Testing.CastEvent? right) -> bool
+static TKCode.Terminal.Core.Testing.CastEvent.operator ==(TKCode.Terminal.Core.Testing.CastEvent? left, TKCode.Terminal.Core.Testing.CastEvent? right) -> bool
+static TKCode.Terminal.Core.Testing.CastHeader.operator !=(TKCode.Terminal.Core.Testing.CastHeader? left, TKCode.Terminal.Core.Testing.CastHeader? right) -> bool
+static TKCode.Terminal.Core.Testing.CastHeader.operator ==(TKCode.Terminal.Core.Testing.CastHeader? left, TKCode.Terminal.Core.Testing.CastHeader? right) -> bool
+static TKCode.Terminal.Core.Testing.CastMarker.operator !=(TKCode.Terminal.Core.Testing.CastMarker? left, TKCode.Terminal.Core.Testing.CastMarker? right) -> bool
+static TKCode.Terminal.Core.Testing.CastMarker.operator ==(TKCode.Terminal.Core.Testing.CastMarker? left, TKCode.Terminal.Core.Testing.CastMarker? right) -> bool
+static TKCode.Terminal.Core.Testing.CastOutput.operator !=(TKCode.Terminal.Core.Testing.CastOutput? left, TKCode.Terminal.Core.Testing.CastOutput? right) -> bool
+static TKCode.Terminal.Core.Testing.CastOutput.operator ==(TKCode.Terminal.Core.Testing.CastOutput? left, TKCode.Terminal.Core.Testing.CastOutput? right) -> bool
+static TKCode.Terminal.Core.Testing.CastReset.operator !=(TKCode.Terminal.Core.Testing.CastReset? left, TKCode.Terminal.Core.Testing.CastReset? right) -> bool
+static TKCode.Terminal.Core.Testing.CastReset.operator ==(TKCode.Terminal.Core.Testing.CastReset? left, TKCode.Terminal.Core.Testing.CastReset? right) -> bool
+static TKCode.Terminal.Core.Testing.CastResize.operator !=(TKCode.Terminal.Core.Testing.CastResize? left, TKCode.Terminal.Core.Testing.CastResize? right) -> bool
+static TKCode.Terminal.Core.Testing.CastResize.operator ==(TKCode.Terminal.Core.Testing.CastResize? left, TKCode.Terminal.Core.Testing.CastResize? right) -> bool
+static TKCode.Terminal.Core.Testing.GridSnapshot.Capture(TKCode.Terminal.Core.TerminalCore! core, TKCode.Terminal.Core.Testing.GridSnapshotOptions? options = null) -> string!
+static TKCode.Terminal.Core.Testing.GridSnapshotOptions.operator !=(TKCode.Terminal.Core.Testing.GridSnapshotOptions? left, TKCode.Terminal.Core.Testing.GridSnapshotOptions? right) -> bool
+static TKCode.Terminal.Core.Testing.GridSnapshotOptions.operator ==(TKCode.Terminal.Core.Testing.GridSnapshotOptions? left, TKCode.Terminal.Core.Testing.GridSnapshotOptions? right) -> bool
+static TKCode.Terminal.Core.ViewportPoint.operator !=(TKCode.Terminal.Core.ViewportPoint left, TKCode.Terminal.Core.ViewportPoint right) -> bool
+static TKCode.Terminal.Core.ViewportPoint.operator ==(TKCode.Terminal.Core.ViewportPoint left, TKCode.Terminal.Core.ViewportPoint right) -> bool
+static TKCode.Terminal.Core.ViewportScroll.Lines(long delta) -> TKCode.Terminal.Core.ViewportScroll
+static TKCode.Terminal.Core.ViewportScroll.Prompts(long delta) -> TKCode.Terminal.Core.ViewportScroll
+static TKCode.Terminal.Core.ViewportScroll.ToRow(long row) -> TKCode.Terminal.Core.ViewportScroll
+static TKCode.Terminal.Core.ViewportScroll.operator !=(TKCode.Terminal.Core.ViewportScroll left, TKCode.Terminal.Core.ViewportScroll right) -> bool
+static TKCode.Terminal.Core.ViewportScroll.operator ==(TKCode.Terminal.Core.ViewportScroll left, TKCode.Terminal.Core.ViewportScroll right) -> bool
+static readonly TKCode.Terminal.Avalonia.TerminalView.FontFamilyProperty -> Avalonia.StyledProperty<Avalonia.Media.FontFamily!>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.FontSizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.PaddingProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.SnapshotProperty -> Avalonia.StyledProperty<TKCode.Terminal.Core.FrameSnapshot?>!
+static readonly TKCode.Terminal.Core.InputModes.Defaults -> TKCode.Terminal.Core.InputModes
+static readonly TKCode.Terminal.Core.NullTerminalEffects.Instance -> TKCode.Terminal.Core.NullTerminalEffects!
+static readonly TKCode.Terminal.Core.ResolvedStyle.Default -> TKCode.Terminal.Core.ResolvedStyle
+static readonly TKCode.Terminal.Core.TerminalColor.Default -> TKCode.Terminal.Core.TerminalColor
+static readonly TKCode.Terminal.Core.TerminalReplyProfile.Default -> TKCode.Terminal.Core.TerminalReplyProfile!
+static readonly TKCode.Terminal.Core.ViewportScroll.Bottom -> TKCode.Terminal.Core.ViewportScroll
+static readonly TKCode.Terminal.Core.ViewportScroll.Top -> TKCode.Terminal.Core.ViewportScroll
+virtual TKCode.Terminal.Core.Testing.CastEvent.EqualityContract.get -> System.Type!
+virtual TKCode.Terminal.Core.Testing.CastEvent.Equals(TKCode.Terminal.Core.Testing.CastEvent? other) -> bool
+virtual TKCode.Terminal.Core.Testing.CastEvent.PrintMembers(System.Text.StringBuilder! builder) -> bool
+~override TKCode.Terminal.Core.CellSpan.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.CellSpan.ToString() -> string
+~override TKCode.Terminal.Core.CursorState.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.CursorState.ToString() -> string
+~override TKCode.Terminal.Core.InputModes.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.InputModes.ToString() -> string
+~override TKCode.Terminal.Core.KeyInput.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.KeyInput.ToString() -> string
+~override TKCode.Terminal.Core.MouseGeometry.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.MouseGeometry.ToString() -> string
+~override TKCode.Terminal.Core.MouseInput.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.MouseInput.ToString() -> string
+~override TKCode.Terminal.Core.PendingClipboardRead.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.PendingClipboardRead.ToString() -> string
+~override TKCode.Terminal.Core.ResolvedStyle.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.ResolvedStyle.ToString() -> string
+~override TKCode.Terminal.Core.ScrollbarState.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.ScrollbarState.ToString() -> string
+~override TKCode.Terminal.Core.SelectionRequest.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.SelectionRequest.ToString() -> string
+~override TKCode.Terminal.Core.SemanticPromptEvent.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.SemanticPromptEvent.ToString() -> string
+~override TKCode.Terminal.Core.TerminalColor.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.TerminalColor.ToString() -> string
+~override TKCode.Terminal.Core.TerminalCoreOptions.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.TerminalCoreOptions.ToString() -> string
+~override TKCode.Terminal.Core.TerminalRgb.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.TerminalRgb.ToString() -> string
+~override TKCode.Terminal.Core.TerminalSize.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.TerminalSize.ToString() -> string
+~override TKCode.Terminal.Core.ViewportPoint.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.ViewportPoint.ToString() -> string
+~override TKCode.Terminal.Core.ViewportScroll.Equals(object obj) -> bool
+~override TKCode.Terminal.Core.ViewportScroll.ToString() -> string

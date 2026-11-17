@@ -1,0 +1,310 @@
+#nullable enable
+TKCode.Arc.ArcPdf
+TKCode.Arc.ArcPdfBuilderExtensions
+TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.LinkHoverFill = 7 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.PasswordFormWidth = 3 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.SearchBarWidth = 4 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.SearchHighlight = 5 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.SearchHighlightCurrent = 6 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.SidebarWidth = 0 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.ThumbnailSpacing = 2 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenKind.ThumbnailWidth = 1 -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.PdfViewerTokenKind
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension.PdfViewerTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension.PdfViewerTokenResourceExtension(TKCode.Arc.DesignTokens.PdfViewerTokenKind kind) -> void
+TKCode.Arc.DesignTokens.PdfViewerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.PdfViewerTokens
+TKCode.Arc.IPdfBackend
+TKCode.Arc.IPdfBackend.IsReal.get -> bool
+TKCode.Arc.IPdfBackend.Name.get -> string!
+TKCode.Arc.IPdfBackend.OpenAsync(TKCode.Arc.PdfSource! source, string? password, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TKCode.Arc.PdfDocument!>!
+TKCode.Arc.Localization.PdfViewerLangResourceExtension
+TKCode.Arc.Localization.PdfViewerLangResourceExtension.Kind.get -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.PdfViewerLangResourceExtension.PdfViewerLangResourceExtension() -> void
+TKCode.Arc.Localization.PdfViewerLangResourceExtension.PdfViewerLangResourceExtension(TKCode.Arc.Localization.PdfViewerLangResourceKind kind) -> void
+TKCode.Arc.Localization.PdfViewerLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.BackendHint = 0 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Cancel = 1 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.CloseSearch = 2 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Copy = 3 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.CouldNotOpen = 4 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.FileDamaged = 5 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.FileNotFound = 6 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Loading = 7 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.MatchCase = 8 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.MatchPosition = 9 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.NextMatch = 10 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.NoBackend = 11 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.NoResults = 12 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Open = 13 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Outline = 14 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.PageNumber = 15 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Password = 16 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.PasswordIncorrect = 17 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.PasswordRequired = 18 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.PreviousMatch = 19 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Protected = 20 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Search = 21 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.SelectAll = 22 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Sidebar = 23 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.Thumbnails = 24 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResourceKind.WholeWord = 25 -> TKCode.Arc.Localization.PdfViewerLangResourceKind
+TKCode.Arc.Localization.PdfViewerLangResources
+TKCode.Arc.Pdf
+TKCode.Arc.PdfDestination
+TKCode.Arc.PdfDestination.<Clone>$() -> TKCode.Arc.PdfDestination!
+TKCode.Arc.PdfDestination.Deconstruct(out int PageIndex, out Avalonia.Point? PointInPage) -> void
+TKCode.Arc.PdfDestination.Equals(TKCode.Arc.PdfDestination? other) -> bool
+TKCode.Arc.PdfDestination.PageIndex.get -> int
+TKCode.Arc.PdfDestination.PageIndex.init -> void
+TKCode.Arc.PdfDestination.PdfDestination(int PageIndex, Avalonia.Point? PointInPage = null) -> void
+TKCode.Arc.PdfDestination.PointInPage.get -> Avalonia.Point?
+TKCode.Arc.PdfDestination.PointInPage.init -> void
+TKCode.Arc.PdfDocument
+TKCode.Arc.PdfDocument.PageLabelsChanged -> System.EventHandler?
+TKCode.Arc.PdfDocument.PagesChanged -> System.EventHandler?
+TKCode.Arc.PdfDocument.PdfDocument() -> void
+TKCode.Arc.PdfDocument.RaisePageLabelsChanged() -> void
+TKCode.Arc.PdfDocument.RaisePagesChanged() -> void
+TKCode.Arc.PdfDocumentFailedEventArgs
+TKCode.Arc.PdfDocumentFailedEventArgs.Error.get -> TKCode.Arc.PdfException!
+TKCode.Arc.PdfDocumentInfo
+TKCode.Arc.PdfDocumentInfo.<Clone>$() -> TKCode.Arc.PdfDocumentInfo!
+TKCode.Arc.PdfDocumentInfo.Author.get -> string?
+TKCode.Arc.PdfDocumentInfo.Author.init -> void
+TKCode.Arc.PdfDocumentInfo.Created.get -> System.DateTimeOffset?
+TKCode.Arc.PdfDocumentInfo.Created.init -> void
+TKCode.Arc.PdfDocumentInfo.Creator.get -> string?
+TKCode.Arc.PdfDocumentInfo.Creator.init -> void
+TKCode.Arc.PdfDocumentInfo.Equals(TKCode.Arc.PdfDocumentInfo? other) -> bool
+TKCode.Arc.PdfDocumentInfo.Keywords.get -> string?
+TKCode.Arc.PdfDocumentInfo.Keywords.init -> void
+TKCode.Arc.PdfDocumentInfo.Modified.get -> System.DateTimeOffset?
+TKCode.Arc.PdfDocumentInfo.Modified.init -> void
+TKCode.Arc.PdfDocumentInfo.PdfDocumentInfo() -> void
+TKCode.Arc.PdfDocumentInfo.Producer.get -> string?
+TKCode.Arc.PdfDocumentInfo.Producer.init -> void
+TKCode.Arc.PdfDocumentInfo.Subject.get -> string?
+TKCode.Arc.PdfDocumentInfo.Subject.init -> void
+TKCode.Arc.PdfDocumentInfo.Title.get -> string?
+TKCode.Arc.PdfDocumentInfo.Title.init -> void
+TKCode.Arc.PdfDocumentOpenedEventArgs
+TKCode.Arc.PdfDocumentOpenedEventArgs.Document.get -> TKCode.Arc.PdfDocument!
+TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.Aborted = 6 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.BackendUnavailable = 0 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.Corrupt = 3 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.Network = 2 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.NotFound = 1 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.PasswordRequired = 5 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfErrorKind.Unsupported = 4 -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfException
+TKCode.Arc.PdfException.Kind.get -> TKCode.Arc.PdfErrorKind
+TKCode.Arc.PdfException.PdfException(TKCode.Arc.PdfErrorKind kind, string? message = null, System.Exception? innerException = null) -> void
+TKCode.Arc.PdfExternalLinkBehavior
+TKCode.Arc.PdfExternalLinkBehavior.None = 1 -> TKCode.Arc.PdfExternalLinkBehavior
+TKCode.Arc.PdfExternalLinkBehavior.Open = 0 -> TKCode.Arc.PdfExternalLinkBehavior
+TKCode.Arc.PdfLink
+TKCode.Arc.PdfLink.<Clone>$() -> TKCode.Arc.PdfLink!
+TKCode.Arc.PdfLink.Bounds.get -> Avalonia.Rect
+TKCode.Arc.PdfLink.Bounds.init -> void
+TKCode.Arc.PdfLink.Deconstruct(out Avalonia.Rect Bounds, out TKCode.Arc.PdfDestination? Destination, out System.Uri? Uri) -> void
+TKCode.Arc.PdfLink.Destination.get -> TKCode.Arc.PdfDestination?
+TKCode.Arc.PdfLink.Destination.init -> void
+TKCode.Arc.PdfLink.Equals(TKCode.Arc.PdfLink? other) -> bool
+TKCode.Arc.PdfLink.PdfLink(Avalonia.Rect Bounds, TKCode.Arc.PdfDestination? Destination, System.Uri? Uri) -> void
+TKCode.Arc.PdfLink.Uri.get -> System.Uri?
+TKCode.Arc.PdfLink.Uri.init -> void
+TKCode.Arc.PdfLinkEventArgs
+TKCode.Arc.PdfLinkEventArgs.Link.get -> TKCode.Arc.PdfLink!
+TKCode.Arc.PdfOutlineItem
+TKCode.Arc.PdfOutlineItem.Children.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfOutlineItem!>!
+TKCode.Arc.PdfOutlineItem.Destination.get -> TKCode.Arc.PdfDestination?
+TKCode.Arc.PdfOutlineItem.PdfOutlineItem(string! title, TKCode.Arc.PdfDestination? destination = null, System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfOutlineItem!>? children = null) -> void
+TKCode.Arc.PdfOutlineItem.Title.get -> string!
+TKCode.Arc.PdfPageText
+TKCode.Arc.PdfPageText.CharBoxes.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Rect>!
+TKCode.Arc.PdfPageText.GetRects(int start, int length) -> System.Collections.Generic.IReadOnlyList<Avalonia.Rect>!
+TKCode.Arc.PdfPageText.HitTest(Avalonia.Point pointInPage) -> int
+TKCode.Arc.PdfPageText.PdfPageText(string! text, Avalonia.Rect[]! charBoxes) -> void
+TKCode.Arc.PdfPageText.Text.get -> string!
+TKCode.Arc.PdfPasswordDeferral
+TKCode.Arc.PdfPasswordDeferral.Complete() -> void
+TKCode.Arc.PdfPasswordDeferral.Dispose() -> void
+TKCode.Arc.PdfPasswordEventArgs
+TKCode.Arc.PdfPasswordEventArgs.Cancel.get -> bool
+TKCode.Arc.PdfPasswordEventArgs.Cancel.set -> void
+TKCode.Arc.PdfPasswordEventArgs.GetDeferral() -> TKCode.Arc.PdfPasswordDeferral!
+TKCode.Arc.PdfPasswordEventArgs.IsRetry.get -> bool
+TKCode.Arc.PdfPasswordEventArgs.Password.get -> string?
+TKCode.Arc.PdfPasswordEventArgs.Password.set -> void
+TKCode.Arc.PdfSidebarMode
+TKCode.Arc.PdfSidebarMode.Outline = 1 -> TKCode.Arc.PdfSidebarMode
+TKCode.Arc.PdfSidebarMode.Thumbnails = 0 -> TKCode.Arc.PdfSidebarMode
+TKCode.Arc.PdfSource
+TKCode.Arc.PdfSource.Bytes.get -> System.ReadOnlyMemory<byte>
+TKCode.Arc.PdfSource.DisplayName.get -> string?
+TKCode.Arc.PdfSource.DisplayName.init -> void
+TKCode.Arc.PdfSource.FilePath.get -> string?
+TKCode.Arc.PdfSource.Kind.get -> TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfSource.OpenStream.get -> System.Func<System.IO.Stream!>?
+TKCode.Arc.PdfSource.Uri.get -> System.Uri?
+TKCode.Arc.PdfSource.WithDisplayName(string? displayName) -> TKCode.Arc.PdfSource!
+TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfSourceKind.Bytes = 1 -> TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfSourceKind.File = 0 -> TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfSourceKind.Stream = 2 -> TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfSourceKind.Uri = 3 -> TKCode.Arc.PdfSourceKind
+TKCode.Arc.PdfViewer
+TKCode.Arc.PdfViewer.ClearSearch() -> void
+TKCode.Arc.PdfViewer.ClearSelection() -> void
+TKCode.Arc.PdfViewer.CopySelection() -> void
+TKCode.Arc.PdfViewer.CurrentSearchMatch.get -> int
+TKCode.Arc.PdfViewer.CurrentSearchMatch.set -> void
+TKCode.Arc.PdfViewer.Document.get -> TKCode.Arc.PdfDocument?
+TKCode.Arc.PdfViewer.Document.set -> void
+TKCode.Arc.PdfViewer.DocumentFailed -> System.EventHandler<TKCode.Arc.PdfDocumentFailedEventArgs!>?
+TKCode.Arc.PdfViewer.DocumentOpened -> System.EventHandler<TKCode.Arc.PdfDocumentOpenedEventArgs!>?
+TKCode.Arc.PdfViewer.Error.get -> TKCode.Arc.PdfException?
+TKCode.Arc.PdfViewer.ExternalLinkBehavior.get -> TKCode.Arc.PdfExternalLinkBehavior
+TKCode.Arc.PdfViewer.ExternalLinkBehavior.set -> void
+TKCode.Arc.PdfViewer.IsMatchCase.get -> bool
+TKCode.Arc.PdfViewer.IsMatchCase.set -> void
+TKCode.Arc.PdfViewer.IsSearchOpen.get -> bool
+TKCode.Arc.PdfViewer.IsSearchOpen.set -> void
+TKCode.Arc.PdfViewer.IsSearching.get -> bool
+TKCode.Arc.PdfViewer.IsSidebarOpen.get -> bool
+TKCode.Arc.PdfViewer.IsSidebarOpen.set -> void
+TKCode.Arc.PdfViewer.IsTextSelectionEnabled.get -> bool
+TKCode.Arc.PdfViewer.IsTextSelectionEnabled.set -> void
+TKCode.Arc.PdfViewer.IsWholeWord.get -> bool
+TKCode.Arc.PdfViewer.IsWholeWord.set -> void
+TKCode.Arc.PdfViewer.LinkActivated -> System.EventHandler<TKCode.Arc.PdfLinkEventArgs!>?
+TKCode.Arc.PdfViewer.OpenedDocument.get -> TKCode.Arc.PdfDocument?
+TKCode.Arc.PdfViewer.PasswordRequested -> System.EventHandler<TKCode.Arc.PdfPasswordEventArgs!>?
+TKCode.Arc.PdfViewer.PdfViewer() -> void
+TKCode.Arc.PdfViewer.SearchMatchCount.get -> int
+TKCode.Arc.PdfViewer.SearchNext() -> void
+TKCode.Arc.PdfViewer.SearchPrevious() -> void
+TKCode.Arc.PdfViewer.SearchText.get -> string!
+TKCode.Arc.PdfViewer.SearchText.set -> void
+TKCode.Arc.PdfViewer.SelectAll() -> void
+TKCode.Arc.PdfViewer.SelectedText.get -> string!
+TKCode.Arc.PdfViewer.SidebarMode.get -> TKCode.Arc.PdfSidebarMode
+TKCode.Arc.PdfViewer.SidebarMode.set -> void
+TKCode.Arc.PdfViewer.Source.get -> TKCode.Arc.PdfSource?
+TKCode.Arc.PdfViewer.Source.set -> void
+TKCode.Arc.PdfViewer.Status.get -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewer.Title.get -> string?
+TKCode.Arc.PdfViewerAutomationPeer
+TKCode.Arc.PdfViewerAutomationPeer.Owner.get -> TKCode.Arc.PdfViewer!
+TKCode.Arc.PdfViewerAutomationPeer.PdfViewerAutomationPeer(TKCode.Arc.PdfViewer! owner) -> void
+TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewerStatus.Empty = 0 -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewerStatus.Failed = 4 -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewerStatus.Loading = 1 -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewerStatus.PasswordRequired = 3 -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.PdfViewerStatus.Ready = 2 -> TKCode.Arc.PdfViewerStatus
+TKCode.Arc.SimulatedPdfDocument
+TKCode.Arc.SimulatedPdfDocument.IsDisposed.get -> bool
+TKCode.Arc.SimulatedPdfDocument.SimulatedPdfDocument(int pageCount = 12, Avalonia.Size? pageSize = null) -> void
+abstract TKCode.Arc.PdfDocument.Dispose() -> void
+abstract TKCode.Arc.PdfDocument.GetLinksAsync(int pageIndex, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfLink!>!>!
+abstract TKCode.Arc.PdfDocument.GetOutlineAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfOutlineItem!>!>!
+abstract TKCode.Arc.PdfDocument.GetPageLabel(int pageIndex) -> string?
+abstract TKCode.Arc.PdfDocument.GetPageSize(int pageIndex) -> Avalonia.Size
+abstract TKCode.Arc.PdfDocument.GetPageTextAsync(int pageIndex, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TKCode.Arc.PdfPageText!>!
+abstract TKCode.Arc.PdfDocument.Info.get -> TKCode.Arc.PdfDocumentInfo!
+abstract TKCode.Arc.PdfDocument.PageCount.get -> int
+abstract TKCode.Arc.PdfDocument.RenderAsync(TKCode.Arc.PageRenderRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<TKCode.Arc.PageImage?>
+const TKCode.Arc.DesignTokens.PdfViewerTokens.Identity = "PdfViewer" -> string!
+const TKCode.Arc.PdfViewer.FailedPseudoClass = ":failed" -> string!
+const TKCode.Arc.PdfViewer.NarrowPseudoClass = ":narrow" -> string!
+const TKCode.Arc.PdfViewer.PasswordPseudoClass = ":password" -> string!
+const TKCode.Arc.PdfViewer.SearchOpenPseudoClass = ":search-open" -> string!
+const TKCode.Arc.PdfViewer.SidebarOpenPseudoClass = ":sidebar-open" -> string!
+override TKCode.Arc.PdfDestination.Equals(object? obj) -> bool
+override TKCode.Arc.PdfDestination.GetHashCode() -> int
+override TKCode.Arc.PdfDestination.ToString() -> string!
+override TKCode.Arc.PdfDocumentInfo.Equals(object? obj) -> bool
+override TKCode.Arc.PdfDocumentInfo.GetHashCode() -> int
+override TKCode.Arc.PdfDocumentInfo.ToString() -> string!
+override TKCode.Arc.PdfLink.Equals(object? obj) -> bool
+override TKCode.Arc.PdfLink.GetHashCode() -> int
+override TKCode.Arc.PdfLink.ToString() -> string!
+override TKCode.Arc.PdfSource.ToString() -> string!
+override TKCode.Arc.PdfViewer.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.PdfViewer.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnPageBitmapReady(int pageIndex, Avalonia.PixelSize targetSize) -> void
+override TKCode.Arc.PdfViewer.OnPageSourceChanged(TKCode.Arc.IPageSource? oldSource, TKCode.Arc.IPageSource? newSource) -> void
+override TKCode.Arc.PdfViewer.OnPagesChanged() -> void
+override TKCode.Arc.PdfViewer.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.PdfViewer.OnSizeChanged(Avalonia.Controls.SizeChangedEventArgs! e) -> void
+override TKCode.Arc.PdfViewer.OnViewerKeyDown(Avalonia.Input.KeyEventArgs! e) -> bool
+override TKCode.Arc.PdfViewerAutomationPeer.GetHelpTextCore() -> string?
+override TKCode.Arc.SimulatedPdfDocument.Dispose() -> void
+override TKCode.Arc.SimulatedPdfDocument.GetLinksAsync(int pageIndex, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfLink!>!>!
+override TKCode.Arc.SimulatedPdfDocument.GetOutlineAsync(System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.Collections.Generic.IReadOnlyList<TKCode.Arc.PdfOutlineItem!>!>!
+override TKCode.Arc.SimulatedPdfDocument.GetPageLabel(int pageIndex) -> string?
+override TKCode.Arc.SimulatedPdfDocument.GetPageSize(int pageIndex) -> Avalonia.Size
+override TKCode.Arc.SimulatedPdfDocument.GetPageTextAsync(int pageIndex, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<TKCode.Arc.PdfPageText!>!
+override TKCode.Arc.SimulatedPdfDocument.Info.get -> TKCode.Arc.PdfDocumentInfo!
+override TKCode.Arc.SimulatedPdfDocument.PageCount.get -> int
+override TKCode.Arc.SimulatedPdfDocument.RenderAsync(TKCode.Arc.PageRenderRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<TKCode.Arc.PageImage?>
+static TKCode.Arc.ArcPdf.Backend.get -> TKCode.Arc.IPdfBackend!
+static TKCode.Arc.ArcPdf.Backend.set -> void
+static TKCode.Arc.ArcPdfBuilderExtensions.UseArcPdf(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DesignTokens.PdfViewerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.PdfViewerTokens.Key(TKCode.Arc.DesignTokens.PdfViewerTokenKind kind) -> object!
+static TKCode.Arc.Localization.PdfViewerLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.PdfViewerLangResources.Format(TKCode.Arc.Localization.PdfViewerLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.PdfViewerLangResources.Get(TKCode.Arc.Localization.PdfViewerLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.PdfViewerLangResources.Index(TKCode.Arc.Localization.PdfViewerLangResourceKind kind) -> int
+static TKCode.Arc.Localization.PdfViewerLangResources.Key(TKCode.Arc.Localization.PdfViewerLangResourceKind kind) -> object!
+static TKCode.Arc.Pdf.GetError(TKCode.Arc.PageViewer! viewer) -> TKCode.Arc.PdfException?
+static TKCode.Arc.Pdf.GetSource(TKCode.Arc.PageViewer! viewer) -> TKCode.Arc.PdfSource?
+static TKCode.Arc.Pdf.SetSource(TKCode.Arc.PageViewer! viewer, TKCode.Arc.PdfSource? value) -> void
+static TKCode.Arc.PdfDestination.operator !=(TKCode.Arc.PdfDestination? left, TKCode.Arc.PdfDestination? right) -> bool
+static TKCode.Arc.PdfDestination.operator ==(TKCode.Arc.PdfDestination? left, TKCode.Arc.PdfDestination? right) -> bool
+static TKCode.Arc.PdfDocumentInfo.operator !=(TKCode.Arc.PdfDocumentInfo? left, TKCode.Arc.PdfDocumentInfo? right) -> bool
+static TKCode.Arc.PdfDocumentInfo.operator ==(TKCode.Arc.PdfDocumentInfo? left, TKCode.Arc.PdfDocumentInfo? right) -> bool
+static TKCode.Arc.PdfLink.operator !=(TKCode.Arc.PdfLink? left, TKCode.Arc.PdfLink? right) -> bool
+static TKCode.Arc.PdfLink.operator ==(TKCode.Arc.PdfLink? left, TKCode.Arc.PdfLink? right) -> bool
+static TKCode.Arc.PdfSource.FromBytes(System.ReadOnlyMemory<byte> data) -> TKCode.Arc.PdfSource!
+static TKCode.Arc.PdfSource.FromFile(string! path) -> TKCode.Arc.PdfSource!
+static TKCode.Arc.PdfSource.FromStream(System.Func<System.IO.Stream!>! open) -> TKCode.Arc.PdfSource!
+static TKCode.Arc.PdfSource.FromUri(System.Uri! uri) -> TKCode.Arc.PdfSource!
+static TKCode.Arc.PdfSource.Parse(string! text) -> TKCode.Arc.PdfSource!
+static readonly TKCode.Arc.Pdf.ErrorProperty -> Avalonia.AttachedProperty<TKCode.Arc.PdfException?>!
+static readonly TKCode.Arc.Pdf.SourceProperty -> Avalonia.AttachedProperty<TKCode.Arc.PdfSource?>!
+static readonly TKCode.Arc.PdfViewer.CurrentSearchMatchProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.PdfViewer.DocumentFailedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.PdfDocumentFailedEventArgs!>!
+static readonly TKCode.Arc.PdfViewer.DocumentOpenedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.PdfDocumentOpenedEventArgs!>!
+static readonly TKCode.Arc.PdfViewer.DocumentProperty -> Avalonia.StyledProperty<TKCode.Arc.PdfDocument?>!
+static readonly TKCode.Arc.PdfViewer.ErrorProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, TKCode.Arc.PdfException?>!
+static readonly TKCode.Arc.PdfViewer.ExternalLinkBehaviorProperty -> Avalonia.StyledProperty<TKCode.Arc.PdfExternalLinkBehavior>!
+static readonly TKCode.Arc.PdfViewer.IsMatchCaseProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.PdfViewer.IsSearchOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.PdfViewer.IsSearchingProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, bool>!
+static readonly TKCode.Arc.PdfViewer.IsSidebarOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.PdfViewer.IsTextSelectionEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.PdfViewer.IsWholeWordProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.PdfViewer.LinkActivatedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.PdfLinkEventArgs!>!
+static readonly TKCode.Arc.PdfViewer.OpenedDocumentProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, TKCode.Arc.PdfDocument?>!
+static readonly TKCode.Arc.PdfViewer.PasswordRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.PdfPasswordEventArgs!>!
+static readonly TKCode.Arc.PdfViewer.SearchMatchCountProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, int>!
+static readonly TKCode.Arc.PdfViewer.SearchTextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.PdfViewer.SelectedTextProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, string!>!
+static readonly TKCode.Arc.PdfViewer.SidebarModeProperty -> Avalonia.StyledProperty<TKCode.Arc.PdfSidebarMode>!
+static readonly TKCode.Arc.PdfViewer.SourceProperty -> Avalonia.StyledProperty<TKCode.Arc.PdfSource?>!
+static readonly TKCode.Arc.PdfViewer.StatusProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, TKCode.Arc.PdfViewerStatus>!
+static readonly TKCode.Arc.PdfViewer.TitleProperty -> Avalonia.DirectProperty<TKCode.Arc.PdfViewer!, string?>!

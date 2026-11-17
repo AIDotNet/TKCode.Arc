@@ -1,0 +1,2006 @@
+#nullable enable
+TKCode.Arc.ArcAccentColors
+TKCode.Arc.ArcAccentColors.Accent.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.Accent.init -> void
+TKCode.Arc.ArcAccentColors.AccentForeground.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.AccentForeground.init -> void
+TKCode.Arc.ArcAccentColors.AccentStrong.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.AccentStrong.init -> void
+TKCode.Arc.ArcAccentColors.AccentSubtle.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.AccentSubtle.init -> void
+TKCode.Arc.ArcAccentColors.ArcAccentColors() -> void
+TKCode.Arc.ArcAccentColors.ArcAccentColors(Avalonia.Media.Color Accent, Avalonia.Media.Color AccentStrong, Avalonia.Media.Color AccentSubtle, Avalonia.Media.Color AccentForeground, Avalonia.Media.Color ControlOn, Avalonia.Media.Color ControlThumbOn, Avalonia.Media.Color ControlGlyph, Avalonia.Media.Color ControlFill, Avalonia.Media.Color Series1, Avalonia.Media.Color Series2, Avalonia.Media.Color Series3, Avalonia.Media.Color Series4, string! Preset) -> void
+TKCode.Arc.ArcAccentColors.ControlFill.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.ControlFill.init -> void
+TKCode.Arc.ArcAccentColors.ControlGlyph.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.ControlGlyph.init -> void
+TKCode.Arc.ArcAccentColors.ControlOn.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.ControlOn.init -> void
+TKCode.Arc.ArcAccentColors.ControlThumbOn.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.ControlThumbOn.init -> void
+TKCode.Arc.ArcAccentColors.Deconstruct(out Avalonia.Media.Color Accent, out Avalonia.Media.Color AccentStrong, out Avalonia.Media.Color AccentSubtle, out Avalonia.Media.Color AccentForeground, out Avalonia.Media.Color ControlOn, out Avalonia.Media.Color ControlThumbOn, out Avalonia.Media.Color ControlGlyph, out Avalonia.Media.Color ControlFill, out Avalonia.Media.Color Series1, out Avalonia.Media.Color Series2, out Avalonia.Media.Color Series3, out Avalonia.Media.Color Series4, out string! Preset) -> void
+TKCode.Arc.ArcAccentColors.Equals(TKCode.Arc.ArcAccentColors other) -> bool
+TKCode.Arc.ArcAccentColors.Preset.get -> string!
+TKCode.Arc.ArcAccentColors.Preset.init -> void
+TKCode.Arc.ArcAccentColors.Series1.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.Series1.init -> void
+TKCode.Arc.ArcAccentColors.Series2.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.Series2.init -> void
+TKCode.Arc.ArcAccentColors.Series3.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.Series3.init -> void
+TKCode.Arc.ArcAccentColors.Series4.get -> Avalonia.Media.Color
+TKCode.Arc.ArcAccentColors.Series4.init -> void
+TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Amber = 4 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Blue = 2 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Coral = 6 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Green = 3 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Neutral = 0 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Orange = 5 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Rose = 7 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcAccentPreset.Violet = 1 -> TKCode.Arc.ArcAccentPreset
+TKCode.Arc.ArcBaseTheme
+TKCode.Arc.ArcCoreBuilderExtensions
+TKCode.Arc.ArcDesign
+TKCode.Arc.ArcDesign.ArcDesign() -> void
+TKCode.Arc.ArcFonts
+TKCode.Arc.ArcGlyph
+TKCode.Arc.ArcGlyph.ArcGlyph() -> void
+TKCode.Arc.ArcGlyph.Data.get -> Avalonia.Media.Geometry?
+TKCode.Arc.ArcGlyph.Data.set -> void
+TKCode.Arc.ArcGlyph.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.ArcGlyph.Foreground.set -> void
+TKCode.Arc.ArcGlyph.Size.get -> double
+TKCode.Arc.ArcGlyph.Size.set -> void
+TKCode.Arc.ArcGlyph.StrokeThickness.get -> double
+TKCode.Arc.ArcGlyph.StrokeThickness.set -> void
+TKCode.Arc.ArcIcons
+TKCode.Arc.ArcNeutralColors
+TKCode.Arc.ArcNeutralColors.<Clone>$() -> TKCode.Arc.ArcNeutralColors!
+TKCode.Arc.ArcNeutralColors.ArcNeutralColors(Avalonia.Media.Color Background, Avalonia.Media.Color Surface, Avalonia.Media.Color SurfaceRaised, Avalonia.Media.Color SurfaceMuted, Avalonia.Media.Color Foreground, Avalonia.Media.Color TextSecondary, Avalonia.Media.Color TextMuted, Avalonia.Media.Color Border, Avalonia.Media.Color BorderSubtle, Avalonia.Media.Color BorderStrong, Avalonia.Media.Color ControlTrack, Avalonia.Media.Color ControlTrackHover, Avalonia.Media.Color ControlThumb, Avalonia.Media.Color Success, Avalonia.Media.Color Warning, Avalonia.Media.Color Danger, Avalonia.Media.Color Scrim) -> void
+TKCode.Arc.ArcNeutralColors.Background.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Background.init -> void
+TKCode.Arc.ArcNeutralColors.Border.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Border.init -> void
+TKCode.Arc.ArcNeutralColors.BorderStrong.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.BorderStrong.init -> void
+TKCode.Arc.ArcNeutralColors.BorderSubtle.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.BorderSubtle.init -> void
+TKCode.Arc.ArcNeutralColors.ControlThumb.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.ControlThumb.init -> void
+TKCode.Arc.ArcNeutralColors.ControlTrack.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.ControlTrack.init -> void
+TKCode.Arc.ArcNeutralColors.ControlTrackHover.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.ControlTrackHover.init -> void
+TKCode.Arc.ArcNeutralColors.Danger.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Danger.init -> void
+TKCode.Arc.ArcNeutralColors.Deconstruct(out Avalonia.Media.Color Background, out Avalonia.Media.Color Surface, out Avalonia.Media.Color SurfaceRaised, out Avalonia.Media.Color SurfaceMuted, out Avalonia.Media.Color Foreground, out Avalonia.Media.Color TextSecondary, out Avalonia.Media.Color TextMuted, out Avalonia.Media.Color Border, out Avalonia.Media.Color BorderSubtle, out Avalonia.Media.Color BorderStrong, out Avalonia.Media.Color ControlTrack, out Avalonia.Media.Color ControlTrackHover, out Avalonia.Media.Color ControlThumb, out Avalonia.Media.Color Success, out Avalonia.Media.Color Warning, out Avalonia.Media.Color Danger, out Avalonia.Media.Color Scrim) -> void
+TKCode.Arc.ArcNeutralColors.Equals(TKCode.Arc.ArcNeutralColors? other) -> bool
+TKCode.Arc.ArcNeutralColors.Foreground.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Foreground.init -> void
+TKCode.Arc.ArcNeutralColors.Scrim.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Scrim.init -> void
+TKCode.Arc.ArcNeutralColors.Success.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Success.init -> void
+TKCode.Arc.ArcNeutralColors.Surface.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Surface.init -> void
+TKCode.Arc.ArcNeutralColors.SurfaceMuted.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.SurfaceMuted.init -> void
+TKCode.Arc.ArcNeutralColors.SurfaceRaised.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.SurfaceRaised.init -> void
+TKCode.Arc.ArcNeutralColors.TextMuted.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.TextMuted.init -> void
+TKCode.Arc.ArcNeutralColors.TextSecondary.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.TextSecondary.init -> void
+TKCode.Arc.ArcNeutralColors.Warning.get -> Avalonia.Media.Color
+TKCode.Arc.ArcNeutralColors.Warning.init -> void
+TKCode.Arc.ArcPalette
+TKCode.Arc.ArcThemeBuilderExtensions
+TKCode.Arc.ArcTokenValueExtension
+TKCode.Arc.ArcTokenValueExtension.ArcTokenValueExtension() -> void
+TKCode.Arc.ArcTokenValueExtension.ArcTokenValueExtension(TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> void
+TKCode.Arc.ArcTokenValueExtension.Kind.get -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.ArcTokenValueExtension.Kind.set -> void
+TKCode.Arc.ArcTokens
+TKCode.Arc.BitmapImageSource
+TKCode.Arc.BitmapImageSource.Bitmap.get -> Avalonia.Media.Imaging.Bitmap!
+TKCode.Arc.BitmapImageSource.BitmapImageSource(Avalonia.Media.Imaging.Bitmap! bitmap) -> void
+TKCode.Arc.ControlSize
+TKCode.Arc.ControlSize.Large = 2 -> TKCode.Arc.ControlSize
+TKCode.Arc.ControlSize.Medium = 1 -> TKCode.Arc.ControlSize
+TKCode.Arc.ControlSize.Small = 0 -> TKCode.Arc.ControlSize
+TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Accent = 23 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.AccentForeground = 26 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.AccentPreset = 27 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.AccentStrong = 24 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.AccentSubtle = 25 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BackdropBlurDialog = 165 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BackdropBlurDrawer = 166 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Background = 12 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BlurSoft = 163 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BlurSubtle = 162 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BlurText = 164 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BodyFontFamily = 121 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Border = 20 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BorderStrong = 22 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.BorderSubtle = 21 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ContentMaxWidthLG = 171 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ContentMaxWidthMD = 170 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ContentMaxWidthSM = 169 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ContentMaxWidthXL = 172 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlFill = 35 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlGlyph = 30 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlOn = 28 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlOnSubtle = 29 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlSizeLG = 69 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlSizeMD = 68 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlSizeSM = 67 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlThumb = 33 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlThumbOn = 34 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlThumbShadow = 36 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlTrack = 31 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ControlTrackHover = 32 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Danger = 39 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DangerSubtle = 42 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DisplayFontFamily = 120 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationConsidered = 142 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationExit = 140 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationFast = 139 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationInstant = 138 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationSpring = 143 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.DurationStandard = 141 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EaseEnter = 144 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EaseExit = 145 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EaseInOut = 147 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EaseStandard = 146 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThickness = 53 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessBottom = 56 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessLeft = 57 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessNoBottom = 60 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessNoLeft = 62 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessNoRight = 61 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessRight = 58 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessRightBottom = 59 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.EdgeThicknessTop = 55 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.FocusEdgeThickness = 54 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.FocusRing = 50 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.FocusRingOffset = 52 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.FocusRingWidth = 51 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Foreground = 17 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.GlyphSizeLG = 72 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.GlyphSizeMD = 71 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.GlyphSizeSM = 70 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.IconStrokeWidth = 73 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.LeadingBody = 137 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.LeadingDisplay = 136 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MediaSizeLG = 175 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MediaSizeMD = 174 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MediaSizeSM = 173 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MediaSizeXL = 176 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MonoFontFamily = 122 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.MotionMode = 167 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral0 = 0 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral1 = 1 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral10 = 10 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral11 = 11 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral2 = 2 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral3 = 3 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral4 = 4 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral5 = 5 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral6 = 6 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral7 = 7 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral8 = 8 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Neutral9 = 9 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusControl = 63 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusPanel = 64 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusPill = 66 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep1 = 86 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep10 = 97 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep11 = 98 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep12 = 99 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep13 = 100 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep14 = 101 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep14p5 = 102 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep15 = 103 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep15Bottom = 104 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep16 = 105 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep17 = 106 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep18 = 107 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep19 = 108 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep19Top = 109 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep1p25 = 87 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep1p5 = 88 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep2 = 89 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep20 = 110 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep20Top = 111 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep21 = 112 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep22 = 113 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep24 = 114 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep25 = 115 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep25Bottom = 116 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep28 = 117 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep3 = 90 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep33 = 118 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep33Bottom = 119 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep4 = 91 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep5 = 92 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep6 = 93 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep7 = 94 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep8 = 95 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusStep9 = 96 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusSurface = 65 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ReduceTransparency = 168 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Scrim = 16 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Series1 = 43 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Series2 = 44 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Series3 = 45 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Series4 = 46 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ShadowFloating = 49 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ShadowRaised = 48 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.ShadowResting = 47 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space1 = 74 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space10 = 81 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space12 = 82 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space16 = 83 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space2 = 75 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space20 = 84 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space24 = 85 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space3 = 76 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space4 = 77 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space5 = 78 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space6 = 79 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Space8 = 80 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringGentleDamping = 157 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringGentleStiffness = 156 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringMorphBounce = 153 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringMorphDuration = 152 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringResponsiveDamping = 155 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringResponsiveStiffness = 154 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringSmoothBounce = 149 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringSmoothDuration = 148 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringSnappyBounce = 151 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SpringSnappyDuration = 150 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.StaggerChar = 158 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.StaggerItem = 161 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.StaggerLine = 160 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.StaggerWord = 159 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Success = 37 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SuccessSubtle = 40 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Surface = 13 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SurfaceMuted = 15 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.SurfaceRaised = 14 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TextMuted = 19 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TextSecondary = 18 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TrackingBody = 135 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TrackingDisplay = 134 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Type2XL = 128 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Type3XL = 129 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Type4XL = 130 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Type5XL = 131 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TypeBase = 125 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TypeLG = 126 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TypeSM = 124 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TypeXL = 127 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.TypeXS = 123 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.Warning = 38 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.WarningSubtle = 41 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.WeightMedium = 133 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenKind.WeightRegular = 132 -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension.ArcDesignTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension.ArcDesignTokenResourceExtension(TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> void
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.ArcDesignTokenKind
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.ArcDesignTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.ArcDesignTokens
+TKCode.Arc.Gestures.DragAxis
+TKCode.Arc.Gestures.DragAxis.Both = 0 -> TKCode.Arc.Gestures.DragAxis
+TKCode.Arc.Gestures.DragAxis.Horizontal = 1 -> TKCode.Arc.Gestures.DragAxis
+TKCode.Arc.Gestures.DragAxis.Vertical = 2 -> TKCode.Arc.Gestures.DragAxis
+TKCode.Arc.Gestures.DragGestureEventArgs
+TKCode.Arc.Gestures.DragGestureEventArgs.Delta.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragGestureEventArgs.KeyModifiers.get -> Avalonia.Input.KeyModifiers
+TKCode.Arc.Gestures.DragGestureEventArgs.Offset.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragGestureEventArgs.PointerType.get -> Avalonia.Input.PointerType
+TKCode.Arc.Gestures.DragGestureEventArgs.Position.get -> Avalonia.Point
+TKCode.Arc.Gestures.DragGestureEventArgs.Start.get -> Avalonia.Point
+TKCode.Arc.Gestures.DragGestureEventArgs.Velocity.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragOptions
+TKCode.Arc.Gestures.DragOptions.Axis.get -> TKCode.Arc.Gestures.DragAxis
+TKCode.Arc.Gestures.DragOptions.Axis.init -> void
+TKCode.Arc.Gestures.DragOptions.CapturePointer.get -> bool
+TKCode.Arc.Gestures.DragOptions.CapturePointer.init -> void
+TKCode.Arc.Gestures.DragOptions.DragOptions() -> void
+TKCode.Arc.Gestures.DragOptions.HandledEventsToo.get -> bool
+TKCode.Arc.Gestures.DragOptions.HandledEventsToo.init -> void
+TKCode.Arc.Gestures.DragOptions.LeftButtonOnly.get -> bool
+TKCode.Arc.Gestures.DragOptions.LeftButtonOnly.init -> void
+TKCode.Arc.Gestures.DragOptions.RejectCrossAxis.get -> bool
+TKCode.Arc.Gestures.DragOptions.RejectCrossAxis.init -> void
+TKCode.Arc.Gestures.DragOptions.Threshold.get -> double
+TKCode.Arc.Gestures.DragOptions.Threshold.init -> void
+TKCode.Arc.Gestures.DragOptions.VelocityStaleAfter.get -> System.TimeSpan
+TKCode.Arc.Gestures.DragOptions.VelocityStaleAfter.init -> void
+TKCode.Arc.Gestures.DragOptions.VelocityWindow.get -> System.TimeSpan
+TKCode.Arc.Gestures.DragOptions.VelocityWindow.init -> void
+TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragPhase.Dragging = 2 -> TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragPhase.Idle = 0 -> TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragPhase.Pending = 1 -> TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragPhase.Rejected = 3 -> TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragRecognizer
+TKCode.Arc.Gestures.DragRecognizer.Begin(Avalonia.Point position, System.TimeSpan time) -> void
+TKCode.Arc.Gestures.DragRecognizer.Cancel() -> void
+TKCode.Arc.Gestures.DragRecognizer.Delta.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragRecognizer.DragRecognizer(TKCode.Arc.Gestures.DragOptions? options = null) -> void
+TKCode.Arc.Gestures.DragRecognizer.End(Avalonia.Point position, System.TimeSpan time) -> bool
+TKCode.Arc.Gestures.DragRecognizer.Move(Avalonia.Point position, System.TimeSpan time) -> TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.DragRecognizer.Offset.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragRecognizer.Options.get -> TKCode.Arc.Gestures.DragOptions!
+TKCode.Arc.Gestures.DragRecognizer.Origin.get -> Avalonia.Point
+TKCode.Arc.Gestures.DragRecognizer.Phase.get -> TKCode.Arc.Gestures.DragPhase
+TKCode.Arc.Gestures.DragRecognizer.Position.get -> Avalonia.Point
+TKCode.Arc.Gestures.DragRecognizer.Reject() -> void
+TKCode.Arc.Gestures.DragRecognizer.ReleaseVelocity.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragRecognizer.Time.get -> System.TimeSpan
+TKCode.Arc.Gestures.DragRecognizer.Velocity.get -> Avalonia.Vector
+TKCode.Arc.Gestures.DragTracker
+TKCode.Arc.Gestures.DragTracker.CanBegin.get -> System.Func<Avalonia.Input.PointerPressedEventArgs!, bool>?
+TKCode.Arc.Gestures.DragTracker.CanBegin.set -> void
+TKCode.Arc.Gestures.DragTracker.Cancel() -> void
+TKCode.Arc.Gestures.DragTracker.Cancelled -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Completed -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Dispose() -> void
+TKCode.Arc.Gestures.DragTracker.DragTracker(Avalonia.Controls.Control! target, TKCode.Arc.Gestures.DragOptions? options = null) -> void
+TKCode.Arc.Gestures.DragTracker.IsDragging.get -> bool
+TKCode.Arc.Gestures.DragTracker.IsEnabled.get -> bool
+TKCode.Arc.Gestures.DragTracker.IsEnabled.set -> void
+TKCode.Arc.Gestures.DragTracker.Moved -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Options.get -> TKCode.Arc.Gestures.DragOptions!
+TKCode.Arc.Gestures.DragTracker.Pressed -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Released -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Started -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Starting -> System.EventHandler<TKCode.Arc.Gestures.DragGestureEventArgs!>?
+TKCode.Arc.Gestures.DragTracker.Target.get -> Avalonia.Controls.Control!
+TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.DragTransition.Moved = 2 -> TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.DragTransition.None = 0 -> TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.DragTransition.Rejected = 3 -> TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.DragTransition.Started = 1 -> TKCode.Arc.Gestures.DragTransition
+TKCode.Arc.Gestures.MomentumProjector
+TKCode.Arc.Gestures.PanZoomTransform
+TKCode.Arc.Gestures.PanZoomTransform.Deconstruct(out Avalonia.Point Origin, out double Zoom) -> void
+TKCode.Arc.Gestures.PanZoomTransform.EnsureVisible(Avalonia.Rect world, Avalonia.Size viewport, Avalonia.Thickness margin = default(Avalonia.Thickness)) -> TKCode.Arc.Gestures.PanZoomTransform
+TKCode.Arc.Gestures.PanZoomTransform.Equals(TKCode.Arc.Gestures.PanZoomTransform other) -> bool
+TKCode.Arc.Gestures.PanZoomTransform.Matrix.get -> Avalonia.Matrix
+TKCode.Arc.Gestures.PanZoomTransform.Origin.get -> Avalonia.Point
+TKCode.Arc.Gestures.PanZoomTransform.Origin.init -> void
+TKCode.Arc.Gestures.PanZoomTransform.PanBy(Avalonia.Vector screenDelta) -> TKCode.Arc.Gestures.PanZoomTransform
+TKCode.Arc.Gestures.PanZoomTransform.PanZoomTransform() -> void
+TKCode.Arc.Gestures.PanZoomTransform.PanZoomTransform(Avalonia.Point Origin, double Zoom) -> void
+TKCode.Arc.Gestures.PanZoomTransform.ScreenToWorld(Avalonia.Point screen) -> Avalonia.Point
+TKCode.Arc.Gestures.PanZoomTransform.ScreenToWorld(Avalonia.Rect screen) -> Avalonia.Rect
+TKCode.Arc.Gestures.PanZoomTransform.VisibleWorld(Avalonia.Size viewport) -> Avalonia.Rect
+TKCode.Arc.Gestures.PanZoomTransform.WorldToScreen(Avalonia.Point world) -> Avalonia.Point
+TKCode.Arc.Gestures.PanZoomTransform.WorldToScreen(Avalonia.Rect world) -> Avalonia.Rect
+TKCode.Arc.Gestures.PanZoomTransform.Zoom.get -> double
+TKCode.Arc.Gestures.PanZoomTransform.Zoom.init -> void
+TKCode.Arc.Gestures.PanZoomTransform.ZoomBy(double factor, Avalonia.Point screenAnchor, double minZoom = 5E-324, double maxZoom = Infinity) -> TKCode.Arc.Gestures.PanZoomTransform
+TKCode.Arc.Gestures.PanZoomTransform.ZoomTo(double zoom, Avalonia.Point screenAnchor, double minZoom = 5E-324, double maxZoom = Infinity) -> TKCode.Arc.Gestures.PanZoomTransform
+TKCode.Arc.Gestures.RubberBand
+TKCode.Arc.Gestures.SnapProjection
+TKCode.Arc.Gestures.SnapProjection.DecayRate.get -> double
+TKCode.Arc.Gestures.SnapProjection.DecayRate.init -> void
+TKCode.Arc.Gestures.SnapProjection.Equals(TKCode.Arc.Gestures.SnapProjection other) -> bool
+TKCode.Arc.Gestures.SnapProjection.FlickVelocity.get -> double
+TKCode.Arc.Gestures.SnapProjection.FlickVelocity.init -> void
+TKCode.Arc.Gestures.SnapProjection.FromIndex.get -> int
+TKCode.Arc.Gestures.SnapProjection.FromIndex.init -> void
+TKCode.Arc.Gestures.SnapProjection.Horizon.get -> System.TimeSpan
+TKCode.Arc.Gestures.SnapProjection.Horizon.init -> void
+TKCode.Arc.Gestures.SnapProjection.SnapProjection() -> void
+TKCode.Arc.Gestures.VelocityTracker
+TKCode.Arc.Gestures.VelocityTracker.AddSample(Avalonia.Point position, System.TimeSpan time) -> void
+TKCode.Arc.Gestures.VelocityTracker.AddSample(double value, System.TimeSpan time) -> void
+TKCode.Arc.Gestures.VelocityTracker.Count.get -> int
+TKCode.Arc.Gestures.VelocityTracker.GetVelocity(System.TimeSpan now) -> Avalonia.Vector
+TKCode.Arc.Gestures.VelocityTracker.LastSampleTime.get -> System.TimeSpan?
+TKCode.Arc.Gestures.VelocityTracker.Reset() -> void
+TKCode.Arc.Gestures.VelocityTracker.StaleAfter.get -> System.TimeSpan
+TKCode.Arc.Gestures.VelocityTracker.Velocity.get -> Avalonia.Vector
+TKCode.Arc.Gestures.VelocityTracker.VelocityTracker(System.TimeSpan? window = null, System.TimeSpan? staleAfter = null) -> void
+TKCode.Arc.Gestures.VelocityTracker.Window.get -> System.TimeSpan
+TKCode.Arc.Gestures.WheelAction
+TKCode.Arc.Gestures.WheelAction.Deconstruct(out TKCode.Arc.Gestures.WheelActionKind Kind, out Avalonia.Vector Pan, out double ZoomFactor) -> void
+TKCode.Arc.Gestures.WheelAction.Equals(TKCode.Arc.Gestures.WheelAction other) -> bool
+TKCode.Arc.Gestures.WheelAction.IsHandled.get -> bool
+TKCode.Arc.Gestures.WheelAction.Kind.get -> TKCode.Arc.Gestures.WheelActionKind
+TKCode.Arc.Gestures.WheelAction.Kind.init -> void
+TKCode.Arc.Gestures.WheelAction.Pan.get -> Avalonia.Vector
+TKCode.Arc.Gestures.WheelAction.Pan.init -> void
+TKCode.Arc.Gestures.WheelAction.WheelAction() -> void
+TKCode.Arc.Gestures.WheelAction.WheelAction(TKCode.Arc.Gestures.WheelActionKind Kind, Avalonia.Vector Pan, double ZoomFactor) -> void
+TKCode.Arc.Gestures.WheelAction.ZoomFactor.get -> double
+TKCode.Arc.Gestures.WheelAction.ZoomFactor.init -> void
+TKCode.Arc.Gestures.WheelActionKind
+TKCode.Arc.Gestures.WheelActionKind.None = 0 -> TKCode.Arc.Gestures.WheelActionKind
+TKCode.Arc.Gestures.WheelActionKind.Pan = 1 -> TKCode.Arc.Gestures.WheelActionKind
+TKCode.Arc.Gestures.WheelActionKind.Zoom = 2 -> TKCode.Arc.Gestures.WheelActionKind
+TKCode.Arc.Gestures.WheelDevice
+TKCode.Arc.Gestures.WheelDevice.Notched = 0 -> TKCode.Arc.Gestures.WheelDevice
+TKCode.Arc.Gestures.WheelDevice.Precise = 1 -> TKCode.Arc.Gestures.WheelDevice
+TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelMode.ModifierZoom = 3 -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelMode.NotchedZoom = 2 -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelMode.Pan = 0 -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelMode.PassThrough = 4 -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelMode.Zoom = 1 -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelRouter
+TKCode.Arc.Gestures.WheelRouter.BurstGap.get -> System.TimeSpan
+TKCode.Arc.Gestures.WheelRouter.BurstGap.set -> void
+TKCode.Arc.Gestures.WheelRouter.ClassifyBurst(Avalonia.Vector delta, System.TimeSpan time) -> TKCode.Arc.Gestures.WheelDevice
+TKCode.Arc.Gestures.WheelRouter.EndPinch() -> void
+TKCode.Arc.Gestures.WheelRouter.MagnifySensitivity.get -> double
+TKCode.Arc.Gestures.WheelRouter.MagnifySensitivity.set -> void
+TKCode.Arc.Gestures.WheelRouter.Mode.get -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.Gestures.WheelRouter.Mode.set -> void
+TKCode.Arc.Gestures.WheelRouter.ModifierSensitivity.get -> double
+TKCode.Arc.Gestures.WheelRouter.ModifierSensitivity.set -> void
+TKCode.Arc.Gestures.WheelRouter.PixelsPerWheelUnit.get -> double
+TKCode.Arc.Gestures.WheelRouter.PixelsPerWheelUnit.set -> void
+TKCode.Arc.Gestures.WheelRouter.Reset() -> void
+TKCode.Arc.Gestures.WheelRouter.Route(Avalonia.Vector delta, Avalonia.Input.KeyModifiers modifiers, System.TimeSpan time) -> TKCode.Arc.Gestures.WheelAction
+TKCode.Arc.Gestures.WheelRouter.RouteMagnify(double magnification) -> TKCode.Arc.Gestures.WheelAction
+TKCode.Arc.Gestures.WheelRouter.RoutePinch(double scaleSinceStart) -> TKCode.Arc.Gestures.WheelAction
+TKCode.Arc.Gestures.WheelRouter.WheelRouter() -> void
+TKCode.Arc.Gestures.WheelRouter.WheelSensitivity.get -> double
+TKCode.Arc.Gestures.WheelRouter.WheelSensitivity.set -> void
+TKCode.Arc.ImageSource
+TKCode.Arc.ImageSourceConverter
+TKCode.Arc.ImageSourceConverter.ImageSourceConverter() -> void
+TKCode.Arc.Motion.ArcBoxShadowsTransition
+TKCode.Arc.Motion.ArcBoxShadowsTransition.ArcBoxShadowsTransition() -> void
+TKCode.Arc.Motion.ArcBoxShadowsTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcBoxShadowsTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcBrushTransition
+TKCode.Arc.Motion.ArcBrushTransition.ArcBrushTransition() -> void
+TKCode.Arc.Motion.ArcBrushTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcBrushTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcBusyPulse
+TKCode.Arc.Motion.ArcColorTransition
+TKCode.Arc.Motion.ArcColorTransition.ArcColorTransition() -> void
+TKCode.Arc.Motion.ArcColorTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcColorTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcDoubleTransition
+TKCode.Arc.Motion.ArcDoubleTransition.ArcDoubleTransition() -> void
+TKCode.Arc.Motion.ArcDoubleTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcDoubleTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcEasings
+TKCode.Arc.Motion.ArcEffectTransition
+TKCode.Arc.Motion.ArcEffectTransition.ArcEffectTransition() -> void
+TKCode.Arc.Motion.ArcEffectTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcEffectTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcLinearEasing
+TKCode.Arc.Motion.ArcLinearEasing.ArcLinearEasing(double[]! points) -> void
+TKCode.Arc.Motion.ArcMotion
+TKCode.Arc.Motion.ArcMotionPresets
+TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Gentle = 4 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Morph = 2 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Quick = 5 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Responsive = 3 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Settle = 6 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Smooth = 0 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpring.Snappy = 1 -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ArcSpringEasing
+TKCode.Arc.Motion.ArcSpringEasing.ArcSpringEasing(TKCode.Arc.Motion.SpringSpec spec) -> void
+TKCode.Arc.Motion.ArcSpringEasing.SettleDuration.get -> System.TimeSpan
+TKCode.Arc.Motion.ArcSpringEasing.Spec.get -> TKCode.Arc.Motion.SpringSpec
+TKCode.Arc.Motion.ArcThicknessTransition
+TKCode.Arc.Motion.ArcThicknessTransition.ArcThicknessTransition() -> void
+TKCode.Arc.Motion.ArcThicknessTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcThicknessTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcTransformOperationsTransition
+TKCode.Arc.Motion.ArcTransformOperationsTransition.ArcTransformOperationsTransition() -> void
+TKCode.Arc.Motion.ArcTransformOperationsTransition.Tween.get -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTransformOperationsTransition.Tween.set -> void
+TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Considered = 4 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Enter = 5 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Exit = 2 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Fast = 1 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Instant = 0 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Spring = 6 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.ArcTween.Standard = 3 -> TKCode.Arc.Motion.ArcTween
+TKCode.Arc.Motion.IFrameClock
+TKCode.Arc.Motion.IFrameClock.RequestFrame(System.Action<System.TimeSpan>! callback) -> void
+TKCode.Arc.Motion.IMotionVector<T>
+TKCode.Arc.Motion.IMotionVector<T>.Dimensions.get -> int
+TKCode.Arc.Motion.IMotionVector<T>.Read(System.ReadOnlySpan<double> components) -> T
+TKCode.Arc.Motion.IMotionVector<T>.Write(T value, System.Span<double> components) -> void
+TKCode.Arc.Motion.ISpringTransition
+TKCode.Arc.Motion.ISpringTransition.Bounce.get -> double
+TKCode.Arc.Motion.ISpringTransition.Bounce.set -> void
+TKCode.Arc.Motion.ISpringTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.ISpringTransition.Spring.set -> void
+TKCode.Arc.Motion.ISpringTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.ISpringTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.LiveLoop
+TKCode.Arc.Motion.LiveLoop.CanRun.get -> bool
+TKCode.Arc.Motion.LiveLoop.Dispose() -> void
+TKCode.Arc.Motion.LiveLoop.IsActive.get -> bool
+TKCode.Arc.Motion.LiveLoop.IsRunning.get -> bool
+TKCode.Arc.Motion.LiveLoop.LiveLoop(Avalonia.Visual! owner, System.Func<double, bool>! step) -> void
+TKCode.Arc.Motion.LiveLoop.MinimumLevel.get -> TKCode.Arc.Motion.ArcMotionLevel
+TKCode.Arc.Motion.LiveLoop.MinimumLevel.set -> void
+TKCode.Arc.Motion.LiveLoop.Refresh() -> void
+TKCode.Arc.Motion.LiveLoop.RunningChanged -> System.Action<bool>?
+TKCode.Arc.Motion.LiveLoop.Start() -> void
+TKCode.Arc.Motion.LiveLoop.Stop() -> void
+TKCode.Arc.Motion.LiveLoop.TracksViewport.get -> bool
+TKCode.Arc.Motion.LiveLoop.TracksViewport.set -> void
+TKCode.Arc.Motion.LiveLoop.ViewportMargin.get -> double
+TKCode.Arc.Motion.LiveLoop.ViewportMargin.set -> void
+TKCode.Arc.Motion.ManualFrameClock
+TKCode.Arc.Motion.ManualFrameClock.Advance(System.TimeSpan duration, System.TimeSpan? frameStep = null) -> void
+TKCode.Arc.Motion.ManualFrameClock.Install() -> System.IDisposable!
+TKCode.Arc.Motion.ManualFrameClock.ManualFrameClock() -> void
+TKCode.Arc.Motion.ManualFrameClock.RequestCount.get -> int
+TKCode.Arc.Motion.ManualFrameClock.RequestFrame(System.Action<System.TimeSpan>! callback) -> void
+TKCode.Arc.Motion.MotionScheduler
+TKCode.Arc.Motion.MotionSpec
+TKCode.Arc.Motion.MotionSpec.Deconstruct(out System.TimeSpan Delay) -> void
+TKCode.Arc.Motion.MotionSpec.Delay.get -> System.TimeSpan
+TKCode.Arc.Motion.MotionSpec.Delay.init -> void
+TKCode.Arc.Motion.MotionSpec.InstantSpec
+TKCode.Arc.Motion.MotionSpec.InstantSpec.Equals(TKCode.Arc.Motion.MotionSpec.InstantSpec? other) -> bool
+TKCode.Arc.Motion.MotionSpec.InstantSpec.InstantSpec() -> void
+TKCode.Arc.Motion.MotionSpec.MotionSpec(System.TimeSpan Delay) -> void
+TKCode.Arc.Motion.MotionSpec.MotionSpec(TKCode.Arc.Motion.MotionSpec! original) -> void
+TKCode.Arc.Motion.MotionSpec.SpringMotion
+TKCode.Arc.Motion.MotionSpec.SpringMotion.Deconstruct(out TKCode.Arc.Motion.SpringSpec Spec, out System.TimeSpan SpringDelay) -> void
+TKCode.Arc.Motion.MotionSpec.SpringMotion.Equals(TKCode.Arc.Motion.MotionSpec.SpringMotion? other) -> bool
+TKCode.Arc.Motion.MotionSpec.SpringMotion.Spec.get -> TKCode.Arc.Motion.SpringSpec
+TKCode.Arc.Motion.MotionSpec.SpringMotion.Spec.init -> void
+TKCode.Arc.Motion.MotionSpec.SpringMotion.SpringDelay.get -> System.TimeSpan
+TKCode.Arc.Motion.MotionSpec.SpringMotion.SpringDelay.init -> void
+TKCode.Arc.Motion.MotionSpec.SpringMotion.SpringMotion(TKCode.Arc.Motion.SpringSpec Spec, System.TimeSpan SpringDelay) -> void
+TKCode.Arc.Motion.MotionSpec.TweenMotion
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Deconstruct(out System.TimeSpan Duration, out Avalonia.Animation.Easings.Easing! Easing, out System.TimeSpan TweenDelay) -> void
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Duration.get -> System.TimeSpan
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Duration.init -> void
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Easing.get -> Avalonia.Animation.Easings.Easing!
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Easing.init -> void
+TKCode.Arc.Motion.MotionSpec.TweenMotion.Equals(TKCode.Arc.Motion.MotionSpec.TweenMotion? other) -> bool
+TKCode.Arc.Motion.MotionSpec.TweenMotion.TweenDelay.get -> System.TimeSpan
+TKCode.Arc.Motion.MotionSpec.TweenMotion.TweenDelay.init -> void
+TKCode.Arc.Motion.MotionSpec.TweenMotion.TweenMotion(System.TimeSpan Duration, Avalonia.Animation.Easings.Easing! Easing, System.TimeSpan TweenDelay) -> void
+TKCode.Arc.Motion.MotionTimeline
+TKCode.Arc.Motion.MotionTimeline.Changed -> System.Action<double>?
+TKCode.Arc.Motion.MotionTimeline.Completed -> System.Action?
+TKCode.Arc.Motion.MotionTimeline.Dispose() -> void
+TKCode.Arc.Motion.MotionTimeline.IsActive.get -> bool
+TKCode.Arc.Motion.MotionTimeline.IsRunning.get -> bool
+TKCode.Arc.Motion.MotionTimeline.Jump(double value) -> void
+TKCode.Arc.Motion.MotionTimeline.MotionTimeline(Avalonia.Visual! owner) -> void
+TKCode.Arc.Motion.MotionTimeline.Pause() -> void
+TKCode.Arc.Motion.MotionTimeline.Remaining.get -> System.TimeSpan
+TKCode.Arc.Motion.MotionTimeline.Resume() -> void
+TKCode.Arc.Motion.MotionTimeline.Rewind(TKCode.Arc.Motion.SpringSpec? spring = null) -> void
+TKCode.Arc.Motion.MotionTimeline.SettleTo(double target, TKCode.Arc.Motion.SpringSpec spring) -> void
+TKCode.Arc.Motion.MotionTimeline.Start(System.TimeSpan duration, double from = 0) -> void
+TKCode.Arc.Motion.MotionTimeline.Stop() -> void
+TKCode.Arc.Motion.MotionTimeline.Value.get -> double
+TKCode.Arc.Motion.MotionValue<T>
+TKCode.Arc.Motion.MotionValue<T>.AnimateTo(T target, TKCode.Arc.Motion.MotionSpec! spec, T? initialVelocity = null) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Motion.MotionValue<T>.Changed -> System.Action<T>?
+TKCode.Arc.Motion.MotionValue<T>.Dispose() -> void
+TKCode.Arc.Motion.MotionValue<T>.IsAnimating.get -> bool
+TKCode.Arc.Motion.MotionValue<T>.Jump(T value) -> void
+TKCode.Arc.Motion.MotionValue<T>.MotionValue(Avalonia.Visual! owner, T initial, TKCode.Arc.Motion.IMotionVector<T>! vector) -> void
+TKCode.Arc.Motion.MotionValue<T>.Stop() -> void
+TKCode.Arc.Motion.MotionValue<T>.Target.get -> T
+TKCode.Arc.Motion.MotionValue<T>.Value.get -> T
+TKCode.Arc.Motion.MotionValue<T>.Velocity.get -> T
+TKCode.Arc.Motion.MotionVectors
+TKCode.Arc.Motion.SpringCornerRadiusTransition
+TKCode.Arc.Motion.SpringCornerRadiusTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringCornerRadiusTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringCornerRadiusTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringCornerRadiusTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringCornerRadiusTransition.SpringCornerRadiusTransition() -> void
+TKCode.Arc.Motion.SpringCornerRadiusTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringCornerRadiusTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringDoubleTransition
+TKCode.Arc.Motion.SpringDoubleTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringDoubleTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringDoubleTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringDoubleTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringDoubleTransition.SpringDoubleTransition() -> void
+TKCode.Arc.Motion.SpringDoubleTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringDoubleTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringPointTransition
+TKCode.Arc.Motion.SpringPointTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringPointTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringPointTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringPointTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringPointTransition.SpringPointTransition() -> void
+TKCode.Arc.Motion.SpringPointTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringPointTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringSizeTransition
+TKCode.Arc.Motion.SpringSizeTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringSizeTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringSizeTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringSizeTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringSizeTransition.SpringSizeTransition() -> void
+TKCode.Arc.Motion.SpringSizeTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringSizeTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringSolver
+TKCode.Arc.Motion.SpringSpec
+TKCode.Arc.Motion.SpringSpec.Damping.get -> double
+TKCode.Arc.Motion.SpringSpec.Damping.init -> void
+TKCode.Arc.Motion.SpringSpec.DampingRatio.get -> double
+TKCode.Arc.Motion.SpringSpec.Deconstruct(out double Stiffness, out double Damping, out double Mass) -> void
+TKCode.Arc.Motion.SpringSpec.Equals(TKCode.Arc.Motion.SpringSpec other) -> bool
+TKCode.Arc.Motion.SpringSpec.EstimateSettle(double restDelta = 0.005, double restSpeed = 0.01) -> System.TimeSpan
+TKCode.Arc.Motion.SpringSpec.Mass.get -> double
+TKCode.Arc.Motion.SpringSpec.Mass.init -> void
+TKCode.Arc.Motion.SpringSpec.NaturalFrequency.get -> double
+TKCode.Arc.Motion.SpringSpec.SpringSpec() -> void
+TKCode.Arc.Motion.SpringSpec.SpringSpec(double Stiffness, double Damping, double Mass = 1) -> void
+TKCode.Arc.Motion.SpringSpec.Stiffness.get -> double
+TKCode.Arc.Motion.SpringSpec.Stiffness.init -> void
+TKCode.Arc.Motion.SpringThicknessTransition
+TKCode.Arc.Motion.SpringThicknessTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringThicknessTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringThicknessTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringThicknessTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringThicknessTransition.SpringThicknessTransition() -> void
+TKCode.Arc.Motion.SpringThicknessTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringThicknessTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringTransformOperationsTransition
+TKCode.Arc.Motion.SpringTransformOperationsTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringTransformOperationsTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringTransformOperationsTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringTransformOperationsTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringTransformOperationsTransition.SpringTransformOperationsTransition() -> void
+TKCode.Arc.Motion.SpringTransformOperationsTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringTransformOperationsTransition.VisualDuration.set -> void
+TKCode.Arc.Motion.SpringVectorTransition
+TKCode.Arc.Motion.SpringVectorTransition.Bounce.get -> double
+TKCode.Arc.Motion.SpringVectorTransition.Bounce.set -> void
+TKCode.Arc.Motion.SpringVectorTransition.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Motion.SpringVectorTransition.Spring.set -> void
+TKCode.Arc.Motion.SpringVectorTransition.SpringVectorTransition() -> void
+TKCode.Arc.Motion.SpringVectorTransition.VisualDuration.get -> double
+TKCode.Arc.Motion.SpringVectorTransition.VisualDuration.set -> void
+TKCode.Arc.Oklch
+TKCode.Arc.Primitives.ArcBlur
+TKCode.Arc.Primitives.ArcClipboard
+TKCode.Arc.Primitives.ArcContentSwap
+TKCode.Arc.Primitives.ArcContentSwap.ArcContentSwap() -> void
+TKCode.Arc.Primitives.ArcContentSwap.Content.get -> object?
+TKCode.Arc.Primitives.ArcContentSwap.Content.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.ContentTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.Primitives.ArcContentSwap.ContentTemplate.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.Direction.get -> int
+TKCode.Arc.Primitives.ArcContentSwap.Direction.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.EnterDelay.get -> System.TimeSpan?
+TKCode.Arc.Primitives.ArcContentSwap.EnterDelay.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.EnterDuration.get -> System.TimeSpan?
+TKCode.Arc.Primitives.ArcContentSwap.EnterDuration.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.EnterOffset.get -> double?
+TKCode.Arc.Primitives.ArcContentSwap.EnterOffset.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.ExitDuration.get -> System.TimeSpan?
+TKCode.Arc.Primitives.ArcContentSwap.ExitDuration.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.HorizontalContentAlignment.get -> Avalonia.Layout.HorizontalAlignment
+TKCode.Arc.Primitives.ArcContentSwap.HorizontalContentAlignment.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.MeasuresExiting.get -> bool
+TKCode.Arc.Primitives.ArcContentSwap.MeasuresExiting.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.Mode.get -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ArcContentSwap.Mode.set -> void
+TKCode.Arc.Primitives.ArcContentSwap.VerticalContentAlignment.get -> Avalonia.Layout.VerticalAlignment
+TKCode.Arc.Primitives.ArcContentSwap.VerticalContentAlignment.set -> void
+TKCode.Arc.Primitives.ArcFormatting
+TKCode.Arc.Primitives.ArcImage
+TKCode.Arc.Primitives.ArcImage.ArcImage() -> void
+TKCode.Arc.Primitives.ArcImage.CurrentImage.get -> Avalonia.Media.IImage?
+TKCode.Arc.Primitives.ArcImage.IsFailed.get -> bool
+TKCode.Arc.Primitives.ArcImage.IsImageLoaded.get -> bool
+TKCode.Arc.Primitives.ArcImage.IsLoading.get -> bool
+TKCode.Arc.Primitives.ArcImage.LoadError.get -> System.Exception?
+TKCode.Arc.Primitives.ArcImage.Loader.get -> TKCode.Arc.Primitives.IArcImageLoader?
+TKCode.Arc.Primitives.ArcImage.Loader.set -> void
+TKCode.Arc.Primitives.ArcImage.Source.get -> TKCode.Arc.ImageSource?
+TKCode.Arc.Primitives.ArcImage.Source.set -> void
+TKCode.Arc.Primitives.ArcImage.Stretch.get -> Avalonia.Media.Stretch
+TKCode.Arc.Primitives.ArcImage.Stretch.set -> void
+TKCode.Arc.Primitives.ArcImage.StretchDirection.get -> Avalonia.Media.StretchDirection
+TKCode.Arc.Primitives.ArcImage.StretchDirection.set -> void
+TKCode.Arc.Primitives.ArcImageCache
+TKCode.Arc.Primitives.ArcImageLoader
+TKCode.Arc.Primitives.ArcImageLoader.ArcImageLoader() -> void
+TKCode.Arc.Primitives.ArcOverlayHost
+TKCode.Arc.Primitives.ArcOverlayHost.ArcOverlayHost() -> void
+TKCode.Arc.Primitives.ArcOverlayHost.Layer.get -> TKCode.Arc.Primitives.ArcOverlayLayer!
+TKCode.Arc.Primitives.ArcOverlayLayer
+TKCode.Arc.Primitives.ArcOverlayLayer.Host.get -> TKCode.Arc.Primitives.ArcOverlayHost!
+TKCode.Arc.Primitives.ArcPopup
+TKCode.Arc.Primitives.ArcPopup.ArcPopup() -> void
+TKCode.Arc.Primitives.ArcPopup.CloseMotion.get -> TKCode.Arc.Primitives.ArcPopupMotion?
+TKCode.Arc.Primitives.ArcPopup.CloseMotion.set -> void
+TKCode.Arc.Primitives.ArcPopup.EnterOffset.get -> double
+TKCode.Arc.Primitives.ArcPopup.EnterOffset.set -> void
+TKCode.Arc.Primitives.ArcPopup.EnterScale.get -> double
+TKCode.Arc.Primitives.ArcPopup.EnterScale.set -> void
+TKCode.Arc.Primitives.ArcPopup.IsExitInstant.get -> bool
+TKCode.Arc.Primitives.ArcPopup.IsExitInstant.set -> void
+TKCode.Arc.Primitives.ArcPopup.IsHorizontalFlipped.get -> bool
+TKCode.Arc.Primitives.ArcPopup.IsHostedInPopupWindow(bool isOverlayHost) -> bool
+TKCode.Arc.Primitives.ArcPopup.IsInstant.get -> bool
+TKCode.Arc.Primitives.ArcPopup.IsInstant.set -> void
+TKCode.Arc.Primitives.ArcPopup.IsMotionEnabled.get -> bool
+TKCode.Arc.Primitives.ArcPopup.IsMotionEnabled.set -> void
+TKCode.Arc.Primitives.ArcPopup.IsVerticalFlipped.get -> bool
+TKCode.Arc.Primitives.ArcPopup.MarginToAnchor.get -> double
+TKCode.Arc.Primitives.ArcPopup.MarginToAnchor.set -> void
+TKCode.Arc.Primitives.ArcPopup.OpenMotion.get -> TKCode.Arc.Primitives.ArcPopupMotion?
+TKCode.Arc.Primitives.ArcPopup.OpenMotion.set -> void
+TKCode.Arc.Primitives.ArcPopup.OverlayHostShadow.get -> Avalonia.Media.BoxShadows
+TKCode.Arc.Primitives.ArcPopup.OverlayHostShadow.set -> void
+TKCode.Arc.Primitives.ArcPopup.PopupRootShadow.get -> Avalonia.Media.BoxShadows
+TKCode.Arc.Primitives.ArcPopup.PopupRootShadow.set -> void
+TKCode.Arc.Primitives.ArcPopup.PositionFlipped -> System.EventHandler?
+TKCode.Arc.Primitives.ArcPopup.Reposition() -> void
+TKCode.Arc.Primitives.ArcPopup.RequestedPlacement.get -> Avalonia.Controls.PlacementMode?
+TKCode.Arc.Primitives.ArcPopup.RequestedPlacement.set -> void
+TKCode.Arc.Primitives.ArcPopup.Surface.get -> Avalonia.Controls.Control?
+TKCode.Arc.Primitives.ArcPopupEnterMotion
+TKCode.Arc.Primitives.ArcPopupEnterMotion.ArcPopupEnterMotion(Avalonia.RelativePoint origin, Avalonia.Vector offset, double scale = 0.97, bool fadeOnly = false, System.TimeSpan? duration = null, Avalonia.Animation.Easings.Easing? easing = null, TKCode.Arc.Motion.MotionSpec? transformSpec = null) -> void
+TKCode.Arc.Primitives.ArcPopupExitMotion
+TKCode.Arc.Primitives.ArcPopupExitMotion.ArcPopupExitMotion(Avalonia.RelativePoint origin, double scale = 0.98, bool fadeOnly = false, System.TimeSpan? duration = null) -> void
+TKCode.Arc.Primitives.ArcPopupFrame
+TKCode.Arc.Primitives.ArcPopupFrame.ArcPopupFrame() -> void
+TKCode.Arc.Primitives.ArcPopupFrame.Surface.get -> Avalonia.Controls.Control?
+TKCode.Arc.Primitives.ArcPopupMotion
+TKCode.Arc.Primitives.ArcPopupMotion.ArcPopupMotion() -> void
+TKCode.Arc.Primitives.ArcPopupMotion.FadeOnly.get -> bool
+TKCode.Arc.Primitives.ArcPopupMotion.FadeOnly.set -> void
+TKCode.Arc.Primitives.ArcPopupMotion.Fades.get -> bool
+TKCode.Arc.Primitives.ArcPopupMotion.Fades.set -> void
+TKCode.Arc.Primitives.ArcPopupMotion.Offset.get -> Avalonia.Vector
+TKCode.Arc.Primitives.ArcPopupMotion.Offset.set -> void
+TKCode.Arc.Primitives.ArcPopupMotion.Origin.get -> Avalonia.RelativePoint
+TKCode.Arc.Primitives.ArcPopupMotion.Origin.set -> void
+TKCode.Arc.Primitives.ArcPopupMotion.Scale.get -> double
+TKCode.Arc.Primitives.ArcPopupMotion.Scale.set -> void
+TKCode.Arc.Primitives.ArcRing
+TKCode.Arc.Primitives.ArcRing.ArcRing() -> void
+TKCode.Arc.Primitives.ArcRing.ChaseRate.get -> double
+TKCode.Arc.Primitives.ArcRing.ChaseRate.set -> void
+TKCode.Arc.Primitives.ArcRing.DisplayedValue.get -> double
+TKCode.Arc.Primitives.ArcRing.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.ArcRing.Foreground.set -> void
+TKCode.Arc.Primitives.ArcRing.IsChasing.get -> bool
+TKCode.Arc.Primitives.ArcRing.IsRoundCap.get -> bool
+TKCode.Arc.Primitives.ArcRing.IsRoundCap.set -> void
+TKCode.Arc.Primitives.ArcRing.StartAngle.get -> double
+TKCode.Arc.Primitives.ArcRing.StartAngle.set -> void
+TKCode.Arc.Primitives.ArcRing.Thickness.get -> double
+TKCode.Arc.Primitives.ArcRing.Thickness.set -> void
+TKCode.Arc.Primitives.ArcRing.TrackBrush.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.ArcRing.TrackBrush.set -> void
+TKCode.Arc.Primitives.ArcRing.Value.get -> double
+TKCode.Arc.Primitives.ArcRing.Value.set -> void
+TKCode.Arc.Primitives.ArcShrinkRow
+TKCode.Arc.Primitives.ArcShrinkRow.ArcShrinkRow() -> void
+TKCode.Arc.Primitives.ArcShrinkRow.Spacing.get -> double
+TKCode.Arc.Primitives.ArcShrinkRow.Spacing.set -> void
+TKCode.Arc.Primitives.ArcSpinner
+TKCode.Arc.Primitives.ArcSpinner.Angle.get -> double
+TKCode.Arc.Primitives.ArcSpinner.ArcSpinner() -> void
+TKCode.Arc.Primitives.ArcSpinner.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.ArcSpinner.Foreground.set -> void
+TKCode.Arc.Primitives.ArcSpinner.IsPulsing.get -> bool
+TKCode.Arc.Primitives.ArcSpinner.IsSpinning.get -> bool
+TKCode.Arc.Primitives.ArcSpinner.PulseOpacity.get -> double
+TKCode.Arc.Primitives.ArcSpinner.Thickness.get -> double
+TKCode.Arc.Primitives.ArcSpinner.Thickness.set -> void
+TKCode.Arc.Primitives.ArcSurface
+TKCode.Arc.Primitives.ArcSurfaceElevation
+TKCode.Arc.Primitives.ArcSurfaceElevation.Base = 0 -> TKCode.Arc.Primitives.ArcSurfaceElevation
+TKCode.Arc.Primitives.ArcSurfaceElevation.Raised = 1 -> TKCode.Arc.Primitives.ArcSurfaceElevation
+TKCode.Arc.Primitives.ArcToday
+TKCode.Arc.Primitives.ArcViewport
+TKCode.Arc.Primitives.ArcViewportHost
+TKCode.Arc.Primitives.ArcViewportHost.ArcViewportHost() -> void
+TKCode.Arc.Primitives.ArcZoom
+TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.BlurSwap = 2 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Crossfade = 7 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Fade = 1 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Label = 6 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Lift = 8 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.None = 0 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Pop = 4 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Roll = 3 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.ContentSwapMode.Slide = 5 -> TKCode.Arc.Primitives.ContentSwapMode
+TKCode.Arc.Primitives.DecoratedTextBlock
+TKCode.Arc.Primitives.DecoratedTextBlock.DecoratedTextBlock() -> void
+TKCode.Arc.Primitives.DecoratedTextBlock.Decorations.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.Primitives.TextRangeDecoration!>!
+TKCode.Arc.Primitives.DecoratedTextBlock.InvalidateDecorations() -> void
+TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.Action = 5 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.CloseButton = 1 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.Escape = 2 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.Gesture = 4 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.PressOutside = 3 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.DismissReason.Programmatic = 0 -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.FormattedPart
+TKCode.Arc.Primitives.FormattedPart.Deconstruct(out TKCode.Arc.Primitives.FormattedPartKind Kind, out string! Text) -> void
+TKCode.Arc.Primitives.FormattedPart.Equals(TKCode.Arc.Primitives.FormattedPart other) -> bool
+TKCode.Arc.Primitives.FormattedPart.FormattedPart() -> void
+TKCode.Arc.Primitives.FormattedPart.FormattedPart(TKCode.Arc.Primitives.FormattedPartKind Kind, string! Text) -> void
+TKCode.Arc.Primitives.FormattedPart.Kind.get -> TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.FormattedPart.Kind.init -> void
+TKCode.Arc.Primitives.FormattedPart.Text.get -> string!
+TKCode.Arc.Primitives.FormattedPart.Text.init -> void
+TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.FormattedPartKind.Decimal = 2 -> TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.FormattedPartKind.Digit = 0 -> TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.FormattedPartKind.Group = 1 -> TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.FormattedPartKind.Literal = 3 -> TKCode.Arc.Primitives.FormattedPartKind
+TKCode.Arc.Primitives.GlidingIndicator
+TKCode.Arc.Primitives.GlidingIndicator.BoxShadow.get -> Avalonia.Media.BoxShadows
+TKCode.Arc.Primitives.GlidingIndicator.BoxShadow.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.CornerRadius.get -> Avalonia.CornerRadius
+TKCode.Arc.Primitives.GlidingIndicator.CornerRadius.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.CurrentOpacity.get -> double
+TKCode.Arc.Primitives.GlidingIndicator.CurrentRect.get -> Avalonia.Rect
+TKCode.Arc.Primitives.GlidingIndicator.FadeDuration.get -> System.TimeSpan
+TKCode.Arc.Primitives.GlidingIndicator.FadeDuration.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.Fill.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.GlidingIndicator.Fill.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.GlidingIndicator() -> void
+TKCode.Arc.Primitives.GlidingIndicator.HasTarget.get -> bool
+TKCode.Arc.Primitives.GlidingIndicator.Hide(bool animate = true) -> void
+TKCode.Arc.Primitives.GlidingIndicator.MoveTo(Avalonia.Rect target, System.TimeSpan duration, Avalonia.Animation.Easings.Easing! easing, bool animate = true) -> void
+TKCode.Arc.Primitives.GlidingIndicator.MoveTo(Avalonia.Rect target, TKCode.Arc.Motion.SpringSpec spring, bool animate = true) -> void
+TKCode.Arc.Primitives.GlidingIndicator.MoveTo(Avalonia.Rect target, bool animate = true, TKCode.Arc.Motion.ArcSpring? spring = null) -> void
+TKCode.Arc.Primitives.GlidingIndicator.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Primitives.GlidingIndicator.Spring.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.Stroke.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.GlidingIndicator.Stroke.set -> void
+TKCode.Arc.Primitives.GlidingIndicator.StrokeThickness.get -> double
+TKCode.Arc.Primitives.GlidingIndicator.StrokeThickness.set -> void
+TKCode.Arc.Primitives.IArcImageLoader
+TKCode.Arc.Primitives.IArcImageLoader.OpenAsync(TKCode.Arc.ImageSource! source, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream!>!
+TKCode.Arc.Primitives.LayeredGraphDirection
+TKCode.Arc.Primitives.LayeredGraphDirection.LeftToRight = 1 -> TKCode.Arc.Primitives.LayeredGraphDirection
+TKCode.Arc.Primitives.LayeredGraphDirection.TopToBottom = 0 -> TKCode.Arc.Primitives.LayeredGraphDirection
+TKCode.Arc.Primitives.LayeredGraphEdge
+TKCode.Arc.Primitives.LayeredGraphEdge.Deconstruct(out int Source, out int Target) -> void
+TKCode.Arc.Primitives.LayeredGraphEdge.Equals(TKCode.Arc.Primitives.LayeredGraphEdge other) -> bool
+TKCode.Arc.Primitives.LayeredGraphEdge.LayeredGraphEdge() -> void
+TKCode.Arc.Primitives.LayeredGraphEdge.LayeredGraphEdge(int Source, int Target) -> void
+TKCode.Arc.Primitives.LayeredGraphEdge.Source.get -> int
+TKCode.Arc.Primitives.LayeredGraphEdge.Source.init -> void
+TKCode.Arc.Primitives.LayeredGraphEdge.Target.get -> int
+TKCode.Arc.Primitives.LayeredGraphEdge.Target.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayout
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.Direction.get -> TKCode.Arc.Primitives.LayeredGraphDirection
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.Direction.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.FanOutRankGap.get -> double
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.FanOutRankGap.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.LayeredGraphLayoutOptions() -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.NodeGap.get -> double
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.NodeGap.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.OrderingSweeps.get -> int
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.OrderingSweeps.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.PositioningPasses.get -> int
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.PositioningPasses.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.RankGap.get -> double
+TKCode.Arc.Primitives.LayeredGraphLayoutOptions.RankGap.init -> void
+TKCode.Arc.Primitives.LayeredGraphLayoutResult
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.Crossings.get -> int
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.Orders.get -> System.Collections.Generic.IReadOnlyList<int>!
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.Positions.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Point>!
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.RankCount.get -> int
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.Ranks.get -> System.Collections.Generic.IReadOnlyList<int>!
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.ReversedEdges.get -> System.Collections.Generic.IReadOnlyList<int>!
+TKCode.Arc.Primitives.LayeredGraphLayoutResult.Size.get -> Avalonia.Size
+TKCode.Arc.Primitives.LazyFocusRing
+TKCode.Arc.Primitives.LazyFocusRing.Attach(Avalonia.Controls.Panel? host, bool below = false) -> void
+TKCode.Arc.Primitives.LazyFocusRing.Attach(System.Action<Avalonia.Controls.Control!>? add, System.Action<Avalonia.Controls.Control!>? remove) -> void
+TKCode.Arc.Primitives.LazyFocusRing.IsAllowed.get -> bool
+TKCode.Arc.Primitives.LazyFocusRing.IsAllowed.set -> void
+TKCode.Arc.Primitives.LazyFocusRing.LazyFocusRing(Avalonia.Controls.Control! owner, object! marginKey, object! radiusKey) -> void
+TKCode.Arc.Primitives.LazyFocusRing.Ring.get -> Avalonia.Controls.Border?
+TKCode.Arc.Primitives.LazyFocusRing.Update() -> void
+TKCode.Arc.Primitives.ListKeyboardNavigator
+TKCode.Arc.Primitives.ListKeyboardNavigator.Columns.get -> int
+TKCode.Arc.Primitives.ListKeyboardNavigator.Columns.set -> void
+TKCode.Arc.Primitives.ListKeyboardNavigator.ListKeyboardNavigator(System.Func<int>! count, System.Func<int, bool>! isEnabled, System.Func<int, string?>? label = null) -> void
+TKCode.Arc.Primitives.ListKeyboardNavigator.Navigate(int current, Avalonia.Input.Key key) -> int?
+TKCode.Arc.Primitives.ListKeyboardNavigator.Orientation.get -> TKCode.Arc.Primitives.NavigationOrientation
+TKCode.Arc.Primitives.ListKeyboardNavigator.Orientation.set -> void
+TKCode.Arc.Primitives.ListKeyboardNavigator.PageSize.get -> int
+TKCode.Arc.Primitives.ListKeyboardNavigator.PageSize.set -> void
+TKCode.Arc.Primitives.ListKeyboardNavigator.TypeAhead(int current, string! text) -> int?
+TKCode.Arc.Primitives.ListKeyboardNavigator.Wrap.get -> bool
+TKCode.Arc.Primitives.ListKeyboardNavigator.Wrap.set -> void
+TKCode.Arc.Primitives.ModalClosedEventArgs
+TKCode.Arc.Primitives.ModalClosedEventArgs.ModalClosedEventArgs(TKCode.Arc.Primitives.DismissReason reason) -> void
+TKCode.Arc.Primitives.ModalClosedEventArgs.Reason.get -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.ModalDismissingEventArgs
+TKCode.Arc.Primitives.ModalDismissingEventArgs.ModalDismissingEventArgs(TKCode.Arc.Primitives.DismissReason reason) -> void
+TKCode.Arc.Primitives.ModalDismissingEventArgs.Reason.get -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalEntrance.Custom = 3 -> TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalEntrance.Fade = 2 -> TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalEntrance.Rise = 0 -> TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalEntrance.Slide = 1 -> TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalHost
+TKCode.Arc.Primitives.ModalHost.PanelHost.get -> Avalonia.Controls.Control!
+TKCode.Arc.Primitives.ModalHost.Presence.get -> TKCode.Arc.Primitives.ModalPresence!
+TKCode.Arc.Primitives.ModalHost.Scrim.get -> Avalonia.Controls.Border!
+TKCode.Arc.Primitives.ModalPresence
+TKCode.Arc.Primitives.ModalPresence.Anchor.get -> Avalonia.Visual?
+TKCode.Arc.Primitives.ModalPresence.Anchor.set -> void
+TKCode.Arc.Primitives.ModalPresence.BackdropBlur.get -> double
+TKCode.Arc.Primitives.ModalPresence.BackdropBlur.set -> void
+TKCode.Arc.Primitives.ModalPresence.Close(TKCode.Arc.Primitives.DismissReason reason = TKCode.Arc.Primitives.DismissReason.Programmatic, double velocity = 0) -> void
+TKCode.Arc.Primitives.ModalPresence.CloseReason.get -> TKCode.Arc.Primitives.DismissReason
+TKCode.Arc.Primitives.ModalPresence.Closed -> System.EventHandler<TKCode.Arc.Primitives.ModalClosedEventArgs!>?
+TKCode.Arc.Primitives.ModalPresence.ContainmentRoot.get -> Avalonia.StyledElement?
+TKCode.Arc.Primitives.ModalPresence.ContainmentRoot.set -> void
+TKCode.Arc.Primitives.ModalPresence.Contains(Avalonia.Input.IInputElement! element) -> bool
+TKCode.Arc.Primitives.ModalPresence.CustomMotion.get -> System.Func<TKCode.Arc.Primitives.ModalPresence!, bool, System.Threading.Tasks.Task<bool>!>?
+TKCode.Arc.Primitives.ModalPresence.CustomMotion.set -> void
+TKCode.Arc.Primitives.ModalPresence.Dismiss(TKCode.Arc.Primitives.DismissReason reason, double velocity = 0) -> bool
+TKCode.Arc.Primitives.ModalPresence.DismissOnEscape.get -> bool
+TKCode.Arc.Primitives.ModalPresence.DismissOnEscape.set -> void
+TKCode.Arc.Primitives.ModalPresence.DismissOnScrimPress.get -> bool
+TKCode.Arc.Primitives.ModalPresence.DismissOnScrimPress.set -> void
+TKCode.Arc.Primitives.ModalPresence.Dismissing -> System.EventHandler<TKCode.Arc.Primitives.ModalDismissingEventArgs!>?
+TKCode.Arc.Primitives.ModalPresence.Dispose() -> void
+TKCode.Arc.Primitives.ModalPresence.Entrance.get -> TKCode.Arc.Primitives.ModalEntrance
+TKCode.Arc.Primitives.ModalPresence.Entrance.set -> void
+TKCode.Arc.Primitives.ModalPresence.FindFocusTarget() -> Avalonia.Input.IInputElement?
+TKCode.Arc.Primitives.ModalPresence.Host.get -> TKCode.Arc.Primitives.ModalHost!
+TKCode.Arc.Primitives.ModalPresence.InitialFocus.get -> Avalonia.Input.IInputElement?
+TKCode.Arc.Primitives.ModalPresence.InitialFocus.set -> void
+TKCode.Arc.Primitives.ModalPresence.IsOpen.get -> bool
+TKCode.Arc.Primitives.ModalPresence.IsTopmost.get -> bool
+TKCode.Arc.Primitives.ModalPresence.LayerSize.get -> Avalonia.Size
+TKCode.Arc.Primitives.ModalPresence.LayerSizeChanged -> System.EventHandler?
+TKCode.Arc.Primitives.ModalPresence.ModalPresence(Avalonia.Controls.Control! panel, Avalonia.Visual? anchor = null) -> void
+TKCode.Arc.Primitives.ModalPresence.Open() -> bool
+TKCode.Arc.Primitives.ModalPresence.Opened -> System.EventHandler?
+TKCode.Arc.Primitives.ModalPresence.Panel.get -> Avalonia.Controls.Control!
+TKCode.Arc.Primitives.ModalPresence.PanelExtent.get -> double
+TKCode.Arc.Primitives.ModalPresence.PanelOffset.get -> double
+TKCode.Arc.Primitives.ModalPresence.PanelVelocity.get -> double
+TKCode.Arc.Primitives.ModalPresence.RestoreFocus.get -> bool
+TKCode.Arc.Primitives.ModalPresence.RestoreFocus.set -> void
+TKCode.Arc.Primitives.ModalPresence.ScrimBrush.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.ModalPresence.ScrimBrush.set -> void
+TKCode.Arc.Primitives.ModalPresence.ScrimOpacity.get -> double
+TKCode.Arc.Primitives.ModalPresence.ScrimOpacity.set -> void
+TKCode.Arc.Primitives.ModalPresence.SetPanelOffset(double offset) -> void
+TKCode.Arc.Primitives.ModalPresence.SettlePanelAsync(TKCode.Arc.Motion.MotionSpec! spec, double velocity = 0, double target = 0) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Primitives.ModalPresence.Side.get -> TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalPresence.Side.set -> void
+TKCode.Arc.Primitives.ModalPresence.State.get -> TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.ModalPresence.StateChanged -> System.EventHandler?
+TKCode.Arc.Primitives.ModalPresence.TrapFocus.get -> bool
+TKCode.Arc.Primitives.ModalPresence.TrapFocus.set -> void
+TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalSide.Bottom = 3 -> TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalSide.Left = 0 -> TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalSide.Right = 2 -> TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalSide.Top = 1 -> TKCode.Arc.Primitives.ModalSide
+TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.ModalState.Closed = 0 -> TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.ModalState.Closing = 3 -> TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.ModalState.Open = 2 -> TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.ModalState.Opening = 1 -> TKCode.Arc.Primitives.ModalState
+TKCode.Arc.Primitives.MorphGlyph
+TKCode.Arc.Primitives.MorphGlyph.Data.get -> string?
+TKCode.Arc.Primitives.MorphGlyph.Data.set -> void
+TKCode.Arc.Primitives.MorphGlyph.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.MorphGlyph.Foreground.set -> void
+TKCode.Arc.Primitives.MorphGlyph.IsFilled.get -> bool
+TKCode.Arc.Primitives.MorphGlyph.IsFilled.set -> void
+TKCode.Arc.Primitives.MorphGlyph.Morph.get -> TKCode.Arc.Primitives.PathMorph?
+TKCode.Arc.Primitives.MorphGlyph.MorphGlyph() -> void
+TKCode.Arc.Primitives.MorphGlyph.MorphTo(string! data, bool animate = true) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Primitives.MorphGlyph.Size.get -> double
+TKCode.Arc.Primitives.MorphGlyph.Size.set -> void
+TKCode.Arc.Primitives.MorphGlyph.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Primitives.MorphGlyph.Spring.set -> void
+TKCode.Arc.Primitives.MorphGlyph.StrokeThickness.get -> double
+TKCode.Arc.Primitives.MorphGlyph.StrokeThickness.set -> void
+TKCode.Arc.Primitives.NavigationOrientation
+TKCode.Arc.Primitives.NavigationOrientation.Horizontal = 1 -> TKCode.Arc.Primitives.NavigationOrientation
+TKCode.Arc.Primitives.NavigationOrientation.Vertical = 0 -> TKCode.Arc.Primitives.NavigationOrientation
+TKCode.Arc.Primitives.PathMorph
+TKCode.Arc.Primitives.PathMorph.BuildGeometry() -> Avalonia.Media.Geometry?
+TKCode.Arc.Primitives.PathMorph.Changed -> System.Action?
+TKCode.Arc.Primitives.PathMorph.Current.get -> TKCode.Arc.Primitives.PathMorphFrame?
+TKCode.Arc.Primitives.PathMorph.Dispose() -> void
+TKCode.Arc.Primitives.PathMorph.IsAnimating.get -> bool
+TKCode.Arc.Primitives.PathMorph.Jump(TKCode.Arc.Primitives.PathMorphShape! shape) -> void
+TKCode.Arc.Primitives.PathMorph.MorphTo(TKCode.Arc.Primitives.PathMorphShape! shape, TKCode.Arc.Motion.ArcSpring spring = TKCode.Arc.Motion.ArcSpring.Morph) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Primitives.PathMorph.MorphTo(TKCode.Arc.Primitives.PathMorphShape! shape, TKCode.Arc.Motion.MotionSpec! spec) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Primitives.PathMorph.PathMorph(Avalonia.Visual! owner, int samples = 48) -> void
+TKCode.Arc.Primitives.PathMorph.Target.get -> TKCode.Arc.Primitives.PathMorphShape?
+TKCode.Arc.Primitives.PathMorphContour
+TKCode.Arc.Primitives.PathMorphContour.Centroid.get -> Avalonia.Point
+TKCode.Arc.Primitives.PathMorphContour.IsClosed.get -> bool
+TKCode.Arc.Primitives.PathMorphContour.Length.get -> double
+TKCode.Arc.Primitives.PathMorphContour.PathMorphContour(Avalonia.Point[]! points, int[]! segmentEnds, bool isClosed) -> void
+TKCode.Arc.Primitives.PathMorphContour.PointAt(double distance) -> Avalonia.Point
+TKCode.Arc.Primitives.PathMorphContour.PointInSegment(int segment, double fraction) -> Avalonia.Point
+TKCode.Arc.Primitives.PathMorphContour.Points.get -> System.Collections.Generic.IReadOnlyList<Avalonia.Point>!
+TKCode.Arc.Primitives.PathMorphContour.SegmentCount.get -> int
+TKCode.Arc.Primitives.PathMorphContour.SegmentLength(int segment) -> double
+TKCode.Arc.Primitives.PathMorphFrame
+TKCode.Arc.Primitives.PathMorphFrame.Clone() -> TKCode.Arc.Primitives.PathMorphFrame!
+TKCode.Arc.Primitives.PathMorphFrame.ContourCount.get -> int
+TKCode.Arc.Primitives.PathMorphFrame.CopyFrom(TKCode.Arc.Primitives.PathMorphFrame! source) -> void
+TKCode.Arc.Primitives.PathMorphFrame.GetContour(int index) -> System.Span<Avalonia.Point>
+TKCode.Arc.Primitives.PathMorphFrame.HasSameLayout(TKCode.Arc.Primitives.PathMorphFrame! other) -> bool
+TKCode.Arc.Primitives.PathMorphFrame.IsClosed(int index) -> bool
+TKCode.Arc.Primitives.PathMorphFrame.PathMorphFrame(System.Collections.Generic.IReadOnlyList<int>! contourSizes, System.Collections.Generic.IReadOnlyList<bool>! closed) -> void
+TKCode.Arc.Primitives.PathMorphFrame.ToGeometry() -> Avalonia.Media.Geometry!
+TKCode.Arc.Primitives.PathMorphFrame.WriteTo(Avalonia.Media.StreamGeometryContext! context) -> void
+TKCode.Arc.Primitives.PathMorphSampler
+TKCode.Arc.Primitives.PathMorphShape
+TKCode.Arc.Primitives.PathMorphShape.Contours.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.PathMorphContour!>!
+TKCode.Arc.Primitives.PathMorphShape.IsCompatibleWith(TKCode.Arc.Primitives.PathMorphShape! other) -> bool
+TKCode.Arc.Primitives.PathMorphShape.Length.get -> double
+TKCode.Arc.Primitives.PathMorphShape.PathMorphShape(System.Collections.Generic.IEnumerable<TKCode.Arc.Primitives.PathMorphContour!>! contours) -> void
+TKCode.Arc.Primitives.PathMorphShape.Signature.get -> string!
+TKCode.Arc.Primitives.PausableTimer
+TKCode.Arc.Primitives.PausableTimer.Dispose() -> void
+TKCode.Arc.Primitives.PausableTimer.IsRunning.get -> bool
+TKCode.Arc.Primitives.PausableTimer.PausableTimer(System.TimeSpan duration, System.Action! elapsed) -> void
+TKCode.Arc.Primitives.PausableTimer.Pause() -> void
+TKCode.Arc.Primitives.PausableTimer.Progress.get -> double
+TKCode.Arc.Primitives.PausableTimer.Remaining.get -> System.TimeSpan
+TKCode.Arc.Primitives.PausableTimer.Restart(System.TimeSpan duration) -> void
+TKCode.Arc.Primitives.PausableTimer.Resume() -> void
+TKCode.Arc.Primitives.PausableTimer.Start() -> void
+TKCode.Arc.Primitives.PausableTimer.Stop() -> void
+TKCode.Arc.Primitives.PresenceCollapse
+TKCode.Arc.Primitives.PresenceCollapse.Height = 2 -> TKCode.Arc.Primitives.PresenceCollapse
+TKCode.Arc.Primitives.PresenceCollapse.None = 0 -> TKCode.Arc.Primitives.PresenceCollapse
+TKCode.Arc.Primitives.PresenceCollapse.Width = 1 -> TKCode.Arc.Primitives.PresenceCollapse
+TKCode.Arc.Primitives.PresenceHost
+TKCode.Arc.Primitives.PresenceHost.Collapse.get -> TKCode.Arc.Primitives.PresenceCollapse
+TKCode.Arc.Primitives.PresenceHost.Collapse.set -> void
+TKCode.Arc.Primitives.PresenceHost.EnterScale.get -> double
+TKCode.Arc.Primitives.PresenceHost.EnterScale.set -> void
+TKCode.Arc.Primitives.PresenceHost.Exited -> System.EventHandler?
+TKCode.Arc.Primitives.PresenceHost.IsPresent.get -> bool
+TKCode.Arc.Primitives.PresenceHost.IsPresent.set -> void
+TKCode.Arc.Primitives.PresenceHost.Mode.get -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceHost.Mode.set -> void
+TKCode.Arc.Primitives.PresenceHost.Offset.get -> double
+TKCode.Arc.Primitives.PresenceHost.Offset.set -> void
+TKCode.Arc.Primitives.PresenceHost.Origin.get -> Avalonia.RelativePoint
+TKCode.Arc.Primitives.PresenceHost.Origin.set -> void
+TKCode.Arc.Primitives.PresenceHost.PresenceHost() -> void
+TKCode.Arc.Primitives.PresenceHost.Progress.get -> double
+TKCode.Arc.Primitives.PresenceHost.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Primitives.PresenceHost.Spring.set -> void
+TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Drop = 4 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Fade = 0 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Pop = 1 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Rise = 3 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Scale = 2 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.PresenceMode.Slide = 5 -> TKCode.Arc.Primitives.PresenceMode
+TKCode.Arc.Primitives.RollingDigits
+TKCode.Arc.Primitives.RollingDigits.CultureName.get -> string!
+TKCode.Arc.Primitives.RollingDigits.CultureName.set -> void
+TKCode.Arc.Primitives.RollingDigits.Decimals.get -> int
+TKCode.Arc.Primitives.RollingDigits.Decimals.set -> void
+TKCode.Arc.Primitives.RollingDigits.DisplayText.get -> string!
+TKCode.Arc.Primitives.RollingDigits.Falloff.get -> TKCode.Arc.Primitives.RollingDigitsFalloff
+TKCode.Arc.Primitives.RollingDigits.Falloff.set -> void
+TKCode.Arc.Primitives.RollingDigits.FontFamily.get -> Avalonia.Media.FontFamily!
+TKCode.Arc.Primitives.RollingDigits.FontFamily.set -> void
+TKCode.Arc.Primitives.RollingDigits.FontSize.get -> double
+TKCode.Arc.Primitives.RollingDigits.FontSize.set -> void
+TKCode.Arc.Primitives.RollingDigits.FontWeight.get -> Avalonia.Media.FontWeight
+TKCode.Arc.Primitives.RollingDigits.FontWeight.set -> void
+TKCode.Arc.Primitives.RollingDigits.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.RollingDigits.Foreground.set -> void
+TKCode.Arc.Primitives.RollingDigits.GlyphPitch.get -> double
+TKCode.Arc.Primitives.RollingDigits.GlyphPitch.set -> void
+TKCode.Arc.Primitives.RollingDigits.IsArmed.get -> bool
+TKCode.Arc.Primitives.RollingDigits.IsArmed.set -> void
+TKCode.Arc.Primitives.RollingDigits.IsInstant.get -> bool
+TKCode.Arc.Primitives.RollingDigits.IsInstant.set -> void
+TKCode.Arc.Primitives.RollingDigits.IsShortestTurn.get -> bool
+TKCode.Arc.Primitives.RollingDigits.IsShortestTurn.set -> void
+TKCode.Arc.Primitives.RollingDigits.Prefix.get -> string?
+TKCode.Arc.Primitives.RollingDigits.Prefix.set -> void
+TKCode.Arc.Primitives.RollingDigits.RollingDigits() -> void
+TKCode.Arc.Primitives.RollingDigits.Suffix.get -> string?
+TKCode.Arc.Primitives.RollingDigits.Suffix.set -> void
+TKCode.Arc.Primitives.RollingDigits.UseGrouping.get -> bool
+TKCode.Arc.Primitives.RollingDigits.UseGrouping.set -> void
+TKCode.Arc.Primitives.RollingDigits.Value.get -> double
+TKCode.Arc.Primitives.RollingDigits.Value.set -> void
+TKCode.Arc.Primitives.RollingDigits.WheelMotion.get -> TKCode.Arc.Motion.MotionSpec?
+TKCode.Arc.Primitives.RollingDigits.WheelMotion.set -> void
+TKCode.Arc.Primitives.RollingDigits.WheelSpring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Primitives.RollingDigits.WheelSpring.set -> void
+TKCode.Arc.Primitives.RollingDigitsFalloff
+TKCode.Arc.Primitives.RollingDigitsFalloff.Eased = 1 -> TKCode.Arc.Primitives.RollingDigitsFalloff
+TKCode.Arc.Primitives.RollingDigitsFalloff.Linear = 0 -> TKCode.Arc.Primitives.RollingDigitsFalloff
+TKCode.Arc.Primitives.RollingDigitsFalloff.None = 2 -> TKCode.Arc.Primitives.RollingDigitsFalloff
+TKCode.Arc.Primitives.SharedElement
+TKCode.Arc.Primitives.SharedElementFrame
+TKCode.Arc.Primitives.SharedElementFrame.ApplyFlight(double scaleX, double scaleY, Avalonia.CornerRadius radius) -> void
+TKCode.Arc.Primitives.SharedElementFrame.Background.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.SharedElementFrame.Background.set -> void
+TKCode.Arc.Primitives.SharedElementFrame.BorderBrush.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.SharedElementFrame.BorderBrush.set -> void
+TKCode.Arc.Primitives.SharedElementFrame.BorderThickness.get -> Avalonia.Thickness
+TKCode.Arc.Primitives.SharedElementFrame.BorderThickness.set -> void
+TKCode.Arc.Primitives.SharedElementFrame.BoxShadow.get -> Avalonia.Media.BoxShadows
+TKCode.Arc.Primitives.SharedElementFrame.BoxShadow.set -> void
+TKCode.Arc.Primitives.SharedElementFrame.CornerRadius.get -> Avalonia.CornerRadius
+TKCode.Arc.Primitives.SharedElementFrame.CornerRadius.set -> void
+TKCode.Arc.Primitives.SharedElementFrame.CurrentRadius.get -> Avalonia.CornerRadius
+TKCode.Arc.Primitives.SharedElementFrame.EndFlight() -> void
+TKCode.Arc.Primitives.SharedElementFrame.IsFlying.get -> bool
+TKCode.Arc.Primitives.SharedElementFrame.SharedElementFrame() -> void
+TKCode.Arc.Primitives.SharedElementMath
+TKCode.Arc.Primitives.SharedElementMode
+TKCode.Arc.Primitives.SharedElementMode.Bounds = 0 -> TKCode.Arc.Primitives.SharedElementMode
+TKCode.Arc.Primitives.SharedElementMode.Position = 1 -> TKCode.Arc.Primitives.SharedElementMode
+TKCode.Arc.Primitives.SharedElementScope
+TKCode.Arc.Primitives.SharedElementScope.Dispose() -> void
+TKCode.Arc.Primitives.SharedElementScope.FlyAsync(double progress, TKCode.Arc.Motion.MotionSpec! spec) -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.Primitives.SharedElementScope.HideSource() -> void
+TKCode.Arc.Primitives.SharedElementScope.IsActive.get -> bool
+TKCode.Arc.Primitives.SharedElementScope.IsSourceHidden.get -> bool
+TKCode.Arc.Primitives.SharedElementScope.Jump(double progress) -> void
+TKCode.Arc.Primitives.SharedElementScope.PairedKeys.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.Primitives.SharedElementScope.Progress.get -> double
+TKCode.Arc.Primitives.SharedElementScope.ProgressChanged -> System.Action<double>?
+TKCode.Arc.Primitives.SharedElementScope.Reset() -> void
+TKCode.Arc.Primitives.SharedElementScope.RevealSource() -> void
+TKCode.Arc.Primitives.SharedElementScope.RevealsSourceOnArrival.get -> bool
+TKCode.Arc.Primitives.SharedElementScope.RevealsSourceOnArrival.set -> void
+TKCode.Arc.Primitives.SharedElementScope.SharedElementScope(Avalonia.Visual! source, Avalonia.Visual! target, double progress = 0) -> void
+TKCode.Arc.Primitives.SharedElementScope.Source.get -> Avalonia.Visual!
+TKCode.Arc.Primitives.SharedElementScope.Target.get -> Avalonia.Visual!
+TKCode.Arc.Primitives.SharedElementScope.Velocity.get -> double
+TKCode.Arc.Primitives.SpringSizeAxis
+TKCode.Arc.Primitives.SpringSizeAxis.Both = 2 -> TKCode.Arc.Primitives.SpringSizeAxis
+TKCode.Arc.Primitives.SpringSizeAxis.Height = 1 -> TKCode.Arc.Primitives.SpringSizeAxis
+TKCode.Arc.Primitives.SpringSizeAxis.Width = 0 -> TKCode.Arc.Primitives.SpringSizeAxis
+TKCode.Arc.Primitives.SpringSizeDecorator
+TKCode.Arc.Primitives.SpringSizeDecorator.Axis.get -> TKCode.Arc.Primitives.SpringSizeAxis
+TKCode.Arc.Primitives.SpringSizeDecorator.Axis.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.CapsToAvailable.get -> bool
+TKCode.Arc.Primitives.SpringSizeDecorator.CapsToAvailable.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.ClipOverflow.get -> double
+TKCode.Arc.Primitives.SpringSizeDecorator.ClipOverflow.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.CrossClipOverflow.get -> double
+TKCode.Arc.Primitives.SpringSizeDecorator.CrossClipOverflow.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.IsExpanded.get -> bool
+TKCode.Arc.Primitives.SpringSizeDecorator.IsExpanded.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.IsHeld.get -> bool
+TKCode.Arc.Primitives.SpringSizeDecorator.IsHeld.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.IsMoving.get -> bool
+TKCode.Arc.Primitives.SpringSizeDecorator.ShrinkSpring.get -> TKCode.Arc.Motion.ArcSpring?
+TKCode.Arc.Primitives.SpringSizeDecorator.ShrinkSpring.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.Spring.get -> TKCode.Arc.Motion.ArcSpring
+TKCode.Arc.Primitives.SpringSizeDecorator.Spring.set -> void
+TKCode.Arc.Primitives.SpringSizeDecorator.SpringSizeDecorator() -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph
+TKCode.Arc.Primitives.StrokeDrawGlyph.Data.get -> Avalonia.Media.Geometry?
+TKCode.Arc.Primitives.StrokeDrawGlyph.Data.set -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.DrawOnAttach.get -> bool
+TKCode.Arc.Primitives.StrokeDrawGlyph.DrawOnAttach.set -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.Foreground.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.StrokeDrawGlyph.Foreground.set -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.Play(System.TimeSpan duration, Avalonia.Animation.Easings.Easing! easing, System.TimeSpan delay = default(System.TimeSpan)) -> System.Threading.Tasks.Task!
+TKCode.Arc.Primitives.StrokeDrawGlyph.Progress.get -> double
+TKCode.Arc.Primitives.StrokeDrawGlyph.Progress.set -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.Size.get -> double
+TKCode.Arc.Primitives.StrokeDrawGlyph.Size.set -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.StrokeDrawGlyph() -> void
+TKCode.Arc.Primitives.StrokeDrawGlyph.StrokeThickness.get -> double
+TKCode.Arc.Primitives.StrokeDrawGlyph.StrokeThickness.set -> void
+TKCode.Arc.Primitives.SubmenuSafeZone
+TKCode.Arc.Primitives.SubmenuSafeZone.Contains(Avalonia.Point point) -> bool
+TKCode.Arc.Primitives.SubmenuSafeZone.Deconstruct(out Avalonia.Point Exit, out Avalonia.Rect Submenu, out bool SubmenuOnRight) -> void
+TKCode.Arc.Primitives.SubmenuSafeZone.Equals(TKCode.Arc.Primitives.SubmenuSafeZone other) -> bool
+TKCode.Arc.Primitives.SubmenuSafeZone.Exit.get -> Avalonia.Point
+TKCode.Arc.Primitives.SubmenuSafeZone.Exit.init -> void
+TKCode.Arc.Primitives.SubmenuSafeZone.IsToward(double dx, bool lastToward) -> bool
+TKCode.Arc.Primitives.SubmenuSafeZone.Submenu.get -> Avalonia.Rect
+TKCode.Arc.Primitives.SubmenuSafeZone.Submenu.init -> void
+TKCode.Arc.Primitives.SubmenuSafeZone.SubmenuOnRight.get -> bool
+TKCode.Arc.Primitives.SubmenuSafeZone.SubmenuOnRight.init -> void
+TKCode.Arc.Primitives.SubmenuSafeZone.SubmenuSafeZone() -> void
+TKCode.Arc.Primitives.SubmenuSafeZone.SubmenuSafeZone(Avalonia.Point Exit, Avalonia.Rect Submenu, bool SubmenuOnRight) -> void
+TKCode.Arc.Primitives.TextRangeDecoration
+TKCode.Arc.Primitives.TextRangeDecoration.Background.get -> Avalonia.Media.IBrush?
+TKCode.Arc.Primitives.TextRangeDecoration.Background.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.CornerRadius.get -> double
+TKCode.Arc.Primitives.TextRangeDecoration.CornerRadius.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Extent.get -> TKCode.Arc.Primitives.TextRangeExtent
+TKCode.Arc.Primitives.TextRangeDecoration.Extent.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Length.get -> int
+TKCode.Arc.Primitives.TextRangeDecoration.Length.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Opacity.get -> double
+TKCode.Arc.Primitives.TextRangeDecoration.Opacity.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Outset.get -> Avalonia.Thickness
+TKCode.Arc.Primitives.TextRangeDecoration.Outset.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Start.get -> int
+TKCode.Arc.Primitives.TextRangeDecoration.Start.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.StrikeThrough.get -> Avalonia.Media.IPen?
+TKCode.Arc.Primitives.TextRangeDecoration.StrikeThrough.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Tag.get -> object?
+TKCode.Arc.Primitives.TextRangeDecoration.Tag.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.TextRangeDecoration() -> void
+TKCode.Arc.Primitives.TextRangeDecoration.TextRangeDecoration(int start, int length) -> void
+TKCode.Arc.Primitives.TextRangeDecoration.Underline.get -> Avalonia.Media.IPen?
+TKCode.Arc.Primitives.TextRangeDecoration.Underline.set -> void
+TKCode.Arc.Primitives.TextRangeDecoration.UnderlineOffset.get -> double
+TKCode.Arc.Primitives.TextRangeDecoration.UnderlineOffset.set -> void
+TKCode.Arc.Primitives.TextRangeExtent
+TKCode.Arc.Primitives.TextRangeExtent.Line = 0 -> TKCode.Arc.Primitives.TextRangeExtent
+TKCode.Arc.Primitives.TextRangeExtent.Text = 1 -> TKCode.Arc.Primitives.TextRangeExtent
+TKCode.Arc.Primitives.TextRangeRenderer
+TKCode.Arc.Primitives.ViewportVisibility
+TKCode.Arc.Primitives.ViewportVisibility.Dispose() -> void
+TKCode.Arc.Primitives.ViewportVisibility.IsVisible.get -> bool
+TKCode.Arc.Primitives.ViewportVisibility.ViewportVisibility(Avalonia.Controls.Control! target, double threshold = 0.5, bool once = true) -> void
+TKCode.Arc.Primitives.ViewportVisibility.VisibilityChanged -> System.EventHandler<bool>?
+TKCode.Arc.Primitives.WordDiff
+TKCode.Arc.Primitives.WordDiffKind
+TKCode.Arc.Primitives.WordDiffKind.Delete = 2 -> TKCode.Arc.Primitives.WordDiffKind
+TKCode.Arc.Primitives.WordDiffKind.Equal = 0 -> TKCode.Arc.Primitives.WordDiffKind
+TKCode.Arc.Primitives.WordDiffKind.Insert = 1 -> TKCode.Arc.Primitives.WordDiffKind
+TKCode.Arc.Primitives.WordDiffOptions
+TKCode.Arc.Primitives.WordDiffOptions.<Clone>$() -> TKCode.Arc.Primitives.WordDiffOptions!
+TKCode.Arc.Primitives.WordDiffOptions.Atoms.get -> System.Collections.Generic.IReadOnlyList<(string! Open, string! Close)>!
+TKCode.Arc.Primitives.WordDiffOptions.Atoms.init -> void
+TKCode.Arc.Primitives.WordDiffOptions.Equals(TKCode.Arc.Primitives.WordDiffOptions? other) -> bool
+TKCode.Arc.Primitives.WordDiffOptions.MaxCells.get -> int
+TKCode.Arc.Primitives.WordDiffOptions.MaxCells.init -> void
+TKCode.Arc.Primitives.WordDiffOptions.WordDiffOptions() -> void
+TKCode.Arc.Primitives.WordDiffResult
+TKCode.Arc.Primitives.WordDiffResult.DeletedWords.get -> int
+TKCode.Arc.Primitives.WordDiffResult.HasChanges.get -> bool
+TKCode.Arc.Primitives.WordDiffResult.InsertedWords.get -> int
+TKCode.Arc.Primitives.WordDiffResult.Segments.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.WordDiffSegment>!
+TKCode.Arc.Primitives.WordDiffSegment
+TKCode.Arc.Primitives.WordDiffSegment.Deconstruct(out TKCode.Arc.Primitives.WordDiffKind Kind, out string! Text) -> void
+TKCode.Arc.Primitives.WordDiffSegment.Equals(TKCode.Arc.Primitives.WordDiffSegment other) -> bool
+TKCode.Arc.Primitives.WordDiffSegment.Kind.get -> TKCode.Arc.Primitives.WordDiffKind
+TKCode.Arc.Primitives.WordDiffSegment.Kind.init -> void
+TKCode.Arc.Primitives.WordDiffSegment.Text.get -> string!
+TKCode.Arc.Primitives.WordDiffSegment.Text.init -> void
+TKCode.Arc.Primitives.WordDiffSegment.WordDiffSegment() -> void
+TKCode.Arc.Primitives.WordDiffSegment.WordDiffSegment(TKCode.Arc.Primitives.WordDiffKind Kind, string! Text) -> void
+TKCode.Arc.Primitives.WordPacer
+TKCode.Arc.Primitives.WordPacer.Complete() -> void
+TKCode.Arc.Primitives.WordPacer.HasPending.get -> bool
+TKCode.Arc.Primitives.WordPacer.IsCompleted.get -> bool
+TKCode.Arc.Primitives.WordPacer.IsFinished.get -> bool
+TKCode.Arc.Primitives.WordPacer.Options.get -> TKCode.Arc.Primitives.WordPacerOptions!
+TKCode.Arc.Primitives.WordPacer.PendingWords.get -> int
+TKCode.Arc.Primitives.WordPacer.Push(string! text) -> void
+TKCode.Arc.Primitives.WordPacer.Reset() -> void
+TKCode.Arc.Primitives.WordPacer.Tick(System.TimeSpan now) -> string?
+TKCode.Arc.Primitives.WordPacer.WordPacer(TKCode.Arc.Primitives.WordPacerOptions? options = null) -> void
+TKCode.Arc.Primitives.WordPacerOptions
+TKCode.Arc.Primitives.WordPacerOptions.<Clone>$() -> TKCode.Arc.Primitives.WordPacerOptions!
+TKCode.Arc.Primitives.WordPacerOptions.CatchUpWindow.get -> System.TimeSpan
+TKCode.Arc.Primitives.WordPacerOptions.CatchUpWindow.init -> void
+TKCode.Arc.Primitives.WordPacerOptions.CompletionDrain.get -> System.TimeSpan
+TKCode.Arc.Primitives.WordPacerOptions.CompletionDrain.init -> void
+TKCode.Arc.Primitives.WordPacerOptions.Equals(TKCode.Arc.Primitives.WordPacerOptions? other) -> bool
+TKCode.Arc.Primitives.WordPacerOptions.MaxWordsPerBatch.get -> int
+TKCode.Arc.Primitives.WordPacerOptions.MaxWordsPerBatch.init -> void
+TKCode.Arc.Primitives.WordPacerOptions.MinInterval.get -> System.TimeSpan
+TKCode.Arc.Primitives.WordPacerOptions.MinInterval.init -> void
+TKCode.Arc.Primitives.WordPacerOptions.WordPacerOptions() -> void
+TKCode.Arc.Primitives.WordPacerOptions.WordsPerSecond.get -> double
+TKCode.Arc.Primitives.WordPacerOptions.WordsPerSecond.init -> void
+TKCode.Arc.StorageFileImageSource
+TKCode.Arc.StorageFileImageSource.File.get -> Avalonia.Platform.Storage.IStorageFile!
+TKCode.Arc.StorageFileImageSource.StorageFileImageSource(Avalonia.Platform.Storage.IStorageFile! file) -> void
+TKCode.Arc.UriImageSource
+TKCode.Arc.UriImageSource.Uri.get -> System.Uri!
+TKCode.Arc.UriImageSource.UriImageSource(System.Uri! uri) -> void
+abstract TKCode.Arc.ImageSource.CacheKey.get -> string?
+abstract TKCode.Arc.Motion.MotionSpec.<Clone>$() -> TKCode.Arc.Motion.MotionSpec!
+abstract TKCode.Arc.Primitives.ArcPopupMotion.OpacitySpec.get -> TKCode.Arc.Motion.MotionSpec!
+abstract TKCode.Arc.Primitives.ArcPopupMotion.TransformSpec.get -> TKCode.Arc.Motion.MotionSpec!
+const TKCode.Arc.DesignTokens.ArcDesignTokens.Identity = "ArcDesign" -> string!
+const TKCode.Arc.Gestures.MomentumProjector.DefaultDecayRate = 0.99 -> double
+const TKCode.Arc.Gestures.RubberBand.DefaultFactor = 0.55 -> double
+const TKCode.Arc.Gestures.WheelRouter.DefaultMagnifySensitivity = 0.01 -> double
+const TKCode.Arc.Gestures.WheelRouter.DefaultPixelsPerWheelUnit = 50 -> double
+const TKCode.Arc.Gestures.WheelRouter.DefaultWheelSensitivity = 0.0022 -> double
+const TKCode.Arc.Gestures.WheelRouter.WebPixelsPerNotch = 100 -> double
+const TKCode.Arc.Motion.ArcBusyPulse.MinOpacity = 0.45 -> double
+const TKCode.Arc.Motion.ArcBusyPulse.Period = 1.8 -> double
+const TKCode.Arc.Motion.ArcMotion.FullPseudoClass = ":motion-full" -> string!
+const TKCode.Arc.Motion.ArcMotion.ReducedPseudoClass = ":motion-reduced" -> string!
+const TKCode.Arc.Primitives.ArcBlur.MaxRadius = 10 -> double
+const TKCode.Arc.Primitives.ArcBlur.Step = 0.25 -> double
+const TKCode.Arc.Primitives.ArcViewport.DefaultCompactWidth = 640 -> double
+const TKCode.Arc.Primitives.LazyFocusRing.PartName = "PART_FocusRing" -> string!
+const TKCode.Arc.Primitives.PathMorphSampler.DefaultSamples = 48 -> int
+const TKCode.Arc.Primitives.SubmenuSafeZone.Bleed = 5 -> double
+override TKCode.Arc.ArcAccentColors.GetHashCode() -> int
+override TKCode.Arc.ArcGlyph.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.ArcGlyph.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.ArcNeutralColors.Equals(object? obj) -> bool
+override TKCode.Arc.ArcNeutralColors.GetHashCode() -> int
+override TKCode.Arc.ArcNeutralColors.ToString() -> string!
+override TKCode.Arc.ArcTokenValueExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+override TKCode.Arc.BitmapImageSource.CacheKey.get -> string?
+override TKCode.Arc.BitmapImageSource.ToString() -> string!
+override TKCode.Arc.Gestures.PanZoomTransform.GetHashCode() -> int
+override TKCode.Arc.Gestures.SnapProjection.GetHashCode() -> int
+override TKCode.Arc.Gestures.WheelAction.GetHashCode() -> int
+override TKCode.Arc.ImageSourceConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Type! sourceType) -> bool
+override TKCode.Arc.ImageSourceConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object! value) -> object?
+override TKCode.Arc.Motion.ArcBrushTransition.Interpolate(double progress, Avalonia.Media.IBrush? from, Avalonia.Media.IBrush? to) -> Avalonia.Media.IBrush?
+override TKCode.Arc.Motion.ArcLinearEasing.Ease(double progress) -> double
+override TKCode.Arc.Motion.ArcSpringEasing.Ease(double progress) -> double
+override TKCode.Arc.Motion.MotionSpec.Equals(object? obj) -> bool
+override TKCode.Arc.Motion.MotionSpec.GetHashCode() -> int
+override TKCode.Arc.Motion.MotionSpec.InstantSpec.<Clone>$() -> TKCode.Arc.Motion.MotionSpec.InstantSpec!
+override TKCode.Arc.Motion.MotionSpec.InstantSpec.Equals(object? obj) -> bool
+override TKCode.Arc.Motion.MotionSpec.InstantSpec.GetHashCode() -> int
+override TKCode.Arc.Motion.MotionSpec.InstantSpec.ToString() -> string!
+override TKCode.Arc.Motion.MotionSpec.SpringMotion.<Clone>$() -> TKCode.Arc.Motion.MotionSpec.SpringMotion!
+override TKCode.Arc.Motion.MotionSpec.SpringMotion.Equals(object? obj) -> bool
+override TKCode.Arc.Motion.MotionSpec.SpringMotion.GetHashCode() -> int
+override TKCode.Arc.Motion.MotionSpec.SpringMotion.ToString() -> string!
+override TKCode.Arc.Motion.MotionSpec.ToString() -> string!
+override TKCode.Arc.Motion.MotionSpec.TweenMotion.<Clone>$() -> TKCode.Arc.Motion.MotionSpec.TweenMotion!
+override TKCode.Arc.Motion.MotionSpec.TweenMotion.Equals(object? obj) -> bool
+override TKCode.Arc.Motion.MotionSpec.TweenMotion.GetHashCode() -> int
+override TKCode.Arc.Motion.MotionSpec.TweenMotion.ToString() -> string!
+override TKCode.Arc.Motion.SpringSpec.GetHashCode() -> int
+override TKCode.Arc.Primitives.ArcContentSwap.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcContentSwap.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcContentSwap.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcContentSwap.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.ArcImage.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcImage.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcImage.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcImage.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcImage.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.ArcImage.OnSizeChanged(Avalonia.Controls.SizeChangedEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcImage.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.ArcOverlayHost.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcOverlayHost.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcPopup.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.ArcPopupEnterMotion.OpacitySpec.get -> TKCode.Arc.Motion.MotionSpec!
+override TKCode.Arc.Primitives.ArcPopupEnterMotion.TransformSpec.get -> TKCode.Arc.Motion.MotionSpec!
+override TKCode.Arc.Primitives.ArcPopupExitMotion.OpacitySpec.get -> TKCode.Arc.Motion.MotionSpec!
+override TKCode.Arc.Primitives.ArcPopupExitMotion.TransformSpec.get -> TKCode.Arc.Motion.MotionSpec!
+override TKCode.Arc.Primitives.ArcRing.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcRing.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.ArcRing.OnSizeChanged(Avalonia.Controls.SizeChangedEventArgs! e) -> void
+override TKCode.Arc.Primitives.ArcRing.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.ArcShrinkRow.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcShrinkRow.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.ArcSpinner.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.ArcSpinner.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.DecoratedTextBlock.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.DecoratedTextBlock.RenderTextLayout(Avalonia.Media.DrawingContext! context, Avalonia.Point origin) -> void
+override TKCode.Arc.Primitives.FormattedPart.GetHashCode() -> int
+override TKCode.Arc.Primitives.GlidingIndicator.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.LayeredGraphEdge.GetHashCode() -> int
+override TKCode.Arc.Primitives.MorphGlyph.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.MorphGlyph.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.MorphGlyph.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.PresenceHost.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.PresenceHost.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.PresenceHost.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.PresenceHost.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.RollingDigits.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.RollingDigits.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.RollingDigits.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.RollingDigits.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.SharedElementFrame.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.SharedElementFrame.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.SharedElementFrame.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.SharedElementFrame.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.SpringSizeDecorator.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.SpringSizeDecorator.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.SpringSizeDecorator.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.SpringSizeDecorator.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Primitives.StrokeDrawGlyph.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.Primitives.StrokeDrawGlyph.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Primitives.StrokeDrawGlyph.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.Primitives.SubmenuSafeZone.GetHashCode() -> int
+override TKCode.Arc.Primitives.WordDiffOptions.Equals(object? obj) -> bool
+override TKCode.Arc.Primitives.WordDiffOptions.GetHashCode() -> int
+override TKCode.Arc.Primitives.WordDiffOptions.ToString() -> string!
+override TKCode.Arc.Primitives.WordDiffSegment.GetHashCode() -> int
+override TKCode.Arc.Primitives.WordPacerOptions.Equals(object? obj) -> bool
+override TKCode.Arc.Primitives.WordPacerOptions.GetHashCode() -> int
+override TKCode.Arc.Primitives.WordPacerOptions.ToString() -> string!
+override TKCode.Arc.StorageFileImageSource.CacheKey.get -> string?
+override TKCode.Arc.StorageFileImageSource.ToString() -> string!
+override TKCode.Arc.UriImageSource.CacheKey.get -> string!
+override TKCode.Arc.UriImageSource.ToString() -> string!
+override abstract TKCode.Arc.ImageSource.ToString() -> string!
+override sealed TKCode.Arc.Motion.MotionSpec.InstantSpec.Equals(TKCode.Arc.Motion.MotionSpec? other) -> bool
+override sealed TKCode.Arc.Motion.MotionSpec.SpringMotion.Equals(TKCode.Arc.Motion.MotionSpec? other) -> bool
+override sealed TKCode.Arc.Motion.MotionSpec.TweenMotion.Equals(TKCode.Arc.Motion.MotionSpec? other) -> bool
+static TKCode.Arc.ArcAccentColors.operator !=(TKCode.Arc.ArcAccentColors left, TKCode.Arc.ArcAccentColors right) -> bool
+static TKCode.Arc.ArcAccentColors.operator ==(TKCode.Arc.ArcAccentColors left, TKCode.Arc.ArcAccentColors right) -> bool
+static TKCode.Arc.ArcBaseTheme.Create() -> Avalonia.Controls.ResourceDictionary!
+static TKCode.Arc.ArcBaseTheme.DefinesBuiltInThemes(Avalonia.Controls.IResourceNode! resources) -> bool
+static TKCode.Arc.ArcBaseTheme.ShouldRegister(Avalonia.Application! application) -> bool
+static TKCode.Arc.ArcBaseTheme.StyledTypes.get -> System.Collections.Generic.IReadOnlyList<System.Type!>!
+static TKCode.Arc.ArcBaseTheme.TryRegister(Avalonia.Application! application) -> bool
+static TKCode.Arc.ArcCoreBuilderExtensions.UseArcCore(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.ArcIcons.Parse(string! data) -> Avalonia.Media.Geometry!
+static TKCode.Arc.ArcNeutralColors.operator !=(TKCode.Arc.ArcNeutralColors? left, TKCode.Arc.ArcNeutralColors? right) -> bool
+static TKCode.Arc.ArcNeutralColors.operator ==(TKCode.Arc.ArcNeutralColors? left, TKCode.Arc.ArcNeutralColors? right) -> bool
+static TKCode.Arc.ArcPalette.ComputeSeries(Avalonia.Media.Color accent, bool isDark) -> Avalonia.Media.Color[]!
+static TKCode.Arc.ArcPalette.GetSeed(TKCode.Arc.ArcAccentPreset preset) -> Avalonia.Media.Color
+static TKCode.Arc.ArcPalette.Neutrals(bool isDark) -> TKCode.Arc.ArcNeutralColors!
+static TKCode.Arc.ArcPalette.Resolve(Avalonia.Media.Color seed, bool isDark) -> TKCode.Arc.ArcAccentColors
+static TKCode.Arc.ArcThemeBuilderExtensions.Accent(this TKCode.Arc.ArcThemeBuilder! builder, TKCode.Arc.ArcAccentPreset preset) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.ArcTokens.Bind(Avalonia.StyledElement! target, Avalonia.AvaloniaProperty! property, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind, Avalonia.Data.BindingPriority priority = Avalonia.Data.BindingPriority.Template) -> System.IDisposable!
+static TKCode.Arc.ArcTokens.BindCornerRadius<TTarget>(this TTarget! target, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> TTarget!
+static TKCode.Arc.ArcTokens.Get<T>(Avalonia.Controls.Control! owner, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> T
+static TKCode.Arc.ArcTokens.GetColor(Avalonia.Controls.Control! owner, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> Avalonia.Media.Color
+static TKCode.Arc.ArcTokens.GetCornerRadius(Avalonia.Controls.Control! owner, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind, Avalonia.CornerRadius fallback) -> Avalonia.CornerRadius
+static TKCode.Arc.DesignTokens.ArcDesignTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.ArcDesignTokens.Key(TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> object!
+static TKCode.Arc.Gestures.MomentumProjector.NearestIndex(System.ReadOnlySpan<double> points, double position) -> int
+static TKCode.Arc.Gestures.MomentumProjector.Project(double velocity, System.TimeSpan horizon) -> double
+static TKCode.Arc.Gestures.MomentumProjector.Project(double velocity, double rate = 0.99) -> double
+static TKCode.Arc.Gestures.MomentumProjector.ProjectedPosition(double position, double velocity, in TKCode.Arc.Gestures.SnapProjection options) -> double
+static TKCode.Arc.Gestures.MomentumProjector.SelectSnapPoint(System.ReadOnlySpan<double> points, double position, double velocity, in TKCode.Arc.Gestures.SnapProjection options) -> int
+static TKCode.Arc.Gestures.MomentumProjector.SettleTo(TKCode.Arc.Motion.MotionValue<double>! value, double target, double velocity, TKCode.Arc.Motion.ArcSpring spring = TKCode.Arc.Motion.ArcSpring.Smooth) -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.Gestures.MomentumProjector.SettleTo(TKCode.Arc.Motion.MotionValue<double>! value, double target, double velocity, TKCode.Arc.Motion.SpringSpec spring) -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.Gestures.PanZoomTransform.Fit(Avalonia.Rect content, Avalonia.Size viewport, Avalonia.Thickness padding, double minZoom = 5E-324, double maxZoom = Infinity) -> TKCode.Arc.Gestures.PanZoomTransform
+static TKCode.Arc.Gestures.PanZoomTransform.Identity.get -> TKCode.Arc.Gestures.PanZoomTransform
+static TKCode.Arc.Gestures.PanZoomTransform.Interpolate(TKCode.Arc.Gestures.PanZoomTransform from, TKCode.Arc.Gestures.PanZoomTransform to, double t) -> TKCode.Arc.Gestures.PanZoomTransform
+static TKCode.Arc.Gestures.PanZoomTransform.operator !=(TKCode.Arc.Gestures.PanZoomTransform left, TKCode.Arc.Gestures.PanZoomTransform right) -> bool
+static TKCode.Arc.Gestures.PanZoomTransform.operator ==(TKCode.Arc.Gestures.PanZoomTransform left, TKCode.Arc.Gestures.PanZoomTransform right) -> bool
+static TKCode.Arc.Gestures.RubberBand.Apply(double overflow, double dimension, double factor = 0.55) -> double
+static TKCode.Arc.Gestures.RubberBand.Clamp(double value, double min, double max, double dimension, double factor = 0.55) -> double
+static TKCode.Arc.Gestures.RubberBand.Invert(double stretch, double dimension, double factor = 0.55) -> double
+static TKCode.Arc.Gestures.RubberBand.Sqrt(double overflow) -> double
+static TKCode.Arc.Gestures.SnapProjection.Decay(double rate = 0.99, int fromIndex = -1, double flickVelocity = 0) -> TKCode.Arc.Gestures.SnapProjection
+static TKCode.Arc.Gestures.SnapProjection.Linear(System.TimeSpan horizon, int fromIndex = -1, double flickVelocity = 0) -> TKCode.Arc.Gestures.SnapProjection
+static TKCode.Arc.Gestures.SnapProjection.operator !=(TKCode.Arc.Gestures.SnapProjection left, TKCode.Arc.Gestures.SnapProjection right) -> bool
+static TKCode.Arc.Gestures.SnapProjection.operator ==(TKCode.Arc.Gestures.SnapProjection left, TKCode.Arc.Gestures.SnapProjection right) -> bool
+static TKCode.Arc.Gestures.WheelAction.None.get -> TKCode.Arc.Gestures.WheelAction
+static TKCode.Arc.Gestures.WheelAction.PanBy(Avalonia.Vector delta) -> TKCode.Arc.Gestures.WheelAction
+static TKCode.Arc.Gestures.WheelAction.ZoomBy(double factor) -> TKCode.Arc.Gestures.WheelAction
+static TKCode.Arc.Gestures.WheelAction.operator !=(TKCode.Arc.Gestures.WheelAction left, TKCode.Arc.Gestures.WheelAction right) -> bool
+static TKCode.Arc.Gestures.WheelAction.operator ==(TKCode.Arc.Gestures.WheelAction left, TKCode.Arc.Gestures.WheelAction right) -> bool
+static TKCode.Arc.Gestures.WheelRouter.Classify(Avalonia.Vector delta) -> TKCode.Arc.Gestures.WheelDevice
+static TKCode.Arc.Gestures.WheelRouter.MagnifyFactor(double magnification, double sensitivity) -> double
+static TKCode.Arc.Gestures.WheelRouter.ZoomFactor(double avaloniaDeltaY, double sensitivity) -> double
+static TKCode.Arc.ImageSource.FromBitmap(Avalonia.Media.Imaging.Bitmap! bitmap) -> TKCode.Arc.ImageSource!
+static TKCode.Arc.ImageSource.FromStorageFile(Avalonia.Platform.Storage.IStorageFile! file) -> TKCode.Arc.ImageSource!
+static TKCode.Arc.ImageSource.FromUri(System.Uri! uri) -> TKCode.Arc.ImageSource!
+static TKCode.Arc.ImageSource.Parse(string! text) -> TKCode.Arc.ImageSource!
+static TKCode.Arc.ImageSource.TryParse(string? text, out TKCode.Arc.ImageSource? source) -> bool
+static TKCode.Arc.Motion.ArcBrushTransition.MixPremultiplied(Avalonia.Media.Color from, Avalonia.Media.Color to, double progress) -> Avalonia.Media.Color
+static TKCode.Arc.Motion.ArcBusyPulse.Advance(double phase, double seconds) -> double
+static TKCode.Arc.Motion.ArcBusyPulse.Opacity(double seconds) -> double
+static TKCode.Arc.Motion.ArcMotion.GetEffectiveLevel(Avalonia.AvaloniaObject! visual) -> TKCode.Arc.Motion.ArcMotionLevel
+static TKCode.Arc.Motion.ArcMotion.GetLevel(Avalonia.AvaloniaObject! element) -> TKCode.Arc.Motion.ArcMotionLevel
+static TKCode.Arc.Motion.ArcMotion.GetMaxFrameRate(Avalonia.AvaloniaObject! element) -> double
+static TKCode.Arc.Motion.ArcMotion.GetTracks(Avalonia.Controls.Control! element) -> bool
+static TKCode.Arc.Motion.ArcMotion.IsFull(Avalonia.AvaloniaObject! visual) -> bool
+static TKCode.Arc.Motion.ArcMotion.SetLevel(Avalonia.AvaloniaObject! element, TKCode.Arc.Motion.ArcMotionLevel value) -> void
+static TKCode.Arc.Motion.ArcMotion.SetMaxFrameRate(Avalonia.AvaloniaObject! element, double value) -> void
+static TKCode.Arc.Motion.ArcMotion.SetTracks(Avalonia.Controls.Control! element, bool value) -> void
+static TKCode.Arc.Motion.ArcMotionPresets.Get(TKCode.Arc.Motion.ArcSpring spring) -> TKCode.Arc.Motion.SpringSpec
+static TKCode.Arc.Motion.ArcSpringEasing.For(TKCode.Arc.Motion.ArcSpring spring) -> TKCode.Arc.Motion.ArcSpringEasing!
+static TKCode.Arc.Motion.MotionSpec.InstantSpec.operator !=(TKCode.Arc.Motion.MotionSpec.InstantSpec? left, TKCode.Arc.Motion.MotionSpec.InstantSpec? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.InstantSpec.operator ==(TKCode.Arc.Motion.MotionSpec.InstantSpec? left, TKCode.Arc.Motion.MotionSpec.InstantSpec? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.Spring(TKCode.Arc.Motion.ArcSpring spring, System.TimeSpan delay = default(System.TimeSpan)) -> TKCode.Arc.Motion.MotionSpec!
+static TKCode.Arc.Motion.MotionSpec.Spring(TKCode.Arc.Motion.SpringSpec spec, System.TimeSpan delay = default(System.TimeSpan)) -> TKCode.Arc.Motion.MotionSpec!
+static TKCode.Arc.Motion.MotionSpec.SpringMotion.operator !=(TKCode.Arc.Motion.MotionSpec.SpringMotion? left, TKCode.Arc.Motion.MotionSpec.SpringMotion? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.SpringMotion.operator ==(TKCode.Arc.Motion.MotionSpec.SpringMotion? left, TKCode.Arc.Motion.MotionSpec.SpringMotion? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.Tween(System.TimeSpan duration, Avalonia.Animation.Easings.Easing! easing, System.TimeSpan delay = default(System.TimeSpan)) -> TKCode.Arc.Motion.MotionSpec!
+static TKCode.Arc.Motion.MotionSpec.TweenMotion.operator !=(TKCode.Arc.Motion.MotionSpec.TweenMotion? left, TKCode.Arc.Motion.MotionSpec.TweenMotion? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.TweenMotion.operator ==(TKCode.Arc.Motion.MotionSpec.TweenMotion? left, TKCode.Arc.Motion.MotionSpec.TweenMotion? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.operator !=(TKCode.Arc.Motion.MotionSpec? left, TKCode.Arc.Motion.MotionSpec? right) -> bool
+static TKCode.Arc.Motion.MotionSpec.operator ==(TKCode.Arc.Motion.MotionSpec? left, TKCode.Arc.Motion.MotionSpec? right) -> bool
+static TKCode.Arc.Motion.SpringSolver.Evaluate(in TKCode.Arc.Motion.SpringSpec spec, double x0, double v0, double t) -> (double Displacement, double Velocity)
+static TKCode.Arc.Motion.SpringSpec.FromPhysical(double stiffness, double damping, double mass = 1) -> TKCode.Arc.Motion.SpringSpec
+static TKCode.Arc.Motion.SpringSpec.FromVisual(double visualDuration, double bounce) -> TKCode.Arc.Motion.SpringSpec
+static TKCode.Arc.Motion.SpringSpec.operator !=(TKCode.Arc.Motion.SpringSpec left, TKCode.Arc.Motion.SpringSpec right) -> bool
+static TKCode.Arc.Motion.SpringSpec.operator ==(TKCode.Arc.Motion.SpringSpec left, TKCode.Arc.Motion.SpringSpec right) -> bool
+static TKCode.Arc.Oklch.Contrast(Avalonia.Media.Color a, Avalonia.Media.Color b) -> double
+static TKCode.Arc.Oklch.FromColor(Avalonia.Media.Color color) -> (double L, double C, double H)
+static TKCode.Arc.Oklch.MixOklab(Avalonia.Media.Color a, Avalonia.Media.Color b, double t) -> Avalonia.Media.Color
+static TKCode.Arc.Oklch.ToColor(double l, double c, double h, double alpha = 1) -> Avalonia.Media.Color
+static TKCode.Arc.Oklch.WithAlpha(Avalonia.Media.Color color, double alpha) -> Avalonia.Media.Color
+static TKCode.Arc.Primitives.ArcBlur.Get(double radius) -> Avalonia.Media.IEffect?
+static TKCode.Arc.Primitives.ArcClipboard.CopyTextAsync(Avalonia.Visual! visual, string! text) -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.Primitives.ArcFormatting.Compact(double value, System.Globalization.CultureInfo? culture = null) -> string!
+static TKCode.Arc.Primitives.ArcFormatting.ToParts(string! formatted, System.Globalization.CultureInfo? culture = null) -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.FormattedPart>!
+static TKCode.Arc.Primitives.ArcImage.DefaultLoader.get -> TKCode.Arc.Primitives.IArcImageLoader!
+static TKCode.Arc.Primitives.ArcImage.DefaultLoader.set -> void
+static TKCode.Arc.Primitives.ArcImage.GetLoader(Avalonia.Visual! visual) -> TKCode.Arc.Primitives.IArcImageLoader?
+static TKCode.Arc.Primitives.ArcImage.SetLoader(Avalonia.Visual! visual, TKCode.Arc.Primitives.IArcImageLoader? loader) -> void
+static TKCode.Arc.Primitives.ArcImageCache.Bytes.get -> long
+static TKCode.Arc.Primitives.ArcImageCache.Clear() -> void
+static TKCode.Arc.Primitives.ArcImageCache.Contains(TKCode.Arc.ImageSource! source) -> bool
+static TKCode.Arc.Primitives.ArcImageCache.Count.get -> int
+static TKCode.Arc.Primitives.ArcImageCache.MaxBytes.get -> long
+static TKCode.Arc.Primitives.ArcImageCache.MaxBytes.set -> void
+static TKCode.Arc.Primitives.ArcImageCache.Remove(TKCode.Arc.ImageSource! source) -> void
+static TKCode.Arc.Primitives.ArcImageLoader.Shared.get -> TKCode.Arc.Primitives.ArcImageLoader!
+static TKCode.Arc.Primitives.ArcOverlayHost.FindHost(Avalonia.Visual! visual) -> TKCode.Arc.Primitives.ArcOverlayHost?
+static TKCode.Arc.Primitives.ArcOverlayLayer.Find(Avalonia.Visual! anchor) -> Avalonia.Controls.Panel?
+static TKCode.Arc.Primitives.ArcShrinkRow.GetIsShrinkable(Avalonia.Controls.Control! control) -> bool
+static TKCode.Arc.Primitives.ArcShrinkRow.SetIsShrinkable(Avalonia.Controls.Control! control, bool value) -> void
+static TKCode.Arc.Primitives.ArcSurface.GetElevation(Avalonia.Controls.Control! element) -> TKCode.Arc.Primitives.ArcSurfaceElevation
+static TKCode.Arc.Primitives.ArcSurface.SetElevation(Avalonia.Controls.Control! element, TKCode.Arc.Primitives.ArcSurfaceElevation value) -> void
+static TKCode.Arc.Primitives.ArcToday.Changed -> System.EventHandler?
+static TKCode.Arc.Primitives.ArcToday.Today.get -> System.DateOnly
+static TKCode.Arc.Primitives.ArcViewport.Calculate(Avalonia.Visual! target) -> Avalonia.Rect
+static TKCode.Arc.Primitives.ArcViewport.CompactWidth.get -> double
+static TKCode.Arc.Primitives.ArcViewport.CompactWidth.set -> void
+static TKCode.Arc.Primitives.ArcViewport.FindHost(Avalonia.Visual! visual) -> TKCode.Arc.Primitives.ArcViewportHost?
+static TKCode.Arc.Primitives.ArcViewport.GetBounds(Avalonia.Visual! visual) -> Avalonia.Rect?
+static TKCode.Arc.Primitives.ArcViewport.GetSize(Avalonia.Visual! visual) -> Avalonia.Size?
+static TKCode.Arc.Primitives.ArcViewport.IsCompact(Avalonia.Visual! visual) -> bool
+static TKCode.Arc.Primitives.ArcViewport.Observe(Avalonia.Visual! visual, System.Action<Avalonia.Size>! changed) -> System.IDisposable!
+static TKCode.Arc.Primitives.ArcZoom.GetScale(Avalonia.AvaloniaObject! element) -> double
+static TKCode.Arc.Primitives.ArcZoom.SetScale(Avalonia.AvaloniaObject! element, double value) -> void
+static TKCode.Arc.Primitives.FormattedPart.operator !=(TKCode.Arc.Primitives.FormattedPart left, TKCode.Arc.Primitives.FormattedPart right) -> bool
+static TKCode.Arc.Primitives.FormattedPart.operator ==(TKCode.Arc.Primitives.FormattedPart left, TKCode.Arc.Primitives.FormattedPart right) -> bool
+static TKCode.Arc.Primitives.LayeredGraphEdge.operator !=(TKCode.Arc.Primitives.LayeredGraphEdge left, TKCode.Arc.Primitives.LayeredGraphEdge right) -> bool
+static TKCode.Arc.Primitives.LayeredGraphEdge.operator ==(TKCode.Arc.Primitives.LayeredGraphEdge left, TKCode.Arc.Primitives.LayeredGraphEdge right) -> bool
+static TKCode.Arc.Primitives.LayeredGraphLayout.Arrange(System.Collections.Generic.IReadOnlyList<Avalonia.Size>! sizes, System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.LayeredGraphEdge>! edges, TKCode.Arc.Primitives.LayeredGraphLayoutOptions? options = null) -> TKCode.Arc.Primitives.LayeredGraphLayoutResult!
+static TKCode.Arc.Primitives.LayeredGraphLayoutOptions.Default.get -> TKCode.Arc.Primitives.LayeredGraphLayoutOptions!
+static TKCode.Arc.Primitives.ModalPresence.GetModals(Avalonia.Controls.TopLevel! topLevel) -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.ModalPresence!>!
+static TKCode.Arc.Primitives.PathMorphFrame.Interpolate(TKCode.Arc.Primitives.PathMorphFrame! from, TKCode.Arc.Primitives.PathMorphFrame! to, double t, TKCode.Arc.Primitives.PathMorphFrame! destination) -> void
+static TKCode.Arc.Primitives.PathMorphSampler.Align(TKCode.Arc.Primitives.PathMorphShape! from, TKCode.Arc.Primitives.PathMorphShape! to, int samples = 48) -> (TKCode.Arc.Primitives.PathMorphFrame! From, TKCode.Arc.Primitives.PathMorphFrame! To)
+static TKCode.Arc.Primitives.PathMorphSampler.Sample(TKCode.Arc.Primitives.PathMorphShape! shape, int samples = 48) -> TKCode.Arc.Primitives.PathMorphFrame!
+static TKCode.Arc.Primitives.PathMorphSampler.SampleInto(TKCode.Arc.Primitives.PathMorphShape! shape, TKCode.Arc.Primitives.PathMorphFrame! reference) -> TKCode.Arc.Primitives.PathMorphFrame?
+static TKCode.Arc.Primitives.PathMorphShape.FromPolylines(System.Collections.Generic.IEnumerable<(System.Collections.Generic.IReadOnlyList<Avalonia.Point>! Points, bool IsClosed)>! polylines) -> TKCode.Arc.Primitives.PathMorphShape!
+static TKCode.Arc.Primitives.PathMorphShape.Parse(string! pathData, double flatness = 0.5) -> TKCode.Arc.Primitives.PathMorphShape!
+static TKCode.Arc.Primitives.SharedElement.GetKey(Avalonia.Visual! element) -> string?
+static TKCode.Arc.Primitives.SharedElement.GetMode(Avalonia.Visual! element) -> TKCode.Arc.Primitives.SharedElementMode
+static TKCode.Arc.Primitives.SharedElement.SetKey(Avalonia.Visual! element, string? value) -> void
+static TKCode.Arc.Primitives.SharedElement.SetMode(Avalonia.Visual! element, TKCode.Arc.Primitives.SharedElementMode value) -> void
+static TKCode.Arc.Primitives.SharedElementMath.CompensateRadius(double radius, double scaleX, double scaleY) -> Avalonia.Vector
+static TKCode.Arc.Primitives.SharedElementMath.FlightRect(TKCode.Arc.Primitives.SharedElementMode mode, Avalonia.Rect source, Avalonia.Rect natural, double progress) -> Avalonia.Rect
+static TKCode.Arc.Primitives.SharedElementMath.Lerp(Avalonia.CornerRadius from, Avalonia.CornerRadius to, double t) -> Avalonia.CornerRadius
+static TKCode.Arc.Primitives.SharedElementMath.Lerp(Avalonia.Point from, Avalonia.Point to, double t) -> Avalonia.Point
+static TKCode.Arc.Primitives.SharedElementMath.Lerp(Avalonia.Rect from, Avalonia.Rect to, double t) -> Avalonia.Rect
+static TKCode.Arc.Primitives.SharedElementMath.Lerp(double from, double to, double t) -> double
+static TKCode.Arc.Primitives.SharedElementMath.Place(Avalonia.Size size, Avalonia.Matrix chain, Avalonia.Rect target) -> Avalonia.Matrix
+static TKCode.Arc.Primitives.SubmenuSafeZone.operator !=(TKCode.Arc.Primitives.SubmenuSafeZone left, TKCode.Arc.Primitives.SubmenuSafeZone right) -> bool
+static TKCode.Arc.Primitives.SubmenuSafeZone.operator ==(TKCode.Arc.Primitives.SubmenuSafeZone left, TKCode.Arc.Primitives.SubmenuSafeZone right) -> bool
+static TKCode.Arc.Primitives.TextRangeRenderer.DrawBackgrounds(Avalonia.Media.DrawingContext! context, Avalonia.Media.TextFormatting.TextLayout! layout, System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.TextRangeDecoration!>! decorations, Avalonia.Point origin) -> void
+static TKCode.Arc.Primitives.TextRangeRenderer.DrawLines(Avalonia.Media.DrawingContext! context, Avalonia.Media.TextFormatting.TextLayout! layout, System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.TextRangeDecoration!>! decorations, Avalonia.Point origin) -> void
+static TKCode.Arc.Primitives.TextRangeRenderer.GetRects(Avalonia.Media.TextFormatting.TextLayout! layout, int start, int length, TKCode.Arc.Primitives.TextRangeExtent extent = TKCode.Arc.Primitives.TextRangeExtent.Text) -> System.Collections.Generic.IReadOnlyList<Avalonia.Rect>!
+static TKCode.Arc.Primitives.WordDiff.Compute(string! before, string! after, TKCode.Arc.Primitives.WordDiffOptions? options = null) -> TKCode.Arc.Primitives.WordDiffResult!
+static TKCode.Arc.Primitives.WordDiff.Tokenize(string! text, TKCode.Arc.Primitives.WordDiffOptions? options = null) -> System.Collections.Generic.IReadOnlyList<string!>!
+static TKCode.Arc.Primitives.WordDiffOptions.Default.get -> TKCode.Arc.Primitives.WordDiffOptions!
+static TKCode.Arc.Primitives.WordDiffOptions.operator !=(TKCode.Arc.Primitives.WordDiffOptions? left, TKCode.Arc.Primitives.WordDiffOptions? right) -> bool
+static TKCode.Arc.Primitives.WordDiffOptions.operator ==(TKCode.Arc.Primitives.WordDiffOptions? left, TKCode.Arc.Primitives.WordDiffOptions? right) -> bool
+static TKCode.Arc.Primitives.WordDiffSegment.operator !=(TKCode.Arc.Primitives.WordDiffSegment left, TKCode.Arc.Primitives.WordDiffSegment right) -> bool
+static TKCode.Arc.Primitives.WordDiffSegment.operator ==(TKCode.Arc.Primitives.WordDiffSegment left, TKCode.Arc.Primitives.WordDiffSegment right) -> bool
+static TKCode.Arc.Primitives.WordPacerOptions.Default.get -> TKCode.Arc.Primitives.WordPacerOptions!
+static TKCode.Arc.Primitives.WordPacerOptions.operator !=(TKCode.Arc.Primitives.WordPacerOptions? left, TKCode.Arc.Primitives.WordPacerOptions? right) -> bool
+static TKCode.Arc.Primitives.WordPacerOptions.operator ==(TKCode.Arc.Primitives.WordPacerOptions? left, TKCode.Arc.Primitives.WordPacerOptions? right) -> bool
+static readonly TKCode.Arc.ArcFonts.Body -> Avalonia.Media.FontFamily!
+static readonly TKCode.Arc.ArcFonts.Display -> Avalonia.Media.FontFamily!
+static readonly TKCode.Arc.ArcFonts.Mono -> Avalonia.Media.FontFamily!
+static readonly TKCode.Arc.ArcGlyph.DataProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.ArcGlyph.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.ArcGlyph.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.ArcGlyph.StrokeThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.ArcNeutralColors.Dark -> TKCode.Arc.ArcNeutralColors!
+static readonly TKCode.Arc.ArcNeutralColors.Light -> TKCode.Arc.ArcNeutralColors!
+static readonly TKCode.Arc.Motion.ArcEasings.CssSpring -> Avalonia.Animation.Easings.Easing!
+static readonly TKCode.Arc.Motion.ArcEasings.Enter -> Avalonia.Animation.Easings.Easing!
+static readonly TKCode.Arc.Motion.ArcEasings.Exit -> Avalonia.Animation.Easings.Easing!
+static readonly TKCode.Arc.Motion.ArcEasings.InOut -> Avalonia.Animation.Easings.Easing!
+static readonly TKCode.Arc.Motion.ArcEasings.Standard -> Avalonia.Animation.Easings.Easing!
+static readonly TKCode.Arc.Motion.ArcMotion.LevelProperty -> Avalonia.AttachedProperty<TKCode.Arc.Motion.ArcMotionLevel>!
+static readonly TKCode.Arc.Motion.ArcMotion.MaxFrameRateProperty -> Avalonia.AttachedProperty<double>!
+static readonly TKCode.Arc.Motion.ArcMotion.TracksProperty -> Avalonia.AttachedProperty<bool>!
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Considered -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.CssSpring -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Exit -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Fast -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Gentle -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Instant -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Morph -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Quick -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Responsive -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Settle -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Smooth -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Snappy -> TKCode.Arc.Motion.SpringSpec
+static readonly TKCode.Arc.Motion.ArcMotionPresets.StaggerChar -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.StaggerItem -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.StaggerLine -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.StaggerWord -> System.TimeSpan
+static readonly TKCode.Arc.Motion.ArcMotionPresets.Standard -> System.TimeSpan
+static readonly TKCode.Arc.Motion.MotionSpec.Instant -> TKCode.Arc.Motion.MotionSpec!
+static readonly TKCode.Arc.Motion.MotionVectors.Color -> TKCode.Arc.Motion.IMotionVector<Avalonia.Media.Color>!
+static readonly TKCode.Arc.Motion.MotionVectors.CornerRadius -> TKCode.Arc.Motion.IMotionVector<Avalonia.CornerRadius>!
+static readonly TKCode.Arc.Motion.MotionVectors.Double -> TKCode.Arc.Motion.IMotionVector<double>!
+static readonly TKCode.Arc.Motion.MotionVectors.Point -> TKCode.Arc.Motion.IMotionVector<Avalonia.Point>!
+static readonly TKCode.Arc.Motion.MotionVectors.Rect -> TKCode.Arc.Motion.IMotionVector<Avalonia.Rect>!
+static readonly TKCode.Arc.Motion.MotionVectors.Size -> TKCode.Arc.Motion.IMotionVector<Avalonia.Size>!
+static readonly TKCode.Arc.Motion.MotionVectors.Thickness -> TKCode.Arc.Motion.IMotionVector<Avalonia.Thickness>!
+static readonly TKCode.Arc.Motion.MotionVectors.Vector -> TKCode.Arc.Motion.IMotionVector<Avalonia.Vector>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.ContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.ContentTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.DirectionProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.EnterDelayProperty -> Avalonia.StyledProperty<System.TimeSpan?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.EnterDurationProperty -> Avalonia.StyledProperty<System.TimeSpan?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.EnterOffsetProperty -> Avalonia.StyledProperty<double?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.ExitDurationProperty -> Avalonia.StyledProperty<System.TimeSpan?>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.HorizontalContentAlignmentProperty -> Avalonia.StyledProperty<Avalonia.Layout.HorizontalAlignment>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.MeasuresExitingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.ModeProperty -> Avalonia.StyledProperty<TKCode.Arc.Primitives.ContentSwapMode>!
+static readonly TKCode.Arc.Primitives.ArcContentSwap.VerticalContentAlignmentProperty -> Avalonia.StyledProperty<Avalonia.Layout.VerticalAlignment>!
+static readonly TKCode.Arc.Primitives.ArcImage.CurrentImageProperty -> Avalonia.DirectProperty<TKCode.Arc.Primitives.ArcImage!, Avalonia.Media.IImage?>!
+static readonly TKCode.Arc.Primitives.ArcImage.IsFailedProperty -> Avalonia.DirectProperty<TKCode.Arc.Primitives.ArcImage!, bool>!
+static readonly TKCode.Arc.Primitives.ArcImage.IsImageLoadedProperty -> Avalonia.DirectProperty<TKCode.Arc.Primitives.ArcImage!, bool>!
+static readonly TKCode.Arc.Primitives.ArcImage.IsLoadingProperty -> Avalonia.DirectProperty<TKCode.Arc.Primitives.ArcImage!, bool>!
+static readonly TKCode.Arc.Primitives.ArcImage.LoaderProperty -> Avalonia.AttachedProperty<TKCode.Arc.Primitives.IArcImageLoader?>!
+static readonly TKCode.Arc.Primitives.ArcImage.SourceProperty -> Avalonia.StyledProperty<TKCode.Arc.ImageSource?>!
+static readonly TKCode.Arc.Primitives.ArcImage.StretchDirectionProperty -> Avalonia.StyledProperty<Avalonia.Media.StretchDirection>!
+static readonly TKCode.Arc.Primitives.ArcImage.StretchProperty -> Avalonia.StyledProperty<Avalonia.Media.Stretch>!
+static readonly TKCode.Arc.Primitives.ArcPopup.EnterOffsetProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcPopup.EnterScaleProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcPopup.IsExitInstantProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcPopup.IsInstantProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcPopup.IsMotionEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcPopup.MarginToAnchorProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcPopup.OverlayHostShadowProperty -> Avalonia.StyledProperty<Avalonia.Media.BoxShadows>!
+static readonly TKCode.Arc.Primitives.ArcPopup.PopupRootShadowProperty -> Avalonia.StyledProperty<Avalonia.Media.BoxShadows>!
+static readonly TKCode.Arc.Primitives.ArcPopup.RequestedPlacementProperty -> Avalonia.StyledProperty<Avalonia.Controls.PlacementMode?>!
+static readonly TKCode.Arc.Primitives.ArcRing.ChaseRateProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcRing.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.ArcRing.IsRoundCapProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcRing.StartAngleProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcRing.ThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcRing.TrackBrushProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.ArcRing.ValueProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcShrinkRow.IsShrinkableProperty -> Avalonia.AttachedProperty<bool>!
+static readonly TKCode.Arc.Primitives.ArcShrinkRow.SpacingProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcSpinner.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.ArcSpinner.ThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.ArcSurface.ElevationProperty -> Avalonia.AttachedProperty<TKCode.Arc.Primitives.ArcSurfaceElevation>!
+static readonly TKCode.Arc.Primitives.ArcZoom.ScaleProperty -> Avalonia.AttachedProperty<double>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.BoxShadowProperty -> Avalonia.StyledProperty<Avalonia.Media.BoxShadows>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.CornerRadiusProperty -> Avalonia.StyledProperty<Avalonia.CornerRadius>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.FadeDurationProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.FillProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.SpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.StrokeProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.GlidingIndicator.StrokeThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.DataProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.IsFilledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.SpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring>!
+static readonly TKCode.Arc.Primitives.MorphGlyph.StrokeThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.PresenceHost.CollapseProperty -> Avalonia.StyledProperty<TKCode.Arc.Primitives.PresenceCollapse>!
+static readonly TKCode.Arc.Primitives.PresenceHost.EnterScaleProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.PresenceHost.IsPresentProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.PresenceHost.ModeProperty -> Avalonia.StyledProperty<TKCode.Arc.Primitives.PresenceMode>!
+static readonly TKCode.Arc.Primitives.PresenceHost.OffsetProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.PresenceHost.OriginProperty -> Avalonia.StyledProperty<Avalonia.RelativePoint>!
+static readonly TKCode.Arc.Primitives.PresenceHost.SpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring>!
+static readonly TKCode.Arc.Primitives.RollingDigits.CultureNameProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Primitives.RollingDigits.DecimalsProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Primitives.RollingDigits.FalloffProperty -> Avalonia.StyledProperty<TKCode.Arc.Primitives.RollingDigitsFalloff>!
+static readonly TKCode.Arc.Primitives.RollingDigits.FontFamilyProperty -> Avalonia.StyledProperty<Avalonia.Media.FontFamily!>!
+static readonly TKCode.Arc.Primitives.RollingDigits.FontSizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.RollingDigits.FontWeightProperty -> Avalonia.StyledProperty<Avalonia.Media.FontWeight>!
+static readonly TKCode.Arc.Primitives.RollingDigits.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.RollingDigits.GlyphPitchProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.RollingDigits.IsArmedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.RollingDigits.IsInstantProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.RollingDigits.IsShortestTurnProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.RollingDigits.PrefixProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Primitives.RollingDigits.SuffixProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Primitives.RollingDigits.UseGroupingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.RollingDigits.ValueProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.RollingDigits.WheelMotionProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.MotionSpec?>!
+static readonly TKCode.Arc.Primitives.RollingDigits.WheelSpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring>!
+static readonly TKCode.Arc.Primitives.SharedElement.KeyProperty -> Avalonia.AttachedProperty<string?>!
+static readonly TKCode.Arc.Primitives.SharedElement.ModeProperty -> Avalonia.AttachedProperty<TKCode.Arc.Primitives.SharedElementMode>!
+static readonly TKCode.Arc.Primitives.SharedElementFrame.BackgroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.SharedElementFrame.BorderBrushProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.SharedElementFrame.BorderThicknessProperty -> Avalonia.StyledProperty<Avalonia.Thickness>!
+static readonly TKCode.Arc.Primitives.SharedElementFrame.BoxShadowProperty -> Avalonia.StyledProperty<Avalonia.Media.BoxShadows>!
+static readonly TKCode.Arc.Primitives.SharedElementFrame.CornerRadiusProperty -> Avalonia.StyledProperty<Avalonia.CornerRadius>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.AxisProperty -> Avalonia.StyledProperty<TKCode.Arc.Primitives.SpringSizeAxis>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.CapsToAvailableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.ClipOverflowProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.CrossClipOverflowProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.IsExpandedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.IsHeldProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.ShrinkSpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring?>!
+static readonly TKCode.Arc.Primitives.SpringSizeDecorator.SpringProperty -> Avalonia.StyledProperty<TKCode.Arc.Motion.ArcSpring>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.DataProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.DrawOnAttachProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.ForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.ProgressProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.StrokeDrawGlyph.StrokeThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Primitives.SubmenuSafeZone.Lifetime -> System.TimeSpan
+virtual TKCode.Arc.Motion.MotionSpec.EqualityContract.get -> System.Type!
+virtual TKCode.Arc.Motion.MotionSpec.Equals(TKCode.Arc.Motion.MotionSpec? other) -> bool
+virtual TKCode.Arc.Motion.MotionSpec.PrintMembers(System.Text.StringBuilder! builder) -> bool
+virtual TKCode.Arc.Primitives.ArcImageLoader.Http.get -> System.Net.Http.HttpClient!
+virtual TKCode.Arc.Primitives.ArcImageLoader.OpenAsync(TKCode.Arc.ImageSource! source, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream!>!
+virtual TKCode.Arc.Primitives.ArcImageLoader.OpenUriAsync(System.Uri! uri, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<System.IO.Stream!>!
+virtual TKCode.Arc.Primitives.ArcPopup.AdjustPlacementAnchor(Avalonia.Controls.Primitives.PopupPositioning.CustomPopupPlacement! placement) -> void
+virtual TKCode.Arc.Primitives.ArcPopup.OnPlacementResolved(Avalonia.Controls.Primitives.PopupPositioning.CustomPopupPlacement! placement, Avalonia.Thickness shadow, double marginToAnchor, bool isOverlayHost, bool flipX, bool flipY) -> void
+~override TKCode.Arc.ArcAccentColors.Equals(object obj) -> bool
+~override TKCode.Arc.ArcAccentColors.ToString() -> string
+~override TKCode.Arc.Gestures.PanZoomTransform.Equals(object obj) -> bool
+~override TKCode.Arc.Gestures.PanZoomTransform.ToString() -> string
+~override TKCode.Arc.Gestures.SnapProjection.Equals(object obj) -> bool
+~override TKCode.Arc.Gestures.SnapProjection.ToString() -> string
+~override TKCode.Arc.Gestures.WheelAction.Equals(object obj) -> bool
+~override TKCode.Arc.Gestures.WheelAction.ToString() -> string
+~override TKCode.Arc.Motion.SpringSpec.Equals(object obj) -> bool
+~override TKCode.Arc.Motion.SpringSpec.ToString() -> string
+~override TKCode.Arc.Primitives.FormattedPart.Equals(object obj) -> bool
+~override TKCode.Arc.Primitives.FormattedPart.ToString() -> string
+~override TKCode.Arc.Primitives.LayeredGraphEdge.Equals(object obj) -> bool
+~override TKCode.Arc.Primitives.LayeredGraphEdge.ToString() -> string
+~override TKCode.Arc.Primitives.SubmenuSafeZone.Equals(object obj) -> bool
+~override TKCode.Arc.Primitives.SubmenuSafeZone.ToString() -> string
+~override TKCode.Arc.Primitives.WordDiffSegment.Equals(object obj) -> bool
+~override TKCode.Arc.Primitives.WordDiffSegment.ToString() -> string
+~static TKCode.Arc.ArcIcons.ALargeSmall.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Activity.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Archive.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowDownUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowDownWideNarrow.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowLeft.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowUpDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowUpFromLine.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowUpNarrowWide.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ArrowUpRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.AtSign.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Ban.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Battery.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Bell.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.BellOff.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Bold.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.BookOpen.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Bookmark.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Box.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Brain.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Bug.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Calendar.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CalendarCheck.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CalendarDays.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CalendarRange.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Camera.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChartBar.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChartLine.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChartPie.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Check.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CheckCheck.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronLeft.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronsDownUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronsLeft.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronsRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ChevronsUpDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Circle.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleAlert.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleCheck.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleDot.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleHelp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleMinus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CirclePlus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CircleX.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ClipboardPaste.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Clock.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Clock3.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Cloud.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CloudUpload.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Code.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Columns2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Command.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Cookie.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Copy.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CopyCheck.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CornerDownLeft.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CornerDownRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Cpu.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.CreditCard.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Database.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.DollarSign.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Download.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Ellipsis.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.EllipsisVertical.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Equal.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Eraser.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Euro.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Expand.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ExternalLink.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Eye.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.EyeOff.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.File.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileArchive.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileCode.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileCode2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileImage.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FilePlay.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FilePlus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileSpreadsheet.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FileText.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Filter.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FilterX.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Fingerprint.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Flag.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Folder.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.FolderOpen.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Gauge.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.GitBranch.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.GitCompareArrows.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Globe.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.GripHorizontal.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.GripVertical.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Hash.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading1.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading3.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading4.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading5.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heading6.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Heart.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Highlighter.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Hourglass.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.House.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Image.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Inbox.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Info.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Italic.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Key.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Keyboard.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Languages.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Laptop.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Layers.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Layers3.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.LayoutGrid.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.LayoutTemplate.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Lightbulb.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Link.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Link2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.List.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ListChecks.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ListFilter.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ListOrdered.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ListTodo.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.LoaderCircle.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Lock.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.LockOpen.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.LogOut.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Mail.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Maximize2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Menu.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.MessageCircle.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.MessageSquare.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Mic.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Minimize2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Minus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Monitor.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Moon.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Move.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Music.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Package.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Palette.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.PanelLeft.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.PanelRight.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.PanelRightClose.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Paperclip.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Pause.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.PenLine.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Pencil.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Percent.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Phone.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Pilcrow.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Pin.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Pipette.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Play.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Plus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Quote.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Redo2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.RefreshCw.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Replace.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ReplaceAll.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Reply.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.RotateCcw.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.RotateCw.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Rows2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ScanText.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Search.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Send.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SendHorizontal.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Server.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Settings.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Share.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Share2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Shield.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ShieldCheck.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Shrink.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SlidersHorizontal.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Smartphone.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Smile.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SmilePlus.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Sparkles.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Square.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SquareCode.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SquareDashedText.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SquarePen.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Star.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Strikethrough.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Subscript.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Sun.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.SunMoon.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Superscript.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Table.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Tag.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Terminal.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.TextSelect.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ThumbsDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ThumbsUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Timer.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Trash2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.TrendingDown.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.TrendingUp.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.TriangleAlert.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Trophy.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Type.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Underline.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Undo2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Unlink.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Upload.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.User.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Users.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Volume2.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Wifi.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Wrench.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.X.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.Zap.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ZoomIn.get -> Avalonia.Media.Geometry
+~static TKCode.Arc.ArcIcons.ZoomOut.get -> Avalonia.Media.Geometry

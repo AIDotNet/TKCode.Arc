@@ -1,0 +1,714 @@
+#nullable enable
+TKCode.Arc.ArcVideo
+TKCode.Arc.ArcVideoBuilderExtensions
+TKCode.Arc.BytesVideoSource
+TKCode.Arc.BytesVideoSource.Data.get -> System.ReadOnlyMemory<byte>
+TKCode.Arc.BytesVideoSource.MediaType.get -> string!
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.BigPlayGlyphSize = 16 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.BigPlaySize = 15 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ButtonSize = 0 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.CaptionHeightRatio = 18 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ChapterGap = 10 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.CompactControlBarGap = 4 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.CompactControlBarPadding = 2 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.CompactScrimMargin = 14 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.CompactWidth = 19 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ControlBarGap = 3 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ControlBarPadding = 1 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.FeedbackPlateColor = 25 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.GlyphSize = 5 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.OnVideoForeground = 20 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.OnVideoHover = 21 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ScrimColor = 24 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ScrimHeightExtra = 17 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.ScrimMargin = 13 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekBarHeight = 9 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekBufferedColor = 23 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekThumbSize = 8 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekTrackColor = 22 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekTrackHeight = 6 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.SeekTrackHeightActive = 7 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.VolumeOpenWidth = 12 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenKind.VolumeSliderWidth = 11 -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.VideoPlayerTokenKind
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension.VideoPlayerTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.VideoPlayerTokenResourceExtension.VideoPlayerTokenResourceExtension(TKCode.Arc.DesignTokens.VideoPlayerTokenKind kind) -> void
+TKCode.Arc.DesignTokens.VideoPlayerTokens
+TKCode.Arc.DesignTokens.VideoSurfaceTokenKind
+TKCode.Arc.DesignTokens.VideoSurfaceTokenKind.LetterboxColor = 0 -> TKCode.Arc.DesignTokens.VideoSurfaceTokenKind
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.VideoSurfaceTokenKind
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension.VideoSurfaceTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.VideoSurfaceTokenResourceExtension.VideoSurfaceTokenResourceExtension(TKCode.Arc.DesignTokens.VideoSurfaceTokenKind kind) -> void
+TKCode.Arc.DesignTokens.VideoSurfaceTokens
+TKCode.Arc.IVideoBackend
+TKCode.Arc.IVideoBackend.CanPlay(string! mediaType) -> TKCode.Arc.VideoSupport
+TKCode.Arc.IVideoBackend.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+TKCode.Arc.IVideoBackend.FrameKinds.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.IVideoBackend.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.IVideoBackend.IsReal.get -> bool
+TKCode.Arc.IVideoBackend.Name.get -> string!
+TKCode.Arc.IVideoEmbeddedTextTracks
+TKCode.Arc.IVideoEmbeddedTextTracks.EmbeddedCue -> System.EventHandler<TKCode.Arc.VideoEmbeddedCueEventArgs!>?
+TKCode.Arc.IVideoEmbeddedTextTracks.EmbeddedTextTracks.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoEmbeddedTextTrackInfo!>!
+TKCode.Arc.IVideoEmbeddedTextTracks.EmbeddedTextTracksChanged -> System.EventHandler?
+TKCode.Arc.IVideoEmbeddedTextTracks.SelectEmbeddedTextTrack(int index) -> void
+TKCode.Arc.IVideoFrameOwner
+TKCode.Arc.IVideoFrameOwner.ReleaseFrame(long token) -> void
+TKCode.Arc.IVideoNativePresentation
+TKCode.Arc.IVideoNativePresentation.CanPresentNatively.get -> bool
+TKCode.Arc.IVideoNativePresentation.CreateNativeView() -> Avalonia.Controls.Control!
+TKCode.Arc.IVideoNativePresentation.SetNativeCaptions(TKCode.Arc.VideoTextTrack? track) -> void
+TKCode.Arc.IVideoPlayer
+TKCode.Arc.IVideoPlayer.Backend.get -> TKCode.Arc.IVideoBackend!
+TKCode.Arc.IVideoPlayer.Buffered.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoTimeRange>!
+TKCode.Arc.IVideoPlayer.BufferedChanged -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.Duration.get -> System.TimeSpan
+TKCode.Arc.IVideoPlayer.DurationChanged -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.Failed -> System.EventHandler<TKCode.Arc.VideoErrorEventArgs!>?
+TKCode.Arc.IVideoPlayer.FrameAvailable -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.FrameTarget.get -> TKCode.Arc.VideoFrameTarget?
+TKCode.Arc.IVideoPlayer.FrameTarget.set -> void
+TKCode.Arc.IVideoPlayer.IsLooping.get -> bool
+TKCode.Arc.IVideoPlayer.IsLooping.set -> void
+TKCode.Arc.IVideoPlayer.IsMuted.get -> bool
+TKCode.Arc.IVideoPlayer.IsMuted.set -> void
+TKCode.Arc.IVideoPlayer.IsSeekable.get -> bool
+TKCode.Arc.IVideoPlayer.LoadAsync(TKCode.Arc.VideoSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+TKCode.Arc.IVideoPlayer.NaturalSize.get -> Avalonia.PixelSize
+TKCode.Arc.IVideoPlayer.NaturalSizeChanged -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.Pause() -> void
+TKCode.Arc.IVideoPlayer.Play() -> void
+TKCode.Arc.IVideoPlayer.PlaybackRate.get -> double
+TKCode.Arc.IVideoPlayer.PlaybackRate.set -> void
+TKCode.Arc.IVideoPlayer.Position.get -> System.TimeSpan
+TKCode.Arc.IVideoPlayer.PositionChanged -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.Seek(System.TimeSpan position, TKCode.Arc.VideoSeekMode mode = TKCode.Arc.VideoSeekMode.Accurate) -> void
+TKCode.Arc.IVideoPlayer.State.get -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.IVideoPlayer.StateChanged -> System.EventHandler?
+TKCode.Arc.IVideoPlayer.TryAcquireFrame(in TKCode.Arc.VideoFrameRequest request, out TKCode.Arc.VideoFrameLease lease) -> bool
+TKCode.Arc.IVideoPlayer.Volume.get -> double
+TKCode.Arc.IVideoPlayer.Volume.set -> void
+TKCode.Arc.IVideoTimelineSync
+TKCode.Arc.IVideoTimelineSync.TryGetTimelineSync(long gpuImageId, out Avalonia.Platform.IPlatformHandle! semaphore, out ulong waitValue, out ulong signalValue) -> bool
+TKCode.Arc.Localization.VideoLangResourceExtension
+TKCode.Arc.Localization.VideoLangResourceExtension.Kind.get -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.VideoLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.VideoLangResourceExtension.VideoLangResourceExtension() -> void
+TKCode.Arc.Localization.VideoLangResourceExtension.VideoLangResourceExtension(TKCode.Arc.Localization.VideoLangResourceKind kind) -> void
+TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.BackendHint = 0 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Buffering = 1 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.CaptionSize = 2 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Captions = 3 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.CaptionsOff = 4 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.CaptionsOffAnnounce = 5 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.CaptionsOnAnnounce = 6 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Chapter = 7 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationHour = 8 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationHours = 9 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationMinute = 10 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationMinutes = 11 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationSecond = 12 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.DurationSeconds = 13 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.EnteredFullScreen = 14 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ErrorAborted = 15 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ErrorBackend = 16 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ErrorDecode = 17 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ErrorNetwork = 18 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ErrorUnsupported = 19 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ExitFullScreen = 20 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.ExitedFullScreen = 21 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.FullScreen = 22 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Loading = 23 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Mute = 24 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Muted = 25 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Pause = 26 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Play = 27 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Replay = 28 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Retry = 29 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Seek = 30 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Shortcut = 31 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.SkipBack = 32 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.SkipForward = 33 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Speed = 34 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.SpeedAnnounce = 35 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.SpeedNormal = 36 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.TimeOf = 37 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Unmute = 38 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Video = 39 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.VideoPlayer = 40 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.Volume = 41 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResourceKind.VolumeValue = 42 -> TKCode.Arc.Localization.VideoLangResourceKind
+TKCode.Arc.Localization.VideoLangResources
+TKCode.Arc.SimulatedVideoBackend
+TKCode.Arc.SimulatedVideoBackend.CanPlay(string! mediaType) -> TKCode.Arc.VideoSupport
+TKCode.Arc.SimulatedVideoBackend.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+TKCode.Arc.SimulatedVideoBackend.FrameKinds.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.SimulatedVideoBackend.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.SimulatedVideoBackend.IsReal.get -> bool
+TKCode.Arc.SimulatedVideoBackend.Name.get -> string!
+TKCode.Arc.SimulatedVideoBackend.SimulatedVideoBackend(System.TimeProvider! timeProvider) -> void
+TKCode.Arc.SimulatedVideoBackend.TimeProvider.get -> System.TimeProvider!
+TKCode.Arc.SimulatedVideoPlayer
+TKCode.Arc.SimulatedVideoPlayer.FramesDelivered.get -> int
+TKCode.Arc.SimulatedVideoPlayer.SetBuffering(bool buffering) -> void
+TKCode.Arc.SimulatedVideoPlayer.SimulateFailure(TKCode.Arc.VideoErrorKind kind, string! message = "Simulated failure.") -> void
+TKCode.Arc.SimulatedVideoPlayer.SimulatedVideoPlayer(TKCode.Arc.SimulatedVideoBackend! backend) -> void
+TKCode.Arc.SimulatedVideoPlayer.Tick() -> void
+TKCode.Arc.SimulatedVideoSource
+TKCode.Arc.SimulatedVideoSource.Duration.get -> System.TimeSpan
+TKCode.Arc.SimulatedVideoSource.Size.get -> Avalonia.PixelSize
+TKCode.Arc.StreamVideoSource
+TKCode.Arc.StreamVideoSource.MediaType.get -> string!
+TKCode.Arc.StreamVideoSource.Open.get -> System.Func<System.IO.Stream!>!
+TKCode.Arc.UriVideoSource
+TKCode.Arc.UriVideoSource.Uri.get -> System.Uri!
+TKCode.Arc.VideoBrowserPresentation
+TKCode.Arc.VideoBrowserPresentation.Canvas = 0 -> TKCode.Arc.VideoBrowserPresentation
+TKCode.Arc.VideoBrowserPresentation.Native = 1 -> TKCode.Arc.VideoBrowserPresentation
+TKCode.Arc.VideoControlsVisibility
+TKCode.Arc.VideoControlsVisibility.Always = 1 -> TKCode.Arc.VideoControlsVisibility
+TKCode.Arc.VideoControlsVisibility.Auto = 0 -> TKCode.Arc.VideoControlsVisibility
+TKCode.Arc.VideoControlsVisibility.Never = 2 -> TKCode.Arc.VideoControlsVisibility
+TKCode.Arc.VideoCpuPixelFormat
+TKCode.Arc.VideoCpuPixelFormat.Bgra8888 = 0 -> TKCode.Arc.VideoCpuPixelFormat
+TKCode.Arc.VideoCpuPixelFormat.Rgba8888 = 1 -> TKCode.Arc.VideoCpuPixelFormat
+TKCode.Arc.VideoCue
+TKCode.Arc.VideoCue.<Clone>$() -> TKCode.Arc.VideoCue!
+TKCode.Arc.VideoCue.Align.get -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCue.Align.init -> void
+TKCode.Arc.VideoCue.End.get -> System.TimeSpan
+TKCode.Arc.VideoCue.End.init -> void
+TKCode.Arc.VideoCue.Equals(TKCode.Arc.VideoCue? other) -> bool
+TKCode.Arc.VideoCue.Id.get -> string?
+TKCode.Arc.VideoCue.Id.init -> void
+TKCode.Arc.VideoCue.IsActiveAt(System.TimeSpan time) -> bool
+TKCode.Arc.VideoCue.Line.get -> double?
+TKCode.Arc.VideoCue.Line.init -> void
+TKCode.Arc.VideoCue.LineIsPercent.get -> bool
+TKCode.Arc.VideoCue.LineIsPercent.init -> void
+TKCode.Arc.VideoCue.Position.get -> double?
+TKCode.Arc.VideoCue.Position.init -> void
+TKCode.Arc.VideoCue.Runs.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoCueRun!>!
+TKCode.Arc.VideoCue.Runs.init -> void
+TKCode.Arc.VideoCue.Size.get -> double
+TKCode.Arc.VideoCue.Size.init -> void
+TKCode.Arc.VideoCue.Start.get -> System.TimeSpan
+TKCode.Arc.VideoCue.Start.init -> void
+TKCode.Arc.VideoCue.Text.get -> string!
+TKCode.Arc.VideoCue.Text.init -> void
+TKCode.Arc.VideoCue.VideoCue() -> void
+TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueAlign.Center = 1 -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueAlign.End = 2 -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueAlign.Left = 3 -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueAlign.Right = 4 -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueAlign.Start = 0 -> TKCode.Arc.VideoCueAlign
+TKCode.Arc.VideoCueChangedEventArgs
+TKCode.Arc.VideoCueChangedEventArgs.Cues.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoCue!>!
+TKCode.Arc.VideoCueChangedEventArgs.VideoCueChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoCue!>! cues) -> void
+TKCode.Arc.VideoCueRun
+TKCode.Arc.VideoCueRun.<Clone>$() -> TKCode.Arc.VideoCueRun!
+TKCode.Arc.VideoCueRun.Deconstruct(out string! Text, out bool IsBold, out bool IsItalic, out bool IsUnderline, out string? Voice) -> void
+TKCode.Arc.VideoCueRun.Equals(TKCode.Arc.VideoCueRun? other) -> bool
+TKCode.Arc.VideoCueRun.IsBold.get -> bool
+TKCode.Arc.VideoCueRun.IsBold.init -> void
+TKCode.Arc.VideoCueRun.IsItalic.get -> bool
+TKCode.Arc.VideoCueRun.IsItalic.init -> void
+TKCode.Arc.VideoCueRun.IsUnderline.get -> bool
+TKCode.Arc.VideoCueRun.IsUnderline.init -> void
+TKCode.Arc.VideoCueRun.Text.get -> string!
+TKCode.Arc.VideoCueRun.Text.init -> void
+TKCode.Arc.VideoCueRun.VideoCueRun(string! Text, bool IsBold = false, bool IsItalic = false, bool IsUnderline = false, string? Voice = null) -> void
+TKCode.Arc.VideoCueRun.Voice.get -> string?
+TKCode.Arc.VideoCueRun.Voice.init -> void
+TKCode.Arc.VideoEmbeddedCueEventArgs
+TKCode.Arc.VideoEmbeddedCueEventArgs.End.get -> System.TimeSpan?
+TKCode.Arc.VideoEmbeddedCueEventArgs.Start.get -> System.TimeSpan
+TKCode.Arc.VideoEmbeddedCueEventArgs.Text.get -> string!
+TKCode.Arc.VideoEmbeddedCueEventArgs.Track.get -> int
+TKCode.Arc.VideoEmbeddedCueEventArgs.VideoEmbeddedCueEventArgs(int track, System.TimeSpan start, System.TimeSpan? end, string! text) -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo
+TKCode.Arc.VideoEmbeddedTextTrackInfo.<Clone>$() -> TKCode.Arc.VideoEmbeddedTextTrackInfo!
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Deconstruct(out int Index, out TKCode.Arc.VideoTextTrackKind Kind, out string? Language, out string? Label) -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Equals(TKCode.Arc.VideoEmbeddedTextTrackInfo? other) -> bool
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Index.get -> int
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Index.init -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Kind.get -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Kind.init -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Label.get -> string?
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Label.init -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Language.get -> string?
+TKCode.Arc.VideoEmbeddedTextTrackInfo.Language.init -> void
+TKCode.Arc.VideoEmbeddedTextTrackInfo.VideoEmbeddedTextTrackInfo(int Index, TKCode.Arc.VideoTextTrackKind Kind, string? Language, string? Label) -> void
+TKCode.Arc.VideoErrorEventArgs
+TKCode.Arc.VideoErrorEventArgs.Exception.get -> System.Exception?
+TKCode.Arc.VideoErrorEventArgs.Kind.get -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorEventArgs.Message.get -> string!
+TKCode.Arc.VideoErrorEventArgs.VideoErrorEventArgs(TKCode.Arc.VideoErrorKind kind, string! message, System.Exception? exception = null) -> void
+TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorKind.Aborted = 0 -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorKind.BackendUnavailable = 4 -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorKind.Decode = 2 -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorKind.Network = 1 -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoErrorKind.Unsupported = 3 -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoFailedEventArgs
+TKCode.Arc.VideoFailedEventArgs.Kind.get -> TKCode.Arc.VideoErrorKind
+TKCode.Arc.VideoFailedEventArgs.Message.get -> string!
+TKCode.Arc.VideoFailedEventArgs.VideoFailedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.VideoErrorKind kind, string! message) -> void
+TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameKinds.CpuBgra = 1 -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameKinds.Gpu = 2 -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameKinds.None = 0 -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameLease
+TKCode.Arc.VideoFrameLease.CpuPixelFormat.get -> TKCode.Arc.VideoCpuPixelFormat
+TKCode.Arc.VideoFrameLease.Dispose() -> void
+TKCode.Arc.VideoFrameLease.GpuFormat.get -> Avalonia.Platform.PlatformGraphicsExternalImageFormat
+TKCode.Arc.VideoFrameLease.GpuImage.get -> Avalonia.Platform.IPlatformHandle?
+TKCode.Arc.VideoFrameLease.GpuImageId.get -> long
+TKCode.Arc.VideoFrameLease.KeyedMutexAcquireKey.get -> uint?
+TKCode.Arc.VideoFrameLease.KeyedMutexReleaseKey.get -> uint
+TKCode.Arc.VideoFrameLease.Kind.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameLease.Pixels.get -> System.ReadOnlySpan<byte>
+TKCode.Arc.VideoFrameLease.PresentationTime.get -> System.TimeSpan
+TKCode.Arc.VideoFrameLease.RotationDegrees.get -> int
+TKCode.Arc.VideoFrameLease.RowBytes.get -> int
+TKCode.Arc.VideoFrameLease.Size.get -> Avalonia.PixelSize
+TKCode.Arc.VideoFrameLease.VideoFrameLease() -> void
+TKCode.Arc.VideoFrameLease.VideoFrameLease(TKCode.Arc.IVideoFrameOwner? owner, long token, Avalonia.PixelSize size, System.TimeSpan presentationTime, Avalonia.Platform.IPlatformHandle! image, long imageId, Avalonia.Platform.PlatformGraphicsExternalImageFormat format, uint? acquireKey = null, uint releaseKey = 0, int rotationDegrees = 0) -> void
+TKCode.Arc.VideoFrameLease.VideoFrameLease(TKCode.Arc.IVideoFrameOwner? owner, long token, Avalonia.PixelSize size, System.TimeSpan presentationTime, System.ReadOnlySpan<byte> pixels, int rowBytes, int rotationDegrees = 0, TKCode.Arc.VideoCpuPixelFormat pixelFormat = TKCode.Arc.VideoCpuPixelFormat.Bgra8888) -> void
+TKCode.Arc.VideoFrameRequest
+TKCode.Arc.VideoFrameRequest.Accepted.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.VideoFrameRequest.HostTime.get -> System.TimeSpan
+TKCode.Arc.VideoFrameRequest.TargetSize.get -> Avalonia.PixelSize
+TKCode.Arc.VideoFrameRequest.VideoFrameRequest() -> void
+TKCode.Arc.VideoFrameRequest.VideoFrameRequest(System.TimeSpan hostTime, Avalonia.PixelSize targetSize, TKCode.Arc.VideoFrameKinds accepted) -> void
+TKCode.Arc.VideoFrameTarget
+TKCode.Arc.VideoFrameTarget.<Clone>$() -> TKCode.Arc.VideoFrameTarget!
+TKCode.Arc.VideoFrameTarget.AcceptsGpu.get -> bool
+TKCode.Arc.VideoFrameTarget.AdapterLuid.get -> byte[]?
+TKCode.Arc.VideoFrameTarget.AdapterLuid.init -> void
+TKCode.Arc.VideoFrameTarget.AdapterUuid.get -> byte[]?
+TKCode.Arc.VideoFrameTarget.AdapterUuid.init -> void
+TKCode.Arc.VideoFrameTarget.Equals(TKCode.Arc.VideoFrameTarget? other) -> bool
+TKCode.Arc.VideoFrameTarget.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.VideoFrameTarget.GpuHandleTypes.init -> void
+TKCode.Arc.VideoFrameTarget.VideoFrameTarget() -> void
+TKCode.Arc.VideoFullScreenMode
+TKCode.Arc.VideoFullScreenMode.System = 1 -> TKCode.Arc.VideoFullScreenMode
+TKCode.Arc.VideoFullScreenMode.Window = 0 -> TKCode.Arc.VideoFullScreenMode
+TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Buffering = 4 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Ended = 5 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Failed = 6 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Idle = 0 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Loading = 1 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Paused = 2 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlaybackState.Playing = 3 -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlayer
+TKCode.Arc.VideoPlayer.AspectRatio.get -> double?
+TKCode.Arc.VideoPlayer.AspectRatio.set -> void
+TKCode.Arc.VideoPlayer.AutoPlay.get -> bool
+TKCode.Arc.VideoPlayer.AutoPlay.set -> void
+TKCode.Arc.VideoPlayer.BrowserPresentation.get -> TKCode.Arc.VideoBrowserPresentation
+TKCode.Arc.VideoPlayer.BrowserPresentation.set -> void
+TKCode.Arc.VideoPlayer.CaptionAnnouncements.get -> bool
+TKCode.Arc.VideoPlayer.CaptionAnnouncements.set -> void
+TKCode.Arc.VideoPlayer.CaptionBackgroundOpacity.get -> double
+TKCode.Arc.VideoPlayer.CaptionBackgroundOpacity.set -> void
+TKCode.Arc.VideoPlayer.CaptionScale.get -> double
+TKCode.Arc.VideoPlayer.CaptionScale.set -> void
+TKCode.Arc.VideoPlayer.CompactWidth.get -> double
+TKCode.Arc.VideoPlayer.CompactWidth.set -> void
+TKCode.Arc.VideoPlayer.ControlsHideDelay.get -> System.TimeSpan
+TKCode.Arc.VideoPlayer.ControlsHideDelay.set -> void
+TKCode.Arc.VideoPlayer.CueChanged -> System.EventHandler<TKCode.Arc.VideoCueChangedEventArgs!>?
+TKCode.Arc.VideoPlayer.Duration.get -> System.TimeSpan
+TKCode.Arc.VideoPlayer.Ended -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.VideoPlayer.EnterFullScreen() -> void
+TKCode.Arc.VideoPlayer.ErrorMessage.get -> string?
+TKCode.Arc.VideoPlayer.ExitFullScreen() -> void
+TKCode.Arc.VideoPlayer.Failed -> System.EventHandler<TKCode.Arc.VideoFailedEventArgs!>?
+TKCode.Arc.VideoPlayer.FullScreenChanged -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.VideoPlayer.FullScreenMode.get -> TKCode.Arc.VideoFullScreenMode
+TKCode.Arc.VideoPlayer.FullScreenMode.set -> void
+TKCode.Arc.VideoPlayer.IsFullScreen.get -> bool
+TKCode.Arc.VideoPlayer.IsFullScreen.set -> void
+TKCode.Arc.VideoPlayer.IsLooping.get -> bool
+TKCode.Arc.VideoPlayer.IsLooping.set -> void
+TKCode.Arc.VideoPlayer.IsMuted.get -> bool
+TKCode.Arc.VideoPlayer.IsMuted.set -> void
+TKCode.Arc.VideoPlayer.IsPlaying.get -> bool
+TKCode.Arc.VideoPlayer.IsPlaying.set -> void
+TKCode.Arc.VideoPlayer.Pause() -> void
+TKCode.Arc.VideoPlayer.Play() -> void
+TKCode.Arc.VideoPlayer.PlayPauseCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.PlaybackRate.get -> double
+TKCode.Arc.VideoPlayer.PlaybackRate.set -> void
+TKCode.Arc.VideoPlayer.PlaybackRates.get -> System.Collections.Generic.IReadOnlyList<double>!
+TKCode.Arc.VideoPlayer.PlaybackRates.set -> void
+TKCode.Arc.VideoPlayer.Player.get -> TKCode.Arc.IVideoPlayer?
+TKCode.Arc.VideoPlayer.Position.get -> System.TimeSpan
+TKCode.Arc.VideoPlayer.Position.set -> void
+TKCode.Arc.VideoPlayer.Poster.get -> Avalonia.Media.IImage?
+TKCode.Arc.VideoPlayer.Poster.set -> void
+TKCode.Arc.VideoPlayer.Seek(System.TimeSpan position) -> void
+TKCode.Arc.VideoPlayer.SeekBy(System.TimeSpan delta) -> void
+TKCode.Arc.VideoPlayer.SeekStep.get -> System.TimeSpan
+TKCode.Arc.VideoPlayer.SeekStep.set -> void
+TKCode.Arc.VideoPlayer.SelectedTextTrack.get -> TKCode.Arc.VideoTextTrack?
+TKCode.Arc.VideoPlayer.SelectedTextTrack.set -> void
+TKCode.Arc.VideoPlayer.ShowControls.get -> TKCode.Arc.VideoControlsVisibility
+TKCode.Arc.VideoPlayer.ShowControls.set -> void
+TKCode.Arc.VideoPlayer.ShowControlsNow() -> void
+TKCode.Arc.VideoPlayer.SkipBackwardCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.SkipForwardCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.Source.get -> TKCode.Arc.VideoSource?
+TKCode.Arc.VideoPlayer.Source.set -> void
+TKCode.Arc.VideoPlayer.State.get -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlayer.StateChanged -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.VideoPlayer.Stop() -> void
+TKCode.Arc.VideoPlayer.StopCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.Stretch.get -> Avalonia.Media.Stretch
+TKCode.Arc.VideoPlayer.Stretch.set -> void
+TKCode.Arc.VideoPlayer.TextTracks.get -> System.Collections.Generic.IList<TKCode.Arc.VideoTextTrack!>!
+TKCode.Arc.VideoPlayer.Title.get -> string?
+TKCode.Arc.VideoPlayer.Title.set -> void
+TKCode.Arc.VideoPlayer.ToggleFullScreenCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.ToggleMuteCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.VideoPlayer.TogglePlay() -> void
+TKCode.Arc.VideoPlayer.VideoPlayer() -> void
+TKCode.Arc.VideoPlayer.Volume.get -> double
+TKCode.Arc.VideoPlayer.Volume.set -> void
+TKCode.Arc.VideoPlayerBase
+TKCode.Arc.VideoPlayerBase.Backend.get -> TKCode.Arc.IVideoBackend!
+TKCode.Arc.VideoPlayerBase.Buffered.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoTimeRange>!
+TKCode.Arc.VideoPlayerBase.BufferedChanged -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.Dispose() -> void
+TKCode.Arc.VideoPlayerBase.Duration.get -> System.TimeSpan
+TKCode.Arc.VideoPlayerBase.DurationChanged -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.EffectiveGain.get -> double
+TKCode.Arc.VideoPlayerBase.Fail(TKCode.Arc.VideoErrorKind kind, string! message, System.Exception? exception = null) -> void
+TKCode.Arc.VideoPlayerBase.Failed -> System.EventHandler<TKCode.Arc.VideoErrorEventArgs!>?
+TKCode.Arc.VideoPlayerBase.FrameAvailable -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.FrameTarget.get -> TKCode.Arc.VideoFrameTarget?
+TKCode.Arc.VideoPlayerBase.FrameTarget.set -> void
+TKCode.Arc.VideoPlayerBase.IsDisposed.get -> bool
+TKCode.Arc.VideoPlayerBase.IsLooping.get -> bool
+TKCode.Arc.VideoPlayerBase.IsLooping.set -> void
+TKCode.Arc.VideoPlayerBase.IsMuted.get -> bool
+TKCode.Arc.VideoPlayerBase.IsMuted.set -> void
+TKCode.Arc.VideoPlayerBase.IsSeekable.get -> bool
+TKCode.Arc.VideoPlayerBase.NaturalSize.get -> Avalonia.PixelSize
+TKCode.Arc.VideoPlayerBase.NaturalSizeChanged -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.PlaybackRate.get -> double
+TKCode.Arc.VideoPlayerBase.PlaybackRate.set -> void
+TKCode.Arc.VideoPlayerBase.PositionChanged -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.Post(System.Action! action) -> void
+TKCode.Arc.VideoPlayerBase.RaiseFrameAvailable() -> void
+TKCode.Arc.VideoPlayerBase.RaisePositionChanged() -> void
+TKCode.Arc.VideoPlayerBase.SetBuffered(System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoTimeRange>! ranges) -> void
+TKCode.Arc.VideoPlayerBase.SetDuration(System.TimeSpan duration) -> void
+TKCode.Arc.VideoPlayerBase.SetNaturalSize(Avalonia.PixelSize size) -> void
+TKCode.Arc.VideoPlayerBase.SetSeekable(bool isSeekable) -> void
+TKCode.Arc.VideoPlayerBase.SetState(TKCode.Arc.VideoPlaybackState state) -> void
+TKCode.Arc.VideoPlayerBase.State.get -> TKCode.Arc.VideoPlaybackState
+TKCode.Arc.VideoPlayerBase.StateChanged -> System.EventHandler?
+TKCode.Arc.VideoPlayerBase.VideoPlayerBase(TKCode.Arc.IVideoBackend! backend) -> void
+TKCode.Arc.VideoPlayerBase.Volume.get -> double
+TKCode.Arc.VideoPlayerBase.Volume.set -> void
+TKCode.Arc.VideoPlayerOptions
+TKCode.Arc.VideoPlayerOptions.PreferGpuFrames.get -> bool
+TKCode.Arc.VideoPlayerOptions.PreferGpuFrames.init -> void
+TKCode.Arc.VideoPlayerOptions.VideoPlayerOptions() -> void
+TKCode.Arc.VideoPlayerToken
+TKCode.Arc.VideoPlayerToken.BigPlayGlyphSize.get -> double
+TKCode.Arc.VideoPlayerToken.BigPlayGlyphSize.set -> void
+TKCode.Arc.VideoPlayerToken.BigPlaySize.get -> double
+TKCode.Arc.VideoPlayerToken.BigPlaySize.set -> void
+TKCode.Arc.VideoPlayerToken.ButtonSize.get -> double
+TKCode.Arc.VideoPlayerToken.ButtonSize.set -> void
+TKCode.Arc.VideoPlayerToken.CaptionHeightRatio.get -> double
+TKCode.Arc.VideoPlayerToken.CaptionHeightRatio.set -> void
+TKCode.Arc.VideoPlayerToken.ChapterGap.get -> double
+TKCode.Arc.VideoPlayerToken.ChapterGap.set -> void
+TKCode.Arc.VideoPlayerToken.CompactControlBarGap.get -> double
+TKCode.Arc.VideoPlayerToken.CompactControlBarGap.set -> void
+TKCode.Arc.VideoPlayerToken.CompactControlBarPadding.get -> Avalonia.Thickness
+TKCode.Arc.VideoPlayerToken.CompactControlBarPadding.set -> void
+TKCode.Arc.VideoPlayerToken.CompactScrimMargin.get -> Avalonia.Thickness
+TKCode.Arc.VideoPlayerToken.CompactScrimMargin.set -> void
+TKCode.Arc.VideoPlayerToken.CompactWidth.get -> double
+TKCode.Arc.VideoPlayerToken.CompactWidth.set -> void
+TKCode.Arc.VideoPlayerToken.ControlBarGap.get -> double
+TKCode.Arc.VideoPlayerToken.ControlBarGap.set -> void
+TKCode.Arc.VideoPlayerToken.ControlBarPadding.get -> Avalonia.Thickness
+TKCode.Arc.VideoPlayerToken.ControlBarPadding.set -> void
+TKCode.Arc.VideoPlayerToken.FeedbackPlateColor.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.FeedbackPlateColor.set -> void
+TKCode.Arc.VideoPlayerToken.GlyphSize.get -> double
+TKCode.Arc.VideoPlayerToken.GlyphSize.set -> void
+TKCode.Arc.VideoPlayerToken.OnVideoForeground.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.OnVideoForeground.set -> void
+TKCode.Arc.VideoPlayerToken.OnVideoHover.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.OnVideoHover.set -> void
+TKCode.Arc.VideoPlayerToken.ScrimColor.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.ScrimColor.set -> void
+TKCode.Arc.VideoPlayerToken.ScrimHeightExtra.get -> double
+TKCode.Arc.VideoPlayerToken.ScrimHeightExtra.set -> void
+TKCode.Arc.VideoPlayerToken.ScrimMargin.get -> Avalonia.Thickness
+TKCode.Arc.VideoPlayerToken.ScrimMargin.set -> void
+TKCode.Arc.VideoPlayerToken.SeekBarHeight.get -> double
+TKCode.Arc.VideoPlayerToken.SeekBarHeight.set -> void
+TKCode.Arc.VideoPlayerToken.SeekBufferedColor.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.SeekBufferedColor.set -> void
+TKCode.Arc.VideoPlayerToken.SeekThumbSize.get -> double
+TKCode.Arc.VideoPlayerToken.SeekThumbSize.set -> void
+TKCode.Arc.VideoPlayerToken.SeekTrackColor.get -> Avalonia.Media.Color
+TKCode.Arc.VideoPlayerToken.SeekTrackColor.set -> void
+TKCode.Arc.VideoPlayerToken.SeekTrackHeight.get -> double
+TKCode.Arc.VideoPlayerToken.SeekTrackHeight.set -> void
+TKCode.Arc.VideoPlayerToken.SeekTrackHeightActive.get -> double
+TKCode.Arc.VideoPlayerToken.SeekTrackHeightActive.set -> void
+TKCode.Arc.VideoPlayerToken.VideoPlayerToken() -> void
+TKCode.Arc.VideoPlayerToken.VolumeOpenWidth.get -> double
+TKCode.Arc.VideoPlayerToken.VolumeOpenWidth.set -> void
+TKCode.Arc.VideoPlayerToken.VolumeSliderWidth.get -> double
+TKCode.Arc.VideoPlayerToken.VolumeSliderWidth.set -> void
+TKCode.Arc.VideoRenderPath
+TKCode.Arc.VideoRenderPath.Bitmap = 2 -> TKCode.Arc.VideoRenderPath
+TKCode.Arc.VideoRenderPath.GpuInterop = 1 -> TKCode.Arc.VideoRenderPath
+TKCode.Arc.VideoRenderPath.None = 0 -> TKCode.Arc.VideoRenderPath
+TKCode.Arc.VideoSeekMode
+TKCode.Arc.VideoSeekMode.Accurate = 0 -> TKCode.Arc.VideoSeekMode
+TKCode.Arc.VideoSeekMode.Fast = 1 -> TKCode.Arc.VideoSeekMode
+TKCode.Arc.VideoSource
+TKCode.Arc.VideoSourceFiles
+TKCode.Arc.VideoSupport
+TKCode.Arc.VideoSupport.Maybe = 1 -> TKCode.Arc.VideoSupport
+TKCode.Arc.VideoSupport.No = 0 -> TKCode.Arc.VideoSupport
+TKCode.Arc.VideoSupport.Probably = 2 -> TKCode.Arc.VideoSupport
+TKCode.Arc.VideoSurface
+TKCode.Arc.VideoSurface.CornerRadius.get -> Avalonia.CornerRadius
+TKCode.Arc.VideoSurface.CornerRadius.set -> void
+TKCode.Arc.VideoSurface.LetterboxBrush.get -> Avalonia.Media.IBrush?
+TKCode.Arc.VideoSurface.LetterboxBrush.set -> void
+TKCode.Arc.VideoSurface.Player.get -> TKCode.Arc.IVideoPlayer?
+TKCode.Arc.VideoSurface.Player.set -> void
+TKCode.Arc.VideoSurface.PreferBitmapPath.get -> bool
+TKCode.Arc.VideoSurface.PreferBitmapPath.set -> void
+TKCode.Arc.VideoSurface.RenderPath.get -> TKCode.Arc.VideoRenderPath
+TKCode.Arc.VideoSurface.RenderPath.set -> void
+TKCode.Arc.VideoSurface.Stretch.get -> Avalonia.Media.Stretch
+TKCode.Arc.VideoSurface.Stretch.set -> void
+TKCode.Arc.VideoSurface.VideoSurface() -> void
+TKCode.Arc.VideoSurfaceToken
+TKCode.Arc.VideoSurfaceToken.LetterboxColor.get -> Avalonia.Media.Color
+TKCode.Arc.VideoSurfaceToken.LetterboxColor.set -> void
+TKCode.Arc.VideoSurfaceToken.VideoSurfaceToken() -> void
+TKCode.Arc.VideoTextTrack
+TKCode.Arc.VideoTextTrack.Cues.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.VideoCue!>!
+TKCode.Arc.VideoTextTrack.CuesChanged -> System.EventHandler?
+TKCode.Arc.VideoTextTrack.IsDefault.get -> bool
+TKCode.Arc.VideoTextTrack.IsDefault.set -> void
+TKCode.Arc.VideoTextTrack.IsEmbedded.get -> bool
+TKCode.Arc.VideoTextTrack.Kind.get -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTextTrack.Kind.set -> void
+TKCode.Arc.VideoTextTrack.Label.get -> string?
+TKCode.Arc.VideoTextTrack.Label.set -> void
+TKCode.Arc.VideoTextTrack.Language.get -> string?
+TKCode.Arc.VideoTextTrack.Language.set -> void
+TKCode.Arc.VideoTextTrack.LoadAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+TKCode.Arc.VideoTextTrack.SetCues(System.Collections.Generic.IEnumerable<TKCode.Arc.VideoCue!>! cues) -> void
+TKCode.Arc.VideoTextTrack.Source.get -> System.Uri?
+TKCode.Arc.VideoTextTrack.Source.set -> void
+TKCode.Arc.VideoTextTrack.Text.get -> string?
+TKCode.Arc.VideoTextTrack.Text.set -> void
+TKCode.Arc.VideoTextTrack.VideoTextTrack() -> void
+TKCode.Arc.VideoTextTrack.Warnings.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTextTrackKind.Captions = 0 -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTextTrackKind.Chapters = 2 -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTextTrackKind.Descriptions = 3 -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTextTrackKind.Subtitles = 1 -> TKCode.Arc.VideoTextTrackKind
+TKCode.Arc.VideoTimeRange
+TKCode.Arc.VideoTimeRange.Deconstruct(out System.TimeSpan Start, out System.TimeSpan End) -> void
+TKCode.Arc.VideoTimeRange.End.get -> System.TimeSpan
+TKCode.Arc.VideoTimeRange.End.init -> void
+TKCode.Arc.VideoTimeRange.Equals(TKCode.Arc.VideoTimeRange other) -> bool
+TKCode.Arc.VideoTimeRange.Start.get -> System.TimeSpan
+TKCode.Arc.VideoTimeRange.Start.init -> void
+TKCode.Arc.VideoTimeRange.VideoTimeRange() -> void
+TKCode.Arc.VideoTimeRange.VideoTimeRange(System.TimeSpan Start, System.TimeSpan End) -> void
+abstract TKCode.Arc.VideoPlayerBase.LoadAsync(TKCode.Arc.VideoSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+abstract TKCode.Arc.VideoPlayerBase.Pause() -> void
+abstract TKCode.Arc.VideoPlayerBase.Play() -> void
+abstract TKCode.Arc.VideoPlayerBase.Position.get -> System.TimeSpan
+abstract TKCode.Arc.VideoPlayerBase.Seek(System.TimeSpan position, TKCode.Arc.VideoSeekMode mode = TKCode.Arc.VideoSeekMode.Accurate) -> void
+abstract TKCode.Arc.VideoPlayerBase.TryAcquireFrame(in TKCode.Arc.VideoFrameRequest request, out TKCode.Arc.VideoFrameLease lease) -> bool
+const TKCode.Arc.DesignTokens.VideoPlayerTokens.Identity = "VideoPlayer" -> string!
+const TKCode.Arc.DesignTokens.VideoSurfaceTokens.Identity = "VideoSurface" -> string!
+const TKCode.Arc.SimulatedVideoBackend.FramesPerSecond = 30 -> int
+const TKCode.Arc.VideoPlayer.AnnouncerPart = "PART_Announcer" -> string!
+const TKCode.Arc.VideoPlayer.BufferingPseudoClass = ":buffering" -> string!
+const TKCode.Arc.VideoPlayer.CaptionsButtonPart = "PART_CaptionsButton" -> string!
+const TKCode.Arc.VideoPlayer.CaptionsPart = "PART_Captions" -> string!
+const TKCode.Arc.VideoPlayer.CompactPseudoClass = ":compact" -> string!
+const TKCode.Arc.VideoPlayer.ControlsPart = "PART_Controls" -> string!
+const TKCode.Arc.VideoPlayer.ControlsVisiblePseudoClass = ":controls-visible" -> string!
+const TKCode.Arc.VideoPlayer.EndedPseudoClass = ":ended" -> string!
+const TKCode.Arc.VideoPlayer.FailedPseudoClass = ":failed" -> string!
+const TKCode.Arc.VideoPlayer.FocusRingPart = "PART_RootFocusRing" -> string!
+const TKCode.Arc.VideoPlayer.FramePart = "PART_Frame" -> string!
+const TKCode.Arc.VideoPlayer.FullScreenButtonPart = "PART_FullScreenButton" -> string!
+const TKCode.Arc.VideoPlayer.FullScreenPseudoClass = ":fullscreen" -> string!
+const TKCode.Arc.VideoPlayer.IdlePseudoClass = ":idle" -> string!
+const TKCode.Arc.VideoPlayer.LoadingPseudoClass = ":loading" -> string!
+const TKCode.Arc.VideoPlayer.NativePresentationPseudoClass = ":native-presentation" -> string!
+const TKCode.Arc.VideoPlayer.PausedPseudoClass = ":paused" -> string!
+const TKCode.Arc.VideoPlayer.PlayPart = "PART_Play" -> string!
+const TKCode.Arc.VideoPlayer.PlayingPseudoClass = ":playing" -> string!
+const TKCode.Arc.VideoPlayer.RootPart = "PART_Root" -> string!
+const TKCode.Arc.VideoPlayer.ScrimPart = "PART_Scrim" -> string!
+const TKCode.Arc.VideoPlayer.SeekPart = "PART_Seek" -> string!
+const TKCode.Arc.VideoPlayer.SeekTipPart = "PART_SeekTip" -> string!
+const TKCode.Arc.VideoPlayer.SpeedButtonPart = "PART_SpeedButton" -> string!
+const TKCode.Arc.VideoPlayer.StatePart = "PART_State" -> string!
+const TKCode.Arc.VideoPlayer.SurfacePart = "PART_Surface" -> string!
+const TKCode.Arc.VideoPlayer.TimePart = "PART_Time" -> string!
+const TKCode.Arc.VideoPlayer.TitlePart = "PART_Title" -> string!
+const TKCode.Arc.VideoPlayer.VolumePart = "PART_Volume" -> string!
+const TKCode.Arc.VideoPlayerBase.MaxPlaybackRate = 4 -> double
+const TKCode.Arc.VideoPlayerBase.MinPlaybackRate = 0.25 -> double
+override TKCode.Arc.SimulatedVideoPlayer.LoadAsync(TKCode.Arc.VideoSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+override TKCode.Arc.SimulatedVideoPlayer.Pause() -> void
+override TKCode.Arc.SimulatedVideoPlayer.Play() -> void
+override TKCode.Arc.SimulatedVideoPlayer.Position.get -> System.TimeSpan
+override TKCode.Arc.SimulatedVideoPlayer.Seek(System.TimeSpan position, TKCode.Arc.VideoSeekMode mode = TKCode.Arc.VideoSeekMode.Accurate) -> void
+override TKCode.Arc.SimulatedVideoPlayer.TryAcquireFrame(in TKCode.Arc.VideoFrameRequest request, out TKCode.Arc.VideoFrameLease lease) -> bool
+override TKCode.Arc.UriVideoSource.ToString() -> string!
+override TKCode.Arc.VideoCue.Equals(object? obj) -> bool
+override TKCode.Arc.VideoCue.GetHashCode() -> int
+override TKCode.Arc.VideoCue.ToString() -> string!
+override TKCode.Arc.VideoCueRun.Equals(object? obj) -> bool
+override TKCode.Arc.VideoCueRun.GetHashCode() -> int
+override TKCode.Arc.VideoCueRun.ToString() -> string!
+override TKCode.Arc.VideoEmbeddedTextTrackInfo.Equals(object? obj) -> bool
+override TKCode.Arc.VideoEmbeddedTextTrackInfo.GetHashCode() -> int
+override TKCode.Arc.VideoEmbeddedTextTrackInfo.ToString() -> string!
+override TKCode.Arc.VideoFrameTarget.Equals(object? obj) -> bool
+override TKCode.Arc.VideoFrameTarget.GetHashCode() -> int
+override TKCode.Arc.VideoFrameTarget.ToString() -> string!
+override TKCode.Arc.VideoPlayer.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.VideoPlayer.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.VideoPlayer.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.VideoPlayer.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.VideoPlayer.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.VideoPlayerToken.CalculateTokenValues(bool isDarkMode) -> void
+override TKCode.Arc.VideoSurface.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.VideoSurface.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.VideoSurface.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.VideoSurface.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.VideoSurface.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.VideoSurface.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.VideoSurfaceToken.CalculateTokenValues(bool isDarkMode) -> void
+override TKCode.Arc.VideoTimeRange.GetHashCode() -> int
+static TKCode.Arc.ArcVideo.Backend.get -> TKCode.Arc.IVideoBackend!
+static TKCode.Arc.ArcVideo.Backend.set -> void
+static TKCode.Arc.ArcVideo.BackendChanged -> System.EventHandler?
+static TKCode.Arc.ArcVideo.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+static TKCode.Arc.ArcVideoBuilderExtensions.UseArcVideo(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DesignTokens.VideoPlayerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.VideoPlayerTokens.Key(TKCode.Arc.DesignTokens.VideoPlayerTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.VideoSurfaceTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.VideoSurfaceTokens.Key(TKCode.Arc.DesignTokens.VideoSurfaceTokenKind kind) -> object!
+static TKCode.Arc.Localization.VideoLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.VideoLangResources.Format(TKCode.Arc.Localization.VideoLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.VideoLangResources.Get(TKCode.Arc.Localization.VideoLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.VideoLangResources.Index(TKCode.Arc.Localization.VideoLangResourceKind kind) -> int
+static TKCode.Arc.Localization.VideoLangResources.Key(TKCode.Arc.Localization.VideoLangResourceKind kind) -> object!
+static TKCode.Arc.SimulatedVideoBackend.FallbackDuration.get -> System.TimeSpan
+static TKCode.Arc.SimulatedVideoBackend.FallbackDuration.set -> void
+static TKCode.Arc.SimulatedVideoBackend.FallbackSize.get -> Avalonia.PixelSize
+static TKCode.Arc.SimulatedVideoBackend.FallbackSize.set -> void
+static TKCode.Arc.SimulatedVideoBackend.Instance.get -> TKCode.Arc.SimulatedVideoBackend!
+static TKCode.Arc.SimulatedVideoPlayer.ReadFrameNumber(System.ReadOnlySpan<byte> pixels, Avalonia.PixelSize size, int rowBytes) -> long
+static TKCode.Arc.VideoCue.operator !=(TKCode.Arc.VideoCue? left, TKCode.Arc.VideoCue? right) -> bool
+static TKCode.Arc.VideoCue.operator ==(TKCode.Arc.VideoCue? left, TKCode.Arc.VideoCue? right) -> bool
+static TKCode.Arc.VideoCueRun.operator !=(TKCode.Arc.VideoCueRun? left, TKCode.Arc.VideoCueRun? right) -> bool
+static TKCode.Arc.VideoCueRun.operator ==(TKCode.Arc.VideoCueRun? left, TKCode.Arc.VideoCueRun? right) -> bool
+static TKCode.Arc.VideoEmbeddedTextTrackInfo.operator !=(TKCode.Arc.VideoEmbeddedTextTrackInfo? left, TKCode.Arc.VideoEmbeddedTextTrackInfo? right) -> bool
+static TKCode.Arc.VideoEmbeddedTextTrackInfo.operator ==(TKCode.Arc.VideoEmbeddedTextTrackInfo? left, TKCode.Arc.VideoEmbeddedTextTrackInfo? right) -> bool
+static TKCode.Arc.VideoFrameTarget.operator !=(TKCode.Arc.VideoFrameTarget? left, TKCode.Arc.VideoFrameTarget? right) -> bool
+static TKCode.Arc.VideoFrameTarget.operator ==(TKCode.Arc.VideoFrameTarget? left, TKCode.Arc.VideoFrameTarget? right) -> bool
+static TKCode.Arc.VideoPlayerOptions.Default.get -> TKCode.Arc.VideoPlayerOptions!
+static TKCode.Arc.VideoSource.FromBytes(System.ReadOnlyMemory<byte> data, string! mediaType = "video/mp4") -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSource.FromFile(string! path) -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSource.FromSimulated(Avalonia.PixelSize size, System.TimeSpan duration) -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSource.FromStream(System.Func<System.IO.Stream!>! open, string! mediaType = "video/mp4") -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSource.FromUri(System.Uri! uri) -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSource.Parse(string! text) -> TKCode.Arc.VideoSource!
+static TKCode.Arc.VideoSourceFiles.ExtensionOf(string! mediaType) -> string!
+static TKCode.Arc.VideoSourceFiles.MaterializeAsync(TKCode.Arc.VideoSource! source, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task<System.Uri!>!
+static TKCode.Arc.VideoTimeRange.operator !=(TKCode.Arc.VideoTimeRange left, TKCode.Arc.VideoTimeRange right) -> bool
+static TKCode.Arc.VideoTimeRange.operator ==(TKCode.Arc.VideoTimeRange left, TKCode.Arc.VideoTimeRange right) -> bool
+static readonly TKCode.Arc.VideoPlayer.AspectRatioProperty -> Avalonia.StyledProperty<double?>!
+static readonly TKCode.Arc.VideoPlayer.AutoPlayProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.BrowserPresentationProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoBrowserPresentation>!
+static readonly TKCode.Arc.VideoPlayer.CaptionAnnouncementsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.CaptionBackgroundOpacityProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.VideoPlayer.CaptionScaleProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.VideoPlayer.CompactWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.VideoPlayer.ControlsHideDelayProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.VideoPlayer.CueChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.VideoCueChangedEventArgs!>!
+static readonly TKCode.Arc.VideoPlayer.DurationProperty -> Avalonia.DirectProperty<TKCode.Arc.VideoPlayer!, System.TimeSpan>!
+static readonly TKCode.Arc.VideoPlayer.EndedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.VideoPlayer.ErrorMessageProperty -> Avalonia.DirectProperty<TKCode.Arc.VideoPlayer!, string?>!
+static readonly TKCode.Arc.VideoPlayer.FailedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.VideoFailedEventArgs!>!
+static readonly TKCode.Arc.VideoPlayer.FullScreenChangedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.VideoPlayer.FullScreenModeProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoFullScreenMode>!
+static readonly TKCode.Arc.VideoPlayer.IsFullScreenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.IsLoopingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.IsMutedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.IsPlayingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoPlayer.PlaybackRateProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.VideoPlayer.PlaybackRatesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<double>!>!
+static readonly TKCode.Arc.VideoPlayer.PlayerProperty -> Avalonia.DirectProperty<TKCode.Arc.VideoPlayer!, TKCode.Arc.IVideoPlayer?>!
+static readonly TKCode.Arc.VideoPlayer.PositionProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.VideoPlayer.PosterProperty -> Avalonia.StyledProperty<Avalonia.Media.IImage?>!
+static readonly TKCode.Arc.VideoPlayer.SeekStepProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.VideoPlayer.SelectedTextTrackProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoTextTrack?>!
+static readonly TKCode.Arc.VideoPlayer.ShowControlsProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoControlsVisibility>!
+static readonly TKCode.Arc.VideoPlayer.SourceProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoSource?>!
+static readonly TKCode.Arc.VideoPlayer.StateChangedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.VideoPlayer.StateProperty -> Avalonia.DirectProperty<TKCode.Arc.VideoPlayer!, TKCode.Arc.VideoPlaybackState>!
+static readonly TKCode.Arc.VideoPlayer.StretchProperty -> Avalonia.StyledProperty<Avalonia.Media.Stretch>!
+static readonly TKCode.Arc.VideoPlayer.TitleProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.VideoPlayer.VolumeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.VideoSurface.CornerRadiusProperty -> Avalonia.StyledProperty<Avalonia.CornerRadius>!
+static readonly TKCode.Arc.VideoSurface.LetterboxBrushProperty -> Avalonia.StyledProperty<Avalonia.Media.IBrush?>!
+static readonly TKCode.Arc.VideoSurface.PlayerProperty -> Avalonia.StyledProperty<TKCode.Arc.IVideoPlayer?>!
+static readonly TKCode.Arc.VideoSurface.PreferBitmapPathProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoSurface.RenderPathProperty -> Avalonia.DirectProperty<TKCode.Arc.VideoSurface!, TKCode.Arc.VideoRenderPath>!
+static readonly TKCode.Arc.VideoSurface.StretchProperty -> Avalonia.StyledProperty<Avalonia.Media.Stretch>!
+static readonly TKCode.Arc.VideoTextTrack.IsDefaultProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.VideoTextTrack.KindProperty -> Avalonia.StyledProperty<TKCode.Arc.VideoTextTrackKind>!
+static readonly TKCode.Arc.VideoTextTrack.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.VideoTextTrack.LanguageProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.VideoTextTrack.SourceProperty -> Avalonia.StyledProperty<System.Uri?>!
+static readonly TKCode.Arc.VideoTextTrack.TextProperty -> Avalonia.StyledProperty<string?>!
+virtual TKCode.Arc.VideoPlayerBase.Dispose(bool disposing) -> void
+virtual TKCode.Arc.VideoPlayerBase.OnFrameTargetChanged() -> void
+virtual TKCode.Arc.VideoPlayerBase.OnLoopingChanged() -> void
+virtual TKCode.Arc.VideoPlayerBase.OnOutputGainChanged() -> void
+virtual TKCode.Arc.VideoPlayerBase.OnPlaybackRateChanged(double oldRate) -> void
+~override TKCode.Arc.VideoTimeRange.Equals(object obj) -> bool
+~override TKCode.Arc.VideoTimeRange.ToString() -> string

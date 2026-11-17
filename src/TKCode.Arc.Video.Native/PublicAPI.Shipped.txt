@@ -1,0 +1,10 @@
+#nullable enable
+TKCode.Arc.ArcVideoNative
+TKCode.Arc.NativeVideoBackend
+TKCode.Arc.NativeVideoBackend.CanPlay(string! mediaType) -> TKCode.Arc.VideoSupport
+TKCode.Arc.NativeVideoBackend.CreatePlayer(TKCode.Arc.VideoPlayerOptions? options = null) -> TKCode.Arc.IVideoPlayer!
+TKCode.Arc.NativeVideoBackend.FrameKinds.get -> TKCode.Arc.VideoFrameKinds
+TKCode.Arc.NativeVideoBackend.GpuHandleTypes.get -> System.Collections.Generic.IReadOnlyList<string!>!
+TKCode.Arc.NativeVideoBackend.IsReal.get -> bool
+TKCode.Arc.NativeVideoBackend.Name.get -> string!
+static TKCode.Arc.ArcVideoNative.Use() -> bool

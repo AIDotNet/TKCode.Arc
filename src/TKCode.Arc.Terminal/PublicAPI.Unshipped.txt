@@ -1,0 +1,304 @@
+#nullable enable
+TKCode.Terminal.Avalonia.CellMetrics.BoxThickness.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.BoxThickness.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.StrikethroughPosition.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.StrikethroughPosition.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.StrikethroughThickness.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.StrikethroughThickness.init -> void
+TKCode.Terminal.Avalonia.CellMetrics.UnderlinePosition.get -> int
+TKCode.Terminal.Avalonia.CellMetrics.UnderlinePosition.init -> void
+TKCode.Terminal.Avalonia.ITerminalGlyphProvider
+TKCode.Terminal.Avalonia.ITerminalGlyphProvider.Create(int codepoint, TKCode.Terminal.Avalonia.TerminalGlyphRequest request) -> TKCode.Terminal.Avalonia.TerminalGlyph?
+TKCode.Terminal.Avalonia.ITerminalGlyphProvider.Handles(int codepoint) -> bool
+TKCode.Terminal.Avalonia.ITerminalRenderLayer
+TKCode.Terminal.Avalonia.ITerminalRenderLayer.Placement.get -> TKCode.Terminal.Avalonia.TerminalLayerPlacement
+TKCode.Terminal.Avalonia.ITerminalRenderLayer.Render(Avalonia.Media.DrawingContext! drawingContext, TKCode.Terminal.Avalonia.TerminalRenderContext! context) -> void
+TKCode.Terminal.Avalonia.TerminalBuiltInGlyphs
+TKCode.Terminal.Avalonia.TerminalBuiltInGlyphs.Create(int codepoint, TKCode.Terminal.Avalonia.TerminalGlyphRequest request) -> TKCode.Terminal.Avalonia.TerminalGlyph?
+TKCode.Terminal.Avalonia.TerminalBuiltInGlyphs.Handles(int codepoint) -> bool
+TKCode.Terminal.Avalonia.TerminalColorMath
+TKCode.Terminal.Avalonia.TerminalCursorBlink
+TKCode.Terminal.Avalonia.TerminalCursorBlink.Always = 2 -> TKCode.Terminal.Avalonia.TerminalCursorBlink
+TKCode.Terminal.Avalonia.TerminalCursorBlink.Never = 1 -> TKCode.Terminal.Avalonia.TerminalCursorBlink
+TKCode.Terminal.Avalonia.TerminalCursorBlink.Program = 0 -> TKCode.Terminal.Avalonia.TerminalCursorBlink
+TKCode.Terminal.Avalonia.TerminalGlyph
+TKCode.Terminal.Avalonia.TerminalGlyph.<Clone>$() -> TKCode.Terminal.Avalonia.TerminalGlyph!
+TKCode.Terminal.Avalonia.TerminalGlyph.Deconstruct(out Avalonia.Media.Geometry! Geometry, out double Opacity, out double StrokeThickness) -> void
+TKCode.Terminal.Avalonia.TerminalGlyph.Equals(TKCode.Terminal.Avalonia.TerminalGlyph? other) -> bool
+TKCode.Terminal.Avalonia.TerminalGlyph.Geometry.get -> Avalonia.Media.Geometry!
+TKCode.Terminal.Avalonia.TerminalGlyph.Geometry.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyph.Opacity.get -> double
+TKCode.Terminal.Avalonia.TerminalGlyph.Opacity.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyph.StrokeThickness.get -> double
+TKCode.Terminal.Avalonia.TerminalGlyph.StrokeThickness.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyph.TerminalGlyph(Avalonia.Media.Geometry! Geometry, double Opacity = 1, double StrokeThickness = 0) -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Deconstruct(out int Width, out int Height, out int Thickness, out double Scaling) -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Equals(TKCode.Terminal.Avalonia.TerminalGlyphRequest other) -> bool
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Height.get -> int
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Height.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Scaling.get -> double
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Scaling.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.TerminalGlyphRequest() -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.TerminalGlyphRequest(int Width, int Height, int Thickness, double Scaling) -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Thickness.get -> int
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Thickness.init -> void
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Width.get -> int
+TKCode.Terminal.Avalonia.TerminalGlyphRequest.Width.init -> void
+TKCode.Terminal.Avalonia.TerminalLayerPlacement
+TKCode.Terminal.Avalonia.TerminalLayerPlacement.AboveText = 1 -> TKCode.Terminal.Avalonia.TerminalLayerPlacement
+TKCode.Terminal.Avalonia.TerminalLayerPlacement.BelowText = 0 -> TKCode.Terminal.Avalonia.TerminalLayerPlacement
+TKCode.Terminal.Avalonia.TerminalLayerPlacement.Overlay = 2 -> TKCode.Terminal.Avalonia.TerminalLayerPlacement
+TKCode.Terminal.Avalonia.TerminalRenderContext
+TKCode.Terminal.Avalonia.TerminalRenderContext.CellBounds(int column, int row, int columns = 1) -> Avalonia.Rect
+TKCode.Terminal.Avalonia.TerminalRenderContext.ColorsAt(int column, int row) -> (Avalonia.Media.Color Foreground, Avalonia.Media.Color Background)
+TKCode.Terminal.Avalonia.TerminalRenderContext.CursorVisiblePhase.get -> bool
+TKCode.Terminal.Avalonia.TerminalRenderContext.Frame.get -> TKCode.Terminal.Core.FrameSnapshot!
+TKCode.Terminal.Avalonia.TerminalRenderContext.Metrics.get -> TKCode.Terminal.Avalonia.CellMetrics!
+TKCode.Terminal.Avalonia.TerminalRenderContext.PaddingPx.get -> double
+TKCode.Terminal.Avalonia.TerminalRenderContext.SpanBounds(TKCode.Terminal.Core.CellSpan span) -> Avalonia.Rect
+TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle
+TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle.Hollow = 0 -> TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle
+TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle.None = 1 -> TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle
+TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle.Same = 2 -> TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle
+TKCode.Terminal.Avalonia.TerminalView.BoldFontWeight.get -> Avalonia.Media.FontWeight
+TKCode.Terminal.Avalonia.TerminalView.BoldFontWeight.set -> void
+TKCode.Terminal.Avalonia.TerminalView.BoldIsBright.get -> bool
+TKCode.Terminal.Avalonia.TerminalView.BoldIsBright.set -> void
+TKCode.Terminal.Avalonia.TerminalView.CellAt(Avalonia.Point point) -> TKCode.Terminal.Core.ViewportPoint?
+TKCode.Terminal.Avalonia.TerminalView.CellBounds(int column, int row, int columns = 1) -> Avalonia.Rect
+TKCode.Terminal.Avalonia.TerminalView.CursorBarWidth.get -> double
+TKCode.Terminal.Avalonia.TerminalView.CursorBarWidth.set -> void
+TKCode.Terminal.Avalonia.TerminalView.CursorBlink.get -> TKCode.Terminal.Avalonia.TerminalCursorBlink
+TKCode.Terminal.Avalonia.TerminalView.CursorBlink.set -> void
+TKCode.Terminal.Avalonia.TerminalView.CursorBlinkInterval.get -> System.TimeSpan
+TKCode.Terminal.Avalonia.TerminalView.CursorBlinkInterval.set -> void
+TKCode.Terminal.Avalonia.TerminalView.CursorTextColor.get -> Avalonia.Media.Color?
+TKCode.Terminal.Avalonia.TerminalView.CursorTextColor.set -> void
+TKCode.Terminal.Avalonia.TerminalView.CustomGlyphs.get -> bool
+TKCode.Terminal.Avalonia.TerminalView.CustomGlyphs.set -> void
+TKCode.Terminal.Avalonia.TerminalView.EmojiFontFamily.get -> Avalonia.Media.FontFamily?
+TKCode.Terminal.Avalonia.TerminalView.EmojiFontFamily.set -> void
+TKCode.Terminal.Avalonia.TerminalView.FontWeight.get -> Avalonia.Media.FontWeight
+TKCode.Terminal.Avalonia.TerminalView.FontWeight.set -> void
+TKCode.Terminal.Avalonia.TerminalView.GlyphProviders.get -> Avalonia.Collections.AvaloniaList<TKCode.Terminal.Avalonia.ITerminalGlyphProvider!>!
+TKCode.Terminal.Avalonia.TerminalView.HoveredLink.get -> System.Collections.Generic.IReadOnlyList<TKCode.Terminal.Core.CellSpan>?
+TKCode.Terminal.Avalonia.TerminalView.HoveredLink.set -> void
+TKCode.Terminal.Avalonia.TerminalView.Layers.get -> Avalonia.Collections.AvaloniaList<TKCode.Terminal.Avalonia.ITerminalRenderLayer!>!
+TKCode.Terminal.Avalonia.TerminalView.LineHeight.get -> double
+TKCode.Terminal.Avalonia.TerminalView.LineHeight.set -> void
+TKCode.Terminal.Avalonia.TerminalView.LinkForeground.get -> Avalonia.Media.Color?
+TKCode.Terminal.Avalonia.TerminalView.LinkForeground.set -> void
+TKCode.Terminal.Avalonia.TerminalView.MinimumContrastRatio.get -> double
+TKCode.Terminal.Avalonia.TerminalView.MinimumContrastRatio.set -> void
+TKCode.Terminal.Avalonia.TerminalView.TextBlink.get -> bool
+TKCode.Terminal.Avalonia.TerminalView.TextBlink.set -> void
+TKCode.Terminal.Avalonia.TerminalView.UnfocusedCursorStyle.get -> TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle
+TKCode.Terminal.Avalonia.TerminalView.UnfocusedCursorStyle.set -> void
+TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.A = 20 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.AltLeft = 51 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.AltRight = 52 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ArrowDown = 75 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ArrowLeft = 76 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ArrowRight = 77 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ArrowUp = 78 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.AudioVolumeDown = 169 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.AudioVolumeMute = 170 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.AudioVolumeUp = 171 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.B = 21 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Backquote = 1 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Backslash = 2 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Backspace = 53 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BracketLeft = 3 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BracketRight = 4 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserBack = 151 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserFavorites = 152 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserForward = 153 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserHome = 154 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserRefresh = 155 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserSearch = 156 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.BrowserStop = 157 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.C = 22 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.CapsLock = 54 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Comma = 5 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ContextMenu = 55 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ControlLeft = 56 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ControlRight = 57 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Convert = 65 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Copy = 173 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Cut = 174 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.D = 23 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Delete = 68 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit0 = 6 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit1 = 7 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit2 = 8 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit3 = 9 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit4 = 10 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit5 = 11 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit6 = 12 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit7 = 13 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit8 = 14 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Digit9 = 15 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.E = 24 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Eject = 158 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.End = 69 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Enter = 58 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Equal = 16 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Escape = 120 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F = 25 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F1 = 121 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F10 = 130 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F11 = 131 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F12 = 132 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F13 = 133 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F14 = 134 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F15 = 135 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F16 = 136 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F17 = 137 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F18 = 138 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F19 = 139 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F2 = 122 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F20 = 140 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F21 = 141 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F22 = 142 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F23 = 143 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F24 = 144 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F25 = 145 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F3 = 123 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F4 = 124 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F5 = 125 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F6 = 126 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F7 = 127 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F8 = 128 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.F9 = 129 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Fn = 146 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.FnLock = 147 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.G = 26 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.H = 27 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Help = 70 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Home = 71 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.I = 28 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Insert = 72 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.IntlBackslash = 17 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.IntlRo = 18 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.IntlYen = 19 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.J = 29 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.K = 30 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.KanaMode = 66 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.L = 31 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.LaunchApp1 = 159 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.LaunchApp2 = 160 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.LaunchMail = 161 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.M = 32 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MediaPlayPause = 162 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MediaSelect = 163 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MediaStop = 164 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MediaTrackNext = 165 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MediaTrackPrevious = 166 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MetaLeft = 59 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.MetaRight = 60 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Minus = 46 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.N = 33 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NonConvert = 67 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumLock = 79 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad0 = 80 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad1 = 81 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad2 = 82 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad3 = 83 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad4 = 84 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad5 = 85 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad6 = 86 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad7 = 87 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad8 = 88 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Numpad9 = 89 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadAdd = 90 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadBackspace = 91 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadBegin = 113 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadClear = 92 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadClearEntry = 93 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadComma = 94 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadDecimal = 95 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadDelete = 117 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadDivide = 96 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadDown = 110 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadEnd = 115 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadEnter = 97 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadEqual = 98 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadHome = 114 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadInsert = 116 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadLeft = 112 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMemoryAdd = 99 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMemoryClear = 100 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMemoryRecall = 101 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMemoryStore = 102 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMemorySubtract = 103 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadMultiply = 104 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadPageDown = 119 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadPageUp = 118 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadParenLeft = 105 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadParenRight = 106 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadRight = 111 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadSeparator = 108 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadSubtract = 107 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.NumpadUp = 109 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.O = 34 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.P = 35 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.PageDown = 73 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.PageUp = 74 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Paste = 175 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Pause = 150 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Period = 47 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Power = 167 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.PrintScreen = 148 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Q = 36 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Quote = 48 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.R = 37 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.S = 38 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ScrollLock = 149 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Semicolon = 49 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ShiftLeft = 61 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.ShiftRight = 62 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Slash = 50 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Sleep = 168 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Space = 63 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.T = 39 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Tab = 64 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.U = 40 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Unidentified = 0 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.V = 41 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.W = 42 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.WakeUp = 172 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.X = 43 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Y = 44 -> TKCode.Terminal.Core.TerminalKey
+TKCode.Terminal.Core.TerminalKey.Z = 45 -> TKCode.Terminal.Core.TerminalKey
+override TKCode.Terminal.Avalonia.TerminalGlyph.Equals(object? obj) -> bool
+override TKCode.Terminal.Avalonia.TerminalGlyph.GetHashCode() -> int
+override TKCode.Terminal.Avalonia.TerminalGlyph.ToString() -> string!
+override TKCode.Terminal.Avalonia.TerminalGlyphRequest.GetHashCode() -> int
+static TKCode.Terminal.Avalonia.TerminalBuiltInGlyphs.Instance.get -> TKCode.Terminal.Avalonia.TerminalBuiltInGlyphs!
+static TKCode.Terminal.Avalonia.TerminalColorMath.ContrastRatio(TKCode.Terminal.Core.TerminalRgb a, TKCode.Terminal.Core.TerminalRgb b) -> double
+static TKCode.Terminal.Avalonia.TerminalColorMath.EnsureContrast(TKCode.Terminal.Core.TerminalRgb foreground, TKCode.Terminal.Core.TerminalRgb background, double ratio) -> TKCode.Terminal.Core.TerminalRgb
+static TKCode.Terminal.Avalonia.TerminalColorMath.Mix(TKCode.Terminal.Core.TerminalRgb from, TKCode.Terminal.Core.TerminalRgb to, double amount) -> TKCode.Terminal.Core.TerminalRgb
+static TKCode.Terminal.Avalonia.TerminalColorMath.RelativeLuminance(TKCode.Terminal.Core.TerminalRgb color) -> double
+static TKCode.Terminal.Avalonia.TerminalGlyph.operator !=(TKCode.Terminal.Avalonia.TerminalGlyph? left, TKCode.Terminal.Avalonia.TerminalGlyph? right) -> bool
+static TKCode.Terminal.Avalonia.TerminalGlyph.operator ==(TKCode.Terminal.Avalonia.TerminalGlyph? left, TKCode.Terminal.Avalonia.TerminalGlyph? right) -> bool
+static TKCode.Terminal.Avalonia.TerminalGlyphRequest.operator !=(TKCode.Terminal.Avalonia.TerminalGlyphRequest left, TKCode.Terminal.Avalonia.TerminalGlyphRequest right) -> bool
+static TKCode.Terminal.Avalonia.TerminalGlyphRequest.operator ==(TKCode.Terminal.Avalonia.TerminalGlyphRequest left, TKCode.Terminal.Avalonia.TerminalGlyphRequest right) -> bool
+static readonly TKCode.Terminal.Avalonia.TerminalView.BoldFontWeightProperty -> Avalonia.StyledProperty<Avalonia.Media.FontWeight>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.BoldIsBrightProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.CursorBarWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.CursorBlinkIntervalProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.CursorBlinkProperty -> Avalonia.StyledProperty<TKCode.Terminal.Avalonia.TerminalCursorBlink>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.CursorTextColorProperty -> Avalonia.StyledProperty<Avalonia.Media.Color?>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.CustomGlyphsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.EmojiFontFamilyProperty -> Avalonia.StyledProperty<Avalonia.Media.FontFamily?>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.FontWeightProperty -> Avalonia.StyledProperty<Avalonia.Media.FontWeight>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.HoveredLinkProperty -> Avalonia.StyledProperty<System.Collections.Generic.IReadOnlyList<TKCode.Terminal.Core.CellSpan>?>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.LineHeightProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.LinkForegroundProperty -> Avalonia.StyledProperty<Avalonia.Media.Color?>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.MinimumContrastRatioProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.TextBlinkProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Terminal.Avalonia.TerminalView.UnfocusedCursorStyleProperty -> Avalonia.StyledProperty<TKCode.Terminal.Avalonia.TerminalUnfocusedCursorStyle>!
+~override TKCode.Terminal.Avalonia.TerminalGlyphRequest.Equals(object obj) -> bool
+~override TKCode.Terminal.Avalonia.TerminalGlyphRequest.ToString() -> string

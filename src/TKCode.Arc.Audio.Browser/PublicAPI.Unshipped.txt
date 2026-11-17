@@ -1,0 +1,3 @@
+#nullable enable
+TKCode.Arc.ArcAudioBrowserBuilderExtensions
+static TKCode.Arc.ArcAudioBrowserBuilderExtensions.UseArcAudioBrowser(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

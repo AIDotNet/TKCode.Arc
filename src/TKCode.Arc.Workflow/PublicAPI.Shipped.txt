@@ -1,0 +1,500 @@
+#nullable enable
+TKCode.Arc.ArcWorkflowBuilderExtensions
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.BezierMinHandle = 10 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.CanvasAccentShare = 20 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.FanOutRankGap = 13 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.FlowDuration = 19 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.FlowThickness = 6 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.GridDotColor = 2 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.GridDotRadius = 1 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.GridMinScreenSpacing = 3 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.GridSpacing = 0 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.NarrowFanOutRankGap = 16 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.NarrowNodeGap = 17 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.NarrowRankGap = 15 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.NodeGap = 14 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.RankGap = 12 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.SkippedDashLength = 7 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.SkippedGapLength = 8 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.SkippedWireOpacity = 9 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.StepCornerRadius = 11 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.WireColor = 5 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.WireThickness = 4 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind.ZoomStep = 18 -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension.WorkflowCanvasTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.WorkflowCanvasTokenResourceExtension.WorkflowCanvasTokenResourceExtension(TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind kind) -> void
+TKCode.Arc.DesignTokens.WorkflowCanvasTokens
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.MapHeight = 1 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.MapPadding = 2 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.MapRadius = 3 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.MapWidth = 0 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.NodeRadius = 4 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind.ViewportRadius = 5 -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension.WorkflowMinimapTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.WorkflowMinimapTokenResourceExtension.WorkflowMinimapTokenResourceExtension(TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind kind) -> void
+TKCode.Arc.DesignTokens.WorkflowMinimapTokens
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CardRadius = 15 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CardShadow = 33 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CompactHeight = 3 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CompactRowGap = 19 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CompactWidth = 2 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.ContentGap = 18 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.CustomContentPadding = 17 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.FailedBorderColor = 32 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.FocusRingMargin = 13 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.FocusRingRadius = 14 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.InlinePadding = 16 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowCompactHeight = 7 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowCompactInlinePadding = 8 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowCompactRowGap = 9 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowCompactWidth = 6 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowStandardHeight = 5 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NarrowStandardWidth = 4 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.NodeIconSize = 20 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.PendingRingColor = 26 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.PendingRingSize = 24 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.PendingRingThickness = 25 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.RunningBorderAccentShare = 30 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.RunningFillAccentShare = 31 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SelectionHaloMargin = 10 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SelectionHaloRadius = 12 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SelectionHaloThickness = 11 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SkippedOpacity = 29 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SpinnerSize = 27 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.SpinnerTrackAccentShare = 28 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.StandardHeight = 1 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.StandardWidth = 0 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.StateGap = 23 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.StateGlyphSize = 22 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind.TitleFontSize = 21 -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension.WorkflowNodeCardTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokenResourceExtension.WorkflowNodeCardTokenResourceExtension(TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind kind) -> void
+TKCode.Arc.DesignTokens.WorkflowNodeCardTokens
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.BarPadding = 0 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.BarRadius = 2 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.ButtonExtent = 3 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.ButtonGlyphSize = 5 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.ButtonRadius = 4 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.DisabledOpacity = 7 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.FocusRingMargin = 8 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.FocusRingRadius = 9 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.ItemGap = 1 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind.ReadoutWidth = 6 -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension.WorkflowZoomControlsTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenResourceExtension.WorkflowZoomControlsTokenResourceExtension(TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind kind) -> void
+TKCode.Arc.DesignTokens.WorkflowZoomControlsTokens
+TKCode.Arc.Localization.WorkflowLangResourceExtension
+TKCode.Arc.Localization.WorkflowLangResourceExtension.Kind.get -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.WorkflowLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.WorkflowLangResourceExtension.WorkflowLangResourceExtension() -> void
+TKCode.Arc.Localization.WorkflowLangResourceExtension.WorkflowLangResourceExtension(TKCode.Arc.Localization.WorkflowLangResourceKind kind) -> void
+TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceConnectCancelled = 0 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceConnectMode = 1 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceConnectNoTarget = 2 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceConnectPort = 3 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceConnected = 4 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceCopiedOne = 5 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceCopiedOther = 6 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceCutOne = 7 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceCutOther = 8 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceDeletedEdgesOne = 9 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceDeletedEdgesOther = 10 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceDeletedOne = 11 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceDeletedOther = 12 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceDisconnected = 13 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceFailed = 14 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceFailedReason = 15 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceFinished = 16 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceMoveCancelled = 17 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceMoveMode = 18 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceMovedOne = 19 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceMovedOther = 20 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceNothingToPaste = 21 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnouncePastedOne = 22 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnouncePastedOther = 23 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceRedo = 24 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceRefused = 25 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.AnnounceUndo = 26 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.CanvasHelp = 27 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.CanvasHelpEditable = 28 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.CanvasNameOne = 29 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.CanvasNameOther = 30 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.CardSelected = 31 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectCycle = 32 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectDirection = 33 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectDuplicate = 34 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectFull = 35 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectSelf = 36 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ConnectType = 37 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.DurationMilliseconds = 38 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.DurationMinutes = 39 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.DurationSeconds = 40 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.StateDone = 41 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.StateFailed = 42 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.StatePending = 43 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.StateRunning = 44 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.StateSkipped = 45 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ZoomFit = 46 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ZoomIn = 47 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ZoomOut = 48 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ZoomPercent = 49 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResourceKind.ZoomReset = 50 -> TKCode.Arc.Localization.WorkflowLangResourceKind
+TKCode.Arc.Localization.WorkflowLangResources
+TKCode.Arc.WorkflowAutoFit
+TKCode.Arc.WorkflowAutoFit.Fit = 2 -> TKCode.Arc.WorkflowAutoFit
+TKCode.Arc.WorkflowAutoFit.None = 0 -> TKCode.Arc.WorkflowAutoFit
+TKCode.Arc.WorkflowAutoFit.ShrinkToFit = 1 -> TKCode.Arc.WorkflowAutoFit
+TKCode.Arc.WorkflowCanvas
+TKCode.Arc.WorkflowCanvas.ArrangeNodes(bool animate = true) -> void
+TKCode.Arc.WorkflowCanvas.AutoFit.get -> TKCode.Arc.WorkflowAutoFit
+TKCode.Arc.WorkflowCanvas.AutoFit.set -> void
+TKCode.Arc.WorkflowCanvas.CardFor(TKCode.Arc.WorkflowNode! node) -> TKCode.Arc.WorkflowNodeCard?
+TKCode.Arc.WorkflowCanvas.ClearSelection() -> void
+TKCode.Arc.WorkflowCanvas.ConnectionDroppedOnCanvas -> System.EventHandler<TKCode.Arc.WorkflowConnectionDroppedEventArgs!>?
+TKCode.Arc.WorkflowCanvas.ConnectionRequested -> System.EventHandler<TKCode.Arc.WorkflowConnectionRequestedEventArgs!>?
+TKCode.Arc.WorkflowCanvas.CopyCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.CopySelectionAsync() -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.WorkflowCanvas.CutCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.CutSelectionAsync() -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.WorkflowCanvas.DeleteSelection() -> int
+TKCode.Arc.WorkflowCanvas.DeleteSelectionCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.DuplicateCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.DuplicateSelection() -> int
+TKCode.Arc.WorkflowCanvas.EdgeStyle.get -> TKCode.Arc.WorkflowEdgeStyle
+TKCode.Arc.WorkflowCanvas.EdgeStyle.set -> void
+TKCode.Arc.WorkflowCanvas.FitCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.FitToContent(bool animate = true) -> void
+TKCode.Arc.WorkflowCanvas.Graph.get -> TKCode.Arc.WorkflowGraph?
+TKCode.Arc.WorkflowCanvas.Graph.set -> void
+TKCode.Arc.WorkflowCanvas.GraphEdited -> System.EventHandler<TKCode.Arc.WorkflowEditEventArgs!>?
+TKCode.Arc.WorkflowCanvas.IsEditable.get -> bool
+TKCode.Arc.WorkflowCanvas.IsEditable.set -> void
+TKCode.Arc.WorkflowCanvas.IsPanZoomEnabled.get -> bool
+TKCode.Arc.WorkflowCanvas.IsPanZoomEnabled.set -> void
+TKCode.Arc.WorkflowCanvas.LayoutDirection.get -> TKCode.Arc.WorkflowLayoutDirection
+TKCode.Arc.WorkflowCanvas.LayoutDirection.set -> void
+TKCode.Arc.WorkflowCanvas.MaxZoom.get -> double
+TKCode.Arc.WorkflowCanvas.MaxZoom.set -> void
+TKCode.Arc.WorkflowCanvas.MinZoom.get -> double
+TKCode.Arc.WorkflowCanvas.MinZoom.set -> void
+TKCode.Arc.WorkflowCanvas.NarrowBelowWidth.get -> double
+TKCode.Arc.WorkflowCanvas.NarrowBelowWidth.set -> void
+TKCode.Arc.WorkflowCanvas.NodeActivated -> System.EventHandler<TKCode.Arc.WorkflowNodeEventArgs!>?
+TKCode.Arc.WorkflowCanvas.NodeTemplates.get -> Avalonia.Controls.Templates.DataTemplates!
+TKCode.Arc.WorkflowCanvas.Offset.get -> Avalonia.Point
+TKCode.Arc.WorkflowCanvas.Offset.set -> void
+TKCode.Arc.WorkflowCanvas.PasteAsync() -> System.Threading.Tasks.Task<bool>!
+TKCode.Arc.WorkflowCanvas.PasteCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.QueueRunVisuals.get -> bool
+TKCode.Arc.WorkflowCanvas.QueueRunVisuals.set -> void
+TKCode.Arc.WorkflowCanvas.Redo() -> void
+TKCode.Arc.WorkflowCanvas.RedoCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.ScrollIntoView(TKCode.Arc.WorkflowNode! node, bool animate = true) -> void
+TKCode.Arc.WorkflowCanvas.Select(System.Collections.Generic.IEnumerable<TKCode.Arc.WorkflowNode!>! nodes) -> void
+TKCode.Arc.WorkflowCanvas.Select(System.Collections.Generic.IEnumerable<TKCode.Arc.WorkflowNode!>! nodes, System.Collections.Generic.IEnumerable<TKCode.Arc.WorkflowEdge!>! edges) -> void
+TKCode.Arc.WorkflowCanvas.SelectedEdges.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowCanvas.SelectedNodes.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>!
+TKCode.Arc.WorkflowCanvas.SelectionChanged -> System.EventHandler<TKCode.Arc.WorkflowSelectionChangedEventArgs!>?
+TKCode.Arc.WorkflowCanvas.ShowGrid.get -> bool
+TKCode.Arc.WorkflowCanvas.ShowGrid.set -> void
+TKCode.Arc.WorkflowCanvas.SnapToGrid.get -> bool
+TKCode.Arc.WorkflowCanvas.SnapToGrid.set -> void
+TKCode.Arc.WorkflowCanvas.Undo() -> void
+TKCode.Arc.WorkflowCanvas.UndoCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.WheelMode.get -> TKCode.Arc.Gestures.WheelMode
+TKCode.Arc.WorkflowCanvas.WheelMode.set -> void
+TKCode.Arc.WorkflowCanvas.WorkflowCanvas() -> void
+TKCode.Arc.WorkflowCanvas.Zoom.get -> double
+TKCode.Arc.WorkflowCanvas.Zoom.set -> void
+TKCode.Arc.WorkflowCanvas.ZoomIn() -> void
+TKCode.Arc.WorkflowCanvas.ZoomInCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.ZoomOut() -> void
+TKCode.Arc.WorkflowCanvas.ZoomOutCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.WorkflowCanvas.ZoomTo(double zoom, Avalonia.Point? anchor = null, bool animate = true) -> void
+TKCode.Arc.WorkflowConnectionDroppedEventArgs
+TKCode.Arc.WorkflowConnectionDroppedEventArgs.Position.get -> Avalonia.Point
+TKCode.Arc.WorkflowConnectionDroppedEventArgs.SourceNode.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowConnectionDroppedEventArgs.SourcePort.get -> TKCode.Arc.WorkflowPort?
+TKCode.Arc.WorkflowConnectionDroppedEventArgs.WorkflowConnectionDroppedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowPort? sourcePort, Avalonia.Point position) -> void
+TKCode.Arc.WorkflowConnectionRequestedEventArgs
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.Cancel.get -> bool
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.Cancel.set -> void
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.Reason.get -> string?
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.Reason.set -> void
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.SourceNode.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.SourcePort.get -> TKCode.Arc.WorkflowPort?
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.TargetNode.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.TargetPort.get -> TKCode.Arc.WorkflowPort?
+TKCode.Arc.WorkflowConnectionRequestedEventArgs.WorkflowConnectionRequestedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowPort? sourcePort, TKCode.Arc.WorkflowNode! target, TKCode.Arc.WorkflowPort? targetPort) -> void
+TKCode.Arc.WorkflowEdge
+TKCode.Arc.WorkflowEdge.Id.get -> string!
+TKCode.Arc.WorkflowEdge.Source.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowEdge.SourcePort.get -> TKCode.Arc.WorkflowPort?
+TKCode.Arc.WorkflowEdge.State.get -> TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdge.State.set -> void
+TKCode.Arc.WorkflowEdge.Target.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowEdge.TargetPort.get -> TKCode.Arc.WorkflowPort?
+TKCode.Arc.WorkflowEdge.WorkflowEdge(TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowNode! target, string? id = null) -> void
+TKCode.Arc.WorkflowEdge.WorkflowEdge(TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowPort? sourcePort, TKCode.Arc.WorkflowNode! target, TKCode.Arc.WorkflowPort? targetPort, string? id = null) -> void
+TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdgeState.Active = 2 -> TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdgeState.Auto = 0 -> TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdgeState.Idle = 1 -> TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdgeState.Skipped = 3 -> TKCode.Arc.WorkflowEdgeState
+TKCode.Arc.WorkflowEdgeStyle
+TKCode.Arc.WorkflowEdgeStyle.Bezier = 0 -> TKCode.Arc.WorkflowEdgeStyle
+TKCode.Arc.WorkflowEdgeStyle.Step = 1 -> TKCode.Arc.WorkflowEdgeStyle
+TKCode.Arc.WorkflowEdgeStyle.Straight = 2 -> TKCode.Arc.WorkflowEdgeStyle
+TKCode.Arc.WorkflowEditEventArgs
+TKCode.Arc.WorkflowEditEventArgs.Edges.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowEditEventArgs.Kind.get -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditEventArgs.Nodes.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>!
+TKCode.Arc.WorkflowEditEventArgs.WorkflowEditEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.WorkflowEditKind kind, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! nodes) -> void
+TKCode.Arc.WorkflowEditEventArgs.WorkflowEditEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.WorkflowEditKind kind, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! nodes, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>! edges) -> void
+TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Connect = 2 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Delete = 1 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Disconnect = 3 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Move = 0 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Paste = 6 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Redo = 5 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowEditKind.Undo = 4 -> TKCode.Arc.WorkflowEditKind
+TKCode.Arc.WorkflowGraph
+TKCode.Arc.WorkflowGraph.AllowCycles.get -> bool
+TKCode.Arc.WorkflowGraph.AllowCycles.set -> void
+TKCode.Arc.WorkflowGraph.CanConnect(TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowPort? sourcePort, TKCode.Arc.WorkflowNode! target, TKCode.Arc.WorkflowPort? targetPort, out string? reason) -> bool
+TKCode.Arc.WorkflowGraph.Connect(TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowNode! target) -> TKCode.Arc.WorkflowEdge!
+TKCode.Arc.WorkflowGraph.Connect(TKCode.Arc.WorkflowNode! source, TKCode.Arc.WorkflowPort? sourcePort, TKCode.Arc.WorkflowNode! target, TKCode.Arc.WorkflowPort? targetPort) -> TKCode.Arc.WorkflowEdge!
+TKCode.Arc.WorkflowGraph.Edges.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowGraph.FindNode(string! id) -> TKCode.Arc.WorkflowNode?
+TKCode.Arc.WorkflowGraph.History.get -> TKCode.Arc.WorkflowHistory!
+TKCode.Arc.WorkflowGraph.IncomingEdges(TKCode.Arc.WorkflowNode! node) -> System.Collections.Generic.IEnumerable<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowGraph.Nodes.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.WorkflowNode!>!
+TKCode.Arc.WorkflowGraph.OutgoingEdges(TKCode.Arc.WorkflowNode! node) -> System.Collections.Generic.IEnumerable<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowGraph.ResetRun() -> void
+TKCode.Arc.WorkflowGraph.WorkflowGraph() -> void
+TKCode.Arc.WorkflowHistory
+TKCode.Arc.WorkflowHistory.BeginGroup() -> System.IDisposable!
+TKCode.Arc.WorkflowHistory.CanRedo.get -> bool
+TKCode.Arc.WorkflowHistory.CanUndo.get -> bool
+TKCode.Arc.WorkflowHistory.Changed -> System.EventHandler?
+TKCode.Arc.WorkflowHistory.Clear() -> void
+TKCode.Arc.WorkflowHistory.IsEnabled.get -> bool
+TKCode.Arc.WorkflowHistory.IsEnabled.set -> void
+TKCode.Arc.WorkflowHistory.Redo() -> void
+TKCode.Arc.WorkflowHistory.Undo() -> void
+TKCode.Arc.WorkflowLayoutDirection
+TKCode.Arc.WorkflowLayoutDirection.LeftToRight = 1 -> TKCode.Arc.WorkflowLayoutDirection
+TKCode.Arc.WorkflowLayoutDirection.TopToBottom = 0 -> TKCode.Arc.WorkflowLayoutDirection
+TKCode.Arc.WorkflowMinimap
+TKCode.Arc.WorkflowMinimap.Target.get -> TKCode.Arc.WorkflowCanvas?
+TKCode.Arc.WorkflowMinimap.Target.set -> void
+TKCode.Arc.WorkflowMinimap.WorkflowMinimap() -> void
+TKCode.Arc.WorkflowNode
+TKCode.Arc.WorkflowNode.Appearance.get -> TKCode.Arc.WorkflowNodeAppearance
+TKCode.Arc.WorkflowNode.Appearance.set -> void
+TKCode.Arc.WorkflowNode.Description.get -> string?
+TKCode.Arc.WorkflowNode.Description.set -> void
+TKCode.Arc.WorkflowNode.Duration.get -> System.TimeSpan?
+TKCode.Arc.WorkflowNode.Duration.set -> void
+TKCode.Arc.WorkflowNode.Error.get -> string?
+TKCode.Arc.WorkflowNode.Error.set -> void
+TKCode.Arc.WorkflowNode.HasDefaultInput.get -> bool
+TKCode.Arc.WorkflowNode.HasDefaultInput.set -> void
+TKCode.Arc.WorkflowNode.Icon.get -> object?
+TKCode.Arc.WorkflowNode.Icon.set -> void
+TKCode.Arc.WorkflowNode.Id.get -> string!
+TKCode.Arc.WorkflowNode.Inputs.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.WorkflowPort!>!
+TKCode.Arc.WorkflowNode.IsLocked.get -> bool
+TKCode.Arc.WorkflowNode.IsLocked.set -> void
+TKCode.Arc.WorkflowNode.Kind.get -> string?
+TKCode.Arc.WorkflowNode.Kind.set -> void
+TKCode.Arc.WorkflowNode.Outputs.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.WorkflowPort!>!
+TKCode.Arc.WorkflowNode.Position.get -> Avalonia.Point
+TKCode.Arc.WorkflowNode.Position.set -> void
+TKCode.Arc.WorkflowNode.Result.get -> string?
+TKCode.Arc.WorkflowNode.Result.set -> void
+TKCode.Arc.WorkflowNode.Size.get -> Avalonia.Size?
+TKCode.Arc.WorkflowNode.Size.set -> void
+TKCode.Arc.WorkflowNode.State.get -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNode.State.set -> void
+TKCode.Arc.WorkflowNode.Title.get -> string!
+TKCode.Arc.WorkflowNode.Title.set -> void
+TKCode.Arc.WorkflowNode.WorkflowNode() -> void
+TKCode.Arc.WorkflowNode.WorkflowNode(string? id, string! title) -> void
+TKCode.Arc.WorkflowNodeAppearance
+TKCode.Arc.WorkflowNodeAppearance.Compact = 1 -> TKCode.Arc.WorkflowNodeAppearance
+TKCode.Arc.WorkflowNodeAppearance.Standard = 0 -> TKCode.Arc.WorkflowNodeAppearance
+TKCode.Arc.WorkflowNodeCard
+TKCode.Arc.WorkflowNodeCard.ContentTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.WorkflowNodeCard.ContentTemplate.set -> void
+TKCode.Arc.WorkflowNodeCard.DisplayState.get -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeCard.Node.get -> TKCode.Arc.WorkflowNode?
+TKCode.Arc.WorkflowNodeCard.Node.set -> void
+TKCode.Arc.WorkflowNodeCard.WorkflowNodeCard() -> void
+TKCode.Arc.WorkflowNodeEventArgs
+TKCode.Arc.WorkflowNodeEventArgs.Node.get -> TKCode.Arc.WorkflowNode!
+TKCode.Arc.WorkflowNodeEventArgs.WorkflowNodeEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.WorkflowNode! node) -> void
+TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Done = 3 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Failed = 4 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Idle = 0 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Pending = 1 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Running = 2 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeState.Skipped = 5 -> TKCode.Arc.WorkflowNodeState
+TKCode.Arc.WorkflowNodeTemplate
+TKCode.Arc.WorkflowNodeTemplate.Build(object? param) -> Avalonia.Controls.Control?
+TKCode.Arc.WorkflowNodeTemplate.Content.get -> object?
+TKCode.Arc.WorkflowNodeTemplate.Content.set -> void
+TKCode.Arc.WorkflowNodeTemplate.DataType.get -> System.Type?
+TKCode.Arc.WorkflowNodeTemplate.DataType.set -> void
+TKCode.Arc.WorkflowNodeTemplate.Kind.get -> string?
+TKCode.Arc.WorkflowNodeTemplate.Kind.set -> void
+TKCode.Arc.WorkflowNodeTemplate.Match(object? data) -> bool
+TKCode.Arc.WorkflowNodeTemplate.WorkflowNodeTemplate() -> void
+TKCode.Arc.WorkflowPort
+TKCode.Arc.WorkflowPort.DataType.get -> string?
+TKCode.Arc.WorkflowPort.DataType.set -> void
+TKCode.Arc.WorkflowPort.Direction.get -> TKCode.Arc.WorkflowPortDirection
+TKCode.Arc.WorkflowPort.Id.get -> string!
+TKCode.Arc.WorkflowPort.Label.get -> string?
+TKCode.Arc.WorkflowPort.Label.set -> void
+TKCode.Arc.WorkflowPort.MaxConnections.get -> int
+TKCode.Arc.WorkflowPort.MaxConnections.set -> void
+TKCode.Arc.WorkflowPort.WorkflowPort(TKCode.Arc.WorkflowPortDirection direction, string? label = null, string? id = null) -> void
+TKCode.Arc.WorkflowPortDirection
+TKCode.Arc.WorkflowPortDirection.Input = 0 -> TKCode.Arc.WorkflowPortDirection
+TKCode.Arc.WorkflowPortDirection.Output = 1 -> TKCode.Arc.WorkflowPortDirection
+TKCode.Arc.WorkflowSelectionChangedEventArgs
+TKCode.Arc.WorkflowSelectionChangedEventArgs.Added.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>!
+TKCode.Arc.WorkflowSelectionChangedEventArgs.AddedEdges.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowSelectionChangedEventArgs.Removed.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>!
+TKCode.Arc.WorkflowSelectionChangedEventArgs.RemovedEdges.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>!
+TKCode.Arc.WorkflowSelectionChangedEventArgs.WorkflowSelectionChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! added, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! removed) -> void
+TKCode.Arc.WorkflowSelectionChangedEventArgs.WorkflowSelectionChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! added, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowNode!>! removed, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>! addedEdges, System.Collections.Generic.IReadOnlyList<TKCode.Arc.WorkflowEdge!>! removedEdges) -> void
+TKCode.Arc.WorkflowZoomControls
+TKCode.Arc.WorkflowZoomControls.Target.get -> TKCode.Arc.WorkflowCanvas?
+TKCode.Arc.WorkflowZoomControls.Target.set -> void
+TKCode.Arc.WorkflowZoomControls.WorkflowZoomControls() -> void
+const TKCode.Arc.DesignTokens.WorkflowCanvasTokens.Identity = "WorkflowCanvas" -> string!
+const TKCode.Arc.DesignTokens.WorkflowMinimapTokens.Identity = "WorkflowMinimap" -> string!
+const TKCode.Arc.DesignTokens.WorkflowNodeCardTokens.Identity = "WorkflowNodeCard" -> string!
+const TKCode.Arc.DesignTokens.WorkflowZoomControlsTokens.Identity = "WorkflowZoomControls" -> string!
+override TKCode.Arc.WorkflowCanvas.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.WorkflowCanvas.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.WorkflowCanvas.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.WorkflowCanvas.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnLoaded(Avalonia.Interactivity.RoutedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPointerWheelChanged(Avalonia.Input.PointerWheelEventArgs! e) -> void
+override TKCode.Arc.WorkflowCanvas.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.WorkflowEdge.ToString() -> string!
+override TKCode.Arc.WorkflowMinimap.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
+override TKCode.Arc.WorkflowMinimap.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.WorkflowMinimap.Render(Avalonia.Media.DrawingContext! context) -> void
+override TKCode.Arc.WorkflowNode.ToString() -> string!
+override TKCode.Arc.WorkflowNodeCard.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.WorkflowNodeCard.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowNodeCard.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.WorkflowNodeCard.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowNodeCard.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WorkflowNodeCard.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.WorkflowNodeCard.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.WorkflowPort.ToString() -> string!
+override TKCode.Arc.WorkflowZoomControls.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.WorkflowZoomControls.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowZoomControls.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.WorkflowZoomControls.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+static TKCode.Arc.ArcWorkflowBuilderExtensions.UseArcWorkflow(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DesignTokens.WorkflowCanvasTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.WorkflowCanvasTokens.Key(TKCode.Arc.DesignTokens.WorkflowCanvasTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.WorkflowMinimapTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.WorkflowMinimapTokens.Key(TKCode.Arc.DesignTokens.WorkflowMinimapTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.WorkflowNodeCardTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.WorkflowNodeCardTokens.Key(TKCode.Arc.DesignTokens.WorkflowNodeCardTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.WorkflowZoomControlsTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.WorkflowZoomControlsTokens.Key(TKCode.Arc.DesignTokens.WorkflowZoomControlsTokenKind kind) -> object!
+static TKCode.Arc.Localization.WorkflowLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.WorkflowLangResources.Format(TKCode.Arc.Localization.WorkflowLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.WorkflowLangResources.Get(TKCode.Arc.Localization.WorkflowLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.WorkflowLangResources.Index(TKCode.Arc.Localization.WorkflowLangResourceKind kind) -> int
+static TKCode.Arc.Localization.WorkflowLangResources.Key(TKCode.Arc.Localization.WorkflowLangResourceKind kind) -> object!
+static readonly TKCode.Arc.WorkflowCanvas.AutoFitProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowAutoFit>!
+static readonly TKCode.Arc.WorkflowCanvas.ConnectionDroppedOnCanvasEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WorkflowConnectionDroppedEventArgs!>!
+static readonly TKCode.Arc.WorkflowCanvas.ConnectionRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WorkflowConnectionRequestedEventArgs!>!
+static readonly TKCode.Arc.WorkflowCanvas.EdgeStyleProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowEdgeStyle>!
+static readonly TKCode.Arc.WorkflowCanvas.GraphEditedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WorkflowEditEventArgs!>!
+static readonly TKCode.Arc.WorkflowCanvas.GraphProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowGraph?>!
+static readonly TKCode.Arc.WorkflowCanvas.IsEditableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowCanvas.IsPanZoomEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowCanvas.LayoutDirectionProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowLayoutDirection>!
+static readonly TKCode.Arc.WorkflowCanvas.MaxZoomProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WorkflowCanvas.MinZoomProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WorkflowCanvas.NarrowBelowWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WorkflowCanvas.NodeActivatedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WorkflowNodeEventArgs!>!
+static readonly TKCode.Arc.WorkflowCanvas.OffsetProperty -> Avalonia.StyledProperty<Avalonia.Point>!
+static readonly TKCode.Arc.WorkflowCanvas.QueueRunVisualsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowCanvas.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.WorkflowSelectionChangedEventArgs!>!
+static readonly TKCode.Arc.WorkflowCanvas.ShowGridProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowCanvas.SnapToGridProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowCanvas.WheelModeProperty -> Avalonia.StyledProperty<TKCode.Arc.Gestures.WheelMode>!
+static readonly TKCode.Arc.WorkflowCanvas.ZoomProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.WorkflowEdge.StateProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowEdgeState>!
+static readonly TKCode.Arc.WorkflowGraph.AllowCyclesProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowMinimap.TargetProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowCanvas?>!
+static readonly TKCode.Arc.WorkflowNode.AppearanceProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowNodeAppearance>!
+static readonly TKCode.Arc.WorkflowNode.DescriptionProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowNode.DurationProperty -> Avalonia.StyledProperty<System.TimeSpan?>!
+static readonly TKCode.Arc.WorkflowNode.ErrorProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowNode.HasDefaultInputProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowNode.IconProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.WorkflowNode.IsLockedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.WorkflowNode.KindProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowNode.PositionProperty -> Avalonia.StyledProperty<Avalonia.Point>!
+static readonly TKCode.Arc.WorkflowNode.ResultProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowNode.SizeProperty -> Avalonia.StyledProperty<Avalonia.Size?>!
+static readonly TKCode.Arc.WorkflowNode.StateProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowNodeState>!
+static readonly TKCode.Arc.WorkflowNode.TitleProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.WorkflowNodeCard.ContentTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.WorkflowNodeCard.DisplayStateProperty -> Avalonia.DirectProperty<TKCode.Arc.WorkflowNodeCard!, TKCode.Arc.WorkflowNodeState>!
+static readonly TKCode.Arc.WorkflowNodeCard.NodeProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowNode?>!
+static readonly TKCode.Arc.WorkflowPort.DataTypeProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowPort.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.WorkflowPort.MaxConnectionsProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.WorkflowZoomControls.TargetProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowCanvas?>!

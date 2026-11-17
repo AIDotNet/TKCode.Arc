@@ -1,0 +1,464 @@
+#nullable enable
+TKCode.Arc.ArcDockBuilderExtensions
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.ButtonGap = 2 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.ButtonPadding = 1 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.ButtonThickness = 0 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.FocusRingMargin = 9 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.FontSize = 3 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.GripThickness = 8 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.HeaderHeight = 6 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.HeaderPadding = 7 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.IconSize = 4 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenKind.IndicatorThickness = 5 -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension.DockAutoHideTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension.DockAutoHideTokenResourceExtension(TKCode.Arc.DesignTokens.DockAutoHideTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockAutoHideTokenKind
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockAutoHideTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockAutoHideTokens
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.CardContentPadding = 6 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.CardGripSize = 5 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.CardTitleHeight = 4 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.MinHeight = 1 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.MinWidth = 0 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.OpenOffsetX = 2 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind.OpenOffsetY = 3 -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension.DockFloatingWindowTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension.DockFloatingWindowTokenResourceExtension(TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockFloatingWindowTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockFloatingWindowTokens
+TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenKind.ActionGlyphSize = 3 -> TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenKind.ActionSize = 2 -> TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenKind.StripHeight = 0 -> TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenKind.StripPadding = 1 -> TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension.DockGroupViewTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension.DockGroupViewTokenResourceExtension(TKCode.Arc.DesignTokens.DockGroupViewTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockGroupViewTokenKind
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockGroupViewTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockGroupViewTokens
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.ButtonGap = 1 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.ButtonSize = 0 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.EdgeInset = 3 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.GhostOffset = 7 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.GhostOpacity = 6 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.GlyphSize = 2 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.InsertionLineWidth = 8 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.PreviewFillOpacity = 5 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenKind.PreviewStroke = 4 -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension.DockIndicatorTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension.DockIndicatorTokenResourceExtension(TKCode.Arc.DesignTokens.DockIndicatorTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockIndicatorTokenKind
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockIndicatorTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockIndicatorTokens
+TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenKind.FlyoutMaxShare = 3 -> TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenKind.Gap = 0 -> TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenKind.Padding = 1 -> TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenKind.StripThickness = 2 -> TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension.DockLayoutTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension.DockLayoutTokenResourceExtension(TKCode.Arc.DesignTokens.DockLayoutTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockLayoutTokenKind
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockLayoutTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockLayoutTokens
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.CaptionHeight = 2 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.FontSize = 5 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.IconSize = 6 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.MaxListHeight = 7 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.Padding = 1 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.RowHeight = 3 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.RowPadding = 4 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind.Width = 0 -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension.DockPaneSwitcherTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension.DockPaneSwitcherTokenResourceExtension(TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockPaneSwitcherTokens
+TKCode.Arc.DesignTokens.DockPaneTokenKind
+TKCode.Arc.DesignTokens.DockPaneTokenKind.DefaultPreferredSize = 0 -> TKCode.Arc.DesignTokens.DockPaneTokenKind
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension.DockPaneTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension.DockPaneTokenResourceExtension(TKCode.Arc.DesignTokens.DockPaneTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockPaneTokenKind
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockPaneTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockPaneTokens
+TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.CloseGlyphSize = 6 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.CloseSize = 5 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.FocusRingMargin = 9 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.FontSize = 2 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.Height = 0 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.IconSize = 3 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.InlinePadding = 1 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.ItemGap = 4 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.ModifiedDotSize = 7 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenKind.TabGap = 8 -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension.DockTabTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension.DockTabTokenResourceExtension(TKCode.Arc.DesignTokens.DockTabTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DockTabTokenKind
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DockTabTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DockTabTokens
+TKCode.Arc.DockDocumentArea
+TKCode.Arc.DockDocumentArea.DockDocumentArea() -> void
+TKCode.Arc.DockDocumentArea.Root.get -> TKCode.Arc.DockNode?
+TKCode.Arc.DockDocumentArea.Root.set -> void
+TKCode.Arc.DockFloat
+TKCode.Arc.DockFloat.Bounds.get -> Avalonia.Rect
+TKCode.Arc.DockFloat.Bounds.set -> void
+TKCode.Arc.DockFloat.DockFloat() -> void
+TKCode.Arc.DockFloat.DockFloat(TKCode.Arc.DockNode! root, Avalonia.Rect bounds) -> void
+TKCode.Arc.DockFloat.IsMaximized.get -> bool
+TKCode.Arc.DockFloat.IsMaximized.set -> void
+TKCode.Arc.DockFloat.Root.get -> TKCode.Arc.DockNode?
+TKCode.Arc.DockFloat.Root.set -> void
+TKCode.Arc.DockFloat.Workspace.get -> TKCode.Arc.DockWorkspace?
+TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockFloatingMode.Auto = 0 -> TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockFloatingMode.Disabled = 3 -> TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockFloatingMode.Overlay = 2 -> TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockFloatingMode.Window = 1 -> TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockGroup
+TKCode.Arc.DockGroup.ActivePane.get -> TKCode.Arc.DockPane?
+TKCode.Arc.DockGroup.ActivePane.set -> void
+TKCode.Arc.DockGroup.DockGroup() -> void
+TKCode.Arc.DockGroup.DockGroup(params TKCode.Arc.DockPane![]! panes) -> void
+TKCode.Arc.DockGroup.IsDocumentGroup.get -> bool
+TKCode.Arc.DockGroup.Panes.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockLayout
+TKCode.Arc.DockLayout.Activate(TKCode.Arc.DockPane! pane) -> void
+TKCode.Arc.DockLayout.ActivePane.get -> TKCode.Arc.DockPane?
+TKCode.Arc.DockLayout.ActivePane.set -> void
+TKCode.Arc.DockLayout.ActivePaneChanged -> System.EventHandler<TKCode.Arc.DockPaneEventArgs!>?
+TKCode.Arc.DockLayout.AutoHide(TKCode.Arc.DockPane! pane) -> bool
+TKCode.Arc.DockLayout.AutoHideActiveCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.DockLayout.Close(TKCode.Arc.DockPane! pane) -> bool
+TKCode.Arc.DockLayout.CloseActiveCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.DockLayout.Dock(TKCode.Arc.DockPane! pane) -> void
+TKCode.Arc.DockLayout.DockLayout() -> void
+TKCode.Arc.DockLayout.DocumentTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.DockLayout.DocumentTemplate.set -> void
+TKCode.Arc.DockLayout.DocumentsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.DockLayout.DocumentsSource.set -> void
+TKCode.Arc.DockLayout.EmptyDocumentContent.get -> object?
+TKCode.Arc.DockLayout.EmptyDocumentContent.set -> void
+TKCode.Arc.DockLayout.Float(TKCode.Arc.DockPane! pane) -> void
+TKCode.Arc.DockLayout.FloatActiveCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.DockLayout.FloatingMode.get -> TKCode.Arc.DockFloatingMode
+TKCode.Arc.DockLayout.FloatingMode.set -> void
+TKCode.Arc.DockLayout.IsLocked.get -> bool
+TKCode.Arc.DockLayout.IsLocked.set -> void
+TKCode.Arc.DockLayout.LayoutChanged -> System.EventHandler<TKCode.Arc.DockLayoutChangedEventArgs!>?
+TKCode.Arc.DockLayout.LoadLayout(string! json) -> bool
+TKCode.Arc.DockLayout.Move(TKCode.Arc.DockPane! pane, TKCode.Arc.DockTarget target) -> bool
+TKCode.Arc.DockLayout.Open(TKCode.Arc.DockPane! pane, TKCode.Arc.DockTarget? target = null) -> void
+TKCode.Arc.DockLayout.PaneClosed -> System.EventHandler<TKCode.Arc.DockPaneEventArgs!>?
+TKCode.Arc.DockLayout.PaneClosing -> System.EventHandler<TKCode.Arc.DockPaneClosingEventArgs!>?
+TKCode.Arc.DockLayout.PaneResolver.get -> System.Func<string!, TKCode.Arc.DockPane?>?
+TKCode.Arc.DockLayout.PaneResolver.set -> void
+TKCode.Arc.DockLayout.Pin(TKCode.Arc.DockPane! pane) -> bool
+TKCode.Arc.DockLayout.Root.get -> TKCode.Arc.DockNode?
+TKCode.Arc.DockLayout.Root.set -> void
+TKCode.Arc.DockLayout.SaveLayout() -> string!
+TKCode.Arc.DockLayout.ShowDockIndicators.get -> bool
+TKCode.Arc.DockLayout.ShowDockIndicators.set -> void
+TKCode.Arc.DockLayout.ShowPaneSwitcherCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.DockLayout.ToggleMaximize(TKCode.Arc.DockGroup! group) -> void
+TKCode.Arc.DockLayout.ToggleMaximizeCommand.get -> System.Windows.Input.ICommand!
+TKCode.Arc.DockLayout.ToolTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.DockLayout.ToolTemplate.set -> void
+TKCode.Arc.DockLayout.ToolsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.DockLayout.ToolsSource.set -> void
+TKCode.Arc.DockLayout.Workspace.get -> TKCode.Arc.DockWorkspace!
+TKCode.Arc.DockLayout.Workspace.set -> void
+TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Activate = 8 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.AutoHide = 5 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Close = 1 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Dock = 4 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Float = 3 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Load = 9 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Move = 0 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Open = 2 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Pin = 6 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangeKind.Resize = 7 -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangedEventArgs
+TKCode.Arc.DockLayoutChangedEventArgs.DockLayoutChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.DockLayoutChangeKind kind, TKCode.Arc.DockPane? pane) -> void
+TKCode.Arc.DockLayoutChangedEventArgs.Kind.get -> TKCode.Arc.DockLayoutChangeKind
+TKCode.Arc.DockLayoutChangedEventArgs.Pane.get -> TKCode.Arc.DockPane?
+TKCode.Arc.DockNode
+TKCode.Arc.DockNode.DockNode() -> void
+TKCode.Arc.DockNode.MinSize.get -> double
+TKCode.Arc.DockNode.MinSize.set -> void
+TKCode.Arc.DockNode.Parent.get -> TKCode.Arc.DockNode?
+TKCode.Arc.DockNode.Size.get -> double
+TKCode.Arc.DockNode.Size.set -> void
+TKCode.Arc.DockNode.Workspace.get -> TKCode.Arc.DockWorkspace?
+TKCode.Arc.DockPane
+TKCode.Arc.DockPane.CanAutoHide.get -> bool
+TKCode.Arc.DockPane.CanAutoHide.set -> void
+TKCode.Arc.DockPane.CanClose.get -> bool
+TKCode.Arc.DockPane.CanClose.set -> void
+TKCode.Arc.DockPane.CanDockAsDocument.get -> bool
+TKCode.Arc.DockPane.CanDockAsDocument.set -> void
+TKCode.Arc.DockPane.CanFloat.get -> bool
+TKCode.Arc.DockPane.CanFloat.set -> void
+TKCode.Arc.DockPane.CanMove.get -> bool
+TKCode.Arc.DockPane.CanMove.set -> void
+TKCode.Arc.DockPane.DockPane() -> void
+TKCode.Arc.DockPane.DockPane(string! id, string! title, object? content = null) -> void
+TKCode.Arc.DockPane.Group.get -> TKCode.Arc.DockGroup?
+TKCode.Arc.DockPane.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.DockPane.Icon.set -> void
+TKCode.Arc.DockPane.Id.get -> string!
+TKCode.Arc.DockPane.Id.set -> void
+TKCode.Arc.DockPane.IsModified.get -> bool
+TKCode.Arc.DockPane.IsModified.set -> void
+TKCode.Arc.DockPane.IsPinned.get -> bool
+TKCode.Arc.DockPane.PreferredSide.get -> TKCode.Arc.DockSide?
+TKCode.Arc.DockPane.PreferredSide.set -> void
+TKCode.Arc.DockPane.PreferredSize.get -> double
+TKCode.Arc.DockPane.PreferredSize.set -> void
+TKCode.Arc.DockPane.State.get -> TKCode.Arc.DockPaneState
+TKCode.Arc.DockPane.Title.get -> string!
+TKCode.Arc.DockPane.Title.set -> void
+TKCode.Arc.DockPaneClosingEventArgs
+TKCode.Arc.DockPaneClosingEventArgs.Cancel.get -> bool
+TKCode.Arc.DockPaneClosingEventArgs.Cancel.set -> void
+TKCode.Arc.DockPaneClosingEventArgs.DockPaneClosingEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.DockPane! pane) -> void
+TKCode.Arc.DockPaneEventArgs
+TKCode.Arc.DockPaneEventArgs.DockPaneEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.DockPane? pane) -> void
+TKCode.Arc.DockPaneEventArgs.Pane.get -> TKCode.Arc.DockPane?
+TKCode.Arc.DockPaneState
+TKCode.Arc.DockPaneState.AutoHidden = 1 -> TKCode.Arc.DockPaneState
+TKCode.Arc.DockPaneState.Docked = 0 -> TKCode.Arc.DockPaneState
+TKCode.Arc.DockPaneState.Floating = 2 -> TKCode.Arc.DockPaneState
+TKCode.Arc.DockPosition
+TKCode.Arc.DockPosition.Bottom = 4 -> TKCode.Arc.DockPosition
+TKCode.Arc.DockPosition.Center = 0 -> TKCode.Arc.DockPosition
+TKCode.Arc.DockPosition.Left = 1 -> TKCode.Arc.DockPosition
+TKCode.Arc.DockPosition.Right = 2 -> TKCode.Arc.DockPosition
+TKCode.Arc.DockPosition.Top = 3 -> TKCode.Arc.DockPosition
+TKCode.Arc.DockScope
+TKCode.Arc.DockScope.DocumentArea = 2 -> TKCode.Arc.DockScope
+TKCode.Arc.DockScope.Group = 0 -> TKCode.Arc.DockScope
+TKCode.Arc.DockScope.Workspace = 1 -> TKCode.Arc.DockScope
+TKCode.Arc.DockSide
+TKCode.Arc.DockSide.Bottom = 3 -> TKCode.Arc.DockSide
+TKCode.Arc.DockSide.Left = 0 -> TKCode.Arc.DockSide
+TKCode.Arc.DockSide.Right = 1 -> TKCode.Arc.DockSide
+TKCode.Arc.DockSide.Top = 2 -> TKCode.Arc.DockSide
+TKCode.Arc.DockSplit
+TKCode.Arc.DockSplit.Children.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockNode!>!
+TKCode.Arc.DockSplit.DockSplit() -> void
+TKCode.Arc.DockSplit.DockSplit(Avalonia.Layout.Orientation orientation, params TKCode.Arc.DockNode![]! children) -> void
+TKCode.Arc.DockSplit.Orientation.get -> Avalonia.Layout.Orientation
+TKCode.Arc.DockSplit.Orientation.set -> void
+TKCode.Arc.DockTarget
+TKCode.Arc.DockTarget.Deconstruct(out TKCode.Arc.DockGroup? Group, out TKCode.Arc.DockPosition Position, out TKCode.Arc.DockScope Scope, out int? Index) -> void
+TKCode.Arc.DockTarget.DockTarget() -> void
+TKCode.Arc.DockTarget.DockTarget(TKCode.Arc.DockGroup? Group, TKCode.Arc.DockPosition Position, TKCode.Arc.DockScope Scope, int? Index = null) -> void
+TKCode.Arc.DockTarget.Equals(TKCode.Arc.DockTarget other) -> bool
+TKCode.Arc.DockTarget.Group.get -> TKCode.Arc.DockGroup?
+TKCode.Arc.DockTarget.Group.init -> void
+TKCode.Arc.DockTarget.Index.get -> int?
+TKCode.Arc.DockTarget.Index.init -> void
+TKCode.Arc.DockTarget.Position.get -> TKCode.Arc.DockPosition
+TKCode.Arc.DockTarget.Position.init -> void
+TKCode.Arc.DockTarget.Scope.get -> TKCode.Arc.DockScope
+TKCode.Arc.DockTarget.Scope.init -> void
+TKCode.Arc.DockWorkspace
+TKCode.Arc.DockWorkspace.AllPanes() -> System.Collections.Generic.IEnumerable<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockWorkspace.AutoHidden(TKCode.Arc.DockSide side) -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockWorkspace.BottomHidden.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockWorkspace.DockWorkspace() -> void
+TKCode.Arc.DockWorkspace.FindPane(string! id) -> TKCode.Arc.DockPane?
+TKCode.Arc.DockWorkspace.Floats.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockFloat!>!
+TKCode.Arc.DockWorkspace.LeftHidden.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockWorkspace.RightHidden.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.DockWorkspace.Root.get -> TKCode.Arc.DockNode?
+TKCode.Arc.DockWorkspace.Root.set -> void
+TKCode.Arc.DockWorkspace.TopHidden.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.DockPane!>!
+TKCode.Arc.IDockItem
+TKCode.Arc.IDockItem.DockId.get -> string!
+TKCode.Arc.IDockItem.DockTitle.get -> string!
+TKCode.Arc.Localization.DockLangResourceExtension
+TKCode.Arc.Localization.DockLangResourceExtension.DockLangResourceExtension() -> void
+TKCode.Arc.Localization.DockLangResourceExtension.DockLangResourceExtension(TKCode.Arc.Localization.DockLangResourceKind kind) -> void
+TKCode.Arc.Localization.DockLangResourceExtension.Kind.get -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.DockLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceAutoHidden = 0 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceClosed = 1 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedAbove = 2 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedBelow = 3 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedEdgeBottom = 4 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedEdgeLeft = 5 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedEdgeRight = 6 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedEdgeTop = 7 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedLeft = 8 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceDockedRight = 9 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceFloating = 10 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceJoined = 11 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AnnounceReordered = 12 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AutoHiddenHelp = 13 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.AutoHide = 14 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Close = 15 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.CloseAll = 16 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.CloseOthers = 17 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.CloseTab = 18 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Dock = 19 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.DockTo = 20 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Float = 21 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.IndicatorBottom = 22 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.IndicatorCenter = 23 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.IndicatorLeft = 24 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.IndicatorRight = 25 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.IndicatorTop = 26 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.LayoutName = 27 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Maximize = 28 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.MoreActions = 29 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.MoreTabs = 30 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.MoveTo = 31 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.NewGroupAbove = 32 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.NewGroupBelow = 33 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.NewGroupLeft = 34 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.NewGroupRight = 35 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.NoOpenDocuments = 36 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.PaneSwitcher = 37 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Pin = 38 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.Restore = 39 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.SideBottom = 40 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.SideLeft = 41 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.SideRight = 42 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.SideTop = 43 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResourceKind.TabModified = 44 -> TKCode.Arc.Localization.DockLangResourceKind
+TKCode.Arc.Localization.DockLangResources
+const TKCode.Arc.DesignTokens.DockAutoHideTokens.Identity = "DockAutoHide" -> string!
+const TKCode.Arc.DesignTokens.DockFloatingWindowTokens.Identity = "DockFloatingWindow" -> string!
+const TKCode.Arc.DesignTokens.DockGroupViewTokens.Identity = "DockGroupView" -> string!
+const TKCode.Arc.DesignTokens.DockIndicatorTokens.Identity = "DockIndicator" -> string!
+const TKCode.Arc.DesignTokens.DockLayoutTokens.Identity = "DockLayout" -> string!
+const TKCode.Arc.DesignTokens.DockPaneSwitcherTokens.Identity = "DockPaneSwitcher" -> string!
+const TKCode.Arc.DesignTokens.DockPaneTokens.Identity = "DockPane" -> string!
+const TKCode.Arc.DesignTokens.DockTabTokens.Identity = "DockTab" -> string!
+const TKCode.Arc.DockLayout.AnnouncerPart = "PART_Announcer" -> string!
+const TKCode.Arc.DockLayout.BottomStripPart = "PART_BottomStrip" -> string!
+const TKCode.Arc.DockLayout.DraggingPseudoClass = ":dragging" -> string!
+const TKCode.Arc.DockLayout.FloatsPart = "PART_Floats" -> string!
+const TKCode.Arc.DockLayout.FlyoutPart = "PART_Flyout" -> string!
+const TKCode.Arc.DockLayout.HostPart = "PART_Host" -> string!
+const TKCode.Arc.DockLayout.IndicatorsPart = "PART_Indicators" -> string!
+const TKCode.Arc.DockLayout.LeftStripPart = "PART_LeftStrip" -> string!
+const TKCode.Arc.DockLayout.LockedPseudoClass = ":locked" -> string!
+const TKCode.Arc.DockLayout.MaximizedPseudoClass = ":maximized" -> string!
+const TKCode.Arc.DockLayout.RightStripPart = "PART_RightStrip" -> string!
+const TKCode.Arc.DockLayout.SwitcherPart = "PART_Switcher" -> string!
+const TKCode.Arc.DockLayout.TopStripPart = "PART_TopStrip" -> string!
+const TKCode.Arc.DockNode.DefaultMinSize = 120 -> double
+const TKCode.Arc.DockPane.ActivePseudoClass = ":active" -> string!
+const TKCode.Arc.DockPane.AutoHiddenPseudoClass = ":auto-hidden" -> string!
+const TKCode.Arc.DockPane.DefaultPreferredSize = 280 -> double
+const TKCode.Arc.DockPane.FloatingPseudoClass = ":floating" -> string!
+override TKCode.Arc.DockLayout.BeginInit() -> void
+override TKCode.Arc.DockLayout.EndInit() -> void
+override TKCode.Arc.DockLayout.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.DockLayout.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.DockLayout.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.DockLayout.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.DockLayout.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.DockLayout.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.DockNode.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.DockPane.BeginInit() -> void
+override TKCode.Arc.DockPane.EndInit() -> void
+override TKCode.Arc.DockPane.ToString() -> string!
+override TKCode.Arc.DockTarget.GetHashCode() -> int
+static TKCode.Arc.ArcDockBuilderExtensions.UseArcDock(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DesignTokens.DockAutoHideTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockAutoHideTokens.Key(TKCode.Arc.DesignTokens.DockAutoHideTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockFloatingWindowTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockFloatingWindowTokens.Key(TKCode.Arc.DesignTokens.DockFloatingWindowTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockGroupViewTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockGroupViewTokens.Key(TKCode.Arc.DesignTokens.DockGroupViewTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockIndicatorTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockIndicatorTokens.Key(TKCode.Arc.DesignTokens.DockIndicatorTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockLayoutTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockLayoutTokens.Key(TKCode.Arc.DesignTokens.DockLayoutTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockPaneSwitcherTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockPaneSwitcherTokens.Key(TKCode.Arc.DesignTokens.DockPaneSwitcherTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockPaneTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockPaneTokens.Key(TKCode.Arc.DesignTokens.DockPaneTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DockTabTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DockTabTokens.Key(TKCode.Arc.DesignTokens.DockTabTokenKind kind) -> object!
+static TKCode.Arc.DockPane.IdOf(object! item) -> string!
+static TKCode.Arc.DockTarget.DocumentArea(TKCode.Arc.DockPosition position) -> TKCode.Arc.DockTarget
+static TKCode.Arc.DockTarget.Edge(TKCode.Arc.DockPosition position) -> TKCode.Arc.DockTarget
+static TKCode.Arc.DockTarget.Into(TKCode.Arc.DockGroup! group, int? index = null) -> TKCode.Arc.DockTarget
+static TKCode.Arc.DockTarget.Split(TKCode.Arc.DockGroup! group, TKCode.Arc.DockPosition position) -> TKCode.Arc.DockTarget
+static TKCode.Arc.DockTarget.operator !=(TKCode.Arc.DockTarget left, TKCode.Arc.DockTarget right) -> bool
+static TKCode.Arc.DockTarget.operator ==(TKCode.Arc.DockTarget left, TKCode.Arc.DockTarget right) -> bool
+static TKCode.Arc.Localization.DockLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.DockLangResources.Format(TKCode.Arc.Localization.DockLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.DockLangResources.Get(TKCode.Arc.Localization.DockLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.DockLangResources.Index(TKCode.Arc.Localization.DockLangResourceKind kind) -> int
+static TKCode.Arc.Localization.DockLangResources.Key(TKCode.Arc.Localization.DockLangResourceKind kind) -> object!
+static readonly TKCode.Arc.DockDocumentArea.RootProperty -> Avalonia.DirectProperty<TKCode.Arc.DockDocumentArea!, TKCode.Arc.DockNode?>!
+static readonly TKCode.Arc.DockFloat.BoundsProperty -> Avalonia.StyledProperty<Avalonia.Rect>!
+static readonly TKCode.Arc.DockFloat.IsMaximizedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockFloat.RootProperty -> Avalonia.DirectProperty<TKCode.Arc.DockFloat!, TKCode.Arc.DockNode?>!
+static readonly TKCode.Arc.DockGroup.ActivePaneProperty -> Avalonia.StyledProperty<TKCode.Arc.DockPane?>!
+static readonly TKCode.Arc.DockGroup.IsDocumentGroupProperty -> Avalonia.DirectProperty<TKCode.Arc.DockGroup!, bool>!
+static readonly TKCode.Arc.DockLayout.ActivePaneChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DockPaneEventArgs!>!
+static readonly TKCode.Arc.DockLayout.ActivePaneProperty -> Avalonia.StyledProperty<TKCode.Arc.DockPane?>!
+static readonly TKCode.Arc.DockLayout.DocumentTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.DockLayout.DocumentsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.DockLayout.EmptyDocumentContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.DockLayout.FloatingModeProperty -> Avalonia.StyledProperty<TKCode.Arc.DockFloatingMode>!
+static readonly TKCode.Arc.DockLayout.IsLockedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockLayout.LayoutChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DockLayoutChangedEventArgs!>!
+static readonly TKCode.Arc.DockLayout.PaneClosedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DockPaneEventArgs!>!
+static readonly TKCode.Arc.DockLayout.PaneClosingEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.DockPaneClosingEventArgs!>!
+static readonly TKCode.Arc.DockLayout.PaneResolverProperty -> Avalonia.StyledProperty<System.Func<string!, TKCode.Arc.DockPane?>?>!
+static readonly TKCode.Arc.DockLayout.ShowDockIndicatorsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockLayout.ToolTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.DockLayout.ToolsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.DockLayout.WorkspaceProperty -> Avalonia.DirectProperty<TKCode.Arc.DockLayout!, TKCode.Arc.DockWorkspace!>!
+static readonly TKCode.Arc.DockNode.MinSizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DockNode.SizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DockPane.CanAutoHideProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.CanCloseProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.CanDockAsDocumentProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.CanFloatProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.CanMoveProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.GroupProperty -> Avalonia.DirectProperty<TKCode.Arc.DockPane!, TKCode.Arc.DockGroup?>!
+static readonly TKCode.Arc.DockPane.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.DockPane.IdProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DockPane.IsModifiedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DockPane.IsPinnedProperty -> Avalonia.DirectProperty<TKCode.Arc.DockPane!, bool>!
+static readonly TKCode.Arc.DockPane.PreferredSideProperty -> Avalonia.StyledProperty<TKCode.Arc.DockSide?>!
+static readonly TKCode.Arc.DockPane.PreferredSizeProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.DockPane.StateProperty -> Avalonia.DirectProperty<TKCode.Arc.DockPane!, TKCode.Arc.DockPaneState>!
+static readonly TKCode.Arc.DockPane.TitleProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DockSplit.OrientationProperty -> Avalonia.StyledProperty<Avalonia.Layout.Orientation>!
+static readonly TKCode.Arc.DockWorkspace.RootProperty -> Avalonia.DirectProperty<TKCode.Arc.DockWorkspace!, TKCode.Arc.DockNode?>!
+~override TKCode.Arc.DockTarget.Equals(object obj) -> bool
+~override TKCode.Arc.DockTarget.ToString() -> string

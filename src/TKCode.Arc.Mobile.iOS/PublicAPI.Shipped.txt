@@ -1,0 +1,13 @@
+#nullable enable
+TKCode.Arc.Mobile.ArcAppDelegate<TApp>
+TKCode.Arc.Mobile.ArcAppDelegate<TApp>.ArcAppDelegate() -> void
+TKCode.Arc.Mobile.ArcIosTextEditing
+override TKCode.Arc.Mobile.ArcAppDelegate<TApp>.CanPerform(ObjCRuntime.Selector! action, Foundation.NSObject? withSender) -> bool
+override TKCode.Arc.Mobile.ArcAppDelegate<TApp>.Copy(Foundation.NSObject? sender) -> void
+override TKCode.Arc.Mobile.ArcAppDelegate<TApp>.Cut(Foundation.NSObject? sender) -> void
+override TKCode.Arc.Mobile.ArcAppDelegate<TApp>.Paste(Foundation.NSObject? sender) -> void
+override TKCode.Arc.Mobile.ArcAppDelegate<TApp>.SelectAll(Foundation.NSObject? sender) -> void
+static TKCode.Arc.Mobile.ArcIosTextEditing.CanPerform(ObjCRuntime.Selector! action) -> bool?
+static TKCode.Arc.Mobile.ArcIosTextEditing.FocusedTextBox.get -> Avalonia.Controls.TextBox?
+static TKCode.Arc.Mobile.ArcIosTextEditing.Install() -> void
+static TKCode.Arc.Mobile.ArcIosTextEditing.Perform(Avalonia.Input.TextInput.ContextMenuAction action) -> bool

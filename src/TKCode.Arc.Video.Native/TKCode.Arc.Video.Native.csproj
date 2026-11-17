@@ -31,6 +31,12 @@
     <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
         <AndroidNativeLibrary Remove="runtimes/**" />
     </ItemGroup>
+    <!-- AndroidVideoBackend exists only in the Android build: its public API is listed apart (#146); the analyzer merges every
+         PublicAPI.*.txt it is given. -->
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <AdditionalFiles Include="Android/PublicAPI.Shipped.txt" />
+        <AdditionalFiles Include="Android/PublicAPI.Unshipped.txt" />
+    </ItemGroup>
     <!-- iOS: the shim as a dynamic framework (tools/video/build-ios.sh, tools/video/sync-native.sh), packed under runtimes/ios
          and embedded by the app through buildTransitive/TKCode.Arc.Video.Native.targets (a class library's own
          NativeReference does not reach the app). -->

@@ -1,0 +1,3 @@
+#nullable enable
+TKCode.Arc.ArcHighlightingBuilderExtensions
+static TKCode.Arc.ArcHighlightingBuilderExtensions.UseArcHighlighting(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
