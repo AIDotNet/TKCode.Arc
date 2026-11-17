@@ -1,6 +1,6 @@
 name: CI (macOS)
 
-# The build and tests of ci.yml's "Build and test" job, on macOS. Kept apart from ci.yml so that macOS runners, which can
+# The tests of ci.yml's verify job, on macOS. Kept apart from ci.yml so that macOS runners, which can
 # queue for a long time or not be acquired at all, never hold up or cancel pull requests, main or a release: a failure
 # here shows as its own red run and is looked at on its own.
 #
@@ -30,10 +30,24 @@ defaults:
 
 jobs:
   verify:
-    name: Build and test (macos-latest)
+    name: Test ${{ matrix.project }} (macos-latest)
     runs-on: macos-latest
-    # About 15 minutes of build and 35 or more of the headless control tests (which grow with every component).
     timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        # The test projects of ci.yml's verify job (#145).
+        project:
+          - TKCode.Arc.Foundation.Tests
+          - TKCode.Arc.Core.Tests
+          - TKCode.Arc.BaseTheme.Tests
+          - TKCode.Arc.Tests
+          - TKCode.Arc.Blocks.Tests
+          - TKCode.Arc.Special.Tests
+          - TKCode.Arc.Extras.Tests
+          - TKCode.Arc.Integration.Tests
+          - TKCode.Arc.Mobile.Tests
+          - TKCode.Arc.A2UI.Tests
     steps:
       - uses: actions/checkout@v7
 
@@ -49,11 +63,5 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
           restore-keys: nuget-${{ runner.os }}-
 
-      - name: Build
-        run: dotnet build TKCode.Arc.slnx
-
-      - name: Test (Core)
-        run: dotnet test tests/TKCode.Arc.Core.Tests --no-build
-
-      - name: Test (controls, headless Avalonia)
-        run: dotnet test tests/TKCode.Arc.Tests --no-build
+      - name: Test
+        run: dotnet test tests/${{ matrix.project }}

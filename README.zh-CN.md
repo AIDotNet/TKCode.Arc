@@ -140,7 +140,7 @@ Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Foundation.Tests
-dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~ButtonTests"   # 完整运行需要 8 分钟以上
+dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~ButtonTests"   # Blocks、Special 等包各有自己的测试项目
 ```
 
 要运行组件库站点，请把 [ArcGallery](https://github.com/AIDotNet/ArcGallery) 克隆到本仓库旁边（目录名 `../ArcGallery`，放在别处则用 `ARC_ROOT` 指向本仓库），然后在那里执行

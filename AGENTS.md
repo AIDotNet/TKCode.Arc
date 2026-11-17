@@ -9,7 +9,7 @@ Design source of truth: `design/` (start at `design/overview.md`).
 - `src/TKCode.Arc.Core`: ArcDesign tokens, palette, motion engine (`TKCode.Arc.Motion`), shared primitives (`TKCode.Arc.Primitives`), Lucide glyphs.
 - `src/TKCode.Arc`: controls, organized as `<Category>/<Component>/` (category = Arc sidebar group).
 - `src/TKCode.Arc.Markdown` (`Markdown`, `ChatThread`, `ChatComposer`; `UseArcMarkdown()`) and `src/TKCode.Arc.Highlighting` (TextMate highlighting for `CodeBlock`, the rich text editor and Markdown, installed by `UseArcHighlighting()`; its `ArcHighlightLanguages` targets trim unused grammars): keep StreamMark, Markdig and TextMate out of `TKCode.Arc`. Code there highlights only through the internal `ICodeSyntaxHighlighter` in `Tables/CodeBlock/CodeBlockSyntax.cs`.
-- `tests/`: `TKCode.Arc.Core.Tests` (pure), `TKCode.Arc.Tests` (headless Avalonia; the tests that use gallery demos are in ArcGallery), `TKCode.Arc.Foundation.Tests` (runtime + generator snapshots), `TKCode.Arc.BaseTheme.Tests` (base theme in an app with no other theme), `TKCode.Arc.Mobile.Tests`; `tests/Baselines/` holds the token and preset snapshots.
+- `tests/`: one project per package, each with a headless app that enables only the packages it tests: `TKCode.Arc.Core.Tests` (pure), `TKCode.Arc.Tests` (the controls of `TKCode.Arc`, Markdown and Highlighting), `TKCode.Arc.Blocks.Tests`, `TKCode.Arc.Special.Tests`, `TKCode.Arc.Extras.Tests` (AdvancedCharts, Dock, Workflow, Terminal, Video, Pdf), `TKCode.Arc.Integration.Tests` (needs every package: token baselines, Pixel and Corners, template contracts), `TKCode.Arc.Foundation.Tests` (runtime + generator snapshots), `TKCode.Arc.BaseTheme.Tests` (base theme in an app with no other theme), `TKCode.Arc.Mobile.Tests`, `TKCode.Arc.A2UI.Tests`, and `Video.Native` / `Pdf.Native` (need the native libraries). Helpers they share are linked source in `tests/Shared/`. The tests that use gallery demos are in ArcGallery; `tests/Baselines/` holds the token and preset snapshots.
 - The gallery and documentation site is its own repository, [AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery), checked out next to this one as `../ArcGallery` (its projects find this checkout through `ArcRoot`; section 'Gallery' below). It holds the shell, the docs pages (`Docs/<Category>/<Component>/<lang>.md`), the demos, the screenshots, the generators that build the API tables from this repository's XML docs, the desktop and browser hosts, `tools/docshots` and the tests that go through the demos (`tests/TKCode.Arc.Gallery.Tests`). Design notes: `design/engineering/gallery-app.md`.
 - `tools/lucide/generate_lucide.py`: regenerates Lucide glyph geometry: Core's `ArcIcons.g.cs`, the `LucideIconKind` enum of `TKCode.Arc.Icons.Lucide` and the path data of `TKCode.Arc.Icons.Lucide.Generators` (`LucidePaths.txt`). That generator ships in the Icons.Lucide package and compiles only the icons a project uses into it (C#, XAML, `<LucideIcon Include="..." />` items, or `LucideIconsIncludeAll`); repository projects opt in with `ArcLucideGenerator=true`.
 
@@ -38,11 +38,11 @@ Read `design/engineering/implementation-guide.md` before writing a component: fi
 
 ## Verify
 
-Do not run the full test suites locally (a full `TKCode.Arc.Tests` run takes 8 minutes or more, and much longer when several builds share the machine); CI runs them. Build what you touched and run only the tests for the code you changed:
+Do not run the full test suites locally (the headless projects take minutes each, and much longer when several builds share the machine); CI runs every test project as its own job. Build what you touched and run only the tests for the code you changed, in the project of its package:
 
 ```bash
 dotnet build src/TKCode.Arc -c Debug                    # or the package you changed
-dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~<Component>Tests"
+dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~<Component>Tests"   # or Blocks.Tests, Special.Tests, Extras.Tests, ...
 ```
 
 ## Gallery
@@ -57,4 +57,4 @@ dotnet test tests/TKCode.Arc.Gallery.Tests --filter "FullyQualifiedName~GalleryD
 
 The gallery builds against this checkout (and CI builds it against `main`), so an API change that breaks a demo has to land in both repositories; the libraries' `InternalsVisibleTo` list includes `TKCode.Arc.Gallery.Tests` for the tests that go through the demos.
 
-Run a whole suite only when asked, or for a change that reaches across the library (Core, Foundation, generators, the base theme).
+Run a whole suite only when asked, or for a change that reaches across the library (Core, Foundation, generators, the base theme). A new test goes in the project of the package it tests; a test that needs several packages at once goes in `TKCode.Arc.Integration.Tests`, not into another project's test app.

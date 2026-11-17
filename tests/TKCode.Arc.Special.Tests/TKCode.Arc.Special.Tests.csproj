@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Special components (TKCode.Arc.Special) in a headless app that enables only Special and what it depends on (#145). -->
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcLucideGenerator>true</ArcLucideGenerator>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <PackageReference Include="Avalonia.Headless.XUnit" />
+        <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
+        <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+        <!-- [PropertyGridModel] test types: the Foundation generator registers them (no themes or tokens here). -->
+        <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
+                          OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Helpers shared by the headless test projects (source, so each assembly keeps its own InternalsVisibleTo access). -->
+        <Compile Include="../Shared/*.cs" Link="Shared/%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

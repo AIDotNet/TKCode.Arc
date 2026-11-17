@@ -4,7 +4,7 @@
 #   tools/dev/integrate.sh <sandbox-name> <path>...
 #
 # Copies the listed paths from .work/sandboxes/<sandbox-name> (see sandbox.sh merge), then builds the
-# solution, runs both test suites, marks implemented components in design/components/overview.md and
+# solution, runs the test suites, marks implemented components in design/components/overview.md and
 # checks the design docs. Stops at the first failing step.
 set -euo pipefail
 
@@ -23,8 +23,9 @@ dotnet build TKCode.Arc.slnx -c Debug 2>&1 | grep -E " error |warning CS|AVLN|å·
 dotnet build TKCode.Arc.slnx -c Debug --no-restore >/dev/null 2>&1 || { echo "build failed"; exit 1; }
 
 echo "== tests"
-dotnet test tests/TKCode.Arc.Core.Tests --no-build 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]" | head -20
-dotnet test tests/TKCode.Arc.Tests --no-build 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]" | head -40
+for project in Core.Tests Tests Blocks.Tests Special.Tests Extras.Tests Integration.Tests; do
+    dotnet test "tests/TKCode.Arc.$project" --no-build 2>&1 | grep -E "Passed!|Failed!|\[FAIL\]" | head -40
+done
 
 echo "== status"
 python3 -I tools/dev/update_status.py "$REPO"

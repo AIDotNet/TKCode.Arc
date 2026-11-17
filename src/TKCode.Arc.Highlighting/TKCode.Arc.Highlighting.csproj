@@ -20,6 +20,10 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Blocks.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Special.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
 </Project>

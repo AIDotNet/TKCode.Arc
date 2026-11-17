@@ -14,6 +14,10 @@
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Blocks.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Special.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.AdvancedCharts" />
         <!-- The split-out packages (ADR 0050) use the code-highlighting contract, palettes and shared parts. -->
