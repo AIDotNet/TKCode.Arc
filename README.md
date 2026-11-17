@@ -146,7 +146,7 @@ Building needs the .NET 11 SDK (see `global.json`) and the .NET 10 runtime, whic
 dotnet build TKCode.Arc.slnx
 dotnet test tests/TKCode.Arc.Core.Tests
 dotnet test tests/TKCode.Arc.Foundation.Tests
-dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~ButtonTests"   # the whole suite takes 8 minutes or more
+dotnet test tests/TKCode.Arc.Tests --filter "FullyQualifiedName~ButtonTests"   # Blocks, Special and the other packages have their own test projects
 ```
 
 To run the gallery, clone [ArcGallery](https://github.com/AIDotNet/ArcGallery) next to this repository as `../ArcGallery`

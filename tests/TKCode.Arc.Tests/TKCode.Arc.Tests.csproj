@@ -1,4 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
+    <!-- The controls of TKCode.Arc (with Markdown and Highlighting) in a headless app that enables only those packages. Blocks,
+         Special, the extra packages and the cross-package tests have their own projects (#145). -->
     <PropertyGroup>
         <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
@@ -21,17 +23,6 @@
         <ProjectReference Include="../../src/TKCode.Arc/TKCode.Arc.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Markdown/TKCode.Arc.Markdown.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Highlighting/TKCode.Arc.Highlighting.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Blocks/TKCode.Arc.Blocks.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Mobile/TKCode.Arc.Mobile.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Special/TKCode.Arc.Special.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
-        <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <!-- LucideIconTests and the XAML loaded at run time need the Lucide assembly. -->
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
         <!-- PropertyGrid tests use [PropertyGridModel] types: the Foundation generator registers them (no themes or tokens here). -->
@@ -39,7 +30,7 @@
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
-        <!-- The browser backend's arithmetic: the package itself is for browsers only, this part runs anywhere. -->
-        <Compile Include="../../src/TKCode.Arc.Pdf.Browser/PdfJs/*.cs" Link="Pdf/PdfJs/%(Filename)%(Extension)" />
+        <!-- Helpers shared by the headless test projects (source, so each assembly keeps its own InternalsVisibleTo access). -->
+        <Compile Include="../Shared/*.cs" Link="Shared/%(Filename)%(Extension)" />
     </ItemGroup>
 </Project>

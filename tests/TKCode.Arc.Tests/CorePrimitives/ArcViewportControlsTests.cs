@@ -208,30 +208,4 @@ public class ArcViewportControlsTests
         rooms[1].Right.ShouldBe(rooms[0].Right, 1);
         rooms[1].Bottom.ShouldBe(rooms[0].Bottom, 1);
     }
-
-    [AvaloniaFact]
-    public void An_Agent_Status_Opened_In_A_Host_Floats_On_The_Host()
-    {
-        var status = new AgentStatus
-        {
-            Status = AgentStatusRunState.Working,
-            Agent = new AgentModel("Atlas Scout 2"),
-            Activity = new AgentStatusActivity("Reading the logs", ArcIcons.Search)
-        };
-        var (window, host) = InPhone(status);
-        try
-        {
-            status.IsExpanded = true;
-            Dispatcher.UIThread.RunJobs();
-            status.IsFloating.ShouldBeTrue();
-            // Its viewport's layer, so the open panel stays on the phone's screen.
-            status.Surface.GetVisualAncestors().ShouldContain(host.Layer);
-            status.IsExpanded = false;
-            Dispatcher.UIThread.RunJobs();
-        }
-        finally
-        {
-            window.Close();
-        }
-    }
 }

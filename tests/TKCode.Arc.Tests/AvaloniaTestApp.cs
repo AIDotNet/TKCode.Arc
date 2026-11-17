@@ -1,7 +1,4 @@
 using TKCode.Arc;
-using TKCode.Arc.Mobile;
-using TKCode.Arc.Themes.Corners;
-using TKCode.Arc.Themes.Pixel;
 using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -29,16 +26,6 @@ public static class TestAppBuilder
                   .UseArc(arc => arc.UseArcControls()
                                     .UseArcMarkdown()
                                     .UseArcHighlighting()
-                                    .UseArcBlocks()
-                                    .UseArcAdvancedCharts()
-                                    .UseArcWorkflow()
-                                    .UseArcDock()
-                                    .UseArcVideo()
-                                    .UseArcPdf()
-                                    .UseArcMobile()
-                                    .UseArcPixelTheme()
-                                    .UseArcCorners()
-                                    .UseArcSpecial()
                                     .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
 }
 

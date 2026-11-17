@@ -17,6 +17,10 @@
         <InternalsVisibleTo Include="TKCode.Terminal.Core.Tests" />
         <InternalsVisibleTo Include="TKCode.Terminal.Avalonia.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Blocks.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Special.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
     </ItemGroup>
     <!-- libghostty-vt per RID. The binaries are not committed: tools/terminal/build-ghostty.sh (+ build-ghostty-ios.sh) builds them

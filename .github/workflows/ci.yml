@@ -1,6 +1,6 @@
 name: CI
 
-# verify:  build and test (Linux) on pushes to main and on pull requests; macOS is ci-macos.yml.
+# verify:  every test project, one job each (Linux), on pushes to main and on pull requests; macOS is ci-macos.yml.
 # templates: creates, builds and starts every dotnet new template case (pushes to main, pull requests).
 # pack:    packs every TKCode.Arc package (the id lists below) (v* tag, or a manual run).
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
@@ -48,13 +48,29 @@ defaults:
 
 jobs:
   verify:
-    # Linux only: macOS runs the same build and tests in ci-macos.yml, apart from this workflow, so a long wait for a
-    # macOS runner (or a cancelled macOS job) never holds up or cancels pull requests, main or a release.
-    name: Build and test (ubuntu-latest)
+    # Linux only: macOS runs the same tests in ci-macos.yml, apart from this workflow, so a long wait for a macOS runner
+    # (or a cancelled macOS job) never holds up or cancels pull requests, main or a release. One job per test project, in
+    # parallel: each builds only its project and what it references (#145). The whole solution is built by the Windows
+    # job below.
+    name: Test ${{ matrix.project }} (ubuntu-latest)
     if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
-    # About 10 minutes of build and 30 or more of the headless control tests (which grow with every component).
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every headless and pure test project; Video.Native and Pdf.Native need native libraries and have their own jobs.
+        project:
+          - TKCode.Arc.Foundation.Tests
+          - TKCode.Arc.Core.Tests
+          - TKCode.Arc.BaseTheme.Tests
+          - TKCode.Arc.Tests
+          - TKCode.Arc.Blocks.Tests
+          - TKCode.Arc.Special.Tests
+          - TKCode.Arc.Extras.Tests
+          - TKCode.Arc.Integration.Tests
+          - TKCode.Arc.Mobile.Tests
+          - TKCode.Arc.A2UI.Tests
     steps:
       - uses: actions/checkout@v7
 
@@ -70,15 +86,8 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
           restore-keys: nuget-${{ runner.os }}-
 
-      # The same three commands as the Verify section of AGENTS.md.
-      - name: Build
-        run: dotnet build TKCode.Arc.slnx
-
-      - name: Test (Core)
-        run: dotnet test tests/TKCode.Arc.Core.Tests --no-build
-
-      - name: Test (controls, headless Avalonia)
-        run: dotnet test tests/TKCode.Arc.Tests --no-build
+      - name: Test
+        run: dotnet test tests/${{ matrix.project }}
 
   # Creates every dotnet new template case from freshly packed packages, builds it with warnings as errors and starts it
   # headless (tools/templates/verify_templates.py; design/engineering/project-templates.md section 6.3).
