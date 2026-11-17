@@ -13,9 +13,9 @@ public class CodeBlockTests
     private static Highlighted Highlight(string code, string language)
     {
         var spans = new List<CodeBlockSyntaxSpan>();
-        using var session = CodeBlockHighlighter.CreateSession(language);
-        session.ShouldNotBeNull(language);
-        CodeBlockHighlighter.AppendSpans(code, session.Update(code), CodeBlockHighlighter.FamilyOf(language), spans);
+        TextMateCodeHighlighter.Shared.SupportsLanguage(language).ShouldBeTrue(language);
+        using var session = TextMateCodeHighlighter.Shared.CreateSession(language);
+        CodeBlockHighlighter.AppendSpans(code, session.Update(code), spans);
         return new Highlighted(code, spans);
     }
 
@@ -188,9 +188,55 @@ public class CodeBlockTests
         CodeBlockHighlighter.SupportsLanguage("no-such-language").ShouldBeFalse();
         CodeBlockHighlighter.SupportsLanguage("text").ShouldBeFalse();
         CodeBlockHighlighter.CreateSession("no-such-language").ShouldBeNull();
-        CodeBlockHighlighter.FamilyOf("{.AXAML}").ShouldBe(CodeBlockLanguageFamily.Markup);
-        CodeBlockHighlighter.FamilyOf("jsonc").ShouldBe(CodeBlockLanguageFamily.Json);
-        CodeBlockHighlighter.FamilyOf("ts").ShouldBe(CodeBlockLanguageFamily.Code);
+        TextMateCodeHighlighter.FamilyOf("{.AXAML}").ShouldBe(CodeBlockLanguageFamily.Markup);
+        TextMateCodeHighlighter.FamilyOf("jsonc").ShouldBe(CodeBlockLanguageFamily.Json);
+        TextMateCodeHighlighter.FamilyOf("ts").ShouldBe(CodeBlockLanguageFamily.Code);
+    }
+
+    [AvaloniaFact]
+    public void UseArcHighlighting_Installs_The_TextMate_Highlighter()
+    {
+        CodeBlockHighlighter.Provider.ShouldBeSameAs(TextMateCodeHighlighter.Shared);
+        Avalonia.Application.Current!.ShouldNotBeNull();
+        ArcRuntime.Current!.Packages.ShouldContain("TKCode.Arc.Highlighting");
+    }
+
+    [AvaloniaFact]
+    public async Task Without_A_Highlighter_Code_Is_Plain_Until_One_Is_Installed()
+    {
+        var provider = CodeBlockHighlighter.Provider;
+        CodeBlockHighlighter.Provider = null;
+        try
+        {
+            CodeBlockHighlighter.SupportsLanguage("cs").ShouldBeFalse();
+            CodeBlockHighlighter.CreateSession("cs").ShouldBeNull();
+            var engine = new RichTextEditorEngine { Docs = true };
+            engine.Load(RichTextEditorHtml.ToDocument("<pre data-lang=\"csharp\">var a = 1;</pre>", true), record: false, caretAtEnd: true);
+            RichTextEditorSurface.HighlightSyntax(engine.Blocks[0]).ShouldBeNull();
+
+            var block = new CodeBlock { Language = "cs", Code = "var x = 1;" };
+            var window = Show(block);
+            try
+            {
+                await block.TextPresenter!.WhenHighlighted;
+                block.TextPresenter.SpanCount.ShouldBe(0);
+
+                // The highlighter that UseArcHighlighting() installs takes over on the next change.
+                CodeBlockHighlighter.Provider = provider;
+                block.Code = "var y = 2;";
+                Dispatcher.UIThread.RunJobs();
+                await block.TextPresenter.WhenHighlighted;
+                block.TextPresenter.SpanCount.ShouldBeGreaterThan(0);
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+        finally
+        {
+            CodeBlockHighlighter.Provider = provider;
+        }
     }
 
     [AvaloniaFact]

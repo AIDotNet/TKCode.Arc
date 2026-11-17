@@ -31,6 +31,24 @@
       ],
       "win-arm64": [
         "-Dtarget=aarch64-windows-gnu"
+      ],
+      "ios-arm64": [
+        "-Dtarget=aarch64-ios"
+      ],
+      "iossimulator-arm64": [
+        "-Dtarget=aarch64-ios-simulator"
+      ],
+      "iossimulator-x64": [
+        "-Dtarget=x86_64-ios-simulator"
+      ],
+      "android-arm64": [
+        "-Dtarget=aarch64-linux-android.29"
+      ],
+      "android-x64": [
+        "-Dtarget=x86_64-linux-android.29"
+      ],
+      "android-arm": [
+        "-Dtarget=arm-linux-androideabi.29"
       ]
     }
   },

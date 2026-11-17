@@ -9,13 +9,15 @@
         <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <!-- Markdown rendering and TextMate code highlighting (ADR 0011); brings StreamMark.Avalonia and StreamMark.Core. -->
-        <PackageReference Include="TKCode.StreamMark.Highlighting.TextMate" />
+        <!-- No Markdown or highlighting dependency: TKCode.Arc.Markdown and TKCode.Arc.Highlighting bring them (ADR 0050). -->
         <ProjectReference Include="../TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
         <InternalsVisibleTo Include="TKCode.Arc.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
         <InternalsVisibleTo Include="TKCode.Arc.AdvancedCharts" />
+        <!-- The split-out packages (ADR 0050) use the code-highlighting contract, palettes and shared parts. -->
+        <InternalsVisibleTo Include="TKCode.Arc.Markdown" />
+        <InternalsVisibleTo Include="TKCode.Arc.Highlighting" />
     </ItemGroup>
 </Project>

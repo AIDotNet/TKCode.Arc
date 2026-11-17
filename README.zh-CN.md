@@ -63,13 +63,15 @@ public static AppBuilder BuildAvaloniaApp() =>
 
 ## 包含内容
 
-全部 23 个包使用同一版本号一起发布，请保持它们版本一致。
+全部 25 个包使用同一版本号一起发布，请保持它们版本一致。
 
 ### 组件
 
 | 包 | 内容 |
 |---|---|
-| `TKCode.Arc` | Arc 侧边栏 22 个分组下的 112 个组件；另有布局面板和扩展控件，如支持流式渲染的 `Markdown`、`Form`、`TreeSelect`、`PropertyGrid`、`Cascader` 和 `TransferBox`。 |
+| `TKCode.Arc` | Arc 侧边栏 22 个分组下除 `ChatThread` 外的全部组件；另有布局面板和扩展控件，如 `Form`、`TreeSelect`、`PropertyGrid`、`Cascader` 和 `TransferBox`。不依赖 Markdown 与代码高亮库。 |
+| `TKCode.Arc.Markdown` | 支持流式渲染的 `Markdown` 以及 `ChatThread` / `ChatComposer`，由 StreamMark 渲染。用 `UseArcMarkdown()` 注册。 |
+| `TKCode.Arc.Highlighting` | TextMate 语法高亮，用于 `CodeBlock`、富文本编辑器的代码块和 Markdown 的围栏代码；不引用时代码显示为纯文本。用 `UseArcHighlighting()` 注册；设置 `ArcHighlightLanguages`（例如 `csharp;json`）可在裁剪发布时只保留这些语法。 |
 | `TKCode.Arc.Blocks` | 按 uiarc.dev 分组的页面级组合（AI、Agents、登录、设置、电商、营销、客服等），以及整页界面：仪表盘、项目、日历、人员与客户、收件箱与客服、电商。 |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid`（区域选择、行内编辑、填充柄、剪贴板、分组、导出）、`Sunburst`、`SankeyFlow`、`FunnelChart`、`RadarChart`、`RealtimeStream`、`RaceBarChart` 和 `WindRoseChart`。 |
 | `TKCode.Arc.Special` | AI 原理动画、玻璃质感、Dock 与标签栏、图库、数据小组件、文字特效、指针特效、趣味控件、加载动画、背景表面和插画。 |

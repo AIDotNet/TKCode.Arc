@@ -67,13 +67,15 @@ Each further package registers itself in the same `UseArc(...)` call: `UseArcBlo
 
 ## What's inside
 
-All 23 packages are released together on one version; keep them on the same one.
+All 25 packages are released together on one version; keep them on the same one.
 
 ### Components
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The 112 components in Arc's 22 sidebar groups, plus layout panels and extras such as `Markdown` (with streaming), `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. |
+| `TKCode.Arc` | The components in Arc's 22 sidebar groups except `ChatThread`, plus layout panels and extras such as `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. No Markdown or highlighting dependency. |
+| `TKCode.Arc.Markdown` | `Markdown` (with streaming) and `ChatThread` / `ChatComposer`, rendered by StreamMark. Register with `UseArcMarkdown()`. |
+| `TKCode.Arc.Highlighting` | TextMate syntax highlighting for `CodeBlock`, the rich text editor's code blocks and Markdown's fenced code; without it code is plain. Register with `UseArcHighlighting()`; set `ArcHighlightLanguages` (for example `csharp;json`) to keep only those grammars in a trimmed app. |
 | `TKCode.Arc.Blocks` | Page-level compositions grouped as on uiarc.dev (AI, Agents, auth, settings, commerce, marketing, support and more), and whole screens: dashboards, projects, calendars, people and customers, inbox and support, commerce. |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream`, `RaceBarChart` and `WindRoseChart`. |
 | `TKCode.Arc.Special` | Animated AI explainers, glass, docks and tabs, galleries, data widgets, type effects, cursor effects, playful controls, loaders, surfaces and illustrations. |
@@ -85,7 +87,7 @@ All 23 packages are released together on one version; keep them on the same one.
 |---|---|
 | `TKCode.Arc.Workflow` | A canvas for showing, editing and running graphs of steps, with pan, zoom, auto-arrange and undo. |
 | `TKCode.Arc.Dock` | IDE-style tab groups and resizable splits, with keyboard navigation and layouts saved as JSON. |
-| `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled. |
+| `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled for Windows, macOS, Linux, Android and iOS. |
 | `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |
 | `TKCode.Arc.Video`, `.Video.Native`, `.Video.Browser` | `VideoPlayer` and `VideoSurface` over each platform's own player (Media Foundation, AVFoundation, GStreamer on desktop, and the browser's video element on WebAssembly). |
@@ -120,7 +122,7 @@ migration notes.
 | **Avalonia** | Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
 | **Desktop** | Windows, macOS and Linux. |
 | **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
-| **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. |
+| **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. `TKCode.Arc.Terminal` carries libghostty-vt for Android (arm64, x64 and arm, API 29 or later) and iOS (devices and the simulator, as an xcframework the iOS SDK embeds), with or without NativeAOT; `tools/dev/TerminalMobileSample` checks it on the iOS simulator and an Android emulator. |
 
 ## Repository
 

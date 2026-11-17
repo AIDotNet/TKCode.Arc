@@ -91,6 +91,20 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     public static readonly DirectProperty<Select, string?> SelectedTextProperty =
         AvaloniaProperty.RegisterDirect<Select, string?>(nameof(SelectedText), o => o.SelectedText);
 
+    /// <inheritdoc cref="Field.LabelPlacementProperty"/>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        Field.LabelPlacementProperty.AddOwner<Select>();
+
+    /// <inheritdoc cref="Field.LabelWidthProperty"/>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        Field.LabelWidthProperty.AddOwner<Select>();
+
+    /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
     /// <summary>Visible label above the trigger; also the accessible name.</summary>
     public string? Label
     {

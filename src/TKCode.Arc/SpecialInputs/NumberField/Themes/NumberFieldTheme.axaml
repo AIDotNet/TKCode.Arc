@@ -8,7 +8,7 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:NumberField">
                 <Panel>
-                    <StackPanel>
+                    <arc:FieldLayout Size="{TemplateBinding Size}">
                         <!-- Arc .head: the label row is as wide as the shell, so the limit note sits over the stepper it answers. -->
                         <Grid Name="PART_Head" ColumnDefinitions="*,Auto">
                             <TextBlock Name="PART_Label"
@@ -62,7 +62,7 @@
                                           HorizontalAlignment="Left"
                                           Kind="Error"
                                           Text="{TemplateBinding EffectiveErrorMessage}" />
-                    </StackPanel>
+                    </arc:FieldLayout>
                     <arc:SpecialInputsLiveRegion Name="PART_LiveRegion" />
                 </Panel>
             </ControlTemplate>

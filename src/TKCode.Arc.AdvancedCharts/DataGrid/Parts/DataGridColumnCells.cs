@@ -847,12 +847,18 @@ internal sealed class DataGridClearFiltersButton : Decorator
     {
         _button.IsVisible = _grid.IsFiltering;
         AutomationProperties.SetName(_button, DataGridText.Get(DataGridLangResourceKind.ClearAllFilters));
+        // The background is drawn here, not by the button; while the button stays hidden nothing else redraws it after a palette change.
+        InvalidateVisual();
     }
+
+    /// <summary>The surface brush of the last render (tests: the gutter follows a theme change, issue #135).</summary>
+    internal IBrush? DrawnSurface { get; private set; }
 
     public override void Render(DrawingContext context)
     {
         base.Render(context);
         var palette = _grid.Palette;
+        DrawnSurface = palette.SurfaceBrush;
         context.FillRectangle(palette.SurfaceBrush, new Rect(Bounds.Size));
         context.DrawLine(palette.BorderPen, new Point(Bounds.Width - 0.5, 0), new Point(Bounds.Width - 0.5, Bounds.Height));
         context.DrawLine(palette.GridPen, new Point(0, Bounds.Height - 0.5), new Point(Bounds.Width, Bounds.Height - 0.5));

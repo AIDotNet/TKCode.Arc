@@ -1,0 +1,58 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Not shipped, not in the solution: runs TerminalView over the bundled libghostty-vt on iOS and Android and prints
+         "TERMINAL-SAMPLE: PASS|FAIL ..." (App.cs). Needs the .NET ios / android workloads and the mobile libghostty-vt in
+         src/TKCode.Arc.Terminal/runtimes (tools/terminal/build-ghostty-ios.sh, tools/terminal/build-ghostty.sh android-*,
+         then tools/terminal/sync-native.sh).
+         iOS simulator:  dotnet build -t:Run -f net11.0-ios -p:RuntimeIdentifier=iossimulator-arm64
+         Android:        dotnet build -t:Run -f net11.0-android (an emulator or device attached)
+         NativeAOT:      dotnet publish -c Release -f net11.0-ios -r iossimulator-arm64 -p:SampleAot=true (or -f net11.0-android);
+                         not -p:PublishAot=true, which would also reach the referenced net11.0 libraries. -->
+    <PropertyGroup>
+        <TargetFrameworks>net11.0-ios;net11.0-android</TargetFrameworks>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>TKCode.Arc.TerminalMobileSample</RootNamespace>
+        <AssemblyName>TKCode.Arc.TerminalMobileSample</AssemblyName>
+        <ApplicationId>dev.tkcode.arc.terminalsample</ApplicationId>
+        <ApplicationTitle>Arc Terminal Sample</ApplicationTitle>
+        <ApplicationVersion>1</ApplicationVersion>
+        <ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+        <IsPackable>false</IsPackable>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsAotCompatible>true</IsAotCompatible>
+        <PublishAot Condition="'$(SampleAot)' == 'true'">true</PublishAot>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <SupportedOSPlatformVersion>15.0</SupportedOSPlatformVersion>
+        <AppBundleManifest>iOS/Info.plist</AppBundleManifest>
+    </PropertyGroup>
+    <PropertyGroup Condition="$(TargetFramework.Contains('-android'))">
+        <!-- libghostty-vt for Android is built for API 29 (native/ghostty/ghostty-upstream.json). -->
+        <SupportedOSPlatformVersion>29</SupportedOSPlatformVersion>
+        <AndroidManifest>Android/AndroidManifest.xml</AndroidManifest>
+    </PropertyGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <PackageReference Include="Avalonia.iOS" />
+        <Compile Remove="Android/**" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <PackageReference Include="Avalonia.Android" />
+        <Compile Remove="iOS/**" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="../../../src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />
+    </ItemGroup>
+    <!-- A NuGet consumer gets these from the package's runtimes/ folder (runtimes/ios/native/ghostty-vt.xcframework,
+         runtimes/android-<abi>/native/libghostty-vt.so); a project reference does not carry them. -->
+    <PropertyGroup>
+        <_TerminalRuntimes>$(MSBuildThisFileDirectory)../../../src/TKCode.Arc.Terminal/runtimes/</_TerminalRuntimes>
+    </PropertyGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-ios'))">
+        <NativeReference Include="$(_TerminalRuntimes)ios/native/ghostty-vt.xcframework" Kind="Framework" />
+    </ItemGroup>
+    <ItemGroup Condition="$(TargetFramework.Contains('-android'))">
+        <AndroidNativeLibrary Include="$(_TerminalRuntimes)android-arm64/native/libghostty-vt.so" Abi="arm64-v8a" Condition="Exists('$(_TerminalRuntimes)android-arm64/native/libghostty-vt.so')" />
+        <AndroidNativeLibrary Include="$(_TerminalRuntimes)android-x64/native/libghostty-vt.so" Abi="x86_64" Condition="Exists('$(_TerminalRuntimes)android-x64/native/libghostty-vt.so')" />
+        <AndroidNativeLibrary Include="$(_TerminalRuntimes)android-arm/native/libghostty-vt.so" Abi="armeabi-v7a" Condition="Exists('$(_TerminalRuntimes)android-arm/native/libghostty-vt.so')" />
+    </ItemGroup>
+</Project>

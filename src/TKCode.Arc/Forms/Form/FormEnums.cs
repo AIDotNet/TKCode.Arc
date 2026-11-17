@@ -1,14 +1,17 @@
 namespace TKCode.Arc;
 
-/// <summary>Where a <see cref="FormItem"/> puts its label (<see cref="Form.LabelPlacementProperty"/>).</summary>
+/// <summary>
+/// Where a <see cref="FormItem"/> (<c>Form.LabelPlacement</c>) or a standalone Arc field (<c>Field.LabelPlacement</c>)
+/// puts its label.
+/// </summary>
 public enum FormLabelPlacement
 {
-    /// <summary>The label sits above the editor, as on a standalone Arc field (default).</summary>
+    /// <summary>The label sits above the editor (default).</summary>
     Top,
 
     /// <summary>
-    /// The label sits in a column to the left of the editor. With <see cref="Form.LabelWidthProperty"/> NaN every left
-    /// label of the same shared size scope takes the width of the widest one.
+    /// The label sits in a column to the left of the editor. With the label width NaN every left label of the same scope
+    /// takes the width of the widest one.
     /// </summary>
     Left
 }

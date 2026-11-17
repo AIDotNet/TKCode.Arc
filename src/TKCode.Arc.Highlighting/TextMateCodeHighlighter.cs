@@ -6,30 +6,6 @@ using TextMateSharp.Grammars;
 
 namespace TKCode.Arc;
 
-/// <summary>Syntax role of a highlighted span (Arc's CSS classes).</summary>
-internal enum CodeBlockSyntaxKind : byte
-{
-    None,
-    Comment,
-    String,
-    Number,
-    Keyword,
-    Type,
-    Function,
-    Property,
-    Tag,
-    Punctuation,
-
-    /// <summary>An added line of a diff (Arc's success color).</summary>
-    Inserted,
-
-    /// <summary>A removed line of a diff (Arc's danger color).</summary>
-    Deleted
-}
-
-/// <summary>A highlighted range of the displayed source.</summary>
-internal readonly record struct CodeBlockSyntaxSpan(int Start, int Length, CodeBlockSyntaxKind Kind);
-
 /// <summary>
 /// Language groups whose TextMate colors mean different roles (an attribute value in XML and a keyword in C# share
 /// Light+'s blue).
@@ -47,16 +23,40 @@ internal enum CodeBlockLanguageFamily : byte
 }
 
 /// <summary>
-/// Syntax highlighting for <see cref="CodeBlock"/> and the Markdown control's fenced code, on StreamMark's TextMate
-/// sessions. Sources are always tokenized with VS Code's Light+ theme (whatever the app's appearance) and each Light+
-/// token color is read back as one of Arc's nine roles, which are then painted with Arc's own palette. The role table
-/// was built from <c>light_plus.json</c> + <c>light_vs.json</c> in TextMateSharp.Grammars 2.0.4; a few colors mean
-/// different roles per language family. Operators and brackets keep the editor foreground in TextMate themes, so
-/// Arc's punctuation role is restored by character class (Arc's own tokenizer rule) inside uncolored, keyword, type,
-/// function and tag runs.
+/// The TextMate highlighter <c>UseArcHighlighting()</c> installs for <see cref="CodeBlock"/>, the rich text editor's code
+/// blocks and the Markdown package's fenced code, on StreamMark's TextMate sessions. Sources are always tokenized with
+/// VS Code's Light+ theme (whatever the app's appearance) and each Light+ token color is read back as one of Arc's nine
+/// roles, which are then painted with Arc's own palette. The role table was built from <c>light_plus.json</c> +
+/// <c>light_vs.json</c> in TextMateSharp.Grammars 2.0.4; a few colors mean different roles per language family.
+/// Operators and brackets keep the editor foreground in TextMate themes, so Arc's punctuation role is restored by
+/// character class (Arc's own tokenizer rule) inside uncolored, keyword, type, function and tag runs.
 /// </summary>
-internal static class CodeBlockHighlighter
+/// <remarks>
+/// A trimmed app that sets <c>ArcHighlightLanguages</c> ships only those grammars. StreamMark still reports the others
+/// as supported (their package.json stays), but their grammar fails to load and the session returns no tokens at all,
+/// which <see cref="Session"/> shows as plain text.
+/// </remarks>
+internal sealed class TextMateCodeHighlighter : ICodeSyntaxHighlighter
 {
+    /// <summary>The instance <c>UseArcHighlighting()</c> installs.</summary>
+    public static TextMateCodeHighlighter Shared { get; } = new();
+
+    private TextMateCodeHighlighter()
+    {
+    }
+
+    /// <inheritdoc />
+    public bool SupportsLanguage(string language) => !string.IsNullOrWhiteSpace(language) && Engine.SupportsLanguage(language);
+
+    /// <inheritdoc />
+    public ICodeSyntaxSession CreateSession(string language)
+        => new Session(Engine.CreateSession(language, SessionTheme), FamilyOf(language));
+
+    /// <inheritdoc />
+    public Task PrewarmAsync(IEnumerable<string> languages)
+        // Sessions always use the Light+ context (the role table), so only that one is warmed.
+        => Engine.PrewarmAsync(SessionTheme, languages);
+
     // Light+ token colors (0xAARRGGBB), see light_plus.json / light_vs.json.
     private const uint LpComment = 0xFF008000;      // comment
     private const uint LpString = 0xFFA31515;       // string
@@ -100,32 +100,8 @@ internal static class CodeBlockHighlighter
     /// <summary>The shared TextMate highlighter (grammars load once per process, lazily, on first use).</summary>
     public static TextMateSyntaxHighlighter Engine => s_engine.Value;
 
-    /// <summary>The number of <see cref="CodeBlockSyntaxKind"/> values (palettes are indexed by role).</summary>
-    public const int KindCount = (int)CodeBlockSyntaxKind.Deleted + 1;
-
     /// <summary>The theme every session is created with: the role table belongs to Light+.</summary>
     public const HighlightThemeKind SessionTheme = HighlightThemeKind.Light;
-
-    /// <summary>Arc's <c>normaliseLanguage</c> for the header label: lower case, no leading dot.</summary>
-    public static string NormalizeLanguage(string? language)
-    {
-        if (string.IsNullOrEmpty(language))
-        {
-            return string.Empty;
-        }
-        var lower = language.ToLowerInvariant();
-        return lower.StartsWith('.') ? lower[1..] : lower;
-    }
-
-    /// <summary>Whether TextMate has a grammar for <paramref name="language"/> (StreamMark's aliases apply).</summary>
-    public static bool SupportsLanguage(string? language) => !string.IsNullOrWhiteSpace(language) && Engine.SupportsLanguage(language);
-
-    /// <summary>
-    /// Creates an incremental session, or null when the language has no grammar (plain text). The session must be
-    /// used by one thread at a time.
-    /// </summary>
-    public static IHighlightSession? CreateSession(string? language)
-        => SupportsLanguage(language) ? Engine.CreateSession(language!, SessionTheme) : null;
 
     /// <summary>
     /// The language family of a fence or <see cref="CodeBlock.Language"/> name, normalized the way StreamMark's
@@ -181,28 +157,6 @@ internal static class CodeBlockHighlighter
                 return CodeBlockSyntaxKind.Property; // property names
         }
         return s_roles.GetValueOrDefault(foreground);
-    }
-
-    /// <summary>
-    /// Appends the role spans of <paramref name="code"/> (ascending, non-overlapping, adjacent equal roles merged) from
-    /// a session result: one token array per '\n'-separated line, offsets relative to the line start.
-    /// </summary>
-    public static void AppendSpans(string code, IReadOnlyList<ImmutableArray<HighlightToken>> lines, CodeBlockLanguageFamily family,
-                                   List<CodeBlockSyntaxSpan> output)
-    {
-        var lineStart = 0;
-        var inComment = false;
-        for (var i = 0; i < lines.Count && lineStart <= code.Length; i++)
-        {
-            var newline = code.IndexOf('\n', lineStart);
-            var lineEnd = newline < 0 ? code.Length : newline;
-            AppendLine(code, lineStart, lineEnd, lines[i], family, ref inComment, output);
-            if (newline < 0)
-            {
-                break;
-            }
-            lineStart = newline + 1;
-        }
     }
 
     /// <summary>
@@ -442,5 +396,104 @@ internal static class CodeBlockHighlighter
             families[name] = CodeBlockLanguageFamily.Diff;
         }
         return families.ToFrozenDictionary(StringComparer.Ordinal);
+    }
+
+    /// <summary>
+    /// One TextMate session mapped to Arc roles line by line. A line whose text, TextMate tokens and open markup
+    /// comment are unchanged keeps its previous span array, so streaming and edits only map the lines that changed.
+    /// </summary>
+    private sealed class Session(IHighlightSession inner, CodeBlockLanguageFamily family) : ICodeSyntaxSession
+    {
+        private readonly List<CodeBlockSyntaxSpan> _scratch = new();
+        private Line[] _lines = [];
+        private string _code = string.Empty;
+
+        public IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>> Update(string code)
+        {
+            code ??= string.Empty;
+            var source = inner.Update(code);
+            if (family != CodeBlockLanguageFamily.Diff && !HasTokens(source) && code.Length > 0 && !string.IsNullOrWhiteSpace(code))
+            {
+                // A grammar gives every non-empty line at least one token, so none at all means it did not load (an app
+                // that trims grammars with ArcHighlightLanguages): plain text, without the punctuation role either.
+                _lines = [];
+                _code = string.Empty;
+                var plain = new ImmutableArray<CodeBlockSyntaxSpan>[source.Count];
+                Array.Fill(plain, ImmutableArray<CodeBlockSyntaxSpan>.Empty);
+                return plain;
+            }
+            var lines = new Line[source.Count];
+            var result = new ImmutableArray<CodeBlockSyntaxSpan>[source.Count];
+            var lineStart = 0;
+            var inComment = false;
+            for (var i = 0; i < source.Count; i++)
+            {
+                var newline = lineStart <= code.Length ? code.IndexOf('\n', lineStart) : -1;
+                var lineEnd = newline < 0 ? code.Length : newline;
+                var startsInComment = inComment;
+                if (i < _lines.Length && _lines[i].Source == source[i] && _lines[i].StartsInComment == startsInComment
+                    && SameText(code, lineStart, lineEnd, _lines[i]))
+                {
+                    lines[i] = _lines[i] with { Start = lineStart };
+                    inComment = _lines[i].EndsInComment;
+                }
+                else
+                {
+                    _scratch.Clear();
+                    AppendLine(code, lineStart, Math.Max(lineStart, lineEnd), source[i], family, ref inComment, _scratch);
+                    lines[i] = new Line(source[i], ToLineSpans(lineStart), lineStart, Math.Max(0, lineEnd - lineStart), startsInComment, inComment);
+                }
+                result[i] = lines[i].Spans;
+                lineStart = newline < 0 ? code.Length + 1 : newline + 1;
+            }
+            _lines = lines;
+            _code = code;
+            return result;
+        }
+
+        private static bool HasTokens(IReadOnlyList<ImmutableArray<HighlightToken>> source)
+        {
+            foreach (var line in source)
+            {
+                if (!line.IsDefaultOrEmpty)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool SameText(string code, int start, int end, Line previous)
+            => end - start == previous.Length && previous.Start + previous.Length <= _code.Length
+               && code.AsSpan(start, end - start).SequenceEqual(_code.AsSpan(previous.Start, previous.Length));
+
+        private ImmutableArray<CodeBlockSyntaxSpan> ToLineSpans(int lineStart)
+        {
+            if (_scratch.Count == 0)
+            {
+                return ImmutableArray<CodeBlockSyntaxSpan>.Empty;
+            }
+            var builder = ImmutableArray.CreateBuilder<CodeBlockSyntaxSpan>(_scratch.Count);
+            foreach (var span in _scratch)
+            {
+                builder.Add(span with { Start = span.Start - lineStart });
+            }
+            return builder.MoveToImmutable();
+        }
+
+        public void Dispose()
+        {
+            inner.Dispose();
+            _lines = [];
+            _code = string.Empty;
+        }
+
+        private readonly record struct Line(
+            ImmutableArray<HighlightToken> Source,
+            ImmutableArray<CodeBlockSyntaxSpan> Spans,
+            int Start,
+            int Length,
+            bool StartsInComment,
+            bool EndsInComment);
     }
 }

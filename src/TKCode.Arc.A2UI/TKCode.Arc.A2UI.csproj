@@ -19,6 +19,9 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+        <!-- Markdown rendering and code highlighting are their own packages (ADR 0050). -->
+        <ProjectReference Include="../TKCode.Arc.Markdown/TKCode.Arc.Markdown.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Highlighting/TKCode.Arc.Highlighting.csproj" />
         <ProjectReference Include="../TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
     </ItemGroup>
     <ItemGroup>

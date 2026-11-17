@@ -77,6 +77,20 @@ public abstract class FieldTextBox : AvaloniaTextBox
     public static readonly StyledProperty<string?> PlaceholderProperty =
         AvaloniaProperty.Register<FieldTextBox, string?>(nameof(Placeholder));
 
+    /// <inheritdoc cref="Field.LabelPlacementProperty"/>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        Field.LabelPlacementProperty.AddOwner<FieldTextBox>();
+
+    /// <inheritdoc cref="Field.LabelWidthProperty"/>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        Field.LabelWidthProperty.AddOwner<FieldTextBox>();
+
+    /// <summary>Where the label sits: Top (default) or Left of the frame. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
     /// <summary>The error actually shown: <see cref="ErrorMessage"/>, else the binding's validation message.</summary>
     public static readonly DirectProperty<FieldTextBox, string?> EffectiveErrorMessageProperty =
         AvaloniaProperty.RegisterDirect<FieldTextBox, string?>(nameof(EffectiveErrorMessage), o => o.EffectiveErrorMessage);

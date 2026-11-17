@@ -7,7 +7,7 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TreeSelect">
-                <StackPanel Spacing="{arc:ArcDesignTokenResource Space2}">
+                <arc:FieldLayout Size="{TemplateBinding Size}" Spacing="{arc:ArcDesignTokenResource Space2}">
                     <TextBlock Name="PART_Label"
                                Text="{TemplateBinding Label}"
                                IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
@@ -117,7 +117,7 @@
                                TextWrapping="Wrap"
                                FontSize="{arc:ArcDesignTokenResource TypeXS}"
                                Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                </StackPanel>
+                </arc:FieldLayout>
             </ControlTemplate>
         </Setter>
 

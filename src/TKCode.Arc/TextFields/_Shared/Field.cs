@@ -66,8 +66,44 @@ public class Field : ContentControl
     public static readonly StyledProperty<FieldMessageSwap> MessageSwapProperty =
         AvaloniaProperty.Register<Field, FieldMessageSwap>(nameof(MessageSwap));
 
+    /// <summary>
+    /// Where the label sits: Top (default, above the editor) or Left (in a column to the left of the editor, centred on a
+    /// field of the same <see cref="Size"/>, with the description and error under the editor). Inherited: set it on a
+    /// panel to lay out every Arc field inside (<c>arc:Field.LabelPlacement="Left"</c>), or on one field. A field inside a
+    /// <see cref="FormItem"/> leaves its label to the item, and a field that is part of another control's template follows
+    /// only a value set on itself.
+    /// </summary>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        AvaloniaProperty.RegisterAttached<Field, Control, FormLabelPlacement>("LabelPlacement", inherits: true);
+
+    /// <summary>
+    /// Width of the label column when <c>LabelPlacement</c> is Left. NaN (default) sizes it to the widest
+    /// left label under the element that sets the placement (or the width, or <c>Grid.IsSharedSizeScope</c>), up to 240
+    /// px; longer labels wrap. Inherited.
+    /// </summary>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        AvaloniaProperty.RegisterAttached<Field, Control, double>("LabelWidth", double.NaN, inherits: true);
+
+    /// <summary>Gets <see cref="LabelPlacementProperty"/>.</summary>
+    public static FormLabelPlacement GetLabelPlacement(Control element) => element.GetValue(LabelPlacementProperty);
+
+    /// <summary>Sets <see cref="LabelPlacementProperty"/>.</summary>
+    public static void SetLabelPlacement(Control element, FormLabelPlacement value) => element.SetValue(LabelPlacementProperty, value);
+
+    /// <summary>Gets <see cref="LabelWidthProperty"/>.</summary>
+    public static double GetLabelWidth(Control element) => element.GetValue(LabelWidthProperty);
+
+    /// <summary>Sets <see cref="LabelWidthProperty"/>.</summary>
+    public static void SetLabelWidth(Control element, double value) => element.SetValue(LabelWidthProperty, value);
+
     /// <summary>How the message rows move between texts.</summary>
     public FieldMessageSwap MessageSwap { get => GetValue(MessageSwapProperty); set => SetValue(MessageSwapProperty, value); }
+
+    /// <inheritdoc cref="LabelPlacementProperty"/>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <inheritdoc cref="LabelWidthProperty"/>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
 
     /// <summary>The visible label.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }

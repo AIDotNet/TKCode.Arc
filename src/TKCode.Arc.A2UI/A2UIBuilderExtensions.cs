@@ -6,9 +6,10 @@ public static class ArcA2UIBuilderExtensions
 {
     /// <summary>
     /// Enables the A2UI renderer view (<see cref="A2UISurfaceView"/>) and its tokens. Depends on
-    /// <see cref="ArcBuilderExtensions.UseArcControls"/>.
+    /// <see cref="ArcBuilderExtensions.UseArcControls"/>, <see cref="ArcMarkdownBuilderExtensions.UseArcMarkdown"/> and
+    /// <see cref="ArcHighlightingBuilderExtensions.UseArcHighlighting"/> (the Arc catalog's Markdown and CodeBlock).
     /// </summary>
     public static ArcBuilder UseArcA2UI(this ArcBuilder builder)
         => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
-            .DependsOn(static b => b.UseArcControls())));
+            .DependsOn(static b => b.UseArcControls().UseArcMarkdown().UseArcHighlighting())));
 }

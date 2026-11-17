@@ -18,8 +18,9 @@ num = r"-?\d+(?:\.\d+)?"
 token_doc = re.compile(r"/// <summary>Token <c>(\w+)</c> \((CornerRadius|double)\)\.</summary>")
 identity = re.compile(r'public const string Identity = "([^"]+)";')
 classes = json.load(open(os.path.join(here, "double_radii.json"), encoding="utf-8"))
-# ArcDesign is generated in Core but listed with the Controls catalog (its own ArcDesign field).
-catalog_of = {"TKCode.Arc.Core": "TKCode.Arc"}
+# ArcDesign is generated in Core but listed with the Controls catalog (its own ArcDesign field). Markdown and ChatThread
+# moved out of TKCode.Arc into TKCode.Arc.Markdown (ADR 0050) and stay in the Controls table.
+catalog_of = {"TKCode.Arc.Core": "TKCode.Arc", "TKCode.Arc.Markdown": "TKCode.Arc"}
 
 found = collections.defaultdict(dict)  # catalog -> {(control, token): is_double}
 generated = os.path.join(src, "*", "GeneratedFiles", "*", "TKCode.Arc.Foundation.Generators", "*", "*Token.g.cs")

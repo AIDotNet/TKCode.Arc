@@ -95,9 +95,10 @@ the public domain. Made with Natural Earth. Free vector and raster map data at h
 
 ## StreamMark — Markdown rendering and code highlighting
 
-`TKCode.Arc` references the StreamMark packages (`TKCode.StreamMark.Core`, `TKCode.StreamMark.Avalonia`,
-`TKCode.StreamMark.Highlighting.TextMate`) as published NuGet binaries. They render the `Markdown` control and
-tokenize the code of `CodeBlock`. StreamMark.Core contains a C# port of remend from vercel/streamdown
+`TKCode.Arc.Markdown` references `TKCode.StreamMark.Avalonia` (and through it `TKCode.StreamMark.Core` and Markdig), and
+`TKCode.Arc.Highlighting` references `TKCode.StreamMark.Highlighting.TextMate` (and through it TextMateSharp, its
+grammars and Oniguruma), as published NuGet binaries. They render the `Markdown` control and tokenize the code of
+`CodeBlock`; `TKCode.Arc` itself references none of them. StreamMark.Core contains a C# port of remend from vercel/streamdown
 (Apache License 2.0, Copyright 2023 Vercel, Inc.); see StreamMark's own third-party notices.
 
 ```

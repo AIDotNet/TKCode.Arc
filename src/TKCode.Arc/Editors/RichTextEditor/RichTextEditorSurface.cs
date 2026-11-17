@@ -840,7 +840,10 @@ internal sealed class RichTextEditorSurface : Control
 
     private bool HasCodeHeader(RichTextEditorBlock block) => block.IsCode && (ShowCodeHeader || block.Language is not null);
 
-    /// <summary>The syntax spans of a code block in its language, or null for plain text, an unknown language or a very long block.</summary>
+    /// <summary>
+    /// The syntax spans of a code block in its language, or null for plain text, an unknown language, a very long block or
+    /// no installed highlighter (<see cref="CodeBlockHighlighter.Provider"/>).
+    /// </summary>
     internal static List<CodeBlockSyntaxSpan>? HighlightSyntax(RichTextEditorBlock block)
     {
         if (block.Language is not { } language || block.Length == 0 || block.Length > 30000 || !CodeBlockHighlighter.SupportsLanguage(language))
@@ -855,7 +858,7 @@ internal sealed class RichTextEditorSurface : Control
                 return null;
             }
             var spans = new List<CodeBlockSyntaxSpan>();
-            CodeBlockHighlighter.AppendSpans(block.Text, session.Update(block.Text), CodeBlockHighlighter.FamilyOf(language), spans);
+            CodeBlockHighlighter.AppendSpans(block.Text, session.Update(block.Text), spans);
             return spans;
         }
         catch (Exception)

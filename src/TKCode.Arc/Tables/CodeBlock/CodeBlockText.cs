@@ -3,7 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
-using StreamMark.Core.Highlighting;
+using System.Collections.Immutable;
 
 namespace TKCode.Arc;
 
@@ -25,8 +25,8 @@ internal sealed class CodeBlockSyntaxPalette
 /// <see cref="SelectableTextBlock"/>; the selection keeps the syntax colors (no selection foreground).
 /// </summary>
 /// <remarks>
-/// Highlighting comes from one incremental StreamMark TextMate session per block and language
-/// (<see cref="CodeBlockHighlighter"/>). It runs once per source change: on the UI thread when the language's grammar
+/// Highlighting comes from one incremental session per block and language of the installed highlighter
+/// (<see cref="CodeBlockHighlighter.Provider"/>; plain text without one). It runs once per source change: on the UI thread when the language's grammar
 /// is already warm, otherwise on a worker (the text shows plain until the colors arrive). A session is only ever used
 /// by one thread at a time; changes that arrive meanwhile are coalesced into one more update.
 /// </remarks>
@@ -40,9 +40,8 @@ internal sealed class CodeBlockText : SelectableTextBlock
 
     private readonly List<CodeBlockSyntaxSpan> _spans = new();
     private readonly TextRunProperties?[] _kindProperties = new TextRunProperties?[CodeBlockHighlighter.KindCount];
-    private IHighlightSession? _session;
+    private ICodeSyntaxSession? _session;
     private string _sessionLanguage = string.Empty;
-    private CodeBlockLanguageFamily _family;
     private string _source = string.Empty;
     private bool _highlightRunning;
     private TaskCompletionSource? _highlighted;
@@ -63,10 +62,10 @@ internal sealed class CodeBlockText : SelectableTextBlock
     public void SetSource(string text, string language)
     {
         _source = text;
-        if (!string.Equals(language, _sessionLanguage, StringComparison.Ordinal))
+        // A highlighter installed after this block was created takes over on the next change.
+        if (!string.Equals(language, _sessionLanguage, StringComparison.Ordinal) || (_session is null && CodeBlockHighlighter.SupportsLanguage(language)))
         {
             _sessionLanguage = language;
-            _family = CodeBlockHighlighter.FamilyOf(language);
             // A running update still owns the old session; it is dropped when that update returns.
             if (!_highlightRunning)
             {
@@ -121,7 +120,7 @@ internal sealed class CodeBlockText : SelectableTextBlock
         var dispatcher = Dispatcher;
         _ = Task.Run(() =>
         {
-            IReadOnlyList<System.Collections.Immutable.ImmutableArray<HighlightToken>>? lines;
+            IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>>? lines;
             try
             {
                 lines = session.Update(code);
@@ -135,7 +134,7 @@ internal sealed class CodeBlockText : SelectableTextBlock
         });
     }
 
-    private void OnHighlighted(IHighlightSession session, string code, IReadOnlyList<System.Collections.Immutable.ImmutableArray<HighlightToken>>? lines)
+    private void OnHighlighted(ICodeSyntaxSession session, string code, IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>>? lines)
     {
         _highlightRunning = false;
         if (!ReferenceEquals(session, _session))
@@ -163,8 +162,8 @@ internal sealed class CodeBlockText : SelectableTextBlock
         }
     }
 
-    private void ApplySpans(string code, IReadOnlyList<System.Collections.Immutable.ImmutableArray<HighlightToken>> lines)
-        => CodeBlockHighlighter.AppendSpans(code, lines, _family, _spans);
+    private void ApplySpans(string code, IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>> lines)
+        => CodeBlockHighlighter.AppendSpans(code, lines, _spans);
 
     private void CompleteHighlight()
     {

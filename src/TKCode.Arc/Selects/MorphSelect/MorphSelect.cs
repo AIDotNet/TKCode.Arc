@@ -111,6 +111,20 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly DirectProperty<MorphSelect, string?> SelectedTextProperty =
         AvaloniaProperty.RegisterDirect<MorphSelect, string?>(nameof(SelectedText), o => o.SelectedText);
 
+    /// <inheritdoc cref="Field.LabelPlacementProperty"/>
+    public static readonly AttachedProperty<FormLabelPlacement> LabelPlacementProperty =
+        Field.LabelPlacementProperty.AddOwner<MorphSelect>();
+
+    /// <inheritdoc cref="Field.LabelWidthProperty"/>
+    public static readonly AttachedProperty<double> LabelWidthProperty =
+        Field.LabelWidthProperty.AddOwner<MorphSelect>();
+
+    /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
+    public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
+
+    /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
+    public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
     /// <summary>Visible label; also the accessible name of the trigger and the list.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 

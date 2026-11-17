@@ -6,7 +6,8 @@
                     x:Class="TKCode.Arc.Mobile.TextFieldTheme">
 
     <!-- Text field: a SurfaceMuted fill with a transparent 1px border that turns Accent while focused; an optional icon before the
-         text and a clear button after it (a PresenceHost pop) while the field has focus and text. No hover state. The Searchbar is this theme with :search. -->
+         text and a clear button after it (a PresenceHost pop) while the field has focus and text. No hover state. A long
+         press opens the TextEditMenu (Cut, Copy, Paste, Select All). The Searchbar is this theme with :search. -->
     <ControlTheme x:Key="{x:Type arcm:TextField}" TargetType="arcm:TextField">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
@@ -93,6 +94,11 @@
         <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="PlaceholderForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <!-- Long-press edit menu (issue #137). One instance serves every field: only one is open at a time, and it reads
+             the field it opens for. A local ContextFlyout or ContextMenu replaces it. -->
+        <Setter Property="ContextFlyout">
+            <arcm:TextEditMenu />
+        </Setter>
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Top" />
 

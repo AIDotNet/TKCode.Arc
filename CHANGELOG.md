@@ -4,9 +4,139 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 from 1.0.0 on, breaking API changes come only with a new major version. Earlier `-preview` versions could change the API between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
-`TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
+`TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (after 1.1.1-preview.5), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
+
+## Unreleased
+
+Markdown and code highlighting leave the main package ([#132](https://github.com/AIDotNet/TKCode.Arc/issues/132),
+ADR 0050). `TKCode.Arc` no longer depends on StreamMark, Markdig, TextMateSharp, its grammars or the native Oniguruma
+library, which made up about 8.5 MiB of a trimmed app that used none of them. **This is a breaking change inside 1.x**,
+made on purpose; see Migration.
+
+### Added
+
+- `TKCode.Arc.Markdown` (new package): `Markdown`, `MarkdownHighlightPlugin`, `ChatThread` and `ChatComposer`, moved
+  here from `TKCode.Arc` with their tokens and themes. Register with `UseArcMarkdown()`. It depends on StreamMark, not
+  on TextMate.
+- `TKCode.Arc.Highlighting` (new package): the TextMate highlighting of `CodeBlock`, the `RichTextEditor` code blocks and
+  Markdown's fenced code, in Arc's role palette as before. Register with `UseArcHighlighting()`.
+- `ArcHighlightLanguages` (MSBuild property of `TKCode.Arc.Highlighting`): a trimmed publish keeps only the grammars it
+  lists, for example `<ArcHighlightLanguages>csharp;json;xml</ArcHighlightLanguages>`. The names are grammar folders or
+  language ids of TextMateSharp.Grammars; an unknown name warns (ARCH001). Code in an unlisted language shows as plain
+  text, and so does a language embedded in a listed grammar (CSS in HTML) unless it is listed too. With `csharp;json`
+  the grammars assembly goes from 6.7 MB to 0.7 MB. It applies wherever ILLink trims (PublishTrimmed, WebAssembly), not
+  to Native AOT.
+
+### Changed
+
+- **Breaking:** `Markdown`, `MarkdownToken`, `MarkdownHighlightPlugin`, `ChatThread`, `ChatThreadToken`,
+  `ChatComposer` and `ChatComposerToken` are in the `TKCode.Arc.Markdown` assembly. Their names, the `TKCode.Arc`
+  namespace, the `arc:` XAML namespace, properties, events and token names are unchanged; code built against an
+  earlier `TKCode.Arc` has to be rebuilt.
+- **Breaking:** without `UseArcHighlighting()`, `CodeBlock`, the `RichTextEditor` code blocks and Markdown's fenced code
+  show plain text. A highlighter that is enabled after a `CodeBlock` was created colors it on its next change.
+- `TKCode.Arc.Blocks`, `TKCode.Arc.Special` and `TKCode.Arc.A2UI` depend on both new packages, and `UseArcBlocks()`,
+  `UseArcSpecial()` and `UseArcA2UI()` enable them, so these packages look and behave as before.
+
+### Migration
+
+- An app that uses `Markdown`, `ChatThread` or `ChatComposer`: add `TKCode.Arc.Markdown` and call `UseArcMarkdown()`.
+- An app that wants colored code in `CodeBlock`, the rich text editor or Markdown: add `TKCode.Arc.Highlighting` and
+  call `UseArcHighlighting()`.
+- An app that uses `TKCode.Arc.Blocks`, `TKCode.Arc.Special` or `TKCode.Arc.A2UI` needs no change.
+
+```csharp
+AppBuilder.Configure<App>()
+    .UsePlatformDetect()
+    .UseArc(arc => arc.UseArcControls()
+                      .UseArcMarkdown()        // Markdown, ChatThread, ChatComposer
+                      .UseArcHighlighting());  // colored code
+```
+
+## 1.1.1-preview.5 - 2026-11-16
+
+Mobile text fields get a long-press edit menu: `TextField` and `Searchbar` (`TKCode.Arc.Mobile`) now offer Cut, Copy,
+Paste and Select All, so text can be pasted on a phone ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)).
+`TKCode.Arc.Terminal` now runs on iOS and Android ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)). Nothing is
+removed and the API of existing members is unchanged. Install it with `--version 1.1.1-preview.5` (or `--prerelease`).
+
+### Added
+
+- `TextEditMenu` (`TKCode.Arc.Mobile`): the long-press edit menu of a text field, a row of Cut, Copy, Paste and Select
+  All above the text ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). It derives from Avalonia's
+  `PopupFlyoutBase`, so set it as the `ContextFlyout` of any `TextBox` to give it the menu. It shows only the actions
+  that apply (no Cut or Copy without a selection or in a password box, no Cut or Paste when read only, no Select All
+  once all is selected), opens without taking focus so the soft keyboard stays up, and closes on a tap outside, on
+  typing and when the field loses focus. Its text comes from the new `TextEditMenuLangResourceKind` catalog (en-US,
+  zh-CN, zh-TW), and its geometry from `TextEditMenuToken`. `TextEditMenu.Platform` (an `ITextEditMenuPlatform`) lets a
+  platform package show the system's own edit menu in its place.
+- `TKCode.Arc.Terminal` carries libghostty-vt for Android (arm64, x64, arm; API 29 and later) and iOS (a dynamic
+  `ghostty-vt.xcframework` for devices and the simulator), so `TerminalView` runs on phones, with or without NativeAOT
+  ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)). No build targets are needed: NuGet picks
+  `runtimes/android-*` for the Android RIDs, and the iOS SDK embeds the xcframework from the package.
+- `TKCode.Arc.Mobile.iOS` (new project, `net10.0-ios` and `net11.0-ios`; not on NuGet in this preview, because CI does
+  not pack iOS projects yet: reference the project for now): the iOS edit actions for Avalonia text boxes
+  ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). Avalonia.iOS 12.1.5 does not implement `cut:`, `copy:`,
+  `paste:` and `selectAll:`, so the keyboard's "Paste from …" suggestion did nothing. Derive the app delegate from
+  `ArcAppDelegate<App>` (in place of `AvaloniaAppDelegate<App>`) and those actions reach the focused `TextBox`, the
+  suggestion pastes, and on iOS 16 and later a long press on a `TextField` opens the system edit menu above the text.
+  Paste reads the pasteboard inside the system's paste action, so iOS does not ask "Allow Paste?". An app that keeps
+  its own delegate base forwards to `ArcIosTextEditing`. Android needs no package: Avalonia.Android already handles the
+  keyboard's paste, and the Arc menu shows there.
+
+### Fixed
+
+- `TextField` and `Searchbar` (`TKCode.Arc.Mobile`) had no long-press menu, so on a phone there was no way to paste
+  into them ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)). Avalonia's `TextBox` shows its `ContextFlyout`
+  on a long press and from the selection handles, but the theme set none. It now sets a `TextEditMenu`; a long press
+  opens it above the field at the finger, also in a field nobody has typed in yet. A `ContextFlyout` or `ContextMenu`
+  you set on the field still replaces it.
+- `TerminalView` on Android: an unknown font family resolved to Roboto instead of a miss, so the default family list
+  stopped at "Menlo"; a substituted face now counts as a miss and the list falls through to monospace. Cell metrics are
+  recomputed on attach and when the scaling changes (phones report it after the first measure, which left the grid at
+  1x) ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)).
+
+### Migration
+
+- `TKCode.Arc.Mobile` now has a language catalog, `TextEditMenuLangResourceKind`, with en-US, zh-CN and zh-TW text. An
+  app that enables `UseArcMobile()` and lists another language in `UseLanguages` gets the startup error that lists
+  missing text, as it already does with the catalogs of the other Arc packages; keep to those three languages until the
+  package ships that language.
+
+## 1.1.1-preview.4 - 2026-11-16
+
+Standalone Arc fields can put their label on the left: `LabelPlacement="Left"` and `LabelWidth` on the field, or
+`arc:Field.LabelPlacement` / `arc:Field.LabelWidth` on a container ([#131](https://github.com/AIDotNet/TKCode.Arc/issues/131)).
+Nothing is removed and the default (label on top) is unchanged. Install it with `--version 1.1.1-preview.4` (or `--prerelease`).
+
+### Added
+
+- `Field.LabelPlacement` and `Field.LabelWidth` (`TKCode.Arc`): inherited attached properties, also exposed as
+  `LabelPlacement` / `LabelWidth` on `Field`, `Input`, `Textarea`, `PasswordField`, `PasswordStrength`, `SearchField`,
+  `NumberField`, `MoneyInput`, `PhoneInput`, the pickers (`DatePicker`, `DateRangePicker`, `TimePicker`), `TagInput`,
+  `Select`, `Combobox`, `MultiSelect`, `TreeSelect`, `Cascader` and `MorphSelect` ([#131](https://github.com/AIDotNet/TKCode.Arc/issues/131)).
+  With `Left`, the label sits in a column left of the frame, vertically centred on the frame height of the field's `Size`
+  (36, 44 or 50 px), and the description and error rows stay under the frame. `LabelWidth` fixes the column; `NaN`
+  (the default) gives every field under the element that sets the placement (or the width, or `Grid.IsSharedSizeScope`)
+  one column as wide as its widest label, capped at 240 px (`Form`'s `AutoLabelMaxWidth`), after which labels wrap.
+  A field inside a `FormItem` keeps leaving its label to the item, and `FormItem` now also follows an inherited
+  `Field.LabelPlacement="Left"`. A field inside another control's template ignores an inherited value, and the
+  `ColorPicker` keeps its label on top.
+
+## 1.1.1-preview.3 - 2026-11-16
+
+A fix for `DataGrid` (`TKCode.Arc.AdvancedCharts`): the filter row's gutter now follows a light/dark switch at run time
+([#135](https://github.com/AIDotNet/TKCode.Arc/issues/135)). Nothing is added or removed and the API is unchanged.
+Install it with `--version 1.1.1-preview.3` (or `--prerelease`).
+
+### Fixed
+
+- `DataGrid`: the gutter cell of the filter row (below the select-all box, where the clear-filters button sits) kept the
+  previous theme's surface after a light/dark switch at run time while no filter was active ([#135](https://github.com/AIDotNet/TKCode.Arc/issues/135)).
+  The gutter paints its own background, and with the clear button hidden nothing asked it to repaint. A palette change
+  now repaints it, and the header, filter and totals rows repaint their own surface as well.
 
 ## 1.1.1-preview.2 - 2026-11-15
 
@@ -1877,6 +2007,9 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.1.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.4...v1.1.1-preview.5
+[1.1.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.3...v1.1.1-preview.4
+[1.1.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.2...v1.1.1-preview.3
 [1.1.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.1...v1.1.1-preview.2
 [1.1.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.0...v1.1.1-preview.1
 [1.1.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.0.0...v1.1.0
