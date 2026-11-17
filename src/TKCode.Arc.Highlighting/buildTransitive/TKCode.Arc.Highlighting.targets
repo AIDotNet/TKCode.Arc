@@ -1,0 +1,44 @@
+<Project>
+    <!-- ArcHighlightLanguages (ADR 0050): a trimmed publish keeps only the TextMate grammars listed here, for example
+           <ArcHighlightLanguages>csharp;json;xml;typescript</ArcHighlightLanguages>
+         Names are grammar folders of TextMateSharp.Grammars or the language ids they declare (csharp, typescript,
+         javascript, json, xml, html, css, python, shellscript, yaml, markdown, ...); fence aliases such as cs or ts are
+         not accepted here. Empty (the default) keeps every grammar. A grammar that embeds another (html embeds css and
+         javascript, markdown embeds most) shows the embedded code plain unless that grammar is listed too; code in an
+         unlisted language shows plain. The grammars are embedded resources, which the trimmer keeps unless told
+         otherwise, so this hands ILLink a substitutions file that removes the others (about 6.4 MB when all go). It
+         applies wherever ILLink trims: PublishTrimmed (desktop, mobile) and WebAssembly. Native AOT is not covered. -->
+    <Import Project="$(MSBuildThisFileDirectory)TKCode.Arc.Highlighting.Grammars.targets" Condition="'$(ArcHighlightLanguages)' != ''" />
+
+    <Target Name="_ArcHighlightTrimGrammars" BeforeTargets="PrepareForILLink" Condition="'$(ArcHighlightLanguages)' != ''">
+        <PropertyGroup>
+            <!-- Property functions return escaped text; unescape so the item list splits on ';'. -->
+            <_ArcHighlightLanguageList>$([MSBuild]::Unescape($(ArcHighlightLanguages.Replace(',', ';').Replace(' ', '').ToLowerInvariant())))</_ArcHighlightLanguageList>
+            <_ArcHighlightSubstitutions>$(IntermediateOutputPath)TKCode.Arc.Highlighting.Substitutions.xml</_ArcHighlightSubstitutions>
+        </PropertyGroup>
+        <ItemGroup>
+            <_ArcHighlightWanted Include="$(_ArcHighlightLanguageList)" />
+            <_ArcHighlightUnknown Include="@(_ArcHighlightWanted)" Exclude="@(_ArcHighlightGrammarLanguage)" />
+            <!-- Wanted ∩ known, keeping the Folder metadata: known minus (known minus wanted). -->
+            <_ArcHighlightNotWanted Include="@(_ArcHighlightGrammarLanguage)" Exclude="@(_ArcHighlightWanted)" />
+            <_ArcHighlightKept Include="@(_ArcHighlightGrammarLanguage)" Exclude="@(_ArcHighlightNotWanted)" />
+            <_ArcHighlightKeptFolder Include="@(_ArcHighlightKept->'%(Folder)')" />
+            <_ArcHighlightRemoved Include="@(_ArcHighlightGrammarResource)" Exclude="@(_ArcHighlightKeptFolder)" />
+            <_ArcHighlightSubstitutionLine Include="&lt;linker&gt;" />
+            <_ArcHighlightSubstitutionLine Include="  &lt;assembly fullname=&quot;TextMateSharp.Grammars&quot;&gt;" />
+            <_ArcHighlightSubstitutionLine Include="@(_ArcHighlightRemoved->'    &lt;resource name=&quot;%(Resource)&quot; action=&quot;remove&quot; /&gt;')" />
+            <_ArcHighlightSubstitutionLine Include="  &lt;/assembly&gt;" />
+            <_ArcHighlightSubstitutionLine Include="&lt;/linker&gt;" />
+        </ItemGroup>
+        <Warning Condition="'@(_ArcHighlightUnknown)' != ''" Code="ARCH001"
+                 Text="ArcHighlightLanguages names no TextMate grammar for: @(_ArcHighlightUnknown, ', '). Use a grammar folder or language id of TextMateSharp.Grammars (see the comment in TKCode.Arc.Highlighting.targets)." />
+        <WriteLinesToFile File="$(_ArcHighlightSubstitutions)" Lines="@(_ArcHighlightSubstitutionLine)" Overwrite="true" WriteOnlyWhenDifferent="true" />
+        <ItemGroup>
+            <FileWrites Include="$(_ArcHighlightSubstitutions)" />
+        </ItemGroup>
+        <PropertyGroup>
+            <_ExtraTrimmerArgs>$(_ExtraTrimmerArgs) --substitutions "$(_ArcHighlightSubstitutions)"</_ExtraTrimmerArgs>
+        </PropertyGroup>
+        <Message Importance="normal" Text="TKCode.Arc.Highlighting: keeping grammars @(_ArcHighlightKeptFolder->Distinct(), ', '); removing @(_ArcHighlightRemoved->Count()) grammar files." />
+    </Target>
+</Project>

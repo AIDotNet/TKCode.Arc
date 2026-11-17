@@ -27,6 +27,8 @@ public static class TestAppBuilder
         AppBuilder.Configure<TestApplication>()
                   .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                   .UseArc(arc => arc.UseArcControls()
+                                    .UseArcMarkdown()
+                                    .UseArcHighlighting()
                                     .UseArcBlocks()
                                     .UseArcAdvancedCharts()
                                     .UseArcWorkflow()

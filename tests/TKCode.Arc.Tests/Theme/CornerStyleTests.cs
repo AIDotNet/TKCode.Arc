@@ -472,7 +472,7 @@ public class CornerStyleTests
     private static Type[] ControlTypes()
     {
         // Every control package of the scope; the Mobile package has its own tokens and is not part of it.
-        string[] assemblies = ["TKCode.Arc", "TKCode.Arc.Blocks", "TKCode.Arc.Special", "TKCode.Arc.AdvancedCharts", "TKCode.Arc.Workflow"];
+        string[] assemblies = ["TKCode.Arc", "TKCode.Arc.Markdown", "TKCode.Arc.Blocks", "TKCode.Arc.Special", "TKCode.Arc.AdvancedCharts", "TKCode.Arc.Workflow"];
         var types = assemblies
             .Select(name => System.Reflection.Assembly.Load(new System.Reflection.AssemblyName(name)))
             .SelectMany(assembly => assembly.GetExportedTypes())
