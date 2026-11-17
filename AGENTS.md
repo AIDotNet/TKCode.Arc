@@ -1,7 +1,7 @@
 # TKCode.Arc agent guide
 
-TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia 12.1.5. Every package depends only on Avalonia and the in-house MIT `TKCode.Arc.Foundation` (token runtime, theme manager, package registration, localization; design/architecture/foundation.md); the exceptions are `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting`, which bring StreamMark (and through it Markdig and TextMate) so that `TKCode.Arc` does not (design/decisions/0050-markdown-and-highlighting-packages.md).
-Design source of truth: `design/` (start at `design/overview.md`).
+TKCode.Arc is an Arc-style (uiarc.dev) component library for Avalonia 12 (the version is `AvaloniaVersion` in `build/Versions.props`). Every package depends only on Avalonia and the in-house MIT `TKCode.Arc.Foundation` (token runtime, theme manager, package registration, localization; design/architecture/foundation.md); the exceptions are `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting`, which bring StreamMark (and through it Markdig and TextMate) so that `TKCode.Arc` does not (design/decisions/0050-markdown-and-highlighting-packages.md).
+Design source of truth: `design/` (start at `design/overview.md`). It is the maintainers' local working area and is not in the repository (`.gitignore`, since commit 4092a675): a fresh clone has no `design/`, and the `design/...` paths below and in the CHANGELOG point into it. Without it, this file, the XML docs and the code are the reference; the rules below stand on their own.
 
 ## Layout
 
