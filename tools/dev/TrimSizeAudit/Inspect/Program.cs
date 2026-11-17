@@ -1,27 +1,49 @@
+using System.Reflection;
 using System.Reflection.Metadata;
 using System.Reflection.PortableExecutable;
+using System.Security.Cryptography;
 using System.Text.Json;
 
-foreach (var path in args)
+var manifest = JsonDocument.Parse(File.ReadAllText(args[0])).RootElement;
+var expectedThemes = manifest.GetProperty("ThemeTypes").EnumerateArray().Select(value => value.GetString()!).ToArray();
+var trackedControls = manifest.GetProperty("ControlTypes").EnumerateArray().Select(value => value.GetString()!).ToArray();
+var path = args[1];
+using var stream = File.OpenRead(path);
+using var pe = new PEReader(stream);
+var metadata = pe.GetMetadataReader();
+var allTypes = metadata.TypeDefinitions.Select(handle => metadata.GetTypeDefinition(handle)).ToArray();
+var topLevelTypes = allTypes.Where(type => !type.IsNested)
+    .ToDictionary(type => metadata.GetString(type.Namespace) + "." + metadata.GetString(type.Name));
+var themes = expectedThemes.Where(topLevelTypes.ContainsKey).Order().ToArray();
+foreach (var name in themes)
 {
-    using var stream = File.OpenRead(path);
-    using var pe = new PEReader(stream);
-    var metadata = pe.GetMetadataReader();
-    var types = metadata.TypeDefinitions.Select(handle => metadata.GetTypeDefinition(handle)).ToList();
-    var names = types.Select(type => metadata.GetString(type.Namespace) + "." + metadata.GetString(type.Name)).ToHashSet();
-    var themes = types.Where(type => metadata.GetString(type.Name).EndsWith("Theme", StringComparison.Ordinal))
-        .Select(type => metadata.GetString(type.Name)).Order().ToArray();
-    var controls = new[] { "Button", "Calendar", "Markdown", "BarChart", "ColorPicker", "PropertyGrid", "CodeBlock" }
-        .ToDictionary(name => name, name => names.Contains("TKCode.Arc." + name));
-
-    Console.WriteLine(JsonSerializer.Serialize(new
+    var type = topLevelTypes[name];
+    if (BaseName(type.BaseType) != "Avalonia.Controls.ResourceDictionary"
+        || (type.Attributes & TypeAttributes.ClassSemanticsMask) == TypeAttributes.Interface)
     {
-        File = Path.GetFileName(path),
-        Bytes = stream.Length,
-        Types = types.Count,
-        Methods = types.Sum(type => type.GetMethods().Count),
-        ThemeCount = themes.Length,
-        Themes = themes,
-        Controls = controls
-    }));
+        throw new InvalidOperationException("Tracked theme no longer matches a top-level ResourceDictionary class: " + name);
+    }
+}
+Console.WriteLine(JsonSerializer.Serialize(new
+{
+    File = Path.GetFileName(path), Bytes = stream.Length,
+    Sha256 = Convert.ToHexString(SHA256.HashData(File.ReadAllBytes(path))),
+    TypeCount = allTypes.Length, MethodCount = allTypes.Sum(type => type.GetMethods().Count),
+    SourceThemeCount = themes.Length, SourceThemes = themes,
+    TrackedTypes = trackedControls.ToDictionary(name => name, topLevelTypes.ContainsKey)
+}));
+
+string BaseName(EntityHandle handle)
+{
+    if (handle.Kind == HandleKind.TypeReference)
+    {
+        var type = metadata.GetTypeReference((TypeReferenceHandle)handle);
+        return metadata.GetString(type.Namespace) + "." + metadata.GetString(type.Name);
+    }
+    if (handle.Kind == HandleKind.TypeDefinition)
+    {
+        var type = metadata.GetTypeDefinition((TypeDefinitionHandle)handle);
+        return metadata.GetString(type.Namespace) + "." + metadata.GetString(type.Name);
+    }
+    return handle.Kind.ToString();
 }

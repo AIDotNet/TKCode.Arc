@@ -1,0 +1,27 @@
+{
+  "SourceCommit": "5a2bb2aa92e83f66d1e5343faa787e018134d9ae",
+  "Sdk": "11.0.100",
+  "Runtime": "10.0.15",
+  "Avalonia": "12.1.5",
+  "Rid": "win-x64",
+  "SelectedTheme": "TKCode.Arc.ButtonTheme",
+  "SelectedToken": "Button",
+  "RequiredCorePrimitives": [
+    "ArcContentSwap",
+    "SpringSizeDecorator",
+    "ArcSpinner",
+    "LazyFocusRing"
+  ],
+  "RequiredArcCatalogs": [],
+  "CorePolicy": "Retain all existing Core registration, including global tokens and all base theme dictionaries",
+  "ClosureScope": "Reviewed Button-only fixture; no general-purpose dependency discovery is claimed",
+  "SourceBlobs": {
+    "src/TKCode.Arc/Buttons/Button/Button.cs": "c3818984265b8d9f92945c88ae8c643b388b7d28",
+    "src/TKCode.Arc/Buttons/Button/ButtonToken.cs": "6e12769414973eb7aba74ae350fa906fbbcb90f3",
+    "src/TKCode.Arc/Buttons/Button/Themes/ButtonTheme.axaml": "b287b3ab36484503440164c4b93b460e70b5e084",
+    "src/TKCode.Arc.Core/Primitives/ArcSpinner.cs": "2e1143ac22fd201ea0c2061111c1f379b396b34e",
+    "src/TKCode.Arc.Core/Primitives/LazyFocusRing.cs": "5802d2b80b1afb15c07425f6b38037f3b31b7808",
+    "src/TKCode.Arc.Core/Primitives/ArcContentSwap.cs": "e06590513561aa445d1b54b41b9809bf7e6c1c79",
+    "src/TKCode.Arc.Core/Primitives/SpringSizeDecorator.cs": "2e3bf3dfafbbf63a9256d1596564dc06c05df8d6"
+  }
+}
