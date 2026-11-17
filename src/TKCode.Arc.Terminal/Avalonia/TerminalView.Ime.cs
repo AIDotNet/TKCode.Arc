@@ -82,7 +82,7 @@ public sealed partial class TerminalView
         var at = x;
         foreach (var (s, width) in runes)
         {
-            DrawText(context, s, width == 2 ? CellWidth.Wide : CellWidth.Narrow, foreground, new Rect(at / scale, y / scale, width * m.CellWidth / scale, m.CellHeight / scale), m);
+            DrawCellText(context, char.ConvertToUtf32(s, 0), null, FaceStyle.Regular, width, foreground, new Point(at / scale, y / scale), m);
             at += width * m.CellWidth;
         }
         var underline = new Rect(x / scale, (y + m.CellHeight - m.UnderlineThickness) / scale, cells * m.CellWidth / scale, Math.Max(1, m.UnderlineThickness) / scale);
