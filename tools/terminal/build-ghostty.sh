@@ -71,13 +71,26 @@ while read -r patch; do
   echo "applied $patch"
 done
 
-# 3. 构建
+# 3. 预置依赖：Codeberg 等托管站会对 CI 限流（429 / 504），仓库里带了这些包的副本（native/ghostty/deps/README.md），
+#    先放进 Zig 包缓存，zig build 按哈希找到它们就不再下载。
+for dep in "$root"/native/ghostty/deps/*.tar.gz; do
+  [[ -e "$dep" ]] || continue
+  name="$(basename "$dep" .tar.gz)"
+  if [[ -e "$ZIG_GLOBAL_CACHE_DIR/p/$name" || -e "$ZIG_GLOBAL_CACHE_DIR/p/$name.tar.gz" ]]; then
+    continue
+  fi
+  fetched="$(cd "$src" && "$zig" fetch "$dep")"
+  [[ "$fetched" == "$name" ]] || { echo "vendored $dep has hash $fetched, expected $name" >&2; exit 1; }
+  echo "seeded $name"
+done
+
+# 4. 构建
 prefix="$root/artifacts/native-build/$rid"
 rm -rf "$prefix"
 echo "zig $("$zig" version): build $args -Doptimize=$optimize"
 (cd "$src" && "$zig" build $args -Doptimize="$optimize" --prefix "$prefix")
 
-# 4. 整理产物：统一文件名，供 MSBuild 拾取
+# 5. 整理产物：统一文件名，供 MSBuild 拾取
 out="$root/artifacts/native/$rid"
 mkdir -p "$out"
 rm -f "$out"/libghostty-vt.* "$out"/ghostty-vt.*
