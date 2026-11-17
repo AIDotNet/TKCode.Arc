@@ -18,9 +18,13 @@ public sealed partial class TerminalView : Control
     public static readonly StyledProperty<FrameSnapshot?> SnapshotProperty =
         AvaloniaProperty.Register<TerminalView, FrameSnapshot?>(nameof(Snapshot));
 
-    /// <summary>Defines the <see cref="FontFamily"/> property.</summary>
+    /// <summary>
+    /// Defines the <see cref="FontFamily"/> property. The default starts with Geist Mono, Arc's code font, when the app
+    /// registers it (<c>WithArcFonts()</c> or <c>UseArcFonts()</c>, TKCode.Arc.Fonts), then the platform's monospace fonts
+    /// (#150).
+    /// </summary>
     public static readonly StyledProperty<FontFamily> FontFamilyProperty =
-        AvaloniaProperty.Register<TerminalView, FontFamily>(nameof(FontFamily), new FontFamily("Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, monospace"));
+        AvaloniaProperty.Register<TerminalView, FontFamily>(nameof(FontFamily), new FontFamily("fonts:GeistMono#Geist Mono, Menlo, Cascadia Mono, Consolas, DejaVu Sans Mono, monospace"));
 
     /// <summary>Defines the <see cref="FontSize"/> property.</summary>
     public static readonly StyledProperty<double> FontSizeProperty =

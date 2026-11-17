@@ -18,6 +18,9 @@ looks different after the upgrade; see Changed for how to get the old look back.
 
 ### Added
 
+- `UseArcFonts()` and `UseArcPixelFonts()` (TKCode.Arc.Fonts) register Geist, Geist Mono and the pixel fonts from
+  `UseArc(...)`, the same as `WithArcFonts()` / `WithArcPixelFonts()`; calling both is harmless. TKCode.Arc.Fonts now
+  references TKCode.Arc.Foundation ([#151](https://github.com/AIDotNet/TKCode.Arc/issues/151)).
 - **Backends follow late arrivals** ([#149](https://github.com/AIDotNet/TKCode.Arc/issues/149)):
   - `ArcAudio.BackendChanged` and `ArcPdf.BackendChanged` join `ArcVideo.BackendChanged`. All three are raised once per
     change, and setting the same backend again raises nothing.
@@ -74,6 +77,9 @@ looks different after the upgrade; see Changed for how to get the old look back.
   - set `UnfocusedCursorStyle="Same"` to stop drawing a hollow cursor while the view does not have focus;
   - set `CursorBlink="Never"` and `TextBlink="False"` to stop blinking;
   - set `CustomGlyphs="False"` to take box drawing and block characters from the font again.
+- `TerminalView`'s default `FontFamily` starts with Geist Mono (`fonts:GeistMono#Geist Mono`), Arc's code font, when the
+  app registers it with `WithArcFonts()` or `UseArcFonts()`; otherwise it is the same list as before
+  ([#150](https://github.com/AIDotNet/TKCode.Arc/issues/150)). Set `FontFamily` to keep the old look.
 - `ArcPdfNative.Use()` no longer waits for PDFium to start while it holds its lock. A second caller waits for the same
   start, and the three native packages share one way of finding their library under `runtimes/<rid>/native`
   ([#149](https://github.com/AIDotNet/TKCode.Arc/issues/149)).

@@ -2,6 +2,9 @@ namespace TKCode.Arc.Themes.Pixel;
 
 public static class ArcPixelBuilderExtensions
 {
+    /// <summary>The package id in <c>ArcRuntime.Packages</c>.</summary>
+    internal const string PackageId = "TKCode.Arc.Themes.Pixel";
+
     /// <summary>
     /// Enables the Pixel style package: registers <see cref="ArcPixelPresets.Pixel"/> so it can be listed
     /// (<c>ArcRuntime.Presets</c>). Registering does not apply it; apply it with
@@ -9,7 +12,7 @@ public static class ArcPixelBuilderExtensions
     /// carries a light and a dark palette; the theme's appearance picks one.
     /// </summary>
     public static ArcBuilder UseArcPixelTheme(this ArcBuilder builder)
-        => builder.UsePackage("TKCode.Arc.Themes.Pixel", static package =>
+        => builder.UsePackage(PackageId, static package =>
         {
             package.DependsOn(static b => b.UseArcCore());
             ArcPixelPresets.Register(package);
