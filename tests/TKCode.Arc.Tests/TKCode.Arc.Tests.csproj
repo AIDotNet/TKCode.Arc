@@ -30,6 +30,10 @@
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />
     </ItemGroup>
     <ItemGroup>
+        <!-- The allow-lists of DuplicateHelperTests (#148). -->
+        <None Include="Architecture/Allowlists/*.txt" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+    <ItemGroup>
         <!-- Helpers shared by the headless test projects (source, so each assembly keeps its own InternalsVisibleTo access). -->
         <Compile Include="../Shared/*.cs" Link="Shared/%(Filename)%(Extension)" />
     </ItemGroup>
