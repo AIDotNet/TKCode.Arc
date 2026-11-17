@@ -4,56 +4,135 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 from 1.0.0 on, breaking API changes come only with a new major version. Earlier `-preview` versions could change the API between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
-`TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (after 1.1.1-preview.5), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
+`TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
-## Unreleased
+## 1.1.1 - 2026-11-17
 
-Markdown and code highlighting leave the main package ([#132](https://github.com/AIDotNet/TKCode.Arc/issues/132),
-ADR 0050). `TKCode.Arc` no longer depends on StreamMark, Markdig, TextMateSharp, its grammars or the native Oniguruma
-library, which made up about 8.5 MiB of a trimmed app that used none of them. **This is a breaking change inside 1.x**,
-made on purpose; see Migration.
+The stable release of everything shipped in `1.1.1-preview.1` to `1.1.1-preview.5`, plus one change that ships here
+for the first time: Markdown and code highlighting leave the main package
+([#132](https://github.com/AIDotNet/TKCode.Arc/issues/132), ADR 0050). `TKCode.Arc` no longer depends on StreamMark,
+Markdig, TextMateSharp, its grammars or the native Oniguruma library, which made up about 8.5 MiB of a trimmed app that
+used none of them. **This is a breaking change inside 1.x**, made on purpose (see Upgrading from 1.1.0); apart from it
+nothing is removed, and the members that no longer apply stay as `[Obsolete]` (see Deprecated). The previews also bring
+`MonthCalendar`, `SlideToConfirm`, `WindowRange` and `CursorTrailDraw`, left-hand field labels, a long-press edit menu
+for Arc Mobile text fields, `TerminalView` on iOS and Android, and rebuilt `KeycapKeyboard`, `PrizeWheel`,
+`BranchGraph`, `SandText`, `SplitBar` and `TocProgress`. Install it without `--prerelease`. The notes of each preview,
+with every detail and issue link, follow below.
+
+### Upgrading from 1.1.0
+
+- **Markdown and highlighting (breaking)**: `Markdown`, `MarkdownHighlightPlugin`, `ChatThread` and `ChatComposer` (and
+  their tokens) moved to the new `TKCode.Arc.Markdown` assembly. Their names, the `TKCode.Arc` namespace, the `arc:` XAML
+  namespace, properties, events and token names are unchanged, but code built against an earlier `TKCode.Arc` has to be
+  rebuilt. Without `UseArcHighlighting()`, `CodeBlock`, the `RichTextEditor` code blocks and Markdown's fenced code show
+  plain text.
+  - An app that uses `Markdown`, `ChatThread` or `ChatComposer`: add `TKCode.Arc.Markdown` and call `UseArcMarkdown()`.
+  - An app that wants colored code in `CodeBlock`, the rich text editor or Markdown: add `TKCode.Arc.Highlighting` and
+    call `UseArcHighlighting()`.
+  - An app that uses `TKCode.Arc.Blocks`, `TKCode.Arc.Special` or `TKCode.Arc.A2UI` needs no change: these packages
+    depend on both new packages, and `UseArcBlocks()`, `UseArcSpecial()` and `UseArcA2UI()` enable them.
+
+  ```csharp
+  AppBuilder.Configure<App>()
+      .UsePlatformDetect()
+      .UseArc(arc => arc.UseArcControls()
+                        .UseArcMarkdown()        // Markdown, ChatThread, ChatComposer
+                        .UseArcHighlighting());  // colored code
+  ```
+
+- **Packages**: `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` are new on NuGet. All packages
+  are still released on one version; keep them on the same one.
+- **Blocks catalog**: the groups follow uiarc.dev's. There is a new Agents group, and the whole-page blocks moved to the
+  Screens groups (`BlockCatalog.ScreenGroups`), so code that filters `BlockCatalog.Blocks` by a group code may need the
+  new codes. Class names, namespaces and packages are unchanged.
+- **Look and behavior changes you may notice**: `KeycapKeyboard` is a typing board with a text area (`ShowsText="False"`
+  hides it); `PrizeWheel` shows a reward panel (`IsPanelVisible="False"` for the wheel alone) and spins by flick or hold
+  instead of a click on its face; `BranchGraph` is a merge strategy preview; `SandText` is a falling-sand headline that
+  fills its width; `SplitBar` and `TocProgress` follow their Arc designs (`TocProgress` shows the minutes left;
+  `ShowsTimeLeft="False"` brings the percentage back).
+- **Arc Mobile languages**: `TKCode.Arc.Mobile` now has a language catalog (`TextEditMenuLangResourceKind`, en-US, zh-CN,
+  zh-TW). An app that enables `UseArcMobile()` and lists another language in `UseLanguages` gets the startup error that
+  lists missing text; keep to those three languages until the package ships that language.
+- **Deprecated members** keep working; move to the new names when convenient (see Deprecated).
 
 ### Added
 
-- `TKCode.Arc.Markdown` (new package): `Markdown`, `MarkdownHighlightPlugin`, `ChatThread` and `ChatComposer`, moved
+- **`TKCode.Arc.Markdown`** (new package): `Markdown`, `MarkdownHighlightPlugin`, `ChatThread` and `ChatComposer`, moved
   here from `TKCode.Arc` with their tokens and themes. Register with `UseArcMarkdown()`. It depends on StreamMark, not
   on TextMate.
-- `TKCode.Arc.Highlighting` (new package): the TextMate highlighting of `CodeBlock`, the `RichTextEditor` code blocks and
-  Markdown's fenced code, in Arc's role palette as before. Register with `UseArcHighlighting()`.
-- `ArcHighlightLanguages` (MSBuild property of `TKCode.Arc.Highlighting`): a trimmed publish keeps only the grammars it
-  lists, for example `<ArcHighlightLanguages>csharp;json;xml</ArcHighlightLanguages>`. The names are grammar folders or
-  language ids of TextMateSharp.Grammars; an unknown name warns (ARCH001). Code in an unlisted language shows as plain
-  text, and so does a language embedded in a listed grammar (CSS in HTML) unless it is listed too. With `csharp;json`
+- **`TKCode.Arc.Highlighting`** (new package): the TextMate highlighting of `CodeBlock`, the `RichTextEditor` code
+  blocks and Markdown's fenced code, in Arc's role palette as before. Register with `UseArcHighlighting()`. The MSBuild
+  property `ArcHighlightLanguages` keeps only the grammars a trimmed publish lists, for example
+  `<ArcHighlightLanguages>csharp;json;xml</ArcHighlightLanguages>`; an unknown name warns (ARCH001). With `csharp;json`
   the grammars assembly goes from 6.7 MB to 0.7 MB. It applies wherever ILLink trims (PublishTrimmed, WebAssembly), not
   to Native AOT.
+- **`TKCode.Arc`**: `LabelPlacement` and `LabelWidth` on the standalone fields, and the inherited attached properties
+  `Field.LabelPlacement` / `Field.LabelWidth`, put the label in a column left of the frame
+  ([#131](https://github.com/AIDotNet/TKCode.Arc/issues/131)); `UnavailableCaptionButtons="Hide"` on `ArcWindow`,
+  `TitleBar` and `WindowCaptionButtons` hides the caption buttons a window cannot use
+  ([#130](https://github.com/AIDotNet/TKCode.Arc/issues/130)), and `TitleBar` gains `ShowMinimizeButton`,
+  `ShowMaximizeButton` and `ShowCloseButton`; `UserMenu.StatusLabel`, `ThemeLabel`, `SignOutLabel` and `SigningOutLabel`;
+  `ColorPicker.TriggerChipPart`, `TriggerNamePart` and `TriggerHexPart`.
+- **`TKCode.Arc.Blocks`**: `MonthCalendar` (Screens › Calendars), a calendar app screen around a month;
+  `BlockCatalog.ScreenGroups` and the `Agents` group.
+- **`TKCode.Arc.Special`**: `SlideToConfirm` (Loaders), a slider you drag to the end to confirm an action; `WindowRange`
+  (Sliders), a movable window over a live area chart; `CursorTrailDraw` (Cursor), a sketching whiteboard; the new members
+  of the rebuilt `KeycapKeyboard`, `PrizeWheel`, `BranchGraph`, `SandText`, `SplitBar` and `TocProgress`.
+- **`TKCode.Arc.Mobile`**: `TextEditMenu`, the long-press edit menu (Cut, Copy, Paste, Select All) of `TextField`,
+  `Searchbar` and any `TextBox` ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)).
+- **`TKCode.Arc.Terminal`**: libghostty-vt for Android (arm64, x64, arm; API 29 and later) and iOS, so `TerminalView`
+  runs on phones, with or without NativeAOT ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)).
+- **Gallery** ([AIDotNet/ArcGallery](https://github.com/AIDotNet/ArcGallery)): docs and demos for every new component in
+  English, 简体中文 and 繁體中文.
 
 ### Changed
 
 - **Breaking:** `Markdown`, `MarkdownToken`, `MarkdownHighlightPlugin`, `ChatThread`, `ChatThreadToken`,
-  `ChatComposer` and `ChatComposerToken` are in the `TKCode.Arc.Markdown` assembly. Their names, the `TKCode.Arc`
-  namespace, the `arc:` XAML namespace, properties, events and token names are unchanged; code built against an
-  earlier `TKCode.Arc` has to be rebuilt.
-- **Breaking:** without `UseArcHighlighting()`, `CodeBlock`, the `RichTextEditor` code blocks and Markdown's fenced code
-  show plain text. A highlighter that is enabled after a `CodeBlock` was created colors it on its next change.
-- `TKCode.Arc.Blocks`, `TKCode.Arc.Special` and `TKCode.Arc.A2UI` depend on both new packages, and `UseArcBlocks()`,
-  `UseArcSpecial()` and `UseArcA2UI()` enable them, so these packages look and behave as before.
+  `ChatComposer` and `ChatComposerToken` are in the `TKCode.Arc.Markdown` assembly, and highlighting needs
+  `TKCode.Arc.Highlighting` (see Upgrading from 1.1.0). A highlighter that is enabled after a `CodeBlock` was created
+  colors it on its next change.
+- `TKCode.Arc.Blocks`, `TKCode.Arc.Special` and `TKCode.Arc.A2UI` depend on both new packages, so they look and behave
+  as before.
+- `KeycapKeyboard`, `PrizeWheel`, `BranchGraph`, `SandText`, `SplitBar` and `TocProgress` were rebuilt after their Arc
+  designs; the Blocks catalog groups and source folders follow uiarc.dev's sidebar (details in `1.1.1-preview.1`).
 
-### Migration
+### Fixed
 
-- An app that uses `Markdown`, `ChatThread` or `ChatComposer`: add `TKCode.Arc.Markdown` and call `UseArcMarkdown()`.
-- An app that wants colored code in `CodeBlock`, the rich text editor or Markdown: add `TKCode.Arc.Highlighting` and
-  call `UseArcHighlighting()`.
-- An app that uses `TKCode.Arc.Blocks`, `TKCode.Arc.Special` or `TKCode.Arc.A2UI` needs no change.
+- `TextField` and `Searchbar` (`TKCode.Arc.Mobile`) had no long-press menu, so on a phone there was no way to paste
+  into them ([#137](https://github.com/AIDotNet/TKCode.Arc/issues/137)).
+- `TerminalView` on Android: the default font list falls through to monospace, and the cell metrics follow the screen's
+  scaling ([#136](https://github.com/AIDotNet/TKCode.Arc/issues/136)).
+- `DataGrid`: the filter row's gutter follows a light/dark switch at run time
+  ([#135](https://github.com/AIDotNet/TKCode.Arc/issues/135)).
+- `ExpandableCard` no longer cuts its shadow off at the card's edge
+  ([#129](https://github.com/AIDotNet/TKCode.Arc/issues/129)).
+- `UserMenu` follows the app's language ([#123](https://github.com/AIDotNet/TKCode.Arc/issues/123)).
+- `ColorPicker`: an empty label no longer reserves a blank line, and the morphing header folds back onto the actual
+  trigger.
+- Video on Android (`TKCode.Arc.Video.Native`): a Java exception from the platform puts the player in `Failed` instead of
+  closing the app.
+- Charts: a `LineChart` narrower than its tooltip no longer throws; `DonutChart` and `BarChart` in a `Card` no longer
+  clip their large numbers.
 
-```csharp
-AppBuilder.Configure<App>()
-    .UsePlatformDetect()
-    .UseArc(arc => arc.UseArcControls()
-                      .UseArcMarkdown()        // Markdown, ChatThread, ChatComposer
-                      .UseArcHighlighting());  // colored code
-```
+### Deprecated
+
+Nothing is removed. Each of these keeps working, is marked `[Obsolete]` and stays for at least two stable releases; it can
+only be deleted in a new major version.
+
+- **`SandText.Trigger`**: use `IsDigEnabled`.
+- **`SandText.Drift`, `Duration`, `Distance` and `MaxGrains`**: no longer change anything; use `DigRadius` and
+  `GrainSize`.
+- **`BranchGraph.IsNewestFirst`**: no longer has an effect, the newest commit is always on top. Remove it.
+- **`BranchGraphLabels.Ready`, `Drawing`, `Paused`, `Done`, `Speed`, `ReadyCaption`, `FirstCaption`, `CommitCaption`,
+  `BranchCaption`, `MergeCaption`, `TagCaption` and `DoneCaption`**: no longer shown; use `BeforeSummary`,
+  `MergeSummary`, `RebaseSummary` and `SquashSummary`.
+
+### Known limitations
+
+- `TKCode.Arc.Mobile.iOS` (the iOS edit actions for Avalonia text boxes) is not on NuGet yet, because CI does not pack
+  iOS projects; reference the project for now.
 
 ## 1.1.1-preview.5 - 2026-11-16
 
