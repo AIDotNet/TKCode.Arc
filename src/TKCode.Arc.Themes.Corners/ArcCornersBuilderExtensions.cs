@@ -2,13 +2,16 @@ namespace TKCode.Arc.Themes.Corners;
 
 public static class ArcCornersBuilderExtensions
 {
+    /// <summary>The package id in <c>ArcRuntime.Packages</c>.</summary>
+    internal const string PackageId = "TKCode.Arc.Themes.Corners";
+
     /// <summary>
     /// Enables the corner style package: registers <see cref="ArcCornerPresets.Square"/> and
     /// <see cref="ArcCornerPresets.Half"/> so they can be listed (<c>ArcRuntime.Presets</c>). Registering does not apply them;
     /// apply a style with <c>ArcTheme.Apply(t => t.Corners(ArcCornerStyle.Square))</c>.
     /// </summary>
     public static ArcBuilder UseArcCorners(this ArcBuilder builder)
-        => builder.UsePackage("TKCode.Arc.Themes.Corners", static package =>
+        => builder.UsePackage(PackageId, static package =>
         {
             package.DependsOn(static b => b.UseArcCore());
             ArcCornerPresets.Register(package);

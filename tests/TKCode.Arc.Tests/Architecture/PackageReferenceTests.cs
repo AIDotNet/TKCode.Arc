@@ -19,7 +19,7 @@ public class PackageReferenceTests
         ["TKCode.Arc.Highlighting"] = ["TKCode.Arc", "TKCode.StreamMark.Highlighting.TextMate"],
         ["TKCode.Arc.Icons.Lucide"] = ["TKCode.Arc.Core"],
         ["TKCode.Arc.Icons.Lucide.Generators"] = ["Microsoft.CodeAnalysis.Analyzers", "Microsoft.CodeAnalysis.CSharp"],
-        ["TKCode.Arc.Fonts"] = ["Avalonia"],
+        ["TKCode.Arc.Fonts"] = ["Avalonia", "TKCode.Arc.Foundation"],
         ["TKCode.Arc.Themes.Corners"] = ["TKCode.Arc.Core"],
         ["TKCode.Arc.Themes.Pixel"] = ["TKCode.Arc.Core", "TKCode.Arc.Themes.Corners"],
         ["TKCode.Arc.AdvancedCharts"] = ["TKCode.Arc"],

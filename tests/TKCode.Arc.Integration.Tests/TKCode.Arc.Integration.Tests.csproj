@@ -28,6 +28,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Corners/TKCode.Arc.Themes.Corners.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Themes.Pixel/TKCode.Arc.Themes.Pixel.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj" />
         <!-- [PropertyGridModel] test types: the Foundation generator registers them (no themes or tokens here). -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
                           OutputItemType="Analyzer" ReferenceOutputAssembly="false" PrivateAssets="all" />

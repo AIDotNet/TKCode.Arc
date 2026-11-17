@@ -8,6 +8,11 @@
     </PropertyGroup>
     <ItemGroup>
         <PackageReference Include="Avalonia" />
+        <!-- For the UseArcFonts() / UseArcPixelFonts() entries in UseArc(...) (#151). -->
+        <ProjectReference Include="../TKCode.Arc.Foundation/TKCode.Arc.Foundation.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
     </ItemGroup>
     <ItemGroup>
         <AvaloniaResource Include="Assets/Geist/*.ttf" />

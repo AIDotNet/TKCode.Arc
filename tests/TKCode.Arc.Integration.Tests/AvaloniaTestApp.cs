@@ -2,6 +2,7 @@ using TKCode.Arc;
 using TKCode.Arc.Mobile;
 using TKCode.Arc.Themes.Corners;
 using TKCode.Arc.Themes.Pixel;
+using TKCode.Arc.Fonts;
 using Avalonia;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
@@ -23,6 +24,7 @@ public static class TestAppBuilder
         return AppBuilder.Configure<TestApplication>()
                          .UseHeadless(new AvaloniaHeadlessPlatformOptions())
                          .UseArc(arc => arc.UseArcControls()
+                                    .UseArcFonts()
                                     .UseArcMarkdown()
                                     .UseArcHighlighting()
                                     .UseArcBlocks()
