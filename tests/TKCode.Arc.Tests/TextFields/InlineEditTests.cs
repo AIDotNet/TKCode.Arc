@@ -325,8 +325,12 @@ public class InlineEditTests
             Dispatcher.UIThread.RunJobs();
             var center = save.TranslatePoint(new Point(save.Bounds.Width / 2, save.Bounds.Height / 2), window)!.Value;
             new Rect(tag.TranslatePoint(default, window)!.Value, tag.Bounds.Size).Contains(center).ShouldBeTrue();
-            (window.InputHitTest(center) as Visual).ShouldNotBeNull()
-                .FindAncestorOfType<InlineEditActionButton>(includeSelf: true).ShouldBeSameAs(save);
+            // Hit testing reads the rendered scene, which a loaded runner can publish a few frames late: tick until it has.
+            TestHelpers.PumpUntil(() =>
+            {
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                return (window.InputHitTest(center) as Visual)?.FindAncestorOfType<InlineEditActionButton>(includeSelf: true) == save;
+            }).ShouldBeTrue();
 
             // A save ends with the text alone: no reserve, no mark past the frame, and the control back in its place.
             window.KeyTextInput("Orion");
