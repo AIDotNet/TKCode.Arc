@@ -31,6 +31,8 @@ public class PackageTests
         var references = typeof(Button).Assembly.GetReferencedAssemblies().Select(a => a.Name).ToList();
         references.ShouldContain("TKCode.Arc.Core");
         references.ShouldNotContain("TKCode.Arc");
+        references.ShouldNotContain("TKCode.Arc.Markdown");
+        references.ShouldNotContain("TKCode.Arc.Highlighting");
         references.ShouldNotContain("TKCode.Arc.Blocks");
         references.ShouldNotContain("TKCode.Arc.Special");
         references.ShouldNotContain("TKCode.Arc.Workflow");

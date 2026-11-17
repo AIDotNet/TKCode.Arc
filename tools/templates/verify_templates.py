@@ -48,6 +48,8 @@ PACK_PROJECTS = [
     "src/TKCode.Arc.Foundation/TKCode.Arc.Foundation.csproj",
     "src/TKCode.Arc.Core/TKCode.Arc.Core.csproj",
     "src/TKCode.Arc/TKCode.Arc.csproj",
+    "src/TKCode.Arc.Markdown/TKCode.Arc.Markdown.csproj",
+    "src/TKCode.Arc.Highlighting/TKCode.Arc.Highlighting.csproj",
     "src/TKCode.Arc.Fonts/TKCode.Arc.Fonts.csproj",
     "src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj",
     "src/TKCode.Arc.Audio/TKCode.Arc.Audio.csproj",

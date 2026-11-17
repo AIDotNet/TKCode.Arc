@@ -15,8 +15,9 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// A source viewer with a file-name header, syntax highlighting (TextMate grammars painted in Arc's role palette), a
-/// copy action and optional collapsing.
+/// A source viewer with a file-name header, syntax highlighting, a copy action and optional collapsing.
+/// Highlighting comes from the TKCode.Arc.Highlighting package: reference it and call <c>UseArcHighlighting()</c> to
+/// paint TextMate grammars in Arc's role palette; without it the code shows as plain text.
 /// Long sources collapse to <see cref="MaxLines"/> lines with a toggle that expands the rest in place on a smooth
 /// height spring; new code fades in with a short rise. Long lines scroll horizontally inside the block.
 /// </summary>
@@ -48,7 +49,8 @@ public class CodeBlock : TemplatedControl
     /// Header label and highlighting language (Arc default "tsx"): a fence-style name or alias such as <c>cs</c>,
     /// <c>ts</c>, <c>json</c>, <c>xml</c>/<c>axaml</c>, <c>py</c>, <c>sh</c>. <c>diff</c> (or <c>patch</c>) colors added
     /// lines in the success color and removed lines in the danger color. Languages without a TextMate grammar, such as
-    /// <c>text</c> or <c>plaintext</c>, show plain text.
+    /// <c>text</c> or <c>plaintext</c>, show plain text, as does every language when <c>UseArcHighlighting()</c>
+    /// (TKCode.Arc.Highlighting) is not enabled.
     /// </summary>
     public static readonly StyledProperty<string?> LanguageProperty =
         AvaloniaProperty.Register<CodeBlock, string?>(nameof(Language), "tsx");

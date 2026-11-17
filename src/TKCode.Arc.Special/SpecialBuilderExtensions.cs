@@ -6,9 +6,10 @@ public static class ArcSpecialBuilderExtensions
 {
     /// <summary>
     /// Enables the Arc special components (the animated AI explainers such as <c>AgentLoop</c>). Depends on
-    /// <see cref="ArcBuilderExtensions.UseArcControls"/>.
+    /// <see cref="ArcBuilderExtensions.UseArcControls"/>, <see cref="ArcMarkdownBuilderExtensions.UseArcMarkdown"/> and
+    /// <see cref="ArcHighlightingBuilderExtensions.UseArcHighlighting"/> (the AI components show highlighted code).
     /// </summary>
     public static ArcBuilder UseArcSpecial(this ArcBuilder builder)
         => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
-            .DependsOn(static b => b.UseArcControls())));
+            .DependsOn(static b => b.UseArcControls().UseArcMarkdown().UseArcHighlighting())));
 }

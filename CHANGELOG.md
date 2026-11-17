@@ -4,9 +4,56 @@ All notable changes to TKCode.Arc are listed here. Versions follow [Semantic Ver
 from 1.0.0 on, breaking API changes come only with a new major version. Earlier `-preview` versions could change the API between releases.
 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
-`TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
+`TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (after 1.1.1-preview.5), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
+
+## Unreleased
+
+Markdown and code highlighting leave the main package ([#132](https://github.com/AIDotNet/TKCode.Arc/issues/132),
+ADR 0050). `TKCode.Arc` no longer depends on StreamMark, Markdig, TextMateSharp, its grammars or the native Oniguruma
+library, which made up about 8.5 MiB of a trimmed app that used none of them. **This is a breaking change inside 1.x**,
+made on purpose; see Migration.
+
+### Added
+
+- `TKCode.Arc.Markdown` (new package): `Markdown`, `MarkdownHighlightPlugin`, `ChatThread` and `ChatComposer`, moved
+  here from `TKCode.Arc` with their tokens and themes. Register with `UseArcMarkdown()`. It depends on StreamMark, not
+  on TextMate.
+- `TKCode.Arc.Highlighting` (new package): the TextMate highlighting of `CodeBlock`, the `RichTextEditor` code blocks and
+  Markdown's fenced code, in Arc's role palette as before. Register with `UseArcHighlighting()`.
+- `ArcHighlightLanguages` (MSBuild property of `TKCode.Arc.Highlighting`): a trimmed publish keeps only the grammars it
+  lists, for example `<ArcHighlightLanguages>csharp;json;xml</ArcHighlightLanguages>`. The names are grammar folders or
+  language ids of TextMateSharp.Grammars; an unknown name warns (ARCH001). Code in an unlisted language shows as plain
+  text, and so does a language embedded in a listed grammar (CSS in HTML) unless it is listed too. With `csharp;json`
+  the grammars assembly goes from 6.7 MB to 0.7 MB. It applies wherever ILLink trims (PublishTrimmed, WebAssembly), not
+  to Native AOT.
+
+### Changed
+
+- **Breaking:** `Markdown`, `MarkdownToken`, `MarkdownHighlightPlugin`, `ChatThread`, `ChatThreadToken`,
+  `ChatComposer` and `ChatComposerToken` are in the `TKCode.Arc.Markdown` assembly. Their names, the `TKCode.Arc`
+  namespace, the `arc:` XAML namespace, properties, events and token names are unchanged; code built against an
+  earlier `TKCode.Arc` has to be rebuilt.
+- **Breaking:** without `UseArcHighlighting()`, `CodeBlock`, the `RichTextEditor` code blocks and Markdown's fenced code
+  show plain text. A highlighter that is enabled after a `CodeBlock` was created colors it on its next change.
+- `TKCode.Arc.Blocks`, `TKCode.Arc.Special` and `TKCode.Arc.A2UI` depend on both new packages, and `UseArcBlocks()`,
+  `UseArcSpecial()` and `UseArcA2UI()` enable them, so these packages look and behave as before.
+
+### Migration
+
+- An app that uses `Markdown`, `ChatThread` or `ChatComposer`: add `TKCode.Arc.Markdown` and call `UseArcMarkdown()`.
+- An app that wants colored code in `CodeBlock`, the rich text editor or Markdown: add `TKCode.Arc.Highlighting` and
+  call `UseArcHighlighting()`.
+- An app that uses `TKCode.Arc.Blocks`, `TKCode.Arc.Special` or `TKCode.Arc.A2UI` needs no change.
+
+```csharp
+AppBuilder.Configure<App>()
+    .UsePlatformDetect()
+    .UseArc(arc => arc.UseArcControls()
+                      .UseArcMarkdown()        // Markdown, ChatThread, ChatComposer
+                      .UseArcHighlighting());  // colored code
+```
 
 ## 1.1.1-preview.5 - 2026-11-16
 

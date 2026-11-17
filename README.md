@@ -67,13 +67,15 @@ Each further package registers itself in the same `UseArc(...)` call: `UseArcBlo
 
 ## What's inside
 
-All 23 packages are released together on one version; keep them on the same one.
+All 25 packages are released together on one version; keep them on the same one.
 
 ### Components
 
 | Package | Contents |
 |---|---|
-| `TKCode.Arc` | The 112 components in Arc's 22 sidebar groups, plus layout panels and extras such as `Markdown` (with streaming), `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. |
+| `TKCode.Arc` | The components in Arc's 22 sidebar groups except `ChatThread`, plus layout panels and extras such as `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. No Markdown or highlighting dependency. |
+| `TKCode.Arc.Markdown` | `Markdown` (with streaming) and `ChatThread` / `ChatComposer`, rendered by StreamMark. Register with `UseArcMarkdown()`. |
+| `TKCode.Arc.Highlighting` | TextMate syntax highlighting for `CodeBlock`, the rich text editor's code blocks and Markdown's fenced code; without it code is plain. Register with `UseArcHighlighting()`; set `ArcHighlightLanguages` (for example `csharp;json`) to keep only those grammars in a trimmed app. |
 | `TKCode.Arc.Blocks` | Page-level compositions grouped as on uiarc.dev (AI, Agents, auth, settings, commerce, marketing, support and more), and whole screens: dashboards, projects, calendars, people and customers, inbox and support, commerce. |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream`, `RaceBarChart` and `WindRoseChart`. |
 | `TKCode.Arc.Special` | Animated AI explainers, glass, docks and tabs, galleries, data widgets, type effects, cursor effects, playful controls, loaders, surfaces and illustrations. |

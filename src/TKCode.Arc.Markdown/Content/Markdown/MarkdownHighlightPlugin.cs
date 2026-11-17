@@ -4,9 +4,10 @@ using StreamMark.Core.Highlighting;
 namespace TKCode.Arc;
 
 /// <summary>
-/// StreamMark plugin that highlights fenced code with TextMate grammars painted in Arc's syntax palette, the same way
-/// <see cref="CodeBlock"/> does. <see cref="Markdown.DefaultServices"/> includes it; add it to your own
-/// <c>MarkdownServices</c> when you replace the defaults:
+/// StreamMark plugin that highlights fenced code in Arc's syntax palette, the same way <see cref="CodeBlock"/> does:
+/// with the TextMate grammars of TKCode.Arc.Highlighting when <c>UseArcHighlighting()</c> is enabled, as plain text
+/// otherwise. <see cref="Markdown.DefaultServices"/> includes it; add it to your own <c>MarkdownServices</c> when you
+/// replace the defaults:
 /// <code>
 /// markdown.Services = new MarkdownServices
 /// {
@@ -17,13 +18,15 @@ namespace TKCode.Arc;
 /// </summary>
 public sealed class MarkdownHighlightPlugin : IMarkdownPlugin
 {
-    /// <summary>Creates the plugin; <paramref name="prewarm"/> lists languages whose grammars load in the background now.</summary>
+    /// <summary>
+    /// Creates the plugin; <paramref name="prewarm"/> lists languages whose grammars load in the background now (when
+    /// <c>UseArcHighlighting()</c> has already run).
+    /// </summary>
     public MarkdownHighlightPlugin(params string[] prewarm)
     {
-        if (prewarm.Length > 0)
+        if (prewarm.Length > 0 && CodeBlockHighlighter.Provider is { } provider)
         {
-            // Sessions always use the Light+ context (the role table), so only that one is warmed.
-            _ = CodeBlockHighlighter.Engine.PrewarmAsync(CodeBlockHighlighter.SessionTheme, prewarm);
+            _ = provider.PrewarmAsync(prewarm);
         }
     }
 
