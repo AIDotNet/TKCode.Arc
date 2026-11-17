@@ -51,11 +51,15 @@ public sealed partial class TerminalView
         Focusable = true;
         LostFocus += (_, _) => SetPreedit(null);  // 失去焦点时组合中止
         InitializeInputMethod();
+        // The view owns both collections, so these subscriptions live as long as it does.
+        Layers.CollectionChanged += OnLayersChanged;
+        GlyphProviders.CollectionChanged += OnGlyphProvidersChanged;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
     {
         base.OnKeyDown(e);
+        ResetCursorBlink();
         Dispatch(e, GlobalKey(e.Key, e.KeyModifiers, text: null), e.Handled);
     }
 
@@ -71,14 +75,13 @@ public sealed partial class TerminalView
         base.OnTextInput(e);
         // 提交的文字结束组合：先清除组合文字
         SetPreedit(null);
+        ResetCursorBlink();
         if (!string.IsNullOrEmpty(e.Text))
         {
             TextEntered?.Invoke(this, e.Text);
             e.Handled = true;
         }
     }
-
-
 
     private void Dispatch(KeyEventArgs e, KeyInput? input, bool alreadyHandled)
     {

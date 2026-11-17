@@ -8,6 +8,59 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 
+## Unreleased
+
+`TerminalView` draws the rest of what the terminal core already captures: bold and italic faces, every underline style,
+grapheme clusters and emoji, box drawing and Powerline glyphs, and a blinking cursor
+([#139](https://github.com/AIDotNet/TKCode.Arc/issues/139)–[#143](https://github.com/AIDotNet/TKCode.Arc/issues/143)).
+Hosts can now add their own drawing and their own glyphs. Nothing is removed and no signature changes, but a terminal
+looks different after the upgrade; see Changed for how to get the old look back.
+
+### Added
+
+- **`TKCode.Arc.Terminal`, text** ([#139](https://github.com/AIDotNet/TKCode.Arc/issues/139)): SGR 1 and 3 draw with the
+  family's bold, italic and bold-italic faces, or synthesized ones when it has none; a fallback font is asked for the
+  same style. New `TerminalView` properties: `FontWeight`, `BoldFontWeight` (default `Bold`; below `SemiBold` it is not
+  emboldened), `LineHeight` (default 1), `BoldIsBright` (default `false`) and `TextBlink` (default `true`: SGR 5 and 6
+  text blinks while it is on screen).
+- **`TKCode.Arc.Terminal`, decorations** ([#140](https://github.com/AIDotNet/TKCode.Arc/issues/140)): single, double,
+  curly, dotted and dashed underlines in the SGR 58 color or the foreground, strikethrough and overline. `CellMetrics`
+  gains `UnderlinePosition`, `StrikethroughPosition`, `StrikethroughThickness` and `BoxThickness`, as init-only
+  properties, so its constructor is unchanged. `TerminalView.HoveredLink` and `LinkForeground` underline the link under
+  the pointer, with a double line where the text is already underlined.
+- **`TKCode.Arc.Terminal`, clusters** ([#141](https://github.com/AIDotNet/TKCode.Arc/issues/141)): combining marks, ZWJ
+  sequences, flags, skin tones and keycaps are shaped with HarfBuzz and stay on the grid. VS15 and VS16 pick text or
+  emoji presentation. Emoji are drawn from the platform's color emoji font, or from `EmojiFontFamily`, and scaled to fit
+  their cells. ASCII text is not shaped.
+- **`TKCode.Arc.Terminal`, custom glyphs** ([#142](https://github.com/AIDotNet/TKCode.Arc/issues/142)): box drawing,
+  block elements, shades, braille and Powerline separators are drawn by the view in whole device pixels, so lines meet
+  across cells with any font. `CustomGlyphs` (default `true`) switches this off. `TerminalBuiltInGlyphs` is public.
+- **`TKCode.Arc.Terminal`, cursor and contrast** ([#143](https://github.com/AIDotNet/TKCode.Arc/issues/143)):
+  - `CursorBlink` (`Program` by default: the cursor blinks when the program asks) and `CursorBlinkInterval` (600 ms).
+    The cursor blinks only while the view has focus, and typing or new output shows it again.
+  - `UnfocusedCursorStyle` (`Hollow`, `None` or `Same`) and `CursorBarWidth` (in DIP).
+  - `CursorTextColor`, and a cursor that would disappear on the cell's background takes the cell's foreground.
+  - A cursor on a wide character covers both of its cells.
+  - `MinimumContrastRatio` (default 1, which turns it off; VS Code uses 4.5) adjusts text that falls below the ratio.
+    Box drawing, block, braille, Powerline, emoji and invisible cells are left alone.
+- **`TKCode.Arc.Terminal`, extension points**:
+  - `TerminalView.Layers` takes `ITerminalRenderLayer`s, drawn below the text, above it, or above the cursor
+    (`TerminalLayerPlacement`). Use them for selection, search highlights or command marks. They get a
+    `TerminalRenderContext` that gives cell bounds and the colors the view uses for each cell.
+  - `TerminalView.GlyphProviders` takes `ITerminalGlyphProvider`s, which draw code points of your choice (icon sets, more
+    symbol ranges) as `TerminalGlyph` shapes, ahead of the built-in glyphs.
+  - `TerminalView.CellBounds` and `CellAt` convert between cells and DIP coordinates.
+  - `TerminalColorMath` has the WCAG luminance and contrast math, mixing, and the contrast adjustment.
+
+### Changed
+
+- `TerminalView` faint text (SGR 2) is now mixed halfway towards the cell's background. It used to be darkened, which
+  made it darker than normal text on light themes.
+- `TerminalView` defaults that change how a terminal looks. To get the earlier look back:
+  - set `UnfocusedCursorStyle="Same"` to stop drawing a hollow cursor while the view does not have focus;
+  - set `CursorBlink="Never"` and `TextBlink="False"` to stop blinking;
+  - set `CustomGlyphs="False"` to take box drawing and block characters from the font again.
+
 ## 1.1.1 - 2026-11-17
 
 The stable release of everything shipped in `1.1.1-preview.1` to `1.1.1-preview.5`, plus one change that ships here

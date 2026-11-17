@@ -162,16 +162,19 @@ public class TerminalViewRowCacheTests
     }
 
     [AvaloniaFact]
-    public void A_Grapheme_Cluster_And_A_Surrogate_Pair_Keep_One_Glyph_Per_Cell()
+    public void A_Grapheme_Cluster_And_An_Emoji_Keep_The_Grid()
     {
-        // e + combining acute (a cluster: the base glyph is what the view draws), then an emoji beyond the BMP.
+        // e + combining acute (shaped as one cluster in one cell), then an emoji beyond the BMP (its own run, issue #141), then z.
         var graphemes = new Dictionary<int, int[]> { [0] = [0x0301] };
         var row = Row(1, [Cell('e', grapheme: true), Cell(0x1F600, CellWidth.Wide), Cell(0, CellWidth.SpacerTail), Cell('z')], graphemes);
         var (view, window) = Show(Frame(1, row));
         try
         {
-            var run = view.GlyphRunsOf(row).ShouldHaveSingleItem().Run;
-            Columns(run).ShouldBe([ExpectedX(view, 0), ExpectedX(view, 1), ExpectedX(view, 3)], 1e-9);
+            var runs = view.GlyphRunsOf(row);
+            runs.Count.ShouldBe(3);
+            runs[0].Run.BaselineOrigin.X.ShouldBe(ExpectedX(view, 0), 1e-9);
+            runs[0].Run.GlyphInfos.Sum(i => i.GlyphAdvance).ShouldBe(view.Metrics.CellWidth / view.Metrics.Scaling, 1e-9);
+            runs[2].Run.BaselineOrigin.X.ShouldBe(ExpectedX(view, 3), 1e-9);
         }
         finally
         {
