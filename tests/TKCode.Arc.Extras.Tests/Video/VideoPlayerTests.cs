@@ -19,6 +19,38 @@ namespace TKCode.Arc.Tests.Video;
 public class VideoPlayerTests
 {
     [AvaloniaFact]
+    public void A_Backend_That_Arrives_Later_Replaces_The_Player_And_Loads_The_Source_Again()
+    {
+        // #149: a browser's UseAsync can finish after the player was created on the simulated backend.
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60) };
+        scope.Show(player);
+        var first = player.Player.ShouldNotBeNull();
+        first.Backend.ShouldBeSameAs(scope.Simulated);
+        var arrived = new RecordingVideoBackend(new SimulatedVideoBackend(scope.Clock));
+        ArcVideo.Backend = arrived;
+        VideoTestScope.Pump();
+        player.Player.ShouldNotBeSameAs(first);
+        player.Player.ShouldNotBeNull().Backend.ShouldBeSameAs(arrived);
+        arrived.Created.Count.ShouldBe(1);
+        player.Duration.ShouldBe(TimeSpan.FromSeconds(60));
+    }
+
+    [AvaloniaFact]
+    public void A_Detached_Player_Does_Not_Follow_The_Backend()
+    {
+        using var scope = new VideoTestScope();
+        var player = new VideoPlayer { Source = VideoTestScope.Clip(60) };
+        var window = scope.Show(player);
+        window.Content = null;
+        VideoTestScope.Pump();
+        var arrived = new RecordingVideoBackend(new SimulatedVideoBackend(scope.Clock));
+        ArcVideo.Backend = arrived;
+        VideoTestScope.Pump();
+        arrived.Created.ShouldBeEmpty();
+    }
+
+    [AvaloniaFact]
     public void A_Source_Set_Before_Attach_Waits_And_Loads_On_Attach()
     {
         using var scope = new VideoTestScope();

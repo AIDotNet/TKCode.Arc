@@ -165,6 +165,54 @@ public class PdfViewerTests
     }
 
     [AvaloniaFact]
+    public void A_Backend_That_Arrives_Later_Opens_The_Source_That_Failed_For_Want_Of_One()
+    {
+        // #149: a browser's UseAsync can finish after the viewer tried to open its source.
+        var viewer = Viewer(Source());
+        var window = Show(viewer);
+        try
+        {
+            Settle(() => viewer.Status == PdfViewerStatus.Failed);
+            viewer.Error!.Kind.ShouldBe(PdfErrorKind.BackendUnavailable);
+            var backend = new FakePdfBackend();
+            using (new BackendScope(backend))
+            {
+                Settle(() => viewer.Status == PdfViewerStatus.Ready);
+                backend.Calls.Count.ShouldBe(1);
+                viewer.PageCount.ShouldBe(backend.PageCount);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_New_Backend_Does_Not_Reopen_A_Document_That_Opened()
+    {
+        var first = new FakePdfBackend();
+        using var scope = new BackendScope(first);
+        var viewer = Viewer(Source());
+        var window = Show(viewer);
+        try
+        {
+            Settle(() => viewer.Status == PdfViewerStatus.Ready);
+            var second = new FakePdfBackend();
+            using (new BackendScope(second))
+            {
+                Pump();
+                second.Calls.ShouldBeEmpty();
+                viewer.Status.ShouldBe(PdfViewerStatus.Ready);
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Without_A_Backend_It_Fails_With_The_Hint_And_Shows_No_Fake_Pages()
     {
         var viewer = Viewer(Source());

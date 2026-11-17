@@ -93,8 +93,23 @@ public static class ArcAudio
     public static IAudioBackend Backend
     {
         get => s_backend;
-        set => s_backend = value ?? throw new ArgumentNullException(nameof(value));
+        set
+        {
+            ArgumentNullException.ThrowIfNull(value);
+            if (ReferenceEquals(value, s_backend))
+            {
+                return;
+            }
+            s_backend = value;
+            BackendChanged?.Invoke(null, EventArgs.Empty);
+        }
     }
+
+    /// <summary>
+    /// Raised on the setting thread when <see cref="Backend"/> changes, e.g. when a browser backend finishes loading after a
+    /// player was created. A player made earlier keeps its backend; consumers that should follow create a new one.
+    /// </summary>
+    public static event EventHandler? BackendChanged;
 
     /// <summary>Creates a player from <see cref="Backend"/>.</summary>
     public static IAudioPlayer CreatePlayer() => s_backend.CreatePlayer();

@@ -143,6 +143,29 @@ public class SimulatedAudioPlayerTests
     }
 
     [Fact]
+    public void Changing_The_Backend_Raises_BackendChanged_Once()
+    {
+        // #149: consumers such as MediaPlayer follow a backend that arrives after they made a player.
+        var previous = ArcAudio.Backend;
+        var raised = 0;
+        EventHandler handler = (_, _) => raised++;
+        ArcAudio.BackendChanged += handler;
+        try
+        {
+            var other = new SimulatedAudioBackend();
+            ArcAudio.Backend = other;
+            ArcAudio.Backend = other;
+            raised.ShouldBe(1);
+            ArcAudio.Backend.ShouldBeSameAs(other);
+        }
+        finally
+        {
+            ArcAudio.BackendChanged -= handler;
+            ArcAudio.Backend = previous;
+        }
+    }
+
+    [Fact]
     public void The_Default_Backend_Is_Silent()
     {
         ArcAudio.Backend.ShouldBeSameAs(SimulatedAudioBackend.Instance);

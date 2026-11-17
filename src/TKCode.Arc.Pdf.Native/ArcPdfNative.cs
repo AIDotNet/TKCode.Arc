@@ -16,6 +16,7 @@ public static class ArcPdfNative
     private static readonly object s_gate = new();
     private static bool s_resolverSet;
     private static PdfiumBackend? s_backend;
+    private static Task<bool>? s_initialized;
 
     /// <summary>
     /// Loads PDFium and makes it the <see cref="ArcPdf.Backend"/>. Returns false, and leaves the current backend in place, when
@@ -23,6 +24,7 @@ public static class ArcPdfNative
     /// </summary>
     public static bool Use()
     {
+        Task<bool> initialized;
         lock (s_gate)
         {
             if (s_backend is not null)
@@ -30,32 +32,43 @@ public static class ArcPdfNative
                 ArcPdf.Backend = s_backend;
                 return true;
             }
-            EnsureResolver();
-            try
+            if (s_initialized is null)
             {
-                if (!TryLoadLibrary(typeof(ArcPdfNative).Assembly, null, out var library))
+                EnsureResolver();
+                try
                 {
-                    Trace.TraceWarning($"TKCode.Arc.Pdf.Native: the PDFium library was not found (run tools/pdf/sync-native.sh in a repository checkout); PDF stays on {ArcPdf.Backend.Name}.");
-                    return false;
-                }
-                foreach (var export in s_requiredExports)
-                {
-                    if (!NativeLibrary.TryGetExport(library, export, out _))
+                    if (!TryLoadLibrary(typeof(ArcPdfNative).Assembly, null, out var library))
                     {
-                        Trace.TraceWarning($"TKCode.Arc.Pdf.Native: the loaded PDFium has no {export}; PDF stays on {ArcPdf.Backend.Name}.");
+                        Trace.TraceWarning($"TKCode.Arc.Pdf.Native: the PDFium library was not found (run tools/pdf/sync-native.sh in a repository checkout); PDF stays on {ArcPdf.Backend.Name}.");
                         return false;
                     }
+                    foreach (var export in s_requiredExports)
+                    {
+                        if (!NativeLibrary.TryGetExport(library, export, out _))
+                        {
+                            Trace.TraceWarning($"TKCode.Arc.Pdf.Native: the loaded PDFium has no {export}; PDF stays on {ArcPdf.Backend.Name}.");
+                            return false;
+                        }
+                    }
                 }
-                PdfiumThread.Instance.RunAsync(InitializeLibrary, PdfiumPriority.Lifetime, CancellationToken.None).GetAwaiter().GetResult();
-                s_backend = new PdfiumBackend();
-                ArcPdf.Backend = s_backend;
-                return true;
+                catch (Exception exception) when (exception is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException)
+                {
+                    Trace.TraceWarning($"TKCode.Arc.Pdf.Native: {exception.Message}; PDF stays on {ArcPdf.Backend.Name}.");
+                    return false;
+                }
+                s_initialized = PdfiumThread.Instance.RunAsync(InitializeLibrary, PdfiumPriority.Lifetime, CancellationToken.None);
             }
-            catch (Exception exception) when (exception is DllNotFoundException or EntryPointNotFoundException or BadImageFormatException)
-            {
-                Trace.TraceWarning($"TKCode.Arc.Pdf.Native: {exception.Message}; PDF stays on {ArcPdf.Backend.Name}.");
-                return false;
-            }
+            initialized = s_initialized;
+        }
+
+        // PDFium starts on its own thread; the wait is outside the lock (#149), so a second caller waits for the same start
+        // here instead of on the lock, and nothing that PDFium's thread might need is held meanwhile.
+        initialized.GetAwaiter().GetResult();
+        lock (s_gate)
+        {
+            s_backend ??= new PdfiumBackend();
+            ArcPdf.Backend = s_backend;
+            return true;
         }
     }
 
@@ -66,22 +79,7 @@ public static class ArcPdfNative
         return true;
     }
 
-    private static void EnsureResolver()
-    {
-        if (s_resolverSet)
-        {
-            return;
-        }
-        s_resolverSet = true;
-        try
-        {
-            NativeLibrary.SetDllImportResolver(typeof(ArcPdfNative).Assembly, Resolve);
-        }
-        catch (InvalidOperationException)
-        {
-            // A resolver was already set for this assembly by the host; keep it.
-        }
-    }
+    private static void EnsureResolver() => ArcNativeLibrary.SetResolverOnce(typeof(ArcPdfNative).Assembly, Resolve, ref s_resolverSet);
 
     private static nint Resolve(string name, Assembly assembly, DllImportSearchPath? searchPath) =>
         name == PdfiumInterop.Library && TryLoadLibrary(assembly, searchPath, out var handle) ? handle : 0;
@@ -93,20 +91,6 @@ public static class ArcPdfNative
     /// </summary>
     private static bool TryLoadLibrary(Assembly assembly, DllImportSearchPath? searchPath, out nint handle)
     {
-        var file = OperatingSystem.IsWindows() ? "pdfium.dll" : OperatingSystem.IsMacOS() ? "libpdfium.dylib" : "libpdfium.so";
-        var path = Path.Combine(AppContext.BaseDirectory, "runtimes", CurrentRid(), "native", file);
-        return NativeLibrary.TryLoad(path, out handle) || NativeLibrary.TryLoad(PdfiumInterop.Library, assembly, searchPath, out handle);
-    }
-
-    private static string CurrentRid()
-    {
-        var os = OperatingSystem.IsWindows() ? "win" : OperatingSystem.IsMacOS() ? "osx" : "linux";
-        var arch = RuntimeInformation.ProcessArchitecture switch
-        {
-            Architecture.Arm64 => "arm64",
-            Architecture.X86 => "x86",
-            _ => "x64",
-        };
-        return $"{os}-{arch}";
+        return ArcNativeLibrary.TryLoadFromRuntimes("pdfium", out handle) || NativeLibrary.TryLoad(PdfiumInterop.Library, assembly, searchPath, out handle);
     }
 }

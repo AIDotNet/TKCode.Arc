@@ -61,9 +61,26 @@ internal sealed class PdfAttachedOpener
     public PdfAttachedOpener(PageViewer viewer)
     {
         _viewer = viewer;
-        viewer.AttachedToVisualTree += (_, _) => OnAttached();
-        viewer.DetachedFromVisualTree += (_, _) => OnDetached();
+        viewer.AttachedToVisualTree += (_, _) =>
+        {
+            ArcPdf.BackendChanged += OnBackendChanged;
+            OnAttached();
+        };
+        viewer.DetachedFromVisualTree += (_, _) =>
+        {
+            ArcPdf.BackendChanged -= OnBackendChanged;
+            OnDetached();
+        };
     }
+
+    /// <summary>Opens the source again when it failed for want of a backend and one arrived (#149).</summary>
+    private void OnBackendChanged(object? sender, EventArgs e) => Dispatcher.UIThread.Post(() =>
+    {
+        if (Pdf.GetError(_viewer) is { Kind: PdfErrorKind.BackendUnavailable })
+        {
+            Reopen();
+        }
+    });
 
     /// <summary>Back before the leaving took effect (a parent moved the viewer in one step), it just goes on.</summary>
     private void OnAttached()

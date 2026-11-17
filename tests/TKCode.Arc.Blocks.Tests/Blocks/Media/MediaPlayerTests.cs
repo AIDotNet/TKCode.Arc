@@ -439,6 +439,53 @@ public class MediaPlayerTests
         player.Position.ShouldBe(TimeSpan.Zero);
     }
 
+    [AvaloniaFact]
+    public void A_Process_Backend_That_Arrives_Later_Replaces_The_Player()
+    {
+        // #149: a browser's UseAsync can finish after the player was made on the simulated backend.
+        var previous = ArcAudio.Backend;
+        ArcAudio.Backend = SimulatedAudioBackend.Instance;
+        try
+        {
+            var player = new MediaPlayer { Width = 520 };
+            player.Tracks.Add(Track("Harbor lights", 2));
+            var window = TestHelpers.Show(player);
+            player.IsAudible.ShouldBeFalse();
+            var backend = new FakeBackend();
+            ArcAudio.Backend = backend;
+            Dispatcher.UIThread.RunJobs();
+            player.IsAudible.ShouldBeTrue();
+            backend.Players.Count.ShouldBe(1);
+            backend.Last.Loaded.ShouldBe(1);
+            window.Close();
+        }
+        finally
+        {
+            ArcAudio.Backend = previous;
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Player_With_Its_Own_Backend_Ignores_The_Process_Backend()
+    {
+        var previous = ArcAudio.Backend;
+        try
+        {
+            var own = new FakeBackend();
+            var player = new MediaPlayer { AudioBackend = own, Width = 520 };
+            player.Tracks.Add(Track("Harbor lights", 2));
+            var window = TestHelpers.Show(player);
+            ArcAudio.Backend = new FakeBackend();
+            Dispatcher.UIThread.RunJobs();
+            own.Players.Count.ShouldBe(1);
+            window.Close();
+        }
+        finally
+        {
+            ArcAudio.Backend = previous;
+        }
+    }
+
     /// <summary>A backend whose players do exactly what they are told and let the test end or fail a track.</summary>
     private sealed class FakeBackend : IAudioBackend
     {

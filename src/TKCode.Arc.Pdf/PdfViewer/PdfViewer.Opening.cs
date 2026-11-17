@@ -187,6 +187,19 @@ public partial class PdfViewer
         owned?.Dispose();
     }
 
+    /// <summary>
+    /// A backend that arrives after the source failed for want of one (a browser's <c>UseAsync</c> finishing late, #149) opens
+    /// it again. <see cref="ArcPdf.BackendChanged"/> is raised on the setting thread.
+    /// </summary>
+    private void OnBackendChanged(object? sender, EventArgs e) => Dispatcher.UIThread.Post(() =>
+    {
+        if (Status == PdfViewerStatus.Failed && Error?.Kind == PdfErrorKind.BackendUnavailable && Source is not null
+            && VisualRoot is not null)
+        {
+            Reopen();
+        }
+    });
+
     private void Fail(PdfException error)
     {
         SetState(PdfViewerStatus.Failed, error);

@@ -32,9 +32,21 @@ public static class ArcPdf
         set
         {
             ArgumentNullException.ThrowIfNull(value);
+            if (ReferenceEquals(value, s_backend))
+            {
+                return;
+            }
             s_backend = value;
+            BackendChanged?.Invoke(null, EventArgs.Empty);
         }
     }
+
+    /// <summary>
+    /// Raised on the setting thread when <see cref="Backend"/> changes, e.g. when the browser backend finishes loading after
+    /// a viewer tried to open a document. <see cref="PdfViewer"/> opens its source again when it had failed for want of a
+    /// backend.
+    /// </summary>
+    public static event EventHandler? BackendChanged;
 }
 
 /// <summary>The default backend: says that there is none.</summary>

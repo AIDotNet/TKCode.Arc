@@ -11,6 +11,8 @@
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="../TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
+        <!-- For the UseArcAudioBrowser() entry in UseArc(...) (#151). -->
+        <ProjectReference Include="../TKCode.Arc.Foundation/TKCode.Arc.Foundation.csproj" />
     </ItemGroup>
     <ItemGroup>
         <!-- Imported from a data: URL by ArcAudioBrowser, so the package needs no static web asset path in the host. -->
