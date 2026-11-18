@@ -7,22 +7,19 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
-With their own version line (`ArcGraphics3DVersion`, previews only): `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
-`TKCode.Arc.Graphics3D.Browser` (0.1.0-preview.1, published with 1.2.0-preview.2).
+Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
+`TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.2).
 
 ## 1.2.0-preview.2 - 2026-11-17
 
-The second preview of 1.2 adds a 3D engine and its controls as four new preview packages with a version of their own
-(0.1.0-preview.1). Nothing changes in the other packages' API: they are republished at 1.2.0-preview.2 with the
-Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162). Install the 3D packages with
-`--version 0.1.0-preview.1` (or `--prerelease`).
+The second preview of 1.2 adds a 3D engine and its controls as four new preview packages that share the release version. Nothing changes in the other packages' API: they are republished at 1.2.0-preview.2 with the
+Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162). 
 
-### Graphics3D (preview packages, their own version line)
+### Graphics3D (preview packages)
 
-`TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and `TKCode.Arc.Graphics3D.Browser` are previews versioned apart from the other packages
-(`ArcGraphics3DVersion`); their API may change between previews without a deprecation period.
+`TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and `TKCode.Arc.Graphics3D.Browser` are previews released with the other packages; their API may change between previews without a deprecation period.
 
-- **`TKCode.Arc.Graphics3D` 0.1.0-preview.1 (new, preview)**: a 3D engine for .NET with no UI dependency, in the
+- **`TKCode.Arc.Graphics3D` (new, preview)**: a 3D engine for .NET with no UI dependency, in the
   namespace `TKCode.Arc.Graphics3D` ([ADR 0051](design/decisions/0051-graphics3d-package.md),
   [architecture](design/architecture/graphics3d.md)). Scene graph (`Scene`, `Object3D`, `Mesh`, `InstancedMesh`,
   `SkinnedMesh`, `Line`, `Points`, `Sprite`), geometries and curves, node-based materials (`BasicMaterial`,
@@ -36,9 +33,9 @@ Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162).
   and camera properties (`KHR_animation_pointer`), ray casting with a
   BVH (`Raycaster`), `OrbitControls`, helper objects, an optional render thread (`ThreadedGraphicsDevice`: the calling thread records each
   frame and a thread that owns the context plays it back), and a renderer over a WebGPU-shaped hardware interface with an OpenGL
-  ES 3.0 / OpenGL 3.3 backend. It has its own version line and is not covered by the deprecation rule: its API may change
+  ES 3.0 / OpenGL 3.3 backend. It is not covered by the deprecation rule: its API may change
   between previews.
-- **`TKCode.Arc.Graphics3D.WebGpu` 0.1.0-preview.1 (new, preview)**: `WgpuDevice`, a `GraphicsDevice` over
+- **`TKCode.Arc.Graphics3D.WebGpu` (new, preview)**: `WgpuDevice`, a `GraphicsDevice` over
   [wgpu-native](https://github.com/gfx-rs/wgpu-native) (Metal, Vulkan, Direct3D 12), with compute shaders
   ([architecture, section 12](design/architecture/graphics3d.md)). The native library is not in the package: pass the
   path of `libwgpu_native` (v29) to `WgpuDevice.Create`. It draws the same pictures as the OpenGL device from the same
@@ -51,7 +48,7 @@ Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162).
   `GraphicsDevice.CreateComputeProgram` / `SetStorageBuffer` / `DispatchCompute` / `ReadBuffer` (they throw
   `NotSupportedException` on the OpenGL device, which has no compute stage), `GraphicsDevice.SupportsVertexFormat`, and
   `GpuCompute`, which runs a GLSL kernel over arrays on the GPU (buffers in, buffers out).
-- **`TKCode.Arc.Graphics3D.Controls` 0.1.0-preview.1 (new, preview)**: `Viewport3D`, which draws a scene inside the
+- **`TKCode.Arc.Graphics3D.Controls` (new, preview)**: `Viewport3D`, which draws a scene inside the
   Avalonia composition tree and renders on demand, and `ModelViewer`, which shows a glTF file or any object with studio
   lighting, a ground shadow, orbit controls, auto-rotation and a reset button; register them with `UseArcGraphics3D()`. On macOS it works under
   Avalonia's default Metal renderer (its own OpenGL context, pictures handed over as IOSurfaces); elsewhere it uses
@@ -63,7 +60,7 @@ Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162).
   Verified on macOS, on Windows (one machine with an NVIDIA card: ANGLE / Direct3D 11, the software mode, the driver's
   OpenGL through WGL, and WebGPU over Vulkan) and on Linux (X11 with Mesa's software OpenGL, in a container); real Linux
   GPU drivers, Wayland and other Windows graphics hardware are untested.
-- **`TKCode.Arc.Graphics3D.Browser` 0.1.0-preview.1 (new, preview)**: `Viewport3D` and `ModelViewer` in the browser
+- **`TKCode.Arc.Graphics3D.Browser` (new, preview)**: `Viewport3D` and `ModelViewer` in the browser
   (WebAssembly). Avalonia.Browser shares neither its WebGL context nor textures and `OpenGlControlBase` never starts
   there, so the viewport draws in a WebGL 2 context of its own on a canvas that is never shown, and presents the picture
   as a bitmap (`Viewport3D.Presentation` reads `Bitmap`): one read-back per drawn frame. A browser app references the

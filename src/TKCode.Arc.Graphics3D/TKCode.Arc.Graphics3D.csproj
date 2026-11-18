@@ -6,8 +6,6 @@
              with Avalonia and with Arc controls in the flat TKCode.Arc namespace (design/decisions/0051-graphics3d-package.md). -->
         <RootNamespace>TKCode.Arc.Graphics3D</RootNamespace>
         <PackageId>TKCode.Arc.Graphics3D</PackageId>
-        <!-- Preview-only version line, independent of ArcVersion (ADR 0051). -->
-        <Version>$(ArcGraphics3DVersion)</Version>
         <Description>3D rendering engine for .NET: scene graph, geometries, node-based PBR materials, lights and shadows, image-based lighting, animation, glTF loading, ray casting and a renderer over a WebGPU-shaped hardware interface with an OpenGL ES 3.0 / OpenGL 4.1 backend. No UI dependency; TKCode.Arc.Graphics3D.Controls hosts it in Avalonia. Preview: the API may change between previews.</Description>
         <PackageTags>3d;rendering;engine;scene;pbr;gltf;opengl;graphics</PackageTags>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>

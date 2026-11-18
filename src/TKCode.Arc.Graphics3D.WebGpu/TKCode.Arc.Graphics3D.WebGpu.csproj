@@ -4,8 +4,6 @@
         <AssemblyName>TKCode.Arc.Graphics3D.WebGpu</AssemblyName>
         <RootNamespace>TKCode.Arc.Graphics3D.Rhi.WebGpu</RootNamespace>
         <PackageId>TKCode.Arc.Graphics3D.WebGpu</PackageId>
-        <!-- Preview-only version line, independent of ArcVersion (ADR 0051). -->
-        <Version>$(ArcGraphics3DVersion)</Version>
         <Description>WebGPU backend for TKCode.Arc.Graphics3D: a GraphicsDevice over wgpu-native (Metal, Vulkan, Direct3D 12, OpenGL ES) with compute shaders. The native library is not included: pass its path to WgpuDevice.Create. Preview: the API may change between previews.</Description>
         <PackageTags>3d;rendering;engine;webgpu;wgpu;compute;graphics</PackageTags>
         <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
