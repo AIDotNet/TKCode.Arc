@@ -4,6 +4,10 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.CalendarTheme">
     <ControlTheme x:Key="{x:Type arc:Calendar}" TargetType="arc:Calendar">
+        <Setter Property="TodayLabel" Value="{arc:PickerLangResource Today}" />
+        <Setter Property="PreviousMonthLabel" Value="{arc:PickerLangResource PreviousMonth}" />
+        <Setter Property="NextMonthLabel" Value="{arc:PickerLangResource NextMonth}" />
+        <Setter Property="AutomationProperties.Name" Value="{CompiledBinding MonthTitle, RelativeSource={RelativeSource Self}, x:DataType=arc:Calendar}" />
         <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
         <Setter Property="FocusAdorner" Value="{x:Null}" />
         <Setter Property="Template">

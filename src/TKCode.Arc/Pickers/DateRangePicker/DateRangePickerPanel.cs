@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -164,7 +165,7 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
     public DateRange? Shown => Anchor is { } a ? DateRange.Ordered(a, HoverDate ?? a) : Draft;
 
     /// <summary>The draft or preview changed (the owner rolls the flying summary).</summary>
-    public event EventHandler? ShownChanged;
+    public event Action<bool>? ShownChanged;
 
     public event EventHandler? ApplyRequested;
 
@@ -236,7 +237,7 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
         HoverDate = null;
         View = ViewFor(committed, compact, today);
         FocusDate = committed?.Start ?? today;
-        BuildPresets();
+        RefreshPresets();
         _begun = true;
         _shownKey = committed is { } c ? c.Start.DayNumber * 2L + c.End.DayNumber : null;
         _railHighlight?.Hide(animate: false);
@@ -279,7 +280,7 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
 
     private static int MonthDiff(DateOnly a, DateOnly b) => (a.Year - b.Year) * 12 + a.Month - b.Month;
 
-    private void BuildPresets()
+    public void RefreshPresets()
     {
         if (_rail is null)
         {
@@ -300,7 +301,7 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
             if (i < presets.Count)
             {
                 button.Index = i;
-                button.Content = presets[i].Label;
+                button.Content = Owner.Presets is null ? DateRangePresets.GetDefaultLabel(i) : presets[i].Label;
             }
         }
     }
@@ -435,6 +436,16 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
             _presetButtons[i].SetActive(i == _activePreset);
         }
         SyncRailHighlight(animate, onlyIfIdle: false);
+        RefreshText(animate);
+    }
+
+    public void RefreshText(bool animate)
+    {
+        if (!_begun)
+        {
+            return;
+        }
+        var owner = Owner;
         if (_previous is not null)
         {
             _previous.IsEnabled = !(owner.MinDate is { } min && MonthDiff(View, min) <= 0);
@@ -468,10 +479,11 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
         if (_live is not null)
         {
             _live.Text = Anchor is { } start
-                ? $"Start {owner.FormatDate(start)}. Choose an end date."
-                : shown is { } s ? $"{owner.FormatRange(s)}, {owner.FormatDays(s.Days)}" : string.Empty;
+                ? PickerLangResources.Format(PickerLangResourceKind.RangeStartAnnouncement, owner.FormatDate(start))
+                : shown is { } s ? PickerLangResources.Format(PickerLangResourceKind.RangeAnnouncement, owner.FormatRange(s), owner.FormatDays(s.Days))
+                : string.Empty;
         }
-        ShownChanged?.Invoke(this, EventArgs.Empty);
+        ShownChanged?.Invoke(animate);
     }
 
     private void SyncRailHighlight(bool animate, bool onlyIfIdle)

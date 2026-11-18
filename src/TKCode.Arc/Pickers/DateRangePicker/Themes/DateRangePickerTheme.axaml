@@ -4,6 +4,16 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.DateRangePickerTheme">
     <ControlTheme x:Key="{x:Type arc:DateRangePicker}" TargetType="arc:DateRangePicker">
+        <Setter Property="Label" Value="{arc:PickerLangResource DateRangeLabel}" />
+        <Setter Property="Placeholder" Value="{arc:PickerLangResource DateRangePlaceholder}" />
+        <Setter Property="ApplyText" Value="{arc:PickerLangResource Apply}" />
+        <Setter Property="CancelText" Value="{arc:PickerLangResource Cancel}" />
+        <Setter Property="NoDatesText" Value="{arc:PickerLangResource NoDates}" />
+        <Setter Property="PickEndText" Value="{arc:PickerLangResource PickEnd}" />
+        <Setter Property="DayCountFormat" Value="{arc:PickerLangResource DayCount}" />
+        <Setter Property="DaysCountFormat" Value="{arc:PickerLangResource DaysCount}" />
+        <Setter Property="PreviousMonthLabel" Value="{arc:PickerLangResource PreviousMonth}" />
+        <Setter Property="NextMonthLabel" Value="{arc:PickerLangResource NextMonth}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:DateRangePicker">
@@ -103,7 +113,7 @@
                         <StackPanel Name="PART_Body" Orientation="Horizontal">
                             <Border Name="PART_RailFrame"
                                     BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
-                                    AutomationProperties.Name="Presets">
+                                    AutomationProperties.Name="{DynamicResource {x:Static arc:PickerLangResourceKind.Presets}}">
                                 <ScrollViewer Name="PART_RailScroll"
                                               HorizontalScrollBarVisibility="Disabled"
                                               VerticalScrollBarVisibility="Disabled">

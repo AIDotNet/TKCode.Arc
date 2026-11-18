@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
@@ -180,11 +181,21 @@ public class TagInput : TemplatedControl
     public static readonly AttachedProperty<double> LabelWidthProperty =
         Field.LabelWidthProperty.AddOwner<TagInput>();
 
+    /// <inheritdoc cref="Field.LabelFontWeightProperty"/>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        Field.LabelFontWeightProperty.AddOwner<TagInput>();
+
     /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
     public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
 
     /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
     public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>The visible label.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }

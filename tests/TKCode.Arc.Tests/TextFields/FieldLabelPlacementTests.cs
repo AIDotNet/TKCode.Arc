@@ -3,6 +3,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
 using Avalonia.Controls.Templates;
 using Avalonia.Headless.XUnit;
+using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 
@@ -24,6 +25,36 @@ public class FieldLabelPlacementTests
     private static Point Origin(Visual element, Visual root) => element.TranslatePoint(default, root)!.Value;
 
     private static double CenterY(Visual element, Visual root) => Origin(element, root).Y + element.Bounds.Height / 2;
+
+    [AvaloniaFact]
+    public void Label_Weight_Inherits_And_Can_Be_Overridden_Without_Styling_The_Editor()
+    {
+        var input = new Input { Label = "Email" };
+        var combo = new Combobox { Label = "Time zone", LabelFontWeight = FontWeight.Bold };
+        var date = new DatePicker { Label = "Due" };
+        var form = new FormItem { Label = "Device", Content = new Input() };
+        var panel = new StackPanel { Children = { input, combo, date, form } };
+        var window = TestHelpers.Show(panel);
+        try
+        {
+            var originalEditorWeight = input.FontWeight;
+            var originalLabelWeight = LabelOf(input).FontWeight;
+            Field.SetLabelFontWeight(panel, FontWeight.SemiBold);
+            LabelOf(input).FontWeight.ShouldBe(FontWeight.SemiBold);
+            LabelOf(combo).FontWeight.ShouldBe(FontWeight.Bold);
+            LabelOf(date).FontWeight.ShouldBe(FontWeight.SemiBold);
+            LabelOf(form).FontWeight.ShouldBe(FontWeight.SemiBold);
+            input.FontWeight.ShouldBe(originalEditorWeight);
+            combo.ClearValue(Combobox.LabelFontWeightProperty);
+            LabelOf(combo).FontWeight.ShouldBe(FontWeight.SemiBold);
+            panel.ClearValue(Field.LabelFontWeightProperty);
+            LabelOf(input).FontWeight.ShouldBe(originalLabelWeight);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 
     [AvaloniaFact]
     public void Top_Is_The_Default_And_Keeps_The_Stacked_Layout()

@@ -11,12 +11,12 @@
                     <arc:FieldLayout Size="{TemplateBinding Size}">
                         <!-- Arc .head: the label row is as wide as the shell, so the limit note sits over the stepper it answers. -->
                         <Grid Name="PART_Head" ColumnDefinitions="*,Auto">
-                            <TextBlock Name="PART_Label"
-                                       Text="{TemplateBinding Label}"
-                                       TextTrimming="CharacterEllipsis"
-                                       Background="Transparent"
-                                       HorizontalAlignment="Left"
-                                       VerticalAlignment="Bottom" />
+                            <arc:FieldLabel Name="PART_Label"
+                                            Text="{TemplateBinding Label}"
+                                            TextTrimming="CharacterEllipsis"
+                                            Background="Transparent"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Bottom" />
                             <arc:NumberFieldLimitNote Name="PART_LimitNote"
                                                       Grid.Column="1"
                                                       TextWrapping="NoWrap"

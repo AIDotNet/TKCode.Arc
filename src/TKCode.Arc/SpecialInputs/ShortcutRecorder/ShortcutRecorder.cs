@@ -7,6 +7,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
 
 namespace TKCode.Arc;
@@ -110,6 +111,10 @@ public class ShortcutRecorder : TemplatedControl
     public static readonly StyledProperty<string?> LabelProperty =
         AvaloniaProperty.Register<ShortcutRecorder, string?>(nameof(Label));
 
+    /// <inheritdoc cref="Field.LabelFontWeightProperty"/>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        Field.LabelFontWeightProperty.AddOwner<ShortcutRecorder>();
+
     /// <summary>When false the label is only read by assistive technology (Arc: <c>hideLabel</c>).</summary>
     public static readonly StyledProperty<bool> IsLabelVisibleProperty =
         AvaloniaProperty.Register<ShortcutRecorder, bool>(nameof(IsLabelVisible), true);
@@ -172,6 +177,12 @@ public class ShortcutRecorder : TemplatedControl
 
     /// <summary>The field label.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>Whether the label is shown.</summary>
     public bool IsLabelVisible { get => GetValue(IsLabelVisibleProperty); set => SetValue(IsLabelVisibleProperty, value); }

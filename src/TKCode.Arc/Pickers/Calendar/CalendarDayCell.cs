@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -91,7 +92,8 @@ internal sealed class CalendarDayCell : Control
                 _selectedness?.Jump(selected ? 1 : 0);
             }
         }
-        AutomationProperties.SetHelpText(this, selected ? "selected" : today ? "today" : string.Empty);
+        AutomationProperties.SetHelpText(this, selected ? PickerLangResources.Get(PickerLangResourceKind.SelectedDay)
+            : today ? PickerLangResources.Get(PickerLangResourceKind.TodayStatus) : string.Empty);
         if (changed)
         {
             InvalidateVisual();

@@ -12,17 +12,17 @@
                         <arc:ArcShrinkRow Name="PART_LabelLine"
                                           Spacing="{arc:FormItemTokenResource RequiredMarkGap}"
                                           VerticalAlignment="Center">
-                            <TextBlock Name="PART_Label"
-                                       Text="{TemplateBinding Label}"
-                                       TextWrapping="Wrap"
-                                       arc:ArcShrinkRow.IsShrinkable="True">
-                                <TextBlock.IsVisible>
+                            <arc:FieldLabel Name="PART_Label"
+                                            Text="{TemplateBinding Label}"
+                                            TextWrapping="Wrap"
+                                            arc:ArcShrinkRow.IsShrinkable="True">
+                                <arc:FieldLabel.IsVisible>
                                     <MultiBinding Converter="{x:Static BoolConverters.And}">
                                         <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
                                         <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
                                     </MultiBinding>
-                                </TextBlock.IsVisible>
-                            </TextBlock>
+                                </arc:FieldLabel.IsVisible>
+                            </arc:FieldLabel>
                             <TextBlock Name="PART_Asterisk"
                                        Text="*"
                                        IsVisible="False"

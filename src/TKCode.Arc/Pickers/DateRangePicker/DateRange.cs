@@ -1,4 +1,5 @@
 using Avalonia.Interactivity;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc;
 
@@ -36,18 +37,23 @@ public static class DateRangePresets
 {
     private static DateOnly MonthStart(DateOnly d) => new(d.Year, d.Month, 1);
 
-    /// <summary>Today, Yesterday, Last 7 days, Last 30 days, This month, Last month, This quarter, Year to date.</summary>
-    public static IReadOnlyList<DateRangePreset> Default { get; } =
+    private static readonly (PickerLangResourceKind Label, Func<DateOnly, DateRange> Range)[] s_definitions =
     [
-        new("Today", today => new DateRange(today, today)),
-        new("Yesterday", today => new DateRange(today.AddDays(-1), today.AddDays(-1))),
-        new("Last 7 days", today => new DateRange(today.AddDays(-6), today)),
-        new("Last 30 days", today => new DateRange(today.AddDays(-29), today)),
-        new("This month", today => new DateRange(MonthStart(today), today)),
-        new("Last month", today => new DateRange(MonthStart(today).AddMonths(-1), MonthStart(today).AddDays(-1))),
-        new("This quarter", today => new DateRange(new DateOnly(today.Year, (today.Month - 1) / 3 * 3 + 1, 1), today)),
-        new("Year to date", today => new DateRange(new DateOnly(today.Year, 1, 1), today))
+        (PickerLangResourceKind.Today, today => new DateRange(today, today)),
+        (PickerLangResourceKind.Yesterday, today => new DateRange(today.AddDays(-1), today.AddDays(-1))),
+        (PickerLangResourceKind.LastSevenDays, today => new DateRange(today.AddDays(-6), today)),
+        (PickerLangResourceKind.LastThirtyDays, today => new DateRange(today.AddDays(-29), today)),
+        (PickerLangResourceKind.ThisMonth, today => new DateRange(MonthStart(today), today)),
+        (PickerLangResourceKind.LastMonth, today => new DateRange(MonthStart(today).AddMonths(-1), MonthStart(today).AddDays(-1))),
+        (PickerLangResourceKind.ThisQuarter, today => new DateRange(new DateOnly(today.Year, (today.Month - 1) / 3 * 3 + 1, 1), today)),
+        (PickerLangResourceKind.YearToDate, today => new DateRange(new DateOnly(today.Year, 1, 1), today))
     ];
+
+    /// <summary>Today, Yesterday, Last 7 days, Last 30 days, This month, Last month, This quarter, Year to date.</summary>
+    public static IReadOnlyList<DateRangePreset> Default { get; } = Array.AsReadOnly(s_definitions.Select(definition =>
+        new DateRangePreset(PickerLangResources.Catalog.SourceText(PickerLangResources.Index(definition.Label)), definition.Range)).ToArray());
+
+    internal static string GetDefaultLabel(int index) => PickerLangResources.Get(s_definitions[index].Label);
 }
 
 /// <summary>How many months a <see cref="DateRangePicker"/> shows.</summary>

@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -280,6 +281,12 @@ public class DatePicker : FieldTextBox
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
+        if (change.Property == PlaceholderProperty)
+        {
+            // FieldTextBox copies Placeholder at PlaceholderText's current priority. The theme supplies this
+            // fallback as a binding so an app value on PlaceholderText remains in control.
+            return;
+        }
         base.OnPropertyChanged(change);
         if (change.Property == SelectedDateProperty)
         {
@@ -322,10 +329,23 @@ public class DatePicker : FieldTextBox
         }
         else if (change.Property == MinDateProperty || change.Property == MaxDateProperty ||
                  change.Property == DisabledDatesProperty || change.Property == ShowTodayProperty ||
-                 change.Property == FirstDayOfWeekProperty || change.Property == EmptyStatusTextProperty ||
-                 change.Property == SelectedStatusFormatProperty)
+                 change.Property == FirstDayOfWeekProperty)
         {
             SyncPanel();
+        }
+        else if (change.Property == ClearTextProperty || change.Property == EmptyStatusTextProperty ||
+                 change.Property == SelectedStatusFormatProperty)
+        {
+            UpdatePanelText(animate: false);
+        }
+        else if (change.Property == PlaceholderTextProperty)
+        {
+            UpdateValue(animate: false, direction: 1);
+        }
+        else if (change.Property == LabelProperty || change.Property == DescriptionProperty ||
+                 change.Property == EffectiveErrorMessageProperty)
+        {
+            UpdateValueAutomation();
         }
         else if (change.Property == IsFocusedProperty)
         {
@@ -358,20 +378,19 @@ public class DatePicker : FieldTextBox
     /// <summary>Rolls the shown copy: changed parts only, in time's direction; the placeholder drops in from above.</summary>
     private void UpdateValue(bool animate, int direction)
     {
-        if (_value is null)
+        if (_value is not null)
         {
-            return;
+            if (SelectedDate is { } date)
+            {
+                PickerDateFormat.FormatParts(date, EffectivePattern, EffectiveCulture, _parts);
+                _value.Show(_parts, placeholder: false, direction, animate, exitDirection: 1);
+            }
+            else
+            {
+                _value.Show(PlaceholderText ?? string.Empty, placeholder: true, direction: -1, animate, exitDirection: 1);
+            }
+            UpdateOverlay();
         }
-        if (SelectedDate is { } date)
-        {
-            PickerDateFormat.FormatParts(date, EffectivePattern, EffectiveCulture, _parts);
-            _value.Show(_parts, placeholder: false, direction, animate, exitDirection: 1);
-        }
-        else
-        {
-            _value.Show(Placeholder ?? string.Empty, placeholder: true, direction: -1, animate, exitDirection: 1);
-        }
-        UpdateOverlay();
         UpdateValueAutomation();
     }
 
@@ -446,12 +465,14 @@ public class DatePicker : FieldTextBox
 
     private void UpdateValueAutomation()
     {
-        var label = Label;
-        var shown = SelectedDate is null ? Placeholder : _formatted;
+        var shown = SelectedDate is null ? PlaceholderText : _formatted;
         FormFieldHost.SetHelpText(this, FieldText.HelpText(string.IsNullOrEmpty(Description) ? shown : $"{shown}. {Description}", EffectiveErrorMessage));
         if (_panel is not null)
         {
-            AutomationProperties.SetName(_panel, $"{label} calendar".Trim());
+            var name = string.IsNullOrWhiteSpace(Label)
+                ? PickerLangResources.Get(PickerLangResourceKind.Calendar)
+                : PickerLangResources.Format(PickerLangResourceKind.CalendarFor, Label);
+            AutomationProperties.SetName(_panel, name.Trim());
         }
     }
 
@@ -526,15 +547,20 @@ public class DatePicker : FieldTextBox
                 calendar.SelectedDate = SelectedDate;
             }
         }
-        if (_panel.ClearButton is { } clear)
+        UpdatePanelText(animate: _popup?.IsOpen == true);
+    }
+
+    private void UpdatePanelText(bool animate)
+    {
+        if (_panel?.ClearButton is { } clear)
         {
             clear.Content = ClearText;
             clear.IsEnabled = SelectedDate is not null;
         }
-        if (_panel.Status is { } status)
+        if (_panel?.Status is { } status)
         {
             var text = SelectedDate is not null ? string.Format(EffectiveCulture, SelectedStatusFormat, _formatted) : EmptyStatusText;
-            status.Show(text, placeholder: false, direction: 1, animate: _popup?.IsOpen == true);
+            status.Show(text, placeholder: false, direction: 1, animate);
         }
     }
 
@@ -847,8 +873,23 @@ public class DatePicker : FieldTextBox
         Dispatcher.UIThread.Post(CheckFocusLeft, DispatcherPriority.Input);
     }
 
+    public DatePicker()
+    {
+        AttachedToVisualTree += (_, _) =>
+        {
+            ArcLanguage.Changed += OnLanguageChanged;
+            UpdateValueAutomation();
+        };
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        UpdateValueAutomation();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        ArcLanguage.Changed -= OnLanguageChanged;
         base.OnDetachedFromVisualTree(e);
         _closeTimer?.Dispose();
         _closeTimer = null;

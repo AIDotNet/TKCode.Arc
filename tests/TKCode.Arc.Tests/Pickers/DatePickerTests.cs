@@ -1,10 +1,13 @@
 using System.Globalization;
+using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
+using TKCode.Arc.Localization;
 
 namespace TKCode.Arc.Tests.Pickers;
 
@@ -39,6 +42,59 @@ public class DatePickerTests
         finally
         {
             window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Language_Changes_Respect_English_Overrides_And_Keep_Typed_Text()
+    {
+        var picker = new DatePicker { Culture = EnUs };
+        var overridden = new DatePicker { Placeholder = "Select a date" };
+        var styled = new DatePicker();
+        var styleScope = new StackPanel { Children = { styled } };
+        styleScope.Styles.Add(new Style(s => s.OfType<DatePicker>())
+        {
+            Setters = { new Setter(DatePicker.PlaceholderTextProperty, "Select a date") }
+        });
+        var previousLanguage = ArcLanguage.Current;
+        Window? window = null;
+        try
+        {
+            ArcLanguage.Set(LanguageTags.ZhCN);
+            window = Show(new StackPanel { Children = { picker, overridden, styleScope } });
+            picker.IsDropDownOpen = true;
+            Dispatcher.UIThread.RunJobs();
+
+            var panel = picker.Panel!;
+            var status = panel.Status!;
+            picker.PlaceholderText.ShouldBe("请选择日期");
+            panel.ClearButton!.Content.ShouldBe("清除");
+            status.Text.ShouldBe("选择日期");
+            AutomationProperties.GetName(panel).ShouldBe("日历");
+            overridden.PlaceholderText.ShouldBe("Select a date");
+            styled.Placeholder.ShouldBe("请选择日期");
+            styled.PlaceholderText.ShouldBe("Select a date");
+
+            picker.SelectedDate = new DateOnly(2026, 10, 20);
+            picker.Focus();
+            picker.Text = "10/21/2026";
+            picker.CaretIndex = 3;
+            ArcLanguage.Set(LanguageTags.ZhTW);
+            Dispatcher.UIThread.RunJobs();
+
+            picker.PlaceholderText.ShouldBe("請選擇日期");
+            status.Text.ShouldBe("已選擇 Oct 20, 2026");
+            AutomationProperties.GetName(panel).ShouldBe("日曆");
+            picker.Text.ShouldBe("10/21/2026");
+            picker.CaretIndex.ShouldBe(3);
+            picker.FormattedValue.ShouldBe("Oct 20, 2026");
+            styled.PlaceholderText.ShouldBe("Select a date");
+            overridden.PlaceholderText.ShouldBe("Select a date");
+        }
+        finally
+        {
+            window?.Close();
+            ArcLanguage.Set(previousLanguage);
         }
     }
 

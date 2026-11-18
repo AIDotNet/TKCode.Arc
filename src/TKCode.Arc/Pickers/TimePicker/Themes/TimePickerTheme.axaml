@@ -4,6 +4,7 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.TimePickerTheme">
     <ControlTheme x:Key="{x:Type arc:TimePicker}" TargetType="arc:TimePicker">
+        <Setter Property="Placeholder" Value="{arc:PickerLangResource TimePlaceholder}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TimePicker">

@@ -4,6 +4,11 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.DatePickerTheme">
     <ControlTheme x:Key="{x:Type arc:DatePicker}" TargetType="arc:DatePicker">
+        <Setter Property="ClearText" Value="{arc:PickerLangResource Clear}" />
+        <Setter Property="EmptyStatusText" Value="{arc:PickerLangResource ChooseDay}" />
+        <Setter Property="SelectedStatusFormat" Value="{arc:PickerLangResource SelectedDateStatus}" />
+        <Setter Property="Placeholder" Value="{arc:PickerLangResource DatePlaceholder}" />
+        <Setter Property="PlaceholderText" Value="{CompiledBinding Placeholder, RelativeSource={RelativeSource Self}, x:DataType=arc:DatePicker}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:DatePicker">

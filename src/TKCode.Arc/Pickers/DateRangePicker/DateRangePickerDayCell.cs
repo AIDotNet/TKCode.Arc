@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using Avalonia;
 using Avalonia.Automation;
@@ -107,7 +108,7 @@ internal sealed class DateRangePickerDayCell : Control
                 _edge.Jump(edge ? 1 : 0);
             }
         }
-        AutomationProperties.SetItemStatus(this, today ? "today" : string.Empty);
+        AutomationProperties.SetItemStatus(this, today ? PickerLangResources.Get(PickerLangResourceKind.TodayStatus) : string.Empty);
         if (changed)
         {
             InvalidateVisual();

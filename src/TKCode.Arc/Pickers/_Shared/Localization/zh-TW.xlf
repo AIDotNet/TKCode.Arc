@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PickerLangResourceKind">
+    <unit id="Apply">
+      <segment>
+        <source>Apply</source>
+        <target state="translated">套用</target>
+      </segment>
+    </unit>
+    <unit id="Calendar">
+      <segment>
+        <source>calendar</source>
+        <target state="translated">日曆</target>
+      </segment>
+    </unit>
+    <unit id="CalendarFor">
+      <segment>
+        <source>{0} calendar</source>
+        <target state="translated">{0}日曆</target>
+      </segment>
+    </unit>
+    <unit id="Cancel">
+      <segment>
+        <source>Cancel</source>
+        <target state="translated">取消</target>
+      </segment>
+    </unit>
+    <unit id="ChooseDay">
+      <segment>
+        <source>Choose a day</source>
+        <target state="translated">選擇日期</target>
+      </segment>
+    </unit>
+    <unit id="Clear">
+      <segment>
+        <source>Clear</source>
+        <target state="translated">清除</target>
+      </segment>
+    </unit>
+    <unit id="DatePlaceholder">
+      <segment>
+        <source>Select a date</source>
+        <target state="translated">請選擇日期</target>
+      </segment>
+    </unit>
+    <unit id="DateRangeLabel">
+      <segment>
+        <source>Date range</source>
+        <target state="translated">日期範圍</target>
+      </segment>
+    </unit>
+    <unit id="DateRangePlaceholder">
+      <segment>
+        <source>Select dates</source>
+        <target state="translated">請選擇日期範圍</target>
+      </segment>
+    </unit>
+    <unit id="DayCount">
+      <segment>
+        <source>{0} day</source>
+        <target state="translated">{0} 天</target>
+      </segment>
+    </unit>
+    <unit id="DaysCount">
+      <segment>
+        <source>{0} days</source>
+        <target state="translated">{0} 天</target>
+      </segment>
+    </unit>
+    <unit id="LastMonth">
+      <segment>
+        <source>Last month</source>
+        <target state="translated">上個月</target>
+      </segment>
+    </unit>
+    <unit id="LastSevenDays">
+      <segment>
+        <source>Last 7 days</source>
+        <target state="translated">最近 7 天</target>
+      </segment>
+    </unit>
+    <unit id="LastThirtyDays">
+      <segment>
+        <source>Last 30 days</source>
+        <target state="translated">最近 30 天</target>
+      </segment>
+    </unit>
+    <unit id="NextMonth">
+      <segment>
+        <source>Next month</source>
+        <target state="translated">下個月</target>
+      </segment>
+    </unit>
+    <unit id="NoDates">
+      <segment>
+        <source>No dates</source>
+        <target state="translated">未選擇日期</target>
+      </segment>
+    </unit>
+    <unit id="PickEnd">
+      <segment>
+        <source>Pick an end date</source>
+        <target state="translated">選擇結束日期</target>
+      </segment>
+    </unit>
+    <unit id="Presets">
+      <segment>
+        <source>Presets</source>
+        <target state="translated">預設</target>
+      </segment>
+    </unit>
+    <unit id="PreviousMonth">
+      <segment>
+        <source>Previous month</source>
+        <target state="translated">上個月</target>
+      </segment>
+    </unit>
+    <unit id="RangeAnnouncement">
+      <segment>
+        <source>{0}, {1}</source>
+        <target state="translated">{0}，共 {1}</target>
+      </segment>
+    </unit>
+    <unit id="RangeStartAnnouncement">
+      <segment>
+        <source>Start {0}. Choose an end date.</source>
+        <target state="translated">開始日期為 {0}。請選擇結束日期。</target>
+      </segment>
+    </unit>
+    <unit id="SelectedDateStatus">
+      <segment>
+        <source>Selected {0}</source>
+        <target state="translated">已選擇 {0}</target>
+      </segment>
+    </unit>
+    <unit id="SelectedDay">
+      <segment>
+        <source>selected</source>
+        <target state="translated">已選擇</target>
+      </segment>
+    </unit>
+    <unit id="ThisMonth">
+      <segment>
+        <source>This month</source>
+        <target state="translated">本月</target>
+      </segment>
+    </unit>
+    <unit id="ThisQuarter">
+      <segment>
+        <source>This quarter</source>
+        <target state="translated">本季</target>
+      </segment>
+    </unit>
+    <unit id="TimeOptions">
+      <segment>
+        <source>options</source>
+        <target state="translated">時間選項</target>
+      </segment>
+    </unit>
+    <unit id="TimeOptionsFor">
+      <segment>
+        <source>{0} options</source>
+        <target state="translated">{0}選項</target>
+      </segment>
+    </unit>
+    <unit id="TimePlaceholder">
+      <segment>
+        <source>Select a time</source>
+        <target state="translated">請選擇時間</target>
+      </segment>
+    </unit>
+    <unit id="Today">
+      <segment>
+        <source>Today</source>
+        <target state="translated">今天</target>
+      </segment>
+    </unit>
+    <unit id="TodayStatus">
+      <segment>
+        <source>today</source>
+        <target state="translated">今天</target>
+      </segment>
+    </unit>
+    <unit id="YearToDate">
+      <segment>
+        <source>Year to date</source>
+        <target state="translated">今年截至今日</target>
+      </segment>
+    </unit>
+    <unit id="Yesterday">
+      <segment>
+        <source>Yesterday</source>
+        <target state="translated">昨天</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

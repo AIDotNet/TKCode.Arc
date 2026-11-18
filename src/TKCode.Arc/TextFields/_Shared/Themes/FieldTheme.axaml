@@ -7,17 +7,17 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Field">
                 <arc:FieldLayout Size="{TemplateBinding Size}">
-                    <TextBlock Name="PART_Label"
-                               Text="{TemplateBinding Label}"
-                               Margin="{arc:FieldTokenResource LabelMargin}"
-                               TextWrapping="Wrap">
-                        <TextBlock.IsVisible>
+                    <arc:FieldLabel Name="PART_Label"
+                                    Text="{TemplateBinding Label}"
+                                    Margin="{arc:FieldTokenResource LabelMargin}"
+                                    TextWrapping="Wrap">
+                        <arc:FieldLabel.IsVisible>
                             <MultiBinding Converter="{x:Static BoolConverters.And}">
                                 <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="IsLabelVisible" />
                                 <Binding RelativeSource="{RelativeSource TemplatedParent}" Path="Label" Converter="{x:Static StringConverters.IsNotNullOrEmpty}" />
                             </MultiBinding>
-                        </TextBlock.IsVisible>
-                    </TextBlock>
+                        </arc:FieldLabel.IsVisible>
+                    </arc:FieldLabel>
                     <ContentPresenter Name="PART_ContentPresenter"
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}"

@@ -54,6 +54,15 @@ public class DrawerTests
             surface.Bounds.Left.ShouldBe(0, 0.5);
             surface.Classes.Contains(DrawerSurface.NarrowPseudoClass).ShouldBeTrue();
             surface.CornerRadius.ShouldBe(new CornerRadius(0, 18, 18, 0));
+            var header = surface.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "PART_DefaultHeader");
+            var body = surface.GetVisualDescendants().OfType<StackPanel>().Single(panel => panel.Name == "PART_BodyContent");
+            header.Padding.ShouldBe(new Thickness(20));
+            body.Margin.ShouldBe(new Thickness(20));
+
+            window.Width = 1000;
+            Dispatcher.UIThread.RunJobs();
+            header.Padding.ShouldBe(new Thickness(24));
+            body.Margin.ShouldBe(new Thickness(24));
         }
         finally
         {

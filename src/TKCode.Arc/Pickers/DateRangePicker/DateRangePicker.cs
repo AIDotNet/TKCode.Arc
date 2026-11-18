@@ -1,5 +1,6 @@
 using TKCode.Arc.DesignTokens;
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -168,11 +169,21 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
     public static readonly AttachedProperty<double> LabelWidthProperty =
         Field.LabelWidthProperty.AddOwner<DateRangePicker>();
 
+    /// <inheritdoc cref="Field.LabelFontWeightProperty"/>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        Field.LabelFontWeightProperty.AddOwner<DateRangePicker>();
+
     /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
     public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
 
     /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
     public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>Accessible name of the trigger and the panel.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -409,7 +420,22 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         else if (change.Property == MinDateProperty || change.Property == MaxDateProperty || change.Property == FirstDayOfWeekProperty ||
                  change.Property == PresetsProperty)
         {
+            if (change.Property == PresetsProperty)
+            {
+                _panel?.RefreshPresets();
+            }
             _panel?.Refresh(animate: false);
+        }
+        else if (change.Property == ApplyTextProperty || change.Property == CancelTextProperty ||
+                 change.Property == PickEndTextProperty || change.Property == DayCountFormatProperty ||
+                 change.Property == DaysCountFormatProperty || change.Property == PreviousMonthLabelProperty ||
+                 change.Property == NextMonthLabelProperty)
+        {
+            _panel?.RefreshText(animate: false);
+        }
+        else if (change.Property == NoDatesTextProperty)
+        {
+            UpdateFlyerText(animate: false);
         }
         else if (change.Property == AccentBrushProperty || change.Property == AccentSubtleBrushProperty ||
                  change.Property == AccentForegroundBrushProperty || change.Property == DayForegroundProperty ||
@@ -507,7 +533,7 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         }
         _panel.ApplyRequested += (_, _) => Apply();
         _panel.CancelRequested += (_, _) => Close(returnFocus: true);
-        _panel.ShownChanged += (_, _) => UpdateFlyerText(animate: true);
+        _panel.ShownChanged += UpdateFlyerText;
         _panel.KeyDown += OnPanelKeyDown;
         _panel.LostFocus += (_, _) => Dispatcher.UIThread.Post(CheckFocusLeft, DispatcherPriority.Input);
 
@@ -1049,8 +1075,20 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
         }
     }
 
+    public DateRangePicker()
+    {
+        AttachedToVisualTree += (_, _) => ArcLanguage.Changed += OnLanguageChanged;
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        _panel?.RefreshPresets();
+        _panel?.Refresh(animate: false);
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        ArcLanguage.Changed -= OnLanguageChanged;
         base.OnDetachedFromVisualTree(e);
         StopWatch();
         _reveal?.Stop();

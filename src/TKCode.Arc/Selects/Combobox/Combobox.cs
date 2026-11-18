@@ -25,6 +25,7 @@ namespace TKCode.Arc;
 [TemplatePart(FramePart, typeof(Border))]
 [TemplatePart(InputHostPart, typeof(Decorator))]
 [TemplatePart(ClearPart, typeof(AvaloniaButton))]
+[TemplatePart(ChevronButtonPart, typeof(AvaloniaButton))]
 [TemplatePart(ClearHostPart, typeof(PresenceHost))]
 [TemplatePart(PopupPart, typeof(ArcPopup))]
 [TemplatePart(SurfacePart, typeof(Border))]
@@ -35,6 +36,8 @@ namespace TKCode.Arc;
 [PseudoClasses(OpenPseudoClass)]
 public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAutomation
 {
+    private const string ChevronButtonPart = "PART_ChevronButton";
+
     public const string FramePart = "PART_Frame";
     public const string InputHostPart = "PART_InputHost";
     public const string ClearPart = "PART_Clear";
@@ -93,11 +96,21 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     public static readonly AttachedProperty<double> LabelWidthProperty =
         Field.LabelWidthProperty.AddOwner<Combobox>();
 
+    /// <inheritdoc cref="Field.LabelFontWeightProperty"/>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        Field.LabelFontWeightProperty.AddOwner<Combobox>();
+
     /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
     public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
 
     /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
     public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>Visible label above the field; also names the field and its list.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -156,6 +169,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     private Decorator? _inputHost;
     private TextBox? _input;
     private AvaloniaButton? _clear;
+    private AvaloniaButton? _chevronButton;
     private PresenceHost? _clearHost;
     private ArcPopup? _popup;
     private Border? _surface;
@@ -235,6 +249,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         {
             _clear.Click -= OnClearClick;
         }
+        if (_chevronButton is not null)
+        {
+            _chevronButton.Click -= OnChevronClick;
+        }
         if (_popup is not null)
         {
             _popup.Closed -= OnPopupClosed;
@@ -247,6 +265,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         _frame = e.NameScope.Find<Border>(FramePart);
         _inputHost = e.NameScope.Find<Decorator>(InputHostPart);
         _clear = e.NameScope.Find<AvaloniaButton>(ClearPart);
+        _chevronButton = e.NameScope.Find<AvaloniaButton>(ChevronButtonPart);
         _clearHost = e.NameScope.Find<PresenceHost>(ClearHostPart);
         _popup = e.NameScope.Find<ArcPopup>(PopupPart);
         _surface = e.NameScope.Find<Border>(SurfacePart);
@@ -270,6 +289,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         if (_clear is not null)
         {
             _clear.Click += OnClearClick;
+        }
+        if (_chevronButton is not null)
+        {
+            _chevronButton.Click += OnChevronClick;
         }
         if (_popup is not null)
         {
@@ -545,6 +568,17 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     }
 
     // ---------------------------------------------------------------- input
+
+    private void OnChevronClick(object? sender, RoutedEventArgs e)
+    {
+        if (IsOpen)
+        {
+            SetCurrentValue(IsOpenProperty, false);
+            return;
+        }
+        OpenMenu();
+        _input?.Focus(NavigationMethod.Pointer);
+    }
 
     private void OnInputGotFocus(object? sender, FocusChangedEventArgs e) => OpenMenu();
 

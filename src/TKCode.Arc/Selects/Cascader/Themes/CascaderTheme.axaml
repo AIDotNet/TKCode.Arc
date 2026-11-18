@@ -8,12 +8,12 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Cascader">
                 <arc:FieldLayout Size="{TemplateBinding Size}" Spacing="{arc:ArcDesignTokenResource Space2}">
-                    <TextBlock Name="PART_Label"
-                               Text="{TemplateBinding Label}"
-                               IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
-                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                               Foreground="{arc:ArcDesignTokenResource Foreground}" />
+                    <arc:FieldLabel Name="PART_Label"
+                                    Text="{TemplateBinding Label}"
+                                    IsVisible="{TemplateBinding Label, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                    FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                    Foreground="{arc:ArcDesignTokenResource Foreground}" />
                     <Panel>
                         <TextBlock Name="PART_Announcer"
                                    Width="1"

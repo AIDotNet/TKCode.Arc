@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Automation;
@@ -251,13 +252,21 @@ public class Calendar : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         ArcToday.Changed += OnTodayChanged;
+        ArcLanguage.Changed += OnLanguageChanged;
         OnTodayChanged(null, EventArgs.Empty);
+        OnLanguageChanged(null, EventArgs.Empty);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
-        base.OnDetachedFromVisualTree(e);
         ArcToday.Changed -= OnTodayChanged;
+        ArcLanguage.Changed -= OnLanguageChanged;
+        base.OnDetachedFromVisualTree(e);
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        _strip?.Refresh(null);
     }
 
     private void OnTodayChanged(object? sender, EventArgs e)
@@ -302,6 +311,11 @@ public class Calendar : TemplatedControl
         else if (change.Property == FirstDayOfWeekProperty || change.Property == CultureProperty)
         {
             _strip?.Refresh(null);
+            UpdateHeader(direction: 0);
+        }
+        else if (change.Property == TodayLabelProperty || change.Property == PreviousMonthLabelProperty ||
+                 change.Property == NextMonthLabelProperty)
+        {
             UpdateHeader(direction: 0);
         }
         else if (change.Property == DayForegroundProperty || change.Property == DayMutedForegroundProperty ||
@@ -374,7 +388,6 @@ public class Calendar : TemplatedControl
             _todayButton.IsEnabled = !IsTodayIdle();
             AutomationProperties.SetName(_todayButton, $"{TodayLabel}, {Today.ToString("D", culture)}");
         }
-        AutomationProperties.SetName(this, MonthTitle);
     }
 
     private bool TodaySelectable => !IsDateDisabled(Today);

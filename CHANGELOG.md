@@ -10,6 +10,20 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Added
+
+- `Field.LabelFontWeight` sets the visible label's font weight on a field or on a container for its fields.
+  Per-field values override the inherited setting, and unset labels use the theme weight (#163).
+
+### Fixed
+
+- Clicking the Combobox chevron toggles the list and focuses the search input on open (#163).
+- DatePicker, Calendar, DateRangePicker and TimePicker use Arc language resources for their built-in text.
+  Changing the language updates existing controls and leaves app-supplied text in place (#165).
+- Drawer header and body spacing follows the narrow layout and its template margins can be overridden with styles (#164).
+
 ## 1.2.0-preview.3 - 2026-11-17
 
 The third preview of 1.2 (1.2.0-preview.2 was never published) adds a 3D engine and its controls as four new preview packages that share the release version. Nothing changes in the other packages' API: they are republished at 1.2.0-preview.3 with the

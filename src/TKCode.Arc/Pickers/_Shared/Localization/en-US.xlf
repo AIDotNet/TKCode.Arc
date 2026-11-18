@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.PickerLangResourceKind">
+    <unit id="Apply">
+      <segment>
+        <source>Apply</source>
+      </segment>
+    </unit>
+    <unit id="Calendar">
+      <segment>
+        <source>calendar</source>
+      </segment>
+    </unit>
+    <unit id="CalendarFor">
+      <segment>
+        <source>{0} calendar</source>
+      </segment>
+    </unit>
+    <unit id="Cancel">
+      <segment>
+        <source>Cancel</source>
+      </segment>
+    </unit>
+    <unit id="ChooseDay">
+      <segment>
+        <source>Choose a day</source>
+      </segment>
+    </unit>
+    <unit id="Clear">
+      <segment>
+        <source>Clear</source>
+      </segment>
+    </unit>
+    <unit id="DatePlaceholder">
+      <segment>
+        <source>Select a date</source>
+      </segment>
+    </unit>
+    <unit id="DateRangeLabel">
+      <segment>
+        <source>Date range</source>
+      </segment>
+    </unit>
+    <unit id="DateRangePlaceholder">
+      <segment>
+        <source>Select dates</source>
+      </segment>
+    </unit>
+    <unit id="DayCount">
+      <segment>
+        <source>{0} day</source>
+      </segment>
+    </unit>
+    <unit id="DaysCount">
+      <segment>
+        <source>{0} days</source>
+      </segment>
+    </unit>
+    <unit id="LastMonth">
+      <segment>
+        <source>Last month</source>
+      </segment>
+    </unit>
+    <unit id="LastSevenDays">
+      <segment>
+        <source>Last 7 days</source>
+      </segment>
+    </unit>
+    <unit id="LastThirtyDays">
+      <segment>
+        <source>Last 30 days</source>
+      </segment>
+    </unit>
+    <unit id="NextMonth">
+      <segment>
+        <source>Next month</source>
+      </segment>
+    </unit>
+    <unit id="NoDates">
+      <segment>
+        <source>No dates</source>
+      </segment>
+    </unit>
+    <unit id="PickEnd">
+      <segment>
+        <source>Pick an end date</source>
+      </segment>
+    </unit>
+    <unit id="Presets">
+      <segment>
+        <source>Presets</source>
+      </segment>
+    </unit>
+    <unit id="PreviousMonth">
+      <segment>
+        <source>Previous month</source>
+      </segment>
+    </unit>
+    <unit id="RangeAnnouncement">
+      <segment>
+        <source>{0}, {1}</source>
+      </segment>
+    </unit>
+    <unit id="RangeStartAnnouncement">
+      <segment>
+        <source>Start {0}. Choose an end date.</source>
+      </segment>
+    </unit>
+    <unit id="SelectedDateStatus">
+      <segment>
+        <source>Selected {0}</source>
+      </segment>
+    </unit>
+    <unit id="SelectedDay">
+      <segment>
+        <source>selected</source>
+      </segment>
+    </unit>
+    <unit id="ThisMonth">
+      <segment>
+        <source>This month</source>
+      </segment>
+    </unit>
+    <unit id="ThisQuarter">
+      <segment>
+        <source>This quarter</source>
+      </segment>
+    </unit>
+    <unit id="TimeOptions">
+      <segment>
+        <source>options</source>
+      </segment>
+    </unit>
+    <unit id="TimeOptionsFor">
+      <segment>
+        <source>{0} options</source>
+      </segment>
+    </unit>
+    <unit id="TimePlaceholder">
+      <segment>
+        <source>Select a time</source>
+      </segment>
+    </unit>
+    <unit id="Today">
+      <segment>
+        <source>Today</source>
+      </segment>
+    </unit>
+    <unit id="TodayStatus">
+      <segment>
+        <source>today</source>
+      </segment>
+    </unit>
+    <unit id="YearToDate">
+      <segment>
+        <source>Year to date</source>
+      </segment>
+    </unit>
+    <unit id="Yesterday">
+      <segment>
+        <source>Yesterday</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

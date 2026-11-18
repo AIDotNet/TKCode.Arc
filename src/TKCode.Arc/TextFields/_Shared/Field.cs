@@ -4,6 +4,7 @@ using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc;
@@ -84,6 +85,13 @@ public class Field : ContentControl
     public static readonly AttachedProperty<double> LabelWidthProperty =
         AvaloniaProperty.RegisterAttached<Field, Control, double>("LabelWidth", double.NaN, inherits: true);
 
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        AvaloniaProperty.RegisterAttached<Field, Control, FontWeight?>(nameof(LabelFontWeight), inherits: true);
+
     /// <summary>Gets <see cref="LabelPlacementProperty"/>.</summary>
     public static FormLabelPlacement GetLabelPlacement(Control element) => element.GetValue(LabelPlacementProperty);
 
@@ -96,6 +104,12 @@ public class Field : ContentControl
     /// <summary>Sets <see cref="LabelWidthProperty"/>.</summary>
     public static void SetLabelWidth(Control element, double value) => element.SetValue(LabelWidthProperty, value);
 
+    /// <summary>Gets <see cref="LabelFontWeightProperty"/>.</summary>
+    public static FontWeight? GetLabelFontWeight(Control element) => element.GetValue(LabelFontWeightProperty);
+
+    /// <summary>Sets <see cref="LabelFontWeightProperty"/>.</summary>
+    public static void SetLabelFontWeight(Control element, FontWeight? value) => element.SetValue(LabelFontWeightProperty, value);
+
     /// <summary>How the message rows move between texts.</summary>
     public FieldMessageSwap MessageSwap { get => GetValue(MessageSwapProperty); set => SetValue(MessageSwapProperty, value); }
 
@@ -104,6 +118,12 @@ public class Field : ContentControl
 
     /// <inheritdoc cref="LabelWidthProperty"/>
     public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>The visible label.</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }

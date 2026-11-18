@@ -145,6 +145,38 @@ public class ComboboxTests
     }
 
     [AvaloniaFact]
+    public void Chevron_Toggles_The_List_And_Focuses_The_Input()
+    {
+        var combo = Zones();
+        var window = Show(combo);
+        try
+        {
+            var chevron = combo.GetVisualDescendants().OfType<Avalonia.Controls.Button>()
+                .Single(button => button.Name == "PART_ChevronButton");
+            var point = chevron.TranslatePoint(new Point(chevron.Bounds.Width / 2, chevron.Bounds.Height / 2), window)!.Value;
+            ClickChevron();
+            combo.IsOpen.ShouldBeTrue();
+            combo.InputBox!.IsFocused.ShouldBeTrue();
+            ClickChevron();
+            combo.IsOpen.ShouldBeFalse();
+            combo.IsEnabled = false;
+            ClickChevron();
+            combo.IsOpen.ShouldBeFalse();
+
+            void ClickChevron()
+            {
+                window.MouseDown(point, MouseButton.Left);
+                window.MouseUp(point, MouseButton.Left);
+                Dispatcher.UIThread.RunJobs();
+            }
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Clear_Button_Clears_And_Reopens()
     {
         var combo = Zones();

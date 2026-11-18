@@ -1,4 +1,5 @@
 using System.Globalization;
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using TKCode.Arc.Primitives;
 using Avalonia;
@@ -9,6 +10,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
+using Avalonia.Media;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -132,11 +134,21 @@ public class TimePicker : TemplatedControl, IPickerAutomation
     public static readonly AttachedProperty<double> LabelWidthProperty =
         Field.LabelWidthProperty.AddOwner<TimePicker>();
 
+    /// <inheritdoc cref="Field.LabelFontWeightProperty"/>
+    public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
+        Field.LabelFontWeightProperty.AddOwner<TimePicker>();
+
     /// <summary>Where the label sits: Top (default) or Left of the editor. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
     public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
 
     /// <summary>Width of the left label column; NaN (default) takes the widest left label of the scope, up to 240 px.</summary>
     public double LabelWidth { get => GetValue(LabelWidthProperty); set => SetValue(LabelWidthProperty, value); }
+
+    /// <summary>
+    /// Font weight of the visible field label. Set it on a container to apply it to the Arc field labels inside,
+    /// or on a single field. Null uses the label's theme weight. This property only styles the label text.
+    /// </summary>
+    public FontWeight? LabelFontWeight { get => GetValue(LabelFontWeightProperty); set => SetValue(LabelFontWeightProperty, value); }
 
     /// <summary>The visible label above the trigger (Arc: required).</summary>
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
@@ -396,7 +408,10 @@ public class TimePicker : TemplatedControl, IPickerAutomation
         FormFieldHost.SetHelpText(this, FieldText.HelpText(Description, EffectiveErrorMessage));
         if (_panel is not null)
         {
-            AutomationProperties.SetName(_panel, $"{Label} options".Trim());
+            var name = string.IsNullOrWhiteSpace(Label)
+                ? PickerLangResources.Get(PickerLangResourceKind.TimeOptions)
+                : PickerLangResources.Format(PickerLangResourceKind.TimeOptionsFor, Label);
+            AutomationProperties.SetName(_panel, name.Trim());
         }
     }
 
@@ -686,8 +701,23 @@ public class TimePicker : TemplatedControl, IPickerAutomation
         }
     }
 
+    public TimePicker()
+    {
+        AttachedToVisualTree += (_, _) =>
+        {
+            ArcLanguage.Changed += OnLanguageChanged;
+            UpdateAutomation();
+        };
+    }
+
+    private void OnLanguageChanged(object? sender, EventArgs e)
+    {
+        UpdateAutomation();
+    }
+
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        ArcLanguage.Changed -= OnLanguageChanged;
         base.OnDetachedFromVisualTree(e);
         if (IsDropDownOpen)
         {

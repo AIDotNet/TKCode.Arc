@@ -8,11 +8,11 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:MorphSelect">
                 <arc:FieldLayout Name="PART_Root" Spacing="{arc:ArcDesignTokenResource Space2}">
-                    <TextBlock Name="PART_Label"
-                               Text="{TemplateBinding Label}"
-                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
-                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:FieldLabel Name="PART_Label"
+                                    Text="{TemplateBinding Label}"
+                                    FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                    FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                    Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                     <Panel Name="PART_AnchorHost">
                         <TextBlock Name="PART_Announcer"
                                    Width="1"
