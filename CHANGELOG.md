@@ -10,7 +10,10 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.2.0-preview.4 - 2026-11-19
+
+This preview adds field label customization and fixes picker localization, Combobox pointer interaction, and
+Drawer spacing. ArcGallery also applies the selected motion setting to demos that set their own motion level (#161).
 
 ### Added
 
@@ -2267,6 +2270,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.2.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.3...v1.2.0-preview.4
 [1.2.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.1...v1.2.0-preview.3
 [1.1.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.4...v1.1.1-preview.5
 [1.1.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.3...v1.1.1-preview.4
