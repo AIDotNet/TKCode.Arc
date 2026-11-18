@@ -1,0 +1,74 @@
+diff --git a/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs b/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
+index 13b4c243..83730d04 100644
+--- a/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
++++ b/src/TKCode.Arc.Foundation.Generators/ThemeEmitter.cs
+@@ -61,7 +61,16 @@ namespace TKCode.Arc.Foundation.Generators
+             sb.AppendLine("        {");
+             foreach (var token in tokens)
+             {
++                var selected = assemblyName == "TKCode.Arc";
++                if (selected)
++                {
++                    sb.AppendLine(token.Stem == "Button" ? "#if !ARC_AUDIT_MISSING_TOKEN" : "#if !ARC_AUDIT_SELECTED");
++                }
+                 sb.Append("            global::").Append(token.TokensNamespace).Append('.').Append(token.Stem).AppendLine("Tokens.Descriptor,");
++                if (selected)
++                {
++                    sb.AppendLine("#endif");
++                }
+             }
+             sb.AppendLine("        };");
+             sb.AppendLine();
+@@ -70,9 +79,18 @@ namespace TKCode.Arc.Foundation.Generators
+             sb.AppendLine("        {");
+             foreach (var (file, className, keys) in assets)
+             {
++                var selected = assemblyName == "TKCode.Arc" && className != "TKCode.Arc.ButtonTheme";
++                if (selected)
++                {
++                    sb.AppendLine("#if !ARC_AUDIT_SELECTED");
++                }
+                 sb.Append("            new global::TKCode.Arc.ArcThemeAsset(\"").Append(assemblyName).Append(':').Append(file.RelativePath)
+                   .Append("\", new object[] { ").Append(string.Join(", ", keys)).Append(" }, static () => new global::")
+                   .Append(className).AppendLine("()),");
++                if (selected)
++                {
++                    sb.AppendLine("#endif");
++                }
+             }
+             sb.AppendLine("        };");
+             sb.AppendLine();
+@@ -84,7 +102,15 @@ namespace TKCode.Arc.Foundation.Generators
+                 sb.AppendLine("        {");
+                 foreach (var catalog in catalogs)
+                 {
++                    if (assemblyName == "TKCode.Arc")
++                    {
++                        sb.AppendLine("#if !ARC_AUDIT_DROP_LANGUAGES");
++                    }
+                     sb.Append("            ").Append(catalog).AppendLine(".Catalog,");
++                    if (assemblyName == "TKCode.Arc")
++                    {
++                        sb.AppendLine("#endif");
++                    }
+                 }
+                 sb.AppendLine("        };");
+                 sb.AppendLine();
+diff --git a/src/TKCode.Arc/TKCode.Arc.csproj b/src/TKCode.Arc/TKCode.Arc.csproj
+index 179e54df..32033884 100644
+--- a/src/TKCode.Arc/TKCode.Arc.csproj
++++ b/src/TKCode.Arc/TKCode.Arc.csproj
+@@ -20,4 +20,13 @@
+         <InternalsVisibleTo Include="TKCode.Arc.Markdown" />
+         <InternalsVisibleTo Include="TKCode.Arc.Highlighting" />
+     </ItemGroup>
++    <PropertyGroup Condition="'$(ArcAuditSelected)' == 'true'">
++        <DefineConstants>$(DefineConstants);ARC_AUDIT_SELECTED</DefineConstants>
++    </PropertyGroup>
++    <PropertyGroup Condition="'$(ArcAuditDropLanguages)' == 'true'">
++        <DefineConstants>$(DefineConstants);ARC_AUDIT_DROP_LANGUAGES</DefineConstants>
++    </PropertyGroup>
++    <PropertyGroup Condition="'$(ArcAuditMissingToken)' == 'true'">
++        <DefineConstants>$(DefineConstants);ARC_AUDIT_MISSING_TOKEN</DefineConstants>
++    </PropertyGroup>
+ </Project>
