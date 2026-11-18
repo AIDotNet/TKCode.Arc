@@ -71,6 +71,7 @@ jobs:
           - TKCode.Arc.Integration.Tests
           - TKCode.Arc.Mobile.Tests
           - TKCode.Arc.A2UI.Tests
+          - TKCode.Arc.Graphics3D.Tests
     steps:
       - uses: actions/checkout@v7
 
@@ -85,6 +86,12 @@ jobs:
           path: ~/.nuget/packages
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
           restore-keys: nuget-${{ runner.os }}-
+
+      # The engine's render tests draw for real through EGL on Mesa's software OpenGL ES; without these libraries
+      # they skip themselves.
+      - name: Install Mesa (software OpenGL)
+        if: matrix.project == 'TKCode.Arc.Graphics3D.Tests'
+        run: sudo apt-get update -q && sudo apt-get install -y -q --no-install-recommends libegl1 libgles2 libgl1-mesa-dri
 
       - name: Test
         run: dotnet test tests/${{ matrix.project }}
@@ -445,6 +452,7 @@ jobs:
     timeout-minutes: 45
     outputs:
       version: ${{ steps.version.outputs.version }}
+      graphics3d-version: ${{ steps.version.outputs.graphics3d-version }}
     steps:
       - uses: actions/checkout@v7
         with:
@@ -485,6 +493,13 @@ jobs:
             exit 1
           fi
           echo "version=$version" >> "$GITHUB_OUTPUT"
+          # The Graphics3D packages have a version line of their own (previews only, ADR 0051).
+          graphics3d="$(sed -n 's:.*<ArcGraphics3DVersion>\(.*\)</ArcGraphics3DVersion>.*:\1:p' build/Versions.props)"
+          if [[ -z "$graphics3d" ]]; then
+            echo "::error::ArcGraphics3DVersion not found in build/Versions.props"
+            exit 1
+          fi
+          echo "graphics3d-version=$graphics3d" >> "$GITHUB_OUTPUT"
 
       - uses: actions/download-artifact@v8
         with:
@@ -518,7 +533,20 @@ jobs:
       - name: Check the packages
         env:
           VERSION: ${{ steps.version.outputs.version }}
+          GRAPHICS3D_VERSION: ${{ steps.version.outputs.graphics3d-version }}
         run: |
+          for id in TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser; do
+            for ext in nupkg snupkg; do
+              file="artifacts/nupkg/$id.$GRAPHICS3D_VERSION.$ext"
+              if [[ ! -f "$file" ]]; then
+                echo "::error::Missing $file"
+                exit 1
+              fi
+            done
+          done
+          # The controls of the 3D engine are built on this release of TKCode.Arc.
+          unzip -p "artifacts/nupkg/TKCode.Arc.Graphics3D.Controls.$GRAPHICS3D_VERSION.nupkg" '*.nuspec' | grep -q "id=\"TKCode.Arc\" version=\"$VERSION\"" \
+            || { echo "::error::TKCode.Arc.Graphics3D.Controls does not reference TKCode.Arc $VERSION"; exit 1; }
           for id in TKCode.Arc TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
@@ -634,5 +662,11 @@ jobs:
         run: |
           for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
+              --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
+          done
+          # The 3D packages, at their own version (previews; the engine first, the controls need TKCode.Arc above). A
+          # version that is already on nuget.org is skipped: raise ArcGraphics3DVersion when these packages change.
+          for id in TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser; do
+            dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.graphics3d-version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done

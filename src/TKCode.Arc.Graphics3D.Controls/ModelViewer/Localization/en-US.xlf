@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.ModelViewerLangResourceKind">
+    <unit id="AutoRotate">
+      <segment>
+        <source>Auto-rotate</source>
+      </segment>
+    </unit>
+    <unit id="Loading">
+      <segment>
+        <source>Loading the model</source>
+      </segment>
+    </unit>
+    <unit id="ModelViewer">
+      <segment>
+        <source>3D model viewer</source>
+      </segment>
+    </unit>
+    <unit id="ResetView">
+      <segment>
+        <source>Reset view</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -87,6 +87,7 @@ public static AppBuilder BuildAvaloniaApp() =>
 | `TKCode.Arc.Pdf`、`.Pdf.Native`、`.Pdf.Browser` | `PdfViewer`，支持缩略图、大纲、搜索、文本选择和链接，桌面端使用 PDFium，WebAssembly 使用 pdf.js。 |
 | `TKCode.Arc.Audio`、`.Audio.Native`、`.Audio.Browser` | `IAudioPlayer` 抽象，桌面端使用 miniaudio，WebAssembly 使用 HTML audio。 |
 | `TKCode.Arc.Video`、`.Video.Native`、`.Video.Browser` | 基于各平台自带播放器的 `VideoPlayer` 和 `VideoSurface`（桌面端使用 Media Foundation、AVFoundation、GStreamer，WebAssembly 上使用浏览器的 video 元素）。 |
+| `TKCode.Arc.Graphics3D`、`.Graphics3D.WebGpu`、`.Graphics3D.Controls`、`.Graphics3D.Browser`（预览） | 不依赖界面库的 .NET 3D 引擎（场景图、节点式 PBR 材质、阴影、基于图像的光照、动画、glTF、射线拾取、后处理），以及 Avalonia 控件 `Viewport3D` 与 `ModelViewer`，WebAssembly 下有 WebGL 2 后端。预览包，版本号独立，接口可能变化；目前在 macOS、Windows（NVIDIA 显卡）、Linux（X11、Mesa 软件 OpenGL）和无头 Chromium（软件 WebGL）上验证过，真实显卡上的浏览器尚未测试。 |
 
 ### 主题与资源
 

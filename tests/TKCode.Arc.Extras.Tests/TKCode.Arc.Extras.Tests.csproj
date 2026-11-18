@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <!-- AdvancedCharts, Dock, Workflow, Terminal, Video and Pdf in a headless app that enables only those packages (#145). -->
+    <!-- AdvancedCharts, Dock, Workflow, Terminal, Video, Pdf and the Graphics3D controls in a headless app that enables only those packages (#145). -->
     <PropertyGroup>
         <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
@@ -20,6 +20,7 @@
         <ProjectReference Include="../../src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Graphics3D.Controls/TKCode.Arc.Graphics3D.Controls.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Icons.Lucide/TKCode.Arc.Icons.Lucide.csproj" />
         <!-- [PropertyGridModel] test types: the Foundation generator registers them (no themes or tokens here). -->
         <ProjectReference Include="../../src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj"
@@ -28,6 +29,8 @@
     <ItemGroup>
         <!-- Helpers shared by the headless test projects (source, so each assembly keeps its own InternalsVisibleTo access). -->
         <Compile Include="../Shared/*.cs" Link="Shared/%(Filename)%(Extension)" />
+        <!-- A model with an external buffer, for ModelViewer's avares:// and http:// loading. -->
+        <AvaloniaResource Include="Graphics3D/Assets/**" />
     </ItemGroup>
     <ItemGroup>
         <!-- The browser backend's arithmetic: the package itself is for browsers only, this part runs anywhere. -->

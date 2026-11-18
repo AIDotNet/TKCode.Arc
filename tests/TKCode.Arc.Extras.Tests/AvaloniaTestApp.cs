@@ -24,6 +24,7 @@ public static class TestAppBuilder
                                     .UseArcDock()
                                     .UseArcVideo()
                                     .UseArcPdf()
+                                    .UseArcGraphics3D()
                                     .UseLanguages(LanguageTags.EnUS, [LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]));
     }
 }

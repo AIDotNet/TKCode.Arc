@@ -7,6 +7,68 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
+With their own version line (`ArcGraphics3DVersion`, previews only): `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
+`TKCode.Arc.Graphics3D.Browser` (0.1.0-preview.1, published with 1.2.0-preview.2).
+
+## Unreleased
+
+### Graphics3D (preview packages, their own version line)
+
+`TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and `TKCode.Arc.Graphics3D.Browser` are previews versioned apart from the other packages
+(`ArcGraphics3DVersion`); their API may change between previews without a deprecation period.
+
+- **`TKCode.Arc.Graphics3D` 0.1.0-preview.1 (new, preview)**: a 3D engine for .NET with no UI dependency, in the
+  namespace `TKCode.Arc.Graphics3D` ([ADR 0051](design/decisions/0051-graphics3d-package.md),
+  [architecture](design/architecture/graphics3d.md)). Scene graph (`Scene`, `Object3D`, `Mesh`, `InstancedMesh`,
+  `SkinnedMesh`, `Line`, `Points`, `Sprite`), geometries and curves, node-based materials (`BasicMaterial`,
+  `LambertMaterial`, `PhongMaterial`, `ToonMaterial`, `StandardMaterial`, `PhysicalMaterial`, `NodeMaterial`; graphs built
+  with `Shading.Sl`), lights with shadow maps, image-based lighting from HDR panoramas, the glTF material layers (clear coat, sheen, specular, transmission and
+  volume, iridescence, anisotropy), post-processing
+  (ambient occlusion, depth of field, outlines, bloom, vignette, grading, FXAA, and full-screen passes of your own built
+  from shader nodes: `PostPass`), tone mapping, fog, animation
+  (`AnimationMixer`), glTF 2.0 loading (`GltfLoader`) with built-in PNG, JPEG, Radiance HDR and KTX2 (Basis Universal ETC1S and UASTC, decoded
+  to RGBA) decoders, Draco and meshopt decompression in managed code (`DracoDecoder`, `MeshoptDecoder`, `Ktx2Decoder`) and animation of material, light
+  and camera properties (`KHR_animation_pointer`), ray casting with a
+  BVH (`Raycaster`), `OrbitControls`, helper objects, an optional render thread (`ThreadedGraphicsDevice`: the calling thread records each
+  frame and a thread that owns the context plays it back), and a renderer over a WebGPU-shaped hardware interface with an OpenGL
+  ES 3.0 / OpenGL 3.3 backend. It has its own version line and is not covered by the deprecation rule: its API may change
+  between previews.
+- **`TKCode.Arc.Graphics3D.WebGpu` 0.1.0-preview.1 (new, preview)**: `WgpuDevice`, a `GraphicsDevice` over
+  [wgpu-native](https://github.com/gfx-rs/wgpu-native) (Metal, Vulkan, Direct3D 12), with compute shaders
+  ([architecture, section 12](design/architecture/graphics3d.md)). The native library is not in the package: pass the
+  path of `libwgpu_native` (v29) to `WgpuDevice.Create`. It draws the same pictures as the OpenGL device from the same
+  shader text. Verified off-screen on macOS (Metal) and in a Linux container (Vulkan on Mesa's software rasterizer);
+  in a window it shows through `Viewport3D.DeviceFactory` (read back into a bitmap), tried on macOS (Metal) and on
+  Windows (Vulkan, an NVIDIA card). On wgpu's OpenGL ES backend multisampled targets and viewport changes inside a pass
+  come out wrong, and Direct3D 12 has not been run.
+- **`TKCode.Arc.Graphics3D` hardware interface, added for it**: `ShaderLanguage.Glsl450`, `BufferUsage.Storage`,
+  `DeviceCapabilities.ComputeShaders` / `MaxComputeWorkGroupSize` / `MaxComputeWorkGroups` / `MaxStorageBuffers`,
+  `GraphicsDevice.CreateComputeProgram` / `SetStorageBuffer` / `DispatchCompute` / `ReadBuffer` (they throw
+  `NotSupportedException` on the OpenGL device, which has no compute stage), `GraphicsDevice.SupportsVertexFormat`, and
+  `GpuCompute`, which runs a GLSL kernel over arrays on the GPU (buffers in, buffers out).
+- **`TKCode.Arc.Graphics3D.Controls` 0.1.0-preview.1 (new, preview)**: `Viewport3D`, which draws a scene inside the
+  Avalonia composition tree and renders on demand, and `ModelViewer`, which shows a glTF file or any object with studio
+  lighting, a ground shadow, orbit controls, auto-rotation and a reset button; register them with `UseArcGraphics3D()`. On macOS it works under
+  Avalonia's default Metal renderer (its own OpenGL context, pictures handed over as IOSurfaces); elsewhere it uses
+  `OpenGlControlBase`. Where neither works (software rendering) it falls back to an off-screen context of its own and a
+  bitmap; `Viewport3D.Presentation` says which way is in use. `UseRenderThread` moves the drawing to a render thread where the
+  viewport owns its context, and `DeviceFactory` lets it draw with a device of the application's choice (the WebGPU
+  backend, for example), read back into a bitmap. `ModelViewer`'s built-in text is in en-US, zh-CN and zh-TW, and its `Source` takes a file path, an `avares://`
+  resource or an `http(s)://` address.
+  Verified on macOS, on Windows (one machine with an NVIDIA card: ANGLE / Direct3D 11, the software mode, the driver's
+  OpenGL through WGL, and WebGPU over Vulkan) and on Linux (X11 with Mesa's software OpenGL, in a container); real Linux
+  GPU drivers, Wayland and other Windows graphics hardware are untested.
+- **`TKCode.Arc.Graphics3D.Browser` 0.1.0-preview.1 (new, preview)**: `Viewport3D` and `ModelViewer` in the browser
+  (WebAssembly). Avalonia.Browser shares neither its WebGL context nor textures and `OpenGlControlBase` never starts
+  there, so the viewport draws in a WebGL 2 context of its own on a canvas that is never shown, and presents the picture
+  as a bitmap (`Viewport3D.Presentation` reads `Bitmap`): one read-back per drawn frame. A browser app references the
+  package and adds `UseArcGraphics3DBrowser()` to `UseArc(...)`; its project file needs nothing else. Without the
+  package `RendererError` says what is missing. Verified in headless Chromium with software WebGL only; real graphics
+  hardware, Firefox and Safari are untested.
+- `TKCode.Arc.Graphics3D`: the OpenGL backend declares a delegate for every native signature shape it calls
+  (`GlSignatures`), which the WebAssembly build needs to make its interpreter-to-native trampolines; without them the
+  first `glClearColor` ends the program in the browser. `GlDevice` reports ETC2, S3TC and ASTC support from WebGL's own
+  extension names under WebGL 2 (ETC2 is not mandatory there).
 
 ## 1.2.0-preview.1 - 2026-11-17
 

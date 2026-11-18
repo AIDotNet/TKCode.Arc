@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Graphics3D.Browser</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Graphics3D.Browser</PackageId>
+        <!-- Preview-only version line, independent of ArcVersion (ADR 0051). -->
+        <Version>$(ArcGraphics3DVersion)</Version>
+        <Description>WebAssembly backend for TKCode.Arc.Graphics3D.Controls: Viewport3D and ModelViewer draw in a WebGL 2 context of the page, created through JavaScript interop, and show the picture inside the Avalonia canvas. Add UseArcGraphics3DBrowser() to UseArc(...) in a browser app. Preview: the API may change between previews.</Description>
+        <PackageTags>$(PackageTags);3d;viewport;webgl;browser;wasm</PackageTags>
+        <!-- The JSImport source generator emits unsafe code, and the OpenGL lookup takes a pointer. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- The API is still moving (preview only, ADR 0051): no public API baseline yet. -->
+        <ArcPublicApi>false</ArcPublicApi>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Graphics3D.Controls/TKCode.Arc.Graphics3D.Controls.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- Imported from a data: URL by ArcGraphics3DBrowser, so the package needs no static web asset path in the host. -->
+        <EmbeddedResource Include="arc-graphics3d.js" LogicalName="TKCode.Arc.Graphics3D.Browser.arc-graphics3d.js" />
+    </ItemGroup>
+</Project>

@@ -48,6 +48,7 @@ jobs:
           - TKCode.Arc.Integration.Tests
           - TKCode.Arc.Mobile.Tests
           - TKCode.Arc.A2UI.Tests
+          - TKCode.Arc.Graphics3D.Tests
     steps:
       - uses: actions/checkout@v7
 

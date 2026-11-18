@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Verification tool (ADR 0051, P0): opens a window with a Viewport3D on the platform's real graphics stack, renders a
+         test scene, and writes the device report and the rendered picture. Run it on each OS with "dotnet run" on this
+         project; an optional argument names the output directory (default: artifacts/graphics3d). -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <RootNamespace>TKCode.Arc.Graphics3D.Probe</RootNamespace>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Graphics3D.Controls/TKCode.Arc.Graphics3D.Controls.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Graphics3D.WebGpu/TKCode.Arc.Graphics3D.WebGpu.csproj" />
+    </ItemGroup>
+</Project>

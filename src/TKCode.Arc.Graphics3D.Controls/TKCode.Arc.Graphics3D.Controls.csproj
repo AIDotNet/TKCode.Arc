@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Graphics3D.Controls</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Graphics3D.Controls</PackageId>
+        <!-- Preview-only version line, independent of ArcVersion (ADR 0051). -->
+        <Version>$(ArcGraphics3DVersion)</Version>
+        <Description>Avalonia controls for the TKCode.Arc.Graphics3D engine: Viewport3D (a scene drawn inside the Avalonia composition tree through OpenGL, rendered on demand) and ModelViewer (a glTF model with orbit controls, lighting presets and Arc chrome). Preview: the API may change between previews.</Description>
+        <PackageTags>$(PackageTags);3d;viewport;model-viewer;gltf;opengl</PackageTags>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
+        <!-- Function pointers into CoreFoundation, IOSurface, Metal and OpenGL for the macOS presenter. -->
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- The API is still moving (preview only, ADR 0051): no public API baseline yet. -->
+        <ArcPublicApi>false</ArcPublicApi>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Graphics3D/TKCode.Arc.Graphics3D.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
+        <!-- Supplies the viewport's WebGL 2 context in the browser (OffscreenContext.PlatformFactory). -->
+        <InternalsVisibleTo Include="TKCode.Arc.Graphics3D.Browser" />
+    </ItemGroup>
+</Project>

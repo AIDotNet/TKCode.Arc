@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Graphics3D</AssemblyName>
+        <!-- The engine has its own namespace: its type names (Scene, Mesh, Line, Path, Shape, Group, ...) would collide
+             with Avalonia and with Arc controls in the flat TKCode.Arc namespace (design/decisions/0051-graphics3d-package.md). -->
+        <RootNamespace>TKCode.Arc.Graphics3D</RootNamespace>
+        <PackageId>TKCode.Arc.Graphics3D</PackageId>
+        <!-- Preview-only version line, independent of ArcVersion (ADR 0051). -->
+        <Version>$(ArcGraphics3DVersion)</Version>
+        <Description>3D rendering engine for .NET: scene graph, geometries, node-based PBR materials, lights and shadows, image-based lighting, animation, glTF loading, ray casting and a renderer over a WebGPU-shaped hardware interface with an OpenGL ES 3.0 / OpenGL 4.1 backend. No UI dependency; TKCode.Arc.Graphics3D.Controls hosts it in Avalonia. Preview: the API may change between previews.</Description>
+        <PackageTags>3d;rendering;engine;scene;pbr;gltf;opengl;graphics</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <!-- The API is still moving (preview only, ADR 0051): no public API baseline yet. -->
+        <ArcPublicApi>false</ArcPublicApi>
+    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Graphics3D.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Graphics3D.Controls" />
+    </ItemGroup>
+</Project>

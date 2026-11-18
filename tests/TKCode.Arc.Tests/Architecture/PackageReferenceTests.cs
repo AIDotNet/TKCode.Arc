@@ -41,6 +41,13 @@ public class PackageReferenceTests
         ["TKCode.Arc.Pdf"] = ["TKCode.Arc"],
         ["TKCode.Arc.Pdf.Native"] = ["TKCode.Arc.Pdf"],
         ["TKCode.Arc.Pdf.Browser"] = ["TKCode.Arc.Pdf"],
+        // ADR 0051: the engine has no dependency at all; only its controls bring Avalonia and Arc.
+        ["TKCode.Arc.Graphics3D"] = [],
+        // The WebGPU backend binds wgpu-native itself (function pointers): no package for it, and no native library inside.
+        ["TKCode.Arc.Graphics3D.WebGpu"] = ["TKCode.Arc.Graphics3D"],
+        ["TKCode.Arc.Graphics3D.Controls"] = ["TKCode.Arc", "TKCode.Arc.Graphics3D"],
+        // The browser backend needs no Avalonia.Browser API: JavaScript interop and the runtime's OpenGL ES layer.
+        ["TKCode.Arc.Graphics3D.Browser"] = ["TKCode.Arc.Graphics3D.Controls"],
     };
 
     [Fact]

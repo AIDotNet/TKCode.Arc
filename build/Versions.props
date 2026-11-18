@@ -1,6 +1,10 @@
 <Project>
     <PropertyGroup>
         <ArcVersion>1.2.0-preview.1</ArcVersion>
+        <!-- The TKCode.Arc.Graphics3D packages (the engine, .WebGpu, .Controls, .Browser): their own version line, preview
+             only until the engine is declared stable (design/decisions/0051-graphics3d-package.md). Raise it whenever
+             these packages change: a release pushes them with skip-duplicate, so an unchanged number publishes nothing. -->
+        <ArcGraphics3DVersion>0.1.0-preview.1</ArcGraphics3DVersion>
         <AvaloniaVersion>12.1.5</AvaloniaVersion>
         <!-- What the packages ask of Avalonia: this version or any later 12.x (#97). Restore picks the lowest match, so the
              repository still builds against AvaloniaVersion, while apps may move to newer Avalonia 12 releases. -->

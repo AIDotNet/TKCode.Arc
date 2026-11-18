@@ -1,0 +1,99 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ModelViewerTheme">
+
+    <!--
+        The model viewer (self-designed; design/decisions/0051-graphics3d-package.md). A rounded stage with the viewport
+        on it; over the viewport: the loading ring, the error message, and a toolbar in the bottom right corner. The
+        viewport itself is transparent, so the stage color is an ordinary Arc background and follows the theme.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ModelViewer}" TargetType="arc:ModelViewer">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Background" Value="{arc:ModelViewerTokenResource StageColor}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep12}" />
+        <Setter Property="MinHeight" Value="{arc:ModelViewerTokenResource MinHeight}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelViewer">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <arc:Viewport3D Name="PART_Viewport" UseRenderThread="{TemplateBinding UseRenderThread}" />
+                        <arc:ArcSpinner Name="PART_Spinner"
+                                        IsHitTestVisible="False"
+                                        Width="{arc:ModelViewerTokenResource SpinnerSize}"
+                                        Height="{arc:ModelViewerTokenResource SpinnerSize}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center"
+                                        Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                        <StackPanel Name="PART_Error"
+                                    IsHitTestVisible="False"
+                                    Spacing="8"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center"
+                                    MaxWidth="{arc:ModelViewerTokenResource MessageMaxWidth}">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.TriangleAlert}"
+                                          Size="20"
+                                          HorizontalAlignment="Center"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                            <TextBlock Text="{TemplateBinding ErrorMessage}"
+                                       TextWrapping="Wrap"
+                                       TextAlignment="Center"
+                                       Foreground="{TemplateBinding Foreground}" />
+                        </StackPanel>
+                        <StackPanel Name="PART_Toolbar"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:ModelViewerTokenResource ToolbarSpacing}"
+                                    Margin="{arc:ModelViewerTokenResource ToolbarMargin}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Bottom">
+                            <arc:Button Name="PART_AutoRotate" Variant="Ghost" Size="Small">
+                                <arc:ArcGlyph Name="PART_AutoRotateGlyph"
+                                              Data="{x:Static arc:ArcIcons.RefreshCw}"
+                                              Size="{arc:ModelViewerTokenResource GlyphSize}" />
+                            </arc:Button>
+                            <arc:Button Name="PART_Reset" Variant="Ghost" Size="Small">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Maximize2}"
+                                              Size="{arc:ModelViewerTokenResource GlyphSize}" />
+                            </arc:Button>
+                        </StackPanel>
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Hidden by base styles (not on the elements), so that the state styles below can show them. -->
+        <Style Selector="^ /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Error">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Toolbar">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:loading /template/ arc|ArcSpinner#PART_Spinner">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:error /template/ StackPanel#PART_Error">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <!-- :toolbar = ShowToolbar and a model is shown (nothing to reset or rotate without one). -->
+        <Style Selector="^:toolbar /template/ StackPanel#PART_Toolbar">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:autorotate /template/ arc|ArcGlyph#PART_AutoRotateGlyph">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
