@@ -10,6 +10,40 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Added
+
+- `CelebrateButton` (`TKCode.Arc.Special`, Special › Loaders): an accent capsule for milestones. A press runs
+  `Action`; while its task runs a spinner and `PendingLabel` show, a success bursts confetti from the button's outline,
+  kicks the button and turns the label into a check with `SuccessLabel` while the width springs to fit, and a failure
+  shows `ErrorLabel` without a burst. Two-way `Status` (`CelebrateButtonStatus`) for driving it from outside,
+  `StatusChanged` (`CelebrateButtonStatusChangedEventArgs`), `ResetAfter` (2.4 s), `Cooldown` (1.2 s),
+  `ParticleCount` (44, at most 180 in the air), `ConfettiColors`, `Celebrate()` and `Reset()`. Reduced motion keeps
+  only a crossfade of the label; the confetti loop stops when the last piece fades.
+- `FeedbackMorph` (`TKCode.Arc.Special`, Special › Loaders): a feedback button that springs open into a small form (a question, five mood
+  faces, a note and a send button) and folds into a thank-you pill, all in one shape
+  ([ADR 0053](design/decisions/0053-code-and-feedback-design-reference.md),
+  [spec](design/components/special/loaders/feedback-morph.md)). `SubmitHandler` receives a `FeedbackMorphSubmission`
+  (mood and note); a failed send keeps the panel open with an error and the draft. `Side` and `Align` choose which way
+  the panel grows, `Moods` replaces the scale (`FeedbackMood`, `FeedbackMoodCollection`, `FeedbackFace`), and
+  `SelectedMood`, `Message` and `IsOpen` bind both ways, with `Submitted`, `StateChanged` and `SelectionChanged`.
+- `CodeMagicMove` (`TKCode.Arc.Special`, Special › Type): a code block that moves between versions of a snippet. Words that stay glide to
+  their new line and column, removed words fade and lift out, and new code types in behind an accent caret while the
+  block follows the new line count. Changed lines carry a band with an accent rule, the header counts added and removed
+  lines, and step dots, the arrow keys and a sideways drag (scrub, commit past a third or on a flick, otherwise rewind)
+  walk through `Steps` (`CodeMagicMoveStep`: `Code`, `Title`, `Description`, `FileName`). `Value` / `ValueChanged`,
+  `AutoPlay`, `Interval`, `Speed`, `IsPaused`, `Label` and `AccentBrush`; colors come from the highlighting package
+  (`UseArcHighlighting()`, `Language`). Reduced motion changes steps at once and keeps autoplay off (ADR 0053).
+- `CodeReview` (`TKCode.Arc.Blocks`, Blocks › Developer): a pull request review in one card. File
+  tabs track open conversations and what was viewed, a syntax-colored unified diff takes a comment on any line (with an
+  optional suggested change), threads fold to one line once resolved, suggestions are applied straight into the diff and
+  Approve sends the review with its pending comments, then turns into Approved (Undo withdraws it). Data types
+  `CodeReviewPullRequest`, `CodeReviewFile`, `CodeReviewDiffLine`, `CodeReviewThread`, `CodeReviewComment`,
+  `CodeReviewSuggestion`, `CodeReviewPerson`, `CodeReviewSubmission` and `CodeReviewLabels`; events report every
+  action. The diff is colored through the library's highlighting contract (install `UseArcHighlighting()`). Design
+  reference: Arc Code review ([ADR 0053](design/decisions/0053-code-and-feedback-design-reference.md)).
+
 ## 1.2.0-preview.4 - 2026-11-19
 
 This preview adds field label customization and fixes picker localization, Combobox pointer interaction, and

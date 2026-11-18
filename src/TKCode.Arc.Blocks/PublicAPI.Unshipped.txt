@@ -1,1 +1,307 @@
 #nullable enable
+const TKCode.Arc.CodeReview.AnnouncerPart = "PART_Announcer" -> string!
+const TKCode.Arc.CodeReview.ApprovedPseudoClass = ":approved" -> string!
+const TKCode.Arc.CodeReview.CompactPseudoClass = ":compact" -> string!
+const TKCode.Arc.CodeReview.RootPart = "PART_Root" -> string!
+const TKCode.Arc.DesignTokens.CodeReviewTokens.Identity = "CodeReview" -> string!
+override TKCode.Arc.CodeReview.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.CodeReview.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.CodeReview.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.CodeReview.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.CodeReview.OnSizeChanged(Avalonia.Controls.SizeChangedEventArgs! e) -> void
+static readonly TKCode.Arc.CodeReview.ApprovalWithdrawnEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewSubmittedEventArgs!>!
+static readonly TKCode.Arc.CodeReview.CommentAddedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewThreadEventArgs!>!
+static readonly TKCode.Arc.CodeReview.CompactWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.CodeReview.FilesProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.CodeReviewFile!>?>!
+static readonly TKCode.Arc.CodeReview.IsApprovedProperty -> Avalonia.DirectProperty<TKCode.Arc.CodeReview!, bool>!
+static readonly TKCode.Arc.CodeReview.LabelsProperty -> Avalonia.StyledProperty<TKCode.Arc.CodeReviewLabels!>!
+static readonly TKCode.Arc.CodeReview.PullProperty -> Avalonia.StyledProperty<TKCode.Arc.CodeReviewPullRequest?>!
+static readonly TKCode.Arc.CodeReview.ReplyPostedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewReplyEventArgs!>!
+static readonly TKCode.Arc.CodeReview.ResolvedChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewThreadEventArgs!>!
+static readonly TKCode.Arc.CodeReview.ReviewSubmittedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewSubmittedEventArgs!>!
+static readonly TKCode.Arc.CodeReview.SelectedFileIdProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.CodeReview.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewSelectionChangedEventArgs!>!
+static readonly TKCode.Arc.CodeReview.SubmitReviewActionProperty -> Avalonia.StyledProperty<System.Func<TKCode.Arc.CodeReviewSubmission!, System.Threading.CancellationToken, System.Threading.Tasks.Task!>?>!
+static readonly TKCode.Arc.CodeReview.SuggestionAppliedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewSuggestionAppliedEventArgs!>!
+static readonly TKCode.Arc.CodeReview.ThreadsProperty -> Avalonia.StyledProperty<System.Collections.Generic.IList<TKCode.Arc.CodeReviewThread!>?>!
+static readonly TKCode.Arc.CodeReview.ViewedChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.CodeReviewViewedChangedEventArgs!>!
+static readonly TKCode.Arc.CodeReview.ViewedCountProperty -> Avalonia.DirectProperty<TKCode.Arc.CodeReview!, int>!
+static readonly TKCode.Arc.CodeReview.ViewerProperty -> Avalonia.StyledProperty<TKCode.Arc.CodeReviewPerson?>!
+static TKCode.Arc.CodeReviewDiffLine.Added(string! id, string! text) -> TKCode.Arc.CodeReviewDiffLine!
+static TKCode.Arc.CodeReviewDiffLine.Context(string! id, string! text) -> TKCode.Arc.CodeReviewDiffLine!
+static TKCode.Arc.CodeReviewDiffLine.Deleted(string! id, string! text) -> TKCode.Arc.CodeReviewDiffLine!
+static TKCode.Arc.CodeReviewDiffLine.Hunk(string! id, int oldStart, int newStart, string? section = null) -> TKCode.Arc.CodeReviewDiffLine!
+static TKCode.Arc.DesignTokens.CodeReviewTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.CodeReviewTokens.Key(TKCode.Arc.DesignTokens.CodeReviewTokenKind kind) -> object!
+TKCode.Arc.CodeReview
+TKCode.Arc.CodeReview.ApplySuggestion(TKCode.Arc.CodeReviewThread! thread) -> void
+TKCode.Arc.CodeReview.ApprovalWithdrawn -> System.EventHandler<TKCode.Arc.CodeReviewSubmittedEventArgs!>?
+TKCode.Arc.CodeReview.Approve() -> System.Threading.Tasks.Task!
+TKCode.Arc.CodeReview.CodeReview() -> void
+TKCode.Arc.CodeReview.CommentAdded -> System.EventHandler<TKCode.Arc.CodeReviewThreadEventArgs!>?
+TKCode.Arc.CodeReview.CompactWidth.get -> double
+TKCode.Arc.CodeReview.CompactWidth.set -> void
+TKCode.Arc.CodeReview.Files.get -> System.Collections.Generic.IList<TKCode.Arc.CodeReviewFile!>?
+TKCode.Arc.CodeReview.Files.set -> void
+TKCode.Arc.CodeReview.IsApproved.get -> bool
+TKCode.Arc.CodeReview.Labels.get -> TKCode.Arc.CodeReviewLabels!
+TKCode.Arc.CodeReview.Labels.set -> void
+TKCode.Arc.CodeReview.Pull.get -> TKCode.Arc.CodeReviewPullRequest?
+TKCode.Arc.CodeReview.Pull.set -> void
+TKCode.Arc.CodeReview.ReplyPosted -> System.EventHandler<TKCode.Arc.CodeReviewReplyEventArgs!>?
+TKCode.Arc.CodeReview.ResolvedChanged -> System.EventHandler<TKCode.Arc.CodeReviewThreadEventArgs!>?
+TKCode.Arc.CodeReview.ReviewSubmitted -> System.EventHandler<TKCode.Arc.CodeReviewSubmittedEventArgs!>?
+TKCode.Arc.CodeReview.SelectedFileId.get -> string?
+TKCode.Arc.CodeReview.SelectedFileId.set -> void
+TKCode.Arc.CodeReview.SelectionChanged -> System.EventHandler<TKCode.Arc.CodeReviewSelectionChangedEventArgs!>?
+TKCode.Arc.CodeReview.SetFileViewed(string! fileId, bool viewed) -> void
+TKCode.Arc.CodeReview.SetThreadResolved(TKCode.Arc.CodeReviewThread! thread, bool resolved) -> void
+TKCode.Arc.CodeReview.SubmitReviewAction.get -> System.Func<TKCode.Arc.CodeReviewSubmission!, System.Threading.CancellationToken, System.Threading.Tasks.Task!>?
+TKCode.Arc.CodeReview.SubmitReviewAction.set -> void
+TKCode.Arc.CodeReview.SuggestionApplied -> System.EventHandler<TKCode.Arc.CodeReviewSuggestionAppliedEventArgs!>?
+TKCode.Arc.CodeReview.Threads.get -> System.Collections.Generic.IList<TKCode.Arc.CodeReviewThread!>?
+TKCode.Arc.CodeReview.Threads.set -> void
+TKCode.Arc.CodeReview.ViewedChanged -> System.EventHandler<TKCode.Arc.CodeReviewViewedChangedEventArgs!>?
+TKCode.Arc.CodeReview.ViewedCount.get -> int
+TKCode.Arc.CodeReview.Viewer.get -> TKCode.Arc.CodeReviewPerson?
+TKCode.Arc.CodeReview.Viewer.set -> void
+TKCode.Arc.CodeReview.Withdraw() -> void
+TKCode.Arc.CodeReviewComment
+TKCode.Arc.CodeReviewComment.Author.get -> TKCode.Arc.CodeReviewPerson!
+TKCode.Arc.CodeReviewComment.Author.init -> void
+TKCode.Arc.CodeReviewComment.CodeReviewComment() -> void
+TKCode.Arc.CodeReviewComment.CreatedAt.get -> System.DateTimeOffset
+TKCode.Arc.CodeReviewComment.CreatedAt.init -> void
+TKCode.Arc.CodeReviewComment.Text.get -> string!
+TKCode.Arc.CodeReviewComment.Text.init -> void
+TKCode.Arc.CodeReviewDiffLine
+TKCode.Arc.CodeReviewDiffLine.Id.get -> string!
+TKCode.Arc.CodeReviewDiffLine.Kind.get -> TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewDiffLine.NewStart.get -> int
+TKCode.Arc.CodeReviewDiffLine.OldStart.get -> int
+TKCode.Arc.CodeReviewDiffLine.Text.get -> string!
+TKCode.Arc.CodeReviewFile
+TKCode.Arc.CodeReviewFile.CodeReviewFile() -> void
+TKCode.Arc.CodeReviewFile.Id.get -> string!
+TKCode.Arc.CodeReviewFile.Id.init -> void
+TKCode.Arc.CodeReviewFile.Language.get -> string!
+TKCode.Arc.CodeReviewFile.Language.init -> void
+TKCode.Arc.CodeReviewFile.Lines.get -> System.Collections.Generic.IList<TKCode.Arc.CodeReviewDiffLine!>!
+TKCode.Arc.CodeReviewFile.Lines.init -> void
+TKCode.Arc.CodeReviewFile.Path.get -> string!
+TKCode.Arc.CodeReviewFile.Path.init -> void
+TKCode.Arc.CodeReviewFile.Status.get -> TKCode.Arc.CodeReviewFileStatus
+TKCode.Arc.CodeReviewFile.Status.init -> void
+TKCode.Arc.CodeReviewFileStatus
+TKCode.Arc.CodeReviewFileStatus.Added = 1 -> TKCode.Arc.CodeReviewFileStatus
+TKCode.Arc.CodeReviewFileStatus.Modified = 0 -> TKCode.Arc.CodeReviewFileStatus
+TKCode.Arc.CodeReviewLabels
+TKCode.Arc.CodeReviewLabels.Age.get -> System.Func<System.TimeSpan, string!>!
+TKCode.Arc.CodeReviewLabels.Age.init -> void
+TKCode.Arc.CodeReviewLabels.Applied.get -> string!
+TKCode.Arc.CodeReviewLabels.Applied.init -> void
+TKCode.Arc.CodeReviewLabels.ApplySuggestion.get -> string!
+TKCode.Arc.CodeReviewLabels.ApplySuggestion.init -> void
+TKCode.Arc.CodeReviewLabels.Approve.get -> string!
+TKCode.Arc.CodeReviewLabels.Approve.init -> void
+TKCode.Arc.CodeReviewLabels.Approved.get -> string!
+TKCode.Arc.CodeReviewLabels.Approved.init -> void
+TKCode.Arc.CodeReviewLabels.ApprovedAnnouncement.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.ApprovedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.ApprovedStatus.get -> string!
+TKCode.Arc.CodeReviewLabels.ApprovedStatus.init -> void
+TKCode.Arc.CodeReviewLabels.Cancel.get -> string!
+TKCode.Arc.CodeReviewLabels.Cancel.init -> void
+TKCode.Arc.CodeReviewLabels.CodeReviewLabels() -> void
+TKCode.Arc.CodeReviewLabels.Comment.get -> string!
+TKCode.Arc.CodeReviewLabels.Comment.init -> void
+TKCode.Arc.CodeReviewLabels.CommentAddedAnnouncement.get -> System.Func<string!, string!>!
+TKCode.Arc.CodeReviewLabels.CommentAddedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.CommentFieldName.get -> System.Func<string!, string!>!
+TKCode.Arc.CodeReviewLabels.CommentFieldName.init -> void
+TKCode.Arc.CodeReviewLabels.DiffstatName.get -> System.Func<int, int, string!>!
+TKCode.Arc.CodeReviewLabels.DiffstatName.init -> void
+TKCode.Arc.CodeReviewLabels.FailedAnnouncement.get -> string!
+TKCode.Arc.CodeReviewLabels.FailedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.FilesName.get -> string!
+TKCode.Arc.CodeReviewLabels.FilesName.init -> void
+TKCode.Arc.CodeReviewLabels.From.get -> string!
+TKCode.Arc.CodeReviewLabels.From.init -> void
+TKCode.Arc.CodeReviewLabels.Hide.get -> string!
+TKCode.Arc.CodeReviewLabels.Hide.init -> void
+TKCode.Arc.CodeReviewLabels.JustNow.get -> string!
+TKCode.Arc.CodeReviewLabels.JustNow.init -> void
+TKCode.Arc.CodeReviewLabels.LeaveComment.get -> string!
+TKCode.Arc.CodeReviewLabels.LeaveComment.init -> void
+TKCode.Arc.CodeReviewLabels.LineLabel.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.LineLabel.init -> void
+TKCode.Arc.CodeReviewLabels.LineName.get -> System.Func<TKCode.Arc.CodeReviewLineKind, int, string!>!
+TKCode.Arc.CodeReviewLabels.LineName.init -> void
+TKCode.Arc.CodeReviewLabels.MergeLine.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.MergeLine.init -> void
+TKCode.Arc.CodeReviewLabels.New.get -> string!
+TKCode.Arc.CodeReviewLabels.New.init -> void
+TKCode.Arc.CodeReviewLabels.Pending.get -> string!
+TKCode.Arc.CodeReviewLabels.Pending.init -> void
+TKCode.Arc.CodeReviewLabels.ProgressName.get -> System.Func<int, int, int, int, string!>!
+TKCode.Arc.CodeReviewLabels.ProgressName.init -> void
+TKCode.Arc.CodeReviewLabels.Reopen.get -> string!
+TKCode.Arc.CodeReviewLabels.Reopen.init -> void
+TKCode.Arc.CodeReviewLabels.ReopenedAnnouncement.get -> string!
+TKCode.Arc.CodeReviewLabels.ReopenedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.Reply.get -> string!
+TKCode.Arc.CodeReviewLabels.Reply.init -> void
+TKCode.Arc.CodeReviewLabels.ReplyFieldName.get -> System.Func<string!, string!>!
+TKCode.Arc.CodeReviewLabels.ReplyFieldName.init -> void
+TKCode.Arc.CodeReviewLabels.ReplyPostedAnnouncement.get -> string!
+TKCode.Arc.CodeReviewLabels.ReplyPostedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.Resolve.get -> string!
+TKCode.Arc.CodeReviewLabels.Resolve.init -> void
+TKCode.Arc.CodeReviewLabels.Resolved.get -> string!
+TKCode.Arc.CodeReviewLabels.Resolved.init -> void
+TKCode.Arc.CodeReviewLabels.ResolvedAnnouncement.get -> string!
+TKCode.Arc.CodeReviewLabels.ResolvedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.ReviewName.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.ReviewName.init -> void
+TKCode.Arc.CodeReviewLabels.SuggestChange.get -> string!
+TKCode.Arc.CodeReviewLabels.SuggestChange.init -> void
+TKCode.Arc.CodeReviewLabels.SuggestedChange.get -> string!
+TKCode.Arc.CodeReviewLabels.SuggestedChange.init -> void
+TKCode.Arc.CodeReviewLabels.SuggestionApplied.get -> string!
+TKCode.Arc.CodeReviewLabels.SuggestionApplied.init -> void
+TKCode.Arc.CodeReviewLabels.TabName.get -> System.Func<string!, bool, int, string!>!
+TKCode.Arc.CodeReviewLabels.TabName.init -> void
+TKCode.Arc.CodeReviewLabels.TryAgain.get -> string!
+TKCode.Arc.CodeReviewLabels.TryAgain.init -> void
+TKCode.Arc.CodeReviewLabels.Undo.get -> string!
+TKCode.Arc.CodeReviewLabels.Undo.init -> void
+TKCode.Arc.CodeReviewLabels.Viewed.get -> string!
+TKCode.Arc.CodeReviewLabels.Viewed.init -> void
+TKCode.Arc.CodeReviewLabels.ViewedAnnouncement.get -> System.Func<string!, bool, string!>!
+TKCode.Arc.CodeReviewLabels.ViewedAnnouncement.init -> void
+TKCode.Arc.CodeReviewLabels.ViewedName.get -> System.Func<string!, string!>!
+TKCode.Arc.CodeReviewLabels.ViewedName.init -> void
+TKCode.Arc.CodeReviewLabels.ViewedOf.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.ViewedOf.init -> void
+TKCode.Arc.CodeReviewLabels.WithComments.get -> System.Func<int, string!>!
+TKCode.Arc.CodeReviewLabels.WithComments.init -> void
+TKCode.Arc.CodeReviewLabels.WithdrawnAnnouncement.get -> string!
+TKCode.Arc.CodeReviewLabels.WithdrawnAnnouncement.init -> void
+TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewLineKind.Added = 2 -> TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewLineKind.Context = 1 -> TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewLineKind.Deleted = 3 -> TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewLineKind.Hunk = 0 -> TKCode.Arc.CodeReviewLineKind
+TKCode.Arc.CodeReviewPerson
+TKCode.Arc.CodeReviewPerson.CodeReviewPerson(string! name) -> void
+TKCode.Arc.CodeReviewPerson.Name.get -> string!
+TKCode.Arc.CodeReviewPullRequest
+TKCode.Arc.CodeReviewPullRequest.Author.get -> TKCode.Arc.CodeReviewPerson!
+TKCode.Arc.CodeReviewPullRequest.Author.init -> void
+TKCode.Arc.CodeReviewPullRequest.BaseBranch.get -> string!
+TKCode.Arc.CodeReviewPullRequest.BaseBranch.init -> void
+TKCode.Arc.CodeReviewPullRequest.CodeReviewPullRequest() -> void
+TKCode.Arc.CodeReviewPullRequest.CommitCount.get -> int
+TKCode.Arc.CodeReviewPullRequest.CommitCount.init -> void
+TKCode.Arc.CodeReviewPullRequest.HeadBranch.get -> string!
+TKCode.Arc.CodeReviewPullRequest.HeadBranch.init -> void
+TKCode.Arc.CodeReviewPullRequest.Number.get -> int
+TKCode.Arc.CodeReviewPullRequest.Number.init -> void
+TKCode.Arc.CodeReviewPullRequest.Title.get -> string!
+TKCode.Arc.CodeReviewPullRequest.Title.init -> void
+TKCode.Arc.CodeReviewReplyEventArgs
+TKCode.Arc.CodeReviewReplyEventArgs.CodeReviewReplyEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewThread! thread, TKCode.Arc.CodeReviewComment! comment) -> void
+TKCode.Arc.CodeReviewReplyEventArgs.Comment.get -> TKCode.Arc.CodeReviewComment!
+TKCode.Arc.CodeReviewReplyEventArgs.Thread.get -> TKCode.Arc.CodeReviewThread!
+TKCode.Arc.CodeReviewSelectionChangedEventArgs
+TKCode.Arc.CodeReviewSelectionChangedEventArgs.CodeReviewSelectionChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewFile? oldFile, TKCode.Arc.CodeReviewFile? newFile) -> void
+TKCode.Arc.CodeReviewSelectionChangedEventArgs.NewFile.get -> TKCode.Arc.CodeReviewFile?
+TKCode.Arc.CodeReviewSelectionChangedEventArgs.OldFile.get -> TKCode.Arc.CodeReviewFile?
+TKCode.Arc.CodeReviewSubmission
+TKCode.Arc.CodeReviewSubmission.Body.get -> string!
+TKCode.Arc.CodeReviewSubmission.Comments.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.CodeReviewThread!>!
+TKCode.Arc.CodeReviewSubmittedEventArgs
+TKCode.Arc.CodeReviewSubmittedEventArgs.CodeReviewSubmittedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewSubmission! submission) -> void
+TKCode.Arc.CodeReviewSubmittedEventArgs.Submission.get -> TKCode.Arc.CodeReviewSubmission!
+TKCode.Arc.CodeReviewSuggestion
+TKCode.Arc.CodeReviewSuggestion.CodeReviewSuggestion() -> void
+TKCode.Arc.CodeReviewSuggestion.LineIds.get -> System.Collections.Generic.IList<string!>!
+TKCode.Arc.CodeReviewSuggestion.LineIds.init -> void
+TKCode.Arc.CodeReviewSuggestion.NewLines.get -> System.Collections.Generic.IList<string!>!
+TKCode.Arc.CodeReviewSuggestion.NewLines.init -> void
+TKCode.Arc.CodeReviewSuggestionAppliedEventArgs
+TKCode.Arc.CodeReviewSuggestionAppliedEventArgs.CodeReviewSuggestionAppliedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewThread! thread, TKCode.Arc.CodeReviewFile! file, System.Collections.Generic.IReadOnlyList<TKCode.Arc.CodeReviewDiffLine!>! lines) -> void
+TKCode.Arc.CodeReviewSuggestionAppliedEventArgs.File.get -> TKCode.Arc.CodeReviewFile!
+TKCode.Arc.CodeReviewSuggestionAppliedEventArgs.Lines.get -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.CodeReviewDiffLine!>!
+TKCode.Arc.CodeReviewSuggestionAppliedEventArgs.Thread.get -> TKCode.Arc.CodeReviewThread!
+TKCode.Arc.CodeReviewThread
+TKCode.Arc.CodeReviewThread.AnchorLineId.get -> string!
+TKCode.Arc.CodeReviewThread.AnchorLineId.set -> void
+TKCode.Arc.CodeReviewThread.CodeReviewThread() -> void
+TKCode.Arc.CodeReviewThread.Comments.get -> System.Collections.Generic.IList<TKCode.Arc.CodeReviewComment!>!
+TKCode.Arc.CodeReviewThread.Comments.init -> void
+TKCode.Arc.CodeReviewThread.FileId.get -> string!
+TKCode.Arc.CodeReviewThread.FileId.init -> void
+TKCode.Arc.CodeReviewThread.Id.get -> string!
+TKCode.Arc.CodeReviewThread.Id.init -> void
+TKCode.Arc.CodeReviewThread.IsPending.get -> bool
+TKCode.Arc.CodeReviewThread.IsPending.set -> void
+TKCode.Arc.CodeReviewThread.IsResolved.get -> bool
+TKCode.Arc.CodeReviewThread.IsResolved.set -> void
+TKCode.Arc.CodeReviewThread.IsSuggestionApplied.get -> bool
+TKCode.Arc.CodeReviewThread.IsSuggestionApplied.set -> void
+TKCode.Arc.CodeReviewThread.Label.get -> string!
+TKCode.Arc.CodeReviewThread.Label.init -> void
+TKCode.Arc.CodeReviewThread.Suggestion.get -> TKCode.Arc.CodeReviewSuggestion?
+TKCode.Arc.CodeReviewThread.Suggestion.init -> void
+TKCode.Arc.CodeReviewThreadEventArgs
+TKCode.Arc.CodeReviewThreadEventArgs.CodeReviewThreadEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewThread! thread) -> void
+TKCode.Arc.CodeReviewThreadEventArgs.IsResolved.get -> bool
+TKCode.Arc.CodeReviewThreadEventArgs.Thread.get -> TKCode.Arc.CodeReviewThread!
+TKCode.Arc.CodeReviewViewedChangedEventArgs
+TKCode.Arc.CodeReviewViewedChangedEventArgs.CodeReviewViewedChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.CodeReviewFile! file, bool isViewed) -> void
+TKCode.Arc.CodeReviewViewedChangedEventArgs.File.get -> TKCode.Arc.CodeReviewFile!
+TKCode.Arc.CodeReviewViewedChangedEventArgs.IsViewed.get -> bool
+TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ActiveGutter = 30 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ActiveLine = 29 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.AddedGutter = 24 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.AddedLine = 23 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ApprovedFill = 31 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ApprovedText = 32 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.BodyFontSize = 2 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactGutterPadding = 9 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactHeaderPadding = 15 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactProgressWidth = 22 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactSidePadding = 17 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactThreadPadding = 19 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.CompactWidth = 1 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.DeletedGutter = 26 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.DeletedLine = 25 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.FocusInset = 34 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.FreshGutter = 28 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.FreshLine = 27 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.GutterPadding = 8 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.HeaderPadding = 14 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.HunkHeight = 6 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.LineHeight = 5 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.MarkRestScale = 13 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.MarkSize = 12 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.MaxWidth = 0 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.NumberWidth = 7 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ProgressWidth = 21 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.SidePadding = 16 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.SignInset = 11 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.SignWidth = 10 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.SmallFontSize = 3 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.StatusFill = 33 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ThreadMaxWidth = 20 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.ThreadPadding = 18 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenKind.TitleFontSize = 4 -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension.CodeReviewTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension.CodeReviewTokenResourceExtension(TKCode.Arc.DesignTokens.CodeReviewTokenKind kind) -> void
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.CodeReviewTokenKind
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.CodeReviewTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.CodeReviewTokens

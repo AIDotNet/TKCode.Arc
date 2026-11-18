@@ -1,0 +1,244 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeMagicMoveTheme">
+
+    <!--
+        A card: a raised header with the file name, the line counts and the play / pause button; the code area, which
+        draws the bands, line numbers, words and caret and follows the line count of each move; and a footer with the
+        step's caption and the step controls (previous, one dot per step, next). Below CompactWidth the caption takes
+        its own row and the controls spread across the width.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeMagicMove}" TargetType="arc:CodeMagicMove">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep20}" />
+        <Setter Property="AccentBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FontSize" Value="{arc:CodeMagicMoveTokenResource TextSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeMagicMove">
+                <Border Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid RowDefinitions="Auto,Auto,Auto">
+                        <TextBlock Name="PART_Status"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   ClipToBounds="True"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top" />
+                        <TextBlock Name="PART_Source"
+                                   Grid.Row="1"
+                                   Width="1"
+                                   Height="1"
+                                   Opacity="0"
+                                   ClipToBounds="True"
+                                   IsHitTestVisible="False"
+                                   HorizontalAlignment="Left"
+                                   VerticalAlignment="Top" />
+                        <Border Name="PART_Header"
+                                Padding="{arc:CodeMagicMoveTokenResource HeaderPadding}"
+                                Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessBottom}">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="{arc:CodeMagicMoveTokenResource HeaderGap}">
+                                <arc:ArcShrinkRow Spacing="{arc:CodeMagicMoveTokenResource FileGap}" VerticalAlignment="Center">
+                                    <arc:ArcGlyph Data="{x:Static arc:ArcIcons.FileCode2}"
+                                                  Size="{arc:CodeMagicMoveTokenResource IconSize}"
+                                                  StrokeThickness="{arc:CodeMagicMoveTokenResource IconStroke}"
+                                                  Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                  VerticalAlignment="Center"
+                                                  AutomationProperties.AccessibilityView="Raw" />
+                                    <TextBlock Text="{TemplateBinding CurrentFileName}"
+                                               arc:ArcShrinkRow.IsShrinkable="True"
+                                               FontWeight="Medium"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" />
+                                </arc:ArcShrinkRow>
+                                <StackPanel Grid.Column="1"
+                                            Orientation="Horizontal"
+                                            Spacing="{arc:CodeMagicMoveTokenResource MetaGap}"
+                                            VerticalAlignment="Center">
+                                    <StackPanel Name="PART_Counts"
+                                                Orientation="Horizontal"
+                                                Spacing="{arc:CodeMagicMoveTokenResource CountGap}"
+                                                VerticalAlignment="Center"
+                                                AutomationProperties.AccessibilityView="Raw">
+                                        <TextBlock Name="PART_Added"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:CodeMagicMoveTokenResource SmallTextSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource Success}" />
+                                        <TextBlock Name="PART_Removed"
+                                                   FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                   FontSize="{arc:CodeMagicMoveTokenResource SmallTextSize}"
+                                                   Foreground="{arc:ArcDesignTokenResource Danger}" />
+                                    </StackPanel>
+                                    <arc:Button Name="PART_Play" Classes="code-magic-move-icon" Variant="Ghost">
+                                        <Panel>
+                                            <arc:ArcGlyph Name="PART_PauseGlyph"
+                                                          Data="{x:Static arc:ArcIcons.Pause}"
+                                                          Size="{arc:CodeMagicMoveTokenResource IconSize}"
+                                                          StrokeThickness="{arc:CodeMagicMoveTokenResource IconStroke}" />
+                                            <arc:ArcGlyph Name="PART_PlayGlyph"
+                                                          Data="{x:Static arc:ArcIcons.Play}"
+                                                          Size="{arc:CodeMagicMoveTokenResource IconSize}"
+                                                          StrokeThickness="{arc:CodeMagicMoveTokenResource IconStroke}" />
+                                        </Panel>
+                                    </arc:Button>
+                                </StackPanel>
+                            </Grid>
+                        </Border>
+                        <Border Name="PART_FooterBorder"
+                                Grid.Row="2"
+                                Padding="{arc:CodeMagicMoveTokenResource FooterPadding}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}">
+                            <Grid ColumnDefinitions="*,Auto"
+                                  RowDefinitions="Auto,Auto"
+                                  ColumnSpacing="{arc:CodeMagicMoveTokenResource FooterGap}">
+                                <arc:ArcContentSwap Name="PART_Caption"
+                                                    Content="{TemplateBinding CurrentStep}"
+                                                    Mode="BlurSwap"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center"
+                                                    VerticalAlignment="Center">
+                                    <arc:ArcContentSwap.ContentTemplate>
+                                        <DataTemplate x:DataType="arc:CodeMagicMoveStep">
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}"
+                                                           FontWeight="Medium"
+                                                           TextTrimming="CharacterEllipsis" />
+                                                <TextBlock Text="{Binding Description}"
+                                                           IsVisible="{Binding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                                           FontSize="{arc:CodeMagicMoveTokenResource SmallTextSize}"
+                                                           Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </arc:ArcContentSwap.ContentTemplate>
+                                </arc:ArcContentSwap>
+                                <Grid Name="PART_Controls"
+                                      Grid.Column="1"
+                                      ColumnDefinitions="Auto,*,Auto"
+                                      VerticalAlignment="Center">
+                                    <arc:Button Name="PART_Previous"
+                                                Classes="code-magic-move-icon"
+                                                Variant="Ghost"
+                                                AutomationProperties.Name="Previous step">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronLeft}"
+                                                      Size="{arc:CodeMagicMoveTokenResource IconSize}"
+                                                      StrokeThickness="{arc:CodeMagicMoveTokenResource IconStroke}" />
+                                    </arc:Button>
+                                    <StackPanel Name="PART_Dots"
+                                                Grid.Column="1"
+                                                Orientation="Horizontal"
+                                                HorizontalAlignment="Center"
+                                                AutomationProperties.Name="Steps" />
+                                    <arc:Button Name="PART_Next"
+                                                Grid.Column="2"
+                                                Classes="code-magic-move-icon"
+                                                Variant="Ghost"
+                                                AutomationProperties.Name="Next step">
+                                        <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                                      Size="{arc:CodeMagicMoveTokenResource IconSize}"
+                                                      StrokeThickness="{arc:CodeMagicMoveTokenResource IconStroke}" />
+                                    </arc:Button>
+                                </Grid>
+                            </Grid>
+                        </Border>
+                        <!-- Last, so its keyboard focus ring draws over the header's and footer's rules. -->
+                        <arc:CodeMagicMoveSurface Name="PART_Surface"
+                                                  Grid.Row="1"
+                                                  FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                                  Foreground="{TemplateBinding Foreground}"
+                                                  LineNumberBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                  AccentBrush="{TemplateBinding AccentBrush}"
+                                                  FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}"
+                                                  BandFillOpacity="{arc:CodeMagicMoveTokenResource BandFillOpacity}"
+                                                  Padding="{arc:CodeMagicMoveTokenResource CodePadding}"
+                                                  CompactPadding="{arc:CodeMagicMoveTokenResource CodePaddingCompact}"
+                                                  CompactWidth="{arc:CodeMagicMoveTokenResource CompactWidth}"
+                                                  CodeFontSize="{arc:CodeMagicMoveTokenResource CodeFontSize}"
+                                                  MinCodeFontSize="{arc:CodeMagicMoveTokenResource MinCodeFontSize}"
+                                                  LineSpacing="{arc:CodeMagicMoveTokenResource CodeLineSpacing}"
+                                                  GutterGap="{arc:CodeMagicMoveTokenResource GutterGap}"
+                                                  BandRuleWidth="{arc:CodeMagicMoveTokenResource BandRuleWidth}"
+                                                  CaretWidth="{arc:CodeMagicMoveTokenResource CaretWidth}"
+                                                  CaretHeight="{arc:CodeMagicMoveTokenResource CaretHeight}"
+                                                  RubberBandLimit="{arc:CodeMagicMoveTokenResource RubberBandLimit}"
+                                                  Cursor="Hand" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|Button.code-magic-move-icon">
+            <Setter Property="Width" Value="{arc:CodeMagicMoveTokenResource ButtonSize}" />
+            <Setter Property="Height" Value="{arc:CodeMagicMoveTokenResource ButtonSize}" />
+            <Setter Property="MinHeight" Value="{arc:CodeMagicMoveTokenResource ButtonSize}" />
+            <Setter Property="MinWidth" Value="{arc:CodeMagicMoveTokenResource ButtonSize}" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ arc|Button.code-magic-move-icon:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_PauseGlyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:playing /template/ arc|ArcGlyph#PART_PauseGlyph">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:playing /template/ arc|ArcGlyph#PART_PlayGlyph">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <Style Selector="^ /template/ StackPanel#PART_Counts">
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:first-step /template/ StackPanel#PART_Counts">
+            <Setter Property="Opacity" Value="0" />
+        </Style>
+        <Style Selector="^:motion-full /template/ StackPanel#PART_Counts">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+
+        <Style Selector="^:compact /template/ Border#PART_FooterBorder">
+            <Setter Property="Padding" Value="{arc:CodeMagicMoveTokenResource FooterPaddingCompact}" />
+        </Style>
+        <Style Selector="^:compact /template/ Grid#PART_Controls">
+            <Setter Property="Grid.Row" Value="1" />
+            <Setter Property="Grid.Column" Value="0" />
+            <Setter Property="Grid.ColumnSpan" Value="2" />
+        </Style>
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:CodeMagicMoveDot}" TargetType="arc:CodeMagicMoveDot">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Padding" Value="4,0" />
+        <Setter Property="MinWidth" Value="{arc:CodeMagicMoveTokenResource DotWidth}" />
+        <Setter Property="Height" Value="{arc:CodeMagicMoveTokenResource DotHeight}" />
+        <Setter Property="PipSize" Value="{arc:CodeMagicMoveTokenResource PipSize}" />
+        <Setter Property="ActivePipWidth" Value="{arc:CodeMagicMoveTokenResource ActivePipWidth}" />
+        <Setter Property="PipBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="FocusRingBrush" Value="{arc:ArcDesignTokenResource FocusRing}" />
+    </ControlTheme>
+</ResourceDictionary>

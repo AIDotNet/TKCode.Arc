@@ -25,5 +25,7 @@
         <InternalsVisibleTo Include="TKCode.Arc.Highlighting" />
         <!-- Special colors code through the highlighting contract (CodeTokens.CodeTokenHighlighter) without Markdown (#147). -->
         <InternalsVisibleTo Include="TKCode.Arc.Special" />
+        <!-- Blocks' Code review colors its diff through the same contract (ADR 0053). -->
+        <InternalsVisibleTo Include="TKCode.Arc.Blocks" />
     </ItemGroup>
 </Project>

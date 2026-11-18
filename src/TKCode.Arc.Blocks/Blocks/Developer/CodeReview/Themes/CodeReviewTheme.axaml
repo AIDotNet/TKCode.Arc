@@ -1,0 +1,45 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeReviewTheme">
+
+    <!--
+        The pull request review card (Arc Code review, design reference, ADR 0053). A card up to 760 wide: 1px Border,
+        radius 24, Surface, no shadow, contents clipped; 13px text with Arc's -0.13 letter spacing. The header, the approval
+        status band, the tabs and the file panels are built in code inside PART_Root (CodeReview.View.cs); the hidden polite
+        live region announces every action.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeReview}" TargetType="arc:CodeReview">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="MaxWidth" Value="{arc:CodeReviewTokenResource MaxWidth}" />
+        <Setter Property="CompactWidth" Value="{arc:CodeReviewTokenResource CompactWidth}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:CodeReviewTokenResource BodyFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="TextElement.LetterSpacing" Value="-0.13" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeReview">
+                <Border Name="PART_Frame"
+                        ClipToBounds="True"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}">
+                    <DockPanel>
+                        <arc:DeveloperAnnouncer Name="PART_Announcer" DockPanel.Dock="Bottom" />
+                        <Panel Name="PART_Root" />
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

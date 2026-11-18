@@ -256,7 +256,7 @@ public partial class SignIn
         {
             x += current.Bounds.X;
             y += current.Bounds.Y;
-            current = current.GetVisualParentSafe();
+            current = SignInVisualExtensions.GetVisualParentSafe(current);
         }
         return new Rect(x, y, visual.Bounds.Width, visual.Bounds.Height);
     }

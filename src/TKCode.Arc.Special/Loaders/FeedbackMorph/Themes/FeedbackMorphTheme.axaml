@@ -1,0 +1,485 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.FeedbackMorphTheme">
+
+    <!--
+        The control takes the button's size. Its surface draws the one rounded shape that changes from the button to the
+        panel and the thank-you pill (fill, hairline and shadow follow the state here; the size springs in code) and holds
+        the faces past the button, over what is around the control. The live region sits in the root panel.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorph}" TargetType="arc:FeedbackMorph">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:FeedbackMorphTokenResource LabelFontSize}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorph">
+                <Panel Name="PART_Root" ClipToBounds="False">
+                    <arc:FeedbackMorphSurface Name="PART_Surface"
+                                              CornerRadius="{arc:ArcDesignTokenResource RadiusStep20}" />
+                    <TextBlock Name="PART_Status"
+                               Height="0"
+                               Opacity="0"
+                               IsHitTestVisible="False"
+                               VerticalAlignment="Top" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="Background" Value="{arc:FeedbackMorphTokenResource SurfaceFill}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BoxShadow" Value="{arc:FeedbackMorphTokenResource PillShadow}" />
+            <Setter Property="RenderTransformOrigin" Value="50%,50%" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:open /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:FeedbackMorphTokenResource PanelShadow}" />
+        </Style>
+        <Style Selector="^:sent /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="BoxShadow" Value="{arc:FeedbackMorphTokenResource SentShadow}" />
+        </Style>
+        <!-- Arc Feedback morph (design reference): the shadow follows the shape over 360 ms on the standard curve. -->
+        <Style Selector="^:motion-full /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Duration="0:0:0.36" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.2" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full:pressed /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="RenderTransform" Value="scale(0.98)" />
+        </Style>
+        <Style Selector="^:motion-reduced /template/ arc|FeedbackMorphSurface#PART_Surface">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBoxShadowsTransition Property="BoxShadow" Duration="0:0:0.15" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The button face: the speech bubble and the label on the surface's fill. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphTrigger}" TargetType="arc:FeedbackMorphTrigger">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:FeedbackMorphTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:FeedbackMorphTokenResource PillPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphTrigger">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                            Padding="{TemplateBinding Padding}">
+                        <StackPanel Orientation="Horizontal"
+                                    Spacing="{arc:FeedbackMorphTokenResource PillGap}"
+                                    VerticalAlignment="Center">
+                            <arc:ArcGlyph Data="{x:Static arc:FeedbackMorphTrigger.BubbleGlyph}"
+                                          Size="{arc:FeedbackMorphTokenResource PillGlyphSize}"
+                                          Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                          VerticalAlignment="Center" />
+                            <TextBlock Text="{TemplateBinding Label}"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       LineHeight="{arc:FeedbackMorphTokenResource LabelLineHeight}"
+                                       VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!-- The round close button: a quiet glyph that gets a soft fill under a mouse. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphIconButton}" TargetType="arc:FeedbackMorphIconButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Width" Value="{arc:FeedbackMorphTokenResource CloseSize}" />
+        <Setter Property="Height" Value="{arc:FeedbackMorphTokenResource CloseSize}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphIconButton">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}" CornerRadius="{arc:ArcDesignTokenResource RadiusPill}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{arc:FeedbackMorphTokenResource CloseGlyphSize}"
+                                      Foreground="{TemplateBinding Foreground}"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:FeedbackMorphTokenResource HighlightFill}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The panel: question and close, the faces and their caption, the note and its prompt, then status and send. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphPanel}" TargetType="arc:FeedbackMorphPanel">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:FeedbackMorphTokenResource PanelPadding}" />
+        <Setter Property="MutedBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="CaptionBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="HintBrush" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="DangerBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphPanel">
+                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:FeedbackMorphTokenResource RowGap}">
+                        <Grid Name="PART_Header"
+                              Height="{arc:FeedbackMorphTokenResource HeaderHeight}"
+                              ColumnDefinitions="*,Auto"
+                              ColumnSpacing="8">
+                            <TextBlock Text="{TemplateBinding Title}"
+                                       Margin="{arc:FeedbackMorphTokenResource TitlePadding}"
+                                       FontSize="{arc:FeedbackMorphTokenResource TitleFontSize}"
+                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                       LineHeight="{arc:FeedbackMorphTokenResource TitleLineHeight}"
+                                       Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                       TextTrimming="CharacterEllipsis"
+                                       VerticalAlignment="Center" />
+                            <arc:FeedbackMorphIconButton Name="PART_Close"
+                                                         Grid.Column="1"
+                                                         Glyph="{x:Static arc:ArcIcons.X}"
+                                                         AutomationProperties.Name="{TemplateBinding CloseLabel}" />
+                        </Grid>
+                        <StackPanel Name="PART_MoodBlock" Spacing="{arc:FeedbackMorphTokenResource CaptionGap}">
+                            <arc:FeedbackMoodPicker Name="PART_Moods"
+                                                    Height="{arc:FeedbackMorphTokenResource MoodRowHeight}"
+                                                    ButtonSize="{arc:FeedbackMorphTokenResource MoodButtonSize}"
+                                                    HighlightSize="{arc:FeedbackMorphTokenResource MoodHighlightSize}"
+                                                    HighlightFill="{arc:FeedbackMorphTokenResource HighlightFill}"
+                                                    HighlightStroke="{arc:ArcDesignTokenResource BorderSubtle}" />
+                            <arc:ArcContentSwap Name="PART_Caption"
+                                                Mode="BlurSwap"
+                                                Height="{arc:FeedbackMorphTokenResource SmallLineHeight}"
+                                                HorizontalContentAlignment="Center"
+                                                TextElement.FontSize="{arc:FeedbackMorphTokenResource SmallFontSize}"
+                                                TextBlock.LineHeight="{arc:FeedbackMorphTokenResource SmallLineHeight}" />
+                        </StackPanel>
+                        <Border Name="PART_Field"
+                                Height="{arc:FeedbackMorphTokenResource FieldHeight}"
+                                Background="{arc:FeedbackMorphTokenResource FieldFill}"
+                                BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
+                                CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                                ClipToBounds="True">
+                            <Panel>
+                                <arc:FeedbackMorphNote Name="PART_Note"
+                                                       MaxLength="{TemplateBinding MaxLength}" />
+                                <arc:ArcContentSwap Name="PART_Prompt"
+                                                    Mode="BlurSwap"
+                                                    IsHitTestVisible="False"
+                                                    Margin="{arc:FeedbackMorphTokenResource FieldPadding}"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Top"
+                                                    VerticalAlignment="Top"
+                                                    TextElement.FontSize="{arc:FeedbackMorphTokenResource LabelFontSize}"
+                                                    TextBlock.LineHeight="{arc:FeedbackMorphTokenResource FieldLineHeight}" />
+                            </Panel>
+                        </Border>
+                        <Grid Name="PART_Actions"
+                              Height="{arc:FeedbackMorphTokenResource ActionsHeight}"
+                              ColumnDefinitions="*,Auto"
+                              ColumnSpacing="12">
+                            <arc:ArcContentSwap Name="PART_Status"
+                                                Mode="BlurSwap"
+                                                Margin="{arc:FeedbackMorphTokenResource StatusPadding}"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalAlignment="Center"
+                                                TextElement.FontSize="{arc:FeedbackMorphTokenResource SmallFontSize}" />
+                            <arc:FeedbackMorphSend Name="PART_Send"
+                                                   Grid.Column="1"
+                                                   Label="{TemplateBinding SendLabel}"
+                                                   BusyLabel="{TemplateBinding SendingLabel}" />
+                        </Grid>
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Field:focus-within">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^:busy /template/ arc|FeedbackMoodPicker#PART_Moods">
+            <Setter Property="Opacity" Value="{arc:FeedbackMorphTokenResource BusyMoodsOpacity}" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Field">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="BorderBrush" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|FeedbackMoodPicker#PART_Moods">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!--
+        One face: the drawing in a 44 px round target. Muted until hovered or picked; the picked face grows to 1.14 and the
+        others shrink to 0.92 on the shape's spring.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMoodButton}" TargetType="arc:FeedbackMoodButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMoodButton">
+                <Panel Name="PART_Root" Background="Transparent">
+                    <arc:FeedbackFaceGlyph Name="PART_Glyph"
+                                           Size="{arc:FeedbackMorphTokenResource MoodGlyphSize}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           RenderTransformOrigin="50%,50%"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ arc|FeedbackFaceGlyph#PART_Glyph">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:hover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked /template/ arc|FeedbackFaceGlyph#PART_Glyph">
+            <Setter Property="RenderTransform" Value="scale(1.14)" />
+        </Style>
+        <Style Selector="^:dimmed /template/ arc|FeedbackFaceGlyph#PART_Glyph">
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ arc|FeedbackFaceGlyph#PART_Glyph">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.36" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The note: a borderless multi-line text box (the field around it draws the fill, the edge and the prompt). -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphNote}" TargetType="arc:FeedbackMorphNote">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Padding" Value="{arc:FeedbackMorphTokenResource FieldPadding}" />
+        <Setter Property="FontSize" Value="{arc:FeedbackMorphTokenResource LabelFontSize}" />
+        <Setter Property="LineHeight" Value="{arc:FeedbackMorphTokenResource FieldLineHeight}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="CaretBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectionBrush" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectionForegroundBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="IBeam" />
+        <Setter Property="AcceptsReturn" Value="True" />
+        <Setter Property="TextWrapping" Value="Wrap" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphNote">
+                <Border Background="{TemplateBinding Background}">
+                    <ScrollViewer Name="PART_ScrollViewer"
+                                  HorizontalScrollBarVisibility="Disabled"
+                                  VerticalScrollBarVisibility="Auto">
+                        <TextPresenter Name="PART_TextPresenter"
+                                       Margin="{TemplateBinding Padding}"
+                                       Text="{TemplateBinding Text, Mode=TwoWay}"
+                                       CaretBlinkInterval="{TemplateBinding CaretBlinkInterval}"
+                                       CaretIndex="{TemplateBinding CaretIndex}"
+                                       SelectionStart="{TemplateBinding SelectionStart}"
+                                       SelectionEnd="{TemplateBinding SelectionEnd}"
+                                       TextWrapping="{TemplateBinding TextWrapping}"
+                                       LineHeight="{TemplateBinding LineHeight}"
+                                       SelectionBrush="{TemplateBinding SelectionBrush}"
+                                       SelectionForegroundBrush="{TemplateBinding SelectionForegroundBrush}"
+                                       CaretBrush="{TemplateBinding CaretBrush}" />
+                    </ScrollViewer>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+
+    <!--
+        The send button: "Send" with an up arrow; while the note is sent the label leaves up and a spinner with "Sending"
+        comes from below. With nothing to send it fades to 0.45.
+    -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphSend}" TargetType="arc:FeedbackMorphSend">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="FontSize" Value="{arc:FeedbackMorphTokenResource LabelFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:FeedbackMorphTokenResource ActionsHeight}" />
+        <Setter Property="Padding" Value="{arc:FeedbackMorphTokenResource SendPadding}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphSend">
+                <Panel Name="PART_Root">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusStep8}"
+                            Padding="{TemplateBinding Padding}">
+                        <arc:FeedbackMorphOverlay VerticalAlignment="Center">
+                            <StackPanel Name="PART_Label" Orientation="Horizontal" Spacing="{arc:FeedbackMorphTokenResource SendGlyphGap}">
+                                <TextBlock Text="{TemplateBinding Label}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           LineHeight="{arc:FeedbackMorphTokenResource LabelLineHeight}"
+                                           VerticalAlignment="Center" />
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowUp}"
+                                              Size="{arc:FeedbackMorphTokenResource SmallGlyphSize}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              VerticalAlignment="Center" />
+                            </StackPanel>
+                            <StackPanel Name="PART_Busy" Orientation="Horizontal" Spacing="{arc:FeedbackMorphTokenResource SendGlyphGap}">
+                                <arc:ArcSpinner Width="{arc:FeedbackMorphTokenResource SmallGlyphSize}"
+                                                Height="{arc:FeedbackMorphTokenResource SmallGlyphSize}"
+                                                Thickness="1.75"
+                                                Foreground="{TemplateBinding Foreground}"
+                                                IsVisible="{TemplateBinding IsBusy}"
+                                                VerticalAlignment="Center" />
+                                <TextBlock Text="{TemplateBinding BusyLabel}"
+                                           Foreground="{TemplateBinding Foreground}"
+                                           LineHeight="{arc:FeedbackMorphTokenResource LabelLineHeight}"
+                                           VerticalAlignment="Center" />
+                            </StackPanel>
+                        </arc:FeedbackMorphOverlay>
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:hover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:empty">
+            <Setter Property="Opacity" Value="{arc:FeedbackMorphTokenResource EmptySendOpacity}" />
+        </Style>
+        <Style Selector="^:busy">
+            <Setter Property="Cursor" Value="Wait" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Label">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^ /template/ StackPanel#PART_Busy">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(6px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:busy /template/ StackPanel#PART_Label">
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="translateY(-6px)" />
+            <Setter Property="Effect">
+                <BlurEffect Radius="2" />
+            </Setter>
+        </Style>
+        <Style Selector="^:busy /template/ StackPanel#PART_Busy">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="none" />
+            <Setter Property="Effect" Value="{x:Null}" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <!-- Arc Feedback morph (design reference): the labels fade over about 150 ms and travel 6 px on the shape's spring. -->
+        <Style Selector="^:motion-full /template/ StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" />
+                    <arc:ArcEffectTransition Property="Effect" />
+                    <arc:SpringTransformOperationsTransition Property="RenderTransform" VisualDuration="0.36" Bounce="0" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ StackPanel">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The thank-you pill: the drawn check in a soft success disc, then the words. -->
+    <ControlTheme x:Key="{x:Type arc:FeedbackMorphSentFace}" TargetType="arc:FeedbackMorphSentFace">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontSize" Value="{arc:FeedbackMorphTokenResource LabelFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Height" Value="{arc:FeedbackMorphTokenResource PillHeight}" />
+        <Setter Property="Padding" Value="{arc:FeedbackMorphTokenResource SentPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:FeedbackMorphSentFace">
+                <Border Padding="{TemplateBinding Padding}">
+                    <StackPanel Orientation="Horizontal"
+                                Spacing="{arc:FeedbackMorphTokenResource PillGap}"
+                                VerticalAlignment="Center">
+                        <Panel Width="{arc:FeedbackMorphTokenResource SentGlyphSize}"
+                               Height="{arc:FeedbackMorphTokenResource SentGlyphSize}"
+                               VerticalAlignment="Center">
+                            <Ellipse Margin="1.8" Fill="{arc:FeedbackMorphTokenResource SuccessDisc}" />
+                            <arc:StrokeDrawGlyph Name="PART_Ring"
+                                                 Data="{x:Static arc:FeedbackMorphSentFace.RingGlyph}"
+                                                 Size="{arc:FeedbackMorphTokenResource SentGlyphSize}"
+                                                 Foreground="{arc:ArcDesignTokenResource Success}" />
+                            <arc:StrokeDrawGlyph Name="PART_Check"
+                                                 Data="{x:Static arc:FeedbackMorphSentFace.CheckGlyph}"
+                                                 Size="{arc:FeedbackMorphTokenResource SentGlyphSize}"
+                                                 Foreground="{arc:ArcDesignTokenResource Success}" />
+                        </Panel>
+                        <StackPanel Name="PART_Words"
+                                    Orientation="Horizontal"
+                                    Spacing="{arc:FeedbackMorphTokenResource WordGap}"
+                                    VerticalAlignment="Center"
+                                    TextBlock.LineHeight="{arc:FeedbackMorphTokenResource LabelLineHeight}" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

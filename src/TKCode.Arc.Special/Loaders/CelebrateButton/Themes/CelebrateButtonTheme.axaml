@@ -1,0 +1,75 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CelebrateButtonTheme">
+
+    <!--
+        A 40 px accent capsule with a 13 px medium label. The control puts its label (one view per status), the confetti
+        layer and the live region into the parts below; PART_Pop carries the kick, PART_Body the press scale (Arc
+        Celebrate button, design reference: 0.96 over 100 ms ease-out, motion-full only) and the 200 ms color change.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CelebrateButton}" TargetType="arc:CelebrateButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:CelebrateButtonTokenResource LabelFontSize}" />
+        <Setter Property="FontWeight" Value="{arc:CelebrateButtonTokenResource LabelFontWeight}" />
+        <Setter Property="LetterSpacing" Value="{arc:CelebrateButtonTokenResource LabelLetterSpacing}" />
+        <Setter Property="Height" Value="{arc:CelebrateButtonTokenResource ButtonHeight}" />
+        <Setter Property="Padding" Value="{arc:CelebrateButtonTokenResource ButtonPadding}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Panel Name="PART_Root">
+                    <Panel Name="PART_Pop" RenderTransformOrigin="50%,50%">
+                        <Border Name="PART_Body"
+                                HorizontalAlignment="Center"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="{TemplateBinding CornerRadius}"
+                                Padding="{TemplateBinding Padding}"
+                                ClipToBounds="True"
+                                RenderTransformOrigin="50%,50%" />
+                    </Panel>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^ /template/ Border#PART_Body">
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:pressed:motion-full /template/ Border#PART_Body">
+            <Setter Property="RenderTransform" Value="scale(0.96)" />
+        </Style>
+        <Style Selector="^:motion-full /template/ Border#PART_Body">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.1" Easing="0,0,0.58,1" />
+                    <BrushTransition Property="Background" Duration="0:0:0.2" Easing="0.22,1,0.36,1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Border#PART_Body">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Background" Duration="0:0:0.2" Easing="0.22,1,0.36,1" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:pending">
+            <Setter Property="Cursor" Value="AppStarting" />
+        </Style>
+        <Style Selector="^:success">
+            <Setter Property="Cursor" Value="Arrow" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Cursor" Value="Arrow" />
+            <Setter Property="Opacity" Value="{arc:CelebrateButtonTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
