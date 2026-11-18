@@ -8,11 +8,11 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
 `TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
-`TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.2).
+`TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## 1.2.0-preview.2 - 2026-11-17
+## 1.2.0-preview.3 - 2026-11-17
 
-The second preview of 1.2 adds a 3D engine and its controls as four new preview packages that share the release version. Nothing changes in the other packages' API: they are republished at 1.2.0-preview.2 with the
+The third preview of 1.2 (1.2.0-preview.2 was never published) adds a 3D engine and its controls as four new preview packages that share the release version. Nothing changes in the other packages' API: they are republished at 1.2.0-preview.3 with the
 Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162). 
 
 ### Graphics3D (preview packages)
@@ -2253,6 +2253,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.2.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.1...v1.2.0-preview.3
 [1.1.1-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.4...v1.1.1-preview.5
 [1.1.1-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.3...v1.1.1-preview.4
 [1.1.1-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1-preview.2...v1.1.1-preview.3
