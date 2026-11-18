@@ -1,6 +1,6 @@
 <Project>
     <PropertyGroup>
-        <ArcVersion>1.2.0-preview.1</ArcVersion>
+        <ArcVersion>1.2.0-preview.2</ArcVersion>
         <!-- The TKCode.Arc.Graphics3D packages (the engine, .WebGpu, .Controls, .Browser): their own version line, preview
              only until the engine is declared stable (design/decisions/0051-graphics3d-package.md). Raise it whenever
              these packages change: a release pushes them with skip-duplicate, so an unchanged number publishes nothing. -->

@@ -10,7 +10,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 With their own version line (`ArcGraphics3DVersion`, previews only): `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (0.1.0-preview.1, published with 1.2.0-preview.2).
 
-## Unreleased
+## 1.2.0-preview.2 - 2026-11-17
+
+The second preview of 1.2 adds a 3D engine and its controls as four new preview packages with a version of their own
+(0.1.0-preview.1). Nothing changes in the other packages' API: they are republished at 1.2.0-preview.2 with the
+Terminal build fix of [#162](https://github.com/AIDotNet/TKCode.Arc/issues/162). Install the 3D packages with
+`--version 0.1.0-preview.1` (or `--prerelease`).
 
 ### Graphics3D (preview packages, their own version line)
 
