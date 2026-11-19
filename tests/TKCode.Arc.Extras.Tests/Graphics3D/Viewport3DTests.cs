@@ -395,6 +395,23 @@ public class ModelViewerTests
     }
 
     [AvaloniaFact]
+    public void Replacing_A_Load_In_Flight_Ends_With_The_New_Source_And_No_Exception()
+    {
+        var viewer = new ModelViewer { Width = 400, Height = 300 };
+        TestHelpers.Show(viewer);
+        Exception? failure = null;
+        viewer.LoadFailed += (_, e) => failure = e.Exception;
+
+        // The first load is cancelled by the second source; its continuation must not touch the disposed source.
+        viewer.Source = "avares://TKCode.Arc.Extras.Tests/Graphics3D/Assets/triangle.gltf";
+        viewer.Source = "avares://TKCode.Arc.Extras.Tests/Graphics3D/Assets/none.glb";
+
+        TestHelpers.PumpUntil(() => failure is not null, 8000).ShouldBeTrue();
+        failure.ShouldBeOfType<FileNotFoundException>();
+        viewer.IsLoading.ShouldBeFalse();
+    }
+
+    [AvaloniaFact]
     public void A_Model_Loads_From_A_Web_Address_With_Its_External_Buffer()
     {
         // A local server with the model and its buffer side by side; the port is whichever is free.

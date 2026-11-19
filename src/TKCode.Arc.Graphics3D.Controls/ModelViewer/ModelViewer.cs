@@ -629,13 +629,16 @@ public class ModelViewer : TemplatedControl
     {
         CancelLoading();
         var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken);
+        // CancelLoading disposes cts when another source takes over, and a disposed source throws on its Token:
+        // keep the token of this load for the checks after the await.
+        var token = cts.Token;
         _loading = cts;
         ErrorMessage = null;
         IsLoading = true;
         GltfAsset asset;
         try
         {
-            asset = await load(cts.Token);
+            asset = await load(token);
         }
         catch (Exception ex) when (ex is not OperationCanceledException)
         {
@@ -651,10 +654,10 @@ public class ModelViewer : TemplatedControl
             return;
         }
 
-        if (!ReferenceEquals(_loading, cts) || cts.IsCancellationRequested)
+        if (!ReferenceEquals(_loading, cts) || token.IsCancellationRequested)
         {
             asset.Dispose();
-            cts.Token.ThrowIfCancellationRequested();
+            token.ThrowIfCancellationRequested();
             return;
         }
 
