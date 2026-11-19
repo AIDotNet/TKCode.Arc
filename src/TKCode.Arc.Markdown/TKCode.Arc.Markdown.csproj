@@ -10,8 +10,9 @@
         <ArcFoundationGenerator>true</ArcFoundationGenerator>
     </PropertyGroup>
     <ItemGroup>
-        <!-- StreamMark (ADR 0011) renders the Markdown; no TextMate here: highlighting is TKCode.Arc.Highlighting (ADR 0050). -->
-        <PackageReference Include="TKCode.StreamMark.Avalonia" />
+        <!-- StreamMark (ADR 0011, in this repository since 1.3.0) renders the Markdown; no TextMate here: highlighting is
+             TKCode.Arc.Highlighting (ADR 0050). -->
+        <ProjectReference Include="../TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
     </ItemGroup>
     <ItemGroup>

@@ -44,6 +44,9 @@ src/TKCode.Arc.Audio.Native/runtimes/
 /.agents/
 src/TKCode.Arc.Video.Native/runtimes/
 
+# libratex_ffi for TKCode.Arc.StreamMark.RaTeX (tools/streammark/sync-native.sh)
+src/TKCode.Arc.StreamMark.RaTeX/runtimes/
+
 # PDFium for TKCode.Arc.Pdf.Native (tools/pdf/sync-native.sh)
 src/TKCode.Arc.Pdf.Native/runtimes/
 src/TKCode.Arc.Pdf.Native/licenses/

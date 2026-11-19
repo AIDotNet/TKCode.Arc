@@ -17,6 +17,10 @@ public partial class PackageEntryTests
         ["TKCode.Arc.Audio"] = "the abstraction alone; the backends (Audio.Native, Audio.Browser) have the entries",
         ["TKCode.Arc.Mobile.iOS"] = "a platform host: derive the app delegate from ArcAppDelegate<TApp>",
         ["TKCode.Arc.Terminal"] = "a standalone terminal library on Avalonia alone (#150, ADR 0052): place a TerminalView",
+        ["TKCode.Arc.StreamMark"] = "a standalone Markdown library on Avalonia and Markdig: place a MarkdownView (TKCode.Arc.Markdown has the Arc entry)",
+        ["TKCode.Arc.StreamMark.TextMate"] = "a StreamMark plugin: add TextMatePlugin to MarkdownServices.Plugins",
+        ["TKCode.Arc.StreamMark.RaTeX"] = "a StreamMark plugin: add RaTeXPlugin to MarkdownServices.Plugins",
+        ["TKCode.Arc.StreamMark.Mermaid"] = "a StreamMark plugin: add MermaidPlugin to MarkdownServices.Plugins",
         ["TKCode.Arc.Graphics3D"] = "a 3D engine without UI dependency (ADR 0051); TKCode.Arc.Graphics3D.Controls has the entry",
         ["TKCode.Arc.Graphics3D.WebGpu"] = "a rendering backend of the 3D engine, without UI dependency: create it with WgpuDevice.Create",
     };

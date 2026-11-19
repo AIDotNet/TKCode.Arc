@@ -1,0 +1,13 @@
+diff --git a/crates/ratex-layout/src/engine.rs b/crates/ratex-layout/src/engine.rs
+index 797138e..ca907a0 100644
+--- a/crates/ratex-layout/src/engine.rs
++++ b/crates/ratex-layout/src/engine.rs
+@@ -3781,7 +3781,7 @@ fn layout_enclose(
+     let bg = background_color.and_then(|c| Color::from_name(c).or_else(|| Color::from_hex(c)));
+     let border = border_color
+         .and_then(|c| Color::from_name(c).or_else(|| Color::from_hex(c)))
+-        .unwrap_or(Color::BLACK);
++        .unwrap_or(options.color);
+ 
+     let inner = layout_node(body, options);
+     let outer_pad = padding + if has_border { border_thickness } else { 0.0 };

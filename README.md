@@ -67,7 +67,7 @@ Each further package registers itself in the same `UseArc(...)` call: `UseArcBlo
 
 ## What's inside
 
-All 26 packages are released together on one version; keep them on the same one.
+All 30 packages are released together on one version; keep them on the same one.
 
 ### Components
 
@@ -75,6 +75,7 @@ All 26 packages are released together on one version; keep them on the same one.
 |---|---|
 | `TKCode.Arc` | The components in Arc's 22 sidebar groups except `ChatThread`, plus layout panels and extras such as `Form`, `TreeSelect`, `PropertyGrid`, `Cascader` and `TransferBox`. No Markdown or highlighting dependency. |
 | `TKCode.Arc.Markdown` | `Markdown` (with streaming) and `ChatThread` / `ChatComposer`, rendered by StreamMark. Register with `UseArcMarkdown()`. |
+| `TKCode.Arc.StreamMark`, `.StreamMark.TextMate`, `.StreamMark.RaTeX`, `.StreamMark.Mermaid` | StreamMark, the streaming Markdown engine under `Markdown` and `ChatThread`, usable on its own with Avalonia alone: `MarkdownView`, `MarkdownStream` and the virtualizing `TranscriptView` (namespaces `StreamMark.*`), with optional TextMate highlighting, LaTeX math (RaTeX, native library bundled for Windows, macOS and Linux) and Mermaid diagrams. See [docs/streammark](docs/streammark/README.md). |
 | `TKCode.Arc.Highlighting` | TextMate syntax highlighting for `CodeBlock`, the rich text editor's code blocks and Markdown's fenced code; without it code is plain. Register with `UseArcHighlighting()`; set `ArcHighlightLanguages` (for example `csharp;json`) to keep only those grammars in a trimmed app. |
 | `TKCode.Arc.Blocks` | Page-level compositions grouped as on uiarc.dev (AI, Agents, auth, settings, commerce, marketing, support and more), and whole screens: dashboards, projects, calendars, people and customers, inbox and support, commerce. |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid` (range selection, inline editing, fill handle, clipboard, grouping, export), `Sunburst`, `SankeyFlow`, `FunnelChart`, `RadarChart`, `RealtimeStream`, `RaceBarChart` and `WindRoseChart`. |
@@ -120,7 +121,7 @@ migration notes.
 
 | | |
 |---|---|
-| **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal` targets `net10.0` and `net11.0`. |
+| **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal`, `TKCode.Arc.StreamMark.RaTeX` and `TKCode.Arc.StreamMark.Mermaid` target `net10.0` and `net11.0`. |
 | **Avalonia** | Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
 | **Desktop** | Windows, macOS and Linux. |
 | **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
@@ -133,7 +134,7 @@ migration notes.
 | `src/` | The libraries above and their source generators. `TKCode.Arc.A2UI`, an A2UI 1.0 renderer, is in development and not yet on NuGet. |
 | `tests/` | Unit, headless Avalonia and generator snapshot tests, with token and preset baselines. |
 | `templates/` | The source of `TKCode.Arc.Templates`. |
-| `native/` | Native shims and libraries for the terminal, audio and video. |
+| `native/` | Native shims and libraries for the terminal, audio and video, and the pinned RaTeX engine for StreamMark's math. |
 | `tools/` | Generators and scripts for icons, native libraries, templates, docs screenshots and packaging. |
 | `design/` | The design notes and decisions, starting at `design/overview.md`. |
 

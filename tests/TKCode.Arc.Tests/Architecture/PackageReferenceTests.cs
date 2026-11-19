@@ -15,8 +15,14 @@ public class PackageReferenceTests
         ["TKCode.Arc.Core"] = ["TKCode.Arc.Foundation"],
         ["TKCode.Arc"] = ["TKCode.Arc.Core"],
         // ADR 0050: StreamMark, Markdig and TextMate come only through these two.
-        ["TKCode.Arc.Markdown"] = ["TKCode.Arc", "TKCode.StreamMark.Avalonia"],
-        ["TKCode.Arc.Highlighting"] = ["TKCode.Arc", "TKCode.StreamMark.Highlighting.TextMate"],
+        ["TKCode.Arc.Markdown"] = ["TKCode.Arc", "TKCode.Arc.StreamMark"],
+        ["TKCode.Arc.Highlighting"] = ["TKCode.Arc", "TKCode.Arc.StreamMark.TextMate"],
+        // StreamMark: a standalone library on Avalonia and Markdig; its plugins bring TextMate, RaTeX and Mermaid on their own.
+        ["TKCode.Arc.StreamMark"] = ["Avalonia", "Markdig"],
+        ["TKCode.Arc.StreamMark.TextMate"] = ["TextMateSharp", "TextMateSharp.Grammars", "TKCode.Arc.StreamMark"],
+        ["TKCode.Arc.StreamMark.RaTeX"] = ["Avalonia", "TKCode.Arc.StreamMark"],
+        ["TKCode.Arc.StreamMark.Mermaid"] = ["Avalonia", "Avalonia.Skia", "Mermaider", "ShimSkiaSharp", "Svg.Animation", "Svg.Custom",
+            "Svg.Model", "Svg.SceneGraph", "Svg.Skia", "TKCode.Arc.StreamMark"],
         ["TKCode.Arc.Icons.Lucide"] = ["TKCode.Arc.Core"],
         ["TKCode.Arc.Icons.Lucide.Generators"] = ["Microsoft.CodeAnalysis.Analyzers", "Microsoft.CodeAnalysis.CSharp"],
         ["TKCode.Arc.Fonts"] = ["Avalonia", "TKCode.Arc.Foundation"],

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.StreamMark</AssemblyName>
+        <!-- A standalone library published with Arc (like TKCode.Arc.Terminal): it keeps its StreamMark.* namespaces
+             (Core/ = StreamMark.Core.*, Avalonia/ = StreamMark.Avalonia.*) and needs no UseArc entry. -->
+        <RootNamespace>StreamMark</RootNamespace>
+        <PackageId>TKCode.Arc.StreamMark</PackageId>
+        <Description>StreamMark: streaming Markdown rendering for Avalonia, built for AI chat. The core (append-only source buffer, incomplete-markdown repair, segmenter, block model, pacing) and the self-drawn controls (MarkdownView, MarkdownStream, the virtualizing TranscriptView, selection). NativeAOT safe, no WebView. Code highlighting, math and diagrams are the optional TKCode.Arc.StreamMark.TextMate, .RaTeX and .Mermaid plugins.</Description>
+        <PackageTags>$(PackageTags);markdown;streaming;streammark;ai;chat</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <PackageReference Include="Markdig" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.StreamMark.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.StreamMark.Benchmarks" />
+    </ItemGroup>
+</Project>

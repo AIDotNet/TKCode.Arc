@@ -10,7 +10,7 @@
     </PropertyGroup>
     <ItemGroup>
         <!-- TextMateSharp, its grammars and the native Oniguruma (Onigwrap) come with StreamMark's TextMate package (ADR 0011). -->
-        <PackageReference Include="TKCode.StreamMark.Highlighting.TextMate" />
+        <ProjectReference Include="../TKCode.Arc.StreamMark.TextMate/TKCode.Arc.StreamMark.TextMate.csproj" />
         <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
     </ItemGroup>
     <ItemGroup>

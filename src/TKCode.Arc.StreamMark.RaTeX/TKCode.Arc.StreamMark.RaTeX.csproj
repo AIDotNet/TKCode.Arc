@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.StreamMark.RaTeX</AssemblyName>
+        <RootNamespace>StreamMark.RaTeX</RootNamespace>
+        <PackageId>TKCode.Arc.StreamMark.RaTeX</PackageId>
+        <Description>LaTeX math for StreamMark through the RaTeX native engine (KaTeX-compatible layout). The native library ships under runtimes/&lt;rid&gt;/native for Windows, macOS and Linux (x64, arm64); the KaTeX fonts are embedded.</Description>
+        <PackageTags>$(PackageTags);markdown;streammark;latex;math;katex</PackageTags>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <ProjectReference Include="../TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- KaTeX fonts (SIL OFL 1.1, from the pinned RaTeX commit), loaded by the font names in the display list. -->
+        <EmbeddedResource Include="Fonts/*.ttf" LogicalName="StreamMark.RaTeX.Fonts.%(Filename)%(Extension)" />
+        <None Include="Fonts/*.txt" Pack="true" PackagePath="licenses/" Visible="false" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.StreamMark.Tests" />
+    </ItemGroup>
+    <!-- libratex_ffi per RID. The binaries are not committed: tools/streammark/build-ratex.sh builds them into
+         artifacts/native/<rid> and tools/streammark/sync-native.sh copies them in. Apps pick them up through deps.json;
+         repository projects that run RaTeX set ArcStreamMarkNative=true (build/Arc.Repository.targets). -->
+    <ItemGroup>
+        <None Include="runtimes/**" Pack="true" PackagePath="runtimes/" Visible="false" />
+    </ItemGroup>
+    <Target Name="WarnMissingRaTeXNative" BeforeTargets="Pack">
+        <ItemGroup>
+            <_RaTeXNative Include="$(MSBuildProjectDirectory)/runtimes/*/native/*" />
+        </ItemGroup>
+        <Warning Condition="'@(_RaTeXNative)' == ''" Text="No libratex_ffi under runtimes/&lt;rid&gt;/native: the package would ship without the native library. Run tools/streammark/sync-native.sh." />
+    </Target>
+</Project>

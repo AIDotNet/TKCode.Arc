@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- Streaming CPU measurement in a real window (NativeAOT publish, then run; tools/streammark/cpu-bench.sh). -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>StreamMark.CpuHarness</RootNamespace>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <PublishAot>true</PublishAot>
+        <!-- Keep symbols for sample / perf call stacks. -->
+        <StripSymbols>false</StripSymbols>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark.TextMate/TKCode.Arc.StreamMark.TextMate.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Samples/chat.md" LogicalName="chat.md" />
+    </ItemGroup>
+</Project>

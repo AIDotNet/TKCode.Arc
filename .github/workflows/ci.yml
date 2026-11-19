@@ -2,6 +2,7 @@ name: CI
 
 # verify:  every test project, one job each (Linux), on pushes to main and on pull requests; macOS is ci-macos.yml.
 # templates: creates, builds and starts every dotnet new template case (pushes to main, pull requests).
+# streammark: StreamMark's tests and NativeAOT smoke test, with the RaTeX native library built first (Linux, Windows).
 # pack:    packs every TKCode.Arc package (the id lists below) (v* tag, or a manual run).
 # nuget:   pushes them to nuget.org (v* tag, or a manual run with "publish" on).
 #
@@ -124,6 +125,67 @@ jobs:
 
       - name: Create, build and start every template case
         run: python3 tools/templates/verify_templates.py
+
+  # StreamMark (src/TKCode.Arc.StreamMark*): its tests need libratex_ffi, so they are not in the verify matrix. Builds the
+  # library for the runner from the commit pinned in native/ratex/ratex-upstream.json, runs the tests, then publishes the
+  # StreamMark Gallery with NativeAOT (zero IL warnings) and runs its smoke test. macOS: ci-macos.yml.
+  streammark:
+    name: StreamMark (${{ matrix.os }})
+    if: github.event_name != 'workflow_dispatch' && !startsWith(github.ref, 'refs/tags/')
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { os: ubuntu-latest, rid: linux-x64 }
+          - { os: windows-latest, rid: win-x64 }
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Build libratex_ffi (Unix)
+        if: runner.os != 'Windows'
+        run: tools/streammark/build-ratex.sh
+
+      - name: Build libratex_ffi (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: tools/streammark/build-ratex.ps1 -Rid ${{ matrix.rid }}
+
+      - name: Test
+        run: dotnet test tests/TKCode.Arc.StreamMark.Tests
+        env:
+          STREAMMARK_SNAPSHOT_DIR: ${{ github.workspace }}/artifacts/snapshots
+
+      - name: NativeAOT publish (zero IL warnings)
+        run: |
+          dotnet publish tools/streammark/Gallery -c Release -r ${{ matrix.rid }} -o artifacts/streammark-aot 2>&1 | tee publish.log
+          if grep -E "warning IL[0-9]+" publish.log; then
+            echo "::error::NativeAOT publish of the StreamMark Gallery produced IL warnings"
+            exit 1
+          fi
+
+      - name: Smoke
+        run: ./artifacts/streammark-aot/TKCode.Arc.StreamMark.Gallery --smoke
+
+      - uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: streammark-snapshots-${{ matrix.rid }}
+          path: artifacts/snapshots/
+          if-no-files-found: ignore
+          retention-days: 7
 
   # Windows paths use '\', which once switched the library defaults off there without a build error (#31). Build only:
   # check that every project under src/ still counts as a library, then that it wrote its XML documentation.
@@ -354,7 +416,9 @@ jobs:
   # the Zig in native/toolchain.json. Linux cross-compiles the Linux, Windows and Android targets (Android with the NDK
   # pinned in native/toolchain.json); the macOS and iOS targets need the Apple SDK (iOS: one xcframework for devices and the
   # simulator). TKCode.Arc.Terminal ships the results under runtimes/<rid>/native and runtimes/ios/native. The same job builds the miniaudio shim of
-  # TKCode.Arc.Audio.Native (native/miniaudio, pinned in miniaudio-upstream.json) with the same Zig and RID split.
+  # TKCode.Arc.Audio.Native (native/miniaudio, pinned in miniaudio-upstream.json) with the same Zig and RID split, and
+  # libratex_ffi of TKCode.Arc.StreamMark.RaTeX (native/ratex, pinned in ratex-upstream.json): cargo on macOS,
+  # cargo-zigbuild on Linux for the Linux (glibc 2.28) and Windows targets.
   native:
     name: Native (${{ matrix.host }})
     if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
@@ -411,6 +475,17 @@ jobs:
       - name: Build the miniaudio shim
         run: for rid in ${{ matrix.rids }}; do tools/audio/build-miniaudio.sh "$rid"; done
 
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.host == 'linux' && 'x86_64-unknown-linux-gnu,aarch64-unknown-linux-gnu,x86_64-pc-windows-gnu,aarch64-pc-windows-gnullvm' || 'aarch64-apple-darwin,x86_64-apple-darwin' }}
+
+      - name: Install cargo-zigbuild
+        if: matrix.host == 'linux'
+        run: cargo install cargo-zigbuild --locked
+
+      - name: Build libratex_ffi
+        run: for rid in ${{ matrix.rids }}; do tools/streammark/build-ratex.sh "$rid"; done
+
       - name: Build the video shim
         run: |
           for rid in ${{ matrix.rids }}; do
@@ -441,6 +516,8 @@ jobs:
             artifacts/native/*/*tkcode_audio.*
             artifacts/native/*/miniaudio-version.txt
             artifacts/native/*/*tkcode_video.*
+            artifacts/native/*/*ratex_ffi.*
+            artifacts/native/*/ratex-commit.txt
           if-no-files-found: error
           retention-days: 7
 
@@ -499,12 +576,14 @@ jobs:
           path: artifacts/native
           merge-multiple: true
 
-      # artifacts/native/<rid>/ -> runtimes/<rid>/native/ of TKCode.Arc.Terminal, TKCode.Arc.Audio.Native and TKCode.Arc.Video.Native
+      # artifacts/native/<rid>/ -> runtimes/<rid>/native/ of TKCode.Arc.Terminal, TKCode.Arc.Audio.Native, TKCode.Arc.Video.Native
+      # and TKCode.Arc.StreamMark.RaTeX
       - name: Stage the native libraries
         run: |
           tools/terminal/sync-native.sh
           tools/audio/sync-native.sh
           tools/video/sync-native.sh
+          tools/streammark/sync-native.sh
           tools/pdf/sync-native.sh
           tools/pdf/sync-pdfjs.sh
 
@@ -529,7 +608,7 @@ jobs:
           # The controls of the 3D engine are built on this release of TKCode.Arc.
           unzip -p "artifacts/nupkg/TKCode.Arc.Graphics3D.Controls.$VERSION.nupkg" '*.nuspec' | grep -q "id=\"TKCode.Arc\" version=\"$VERSION\"" \
             || { echo "::error::TKCode.Arc.Graphics3D.Controls does not reference TKCode.Arc $VERSION"; exit 1; }
-          for id in TKCode.Arc TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Ribbon TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser; do
+          for id in TKCode.Arc TKCode.Arc.StreamMark TKCode.Arc.StreamMark.TextMate TKCode.Arc.StreamMark.RaTeX TKCode.Arc.StreamMark.Mermaid TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Ribbon TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser; do
             for ext in nupkg snupkg; do
               file="artifacts/nupkg/$id.$VERSION.$ext"
               if [[ ! -f "$file" ]]; then
@@ -557,6 +636,14 @@ jobs:
                        runtimes/ios/native/ghostty-vt.xcframework/ios-arm64/ghostty-vt.framework/ghostty-vt \
                        runtimes/ios/native/ghostty-vt.xcframework/ios-arm64_x86_64-simulator/ghostty-vt.framework/ghostty-vt; do
             unzip -l "$terminal" | grep -q " $entry\$" || { echo "::error::$terminal lacks $entry"; exit 1; }
+          done
+          # TKCode.Arc.StreamMark.RaTeX must carry libratex_ffi for every desktop RID, and the KaTeX font license.
+          ratex="artifacts/nupkg/TKCode.Arc.StreamMark.RaTeX.$VERSION.nupkg"
+          for entry in runtimes/linux-x64/native/libratex_ffi.so runtimes/linux-arm64/native/libratex_ffi.so \
+                       runtimes/win-x64/native/ratex_ffi.dll runtimes/win-arm64/native/ratex_ffi.dll \
+                       runtimes/osx-x64/native/libratex_ffi.dylib runtimes/osx-arm64/native/libratex_ffi.dylib \
+                       licenses/SIL-OFL-1.1.txt; do
+            unzip -l "$ratex" | grep -q " $entry\$" || { echo "::error::$ratex lacks $entry"; exit 1; }
           done
           # TKCode.Arc.Audio.Native must carry the miniaudio shim for every RID.
           audio="artifacts/nupkg/TKCode.Arc.Audio.Native.$VERSION.nupkg"
@@ -637,12 +724,12 @@ jobs:
         with:
           user: ${{ secrets.NUGET_USER }}
 
-      # The matching .snupkg next to each .nupkg is pushed too. Foundation goes first (Core depends on it), then Core, the packages that depend on it after (TKCode.Arc before Markdown and Highlighting, those two before Blocks, AdvancedCharts and Special; TKCode.Arc.Audio before Blocks and its backends). The templates go last: they reference the others by version.
+      # The matching .snupkg next to each .nupkg is pushed too. StreamMark goes first (Markdown and Highlighting depend on it; it depends on no Arc package), then Foundation (Core depends on it), then Core, the packages that depend on it after (TKCode.Arc before Markdown and Highlighting, those two before Blocks, AdvancedCharts and Special; TKCode.Arc.Audio before Blocks and its backends). The templates go last: they reference the others by version.
       - name: Push
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          for id in TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Ribbon TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
+          for id in TKCode.Arc.StreamMark TKCode.Arc.StreamMark.TextMate TKCode.Arc.StreamMark.RaTeX TKCode.Arc.StreamMark.Mermaid TKCode.Arc.Foundation TKCode.Arc.Core TKCode.Arc.Fonts TKCode.Arc.Icons.Lucide TKCode.Arc.Audio TKCode.Arc.Audio.Native TKCode.Arc.Audio.Browser TKCode.Arc TKCode.Arc.Markdown TKCode.Arc.Highlighting TKCode.Arc.Pdf TKCode.Arc.Pdf.Native TKCode.Arc.Pdf.Browser TKCode.Arc.Video TKCode.Arc.Video.Native TKCode.Arc.Video.Browser TKCode.Arc.Graphics3D TKCode.Arc.Graphics3D.WebGpu TKCode.Arc.Graphics3D.Controls TKCode.Arc.Graphics3D.Browser TKCode.Arc.Blocks TKCode.Arc.AdvancedCharts TKCode.Arc.Special TKCode.Arc.Terminal TKCode.Arc.Workflow TKCode.Arc.Dock TKCode.Arc.Ribbon TKCode.Arc.Themes.Pixel TKCode.Arc.Themes.Corners TKCode.Arc.Mobile TKCode.Arc.Templates; do
             dotnet nuget push "nupkg/$id.${{ needs.pack.outputs.version }}.nupkg" \
               --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
           done
