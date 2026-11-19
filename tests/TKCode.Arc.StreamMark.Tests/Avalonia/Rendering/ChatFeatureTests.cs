@@ -165,7 +165,7 @@ public sealed class ChatFeatureTests
             view.Panel.ApplyLatest();
             await HeadlessApp.Settle();
             Assert.Equal(1, view.Panel.RowCount);
-            var block = view.Panel.Children.OfType<CodeBlockView>().Single();
+            var block = view.Panel.RowViews.OfType<CodeBlockView>().Single();
             Assert.True(block.IsCollapsed);
 
             block.ToggleExpanded();
@@ -202,7 +202,7 @@ public sealed class ChatFeatureTests
             await stream.Document.WhenIdle();
             view.Panel.ApplyLatest();
             await HeadlessApp.Settle();
-            Assert.False(view.Panel.Children.OfType<CodeBlockView>().Single().IsCollapsed);
+            Assert.False(view.Panel.RowViews.OfType<CodeBlockView>().Single().IsCollapsed);
             window.Close();
         });
     }

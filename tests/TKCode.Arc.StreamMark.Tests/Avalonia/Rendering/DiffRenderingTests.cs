@@ -133,7 +133,7 @@ public sealed class DiffRenderingTests
             await stream.Document.WhenIdle();
             view.Panel.ApplyLatest();
             await HeadlessApp.Settle();
-            var diff = view.Panel.Children.OfType<DiffBlockView>().Single();
+            var diff = view.Panel.RowViews.OfType<DiffBlockView>().Single();
             Assert.Equal(2, diff.Document.Files.Length);
             diff.Mode = DiffViewMode.Split;
             stream.Push("```\n\n" + string.Concat(Enumerable.Range(0, 80).Select(i => $"Paragraph {i}.\n\n")));
@@ -143,10 +143,10 @@ public sealed class DiffRenderingTests
             await HeadlessApp.Settle();
             view.ScrollToEnd();
             await HeadlessApp.Settle();
-            Assert.Empty(view.Panel.Children.OfType<DiffBlockView>());
+            Assert.Empty(view.Panel.RowViews.OfType<DiffBlockView>());
             view.Offset = new(0, 0);
             await HeadlessApp.Settle();
-            Assert.Equal(DiffViewMode.Split, view.Panel.Children.OfType<DiffBlockView>().Single().Mode);
+            Assert.Equal(DiffViewMode.Split, view.Panel.RowViews.OfType<DiffBlockView>().Single().Mode);
             window.Close();
         });
     }

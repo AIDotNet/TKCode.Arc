@@ -6,15 +6,17 @@ from 1.0.0 on, breaking API changes come only with a new major version. Earlier 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1), `TKCode.Arc.Ribbon` (from 1.2.0), `TKCode.Arc.StreamMark`, `TKCode.Arc.StreamMark.TextMate`, `TKCode.Arc.StreamMark.RaTeX` and `TKCode.Arc.StreamMark.Mermaid` (from 1.3.0-preview.1).
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1), `TKCode.Arc.Ribbon` (from 1.2.0), `TKCode.Arc.StreamMark`, `TKCode.Arc.StreamMark.TextMate`, `TKCode.Arc.StreamMark.RaTeX` and `TKCode.Arc.StreamMark.Mermaid` (from 1.3.0-preview.2).
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## 1.3.0-preview.1 - 2026-11-19
+## 1.3.0-preview.2 - 2026-11-19
 
-The first preview of 1.3 brings StreamMark, the streaming Markdown engine under `Markdown` and `ChatThread`, into
-this repository as four new packages, and updates Markdig, TextMateSharp and Mermaider. Nothing changes in the API of
-the other packages. Install it with `--version 1.3.0-preview.1` (or `--prerelease`).
+The first published preview of 1.3 (1.3.0-preview.1 was tagged but never published: its StreamMark lacked two
+performance changes of StreamMark 0.1.2, so the release was stopped before packing). It brings StreamMark, the
+streaming Markdown engine under `Markdown` and `ChatThread`, into this repository as four new packages, and updates
+Markdig, TextMateSharp and Mermaider. Nothing changes in the API of the other packages. Install it with
+`--version 1.3.0-preview.2` (or `--prerelease`).
 
 ### StreamMark moves into this repository
 
