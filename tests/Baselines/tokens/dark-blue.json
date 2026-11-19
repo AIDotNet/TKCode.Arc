@@ -6693,6 +6693,10 @@
       "UpdateMargin": "0,0,0,14",
       "UptimeColumnWidth": "60"
     },
+    "QuickAccessToolBar": {
+      "ItemSpacing": "2",
+      "Padding": "2,2,2,2"
+    },
     "RaceBarChart": {
       "AxisHeight": "26",
       "BarGap": "6",
@@ -7142,6 +7146,66 @@
       "TipFiguresMargin": "0,10,0,0",
       "TipPadding": "12,10,12,10",
       "TipWidth": "216"
+    },
+    "Ribbon": {
+      "ContentPadding": "0,4,0,4",
+      "IndicatorThickness": "2",
+      "TabFocusRingMargin": "0,0,0,0",
+      "TabFontSize": "13",
+      "TabGap": "2",
+      "TabHeight": "28",
+      "TabPadding": "12,0,12,0",
+      "TabRowHeight": "36",
+      "TabRowPadding": "8,0,8,0"
+    },
+    "RibbonButton": {
+      "BorderThickness": "1,1,1,1",
+      "DisabledOpacity": "0.4",
+      "FocusRingMargin": "-2,-2,-2,-2",
+      "FontSize": "12",
+      "LabelMargin": "6,0,0,0",
+      "LargeIconSize": "24",
+      "LargeLabelMargin": "0,4,0,0",
+      "LargeMinWidth": "44",
+      "LargePadding": "6,6,6,4",
+      "MediumPadding": "6,0,8,0",
+      "PressedBackground": "#FF404040",
+      "RowHeight": "24",
+      "SmallIconSize": "16",
+      "SmallPadding": "4,0,4,0"
+    },
+    "RibbonDropDownButton": {
+      "ChevronMargin": "2,0,0,0",
+      "ChevronSize": "12",
+      "MenuGap": "4"
+    },
+    "RibbonGroup": {
+      "ColumnSpacing": "2",
+      "ContentHeight": "78",
+      "DropDownPadding": "6,6,6,2",
+      "HeaderFontSize": "11",
+      "HeaderHeight": "20",
+      "HeaderMargin": "0,4,0,0",
+      "LauncherGlyphSize": "12",
+      "Padding": "4,4,4,0",
+      "SeparatorThickness": "0,0,1,0"
+    },
+    "RibbonSeparator": {
+      "LineMargin": "4,6,4,6",
+      "LineWidth": "1"
+    },
+    "RibbonSplitButton": {
+      "DividerThickness": "1,0,0,0",
+      "LargeDividerThickness": "0,1,0,0",
+      "MenuPartWidth": "20",
+      "PartHoverBackground": "#FF373737"
+    },
+    "RibbonTab": {
+      "GroupSpacing": "0",
+      "Padding": "4,0,4,0"
+    },
+    "RibbonToggleButton": {
+      "CheckedBorderThickness": "1,1,1,1"
     },
     "RichTextEditor": {
       "FillBlue": "#FF274367",

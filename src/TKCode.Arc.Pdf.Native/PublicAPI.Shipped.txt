@@ -1,3 +1,5 @@
 #nullable enable
 TKCode.Arc.ArcPdfNative
+TKCode.Arc.ArcPdfNativeBuilderExtensions
 static TKCode.Arc.ArcPdfNative.Use() -> bool
+static TKCode.Arc.ArcPdfNativeBuilderExtensions.UseArcPdfNative(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

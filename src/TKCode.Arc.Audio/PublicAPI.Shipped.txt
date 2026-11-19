@@ -81,6 +81,7 @@ override TKCode.Arc.SimulatedAudioPlayer.Position.get -> System.TimeSpan
 override TKCode.Arc.SimulatedAudioPlayer.Seek(System.TimeSpan position) -> void
 static TKCode.Arc.ArcAudio.Backend.get -> TKCode.Arc.IAudioBackend!
 static TKCode.Arc.ArcAudio.Backend.set -> void
+static TKCode.Arc.ArcAudio.BackendChanged -> System.EventHandler?
 static TKCode.Arc.ArcAudio.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
 static TKCode.Arc.AudioSource.FromBytes(System.ReadOnlyMemory<byte> data, string! mediaType = "audio/wav") -> TKCode.Arc.AudioSource!
 static TKCode.Arc.AudioSource.FromFile(string! path) -> TKCode.Arc.AudioSource!

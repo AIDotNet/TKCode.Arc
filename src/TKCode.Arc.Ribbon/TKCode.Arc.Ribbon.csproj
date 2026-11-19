@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Ribbon</AssemblyName>
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Ribbon</PackageId>
+        <Description>Office-style ribbon for TKCode.Arc: tabs over grouped commands (large, medium and small buttons, toggle, drop-down and split buttons), groups that shrink step by step and collapse into drop-downs as the window narrows, a collapsible ribbon and a quick access toolbar.</Description>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
+    </ItemGroup>
+</Project>

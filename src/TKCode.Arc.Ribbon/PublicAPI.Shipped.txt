@@ -1,0 +1,370 @@
+#nullable enable
+TKCode.Arc.ArcRibbonBuilderExtensions
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind.ItemSpacing = 0 -> TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind.Padding = 1 -> TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension.QuickAccessToolBarTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokenResourceExtension.QuickAccessToolBarTokenResourceExtension(TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind kind) -> void
+TKCode.Arc.DesignTokens.QuickAccessToolBarTokens
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.BorderThickness = 10 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.DisabledOpacity = 12 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.FocusRingMargin = 13 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.FontSize = 0 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.LabelMargin = 8 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.LargeIconSize = 1 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.LargeLabelMargin = 9 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.LargeMinWidth = 4 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.LargePadding = 5 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.MediumPadding = 6 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.PressedBackground = 11 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.RowHeight = 3 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.SmallIconSize = 2 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenKind.SmallPadding = 7 -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension.RibbonButtonTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonButtonTokenResourceExtension.RibbonButtonTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonButtonTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonButtonTokens
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind.ChevronMargin = 1 -> TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind.ChevronSize = 0 -> TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind.MenuGap = 2 -> TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension.RibbonDropDownButtonTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenResourceExtension.RibbonDropDownButtonTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonDropDownButtonTokens
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.ColumnSpacing = 1 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.ContentHeight = 0 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.DropDownPadding = 7 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.HeaderFontSize = 4 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.HeaderHeight = 3 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.HeaderMargin = 5 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.LauncherGlyphSize = 8 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.Padding = 2 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenKind.SeparatorThickness = 6 -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonGroupTokenKind
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension.RibbonGroupTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonGroupTokenResourceExtension.RibbonGroupTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonGroupTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonGroupTokens
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind.LineMargin = 1 -> TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind.LineWidth = 0 -> TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension.RibbonSeparatorTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonSeparatorTokenResourceExtension.RibbonSeparatorTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonSeparatorTokens
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind.DividerThickness = 0 -> TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind.LargeDividerThickness = 1 -> TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind.MenuPartWidth = 2 -> TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind.PartHoverBackground = 3 -> TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension.RibbonSplitButtonTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokenResourceExtension.RibbonSplitButtonTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonSplitButtonTokens
+TKCode.Arc.DesignTokens.RibbonTabTokenKind
+TKCode.Arc.DesignTokens.RibbonTabTokenKind.GroupSpacing = 0 -> TKCode.Arc.DesignTokens.RibbonTabTokenKind
+TKCode.Arc.DesignTokens.RibbonTabTokenKind.Padding = 1 -> TKCode.Arc.DesignTokens.RibbonTabTokenKind
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonTabTokenKind
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension.RibbonTabTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonTabTokenResourceExtension.RibbonTabTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonTabTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonTabTokens
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind.CheckedBorderThickness = 0 -> TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension.RibbonToggleButtonTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokenResourceExtension.RibbonToggleButtonTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonToggleButtonTokens
+TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.ContentPadding = 8 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.IndicatorThickness = 6 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabFocusRingMargin = 7 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabFontSize = 5 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabGap = 4 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabHeight = 2 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabPadding = 3 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabRowHeight = 0 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenKind.TabRowPadding = 1 -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.RibbonTokenKind
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension.RibbonTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.RibbonTokenResourceExtension.RibbonTokenResourceExtension(TKCode.Arc.DesignTokens.RibbonTokenKind kind) -> void
+TKCode.Arc.DesignTokens.RibbonTokens
+TKCode.Arc.Localization.RibbonLangResourceExtension
+TKCode.Arc.Localization.RibbonLangResourceExtension.Kind.get -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.RibbonLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.RibbonLangResourceExtension.RibbonLangResourceExtension() -> void
+TKCode.Arc.Localization.RibbonLangResourceExtension.RibbonLangResourceExtension(TKCode.Arc.Localization.RibbonLangResourceKind kind) -> void
+TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.AddToQuickAccess = 0 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.CollapseRibbon = 1 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.CustomizeQuickAccess = 2 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.ExpandRibbon = 3 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.GroupOptions = 4 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.QuickAccessToolBar = 5 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.RemoveFromQuickAccess = 6 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResourceKind.RibbonTabs = 7 -> TKCode.Arc.Localization.RibbonLangResourceKind
+TKCode.Arc.Localization.RibbonLangResources
+TKCode.Arc.QuickAccessToolBar
+TKCode.Arc.QuickAccessToolBar.IsCustomizeButtonVisible.get -> bool
+TKCode.Arc.QuickAccessToolBar.IsCustomizeButtonVisible.set -> void
+TKCode.Arc.QuickAccessToolBar.Items.get -> Avalonia.Collections.AvaloniaList<Avalonia.Controls.Control!>!
+TKCode.Arc.QuickAccessToolBar.Keys.get -> Avalonia.Collections.AvaloniaList<string!>!
+TKCode.Arc.QuickAccessToolBar.QuickAccessToolBar() -> void
+TKCode.Arc.QuickAccessToolBar.Ribbon.get -> TKCode.Arc.Ribbon?
+TKCode.Arc.QuickAccessToolBar.Ribbon.set -> void
+TKCode.Arc.Ribbon
+TKCode.Arc.Ribbon.IsMinimized.get -> bool
+TKCode.Arc.Ribbon.IsMinimized.set -> void
+TKCode.Arc.Ribbon.ItemInvoked -> System.EventHandler<TKCode.Arc.RibbonItemInvokedEventArgs!>?
+TKCode.Arc.Ribbon.LeftContent.get -> object?
+TKCode.Arc.Ribbon.LeftContent.set -> void
+TKCode.Arc.Ribbon.Ribbon() -> void
+TKCode.Arc.Ribbon.RightContent.get -> object?
+TKCode.Arc.Ribbon.RightContent.set -> void
+TKCode.Arc.Ribbon.SelectedIndex.get -> int
+TKCode.Arc.Ribbon.SelectedIndex.set -> void
+TKCode.Arc.Ribbon.SelectedTab.get -> TKCode.Arc.RibbonTab?
+TKCode.Arc.Ribbon.SelectedTab.set -> void
+TKCode.Arc.Ribbon.SelectionChanged -> System.EventHandler<TKCode.Arc.RibbonSelectionChangedEventArgs!>?
+TKCode.Arc.Ribbon.Tabs.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.RibbonTab!>!
+TKCode.Arc.RibbonButton
+TKCode.Arc.RibbonButton.Description.get -> string?
+TKCode.Arc.RibbonButton.Description.set -> void
+TKCode.Arc.RibbonButton.EffectiveSize.get -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonButton.Icon.get -> object?
+TKCode.Arc.RibbonButton.Icon.set -> void
+TKCode.Arc.RibbonButton.Label.get -> string?
+TKCode.Arc.RibbonButton.Label.set -> void
+TKCode.Arc.RibbonButton.MinSize.get -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonButton.MinSize.set -> void
+TKCode.Arc.RibbonButton.QuickAccessKey.get -> string?
+TKCode.Arc.RibbonButton.QuickAccessKey.set -> void
+TKCode.Arc.RibbonButton.RibbonButton() -> void
+TKCode.Arc.RibbonButton.Shortcut.get -> string?
+TKCode.Arc.RibbonButton.Shortcut.set -> void
+TKCode.Arc.RibbonButton.Size.get -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonButton.Size.set -> void
+TKCode.Arc.RibbonDropDownButton
+TKCode.Arc.RibbonDropDownButton.IsDropDownOpen.get -> bool
+TKCode.Arc.RibbonDropDownButton.IsDropDownOpen.set -> void
+TKCode.Arc.RibbonDropDownButton.ItemTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.RibbonDropDownButton.ItemTemplate.set -> void
+TKCode.Arc.RibbonDropDownButton.Items.get -> Avalonia.Controls.ItemCollection!
+TKCode.Arc.RibbonDropDownButton.ItemsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.RibbonDropDownButton.ItemsSource.set -> void
+TKCode.Arc.RibbonDropDownButton.Menu.get -> TKCode.Arc.MenuSurface!
+TKCode.Arc.RibbonDropDownButton.RibbonDropDownButton() -> void
+TKCode.Arc.RibbonGroup
+TKCode.Arc.RibbonGroup.CanCollapse.get -> bool
+TKCode.Arc.RibbonGroup.CanCollapse.set -> void
+TKCode.Arc.RibbonGroup.Header.get -> string?
+TKCode.Arc.RibbonGroup.Header.set -> void
+TKCode.Arc.RibbonGroup.Icon.get -> object?
+TKCode.Arc.RibbonGroup.Icon.set -> void
+TKCode.Arc.RibbonGroup.IsCollapsed.get -> bool
+TKCode.Arc.RibbonGroup.IsDropDownOpen.get -> bool
+TKCode.Arc.RibbonGroup.IsDropDownOpen.set -> void
+TKCode.Arc.RibbonGroup.IsLauncherVisible.get -> bool
+TKCode.Arc.RibbonGroup.IsLauncherVisible.set -> void
+TKCode.Arc.RibbonGroup.Items.get -> Avalonia.Collections.AvaloniaList<Avalonia.Controls.Control!>!
+TKCode.Arc.RibbonGroup.LauncherClick -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.RibbonGroup.LauncherCommand.get -> System.Windows.Input.ICommand?
+TKCode.Arc.RibbonGroup.LauncherCommand.set -> void
+TKCode.Arc.RibbonGroup.LauncherCommandParameter.get -> object?
+TKCode.Arc.RibbonGroup.LauncherCommandParameter.set -> void
+TKCode.Arc.RibbonGroup.ReductionPriority.get -> int
+TKCode.Arc.RibbonGroup.ReductionPriority.set -> void
+TKCode.Arc.RibbonGroup.RibbonGroup() -> void
+TKCode.Arc.RibbonItemInvokedEventArgs
+TKCode.Arc.RibbonItemInvokedEventArgs.Entry.get -> TKCode.Arc.MenuEntry?
+TKCode.Arc.RibbonItemInvokedEventArgs.Item.get -> Avalonia.Controls.Control!
+TKCode.Arc.RibbonItemInvokedEventArgs.RibbonItemInvokedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, Avalonia.Controls.Control! item, TKCode.Arc.MenuEntry? entry) -> void
+TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonItemSize.Large = 2 -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonItemSize.Medium = 1 -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonItemSize.Small = 0 -> TKCode.Arc.RibbonItemSize
+TKCode.Arc.RibbonSelectionChangedEventArgs
+TKCode.Arc.RibbonSelectionChangedEventArgs.NewItem.get -> TKCode.Arc.RibbonTab?
+TKCode.Arc.RibbonSelectionChangedEventArgs.OldItem.get -> TKCode.Arc.RibbonTab?
+TKCode.Arc.RibbonSelectionChangedEventArgs.RibbonSelectionChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.RibbonTab? oldItem, TKCode.Arc.RibbonTab? newItem) -> void
+TKCode.Arc.RibbonSeparator
+TKCode.Arc.RibbonSeparator.RibbonSeparator() -> void
+TKCode.Arc.RibbonSplitButton
+TKCode.Arc.RibbonSplitButton.RibbonSplitButton() -> void
+TKCode.Arc.RibbonTab
+TKCode.Arc.RibbonTab.Groups.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.RibbonGroup!>!
+TKCode.Arc.RibbonTab.Header.get -> string?
+TKCode.Arc.RibbonTab.Header.set -> void
+TKCode.Arc.RibbonTab.IsContextual.get -> bool
+TKCode.Arc.RibbonTab.IsContextual.set -> void
+TKCode.Arc.RibbonTab.IsSelected.get -> bool
+TKCode.Arc.RibbonTab.RibbonTab() -> void
+TKCode.Arc.RibbonToggleButton
+TKCode.Arc.RibbonToggleButton.IsChecked.get -> bool
+TKCode.Arc.RibbonToggleButton.IsChecked.set -> void
+TKCode.Arc.RibbonToggleButton.IsCheckedChanged -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.RibbonToggleButton.RibbonToggleButton() -> void
+const TKCode.Arc.DesignTokens.QuickAccessToolBarTokens.Identity = "QuickAccessToolBar" -> string!
+const TKCode.Arc.DesignTokens.RibbonButtonTokens.Identity = "RibbonButton" -> string!
+const TKCode.Arc.DesignTokens.RibbonDropDownButtonTokens.Identity = "RibbonDropDownButton" -> string!
+const TKCode.Arc.DesignTokens.RibbonGroupTokens.Identity = "RibbonGroup" -> string!
+const TKCode.Arc.DesignTokens.RibbonSeparatorTokens.Identity = "RibbonSeparator" -> string!
+const TKCode.Arc.DesignTokens.RibbonSplitButtonTokens.Identity = "RibbonSplitButton" -> string!
+const TKCode.Arc.DesignTokens.RibbonTabTokens.Identity = "RibbonTab" -> string!
+const TKCode.Arc.DesignTokens.RibbonToggleButtonTokens.Identity = "RibbonToggleButton" -> string!
+const TKCode.Arc.DesignTokens.RibbonTokens.Identity = "Ribbon" -> string!
+const TKCode.Arc.QuickAccessToolBar.CustomizeButtonPart = "PART_CustomizeButton" -> string!
+const TKCode.Arc.QuickAccessToolBar.ItemsPanelPart = "PART_ItemsPanel" -> string!
+const TKCode.Arc.Ribbon.ContentAreaPart = "PART_ContentArea" -> string!
+const TKCode.Arc.Ribbon.ContentSlotPart = "PART_ContentSlot" -> string!
+const TKCode.Arc.Ribbon.MinimizeButtonPart = "PART_MinimizeButton" -> string!
+const TKCode.Arc.Ribbon.MinimizedPseudoClass = ":minimized" -> string!
+const TKCode.Arc.Ribbon.OpenPseudoClass = ":open" -> string!
+const TKCode.Arc.Ribbon.SelectionIndicatorPart = "PART_SelectionIndicator" -> string!
+const TKCode.Arc.Ribbon.TabRowPart = "PART_TabRow" -> string!
+const TKCode.Arc.Ribbon.TabStripPart = "PART_TabStrip" -> string!
+const TKCode.Arc.RibbonButton.CheckedPseudoClass = ":checked" -> string!
+const TKCode.Arc.RibbonButton.DropDownPseudoClass = ":dropdown" -> string!
+const TKCode.Arc.RibbonButton.FramePart = "PART_Frame" -> string!
+const TKCode.Arc.RibbonButton.HasIconPseudoClass = ":has-icon" -> string!
+const TKCode.Arc.RibbonButton.LabelPart = "PART_Label" -> string!
+const TKCode.Arc.RibbonButton.LargePseudoClass = ":large" -> string!
+const TKCode.Arc.RibbonButton.MediumPseudoClass = ":medium" -> string!
+const TKCode.Arc.RibbonButton.OpenPseudoClass = ":open" -> string!
+const TKCode.Arc.RibbonButton.SmallPseudoClass = ":small" -> string!
+const TKCode.Arc.RibbonButton.SplitPseudoClass = ":split" -> string!
+const TKCode.Arc.RibbonGroup.CollapsedButtonPart = "PART_CollapsedButton" -> string!
+const TKCode.Arc.RibbonGroup.CollapsedPseudoClass = ":collapsed" -> string!
+const TKCode.Arc.RibbonGroup.ExpandedPart = "PART_Expanded" -> string!
+const TKCode.Arc.RibbonGroup.HeaderRowPart = "PART_HeaderRow" -> string!
+const TKCode.Arc.RibbonGroup.ItemsSlotPart = "PART_ItemsSlot" -> string!
+const TKCode.Arc.RibbonGroup.LauncherPart = "PART_Launcher" -> string!
+const TKCode.Arc.RibbonGroup.LayoutPart = "PART_Layout" -> string!
+const TKCode.Arc.RibbonGroup.OpenPseudoClass = ":open" -> string!
+const TKCode.Arc.RibbonSplitButton.MenuPart = "PART_MenuPart" -> string!
+const TKCode.Arc.RibbonTab.GroupsPanelPart = "PART_GroupsPanel" -> string!
+override TKCode.Arc.QuickAccessToolBar.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.QuickAccessToolBar.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.QuickAccessToolBar.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.QuickAccessToolBar.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Ribbon.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.Ribbon.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Ribbon.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Ribbon.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Ribbon.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RibbonButton.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.RibbonButton.MeasureCore(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.RibbonButton.MeasureOverride(Avalonia.Size availableSize) -> Avalonia.Size
+override TKCode.Arc.RibbonButton.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RibbonButton.OnClick() -> void
+override TKCode.Arc.RibbonButton.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.RibbonButton.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.RibbonButton.OnPointerEntered(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.RibbonButton.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RibbonButton.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.RibbonDropDownButton.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RibbonDropDownButton.OnClick() -> void
+override TKCode.Arc.RibbonDropDownButton.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RibbonDropDownButton.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.RibbonDropDownButton.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RibbonGroup.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RibbonGroup.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RibbonGroup.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.RibbonGroup.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RibbonSplitButton.ArrangeOverride(Avalonia.Size finalSize) -> Avalonia.Size
+override TKCode.Arc.RibbonSplitButton.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RibbonSplitButton.OnClick() -> void
+override TKCode.Arc.RibbonTab.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.RibbonTab.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RibbonToggleButton.OnClick() -> void
+override TKCode.Arc.RibbonToggleButton.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
+override TKCode.Arc.RibbonToggleButton.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+static TKCode.Arc.ArcRibbonBuilderExtensions.UseArcRibbon(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.DesignTokens.QuickAccessToolBarTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.QuickAccessToolBarTokens.Key(TKCode.Arc.DesignTokens.QuickAccessToolBarTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonButtonTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonButtonTokens.Key(TKCode.Arc.DesignTokens.RibbonButtonTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonDropDownButtonTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonDropDownButtonTokens.Key(TKCode.Arc.DesignTokens.RibbonDropDownButtonTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonGroupTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonGroupTokens.Key(TKCode.Arc.DesignTokens.RibbonGroupTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonSeparatorTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonSeparatorTokens.Key(TKCode.Arc.DesignTokens.RibbonSeparatorTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonSplitButtonTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonSplitButtonTokens.Key(TKCode.Arc.DesignTokens.RibbonSplitButtonTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonTabTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonTabTokens.Key(TKCode.Arc.DesignTokens.RibbonTabTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonToggleButtonTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonToggleButtonTokens.Key(TKCode.Arc.DesignTokens.RibbonToggleButtonTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.RibbonTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.RibbonTokens.Key(TKCode.Arc.DesignTokens.RibbonTokenKind kind) -> object!
+static TKCode.Arc.Localization.RibbonLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.RibbonLangResources.Format(TKCode.Arc.Localization.RibbonLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.RibbonLangResources.Get(TKCode.Arc.Localization.RibbonLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.RibbonLangResources.Index(TKCode.Arc.Localization.RibbonLangResourceKind kind) -> int
+static TKCode.Arc.Localization.RibbonLangResources.Key(TKCode.Arc.Localization.RibbonLangResourceKind kind) -> object!
+static readonly TKCode.Arc.QuickAccessToolBar.IsCustomizeButtonVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.QuickAccessToolBar.RibbonProperty -> Avalonia.StyledProperty<TKCode.Arc.Ribbon?>!
+static readonly TKCode.Arc.Ribbon.IsMinimizedProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Ribbon.ItemInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.RibbonItemInvokedEventArgs!>!
+static readonly TKCode.Arc.Ribbon.LeftContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Ribbon.RightContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Ribbon.SelectedIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Ribbon.SelectedTabProperty -> Avalonia.StyledProperty<TKCode.Arc.RibbonTab?>!
+static readonly TKCode.Arc.Ribbon.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.RibbonSelectionChangedEventArgs!>!
+static readonly TKCode.Arc.RibbonButton.DescriptionProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonButton.EffectiveSizeProperty -> Avalonia.DirectProperty<TKCode.Arc.RibbonButton!, TKCode.Arc.RibbonItemSize>!
+static readonly TKCode.Arc.RibbonButton.IconProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.RibbonButton.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonButton.MinSizeProperty -> Avalonia.StyledProperty<TKCode.Arc.RibbonItemSize>!
+static readonly TKCode.Arc.RibbonButton.QuickAccessKeyProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonButton.ShortcutProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonButton.SizeProperty -> Avalonia.StyledProperty<TKCode.Arc.RibbonItemSize>!
+static readonly TKCode.Arc.RibbonDropDownButton.IsDropDownOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RibbonDropDownButton.ItemTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.RibbonDropDownButton.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.RibbonGroup.CanCollapseProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RibbonGroup.HeaderProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonGroup.IconProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.RibbonGroup.IsCollapsedProperty -> Avalonia.DirectProperty<TKCode.Arc.RibbonGroup!, bool>!
+static readonly TKCode.Arc.RibbonGroup.IsDropDownOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RibbonGroup.IsLauncherVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RibbonGroup.LauncherClickEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.RibbonGroup.LauncherCommandParameterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.RibbonGroup.LauncherCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.RibbonGroup.ReductionPriorityProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.RibbonTab.HeaderProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.RibbonTab.IsContextualProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.RibbonTab.IsSelectedProperty -> Avalonia.DirectProperty<TKCode.Arc.RibbonTab!, bool>!
+static readonly TKCode.Arc.RibbonToggleButton.IsCheckedChangedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.RibbonToggleButton.IsCheckedProperty -> Avalonia.StyledProperty<bool>!

@@ -22,6 +22,7 @@ public static class TestAppBuilder
                          .UseArc(arc => arc.UseArcAdvancedCharts()
                                     .UseArcWorkflow()
                                     .UseArcDock()
+                                    .UseArcRibbon()
                                     .UseArcVideo()
                                     .UseArcPdf()
                                     .UseArcGraphics3D()

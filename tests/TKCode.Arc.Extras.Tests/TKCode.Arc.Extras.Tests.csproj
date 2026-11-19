@@ -1,5 +1,5 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <!-- AdvancedCharts, Dock, Workflow, Terminal, Video, Pdf and the Graphics3D controls in a headless app that enables only those packages (#145). -->
+    <!-- AdvancedCharts, Dock, Ribbon, Workflow, Terminal, Video, Pdf and the Graphics3D controls in a headless app that enables only those packages (#145). -->
     <PropertyGroup>
         <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
         <OutputType>Exe</OutputType>
@@ -16,6 +16,7 @@
         <PackageReference Include="Avalonia.Markup.Xaml.Loader" />
         <ProjectReference Include="../../src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
+        <ProjectReference Include="../../src/TKCode.Arc.Ribbon/TKCode.Arc.Ribbon.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Terminal/TKCode.Arc.Terminal.csproj" />
         <ProjectReference Include="../../src/TKCode.Arc.Video/TKCode.Arc.Video.csproj" />

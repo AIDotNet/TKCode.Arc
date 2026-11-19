@@ -1,4 +1,1 @@
 #nullable enable
-TKCode.Arc.Fonts.ArcFontsBuilderExtensions
-static TKCode.Arc.Fonts.ArcFontsBuilderExtensions.UseArcFonts(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
-static TKCode.Arc.Fonts.ArcFontsBuilderExtensions.UseArcPixelFonts(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.RibbonLangResourceKind">
+    <unit id="AddToQuickAccess">
+      <segment>
+        <source>Add to Quick Access Toolbar</source>
+        <target state="translated">添加到快速访问工具栏</target>
+      </segment>
+    </unit>
+    <unit id="CollapseRibbon">
+      <segment>
+        <source>Collapse the ribbon</source>
+        <target state="translated">折叠功能区</target>
+      </segment>
+    </unit>
+    <unit id="CustomizeQuickAccess">
+      <segment>
+        <source>Customize Quick Access Toolbar</source>
+        <target state="translated">自定义快速访问工具栏</target>
+      </segment>
+    </unit>
+    <unit id="ExpandRibbon">
+      <segment>
+        <source>Pin the ribbon</source>
+        <target state="translated">固定功能区</target>
+      </segment>
+    </unit>
+    <unit id="GroupOptions">
+      <segment>
+        <source>{0} options</source>
+        <target state="translated">{0}选项</target>
+      </segment>
+    </unit>
+    <unit id="QuickAccessToolBar">
+      <segment>
+        <source>Quick Access Toolbar</source>
+        <target state="translated">快速访问工具栏</target>
+      </segment>
+    </unit>
+    <unit id="RemoveFromQuickAccess">
+      <segment>
+        <source>Remove from Quick Access Toolbar</source>
+        <target state="translated">从快速访问工具栏删除</target>
+      </segment>
+    </unit>
+    <unit id="RibbonTabs">
+      <segment>
+        <source>Ribbon tabs</source>
+        <target state="translated">功能区选项卡</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

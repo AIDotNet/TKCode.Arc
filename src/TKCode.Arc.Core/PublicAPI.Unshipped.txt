@@ -1,6 +1,1 @@
 #nullable enable
-static TKCode.Arc.Primitives.ArcFormatting.Bytes(long bytes, System.Globalization.CultureInfo? culture = null) -> string!
-TKCode.Arc.ArcColor
-static TKCode.Arc.ArcColor.Lerp(Avalonia.Media.Color from, Avalonia.Media.Color to, double t) -> Avalonia.Media.Color
-static TKCode.Arc.ArcColor.LerpOklab(Avalonia.Media.Color from, Avalonia.Media.Color to, double t) -> Avalonia.Media.Color
-static TKCode.Arc.ArcColor.WithOpacity(Avalonia.Media.Color color, double opacity) -> Avalonia.Media.Color

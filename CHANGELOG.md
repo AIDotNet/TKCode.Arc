@@ -6,9 +6,59 @@ from 1.0.0 on, breaking API changes come only with a new major version. Earlier 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1).
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1), `TKCode.Arc.Ribbon` (from 1.2.0).
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
+
+## 1.2.0 - 2026-11-19
+
+The stable release of everything shipped in `1.2.0-preview.1` to `1.2.0-preview.6`, plus two changes that ship here for
+the first time: the new `TKCode.Arc.Ribbon` package, an Office-style ribbon for command-heavy desktop apps
+([#166](https://github.com/AIDotNet/TKCode.Arc/issues/166)), and Avalonia 12.1.6. The previews bring a richer
+`TerminalView` and the fixes of the architecture review ([#157](https://github.com/AIDotNet/TKCode.Arc/issues/157)),
+public API tracking for every package, field label customization, `CodeMagicMove`, `CelebrateButton`, `FeedbackMorph`
+and the `CodeReview` block, and the 3D engine with `Viewport3D` and `ModelViewer` as preview packages
+(`TKCode.Arc.Graphics3D*`, whose API stays preview-grade). No public API is removed or renamed. Install it without
+`--prerelease`. The notes of each preview, with every detail and issue link, follow below.
+
+### Upgrading from 1.1.1
+
+- Set every `TKCode.Arc*` package to `1.2.0`. The packages need Avalonia 12.1.6 or a later 12.x.
+- `TKCode.Arc.Special` no longer brings StreamMark, Markdig or TextMate, and `TKCode.Arc.Blocks` no longer brings
+  TextMate (since `1.2.0-preview.1`). An app that shows colored code in blocks or special components adds
+  `TKCode.Arc.Highlighting` and calls `UseArcHighlighting()` inside `UseArc(...)`.
+
+### Changed
+
+- Avalonia 12.1.6 (was 12.1.5): the repository builds and tests against it, and the packages ask for
+  `[12.1.6, 13.0.0)`. It brings browser clipboard and safe-area fixes and native resource leak fixes.
+
+### Added
+
+- **Ribbon** (new package `TKCode.Arc.Ribbon`, `UseArcRibbon()`; issue #166): `Ribbon` holds `RibbonTab`s, each tab
+  holds `RibbonGroup`s, each group holds commands. `RibbonButton` lays out an icon and a label as `Large` (icon over
+  label, the full height of the group), `Medium` (icon beside label, three to a column) or `Small` (icon alone);
+  `RibbonToggleButton` stays on or off (`IsChecked`, `IsCheckedChanged`); `RibbonDropDownButton` opens a menu of Arc
+  `MenuEntry` rows (inline, or `ItemsSource` / `ItemTemplate`); `RibbonSplitButton` runs its default action from the
+  icon and opens its menu from the chevron part; `RibbonSeparator` starts a new column; any other control stacks like a
+  medium command. Tooltips show the label with `Shortcut` and `Description`.
+  - Adaptive groups: when the ribbon is narrower than its groups they shrink one step at a time (large to medium, then
+    everything small, then the whole group collapses into a button that shows it in a drop-down). Each command stops
+    at its `MinSize`; steps that would not save room are skipped; a higher `ReductionPriority` shrinks first and equal
+    groups take turns from the right; `CanCollapse="False"` keeps a group expanded. The layout depends only on the width.
+    Groups can show a launcher button (`IsLauncherVisible`, `LauncherClick`, `LauncherCommand`).
+  - The ribbon: `SelectedIndex` / `SelectedTab` with `SelectionChanged`, an accent underline that glides between tabs,
+    contextual tabs (`IsContextual`, hidden and shown with `IsVisible`), `LeftContent` / `RightContent` for a File menu or
+    a search box, and `IsMinimized` (the end button, Ctrl+F1 or a double-click on a tab) to collapse it to its tab row;
+    a tab then opens its groups in a pop-up until a command runs. `ItemInvoked` reports every command the user runs,
+    with the menu row when it came from a menu.
+  - `QuickAccessToolBar`: its own small commands (`Items`) and the ribbon commands pinned by their `QuickAccessKey`
+    (`Keys`, an observable list to save and restore). Users pin and unpin commands from a command's context menu (also
+    Shift+F10) or the toolbar's customize menu; a pinned copy runs the ribbon command and follows its icon and state.
+    Place it in an `ArcWindow` title bar or above or below the ribbon, and link it with `Ribbon`.
+  - Keyboard: the tab row is one tab stop (arrows, Home, End), ArrowDown enters the groups, arrows move between commands,
+    Escape returns to the tab. Built-in text in en-US, zh-CN and zh-TW. AOT and trimming safe, no reflection.
+  - Gallery: a new "Ribbon" group with seven examples.
 
 ## 1.2.0-preview.6 - 2026-11-19
 
@@ -2319,6 +2369,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.2.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1...v1.2.0
 [1.2.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.5...v1.2.0-preview.6
 [1.2.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.4...v1.2.0-preview.5
 [1.2.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.3...v1.2.0-preview.4

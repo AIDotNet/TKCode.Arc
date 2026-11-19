@@ -262,6 +262,7 @@ override TKCode.Arc.SimulatedPdfDocument.PageCount.get -> int
 override TKCode.Arc.SimulatedPdfDocument.RenderAsync(TKCode.Arc.PageRenderRequest request, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.ValueTask<TKCode.Arc.PageImage?>
 static TKCode.Arc.ArcPdf.Backend.get -> TKCode.Arc.IPdfBackend!
 static TKCode.Arc.ArcPdf.Backend.set -> void
+static TKCode.Arc.ArcPdf.BackendChanged -> System.EventHandler?
 static TKCode.Arc.ArcPdfBuilderExtensions.UseArcPdf(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
 static TKCode.Arc.DesignTokens.PdfViewerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
 static TKCode.Arc.DesignTokens.PdfViewerTokens.Key(TKCode.Arc.DesignTokens.PdfViewerTokenKind kind) -> object!

@@ -1,0 +1,19 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RibbonTabTheme">
+    <ControlTheme x:Key="{x:Type arc:RibbonTab}" TargetType="arc:RibbonTab">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="True" />
+        <Setter Property="Padding" Value="{arc:RibbonTabTokenResource Padding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RibbonTab">
+                <!-- The tab fills the ribbon's command area; the groups decide among themselves how far to shrink. -->
+                <Border Padding="{TemplateBinding Padding}">
+                    <arc:RibbonGroupsPanel Name="PART_GroupsPanel" HorizontalAlignment="Left" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

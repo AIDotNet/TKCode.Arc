@@ -15,6 +15,7 @@
     <Project Path="src/TKCode.Arc.AdvancedCharts/TKCode.Arc.AdvancedCharts.csproj" />
     <Project Path="src/TKCode.Arc.Workflow/TKCode.Arc.Workflow.csproj" />
     <Project Path="src/TKCode.Arc.Dock/TKCode.Arc.Dock.csproj" />
+    <Project Path="src/TKCode.Arc.Ribbon/TKCode.Arc.Ribbon.csproj" />
     <Project Path="src/TKCode.Arc.A2UI/TKCode.Arc.A2UI.csproj" />
     <Project Path="src/TKCode.Arc.Pdf/TKCode.Arc.Pdf.csproj" />
     <Project Path="src/TKCode.Arc.Pdf.Native/TKCode.Arc.Pdf.Native.csproj" />

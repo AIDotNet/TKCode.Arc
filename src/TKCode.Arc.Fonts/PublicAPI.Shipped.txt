@@ -1,5 +1,6 @@
 #nullable enable
 TKCode.Arc.Fonts.ArcFontsAppBuilderExtensions
+TKCode.Arc.Fonts.ArcFontsBuilderExtensions
 TKCode.Arc.Fonts.ArcPixelFontCollection
 TKCode.Arc.Fonts.ArcPixelFontCollection.ArcPixelFontCollection() -> void
 TKCode.Arc.Fonts.GeistFontCollection
@@ -8,3 +9,5 @@ TKCode.Arc.Fonts.GeistMonoFontCollection
 TKCode.Arc.Fonts.GeistMonoFontCollection.GeistMonoFontCollection() -> void
 static TKCode.Arc.Fonts.ArcFontsAppBuilderExtensions.WithArcFonts(this Avalonia.AppBuilder! builder) -> Avalonia.AppBuilder!
 static TKCode.Arc.Fonts.ArcFontsAppBuilderExtensions.WithArcPixelFonts(this Avalonia.AppBuilder! builder) -> Avalonia.AppBuilder!
+static TKCode.Arc.Fonts.ArcFontsBuilderExtensions.UseArcFonts(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.Fonts.ArcFontsBuilderExtensions.UseArcPixelFonts(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

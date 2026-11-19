@@ -1,0 +1,214 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RibbonButtonTheme">
+    <!-- One theme for every ribbon command: RibbonToggleButton, RibbonDropDownButton and RibbonSplitButton use it through
+         their pseudo-classes (:checked, :dropdown, :split). Sizes switch with :large / :medium / :small; values that a state
+         changes are set in styles, not on the template elements, so the state styles can override them. -->
+    <ControlTheme x:Key="{x:Type arc:RibbonButton}" TargetType="arc:RibbonButton">
+        <!-- Arc draws its own focus ring; suppress the window's default focus adorner. -->
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderBrush" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="{arc:RibbonButtonTokenResource BorderThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep8}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:RibbonButtonTokenResource FontSize}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RibbonButton">
+                <!-- The focus ring is built by the button the first time it is keyboard focused. Layers, bottom to top: the
+                     fill, the menu part of a split button (its own fill and divider), the content (not hit-testable, so a press
+                     lands on the button or on the menu part), and the outline of a toggle that is on. -->
+                <Panel Name="PART_Root">
+                    <Border Name="PART_Frame"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}" />
+                    <Border Name="PART_MenuPartClip"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            ClipToBounds="True">
+                        <arc:RibbonSplitButtonPart Name="PART_MenuPart" />
+                    </Border>
+                    <Border Name="PART_Content"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}"
+                            IsHitTestVisible="False">
+                        <DockPanel Name="PART_Layout">
+                            <Panel Name="PART_IconSlot">
+                                <arc:ArcGlyph Name="PART_Glyph"
+                                              Data="{TemplateBinding IconGeometry}"
+                                              Foreground="{TemplateBinding Foreground}" />
+                                <ContentPresenter Name="PART_IconContent"
+                                                  Content="{TemplateBinding IconContent}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                            </Panel>
+                            <TextBlock Name="PART_Label"
+                                       Text="{TemplateBinding Label}"
+                                       TextTrimming="CharacterEllipsis" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                          Size="{arc:RibbonDropDownButtonTokenResource ChevronSize}"
+                                          Foreground="{TemplateBinding Foreground}" />
+                        </DockPanel>
+                    </Border>
+                    <Border Name="PART_CheckedOutline"
+                            BorderBrush="{arc:ArcDesignTokenResource Accent}"
+                            BorderThickness="{arc:RibbonToggleButtonTokenResource CheckedBorderThickness}"
+                            CornerRadius="{TemplateBinding CornerRadius}"
+                            IsHitTestVisible="False" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- Base values of the template parts (the state styles below override them). -->
+        <!-- The chevron is the DockPanel's last child and takes the rest: after the label, or under it on a large button. -->
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="{arc:RibbonDropDownButtonTokenResource ChevronMargin}" />
+        </Style>
+        <Style Selector="^ /template/ Panel#PART_IconSlot">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Size" Value="{arc:RibbonButtonTokenResource SmallIconSize}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock#PART_Label">
+            <Setter Property="DockPanel.Dock" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_CheckedOutline">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ Border#PART_MenuPartClip">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^ /template/ arc|RibbonSplitButtonPart#PART_MenuPart">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="{arc:RibbonSplitButtonTokenResource DividerThickness}" />
+        </Style>
+
+        <!-- Sizes. -->
+        <Style Selector="^:large">
+            <Setter Property="Padding" Value="{arc:RibbonButtonTokenResource LargePadding}" />
+            <Setter Property="MinWidth" Value="{arc:RibbonButtonTokenResource LargeMinWidth}" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
+        <Style Selector="^:large /template/ Panel#PART_IconSlot">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+        </Style>
+        <Style Selector="^:large /template/ arc|ArcGlyph#PART_Glyph">
+            <Setter Property="Size" Value="{arc:RibbonButtonTokenResource LargeIconSize}" />
+        </Style>
+        <Style Selector="^:large /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="0" />
+        </Style>
+        <Style Selector="^:large /template/ TextBlock#PART_Label">
+            <Setter Property="DockPanel.Dock" Value="Top" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="TextAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Top" />
+            <Setter Property="Margin" Value="{arc:RibbonButtonTokenResource LargeLabelMargin}" />
+        </Style>
+        <Style Selector="^:medium">
+            <Setter Property="Padding" Value="{arc:RibbonButtonTokenResource MediumPadding}" />
+            <Setter Property="Height" Value="{arc:RibbonButtonTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^:medium:has-icon /template/ TextBlock#PART_Label">
+            <Setter Property="Margin" Value="{arc:RibbonButtonTokenResource LabelMargin}" />
+        </Style>
+        <Style Selector="^:small">
+            <Setter Property="Padding" Value="{arc:RibbonButtonTokenResource SmallPadding}" />
+            <Setter Property="Height" Value="{arc:RibbonButtonTokenResource RowHeight}" />
+            <Setter Property="MinWidth" Value="{arc:RibbonButtonTokenResource RowHeight}" />
+        </Style>
+        <Style Selector="^:small /template/ TextBlock#PART_Label">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:not(:has-icon) /template/ Panel#PART_IconSlot">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:dropdown /template/ arc|ArcGlyph#PART_Chevron">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+
+        <!-- States. -->
+        <Style Selector="^:pointerover">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:pressed">
+            <Setter Property="Background" Value="{arc:RibbonButtonTokenResource PressedBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:open">
+            <Setter Property="Background" Value="{arc:RibbonButtonTokenResource PressedBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:checked">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
+        </Style>
+        <Style Selector="^:checked /template/ Border#PART_CheckedOutline">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:RibbonButtonTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Split button: the menu part is its own target. -->
+        <Style Selector="^:split /template/ Border#PART_MenuPartClip">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:split:not(:large) /template/ arc|RibbonSplitButtonPart#PART_MenuPart">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Width" Value="{arc:RibbonSplitButtonTokenResource MenuPartWidth}" />
+        </Style>
+        <Style Selector="^:split:large /template/ arc|RibbonSplitButtonPart#PART_MenuPart">
+            <Setter Property="BorderThickness" Value="{arc:RibbonSplitButtonTokenResource LargeDividerThickness}" />
+        </Style>
+        <Style Selector="^:split:pointerover /template/ arc|RibbonSplitButtonPart#PART_MenuPart">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:split /template/ arc|RibbonSplitButtonPart#PART_MenuPart:pointerover">
+            <Setter Property="Background" Value="{arc:RibbonSplitButtonTokenResource PartHoverBackground}" />
+        </Style>
+        <Style Selector="^:split:open">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^:split:open /template/ arc|RibbonSplitButtonPart#PART_MenuPart">
+            <Setter Property="Background" Value="{arc:RibbonButtonTokenResource PressedBackground}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                    <arc:ArcBrushTransition Property="Foreground" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

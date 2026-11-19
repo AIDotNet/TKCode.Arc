@@ -61,13 +61,13 @@ public static AppBuilder BuildAvaloniaApp() =>
 ```
 
 Each further package registers itself in the same `UseArc(...)` call: `UseArcBlocks()`, `UseArcSpecial()`,
-`UseArcAdvancedCharts()`, `UseArcMobile()`, `UseArcWorkflow()`, `UseArcDock()`, `UseArcPdf()`, `UseArcVideo()`,
+`UseArcAdvancedCharts()`, `UseArcMobile()`, `UseArcWorkflow()`, `UseArcDock()`, `UseArcRibbon()`, `UseArcPdf()`, `UseArcVideo()`,
 `UseArcPixelTheme()` and `UseArcCorners()`. Change the theme at run time with
 `ArcTheme.Apply(t => t.Appearance(...).Accent(...))`.
 
 ## What's inside
 
-All 25 packages are released together on one version; keep them on the same one.
+All 26 packages are released together on one version; keep them on the same one.
 
 ### Components
 
@@ -87,6 +87,7 @@ All 25 packages are released together on one version; keep them on the same one.
 |---|---|
 | `TKCode.Arc.Workflow` | A canvas for showing, editing and running graphs of steps, with pan, zoom, auto-arrange and undo. |
 | `TKCode.Arc.Dock` | IDE-style tab groups and resizable splits, with keyboard navigation and layouts saved as JSON. |
+| `TKCode.Arc.Ribbon` | An Office-style ribbon: tabs over grouped commands that shrink and collapse into drop-downs as the window narrows, and a quick access toolbar. |
 | `TKCode.Arc.Terminal` | `TerminalView` over libghostty-vt, with the native libraries bundled for Windows, macOS, Linux, Android and iOS. |
 | `TKCode.Arc.Pdf`, `.Pdf.Native`, `.Pdf.Browser` | `PdfViewer` with thumbnails, outline, search, text selection and links, using PDFium on desktop and pdf.js on WebAssembly. |
 | `TKCode.Arc.Audio`, `.Audio.Native`, `.Audio.Browser` | The `IAudioPlayer` abstraction, with miniaudio on desktop and HTML audio on WebAssembly. |

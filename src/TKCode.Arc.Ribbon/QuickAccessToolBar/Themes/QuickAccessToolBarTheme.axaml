@@ -1,0 +1,27 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.QuickAccessToolBarTheme">
+    <ControlTheme x:Key="{x:Type arc:QuickAccessToolBar}" TargetType="arc:QuickAccessToolBar">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="{arc:QuickAccessToolBarTokenResource Padding}" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:QuickAccessToolBar">
+                <!-- The toolbar fills PART_ItemsPanel with its own commands and the copies of the pinned ribbon commands. -->
+                <StackPanel Orientation="Horizontal"
+                            Margin="{TemplateBinding Padding}"
+                            Spacing="{arc:QuickAccessToolBarTokenResource ItemSpacing}">
+                    <StackPanel Name="PART_ItemsPanel"
+                                Orientation="Horizontal"
+                                Spacing="{arc:QuickAccessToolBarTokenResource ItemSpacing}" />
+                    <arc:RibbonChromeButton Name="PART_CustomizeButton"
+                                            Icon="{x:Static arc:ArcIcons.ChevronDown}"
+                                            IsVisible="{TemplateBinding IsCustomizeButtonVisible}" />
+                </StackPanel>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,7 +1,9 @@
 #nullable enable
 TKCode.Arc.ArcAudioBrowser
+TKCode.Arc.ArcAudioBrowserBuilderExtensions
 TKCode.Arc.BrowserAudioBackend
 TKCode.Arc.BrowserAudioBackend.CreatePlayer() -> TKCode.Arc.IAudioPlayer!
 TKCode.Arc.BrowserAudioBackend.IsAudible.get -> bool
 TKCode.Arc.BrowserAudioBackend.Name.get -> string!
 static TKCode.Arc.ArcAudioBrowser.UseAsync() -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.ArcAudioBrowserBuilderExtensions.UseArcAudioBrowser(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

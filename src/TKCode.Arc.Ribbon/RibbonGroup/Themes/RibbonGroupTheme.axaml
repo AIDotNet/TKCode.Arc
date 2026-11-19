@@ -1,0 +1,53 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.RibbonGroupTheme">
+    <ControlTheme x:Key="{x:Type arc:RibbonGroup}" TargetType="arc:RibbonGroup">
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Padding" Value="{arc:RibbonGroupTokenResource Padding}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:RibbonGroup">
+                <!-- The commands panel is placed into PART_ItemsSlot by the group (it moves into the drop-down when the group
+                     is collapsed); PART_Layout keeps both forms measured and arranges the current one. -->
+                <Border Name="PART_Edge"
+                        Padding="{TemplateBinding Padding}"
+                        BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                        BorderThickness="{arc:RibbonGroupTokenResource SeparatorThickness}">
+                    <arc:RibbonGroupLayout Name="PART_Layout">
+                        <DockPanel Name="PART_Expanded">
+                            <Grid Name="PART_HeaderRow"
+                                  DockPanel.Dock="Bottom"
+                                  Height="{arc:RibbonGroupTokenResource HeaderHeight}"
+                                  ColumnDefinitions="*,Auto">
+                                <TextBlock Name="PART_Header"
+                                           Text="{TemplateBinding Header}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Margin="4,0"
+                                           TextTrimming="CharacterEllipsis"
+                                           FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                           FontSize="{arc:RibbonGroupTokenResource HeaderFontSize}"
+                                           Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+                                <arc:Button Name="PART_Launcher"
+                                            Grid.Column="1"
+                                            Variant="Text"
+                                            VerticalAlignment="Center"
+                                            IsVisible="{TemplateBinding IsLauncherVisible}">
+                                    <arc:ArcGlyph Data="{x:Static arc:RibbonGlyphs.Launcher}"
+                                                  Size="{arc:RibbonGroupTokenResource LauncherGlyphSize}" />
+                                </arc:Button>
+                            </Grid>
+                            <arc:RibbonVisualSlot Name="PART_ItemsSlot" />
+                        </DockPanel>
+                        <arc:RibbonGroupCollapsedButton Name="PART_CollapsedButton"
+                                                        Size="Large"
+                                                        Label="{TemplateBinding Header}"
+                                                        Icon="{TemplateBinding Icon}" />
+                    </arc:RibbonGroupLayout>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

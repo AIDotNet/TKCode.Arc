@@ -40,6 +40,7 @@ TKCode.Arc.ArcAccentPreset.Orange = 5 -> TKCode.Arc.ArcAccentPreset
 TKCode.Arc.ArcAccentPreset.Rose = 7 -> TKCode.Arc.ArcAccentPreset
 TKCode.Arc.ArcAccentPreset.Violet = 1 -> TKCode.Arc.ArcAccentPreset
 TKCode.Arc.ArcBaseTheme
+TKCode.Arc.ArcColor
 TKCode.Arc.ArcCoreBuilderExtensions
 TKCode.Arc.ArcDesign
 TKCode.Arc.ArcDesign.ArcDesign() -> void
@@ -1457,6 +1458,9 @@ static TKCode.Arc.ArcBaseTheme.DefinesBuiltInThemes(Avalonia.Controls.IResourceN
 static TKCode.Arc.ArcBaseTheme.ShouldRegister(Avalonia.Application! application) -> bool
 static TKCode.Arc.ArcBaseTheme.StyledTypes.get -> System.Collections.Generic.IReadOnlyList<System.Type!>!
 static TKCode.Arc.ArcBaseTheme.TryRegister(Avalonia.Application! application) -> bool
+static TKCode.Arc.ArcColor.Lerp(Avalonia.Media.Color from, Avalonia.Media.Color to, double t) -> Avalonia.Media.Color
+static TKCode.Arc.ArcColor.LerpOklab(Avalonia.Media.Color from, Avalonia.Media.Color to, double t) -> Avalonia.Media.Color
+static TKCode.Arc.ArcColor.WithOpacity(Avalonia.Media.Color color, double opacity) -> Avalonia.Media.Color
 static TKCode.Arc.ArcCoreBuilderExtensions.UseArcCore(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
 static TKCode.Arc.ArcIcons.Parse(string! data) -> Avalonia.Media.Geometry!
 static TKCode.Arc.ArcNeutralColors.operator !=(TKCode.Arc.ArcNeutralColors? left, TKCode.Arc.ArcNeutralColors? right) -> bool
@@ -1542,6 +1546,7 @@ static TKCode.Arc.Oklch.ToColor(double l, double c, double h, double alpha = 1) 
 static TKCode.Arc.Oklch.WithAlpha(Avalonia.Media.Color color, double alpha) -> Avalonia.Media.Color
 static TKCode.Arc.Primitives.ArcBlur.Get(double radius) -> Avalonia.Media.IEffect?
 static TKCode.Arc.Primitives.ArcClipboard.CopyTextAsync(Avalonia.Visual! visual, string! text) -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.Primitives.ArcFormatting.Bytes(long bytes, System.Globalization.CultureInfo? culture = null) -> string!
 static TKCode.Arc.Primitives.ArcFormatting.Compact(double value, System.Globalization.CultureInfo? culture = null) -> string!
 static TKCode.Arc.Primitives.ArcFormatting.ToParts(string! formatted, System.Globalization.CultureInfo? culture = null) -> System.Collections.Generic.IReadOnlyList<TKCode.Arc.Primitives.FormattedPart>!
 static TKCode.Arc.Primitives.ArcImage.DefaultLoader.get -> TKCode.Arc.Primitives.IArcImageLoader!

@@ -58,12 +58,12 @@ public static AppBuilder BuildAvaloniaApp() =>
 ```
 
 其他包也在同一个 `UseArc(...)` 中注册：`UseArcBlocks()`、`UseArcSpecial()`、`UseArcAdvancedCharts()`、`UseArcMobile()`、
-`UseArcWorkflow()`、`UseArcDock()`、`UseArcPdf()`、`UseArcVideo()`、`UseArcPixelTheme()` 和 `UseArcCorners()`。运行时用
+`UseArcWorkflow()`、`UseArcDock()`、`UseArcRibbon()`、`UseArcPdf()`、`UseArcVideo()`、`UseArcPixelTheme()` 和 `UseArcCorners()`。运行时用
 `ArcTheme.Apply(t => t.Appearance(...).Accent(...))` 切换主题。
 
 ## 包含内容
 
-全部 25 个包使用同一版本号一起发布，请保持它们版本一致。
+全部 26 个包使用同一版本号一起发布，请保持它们版本一致。
 
 ### 组件
 
@@ -83,6 +83,7 @@ public static AppBuilder BuildAvaloniaApp() =>
 |---|---|
 | `TKCode.Arc.Workflow` | 用于展示、编辑和运行步骤图的画布，支持平移、缩放、自动排列和撤销。 |
 | `TKCode.Arc.Dock` | IDE 式标签组和可调整大小的分栏，支持键盘导航，布局可保存为 JSON。 |
+| `TKCode.Arc.Ribbon` | Office 式功能区：选项卡下是分组的命令，窗口变窄时逐级缩小并折叠为下拉，另有快速访问工具栏。 |
 | `TKCode.Arc.Terminal` | 基于 libghostty-vt 的 `TerminalView`，已内置原生库。 |
 | `TKCode.Arc.Pdf`、`.Pdf.Native`、`.Pdf.Browser` | `PdfViewer`，支持缩略图、大纲、搜索、文本选择和链接，桌面端使用 PDFium，WebAssembly 使用 pdf.js。 |
 | `TKCode.Arc.Audio`、`.Audio.Native`、`.Audio.Browser` | `IAudioPlayer` 抽象，桌面端使用 miniaudio，WebAssembly 使用 HTML audio。 |

@@ -807,6 +807,8 @@ TKCode.Arc.Cascader.ItemsSource.get -> System.Collections.IEnumerable?
 TKCode.Arc.Cascader.ItemsSource.set -> void
 TKCode.Arc.Cascader.Label.get -> string?
 TKCode.Arc.Cascader.Label.set -> void
+TKCode.Arc.Cascader.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.Cascader.LabelFontWeight.set -> void
 TKCode.Arc.Cascader.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.Cascader.LabelPlacement.set -> void
 TKCode.Arc.Cascader.LabelWidth.get -> double
@@ -1122,6 +1124,8 @@ TKCode.Arc.Combobox.IsOpen.get -> bool
 TKCode.Arc.Combobox.IsOpen.set -> void
 TKCode.Arc.Combobox.Label.get -> string?
 TKCode.Arc.Combobox.Label.set -> void
+TKCode.Arc.Combobox.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.Combobox.LabelFontWeight.set -> void
 TKCode.Arc.Combobox.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.Combobox.LabelPlacement.set -> void
 TKCode.Arc.Combobox.LabelWidth.get -> double
@@ -1720,6 +1724,8 @@ TKCode.Arc.DateRangePicker.IsLabelVisible.get -> bool
 TKCode.Arc.DateRangePicker.IsLabelVisible.set -> void
 TKCode.Arc.DateRangePicker.Label.get -> string?
 TKCode.Arc.DateRangePicker.Label.set -> void
+TKCode.Arc.DateRangePicker.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.DateRangePicker.LabelFontWeight.set -> void
 TKCode.Arc.DateRangePicker.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.DateRangePicker.LabelPlacement.set -> void
 TKCode.Arc.DateRangePicker.LabelWidth.get -> double
@@ -5460,6 +5466,8 @@ TKCode.Arc.Field.IsLabelVisible.set -> void
 TKCode.Arc.Field.Label.get -> string?
 TKCode.Arc.Field.Label.set -> void
 TKCode.Arc.Field.LabelElement.get -> Avalonia.Controls.TextBlock?
+TKCode.Arc.Field.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.Field.LabelFontWeight.set -> void
 TKCode.Arc.Field.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.Field.LabelPlacement.set -> void
 TKCode.Arc.Field.LabelWidth.get -> double
@@ -5539,6 +5547,8 @@ TKCode.Arc.FieldTextBox.IsLabelVisible.get -> bool
 TKCode.Arc.FieldTextBox.IsLabelVisible.set -> void
 TKCode.Arc.FieldTextBox.Label.get -> string?
 TKCode.Arc.FieldTextBox.Label.set -> void
+TKCode.Arc.FieldTextBox.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.FieldTextBox.LabelFontWeight.set -> void
 TKCode.Arc.FieldTextBox.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.FieldTextBox.LabelPlacement.set -> void
 TKCode.Arc.FieldTextBox.LabelWidth.get -> double
@@ -6854,6 +6864,8 @@ TKCode.Arc.MorphSelect.IsOpen.set -> void
 TKCode.Arc.MorphSelect.IsSearchActive.get -> bool
 TKCode.Arc.MorphSelect.Label.get -> string?
 TKCode.Arc.MorphSelect.Label.set -> void
+TKCode.Arc.MorphSelect.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.MorphSelect.LabelFontWeight.set -> void
 TKCode.Arc.MorphSelect.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.MorphSelect.LabelPlacement.set -> void
 TKCode.Arc.MorphSelect.LabelWidth.get -> double
@@ -6965,6 +6977,8 @@ TKCode.Arc.MultiSelect.IsSearchable.get -> bool
 TKCode.Arc.MultiSelect.IsSearchable.set -> void
 TKCode.Arc.MultiSelect.Label.get -> string?
 TKCode.Arc.MultiSelect.Label.set -> void
+TKCode.Arc.MultiSelect.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.MultiSelect.LabelFontWeight.set -> void
 TKCode.Arc.MultiSelect.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.MultiSelect.LabelPlacement.set -> void
 TKCode.Arc.MultiSelect.LabelWidth.get -> double
@@ -8751,6 +8765,8 @@ TKCode.Arc.Select.IsOpen.get -> bool
 TKCode.Arc.Select.IsOpen.set -> void
 TKCode.Arc.Select.Label.get -> string?
 TKCode.Arc.Select.Label.set -> void
+TKCode.Arc.Select.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.Select.LabelFontWeight.set -> void
 TKCode.Arc.Select.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.Select.LabelPlacement.set -> void
 TKCode.Arc.Select.LabelWidth.get -> double
@@ -8840,6 +8856,8 @@ TKCode.Arc.ShortcutRecorder.IsReservedWarningEnabled.get -> bool
 TKCode.Arc.ShortcutRecorder.IsReservedWarningEnabled.set -> void
 TKCode.Arc.ShortcutRecorder.Label.get -> string?
 TKCode.Arc.ShortcutRecorder.Label.set -> void
+TKCode.Arc.ShortcutRecorder.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.ShortcutRecorder.LabelFontWeight.set -> void
 TKCode.Arc.ShortcutRecorder.Placeholder.get -> string!
 TKCode.Arc.ShortcutRecorder.Placeholder.set -> void
 TKCode.Arc.ShortcutRecorder.Platform.get -> TKCode.Arc.ShortcutPlatform?
@@ -9374,6 +9392,8 @@ TKCode.Arc.TagInput.IsLabelVisible.get -> bool
 TKCode.Arc.TagInput.IsLabelVisible.set -> void
 TKCode.Arc.TagInput.Label.get -> string?
 TKCode.Arc.TagInput.Label.set -> void
+TKCode.Arc.TagInput.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.TagInput.LabelFontWeight.set -> void
 TKCode.Arc.TagInput.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.TagInput.LabelPlacement.set -> void
 TKCode.Arc.TagInput.LabelWidth.get -> double
@@ -9620,6 +9640,8 @@ TKCode.Arc.TimePicker.IsLabelVisible.set -> void
 TKCode.Arc.TimePicker.IsTwelveHour.get -> bool
 TKCode.Arc.TimePicker.Label.get -> string?
 TKCode.Arc.TimePicker.Label.set -> void
+TKCode.Arc.TimePicker.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.TimePicker.LabelFontWeight.set -> void
 TKCode.Arc.TimePicker.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.TimePicker.LabelPlacement.set -> void
 TKCode.Arc.TimePicker.LabelWidth.get -> double
@@ -10160,6 +10182,8 @@ TKCode.Arc.TreeSelect.ItemsSource.get -> System.Collections.IEnumerable?
 TKCode.Arc.TreeSelect.ItemsSource.set -> void
 TKCode.Arc.TreeSelect.Label.get -> string?
 TKCode.Arc.TreeSelect.Label.set -> void
+TKCode.Arc.TreeSelect.LabelFontWeight.get -> Avalonia.Media.FontWeight?
+TKCode.Arc.TreeSelect.LabelFontWeight.set -> void
 TKCode.Arc.TreeSelect.LabelPlacement.get -> TKCode.Arc.FormLabelPlacement
 TKCode.Arc.TreeSelect.LabelPlacement.set -> void
 TKCode.Arc.TreeSelect.LabelWidth.get -> double
@@ -13382,8 +13406,10 @@ static TKCode.Arc.EnumTypes.Register(System.Type! type, System.Func<TKCode.Arc.E
 static TKCode.Arc.EnumTypes.Register(TKCode.Arc.EnumTypeInfo! info) -> void
 static TKCode.Arc.EnumTypes.Registered -> System.EventHandler<System.Type!>?
 static TKCode.Arc.EnumTypes.Unregister(System.Type! type) -> bool
+static TKCode.Arc.Field.GetLabelFontWeight(Avalonia.Controls.Control! element) -> Avalonia.Media.FontWeight?
 static TKCode.Arc.Field.GetLabelPlacement(Avalonia.Controls.Control! element) -> TKCode.Arc.FormLabelPlacement
 static TKCode.Arc.Field.GetLabelWidth(Avalonia.Controls.Control! element) -> double
+static TKCode.Arc.Field.SetLabelFontWeight(Avalonia.Controls.Control! element, Avalonia.Media.FontWeight? value) -> void
 static TKCode.Arc.Field.SetLabelPlacement(Avalonia.Controls.Control! element, TKCode.Arc.FormLabelPlacement value) -> void
 static TKCode.Arc.Field.SetLabelWidth(Avalonia.Controls.Control! element, double value) -> void
 static TKCode.Arc.FileDropzoneItem.FormatSize(long bytes) -> string!
@@ -13846,6 +13872,7 @@ static readonly TKCode.Arc.Cascader.IsLeafSelectorProperty -> Avalonia.StyledPro
 static readonly TKCode.Arc.Cascader.IsOpenProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Cascader.IsReadOnlyProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Cascader.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.Cascader.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.Cascader.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.Cascader.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Cascader.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -13947,6 +13974,7 @@ static readonly TKCode.Arc.Combobox.DisabledSelectorProperty -> Avalonia.StyledP
 static readonly TKCode.Arc.Combobox.EmptyTextProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Combobox.FilterPredicateProperty -> Avalonia.StyledProperty<System.Func<object?, string!, bool>?>!
 static readonly TKCode.Arc.Combobox.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Combobox.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.Combobox.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.Combobox.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Combobox.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -14083,6 +14111,7 @@ static readonly TKCode.Arc.DateRangePicker.ErrorMessageProperty -> Avalonia.Styl
 static readonly TKCode.Arc.DateRangePicker.FirstDayOfWeekProperty -> Avalonia.StyledProperty<System.DayOfWeek>!
 static readonly TKCode.Arc.DateRangePicker.IsDropDownOpenProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.DateRangePicker.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DateRangePicker.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.DateRangePicker.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.DateRangePicker.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.DateRangePicker.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -14237,6 +14266,7 @@ static readonly TKCode.Arc.Field.DescriptionProperty -> Avalonia.StyledProperty<
 static readonly TKCode.Arc.Field.ErrorMessageProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Field.IsInvalidProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Field.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Field.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.Field.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.Field.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Field.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -14269,6 +14299,7 @@ static readonly TKCode.Arc.FieldTextBox.EffectiveErrorMessageProperty -> Avaloni
 static readonly TKCode.Arc.FieldTextBox.ErrorMessageProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.FieldTextBox.IsInvalidProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.FieldTextBox.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.FieldTextBox.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.FieldTextBox.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.FieldTextBox.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.FieldTextBox.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -14628,6 +14659,7 @@ static readonly TKCode.Arc.MorphSelect.DisabledSelectorProperty -> Avalonia.Styl
 static readonly TKCode.Arc.MorphSelect.FilterPredicateProperty -> Avalonia.StyledProperty<System.Func<object?, string!, bool>?>!
 static readonly TKCode.Arc.MorphSelect.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.MorphSelect.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.MorphSelect.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.MorphSelect.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.MorphSelect.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.MorphSelect.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -14649,6 +14681,7 @@ static readonly TKCode.Arc.MultiSelect.EmptyTextProperty -> Avalonia.StyledPrope
 static readonly TKCode.Arc.MultiSelect.FilterPredicateProperty -> Avalonia.StyledProperty<System.Func<object?, string!, bool>?>!
 static readonly TKCode.Arc.MultiSelect.IsOpenProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.MultiSelect.IsSearchableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.MultiSelect.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.MultiSelect.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.MultiSelect.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.MultiSelect.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -15037,6 +15070,7 @@ static readonly TKCode.Arc.SegmentedOption.ValueProperty -> Avalonia.StyledPrope
 static readonly TKCode.Arc.Select.DescriptionProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Select.DisabledSelectorProperty -> Avalonia.StyledProperty<System.Func<object?, bool>?>!
 static readonly TKCode.Arc.Select.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Select.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.Select.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.Select.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Select.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -15060,6 +15094,7 @@ static readonly TKCode.Arc.ShortcutRecorder.IsLabelVisibleProperty -> Avalonia.S
 static readonly TKCode.Arc.ShortcutRecorder.IsModifierRequiredProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.ShortcutRecorder.IsRecordingProperty -> Avalonia.DirectProperty<TKCode.Arc.ShortcutRecorder!, bool>!
 static readonly TKCode.Arc.ShortcutRecorder.IsReservedWarningEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ShortcutRecorder.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.ShortcutRecorder.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.ShortcutRecorder.PlaceholderProperty -> Avalonia.StyledProperty<string!>!
 static readonly TKCode.Arc.ShortcutRecorder.PlatformProperty -> Avalonia.StyledProperty<TKCode.Arc.ShortcutPlatform?>!
@@ -15244,6 +15279,7 @@ static readonly TKCode.Arc.TagInput.EffectiveErrorMessageProperty -> Avalonia.Di
 static readonly TKCode.Arc.TagInput.ErrorMessageProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.TagInput.IsInvalidProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.TagInput.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.TagInput.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.TagInput.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.TagInput.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.TagInput.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -15318,6 +15354,7 @@ static readonly TKCode.Arc.TimePicker.EffectiveErrorMessageProperty -> Avalonia.
 static readonly TKCode.Arc.TimePicker.ErrorMessageProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.TimePicker.IsDropDownOpenProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.TimePicker.IsLabelVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.TimePicker.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.TimePicker.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.TimePicker.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.TimePicker.LabelWidthProperty -> Avalonia.AttachedProperty<double>!
@@ -15456,6 +15493,7 @@ static readonly TKCode.Arc.TreeSelect.IsOpenProperty -> Avalonia.StyledProperty<
 static readonly TKCode.Arc.TreeSelect.IsReadOnlyProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.TreeSelect.IsSearchableProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.TreeSelect.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.TreeSelect.LabelFontWeightProperty -> Avalonia.AttachedProperty<Avalonia.Media.FontWeight?>!
 static readonly TKCode.Arc.TreeSelect.LabelPlacementProperty -> Avalonia.AttachedProperty<TKCode.Arc.FormLabelPlacement>!
 static readonly TKCode.Arc.TreeSelect.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.TreeSelect.LabelWidthProperty -> Avalonia.AttachedProperty<double>!

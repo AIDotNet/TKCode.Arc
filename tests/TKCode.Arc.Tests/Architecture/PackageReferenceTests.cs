@@ -27,6 +27,7 @@ public class PackageReferenceTests
         ["TKCode.Arc.Blocks"] = ["TKCode.Arc", "TKCode.Arc.Audio", "TKCode.Arc.Markdown"],
         ["TKCode.Arc.Special"] = ["TKCode.Arc"],
         ["TKCode.Arc.Dock"] = ["TKCode.Arc"],
+        ["TKCode.Arc.Ribbon"] = ["TKCode.Arc"],
         ["TKCode.Arc.Workflow"] = ["TKCode.Arc"],
         ["TKCode.Arc.A2UI"] = ["TKCode.Arc", "TKCode.Arc.Highlighting", "TKCode.Arc.Icons.Lucide", "TKCode.Arc.Markdown"],
         ["TKCode.Arc.Terminal"] = ["Avalonia"],

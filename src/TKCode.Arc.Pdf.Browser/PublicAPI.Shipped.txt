@@ -1,3 +1,5 @@
 #nullable enable
 TKCode.Arc.ArcPdfBrowser
+TKCode.Arc.ArcPdfBrowserBuilderExtensions
 static TKCode.Arc.ArcPdfBrowser.UseAsync(string? assetsUrl = null) -> System.Threading.Tasks.Task<bool>!
+static TKCode.Arc.ArcPdfBrowserBuilderExtensions.UseArcPdfBrowser(this TKCode.Arc.ArcBuilder! builder, string? assetsUrl = null) -> TKCode.Arc.ArcBuilder!
