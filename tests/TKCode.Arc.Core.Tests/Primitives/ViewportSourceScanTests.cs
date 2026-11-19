@@ -23,7 +23,12 @@ public partial class ViewportSourceScanTests
         // Dragging a card near the window's edge scrolls: the edge that matters is the window's.
         "TKCode.Arc.Blocks/Screens/Projects/KanbanBoard/KanbanBoard.Drag.cs",
         // Fallbacks after ArcViewport (only reached when the control is not in a window).
-        "TKCode.Arc/Messages/ToastStack/ToastHost.cs"
+        "TKCode.Arc/Messages/ToastStack/ToastHost.cs",
+        // StreamMark is a standalone library without Arc (no ArcViewport): its image viewer, block overlay and source card
+        // cover the window's overlay layer, and fall back to the window's client size before that layer is measured.
+        "TKCode.Arc.StreamMark/Avalonia/Rendering/ImageViewer.cs",
+        "TKCode.Arc.StreamMark/Avalonia/Rendering/BlockOverlay.cs",
+        "TKCode.Arc.StreamMark/Avalonia/Rendering/SourceCard.cs"
     ];
 
     [GeneratedRegex(@"\bClientSize\b(?!Property\b)|ClientSizeProperty")]
