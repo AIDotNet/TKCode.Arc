@@ -10,6 +10,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## 1.2.0-preview.6 - 2026-11-19
+
+This patch preview fixes a crash in `ModelViewer` when a model is replaced while the previous one is still loading.
+
+### Fixed
+
+- `ModelViewer` no longer throws `ObjectDisposedException` when a new `Source` or `Model` replaces a load that is still
+  running. The finished load used to read the token of the source that the replacement had already disposed
+  (`TKCode.Arc.Graphics3D.Controls`, preview).
+
 ## 1.2.0-preview.5 - 2026-11-19
 
 This preview adds four components rebuilt after their Arc designs: `CodeMagicMove` (Special › Type), a code block that
@@ -2309,6 +2319,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.2.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.5...v1.2.0-preview.6
 [1.2.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.4...v1.2.0-preview.5
 [1.2.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.3...v1.2.0-preview.4
 [1.2.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.1...v1.2.0-preview.3
