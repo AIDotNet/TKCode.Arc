@@ -14,5 +14,12 @@
   "androidNdk": {
     "release": "r29",
     "version": "29.0.14206865"
+  },
+  "rust": {
+    "version": "1.99.1",
+    "reason": "Release builds of libratex_ffi (tools/streammark/build-ratex.sh <rid>). Rust 1.100 links windows-gnullvm against an external libunwind that zig cc does not supply, so win-arm64 fails with undefined _Unwind_* symbols; check that target before moving on."
+  },
+  "cargoZigbuild": {
+    "version": "0.24.1"
   }
 }

@@ -23,7 +23,7 @@ StreamMark：面向 AI 对话场景的流式 Markdown 渲染库，Avalonia 12，
 |---|---|---|
 | 构建 | `dotnet build src/TKCode.Arc.StreamMark`（或某个插件包） | 基础包与 TextMate 目标 `net8.0;net10.0;net11.0`，RaTeX 与 Mermaid 目标 `net10.0;net11.0` |
 | 原生库（公式必需） | `tools/streammark/build-ratex.sh` | 按 `native/ratex/ratex-upstream.json` 的提交检出到 `artifacts/src/ratex-*`、打补丁、`cargo build`，输出 `artifacts/native/<本机 RID>/`。需要 Rust。Windows：`tools/streammark/build-ratex.ps1` |
-| 发布用原生库 | `tools/streammark/build-ratex.sh <rid>` → `tools/streammark/sync-native.sh` | osx-* 用 `cargo build --target`，linux-* / win-* 用 cargo-zigbuild（Linux 的 glibc 下限 2.28）；需要对应的 rustup 目标。sync 把库复制到 `src/TKCode.Arc.StreamMark.RaTeX/runtimes/<rid>/native/`（不提交） |
+| 发布用原生库 | `tools/streammark/build-ratex.sh <rid>` → `tools/streammark/sync-native.sh` | osx-* 用 `cargo build --target`，linux-* / win-* 用 cargo-zigbuild（Linux 的 glibc 下限 2.28）。Rust 与 cargo-zigbuild 的版本固定在 `native/toolchain.json`（脚本经 `RUSTUP_TOOLCHAIN` 选用，需要 rustup 的 cargo 代理在 PATH 前面），给该版本加上对应的 rustup 目标。升级 Rust 前先编一次 win-arm64（[[rust-gnullvm-unwind]]）。sync 把库复制到 `src/TKCode.Arc.StreamMark.RaTeX/runtimes/<rid>/native/`（不提交） |
 | 测试 | `dotnet test tests/TKCode.Arc.StreamMark.Tests` | 公式测试需要先跑 `build-ratex.sh`（`ArcStreamMarkNative=true` 让项目从 `artifacts/native/<rid>/` 复制库）。单用例 `--filter "FullyQualifiedName~<名字>"` |
 | AOT 冒烟（CI 门禁） | `dotnet publish tools/streammark/Gallery -c Release -r <rid> -o artifacts/streammark-aot`，publish 日志里 0 个 `warning IL####`；再运行 `artifacts/streammark-aot/TKCode.Arc.StreamMark.Gallery --smoke` | 退出码即结论（0 = 全部通过）；缺原生库时在 `ratex.*` 检查失败 |
 | 基准 | `dotnet run -c Release --project tools/streammark/Benchmarks -- --filter '*'` | ShortRun，只看量级；结果记录在 [benchmarks.md](benchmarks.md) |
