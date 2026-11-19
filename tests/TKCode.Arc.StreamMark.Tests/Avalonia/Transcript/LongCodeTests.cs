@@ -60,7 +60,7 @@ public sealed class LongCodeTests(ITestOutputHelper output)
             // 中段视图只显示自己的行窗口，头部只在第一段
             view.Offset = new(0, panel.Extent.Height * 0.5);
             await HeadlessApp.Settle();
-            var chunks = panel.Children.OfType<CodeBlockView>().ToList();
+            var chunks = panel.RowViews.OfType<CodeBlockView>().ToList();
             Assert.NotEmpty(chunks);
             Assert.All(chunks, c => Assert.True(c.Chunk.Count == 24));
             HeadlessApp.Save(window, "long-code-middle");

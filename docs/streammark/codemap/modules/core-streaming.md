@@ -33,7 +33,7 @@ updated: 2026-10-16
 | `DocumentComposer.Update` | `src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:62` | push-once 语义：`from` 必须 ≤ `FrozenEnd`，返回的 `text` 是 `[from, 末尾)`；新冻结区间只解析一次 |
 | `DocumentComposer.Finish` | `src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:94` | 整篇重解析、`Generation++`、冻结列表重置、`IsComplete = true` |
 | `DocumentComposer.SettledOptions` | `src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:21` | 冻结片段与整篇解析用的 remend 选项：只留转义修正（与 `remend-and-offsetmap` 重复，但这里决定谁被补全） |
-| `DocumentComposer.OpenCodeBlock` | `src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:118` | 尾部是未闭合围栏时手工按行构造 `CodeBlock{IsOpen=true}`，并复刻 remend 的"去末尾单空格"（`:122`） |
+| `DocumentComposer.OpenCodeBlock` | `src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:167` | 尾部是未闭合围栏时不经解析器构造 `CodeBlock{IsOpen=true}`；代码文本由 `OpenFenceCache.Build` 按行增量组装（已完整的行缓存，每次只处理新行，一次复制成字符串），并复刻 remend 的末尾修整（去单个末尾空格、再去末尾换行）。缓存只收换行后还有 ≥2 个字符的行，保证修整碰不到缓存；`Reset` / `Finish` / 尾部不再是未闭合围栏时清空。结果必须与不带缓存的组装一致（`OpenFenceCacheTests`） |
 | `StreamSegmenter.Advance` | `src/TKCode.Arc.StreamMark/Core/Streaming/StreamSegmenter.cs:69` | 逐完整行扫描；未结束的最后一行只借 `IsDecisive` 提前提交边界，不改扫描状态 |
 | `StreamSegmenter.TryCommit`/`CanCut` | `src/TKCode.Arc.StreamMark/Core/Streaming/StreamSegmenter.cs:260`、`:273` | 冻结的守卫：`SawDefinition`、下一行缩进 / `:` 开头 / 列表标记 / setext 下划线一律不切 |
 | `StreamSegmenter.TryGetOpenFence` | `src/TKCode.Arc.StreamMark/Core/Streaming/StreamSegmenter.cs:111` | 仅当围栏是这一段（run）的第一行（`_fenceStartsRun`）且 `partialLine` 未构成闭合围栏时命中 |
@@ -76,7 +76,7 @@ updated: 2026-10-16
 - 原样组件：切分器有单独的 `HtmlKind.RawComponent`，只有以 `</name>` 结尾的行才结束（`StreamSegmenter.EndsWithClosingTag`，结束不能早于解析器）；设置 `RawRegions` 时还记录内容区间。`DocumentComposer.Parse` 先用一个独立的切分器扫描（容器表是 `MarkdownProfile.RawScanContainers`：只跳过 HTML 容器，白名单组件内部照样找）得到区间，`MaskRawComponents` 把区间内非空白字符换成 `x`（行首 `>` 保留）后再交给 remend / Markdig，`OffsetMap.Create(base, masked, healed, raw)` 让 `SourceText` 从未遮盖的原文取字。三处规则要一起改。
 - To 让某个标签按"容器"处理（内部可含空行不冻结）：不是改切分器，而是让插件把它注册为组件，或加进 `Html.HtmlElements.Containers` — `src/TKCode.Arc.StreamMark/Core/Parsing/MarkdownProfile.cs:52`、`:54`；漏掉这一步 → `<details>` 之类容器里的空行会被当成可切点，容器被拆成两半。
 - To 加节奏预设：在 `PacingPreset` 与 `StreamPacerOptions.TargetLag` 的 switch 各加一项（`src/TKCode.Arc.StreamMark/Core/Pacing/StreamPacer.cs:7`、`:43`），再补 `tests/TKCode.Arc.StreamMark.Tests/Core/Pacing/StreamPacerTests.cs` 的节奏断言。只加枚举不改 `TargetLag` → 新预设落进 `_ =>` 分支，静默等同 `Balanced`。
-- To 让流式代码块尾部走别的路径：`DocumentComposer.Update` 的 `TryGetOpenFence` 分支（`src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:81`）是唯一入口；对应探针是 `StreamSegmenter.TryGetOpenFence`（`:111`）。漏掉 `_fenceStartsRun` 条件 → 围栏出现在段落中间（如引用块之后）时也会命中快速路径，`IsOpen` 与解析路径不一致。
+- To 让流式代码块尾部走别的路径：`DocumentComposer.Update` 的 `TryGetOpenFence` 分支（`src/TKCode.Arc.StreamMark/Core/Streaming/DocumentComposer.cs:82`）是唯一入口；对应探针是 `StreamSegmenter.TryGetOpenFence`（`:111`）。漏掉 `_fenceStartsRun` 条件 → 围栏出现在段落中间（如引用块之后）时也会命中快速路径，`IsOpen` 与解析路径不一致。
 - To 加一种差异操作：`DiffKind`（`src/TKCode.Arc.StreamMark/Core/Streaming/SnapshotDiff.cs:5`）是 `byte` 枚举，`DocumentPresenter.Apply`（`src/TKCode.Arc.StreamMark/Avalonia/Rendering/DocumentPresenter.cs:35`）与 `TranscriptPanel`（`src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:276`）各有一份 `switch`，**必须同步改三处**；漏改 → 新操作被静默忽略，控件与快照脱节。
 
 ## Invariants and traps

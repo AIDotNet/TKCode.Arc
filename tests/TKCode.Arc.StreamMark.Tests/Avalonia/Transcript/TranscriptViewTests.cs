@@ -152,7 +152,7 @@ public sealed class TranscriptViewTests
             view.Entries.Add(answer);
             await Converge(view);
 
-            var answerView = view.Panel.Children.OfType<global::StreamMark.Avalonia.Rendering.BlockView>().Single();
+            var answerView = view.Panel.RowViews.OfType<global::StreamMark.Avalonia.Rendering.BlockView>().Single();
             var collapsedTop = answerView.Bounds.Top;
             Assert.True(collapsedTop >= thinking.Bounds.Bottom - 0.5, $"overlap before expand: {collapsedTop} < {thinking.Bounds.Bottom}");
 

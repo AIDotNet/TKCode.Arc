@@ -1,5 +1,4 @@
 using System.Collections.Immutable;
-using System.Text;
 using Markdig;
 using StreamMark.Core.Model;
 using StreamMark.Core.Parsing;
@@ -38,6 +37,7 @@ internal sealed class DocumentComposer
     private AppendOnlyList<MarkdownBlock> _frozen = new();
     private StreamSegmenter _segmenter;
     private int _generation;
+    private readonly OpenFenceCache _fence = new();
 
     public DocumentComposer(MarkdownProfile? profile = null, RemendOptions? tailOptions = null)
     {
@@ -53,6 +53,7 @@ internal sealed class DocumentComposer
     {
         _frozen = new AppendOnlyList<MarkdownBlock>();
         _segmenter = new StreamSegmenter(_profile.SegmenterContainers, _profile.RawComponentNames);
+        _fence.Clear();
         _generation++;
     }
 
@@ -85,6 +86,7 @@ internal sealed class DocumentComposer
         }
         else
         {
+            _fence.Clear();
             tail = Parse(text[tailStart..], newFrozen, _tailOptions);
         }
         return new DocumentSnapshot(_frozen, _frozen.Count, tail, version, _generation, from + text.Length, newFrozen, isComplete: false);
@@ -94,6 +96,7 @@ internal sealed class DocumentComposer
     public DocumentSnapshot Finish(string fullText, long version)
     {
         _generation++;
+        _fence.Clear();
         _frozen = new AppendOnlyList<MarkdownBlock>();
         foreach (var block in Parse(fullText, 0, SettledOptions))
         {
@@ -161,53 +164,8 @@ internal sealed class DocumentComposer
         return new string(chars);
     }
 
-    private static Model.CodeBlock OpenCodeBlock(string text, int from, int fenceStart, int contentStart, int indent, string? info)
+    private Model.CodeBlock OpenCodeBlock(string text, int from, int fenceStart, int contentStart, int indent, string? info)
     {
-        var body = contentStart - from < text.Length ? text.AsSpan(contentStart - from) : [];
-        // 与 remend 一致：去掉末尾单个空格（流式中常见的分词残留），保证与解析路径结果相同
-        if (body.EndsWith(" ".AsSpan()) && !body.EndsWith("  ".AsSpan()))
-        {
-            body = body[..^1];
-        }
-        if (body.EndsWith("\n".AsSpan()))
-        {
-            body = body[..^1];
-        }
-        var code = new StringBuilder(body.Length);
-        var first = true;
-        // 按行切分；net8 没有 span.Split，用 IndexOf 逐行推进
-        var rest = body;
-        while (true)
-        {
-            var newline = rest.IndexOf('\n');
-            var line = newline < 0 ? rest : rest[..newline];
-            if (line.EndsWith("\r".AsSpan()))
-            {
-                line = line[..^1];
-            }
-            // 去掉不超过开头围栏缩进量的前导空格（CommonMark 规则）
-            var strip = 0;
-            while (strip < indent && strip < line.Length && line[strip] == ' ')
-            {
-                strip++;
-            }
-            if (!first)
-            {
-                code.Append('\n');
-            }
-            code.Append(line[strip..]);
-            first = false;
-            if (newline < 0)
-            {
-                break;
-            }
-            rest = rest[(newline + 1)..];
-        }
-        if (body.IsEmpty)
-        {
-            code.Clear();
-        }
-
         string? language = null;
         if (info is not null)
         {
@@ -215,9 +173,122 @@ internal sealed class DocumentComposer
             language = space < 0 ? info : info[..space];
         }
         var end = from + text.Length;
-        return new Model.CodeBlock(language, info, code.ToString(), IsFenced: true, IsOpen: true)
+        return new Model.CodeBlock(language, info, _fence.Build(text, from, contentStart, indent), IsFenced: true, IsOpen: true)
         {
             Range = new SourceRange(fenceStart, end - fenceStart),
         };
+    }
+
+    /// <summary>
+    /// 尚未闭合的代码块按行增量组装：已完整的行处理一次后缓存，每次更新只处理新到达的行，
+    /// 再把缓存与尾部一次复制成代码字符串。不缓存时每次更新要把整块逐行切分并复制两遍（O(块长)）。
+    /// </summary>
+    /// <remarks>
+    /// 结果必须与对整块重新切分完全一致（<c>StreamingEquivalenceTests</c>）。末尾修整（与 remend 一致：
+    /// 去掉单个末尾空格，再去掉末尾换行）最多去掉 2 个字符，所以只缓存换行之后还至少有 2 个字符的行，
+    /// 之后无论文本怎样追加，修整都碰不到已缓存的部分。
+    /// </remarks>
+    private sealed class OpenFenceCache
+    {
+        private int _contentStart = -1;
+        private int _indent;
+        // 已缓存的行之后的源码偏移（总是某个换行之后）
+        private int _consumed;
+        private char[] _buffer = [];
+        private int _length;
+
+        public void Clear()
+        {
+            _contentStart = -1;
+            _length = 0;
+            if (_buffer.Length > 64 * 1024)
+            {
+                _buffer = [];
+            }
+        }
+
+        public string Build(string text, int from, int contentStart, int indent)
+        {
+            var end = from + text.Length;
+            var body = contentStart - from < text.Length ? text.AsSpan(contentStart - from) : [];
+            if (body.EndsWith(" ".AsSpan()) && !body.EndsWith("  ".AsSpan()))
+            {
+                body = body[..^1];
+            }
+            if (body.EndsWith("\n".AsSpan()))
+            {
+                body = body[..^1];
+            }
+            if (body.IsEmpty)
+            {
+                return "";
+            }
+
+            if (_contentStart != contentStart || _indent != indent || _consumed < from || _consumed > end - 2)
+            {
+                _contentStart = contentStart;
+                _indent = indent;
+                _consumed = contentStart;
+                _length = 0;
+            }
+
+            // 缓存新完整的行（换行之后至少还有 2 个字符）
+            while (true)
+            {
+                var rel = _consumed - from;
+                var newline = text.AsSpan(rel).IndexOf('\n');
+                if (newline < 0 || _consumed + newline + 3 > end)
+                {
+                    break;
+                }
+                Reserve(newline + 1);
+                _length += AppendLine(text.AsSpan(rel, newline), _buffer.AsSpan(_length));
+                _buffer[_length++] = '\n';
+                _consumed += newline + 1;
+            }
+
+            // 尾部（最多几行）每次重新处理，写在缓存之后但不计入缓存
+            var rest = body[(_consumed - contentStart)..];
+            Reserve(rest.Length);
+            var length = _length;
+            while (true)
+            {
+                var newline = rest.IndexOf('\n');
+                var line = newline < 0 ? rest : rest[..newline];
+                length += AppendLine(line, _buffer.AsSpan(length));
+                if (newline < 0)
+                {
+                    break;
+                }
+                _buffer[length++] = '\n';
+                rest = rest[(newline + 1)..];
+            }
+            return new string(_buffer, 0, length);
+        }
+
+        // 去掉行尾 \r 和不超过围栏缩进量的前导空格（CommonMark 规则），返回写入的字符数
+        private int AppendLine(ReadOnlySpan<char> line, Span<char> destination)
+        {
+            if (line.EndsWith("\r".AsSpan()))
+            {
+                line = line[..^1];
+            }
+            var strip = 0;
+            while (strip < _indent && strip < line.Length && line[strip] == ' ')
+            {
+                strip++;
+            }
+            line[strip..].CopyTo(destination);
+            return line.Length - strip;
+        }
+
+        private void Reserve(int extra)
+        {
+            if (_length + extra <= _buffer.Length)
+            {
+                return;
+            }
+            Array.Resize(ref _buffer, Math.Max(_length + extra, Math.Max(256, _buffer.Length * 2)));
+        }
     }
 }

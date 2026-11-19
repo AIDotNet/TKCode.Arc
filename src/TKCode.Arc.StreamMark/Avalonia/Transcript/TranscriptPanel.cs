@@ -58,6 +58,31 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
 
     private const double Overscan = 600;
 
+    // 各行的承载图层：行按 Top - _origin 排在图层内，滚动只移动图层本身。
+    // Avalonia 在视觉的 Bounds 变化时会重新录制它，若每次滚动都改每一行的位置，贴底跟随时视口内所有行每出现新行都要重录。
+    private readonly RowLayer _layer;
+    // 图层原点（会话坐标）：离视口太远时重设，避免行坐标过大损失合成层（float）的精度
+    private double _origin;
+    private const double RebaseDistance = 50_000;
+
+    /// <summary>不参与布局计算的行图层：行的测量与排列都由面板直接完成。</summary>
+    private sealed class RowLayer(TranscriptPanel owner) : Panel
+    {
+        protected override Size MeasureOverride(Size availableSize) => default;
+
+        protected override Size ArrangeOverride(Size finalSize) => finalSize;
+
+        // 行的期望尺寸变化使图层失效时，转给面板重新测量（图层自身的期望尺寸恒为 0，不会向上传播）
+        protected override void OnMeasureInvalidated()
+        {
+            base.OnMeasureInvalidated();
+            owner.InvalidateMeasure();
+        }
+    }
+
+    /// <summary>已实例化的行视图（测试用）。</summary>
+    internal IEnumerable<Control> RowViews => _layer.Children;
+
     private readonly List<EntryState> _entries = [];
     private readonly List<Row> _rows = [];
     private readonly HashSet<Row> _realized = [];
@@ -212,6 +237,8 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         Focusable = true;
         // 透明背景：空白处也能开始拖拽选择
         Background = Brushes.Transparent;
+        _layer = new RowLayer(this);
+        Children.Add(_layer);
         _selection = new SelectionController(this);
         MarkdownContextMenu.Attach(this, _selection);
         AddHandler(CodeBlockView.ExpandedChangedEvent, OnCodeExpandedChanged);
@@ -311,7 +338,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
             }
             if (removed.ContentView is not null)
             {
-                Children.Remove(removed.ContentView);
+                _layer.Children.Remove(removed.ContentView);
             }
         }
         _entries.Clear();
@@ -680,12 +707,12 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         }
         else
         {
-            Children.Remove(view);
+            _layer.Children.Remove(view);
             var replacement = BlockViewFactory.Create(row.Block!, context);
             ApplyChunk(row, replacement);
             replacement.Update(context, row.Block!, row.Block!.Key, ref segment);
             row.View = replacement;
-            Children.Add(replacement);
+            _layer.Children.Add(replacement);
         }
         row.Measured = false;
         MarkTopsDirty(row);
@@ -832,7 +859,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         }
         row.View = view;
         _realized.Add(row);
-        Children.Add(view);
+        _layer.Children.Add(view);
         return view;
     }
 
@@ -854,7 +881,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         {
             return;
         }
-        Children.Remove(row.View);
+        _layer.Children.Remove(row.View);
         // 宿主内容控件保留以便再次出现时复用（保持其内部状态）；块视图直接丢弃
         row.View = null;
         _realized.Remove(row);
@@ -963,6 +990,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         _offset = new Vector(0, Math.Clamp(_offset.Y, 0, maxOffset));
         _viewport = new Size(fullWidth, height);
         _extent = new Size(fullWidth, _extent.Height);
+        _layer.Measure(Size.Infinity);
         UpdateTail();
         // 只在滚动信息变化时通知（流式时每帧都会测量）
         var info = (_extent, _viewport, _offset);
@@ -978,9 +1006,19 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     {
         var width = Math.Min(finalSize.Width, MaxContentWidth);
         var x = Math.Max(0, (finalSize.Width - width) / 2);
+        var top = double.PositiveInfinity;
         foreach (var row in _realized)
         {
-            row.View!.Arrange(new Rect(x, row.Top - _offset.Y, width, row.Height));
+            top = Math.Min(top, row.Top);
+        }
+        if (top < _origin || _offset.Y - _origin > RebaseDistance)
+        {
+            _origin = Math.Floor(Math.Max(0, Math.Min(top, _offset.Y) - Overscan));
+        }
+        _layer.Arrange(new Rect(x, _origin - _offset.Y, width, Math.Max(_extent.Height, _offset.Y + finalSize.Height) - _origin));
+        foreach (var row in _realized)
+        {
+            row.View!.Arrange(new Rect(0, row.Top - _origin, width, row.Height));
         }
         return finalSize;
     }

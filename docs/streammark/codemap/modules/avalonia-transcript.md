@@ -38,7 +38,8 @@ updated: 2026-10-16
 | `EnsureRows()` / `EnsureTops()` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:548,576` | 重建 `_rows` 扁平列表；自顶向下累加 `Top` 与总高度（行间距：同块分段 0、同消息块间 `BlockSpacing`、消息间 `EntrySpacing`） |
 | `FirstRowAt(double)` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:599` | 在已排序的 `Top` 上二分，取第一个底边越过给定 y 的行 |
 | `Realize()` / `Unrealize()` / `BuildContent()` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:618,657,645` | 实例化一行（块视图经 `BlockViewFactory.Create`）、回收、宿主内容控件或数据模板构建 |
-| `MeasureOverride` / `ArrangeOverride` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:669,752` | 宽度变化时作废全部实测高度；最多 3 轮"实例化 → 测量 → 更新 Top → 恢复锚点"；按 `MaxContentWidth` 居中排布 |
+| `MeasureOverride` / `ArrangeOverride` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:890,1005` | 宽度变化时作废全部实测高度；最多 3 轮"实例化 → 测量 → 更新 Top → 恢复锚点"；按 `MaxContentWidth` 居中排布 |
+| `RowLayer` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:69` | 行视图的承载图层（面板唯一的子控件）：行按 `Top - _origin` 排在图层内，滚动只移动图层，已在视口内的行 `Bounds` 不变、不会重录；`_origin` 离偏移超过 `RebaseDistance`（50 000）或有行在其上方时重设。图层不测量 / 排列子控件，`OnMeasureInvalidated` 转给面板；测试经 `RowViews` 取行视图 |
 | `UpdateTail()` | `src/TKCode.Arc.StreamMark/Avalonia/Transcript/TranscriptPanel.cs:764` | 只有最后一个流式条目的最后一段被标为 `IsDocumentTail`（渐显与光标，见 `Rendering/TextSegmentView.cs:446`） |
 
 ## Dependencies
@@ -83,7 +84,7 @@ updated: 2026-10-16
 - 只有**最后一个** `MarkdownEntry { State: not null }` 的最后一段被标记为文档尾（`UpdateTail` 第 764-791 行），流式光标与渐显只在那里渲染（`Rendering/TextSegmentView.cs:446`）；若该尾行恰好被回收，就没有光标。
 - `RenderContext.Entry` 是"消息在 `_entries` 中的序号"，也是选区坐标的第一维；`SyncEntries` 一旦改变顺序就丢弃上下文、下一帧重建（`TranscriptPanel.cs:189-196`），`TextPoint` 的比较序（`Selection/TextPoint.cs:8-24`）依赖它。
 - `ApplyAll` 会为**所有**条目的所有顶层块建 `Row`，只有控件是窗口化的（10 万块 = 10 万 `Row`，`VirtualizationScaleTests.cs:32-33`）；`EnsureTops` 一次是 O(行数)，任何 `_topsDirty` 都会全量重算。
-- `MaxContentWidth` 只影响内容列的居中宽度，`Extent.Width` 始终是完整可用宽度（`ArrangeOverride` 第 752-761 行、`MeasureOverride` 第 746 行）。
+- `MaxContentWidth` 只影响内容列的居中宽度，`Extent.Width` 始终是完整可用宽度（`ArrangeOverride`、`MeasureOverride` 末尾）。
 - `SetEntries` 会退订旧的 `INotifyCollectionChanged` 并订阅新的（`TranscriptPanel.cs:133-146`）；传同一个集合两次是幂等的，传新集合会整体重同步。
 
 ## Tests

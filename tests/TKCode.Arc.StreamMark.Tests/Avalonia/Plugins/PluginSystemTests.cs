@@ -199,7 +199,7 @@ public sealed class PluginSystemTests
             view.Offset = new(0, 0);
             await HeadlessApp.Settle();
 
-            var code = view.Panel.Children.OfType<CodeBlockView>().Single();
+            var code = view.Panel.RowViews.OfType<CodeBlockView>().Single();
             Assert.False(code.Wrap);
             // 用户切换"换行"：视图状态写回块状态存储
             code.Wrap = true;
@@ -208,10 +208,10 @@ public sealed class PluginSystemTests
             // 滚到底部（代码块被回收），再滚回顶部（重新实例化）
             view.ScrollToEnd();
             await HeadlessApp.Settle();
-            Assert.DoesNotContain(view.Panel.Children, c => c is CodeBlockView);
+            Assert.DoesNotContain(view.Panel.RowViews, c => c is CodeBlockView);
             view.Offset = new(0, 0);
             await HeadlessApp.Settle();
-            var recreated = view.Panel.Children.OfType<CodeBlockView>().Single();
+            var recreated = view.Panel.RowViews.OfType<CodeBlockView>().Single();
             Assert.NotSame(code, recreated);
             Assert.True(recreated.Wrap);
             window.Close();

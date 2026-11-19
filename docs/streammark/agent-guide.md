@@ -2,7 +2,7 @@
 
 ## 这份文件管什么
 
-StreamMark：面向 AI 对话场景的流式 Markdown 渲染库，Avalonia 12，NativeAOT 安全、不使用 WebView，原生库覆盖六个桌面 RID（win/linux/osx × x64/arm64）。2026-11-19 从独立仓库（AtomUICommunity/StreamMark，最后一个提交 `58c24ea`）并入 TKCode.Arc，作为随 Arc 发布的独立库（与 `TKCode.Arc.Terminal` 同样处理：保留 `StreamMark.*` 命名空间，不依赖 Foundation / Core，没有 `UseArc` 入口，Arc 的 Token、主题与注册规则不适用）。
+StreamMark：面向 AI 对话场景的流式 Markdown 渲染库，Avalonia 12，NativeAOT 安全、不使用 WebView，原生库覆盖六个桌面 RID（win/linux/osx × x64/arm64）。2026-11-19 从独立仓库（AtomUICommunity/StreamMark，最后一个版本 0.1.2，提交 `f911c50`）并入 TKCode.Arc，作为随 Arc 发布的独立库（与 `TKCode.Arc.Terminal` 同样处理：保留 `StreamMark.*` 命名空间，不依赖 Foundation / Core，没有 `UseArc` 入口，Arc 的 Token、主题与注册规则不适用）。
 
 | 包 | 源码 | 命名空间 |
 |---|---|---|
@@ -27,7 +27,7 @@ StreamMark：面向 AI 对话场景的流式 Markdown 渲染库，Avalonia 12，
 | 测试 | `dotnet test tests/TKCode.Arc.StreamMark.Tests` | 公式测试需要先跑 `build-ratex.sh`（`ArcStreamMarkNative=true` 让项目从 `artifacts/native/<rid>/` 复制库）。单用例 `--filter "FullyQualifiedName~<名字>"` |
 | AOT 冒烟（CI 门禁） | `dotnet publish tools/streammark/Gallery -c Release -r <rid> -o artifacts/streammark-aot`，publish 日志里 0 个 `warning IL####`；再运行 `artifacts/streammark-aot/TKCode.Arc.StreamMark.Gallery --smoke` | 退出码即结论（0 = 全部通过）；缺原生库时在 `ratex.*` 检查失败 |
 | 基准 | `dotnet run -c Release --project tools/streammark/Benchmarks -- --filter '*'` | ShortRun，只看量级；结果记录在 [benchmarks.md](benchmarks.md) |
-| 流式 CPU 基准（真实窗口） | `tools/streammark/cpu-bench.sh [rid]` | NativeAOT 发布 `tools/streammark/CpuHarness` 并依次跑场景矩阵，结果追加到 `artifacts/cpu-bench.txt`；会打开窗口，运行期间保持可见。改动渲染、排版、节奏或会话面板后跑一次并与 [benchmarks.md](benchmarks.md) 对比 |
+| 流式 CPU 基准（真实窗口） | `[ROUNDS=n] tools/streammark/cpu-bench.sh [rid]` | NativeAOT 发布 `tools/streammark/CpuHarness`，把场景矩阵交错跑 n 轮（默认 3），每次运行与各场景有效轮次的中位数追加到 `artifacts/cpu-bench.txt`；会打开窗口，运行期间保持可见。窗口被遮挡时系统停止渲染、CPU 骤降，这样的运行标为 `INVALID` 且不计入中位数；跨轮次比较看 `cpu/frame`（每渲染一帧的进程 CPU）。改动渲染、排版、节奏或会话面板后跑一次并与 [benchmarks.md](benchmarks.md) 对比 |
 | 测试截图 | 图片写到 `STREAMMARK_SNAPSHOT_DIR`，未设置时用测试输出目录下的 `snapshots/` | 只用于人工查看，没有基线比对 |
 | 升级 RaTeX | 改 `native/ratex/ratex-upstream.json` 的 `commit`，重新复制该提交的 `fonts/*.ttf` 与 `licenses/*` 到 `src/TKCode.Arc.StreamMark.RaTeX/Fonts/`，确认 `native/ratex/patches/` 仍能打上（上游已包含则删除） | |
 
