@@ -475,13 +475,21 @@ jobs:
       - name: Build the miniaudio shim
         run: for rid in ${{ matrix.rids }}; do tools/audio/build-miniaudio.sh "$rid"; done
 
-      - uses: dtolnay/rust-toolchain@stable
+      # Rust and cargo-zigbuild for libratex_ffi, at the versions pinned in native/toolchain.json (a newer stable once
+      # broke the windows-gnullvm link).
+      - name: Read the Rust pins
+        id: rust
+        run: |
+          python3 -c "import json; d=json.load(open('native/toolchain.json')); print('version=' + d['rust']['version']); print('zigbuild=' + d['cargoZigbuild']['version'])" >> "$GITHUB_OUTPUT"
+
+      - uses: dtolnay/rust-toolchain@master
         with:
+          toolchain: ${{ steps.rust.outputs.version }}
           targets: ${{ matrix.host == 'linux' && 'x86_64-unknown-linux-gnu,aarch64-unknown-linux-gnu,x86_64-pc-windows-gnu,aarch64-pc-windows-gnullvm' || 'aarch64-apple-darwin,x86_64-apple-darwin' }}
 
       - name: Install cargo-zigbuild
         if: matrix.host == 'linux'
-        run: cargo install cargo-zigbuild --locked
+        run: cargo install cargo-zigbuild --version ${{ steps.rust.outputs.zigbuild }} --locked
 
       - name: Build libratex_ffi
         run: for rid in ${{ matrix.rids }}; do tools/streammark/build-ratex.sh "$rid"; done

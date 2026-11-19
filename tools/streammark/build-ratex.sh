@@ -3,7 +3,9 @@
 # patches it lists, into artifacts/native/<rid>/.
 #   tools/streammark/build-ratex.sh            the machine's own RID with plain cargo (local work and tests)
 #   tools/streammark/build-ratex.sh <rid>      a release build for that RID: osx-* with cargo --target, linux-* and win-*
-#                                              with cargo-zigbuild (glibc 2.28 floor on Linux); needs the rustup target
+#                                              with cargo-zigbuild (glibc 2.28 floor on Linux), on the Rust and
+#                                              cargo-zigbuild versions pinned in native/toolchain.json (rustup installs
+#                                              that Rust; add the RID's target to it: rustup target add --toolchain)
 # Needs a Rust toolchain. cargo-zigbuild finds Zig through CARGO_ZIGBUILD_ZIG_PATH, TKCODE_ZIG, a zig on PATH, or else the
 # version pinned in native/toolchain.json (tools/terminal/install-zig.sh). On Windows use build-ratex.ps1.
 set -euo pipefail
@@ -53,6 +55,11 @@ if [[ "$host" == 1 ]]; then
   dir="$CARGO_TARGET_DIR/release"
   lib="$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['build']['perRid'][sys.argv[2]]['lib'])" "$manifest" "$rid")"
 else
+  # Release builds use the pinned Rust (RUSTUP_TOOLCHAIN overrides it).
+  if command -v rustup > /dev/null; then
+    export RUSTUP_TOOLCHAIN="${RUSTUP_TOOLCHAIN:-$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['rust']['version'])" "$root/native/toolchain.json")}"
+  fi
+  echo "rust: $(rustc --version)"
   read -r target tool lib glibc < <(python3 -c "
 import json,sys
 r=json.load(open(sys.argv[1]))['build']['perRid'][sys.argv[2]]
