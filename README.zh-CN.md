@@ -63,7 +63,7 @@ public static AppBuilder BuildAvaloniaApp() =>
 
 ## 包含内容
 
-全部 26 个包使用同一版本号一起发布，请保持它们版本一致。
+全部 30 个包使用同一版本号一起发布，请保持它们版本一致。
 
 ### 组件
 
@@ -71,6 +71,7 @@ public static AppBuilder BuildAvaloniaApp() =>
 |---|---|
 | `TKCode.Arc` | Arc 侧边栏 22 个分组下除 `ChatThread` 外的全部组件；另有布局面板和扩展控件，如 `Form`、`TreeSelect`、`PropertyGrid`、`Cascader` 和 `TransferBox`。不依赖 Markdown 与代码高亮库。 |
 | `TKCode.Arc.Markdown` | 支持流式渲染的 `Markdown` 以及 `ChatThread` / `ChatComposer`，由 StreamMark 渲染。用 `UseArcMarkdown()` 注册。 |
+| `TKCode.Arc.StreamMark`、`.StreamMark.TextMate`、`.StreamMark.RaTeX`、`.StreamMark.Mermaid` | StreamMark：`Markdown` 与 `ChatThread` 底下的流式 Markdown 引擎，只依赖 Avalonia 也能单独使用：`MarkdownView`、`MarkdownStream` 和虚拟化的 `TranscriptView`（命名空间 `StreamMark.*`），可选 TextMate 代码高亮、LaTeX 公式（RaTeX，自带 Windows、macOS、Linux 原生库）与 Mermaid 图表。见 [docs/streammark](docs/streammark/README.md)。 |
 | `TKCode.Arc.Highlighting` | TextMate 语法高亮，用于 `CodeBlock`、富文本编辑器的代码块和 Markdown 的围栏代码；不引用时代码显示为纯文本。用 `UseArcHighlighting()` 注册；设置 `ArcHighlightLanguages`（例如 `csharp;json`）可在裁剪发布时只保留这些语法。 |
 | `TKCode.Arc.Blocks` | 按 uiarc.dev 分组的页面级组合（AI、Agents、登录、设置、电商、营销、客服等），以及整页界面：仪表盘、项目、日历、人员与客户、收件箱与客服、电商。 |
 | `TKCode.Arc.AdvancedCharts` | `DataGrid`（区域选择、行内编辑、填充柄、剪贴板、分组、导出）、`Sunburst`、`SankeyFlow`、`FunnelChart`、`RadarChart`、`RealtimeStream`、`RaceBarChart` 和 `WindRoseChart`。 |
@@ -115,7 +116,7 @@ Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API
 
 | | |
 |---|---|
-| **.NET** | `net8.0`、`net10.0` 和 `net11.0`。`TKCode.Arc.Terminal` 面向 `net10.0` 和 `net11.0`。 |
+| **.NET** | `net8.0`、`net10.0` 和 `net11.0`。`TKCode.Arc.Terminal`、`TKCode.Arc.StreamMark.RaTeX` 与 `TKCode.Arc.StreamMark.Mermaid` 面向 `net10.0` 和 `net11.0`。 |
 | **Avalonia** | Avalonia 12.1.5 及之后的任意 12.x 版本（`[12.1.5, 13.0.0)`），应用升级 Avalonia 无需等待 Arc 发版。 |
 | **桌面** | Windows、macOS 和 Linux。 |
 | **浏览器** | 组件库站点本身运行在 WebAssembly 上，音频、视频和 PDF 都有浏览器后端。 |
@@ -128,7 +129,7 @@ Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API
 | `src/` | 上述各个库及其源生成器。`TKCode.Arc.A2UI`（A2UI 1.0 渲染器）仍在开发中，尚未发布到 NuGet。 |
 | `tests/` | 单元测试、Avalonia 无头测试和生成器快照测试，以及令牌和预设基线。 |
 | `templates/` | `TKCode.Arc.Templates` 的源码。 |
-| `native/` | 终端、音频和视频用到的原生封装与原生库。 |
+| `native/` | 终端、音频和视频用到的原生封装与原生库，以及 StreamMark 公式所用 RaTeX 引擎的版本固定。 |
 | `tools/` | 图标、原生库、模板、文档截图和打包相关的生成器与脚本。 |
 | `design/` | 设计文档与决策记录，从 `design/overview.md` 开始阅读。 |
 

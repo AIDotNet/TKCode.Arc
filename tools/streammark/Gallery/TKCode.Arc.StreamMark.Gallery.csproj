@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- StreamMark's demo window, and its NativeAOT smoke test: publish with -r <rid> (zero IL warnings), then run the binary
+         with the smoke argument; the exit code is the verdict. Math needs libratex_ffi (tools/streammark/build-ratex.sh). -->
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>StreamMark.Gallery</RootNamespace>
+        <PublishAot>true</PublishAot>
+        <ArcStreamMarkNative>true</ArcStreamMarkNative>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia.Desktop" />
+        <PackageReference Include="Avalonia.Themes.Fluent" />
+        <PackageReference Include="Avalonia.Headless" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark.TextMate/TKCode.Arc.StreamMark.TextMate.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark.RaTeX/TKCode.Arc.StreamMark.RaTeX.csproj" />
+        <ProjectReference Include="../../../src/TKCode.Arc.StreamMark.Mermaid/TKCode.Arc.StreamMark.Mermaid.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Samples/*.md" LogicalName="Samples.%(Filename)%(Extension)" />
+    </ItemGroup>
+</Project>

@@ -1,7 +1,7 @@
 <ResourceDictionary xmlns="https://github.com/avaloniaui"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
-                    xmlns:sm="clr-namespace:StreamMark.Avalonia;assembly=StreamMark.Avalonia"
+                    xmlns:sm="clr-namespace:StreamMark.Avalonia;assembly=TKCode.Arc.StreamMark"
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.MarkdownTheme">
     <!-- The document itself is StreamMark's MarkdownView; Markdown maps its Md.* resources onto ArcDesign tokens. -->

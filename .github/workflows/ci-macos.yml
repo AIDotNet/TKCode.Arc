@@ -66,3 +66,39 @@ jobs:
 
       - name: Test
         run: dotnet test tests/${{ matrix.project }}
+
+  # StreamMark's tests and NativeAOT smoke test (ci.yml's streammark job), with libratex_ffi built first.
+  streammark:
+    name: StreamMark (macos-latest)
+    runs-on: macos-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          dotnet-version: 10.0.x
+
+      - uses: actions/cache@v6
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Packages.props', 'build/Versions.props', 'global.json') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - name: Build libratex_ffi
+        run: tools/streammark/build-ratex.sh
+
+      - name: Test
+        run: dotnet test tests/TKCode.Arc.StreamMark.Tests
+
+      - name: NativeAOT publish (zero IL warnings)
+        run: |
+          dotnet publish tools/streammark/Gallery -c Release -r osx-arm64 -o artifacts/streammark-aot 2>&1 | tee publish.log
+          if grep -E "warning IL[0-9]+" publish.log; then
+            echo "::error::NativeAOT publish of the StreamMark Gallery produced IL warnings"
+            exit 1
+          fi
+
+      - name: Smoke
+        run: ./artifacts/streammark-aot/TKCode.Arc.StreamMark.Gallery --smoke

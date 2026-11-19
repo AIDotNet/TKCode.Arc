@@ -6,9 +6,55 @@ from 1.0.0 on, breaking API changes come only with a new major version. Earlier 
 NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TKCode.Arc.Foundation` (from 0.3.2),
 `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting` (from 1.1.1), `TKCode.Arc.Fonts`, `TKCode.Arc.Icons.Lucide`, `TKCode.Arc.Blocks`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Special`,
 `TKCode.Arc.Workflow`, `TKCode.Arc.Dock` (from 0.4.0-preview.2), `TKCode.Arc.Themes.Pixel`, `TKCode.Arc.Themes.Corners`, `TKCode.Arc.Mobile`, `TKCode.Arc.Terminal`, `TKCode.Arc.Audio`,
-`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1), `TKCode.Arc.Ribbon` (from 1.2.0).
+`TKCode.Arc.Audio.Native`, `TKCode.Arc.Audio.Browser`, `TKCode.Arc.Templates` (from 0.4.0-preview.6), `TKCode.Arc.Pdf`, `TKCode.Arc.Pdf.Native` and `TKCode.Arc.Pdf.Browser` (from 1.0.0), `TKCode.Arc.Video`, `TKCode.Arc.Video.Native` and `TKCode.Arc.Video.Browser` (from 1.1.0-preview.1), `TKCode.Arc.Ribbon` (from 1.2.0), `TKCode.Arc.StreamMark`, `TKCode.Arc.StreamMark.TextMate`, `TKCode.Arc.StreamMark.RaTeX` and `TKCode.Arc.StreamMark.Mermaid` (from 1.3.0-preview.1).
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
+
+## 1.3.0-preview.1 - 2026-11-19
+
+The first preview of 1.3 brings StreamMark, the streaming Markdown engine under `Markdown` and `ChatThread`, into
+this repository as four new packages, and updates Markdig, TextMateSharp and Mermaider. Nothing changes in the API of
+the other packages. Install it with `--version 1.3.0-preview.1` (or `--prerelease`).
+
+### StreamMark moves into this repository
+
+StreamMark, the streaming Markdown engine under `Markdown` and `ChatThread`, now lives here instead of in its own
+repository, and ships with every Arc release as four packages that share `ArcVersion`:
+
+- **`TKCode.Arc.StreamMark` (new)**: the former `TKCode.StreamMark.Core` and `TKCode.StreamMark.Avalonia` in one
+  package (`MarkdownView`, `MarkdownStream`, `TranscriptView`, `MarkdownServices`, the streaming engine). Depends on
+  Avalonia and Markdig only; no Arc package and no `UseArc` entry.
+- **`TKCode.Arc.StreamMark.TextMate`**, **`TKCode.Arc.StreamMark.RaTeX`** and **`TKCode.Arc.StreamMark.Mermaid` (new)**:
+  the former `TKCode.StreamMark.Highlighting.TextMate`, `.RaTeX` and `.Mermaid` plugins. RaTeX carries `libratex_ffi`
+  for win/linux/osx × x64/arm64; RaTeX and Mermaid target `net10.0` and `net11.0`.
+- The code is StreamMark 0.1.2, the version Arc used until now, so `Markdown`, `ChatThread` and highlighting behave as
+  before. Namespaces stay `StreamMark.*`.
+- `TKCode.StreamMark.Theme.AtomUI` is not carried over: Arc does not use AtomUI, and hosts map the `Md.*` resources with
+  `MarkdownResourceAlias` (Arc's `Markdown` does this for Arc's tokens).
+
+Upgrading:
+
+- Apps that use `TKCode.Arc.Markdown` or `TKCode.Arc.Highlighting` need no change; they now bring
+  `TKCode.Arc.StreamMark` / `TKCode.Arc.StreamMark.TextMate` instead of the `TKCode.StreamMark.*` packages. Remove any
+  direct `TKCode.StreamMark.*` reference, or replace it as below: the old and the new packages contain the same types
+  and cannot be used together.
+- Apps that reference StreamMark directly: `TKCode.StreamMark.Core` + `TKCode.StreamMark.Avalonia` →
+  `TKCode.Arc.StreamMark`; `TKCode.StreamMark.Highlighting.TextMate` → `TKCode.Arc.StreamMark.TextMate`;
+  `TKCode.StreamMark.RaTeX` / `.Mermaid` → `TKCode.Arc.StreamMark.RaTeX` / `.Mermaid`. XAML that names the assembly
+  changes `assembly=StreamMark.Avalonia` to `assembly=TKCode.Arc.StreamMark`.
+
+### Dependencies
+
+- Markdig 1.6.0 (was 1.4.0), TextMateSharp and TextMateSharp.Grammars 2.0.5 (was 2.0.4; the `ArcHighlightLanguages`
+  grammar index is regenerated and unchanged), Mermaider 0.17.0 (was 0.15.1).
+- Svg.Skia and Svg.Animation stay on 5.1.1: 5.2.x needs SkiaSharp 4, and Avalonia 12 ships SkiaSharp 3.
+- Roslyn for the source generators stays on 5.9.0, the compiler of the .NET 10 SDK: the generators ship inside
+  `TKCode.Arc.Foundation` and `TKCode.Arc.Icons.Lucide`, and a .NET 10 SDK would not load ones built on 5.12.
+- Repository only (not in the packages): Microsoft.NET.Test.Sdk 18.12.0. xunit stays on 3.x: Avalonia.Headless.XUnit
+  12.1.6 is built on xunit 3, and under xunit 4 the headless test projects find no tests.
+
+Maintainers: StreamMark's rules, code map and history are in `docs/streammark/` (start at `agent-guide.md`); its
+standalone changelog is `docs/streammark/CHANGELOG.md`.
 
 ## 1.2.0 - 2026-11-19
 

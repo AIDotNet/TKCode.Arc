@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "repo": "https://github.com/erweixin/RaTeX.git",
+  "commit": "ae391d727ac615437c63c308f4538d971a84bede",
+  "commitDate": "2026-07-28T08:41:16Z",
+  "crate": "ratex-ffi",
+  "license": "MIT (fonts: SIL OFL 1.1)",
+  "fonts": "src/TKCode.Arc.StreamMark.RaTeX/Fonts holds fonts/*.ttf and licenses/* of this commit; copy them again when the commit changes.",
+  "build": {
+    "perRid": {
+      "osx-arm64": { "target": "aarch64-apple-darwin", "tool": "build", "lib": "libratex_ffi.dylib" },
+      "osx-x64": { "target": "x86_64-apple-darwin", "tool": "build", "lib": "libratex_ffi.dylib" },
+      "linux-x64": { "target": "x86_64-unknown-linux-gnu", "glibc": "2.28", "tool": "zigbuild", "lib": "libratex_ffi.so" },
+      "linux-arm64": { "target": "aarch64-unknown-linux-gnu", "glibc": "2.28", "tool": "zigbuild", "lib": "libratex_ffi.so" },
+      "win-x64": { "target": "x86_64-pc-windows-gnu", "tool": "zigbuild", "lib": "ratex_ffi.dll" },
+      "win-arm64": { "target": "aarch64-pc-windows-gnullvm", "tool": "zigbuild", "lib": "ratex_ffi.dll" }
+    }
+  },
+  "patches": [
+    {
+      "file": "patches/0001-enclose-border-uses-current-color.patch",
+      "reason": "\\fbox / \\boxed borders take the current color instead of fixed black, so they show on dark themes. To be sent upstream; when upstream has it, drop the patch and the managed check in RaTeXMathLayout that depends on it."
+    }
+  ],
+  "updatedAt": "2026-11-19"
+}

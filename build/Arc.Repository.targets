@@ -21,6 +21,18 @@
     </ItemGroup>
     <Import Project="$(ArcRepositoryRoot)src/TKCode.Arc.Icons.Lucide/buildTransitive/TKCode.Arc.Icons.Lucide.targets"
             Condition="'$(ArcLucideGenerator)' == 'true'" />
+    <!-- Projects in this repository that run StreamMark's math set ArcStreamMarkNative=true: the SDK does not pass a
+         RuntimeIdentifier to referenced projects, so they copy libratex_ffi for their own RID from artifacts/native/<rid>
+         (tools/streammark/build-ratex.sh). Package consumers get it from runtimes/<rid>/native of TKCode.Arc.StreamMark.RaTeX. -->
+    <PropertyGroup Condition="'$(ArcStreamMarkNative)' == 'true'">
+        <_ArcStreamMarkNativeRid>$(RuntimeIdentifier)</_ArcStreamMarkNativeRid>
+        <_ArcStreamMarkNativeRid Condition="'$(_ArcStreamMarkNativeRid)' == ''">$(NETCoreSdkPortableRuntimeIdentifier)</_ArcStreamMarkNativeRid>
+        <_ArcStreamMarkNativeDir>$(ArcRepositoryRoot)artifacts/native/$(_ArcStreamMarkNativeRid)/</_ArcStreamMarkNativeDir>
+    </PropertyGroup>
+    <ItemGroup Condition="'$(ArcStreamMarkNative)' == 'true' and Exists('$(_ArcStreamMarkNativeDir)')">
+        <None Include="$(_ArcStreamMarkNativeDir)*ratex_ffi.*" Exclude="$(_ArcStreamMarkNativeDir)*.a;$(_ArcStreamMarkNativeDir)*.lib;$(_ArcStreamMarkNativeDir)*.d"
+              Link="%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" Visible="false" />
+    </ItemGroup>
     <!-- Public API tracking (#146): every packable library lists its public surface in PublicAPI.Shipped.txt (what released
          packages contain) and PublicAPI.Unshipped.txt (added since). A public member missing from both, or listed but gone,
          fails the build (RS0016, RS0017). At a stable release the Unshipped lines move to Shipped. -->

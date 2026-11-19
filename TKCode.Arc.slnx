@@ -4,6 +4,10 @@
     <Project Path="src/TKCode.Arc.Foundation.Generators/TKCode.Arc.Foundation.Generators.csproj" />
     <Project Path="src/TKCode.Arc.Core/TKCode.Arc.Core.csproj" />
     <Project Path="src/TKCode.Arc/TKCode.Arc.csproj" />
+    <Project Path="src/TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
+    <Project Path="src/TKCode.Arc.StreamMark.TextMate/TKCode.Arc.StreamMark.TextMate.csproj" />
+    <Project Path="src/TKCode.Arc.StreamMark.RaTeX/TKCode.Arc.StreamMark.RaTeX.csproj" />
+    <Project Path="src/TKCode.Arc.StreamMark.Mermaid/TKCode.Arc.StreamMark.Mermaid.csproj" />
     <Project Path="src/TKCode.Arc.Markdown/TKCode.Arc.Markdown.csproj" />
     <Project Path="src/TKCode.Arc.Highlighting/TKCode.Arc.Highlighting.csproj" />
     <Project Path="src/TKCode.Arc.Audio/TKCode.Arc.Audio.csproj" />
@@ -39,10 +43,14 @@
   </Folder>
   <Folder Name="/tools/">
     <Project Path="tools/graphics3d/Probe/TKCode.Arc.Graphics3D.Probe.csproj" />
+    <Project Path="tools/streammark/Gallery/TKCode.Arc.StreamMark.Gallery.csproj" />
+    <Project Path="tools/streammark/CpuHarness/TKCode.Arc.StreamMark.CpuHarness.csproj" />
+    <Project Path="tools/streammark/Benchmarks/TKCode.Arc.StreamMark.Benchmarks.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/TKCode.Arc.Foundation.Tests/TKCode.Arc.Foundation.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Core.Tests/TKCode.Arc.Core.Tests.csproj" />
+    <Project Path="tests/TKCode.Arc.StreamMark.Tests/TKCode.Arc.StreamMark.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.BaseTheme.Tests/TKCode.Arc.BaseTheme.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Tests/TKCode.Arc.Tests.csproj" />
     <Project Path="tests/TKCode.Arc.Blocks.Tests/TKCode.Arc.Blocks.Tests.csproj" />

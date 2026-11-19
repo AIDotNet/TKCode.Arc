@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>net10.0;net11.0</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.StreamMark.Mermaid</AssemblyName>
+        <RootNamespace>StreamMark.Mermaid</RootNamespace>
+        <PackageId>TKCode.Arc.StreamMark.Mermaid</PackageId>
+        <Description>Mermaid diagrams for StreamMark (Mermaider and Svg.Skia), drawn without a browser.</Description>
+        <PackageTags>$(PackageTags);markdown;streammark;mermaid;diagram</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Avalonia" />
+        <!-- ISkiaSharpApiLeaseFeature: draws the SKPicture straight into Avalonia's Skia canvas as vectors. -->
+        <PackageReference Include="Avalonia.Skia" />
+        <PackageReference Include="Mermaider" />
+        <!-- Svg.Skia stays on 5.1.1 (SkiaSharp 3, the native libraries Avalonia 12 ships); its managed parts move to 5.2.3
+             for the Svg.Model TypeDescriptor fix (IL2026 otherwise). Versions: Directory.Packages.props. -->
+        <PackageReference Include="Svg.Skia" />
+        <PackageReference Include="Svg.Model" />
+        <PackageReference Include="Svg.Custom" />
+        <PackageReference Include="ShimSkiaSharp" />
+        <PackageReference Include="Svg.SceneGraph" />
+        <PackageReference Include="Svg.Animation" />
+        <ProjectReference Include="../TKCode.Arc.StreamMark/TKCode.Arc.StreamMark.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.StreamMark.Tests" />
+    </ItemGroup>
+</Project>
