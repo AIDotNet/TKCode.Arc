@@ -8,6 +8,7 @@ using Avalonia.Interactivity;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
+using Avalonia.Media.TextFormatting.Unicode;
 using StreamMark.Avalonia.Selection;
 using StreamMark.Avalonia.Extensions;
 using StreamMark.Core.Model;
@@ -1353,8 +1354,64 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             }
 
             var properties = PropertiesFor(style, component, textStyle);
-            return CreateCharacters(text, begin, textSourceIndex, end, properties, style, component, textStyle);
+            end = ScriptCut(text, textSourceIndex, end, out var atScriptBoundary);
+            return CreateCharacters(text, begin, textSourceIndex, end, atScriptBoundary ? end : -1, properties, style, component, textStyle);
         }
+
+        // 文字按书写系统（script）分段，各段单独整形，与从哪里开始取 run 无关。
+        // Avalonia 把相邻、同一字体、内存连续的 run 拼成一个缓冲交给 HarfBuzz 整形，整个缓冲的 script 按其中第一个有书写系统的字推断：
+        // 主字体同时覆盖（或都不覆盖、又没有回退字体，例如只有 DejaVu 的 Linux）中文与英文时，"中文。The renderer" 整段按汉字整形，
+        // 英文没有字距调整；逐行重排从行首 "renderer" 开始取 run，按拉丁文整形，有字距调整，字宽不同，断行与整段排版不一致。
+        // 所以 run 在书写系统变化处截断，并让截断处之前的那个 run 用一份独立的字符串，Avalonia 无法把它与后面的 run 拼在一起。
+        // 分界点紧跟在前一个书写系统的最后一个字（含其后的组合附加符号）之后，中性字符（标点、数字、空格）归后一段：
+        // 每段都以有书写系统的字结尾，从段内任意行首开始整形推断出的 script 都与整段相同。
+        // 是否截断、run 末尾是不是分界点只取决于位置，与取 run 的起点无关（向后最多看 ScriptLookahead 个中性字符）。
+        private const int ScriptLookahead = 64;
+
+        private static int ScriptCut(string text, int start, int end, out bool atBoundary)
+        {
+            atBoundary = false;
+            var current = Script.Unknown;
+            var strongEnd = start;
+            var i = start;
+            while (i < text.Length)
+            {
+                if (i >= end && (current == Script.Unknown || i - end >= ScriptLookahead))
+                {
+                    break;
+                }
+                var script = Codepoint.ReadAt(text.AsSpan(), i, out var count).Script;
+                if (script is not (Script.Unknown or Script.Common or Script.Inherited))
+                {
+                    if (current == Script.Unknown)
+                    {
+                        current = script;
+                    }
+                    else if (script != current)
+                    {
+                        // strongEnd 不超过 end：run 内最后一个与 current 相同书写系统的字之后
+                        atBoundary = true;
+                        return strongEnd;
+                    }
+                    if (i >= end)
+                    {
+                        // run 之后的第一个有书写系统的字与 run 相同：run 末尾不是分界点
+                        break;
+                    }
+                    strongEnd = i + count;
+                }
+                else if (script == Script.Inherited && i == strongEnd && i < end && current != Script.Unknown)
+                {
+                    strongEnd = i + count;
+                }
+                i += count;
+            }
+            return end;
+        }
+
+        // 末尾是书写系统分界点的 run 用独立字符串，见 ScriptCut
+        private static ReadOnlyMemory<char> Slice(string text, int start, int length, int scriptBoundary) =>
+            start + length == scriptBoundary ? text.Substring(start, length).AsMemory() : text.AsMemory(start, length);
 
         private static int LowerBoundObject(System.Collections.Immutable.ImmutableArray<InlineObject> objects, int offset)
         {
@@ -1398,7 +1455,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         // 回退字体按整段缺字文字的第一个字匹配，与从哪个位置开始取 run 无关：逐行排版会从行首重新取 run，
         // 若按行首的字匹配（如"。"与"首"在 Windows 上可能匹配到不同字体），增量结果就会与整段排版不同。
         // begin 是同一样式范围（span / 内嵌对象之间）的起点，向前找缺字段的起点不越过它；已扫描过的区间缓存在 _owner 上，避免每帧倒扫。
-        private TextRun CreateCharacters(string text, int begin, int start, int end, TextRunProperties properties, InlineStyle style, int component, int textStyle)
+        private TextRun CreateCharacters(string text, int begin, int start, int end, int scriptBoundary, TextRunProperties properties, InlineStyle style, int component, int textStyle)
         {
             var map = GlyphMap(properties);
             var first = Rune.GetRuneAt(text, start);
@@ -1439,9 +1496,9 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 }
                 if (MatchFallback(headCodepoint, properties.Typeface) is { } fallback)
                 {
-                    return new TextCharacters(text.AsMemory(start, length), FallbackProperties(properties, style, component, textStyle, fallback));
+                    return new TextCharacters(Slice(text, start, length, scriptBoundary), FallbackProperties(properties, style, component, textStyle, fallback));
                 }
-                return new TextCharacters(text.AsMemory(start, length), properties);
+                return new TextCharacters(Slice(text, start, length, scriptBoundary), properties);
             }
             // 主字体能覆盖的前缀：截到第一个缺字处，缺字部分由下一次调用按上面的规则处理
             var covered = first.Utf16SequenceLength;
@@ -1454,7 +1511,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 }
                 covered += rune.Utf16SequenceLength;
             }
-            return new TextCharacters(text.AsMemory(start, covered), properties);
+            return new TextCharacters(Slice(text, start, covered, scriptBoundary), properties);
         }
 
         // Avalonia 匹配回退字体时优先复用之前匹配到的字体：同一个"。"在匹配过韩文之后会落到 Apple SD Gothic Neo 而不是苹方。

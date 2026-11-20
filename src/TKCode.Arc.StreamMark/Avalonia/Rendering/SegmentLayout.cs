@@ -12,6 +12,7 @@ namespace StreamMark.Avalonia.Rendering;
 /// <remarks>
 /// 从行首重新开始等价于整段排版：行首本身是断行机会，前一行的断行只取决于它自己的文字与紧随其后的字符，
 /// 因此从差异点所在行的前一行开始即可覆盖禁则（如行首不能是句号）把前一行末字拉到下一行的情况。
+/// 前提是文本源给出的 run 与从哪里开始取无关，且整形结果不随缓冲起点变化（书写系统按 run 分开，见 TextSegmentView 的 ScriptCut）。
 /// 两端对齐（只来自 HTML 继承样式）依赖 Avalonia 内部的词间对齐实现，整段交给 <see cref="TextLayout"/> 排版后接管其行。
 /// </remarks>
 public sealed class SegmentLayout : IDisposable

@@ -19,6 +19,7 @@
 - [StreamPacer.GetRevealTime 还没有生产消费者](pacer-reveal-time-unwired.md) — 排查渐显不生效时的第一个怀疑对象
 - [CI runner 的字体环境与本机不同](ci-font-environments.md) — Linux 只有 DejaVu、macOS 苹方 600 加载成 Medium；字体断言按真实加载结果
 - [回退字体曾依赖取 run 的起点与匹配历史](fallback-font-position-history.md) — Windows 上流式断行与整段排版不一致的原因（alpha.19 修复）
+- [整形缓冲曾跨书写系统，script 依赖取 run 的起点](script-itemized-shaping.md) — Linux CI 上带样式段落的流式断行与整段排版不一致的原因（2026-11-20 修复）
 - [差异视图正在加入（2026-10-16）](diff-view-in-flight.md) — 当前在飞的特性，以及它会收紧哪些不变量
 - [Mermaid 配色默认复刻 mermaid.js，宿主半透明色必须叠底色](mermaid-theme-mermaidjs.md) — 白底白字的来历、`DataPalette` 的蓝色陷阱、高图不再封顶 900px
 - [LongCodeTests 的 20ms 计时断言本机偶发失败](longcode-jump-timing-flaky.md) — 全量里只有它失败时先单独重跑，别当成回归
