@@ -38,6 +38,7 @@ public class MarkdownView : Control, ISelectionHost
     private StreamingDocument? _ownDocument;
     private RenderContext? _context;
     private bool _frameRequested;
+    private int _snapshotPostPending;
     private readonly Plugins.BlockStateStore _state = new();
     private bool _refreshing;
     private long _refreshVersion;
@@ -217,7 +218,20 @@ public class MarkdownView : Control, ISelectionHost
         }
     }
 
-    private void OnSnapshotReady(DocumentSnapshot snapshot) => Dispatcher.UIThread.Post(RequestFrame, DispatcherPriority.Render);
+    private void OnSnapshotReady(DocumentSnapshot snapshot)
+    {
+        // 在后台线程合并多次快照通知，避免高 TPS 下每快照都向界面线程投递一个委托
+        if (Interlocked.Exchange(ref _snapshotPostPending, 1) == 0)
+        {
+            Dispatcher.UIThread.Post(OnSnapshotPosted, DispatcherPriority.Render);
+        }
+    }
+
+    private void OnSnapshotPosted()
+    {
+        Volatile.Write(ref _snapshotPostPending, 0);
+        RequestFrame();
+    }
 
     private void RequestFrame()
     {

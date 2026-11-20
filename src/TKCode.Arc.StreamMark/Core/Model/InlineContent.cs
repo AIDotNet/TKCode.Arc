@@ -115,6 +115,50 @@ public sealed record InlineContent(
 
     public bool IsEmpty => Text.Length == 0;
 
+    public bool Equals(InlineContent? other)
+    {
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+        if (other is null || !string.Equals(Text, other.Text, StringComparison.Ordinal))
+        {
+            return false;
+        }
+        return SequenceEqual(Spans, other.Spans)
+            && SequenceEqual(Links, other.Links)
+            && SequenceEqual(Objects, other.Objects)
+            && SequenceEqual(Components, other.Components)
+            && SequenceEqual(TextStyles, other.TextStyles);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Text, Spans.Length, Links.Length, Objects.Length, Components.Length, TextStyles.Length);
+
+    private static bool SequenceEqual<T>(ImmutableArray<T> a, ImmutableArray<T> b)
+    {
+        if (a == b)
+        {
+            return true;
+        }
+        if (a.IsDefaultOrEmpty && b.IsDefaultOrEmpty)
+        {
+            return true;
+        }
+        if (a.IsDefault || b.IsDefault || a.Length != b.Length)
+        {
+            return false;
+        }
+        var comparer = EqualityComparer<T>.Default;
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (!comparer.Equals(a[i], b[i]))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     internal void AddTo(ref Fingerprint fp)
     {
         fp.Add(Text);

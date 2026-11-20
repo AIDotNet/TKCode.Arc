@@ -1,189 +1,304 @@
+using System.Buffers;
 using System.Collections.Immutable;
-using Markdig;
-using Markdig.Extensions.AutoIdentifiers;
-using Markdig.Extensions.EmphasisExtras;
-using Markdig.Extensions.Tables;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
-using StreamMark.Core.Model;
 using StreamMark.Core.Remend;
 
 namespace StreamMark.Core.Parsing;
 
 /// <summary>
-/// 一套 Markdown 方言：Markdig 管线、白名单组件、插件映射与 remend 处理器。不可变、线程安全，
-/// 由 <see cref="MarkdownProfileBuilder"/> 构建；同一宿主的所有文档通常共用一个实例。
+/// 一套 Markdown 方言配置：原生增量解析器的方言开关、白名单组件、自定义块/行内语法规则与 remend 处理器。
+/// 不可变、线程安全，由 <see cref="MarkdownProfileBuilder"/> 构建；同一宿主的所有文档通常共用一个实例。
 /// </summary>
 public sealed class MarkdownProfile
 {
-    internal MarkdownProfile(MarkdownPipeline pipeline, ImmutableArray<ComponentSpec> components,
-        ImmutableArray<Func<Block, MapContext, MarkdownBlock?>> blockMappers,
-        ImmutableArray<Func<Inline, InlineMapContext, bool>> inlineMappers,
-        ImmutableArray<RemendHandler> remendHandlers)
+    private readonly SearchValues<char>? _customBaseTriggers;
+    private readonly SearchValues<char>? _customAutolinkTriggers;
+
+    internal MarkdownProfile(
+        ImmutableArray<ComponentSpec> components,
+        ImmutableArray<IBlockSyntaxRule> blockRules,
+        ImmutableArray<IInlineSyntaxRule> inlineRules,
+        ImmutableArray<RemendHandler> remendHandlers,
+        bool softlineBreakAsHardline,
+        bool enableTables,
+        bool enableTaskLists,
+        bool enableStrikethrough,
+        bool enableAutoLinks,
+        bool enableFootnotes,
+        bool enableAlertBlocks,
+        bool enableDefinitionLists,
+        bool enableCustomContainers,
+        bool enableMathematics,
+        bool enableCjkFriendlyEmphasis,
+        bool enableEmojiShortcodes,
+        bool enableAutoIdentifiers)
     {
-        Pipeline = pipeline;
         Components = components;
         Table = new ComponentTable(components);
-        BlockMappers = blockMappers;
-        InlineMappers = inlineMappers;
+        BlockRules = blockRules;
+        InlineRules = inlineRules;
         RemendHandlers = remendHandlers;
+        SoftlineBreakAsHardline = softlineBreakAsHardline;
+        EnableTables = enableTables;
+        EnableTaskLists = enableTaskLists;
+        EnableStrikethrough = enableStrikethrough;
+        EnableAutoLinks = enableAutoLinks;
+        EnableFootnotes = enableFootnotes;
+        EnableAlertBlocks = enableAlertBlocks;
+        EnableDefinitionLists = enableDefinitionLists;
+        EnableCustomContainers = enableCustomContainers;
+        EnableMathematics = enableMathematics;
+        EnableCjkFriendlyEmphasis = enableCjkFriendlyEmphasis;
+        EnableEmojiShortcodes = enableEmojiShortcodes;
+        EnableAutoIdentifiers = enableAutoIdentifiers;
+
+        if (!inlineRules.IsEmpty)
+        {
+            var extra = new HashSet<char>();
+            foreach (var rule in inlineRules)
+            {
+                foreach (var c in rule.OpeningCharacters)
+                {
+                    extra.Add(c);
+                }
+            }
+            if (extra.Count > 0)
+            {
+                var baseChars = new HashSet<char>("\\`*_~[]!<&$:\n\r");
+                baseChars.UnionWith(extra);
+                _customBaseTriggers = SearchValues.Create([.. baseChars]);
+
+                baseChars.UnionWith("wW");
+                _customAutolinkTriggers = SearchValues.Create([.. baseChars]);
+            }
+        }
     }
 
-    /// <summary>默认方言：GFM、数学、脚注、提示块、自定义容器等，加上内置白名单组件。</summary>
+    /// <summary>默认方言：GFM、数学、脚注、提示块、自定义容器、CJK 友好强调、Emoji 短码等，加上内置白名单组件。</summary>
     public static MarkdownProfile Default { get; } = new MarkdownProfileBuilder().BuildNew();
 
-    public MarkdownPipeline Pipeline { get; }
-
+    /// <summary>白名单 HTML 组件表。</summary>
     public ImmutableArray<ComponentSpec> Components { get; }
 
     internal ComponentTable Table { get; }
 
-    internal ImmutableArray<Func<Block, MapContext, MarkdownBlock?>> BlockMappers { get; }
+    /// <summary>自定义块级语法规则。</summary>
+    public ImmutableArray<IBlockSyntaxRule> BlockRules { get; }
 
-    internal ImmutableArray<Func<Inline, InlineMapContext, bool>> InlineMappers { get; }
+    /// <summary>自定义行内语法规则。</summary>
+    public ImmutableArray<IInlineSyntaxRule> InlineRules { get; }
 
-    /// <summary>插件追加的 remend 处理器（流式尾部使用）。</summary>
+    /// <summary>插件追加的 remend 处理器（流式活跃叶节点使用）。</summary>
     public ImmutableArray<RemendHandler> RemendHandlers { get; }
 
-    /// <summary>内容按 Markdown 解析的块级组件名（小写），切分器据此不在容器内部冻结。</summary>
-    internal ImmutableArray<string> BlockComponentNames => Table.BlockNames;
+    /// <summary>单次软换行是否按硬换行（<c>\n</c>）输出（聊天消息常用）。</summary>
+    public bool SoftlineBreakAsHardline { get; }
 
-    /// <summary>内容原样保留的块级组件名（小写）：切分器把它们当作不透明块，直到行尾出现结束标签。</summary>
-    internal ImmutableArray<string> RawComponentNames => Table.RawBlockNames;
+    public bool EnableTables { get; }
 
-    /// <summary>流式切分时按"容器"处理（未闭合就不冻结）的标签：块级组件与可包住 Markdown 的 HTML 容器元素。</summary>
-    internal ImmutableArray<string> SegmenterContainers =>
-        _segmenterContainers.IsDefault
-            ? _segmenterContainers = [.. BlockComponentNames.Concat(Html.HtmlElements.Containers).Distinct(StringComparer.OrdinalIgnoreCase)]
-            : _segmenterContainers;
+    public bool EnableTaskLists { get; }
 
-    private ImmutableArray<string> _segmenterContainers;
+    public bool EnableStrikethrough { get; }
 
-    /// <summary>
-    /// 找原样组件区间时按不透明容器跳过的标签：只有 HTML 容器元素（其内部是 HTML 块，解析器不会在里面开组件）。
-    /// 白名单块级组件内部按 Markdown 解析、可以嵌套原样组件，所以这里不跳过。
-    /// </summary>
-    internal ImmutableArray<string> RawScanContainers =>
-        _rawScanContainers.IsDefault
-            ? _rawScanContainers = [.. Html.HtmlElements.Containers.Where(tag => !BlockComponentNames.Contains(tag, StringComparer.OrdinalIgnoreCase) && !RawComponentNames.Contains(tag, StringComparer.OrdinalIgnoreCase))]
-            : _rawScanContainers;
+    public bool EnableAutoLinks { get; }
 
-    private ImmutableArray<string> _rawScanContainers;
+    public bool EnableFootnotes { get; }
+
+    public bool EnableAlertBlocks { get; }
+
+    public bool EnableDefinitionLists { get; }
+
+    public bool EnableCustomContainers { get; }
+
+    public bool EnableMathematics { get; }
+
+    public bool EnableCjkFriendlyEmphasis { get; }
+
+    public bool EnableEmojiShortcodes { get; }
+
+    public bool EnableAutoIdentifiers { get; }
+
+    internal SearchValues<char> GetInlineTriggers(bool hasBareAutolink, SearchValues<char> defaultBase, SearchValues<char> defaultAutolink) =>
+        hasBareAutolink
+            ? _customAutolinkTriggers ?? defaultAutolink
+            : _customBaseTriggers ?? defaultBase;
 }
 
-/// <summary>构建 <see cref="MarkdownProfile"/>。插件在这里注册语法扩展、组件与映射。</summary>
+/// <summary>构建 <see cref="MarkdownProfile"/>。插件在这里注册方言开关、白名单组件、自定义语法规则与 remend 处理器。</summary>
 public sealed class MarkdownProfileBuilder
 {
-    private readonly List<IMarkdownExtension> _extensions = [];
     private readonly List<ComponentSpec> _components = [.. ComponentSpec.BuiltIn];
-    private readonly List<Func<Block, MapContext, MarkdownBlock?>> _blockMappers = [];
-    private readonly List<Func<Inline, InlineMapContext, bool>> _inlineMappers = [];
+    private readonly List<IBlockSyntaxRule> _blockRules = [];
+    private readonly List<IInlineSyntaxRule> _inlineRules = [];
     private readonly List<RemendHandler> _remendHandlers = [];
 
-    /// <summary>追加 Markdig 扩展（自定义块 / 行内解析器）。</summary>
-    public MarkdownProfileBuilder AddMarkdigExtension(IMarkdownExtension extension)
-    {
-        _extensions.Add(extension);
-        return this;
-    }
+    private bool _softlineBreakAsHardline;
+    private bool _enableTables = true;
+    private bool _enableTaskLists = true;
+    private bool _enableStrikethrough = true;
+    private bool _enableAutoLinks = true;
+    private bool _enableFootnotes = true;
+    private bool _enableAlertBlocks = true;
+    private bool _enableDefinitionLists = true;
+    private bool _enableCustomContainers = true;
+    private bool _enableMathematics = true;
+    private bool _enableCjkFriendlyEmphasis = true;
+    private bool _enableEmojiShortcodes = true;
+    private bool _enableAutoIdentifiers = true;
 
     /// <summary>登记白名单 HTML 组件；同名时后登记的覆盖先登记的。</summary>
     public MarkdownProfileBuilder AddComponent(ComponentSpec spec)
     {
+        ArgumentNullException.ThrowIfNull(spec);
         _components.RemoveAll(c => string.Equals(c.Name, spec.Name, StringComparison.OrdinalIgnoreCase));
         _components.Add(spec);
         return this;
     }
 
-    /// <summary>为自定义 Markdig 块节点提供模型映射；返回 null 表示交给后续映射器 / 内置映射。</summary>
-    public MarkdownProfileBuilder MapBlock<TNode>(Func<TNode, MapContext, MarkdownBlock?> map) where TNode : Block
+    /// <summary>追加零依赖的自定义块级语法规则。</summary>
+    public MarkdownProfileBuilder AddBlockRule(IBlockSyntaxRule rule)
     {
-        _blockMappers.Add((block, context) => block is TNode node ? map(node, context) : null);
+        ArgumentNullException.ThrowIfNull(rule);
+        _blockRules.Add(rule);
         return this;
     }
 
-    /// <summary>为自定义 Markdig 行内节点提供映射：通过 <see cref="InlineMapContext"/> 输出文本或对象，返回 true 表示已处理。</summary>
-    public MarkdownProfileBuilder MapInline<TNode>(Func<TNode, InlineMapContext, bool> map) where TNode : Inline
+    /// <summary>追加零依赖的自定义行内语法规则。</summary>
+    public MarkdownProfileBuilder AddInlineRule(IInlineSyntaxRule rule)
     {
-        _inlineMappers.Add((inline, context) => inline is TNode node && map(node, context));
+        ArgumentNullException.ThrowIfNull(rule);
+        _inlineRules.Add(rule);
         return this;
     }
 
-    /// <summary>追加 remend 处理器（作用于流式尾部，优先级规则见 <see cref="Remend.Remend"/>）。</summary>
+    /// <summary>追加 remend 处理器（作用于流式活跃叶节点，优先级规则见 <see cref="Remend.Remend"/>）。</summary>
     public MarkdownProfileBuilder AddRemendHandler(RemendHandler handler)
     {
+        ArgumentNullException.ThrowIfNull(handler);
         _remendHandlers.Add(handler);
         return this;
     }
 
+    /// <summary>将段落内的单个软换行视为硬换行（例如聊天消息输入框的换行行为）。</summary>
+    public MarkdownProfileBuilder UseSoftlineBreakAsHardline(bool enabled = true)
+    {
+        _softlineBreakAsHardline = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 GFM 管道表格（默认开启）。</summary>
+    public MarkdownProfileBuilder UseTables(bool enabled = true)
+    {
+        _enableTables = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 GFM 任务列表（默认开启）。</summary>
+    public MarkdownProfileBuilder UseTaskLists(bool enabled = true)
+    {
+        _enableTaskLists = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 <c>~~</c> 删除线（默认开启；单波浪下标始终关闭）。</summary>
+    public MarkdownProfileBuilder UseStrikethrough(bool enabled = true)
+    {
+        _enableStrikethrough = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 GFM 裸自动链接（默认开启）。</summary>
+    public MarkdownProfileBuilder UseAutoLinks(bool enabled = true)
+    {
+        _enableAutoLinks = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭脚注（默认开启）。</summary>
+    public MarkdownProfileBuilder UseFootnotes(bool enabled = true)
+    {
+        _enableFootnotes = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 GitHub 提示块 <c>&gt; [!NOTE]</c>（默认开启）。</summary>
+    public MarkdownProfileBuilder UseAlertBlocks(bool enabled = true)
+    {
+        _enableAlertBlocks = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭定义列表（默认开启）。</summary>
+    public MarkdownProfileBuilder UseDefinitionLists(bool enabled = true)
+    {
+        _enableDefinitionLists = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 <c>:::</c> 自定义容器（默认开启）。</summary>
+    public MarkdownProfileBuilder UseCustomContainers(bool enabled = true)
+    {
+        _enableCustomContainers = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭数学公式（<c>$…$</c>、<c>$$…$$</c>、<c>\(…\)</c>、<c>\[…\]</c>，默认开启）。</summary>
+    public MarkdownProfileBuilder UseMathematics(bool enabled = true)
+    {
+        _enableMathematics = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 CJK 友好强调侧翼规则（默认开启）。</summary>
+    public MarkdownProfileBuilder UseCjkFriendlyEmphasis(bool enabled = true)
+    {
+        _enableCjkFriendlyEmphasis = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 <c>:smile:</c> Emoji 短码（默认开启）。</summary>
+    public MarkdownProfileBuilder UseEmojiShortcodes(bool enabled = true)
+    {
+        _enableEmojiShortcodes = enabled;
+        return this;
+    }
+
+    /// <summary>启用或关闭 GitHub 风格标题自动锚点 Id（默认开启）。</summary>
+    public MarkdownProfileBuilder UseAutoIdentifiers(bool enabled = true)
+    {
+        _enableAutoIdentifiers = enabled;
+        return this;
+    }
+
     /// <summary>
-    /// 构建方言。没有登记任何语法改动（扩展、映射、remend 处理器，组件表仍是内置表）时返回共享的
-    /// <see cref="MarkdownProfile.Default"/>：只加渲染器、不改语法的插件组合与默认方言是同一个实例，
-    /// 宿主可以按引用判断文档与服务是否匹配，也不必为每组服务各建一条 Markdig 管线。
+    /// 构建方言。没有登记任何语法改动时返回共享的 <see cref="MarkdownProfile.Default"/>：
+    /// 只加渲染器、不改语法的插件组合与默认方言是同一个实例，宿主可按引用判断文档与服务是否匹配。
     /// </summary>
     public MarkdownProfile Build() => IsUnchanged ? MarkdownProfile.Default : BuildNew();
 
     private bool IsUnchanged =>
-        _extensions.Count == 0 && _blockMappers.Count == 0 && _inlineMappers.Count == 0 && _remendHandlers.Count == 0
+        !_softlineBreakAsHardline
+        && _enableTables && _enableTaskLists && _enableStrikethrough && _enableAutoLinks
+        && _enableFootnotes && _enableAlertBlocks && _enableDefinitionLists && _enableCustomContainers
+        && _enableMathematics && _enableCjkFriendlyEmphasis && _enableEmojiShortcodes && _enableAutoIdentifiers
+        && _blockRules.Count == 0 && _inlineRules.Count == 0 && _remendHandlers.Count == 0
         && _components.Count == ComponentSpec.BuiltIn.Length && _components.TrueForAll(ComponentSpec.BuiltIn.Contains);
 
-    internal MarkdownProfile BuildNew()
-    {
-        var components = _components.ToImmutableArray();
-        var builder = new MarkdownPipelineBuilder()
-            .UsePipeTables(new PipeTableOptions { UseGfmRules = true })
-            .UseEmphasisExtras(EmphasisExtraOptions.Strikethrough)
-            .UseTaskLists()
-            .UseAutoLinks()
-            .UseFootnotes()
-            .UseAlertBlocks()
-            .UseDefinitionLists()
-            .UseCustomContainers()
-            .UseMathematics()
-            .UseCjkFriendlyEmphasis()
-            .UseEmojiAndSmiley(enableSmileys: false)
-            .UseAutoIdentifiers(AutoIdentifierOptions.GitHub)
-            .Use<BackslashMathExtension>();
-        builder.Extensions.Add(new HtmlComponentExtension(new ComponentTable(components)));
-        foreach (var extension in _extensions)
-        {
-            builder.Extensions.Add(extension);
-        }
-
-        return new MarkdownProfile(builder.Build(), components, [.. _blockMappers], [.. _inlineMappers], [.. _remendHandlers]);
-    }
-}
-
-/// <summary>块映射上下文：插件映射自定义块时用来映射子块、行内内容和源码区间。</summary>
-public sealed class MapContext
-{
-    internal MapContext(MarkdownProfile profile, OffsetMap map)
-    {
-        Profile = profile;
-        Map = map;
-    }
-
-    public MarkdownProfile Profile { get; }
-
-    internal OffsetMap Map { get; }
-
-    public ImmutableArray<MarkdownBlock> MapChildren(ContainerBlock container) => MarkdigMapper.MapChildren(container, this);
-
-    public InlineContent MapInlines(ContainerInline? inline) => MarkdigMapper.MapInlines(inline, this);
-
-    public SourceRange RangeOf(Block block) => MarkdigMapper.RangeOf(block, this);
-}
-
-/// <summary>行内映射上下文：插件向当前行内内容输出文本、对象，或继续映射子节点。</summary>
-public abstract class InlineMapContext
-{
-    /// <summary>当前继承的样式。</summary>
-    public abstract InlineStyle Style { get; }
-
-    public abstract void AppendText(ReadOnlySpan<char> text, InlineStyle extraStyle = InlineStyle.None);
-
-    public abstract void AppendObject(InlineObjectKind kind, string value, ComponentAttributes? attributes = null, string? alt = null, bool flag = false);
-
-    /// <summary>以附加样式映射一个容器节点的子节点。</summary>
-    public abstract void Walk(ContainerInline container, InlineStyle extraStyle = InlineStyle.None);
+    internal MarkdownProfile BuildNew() => new(
+        [.. _components],
+        [.. _blockRules],
+        [.. _inlineRules],
+        [.. _remendHandlers],
+        _softlineBreakAsHardline,
+        _enableTables,
+        _enableTaskLists,
+        _enableStrikethrough,
+        _enableAutoLinks,
+        _enableFootnotes,
+        _enableAlertBlocks,
+        _enableDefinitionLists,
+        _enableCustomContainers,
+        _enableMathematics,
+        _enableCjkFriendlyEmphasis,
+        _enableEmojiShortcodes,
+        _enableAutoIdentifiers);
 }

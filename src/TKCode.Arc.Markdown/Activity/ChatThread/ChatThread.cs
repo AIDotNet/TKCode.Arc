@@ -415,11 +415,12 @@ public class ChatThread : ItemsControl
             return true;
         }
         var started = _bodies.Append(message, text);
-        ArmGrowth();
         if (started)
         {
             // The first piece shows the bubble (an empty message has none) and hands it the streaming Markdown; the rest
             // of the reply reaches the Markdown directly (OnMessagePropertyChanged skips the row refresh while appending).
+            // Arm row-growth settle only when the bubble first appears, not on every 300 TPS streamed token.
+            ArmGrowth();
             RefreshMessage(message);
         }
         return true;
@@ -697,13 +698,14 @@ public class ChatThread : ItemsControl
                 break;
             case nameof(ChatMessage.Text):
                 _bodies.OnTextChanged(message);
-                ArmGrowth();
                 if (_bodies.IsAppending(message))
                 {
                     // A streamed token: the bubble's Markdown already has it (AppendToMessage refreshes the row once at
-                    // the start and once at the end of the reply).
+                    // the start and once at the end of the reply). Do not re-arm the arrival settle spring on every
+                    // streamed token; PinToEnd() tracks line growth directly without 60-120Hz ItemsPanelRoot springs.
                     break;
                 }
+                ArmGrowth();
                 RefreshMessage(message);
                 break;
             default:
@@ -1687,13 +1689,13 @@ internal sealed class ChatThreadList : ItemsControl
     }
 }
 
-/// <summary>Chat line breaks: a single newline in a message stays a line break (Markdig's soft-line-as-hard-line).</summary>
+/// <summary>Chat line breaks: a single newline in a message stays a line break.</summary>
 internal sealed class ChatThreadLineBreakPlugin : IMarkdownPlugin
 {
     public string Name => "chat-line-breaks";
 
     public void Configure(MarkdownPluginBuilder builder) =>
-        builder.Profile.AddMarkdigExtension(new Markdig.Extensions.Hardlines.SoftlineBreakAsHardlineExtension());
+        builder.Profile.UseSoftlineBreakAsHardline();
 }
 
 /// <summary>
@@ -1770,8 +1772,6 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     private readonly LinkedList<ChatMessage> _recent = new();
     private readonly Dictionary<ChatMessage, LinkedListNode<ChatMessage>> _nodes = new(ReferenceEqualityComparer.Instance);
     private readonly HashSet<ChatMessage> _streaming = new(ReferenceEqualityComparer.Instance);
-    // The text of each streaming reply so far: appending a token extends it instead of concatenating the whole text.
-    private readonly Dictionary<ChatMessage, StringBuilder> _streamed = new(ReferenceEqualityComparer.Instance);
     // The message text each body was last given, to spot changes the thread missed while it was detached.
     private readonly Dictionary<ChatMessage, string?> _given = new(ReferenceEqualityComparer.Instance);
     private readonly Dictionary<ChatMessage, bool> _mine = new(ReferenceEqualityComparer.Instance);
@@ -1809,31 +1809,23 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     public bool Append(ChatMessage message, string text)
     {
         var markdown = Acquire(message, message.AuthorId == thread.CurrentUserId);
-        _streamed.TryGetValue(message, out var buffer);
-        var started = buffer is null || !_streaming.Contains(message) || !markdown.IsStreaming;
-        string full;
-        if (started || buffer is null)
+        var started = !_streaming.Contains(message) || !markdown.IsStreaming || !message.IsStreamBufferActive;
+        if (started)
         {
             // A new reply starts from what the message already says.
             var before = message.Text ?? string.Empty;
             _streaming.Add(message);
-            buffer = new StringBuilder(before, Math.Max(256, (before.Length + text.Length) * 2));
-            _streamed[message] = buffer;
-            buffer.Append(text);
-            full = buffer.ToString();
-            markdown.Append(full);
+            markdown.Append(before.Length == 0 ? text : before + text);
         }
         else
         {
-            buffer.Append(text);
-            full = buffer.ToString();
             markdown.Append(text);
         }
-        _given[message] = full;
         _appending = message;
         try
         {
-            message.Text = full;
+            // Append into the message's lazy StringBuilder without materializing a full string per token (O(N) vs O(N^2)).
+            message.AppendStreamed(text);
         }
         finally
         {
@@ -1845,9 +1837,10 @@ internal sealed class ChatThreadBodies(ChatThread thread)
     /// <summary>Ends the reply; true when <paramref name="message"/> was streaming.</summary>
     public bool Complete(ChatMessage message)
     {
-        _streamed.Remove(message);
+        var sealedText = message.SealStreamed();
         if (_bodies.TryGetValue(message, out var markdown) && _streaming.Remove(message))
         {
+            _given[message] = sealedText;
             markdown.Complete();
             return true;
         }
@@ -1861,7 +1854,6 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         {
             return;
         }
-        _streamed.Remove(message);
         if (_streaming.Remove(message) && _bodies.TryGetValue(message, out var streamed))
         {
             streamed.Text = message.Text;
@@ -1887,6 +1879,11 @@ internal sealed class ChatThreadBodies(ChatThread thread)
         List<ChatMessage>? changed = null;
         foreach (var message in _bodies.Keys)
         {
+            // While our own streaming buffer is still active, no external writer replaced message.Text.
+            if (_streaming.Contains(message) && message.IsStreamBufferActive)
+            {
+                continue;
+            }
             if (!string.Equals(_given.GetValueOrDefault(message), message.Text, StringComparison.Ordinal))
             {
                 (changed ??= new List<ChatMessage>()).Add(message);
@@ -1909,7 +1906,6 @@ internal sealed class ChatThreadBodies(ChatThread thread)
             host.Child = null;
         }
         _streaming.Remove(message);
-        _streamed.Remove(message);
         _given.Remove(message);
         _mine.Remove(message);
         if (_nodes.Remove(message, out var node))

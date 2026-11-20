@@ -100,16 +100,16 @@ public sealed class ComponentTests
     [Fact]
     public void Segmenter_DoesNotFreezeInsideContainer()
     {
-        var segmenter = new StreamSegmenter(["details", "think"]);
+        var composer = new DocumentComposer();
         var text = "<details>\n\npara\n\nmore\n";
         for (var i = 1; i <= text.Length; i++)
         {
-            segmenter.Advance(text.AsSpan(segmenter.FrozenEnd, i - segmenter.FrozenEnd), segmenter.FrozenEnd);
+            composer.AppendDelta(text.AsSpan(i - 1, 1), i);
         }
-        Assert.Equal(0, segmenter.FrozenEnd);
-        var closed = text + "</details>\n\nafter";
-        segmenter.Advance(closed.AsSpan(segmenter.FrozenEnd), segmenter.FrozenEnd);
-        Assert.True(segmenter.FrozenEnd > 0);
+        Assert.Equal(0, composer.FrozenEnd);
+        var suffix = "</details>\n\nafter\n";
+        composer.AppendDelta(suffix.AsSpan(), text.Length + 1);
+        Assert.True(composer.FrozenEnd > 0);
     }
 
     [Fact]
@@ -210,13 +210,13 @@ public sealed class ComponentTests
     [Fact]
     public void Segmenter_DoesNotFreezeInsideRawComponent_UntilClosingLine()
     {
-        var segmenter = new StreamSegmenter([], ["tool-call"]);
+        var composer = new DocumentComposer(RawProfile);
         var text = "<tool-call>\n\na </tool-call> b\n\nmore\n";
-        segmenter.Advance(text, 0);
-        Assert.Equal(0, segmenter.FrozenEnd);
-        var closed = text + "</tool-call>\n\nafter";
-        segmenter.Advance(closed.AsSpan(segmenter.FrozenEnd), segmenter.FrozenEnd);
-        Assert.True(segmenter.FrozenEnd > 0);
+        composer.AppendDelta(text.AsSpan(), 1);
+        Assert.Equal(0, composer.FrozenEnd);
+        var suffix = "</tool-call>\n\nafter\n";
+        composer.AppendDelta(suffix.AsSpan(), 2);
+        Assert.True(composer.FrozenEnd > 0);
     }
 
     private static void AssertSame(IReadOnlyList<MarkdownBlock> expected, IReadOnlyList<MarkdownBlock> actual, string context)

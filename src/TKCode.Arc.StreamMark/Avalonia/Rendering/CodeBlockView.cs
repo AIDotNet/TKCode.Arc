@@ -33,7 +33,10 @@ public sealed class CodeBlockView : BlockView
     private readonly IconButton _expand = new() { Icon = MarkdownIcons.Chevron, IsVisible = false };
     private readonly CodeTextView _code = new();
     private readonly BlockActionBar _actions;
+    private readonly List<IconButton> _headerButtons = [];
     private TextLayout? _title;
+    private string? _parsedInfo;
+    private int _parsedFirstLine = 1;
     private DispatcherTimer? _copiedTimer;
     private int _chunk;
     private int _chunkCount = 1;
@@ -45,6 +48,9 @@ public sealed class CodeBlockView : BlockView
     // 行号
     private bool _lineNumbers;
     private int _firstLineNumber = 1;
+    private int _lineNumberStart;
+    private int _lineNumberDigits;
+    private MarkdownStyle? _lineNumbersStyle;
     private readonly List<TextLayout> _numbers = [];
     private double _gutter;
     private SegmentKey _segmentKey;
@@ -65,6 +71,7 @@ public sealed class CodeBlockView : BlockView
         AddChild(_wrap);
         AddChild(_copy);
         AddChild(_expand);
+        RebuildHeaderButtons();
         global::Avalonia.Automation.AutomationProperties.SetName(_copy, "Copy");
         global::Avalonia.Automation.AutomationProperties.SetName(_wrap, "Wrap lines");
         global::Avalonia.Automation.AutomationProperties.SetName(_download, "Download");
@@ -105,12 +112,20 @@ public sealed class CodeBlockView : BlockView
         _chunk = index;
         _chunkCount = Math.Max(1, count);
         _linesPerChunk = count <= 1 ? int.MaxValue : linesPerChunk;
-        foreach (var button in HeaderButtons)
+        for (var i = 0; i < _headerButtons.Count; i++)
         {
-            button.IsVisible = IsFirstChunk;
+            _headerButtons[i].IsVisible = IsFirstChunk;
         }
         InvalidateMeasure();
         InvalidateVisual();
+    }
+
+    // 流式超长代码块在尾部新增分段时，前面已满的分段只同步最新模型与总分段数，不触发测量或重绘
+    internal void SyncChunkMetadata(CodeBlock block, int count)
+    {
+        ReplaceBlockReference(block);
+        _chunkCount = Math.Max(1, count);
+        _code.SyncText(block.Code);
     }
 
     private double TopHeight => IsFirstChunk ? HeaderHeight : 0;
@@ -127,14 +142,16 @@ public sealed class CodeBlockView : BlockView
     /// <summary>按选项与块状态判断代码块是否应折叠（会话视图分段时也用）。</summary>
     internal static bool ShouldCollapse(CodeBlock code, RenderContext context, int key, out int lines)
     {
-        lines = 1;
-        foreach (var c in code.Code)
-        {
-            if (c == '\n')
-            {
-                lines++;
-            }
-        }
+        var existing = context.State.Get<CodeBlockState?>(key, "code.state", null);
+        lines = existing is not null && ReferenceEquals(existing.Code, code.Code)
+            ? existing.LineCount
+            : code.GetLineCount();
+        var options = context.Services.CodeBlocks;
+        return IsCollapsible(code, options, lines) && !context.State.Get(key, ExpandedState, false);
+    }
+
+    private static bool ShouldCollapse(CodeBlock code, RenderContext context, int key, int lines)
+    {
         var options = context.Services.CodeBlocks;
         return IsCollapsible(code, options, lines) && !context.State.Get(key, ExpandedState, false);
     }
@@ -191,6 +208,8 @@ public sealed class CodeBlockView : BlockView
         {
             // 头部标题：语言，信息串带路径时显示 "语言 · 路径#L起-止"
             var fence = Plugins.CodeFenceInfo.Parse(code.Info);
+            _parsedInfo = code.Info;
+            _parsedFirstLine = fence.StartLine ?? 1;
             var title = string.IsNullOrEmpty(code.Language) ? "text" : code.Language;
             if (fence.Path is { } path)
             {
@@ -199,21 +218,29 @@ public sealed class CodeBlockView : BlockView
             _title = new TextLayout(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
                 textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 480);
             _actions.Rebuild(context, Plugins.BlockActionTargets.Code, code, IsFirstChunk);
-            foreach (var button in HeaderButtons)
+            RebuildHeaderButtons();
+            for (var i = 0; i < _headerButtons.Count; i++)
             {
+                var button = _headerButtons[i];
                 button.Foreground = style.SecondaryForeground;
                 button.HoverBackground = style.HoverBackground;
                 button.InvalidateVisual();
             }
         }
         Wrap = context.State.Get(topKey, WrapState, false);
+        var shared = CodeBlockState.For(context, topKey, code.Language);
+        shared.Update(code.Code, code.IsOpen);
         var options = context.Services.CodeBlocks;
         if (code.IsOpen)
         {
             // 看着流式写出来的代码块完成后不折叠（避免突然收起）
             context.State.Set(topKey, ExpandedState, true);
         }
-        _collapsed = ShouldCollapse(code, context, topKey, out _lineCount) && _chunkCount == 1;
+        var oldCollapsed = _collapsed;
+        var oldCollapsible = _collapsible;
+        var oldLineCount = _lineCount;
+        _lineCount = shared.LineCount;
+        _collapsed = ShouldCollapse(code, context, topKey, _lineCount) && _chunkCount == 1;
         _collapsible = _chunkCount == 1 && IsCollapsible(code, options, _lineCount) || _chunkCount > 1 && IsLastChunk && IsCollapsible(code, options, _lineCount);
         _expand.IsVisible = _collapsible;
         _expand.Foreground = style.SecondaryForeground;
@@ -221,38 +248,83 @@ public sealed class CodeBlockView : BlockView
         _expand.Icon = _collapsed ? MarkdownIcons.Chevron : MarkdownIcons.ChevronUp;
         _expand.Label = _collapsed ? options.ExpandText(_lineCount) : options.CollapseText();
         _download.IsVisible = options.ShowDownload && IsFirstChunk;
-        var shared = CodeBlockState.For(context, topKey, code.Language);
-        shared.Update(code.Code);
         var lineStart = _linesPerChunk == int.MaxValue ? 0 : _chunk * _linesPerChunk;
         _segmentKey = KeyFor(context, topKey, ref segment);
-        _code.Set(context, _segmentKey, shared, lineStart, _collapsed ? options.CollapsedLines : _linesPerChunk);
-        UpdateLineNumbers(context, code, shared, lineStart);
-        InvalidateMeasure();
-        InvalidateVisual();
+        var codeChanged = _code.Set(context, _segmentKey, shared, lineStart, _collapsed ? options.CollapsedLines : _linesPerChunk);
+        var numbersChanged = UpdateLineNumbers(context, code, shared, lineStart);
+        var frameChanged = contextChanged || previous is null || numbersChanged || oldCollapsed != _collapsed || oldCollapsible != _collapsible;
+        if (frameChanged || codeChanged || oldLineCount != _lineCount)
+        {
+            InvalidateMeasure();
+        }
+        if (frameChanged)
+        {
+            InvalidateVisual();
+        }
     }
 
-    private void UpdateLineNumbers(RenderContext context, CodeBlock code, CodeBlockState shared, int lineStart)
+    private static int DigitCount(int n)
     {
-        _lineNumbers = context.Services.CodeBlocks.ShowLineNumbers;
-        _numbers.Clear();
-        _gutter = 0;
-        if (!_lineNumbers)
+        var digits = 1;
+        while (n >= 10)
         {
-            return;
+            n /= 10;
+            digits++;
         }
-        _firstLineNumber = Plugins.CodeFenceInfo.Parse(code.Info).StartLine ?? 1;
+        return digits;
+    }
+
+    private bool UpdateLineNumbers(RenderContext context, CodeBlock code, CodeBlockState shared, int lineStart)
+    {
+        var show = context.Services.CodeBlocks.ShowLineNumbers;
+        if (!show)
+        {
+            var wasShowing = _lineNumbers;
+            _lineNumbers = false;
+            _numbers.Clear();
+            _gutter = 0;
+            _lineNumberDigits = 0;
+            _lineNumbersStyle = null;
+            return wasShowing;
+        }
+        if (!ReferenceEquals(_parsedInfo, code.Info) && _parsedInfo != code.Info)
+        {
+            _parsedInfo = code.Info;
+            _parsedFirstLine = Plugins.CodeFenceInfo.Parse(code.Info).StartLine ?? 1;
+        }
+        var firstLine = _parsedFirstLine;
         var style = context.Style;
-        var last = _firstLineNumber + shared.LineCount - 1;
-        var typeface = new Typeface(style.MonospaceFontFamily);
-        var probe = new TextLayout(new string('0', last.ToString().Length), typeface, style.CodeFontSize, style.SecondaryForeground);
-        _gutter = Math.Ceiling(probe.WidthIncludingTrailingWhitespace) + 14;
+        var last = firstLine + shared.LineCount - 1;
+        var digits = DigitCount(Math.Max(1, last));
         var count = _code.VisibleLineCount;
-        for (var i = 0; i < count; i++)
+        var rebuild = !_lineNumbers || !ReferenceEquals(_lineNumbersStyle, style) || _firstLineNumber != firstLine || _lineNumberStart != lineStart || _lineNumberDigits != digits;
+        _lineNumbers = true;
+        _firstLineNumber = firstLine;
+        _lineNumberStart = lineStart;
+        _lineNumbersStyle = style;
+        var typeface = new Typeface(style.MonospaceFontFamily);
+        if (rebuild)
+        {
+            _lineNumberDigits = digits;
+            var probe = new TextLayout(new string('0', digits), typeface, style.CodeFontSize, style.SecondaryForeground);
+            _gutter = Math.Ceiling(probe.WidthIncludingTrailingWhitespace) + 14;
+            _numbers.Clear();
+        }
+        if (_numbers.Count == count && !rebuild)
+        {
+            return false;
+        }
+        if (_numbers.Count > count)
+        {
+            _numbers.RemoveRange(count, _numbers.Count - count);
+        }
+        for (var i = _numbers.Count; i < count; i++)
         {
             // 与代码行相同的行高，保证基线对齐
             _numbers.Add(new TextLayout((_firstLineNumber + lineStart + i).ToString(), typeface, style.CodeFontSize, style.SecondaryForeground,
                 TextAlignment.Right, maxWidth: _gutter - 14, lineHeight: style.CodeLineHeight));
         }
+        return true;
     }
 
     private async Task CopyAsync()
@@ -273,13 +345,23 @@ public sealed class CodeBlockView : BlockView
     }
 
     // 插件操作（例如"应用到文件""在终端运行"）排在内置按钮左边
-    private IEnumerable<IconButton> HeaderButtons => new[] { _copy, _wrap, _download }.Concat(_actions.Buttons);
+    private void RebuildHeaderButtons()
+    {
+        _headerButtons.Clear();
+        _headerButtons.Add(_copy);
+        _headerButtons.Add(_wrap);
+        _headerButtons.Add(_download);
+        foreach (var button in _actions.Buttons)
+        {
+            _headerButtons.Add(button);
+        }
+    }
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        foreach (var button in HeaderButtons)
+        for (var i = 0; i < _headerButtons.Count; i++)
         {
-            button.Measure(Size.Infinity);
+            _headerButtons[i].Measure(Size.Infinity);
         }
         _expand.Measure(Size.Infinity);
         var inner = Math.Max(0, availableSize.Width - Padding * 2 - _gutter);
@@ -291,8 +373,9 @@ public sealed class CodeBlockView : BlockView
     protected override Size ArrangeOverride(Size finalSize)
     {
         var x = finalSize.Width - 6;
-        foreach (var button in HeaderButtons)
+        for (var i = 0; i < _headerButtons.Count; i++)
         {
+            var button = _headerButtons[i];
             if (!button.IsVisible)
             {
                 continue;
@@ -407,6 +490,9 @@ public sealed class CodeBlockView : BlockView
 /// </summary>
 public sealed class CodeTextView : Control, ISelectableSegment
 {
+    private const int LinesPerStrip = 16;
+    private static readonly Cursor IbeamCursor = new(StandardCursorType.Ibeam);
+
     private sealed class Line
     {
         public required string Text;
@@ -415,8 +501,29 @@ public sealed class CodeTextView : Control, ISelectableSegment
         public double Width;
     }
 
+    /// <summary>每 16 行代码共享一个轻量子视觉，流式追加或异步高亮着色时只重录变化的分条，避免重绘整块代码。</summary>
+    private sealed class CodeStripVisual(CodeTextView owner) : Visual
+    {
+        public int StripIndex { get; set; }
+
+        public bool SetBounds(Rect bounds)
+        {
+            if (Bounds == bounds)
+            {
+                return false;
+            }
+            Bounds = bounds;
+            return true;
+        }
+
+        public override void Render(DrawingContext context) => owner.RenderStrip(context, StripIndex);
+    }
+
     private readonly List<Line> _lines = [];
     private readonly List<int> _lineStarts = [];
+    private readonly List<double> _lineTops = [];
+    private readonly List<CodeStripVisual> _strips = [];
+    private readonly Dictionary<(uint Foreground, HighlightFontStyle Style), GenericTextRunProperties> _runProps = [];
     private RenderContext? _context;
     private CodeBlockState? _state;
     private string _text = "";
@@ -427,12 +534,17 @@ public sealed class CodeTextView : Control, ISelectableSegment
     private double _offsetX;
     private double _contentWidth;
     private bool _hover;
-    private readonly List<double> _lineTops = [];
+    private bool _allStripsDirty = true;
+    private int _dirtyLineStart = int.MaxValue;
+    private int _dirtyLineEnd = -1;
 
     /// <summary>窗口内各行相对自身的顶部位置（行号用，测量后有效）。</summary>
     internal IReadOnlyList<double> LineTops => _lineTops;
 
     internal int VisibleLineCount => _lines.Count;
+
+    /// <summary>当前代码分条视觉数（测试与诊断用）。</summary>
+    internal int StripCount => _strips.Count;
 
     public SegmentKey Key { get; private set; }
 
@@ -455,6 +567,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
                     line.Layout = null;
                 }
                 _layoutWidth = double.NaN;
+                _allStripsDirty = true;
                 InvalidateMeasure();
                 InvalidateVisual();
             }
@@ -466,9 +579,11 @@ public sealed class CodeTextView : Control, ISelectableSegment
         ClipToBounds = true;
     }
 
+    internal void SyncText(string code) => _text = code;
+
     protected override global::Avalonia.Automation.Peers.AutomationPeer OnCreateAutomationPeer() => new Automation.TextSegmentAutomationPeer(this, () => _text);
 
-    internal void Set(RenderContext context, SegmentKey key, CodeBlockState state, int lineStart, int lineCount)
+    internal bool Set(RenderContext context, SegmentKey key, CodeBlockState state, int lineStart, int lineCount)
     {
         var contextChanged = !ReferenceEquals(_context, context);
         if (_context is not null && contextChanged)
@@ -480,8 +595,13 @@ public sealed class CodeTextView : Control, ISelectableSegment
             context.Selection.Changed += InvalidateVisual;
         }
         var styleChanged = _context is null || !ReferenceEquals(_context.Style, context.Style);
+        if (styleChanged)
+        {
+            _runProps.Clear();
+        }
         _context = context;
         Key = key;
+        var reset = false;
         if (!ReferenceEquals(_state, state))
         {
             if (_state is not null)
@@ -494,23 +614,30 @@ public sealed class CodeTextView : Control, ISelectableSegment
                 state.HighlightUpdated += OnHighlightUpdated;
             }
             _lines.Clear();
+            reset = true;
         }
         if (styleChanged || lineStart != _windowStart || lineCount != _windowLines)
         {
             _lines.Clear();
+            reset = true;
         }
         _windowStart = lineStart;
         _windowLines = lineCount;
         _text = state.Code;
-        ApplyWindow();
+        return ApplyWindow(forceChanged: reset || contextChanged, highlightOnly: false);
     }
 
-    // 只为窗口内的行建立排版对象；文本与着色未变的行保留缓存
-    private void ApplyWindow()
+    // 只为窗口内的行建立排版对象；文本与着色未变的行保留缓存。
+    // 异步高亮仅着色且不换行、尺寸未变时只重录受影响的分条，完全跳过 Measure。
+    private bool ApplyWindow(bool forceChanged = false, bool highlightOnly = false)
     {
         var state = _state!;
         var end = (int)Math.Min((long)_windowStart + _windowLines, state.LineCount);
         _lineStarts.Clear();
+        var textOrCountChanged = forceChanged;
+        var tokensChanged = false;
+        var localDirtyStart = int.MaxValue;
+        var localDirtyEnd = -1;
         var index = 0;
         for (var i = _windowStart; i < end; i++, index++)
         {
@@ -520,38 +647,184 @@ public sealed class CodeTextView : Control, ISelectableSegment
             if (index < _lines.Count)
             {
                 var line = _lines[index];
-                if (line.Text != text || !SameTokens(line.Tokens, tokens))
+                var textChanged = !ReferenceEquals(line.Text, text) && line.Text != text;
+                var tokenChanged = !SameTokens(line.Tokens, tokens);
+                if (textChanged || tokenChanged)
                 {
                     line.Text = text;
                     line.Tokens = tokens;
                     line.Layout = null;
+                    if (textChanged)
+                    {
+                        textOrCountChanged = true;
+                    }
+                    else
+                    {
+                        tokensChanged = true;
+                    }
+                    if (index < localDirtyStart)
+                    {
+                        localDirtyStart = index;
+                    }
+                    localDirtyEnd = index;
                 }
             }
             else
             {
                 _lines.Add(new Line { Text = text, Tokens = tokens });
+                textOrCountChanged = true;
+                if (index < localDirtyStart)
+                {
+                    localDirtyStart = index;
+                }
+                localDirtyEnd = index;
             }
         }
         if (_lines.Count > index)
         {
             _lines.RemoveRange(index, _lines.Count - index);
+            textOrCountChanged = true;
+            if (index < localDirtyStart)
+            {
+                localDirtyStart = index;
+            }
+            localDirtyEnd = Math.Max(localDirtyEnd, index);
         }
+        if (!textOrCountChanged && !tokensChanged)
+        {
+            return false;
+        }
+        if (forceChanged)
+        {
+            _allStripsDirty = true;
+        }
+        else if (localDirtyStart <= localDirtyEnd)
+        {
+            _dirtyLineStart = Math.Min(_dirtyLineStart, localDirtyStart);
+            _dirtyLineEnd = Math.Max(_dirtyLineEnd, localDirtyEnd);
+        }
+
+        // 高亮到达且不换行、行数和文本都未变时：只需重建着色行的 TextLayout 并刷新对应分条
+        if (highlightOnly && !textOrCountChanged && !_wrap && _context is not null && !double.IsNaN(_layoutWidth)
+            && _strips.Count > 0 && _lineTops.Count == _lines.Count)
+        {
+            var oldScrollbar = double.IsFinite(_layoutWidth) && _contentWidth > _layoutWidth;
+            var newContentWidth = 0.0;
+            for (var i = 0; i < _lines.Count; i++)
+            {
+                var line = _lines[i];
+                if (line.Layout is null)
+                {
+                    LayoutFor(line, _layoutWidth);
+                }
+                if (line.Width > newContentWidth)
+                {
+                    newContentWidth = line.Width;
+                }
+            }
+            var newScrollbar = double.IsFinite(_layoutWidth) && newContentWidth > _layoutWidth;
+            var oldOffsetX = _offsetX;
+            _contentWidth = newContentWidth;
+            ClampOffset(double.IsFinite(_layoutWidth) ? _layoutWidth : newContentWidth);
+            if (oldScrollbar == newScrollbar && oldOffsetX.Equals(_offsetX))
+            {
+                InvalidateDirtyStripsNow();
+                if (_hover)
+                {
+                    InvalidateVisual();
+                }
+                return false;
+            }
+            if (!oldOffsetX.Equals(_offsetX))
+            {
+                _allStripsDirty = true;
+            }
+        }
+
         InvalidateMeasure();
-        InvalidateVisual();
+        if (forceChanged || _context?.Selection is { IsEmpty: false } or { HasHighlights: true })
+        {
+            InvalidateVisual();
+        }
+        return true;
     }
 
-    private static bool SameTokens(ImmutableArray<HighlightToken> a, ImmutableArray<HighlightToken> b) =>
-        a.IsDefault ? b.IsDefault : !b.IsDefault && a.SequenceEqual(b);
+    private void InvalidateDirtyStripsNow()
+    {
+        if (_allStripsDirty)
+        {
+            InvalidateAllStrips();
+            _allStripsDirty = false;
+            _dirtyLineStart = int.MaxValue;
+            _dirtyLineEnd = -1;
+            return;
+        }
+        if (_dirtyLineStart <= _dirtyLineEnd && _strips.Count > 0)
+        {
+            var firstStrip = Math.Clamp(_dirtyLineStart / LinesPerStrip, 0, _strips.Count - 1);
+            var lastStrip = Math.Clamp(_dirtyLineEnd / LinesPerStrip, 0, _strips.Count - 1);
+            for (var s = firstStrip; s <= lastStrip; s++)
+            {
+                _strips[s].InvalidateVisual();
+            }
+        }
+        _dirtyLineStart = int.MaxValue;
+        _dirtyLineEnd = -1;
+    }
+
+    private void InvalidateAllStrips()
+    {
+        for (var s = 0; s < _strips.Count; s++)
+        {
+            _strips[s].InvalidateVisual();
+        }
+    }
+
+    private static bool SameTokens(ImmutableArray<HighlightToken> a, ImmutableArray<HighlightToken> b)
+    {
+        if (a == b)
+        {
+            return true;
+        }
+        if (a.IsDefault || b.IsDefault || a.Length != b.Length)
+        {
+            return false;
+        }
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i] != b[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     private void OnHighlightUpdated()
     {
         if (_state is not null)
         {
-            ApplyWindow();
+            ApplyWindow(forceChanged: false, highlightOnly: true);
         }
     }
 
     private double LineHeight => _context?.Style.CodeLineHeight ?? 20;
+
+    private GenericTextRunProperties RunPropertiesFor(MarkdownStyle style, uint foreground, HighlightFontStyle fontStyle)
+    {
+        var key = (foreground, fontStyle);
+        if (!_runProps.TryGetValue(key, out var props))
+        {
+            var brush = foreground == 0 ? style.Foreground : BrushCache.Get(foreground);
+            var face = new Typeface(style.MonospaceFontFamily,
+                fontStyle.HasFlag(HighlightFontStyle.Italic) ? FontStyle.Italic : FontStyle.Normal,
+                fontStyle.HasFlag(HighlightFontStyle.Bold) ? FontWeight.Bold : FontWeight.Normal);
+            TextDecorationCollection? decorations = fontStyle.HasFlag(HighlightFontStyle.Underline) ? TextDecorations.Underline : null;
+            props = new GenericTextRunProperties(face, style.CodeFontSize, decorations, brush);
+            _runProps[key] = props;
+        }
+        return props;
+    }
 
     private TextLayout LayoutFor(Line line, double maxWidth)
     {
@@ -576,12 +849,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
                 {
                     continue;
                 }
-                var brush = token.Foreground == 0 ? style.Foreground : BrushCache.Get(token.Foreground);
-                var face = new Typeface(style.MonospaceFontFamily,
-                    token.Style.HasFlag(HighlightFontStyle.Italic) ? FontStyle.Italic : FontStyle.Normal,
-                    token.Style.HasFlag(HighlightFontStyle.Bold) ? FontWeight.Bold : FontWeight.Normal);
-                TextDecorationCollection? decorations = token.Style.HasFlag(HighlightFontStyle.Underline) ? TextDecorations.Underline : null;
-                overrides.Add(new ValueSpan<TextRunProperties>(token.Start, length, new GenericTextRunProperties(face, style.CodeFontSize, decorations, brush)));
+                overrides.Add(new ValueSpan<TextRunProperties>(token.Start, length, RunPropertiesFor(style, token.Foreground, token.Style)));
             }
         }
         line.Layout = new TextLayout(line.Text.Length == 0 ? " " : line.Text, typeface, style.CodeFontSize, style.Foreground,
@@ -604,21 +872,103 @@ public sealed class CodeTextView : Control, ISelectableSegment
             {
                 line.Layout = null;
             }
+            _allStripsDirty = true;
         }
         _layoutWidth = maxWidth;
         double height = 0, width = 0;
         _lineTops.Clear();
-        foreach (var line in _lines)
+        for (var i = 0; i < _lines.Count; i++)
         {
+            var line = _lines[i];
             var layout = LayoutFor(line, maxWidth);
             _lineTops.Add(height);
             height += _wrap ? layout.Height : LineHeight;
-            width = Math.Max(width, line.Width);
+            if (line.Width > width)
+            {
+                width = line.Width;
+            }
         }
+        var oldOffsetX = _offsetX;
         _contentWidth = width;
-        ClampOffset(double.IsFinite(availableSize.Width) ? availableSize.Width : width);
+        var viewportWidth = double.IsFinite(availableSize.Width) ? availableSize.Width : width;
+        ClampOffset(viewportWidth);
+        if (!oldOffsetX.Equals(_offsetX))
+        {
+            _allStripsDirty = true;
+        }
+        SyncStrips(Math.Max(1, viewportWidth), height);
         var scrollbar = !_wrap && double.IsFinite(availableSize.Width) && width > availableSize.Width ? 8 : 0;
         return new Size(double.IsFinite(availableSize.Width) ? Math.Min(width, availableSize.Width) : width, height + scrollbar);
+    }
+
+    protected override Size ArrangeOverride(Size finalSize)
+    {
+        var width = Math.Max(1, finalSize.Width);
+        for (var s = 0; s < _strips.Count; s++)
+        {
+            var b = _strips[s].Bounds;
+            if (!b.Width.Equals(width))
+            {
+                _strips[s].SetBounds(new Rect(b.X, b.Y, width, b.Height));
+            }
+        }
+        return finalSize;
+    }
+
+    private void SyncStrips(double width, double totalHeight)
+    {
+        var stripCount = (_lines.Count + LinesPerStrip - 1) / LinesPerStrip;
+        while (_strips.Count > stripCount)
+        {
+            VisualChildren.Remove(_strips[^1]);
+            _strips.RemoveAt(_strips.Count - 1);
+        }
+        while (_strips.Count < stripCount)
+        {
+            var strip = new CodeStripVisual(this) { StripIndex = _strips.Count };
+            _strips.Add(strip);
+            VisualChildren.Add(strip);
+        }
+        for (var s = 0; s < stripCount; s++)
+        {
+            var firstLine = s * LinesPerStrip;
+            var lastLine = Math.Min(_lines.Count, firstLine + LinesPerStrip) - 1;
+            var stripTop = _lineTops[firstLine];
+            var stripBottom = lastLine + 1 < _lines.Count ? _lineTops[lastLine + 1] : totalHeight;
+            var strip = _strips[s];
+            strip.StripIndex = s;
+            var boundsChanged = strip.SetBounds(new Rect(0, stripTop, width, Math.Max(1, stripBottom - stripTop)));
+            if (_allStripsDirty || boundsChanged || (lastLine >= _dirtyLineStart && firstLine <= _dirtyLineEnd))
+            {
+                strip.InvalidateVisual();
+            }
+        }
+        _allStripsDirty = false;
+        _dirtyLineStart = int.MaxValue;
+        _dirtyLineEnd = -1;
+    }
+
+    internal void RenderStrip(DrawingContext context, int stripIndex)
+    {
+        if (_context is null)
+        {
+            return;
+        }
+        var first = stripIndex * LinesPerStrip;
+        if (first >= _lines.Count || first >= _lineTops.Count)
+        {
+            return;
+        }
+        var end = Math.Min(_lines.Count, first + LinesPerStrip);
+        var stripTop = _lineTops[first];
+        using (context.PushTransform(Matrix.CreateTranslation(-_offsetX, 0)))
+        {
+            for (var i = first; i < end; i++)
+            {
+                var layout = LayoutFor(_lines[i], _layoutWidth);
+                layout.Draw(context, new Point(0, _lineTops[i] - stripTop));
+            }
+        }
     }
 
     private void ClampOffset(double viewport) => _offsetX = Math.Clamp(_offsetX, 0, Math.Max(0, _contentWidth - viewport));
@@ -629,53 +979,68 @@ public sealed class CodeTextView : Control, ISelectableSegment
         {
             return;
         }
+        // 文字由各分条视觉绘制；这里只画可命中区域、选区 / 查找高亮（位于文字下方）与横向滚动条
+        context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
+
         var style = _context.Style;
         var selected = _context.Selection.GetSegmentRange(Key, _text.Length);
-        using (context.PushTransform(Matrix.CreateTranslation(-_offsetX, 0)))
+        List<(int Start, int End, bool Current)>? highlights = null;
+        if (_context.Selection.HasHighlights)
         {
-            double y = 0;
-            for (var i = 0; i < _lines.Count; i++)
+            foreach (var h in _context.Selection.GetHighlights(Key, _text.Length))
             {
-                var line = _lines[i];
-                var layout = LayoutFor(line, _layoutWidth);
-                var height = _wrap ? layout.Height : LineHeight;
-                foreach (var (hs, he, current) in _context.Selection.GetHighlights(Key, _text.Length))
+                (highlights ??= []).Add(h);
+            }
+        }
+        if (highlights is not null || selected is not null)
+        {
+            using (context.PushTransform(Matrix.CreateTranslation(-_offsetX, 0)))
+            {
+                for (var i = 0; i < _lines.Count; i++)
                 {
-                    var lineStart = _lineStarts[i];
-                    var s = Math.Max(hs, lineStart) - lineStart;
-                    var e = Math.Min(he, lineStart + line.Text.Length) - lineStart;
-                    if (e > s)
-                    {
-                        var brush = current ? style.SearchCurrentBackground : style.SearchHighlightBackground;
-                        foreach (var rect in layout.HitTestTextRange(s, e - s))
-                        {
-                            context.FillRectangle(brush, rect.Translate(new Vector(0, y)), 2);
-                        }
-                    }
-                }
-                if (selected is { } range)
-                {
+                    var line = _lines[i];
+                    var y = i < _lineTops.Count ? _lineTops[i] : i * LineHeight;
                     var lineStart = _lineStarts[i];
                     var lineEnd = lineStart + line.Text.Length;
-                    var s = Math.Max(range.Start, lineStart);
-                    var e = Math.Min(range.End, lineEnd + 1);
-                    if (e > s)
+                    TextLayout? layout = null;
+                    if (highlights is not null)
                     {
-                        var hasNewline = range.End > lineEnd && lineEnd < _text.Length;
-                        var textEnd = Math.Min(e, lineEnd);
-                        foreach (var rect in layout.HitTestTextRange(s - lineStart, Math.Max(0, textEnd - s)))
+                        foreach (var (hs, he, current) in highlights)
                         {
-                            context.FillRectangle(style.SelectionBackground, rect.Translate(new Vector(0, y)));
+                            var s = Math.Max(hs, lineStart) - lineStart;
+                            var e = Math.Min(he, lineEnd) - lineStart;
+                            if (e > s)
+                            {
+                                layout ??= LayoutFor(line, _layoutWidth);
+                                var brush = current ? style.SearchCurrentBackground : style.SearchHighlightBackground;
+                                foreach (var rect in layout.HitTestTextRange(s, e - s))
+                                {
+                                    context.FillRectangle(brush, rect.Translate(new Vector(0, y)), 2);
+                                }
+                            }
                         }
-                        if (hasNewline)
+                    }
+                    if (selected is { } range)
+                    {
+                        var s = Math.Max(range.Start, lineStart);
+                        var e = Math.Min(range.End, lineEnd + 1);
+                        if (e > s)
                         {
-                            var endRect = layout.HitTestTextPosition(line.Text.Length);
-                            context.FillRectangle(style.SelectionBackground, new Rect(endRect.X, y + endRect.Y, style.CodeFontSize * 0.5, endRect.Height));
+                            layout ??= LayoutFor(line, _layoutWidth);
+                            var hasNewline = range.End > lineEnd && lineEnd < _text.Length;
+                            var textEnd = Math.Min(e, lineEnd);
+                            foreach (var rect in layout.HitTestTextRange(s - lineStart, Math.Max(0, textEnd - s)))
+                            {
+                                context.FillRectangle(style.SelectionBackground, rect.Translate(new Vector(0, y)));
+                            }
+                            if (hasNewline)
+                            {
+                                var endRect = layout.HitTestTextPosition(line.Text.Length);
+                                context.FillRectangle(style.SelectionBackground, new Rect(endRect.X, y + endRect.Y, style.CodeFontSize * 0.5, endRect.Height));
+                            }
                         }
                     }
                 }
-                layout.Draw(context, new Point(0, y));
-                y += height;
             }
         }
 
@@ -693,7 +1058,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
     {
         base.OnPointerEntered(e);
         _hover = true;
-        Cursor = new Cursor(StandardCursorType.Ibeam);
+        Cursor = IbeamCursor;
         InvalidateVisual();
     }
 
@@ -718,9 +1083,14 @@ public sealed class CodeTextView : Control, ISelectableSegment
             base.OnPointerWheelChanged(e);
             return;
         }
+        var oldOffsetX = _offsetX;
         _offsetX += dx * 40;
         ClampOffset(Bounds.Width);
-        InvalidateVisual();
+        if (!oldOffsetX.Equals(_offsetX))
+        {
+            InvalidateVisual();
+            InvalidateAllStrips();
+        }
         e.Handled = true;
     }
 

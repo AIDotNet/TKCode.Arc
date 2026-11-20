@@ -59,6 +59,34 @@ public sealed record HeadingBlock(int Level, InlineContent Content, string? Id) 
 /// <summary>代码块。<see cref="IsOpen"/> 表示流式中尚未出现闭合围栏。</summary>
 public sealed record CodeBlock(string? Language, string? Info, string Code, bool IsFenced, bool IsOpen) : MarkdownBlock
 {
+    // 私有缓存字段（不参与 record Equals/GetHashCode），解析器构造时 O(1) 填入，避免 TranscriptPanel / ShouldCollapse 每帧全扫 '\n'
+    private int _cachedLineCount;
+
+    internal int GetLineCount()
+    {
+        var cached = _cachedLineCount;
+        if (cached > 0)
+        {
+            return cached;
+        }
+        var count = 1;
+        var span = Code.AsSpan();
+        int nl;
+        while ((nl = span.IndexOf('\n')) >= 0)
+        {
+            count++;
+            span = span[(nl + 1)..];
+        }
+        _cachedLineCount = count;
+        return count;
+    }
+
+    internal CodeBlock WithCachedLineCount(int lineCount)
+    {
+        _cachedLineCount = Math.Max(1, lineCount);
+        return this;
+    }
+
     internal override void AddContent(ref Fingerprint fp)
     {
         fp.Add(Info);

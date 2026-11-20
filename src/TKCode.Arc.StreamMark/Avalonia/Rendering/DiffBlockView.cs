@@ -49,6 +49,10 @@ public sealed class DiffBlockView : BlockView
     private string? _code;
     private DiffDocument _document = new([]);
     private DispatcherTimer? _copiedTimer;
+    private IPen? _framePen;
+    private IBrush? _framePenBrush;
+    private DiffViewMode _titleMode;
+    private string? _titleLanguage;
 
     public DiffBlockView()
     {
@@ -111,33 +115,46 @@ public sealed class DiffBlockView : BlockView
     {
         var code = (CodeBlock)block;
         var style = context.Style;
-        if (!ReferenceEquals(_code, code.Code) && _code != code.Code)
+        var codeChanged = !ReferenceEquals(_code, code.Code) && _code != code.Code;
+        if (codeChanged)
         {
             _code = code.Code;
             _document = UnifiedDiff.Parse(code.Code);
         }
-        _body.Mode = context.State.Get(topKey, ModeState, context.Services.CodeBlocks.DiffMode);
-        UpdateModeButton();
-        foreach (var button in new[] { _mode, _copy })
+        var targetMode = context.State.Get(topKey, ModeState, context.Services.CodeBlocks.DiffMode);
+        var modeChanged = _body.Mode != targetMode;
+        _body.Mode = targetMode;
+        if (contextChanged || previous is null || modeChanged)
         {
-            button.Foreground = style.SecondaryForeground;
-            button.HoverBackground = style.HoverBackground;
+            UpdateModeButton();
+            _mode.Foreground = style.SecondaryForeground;
+            _mode.HoverBackground = style.HoverBackground;
+            _copy.Foreground = style.SecondaryForeground;
+            _copy.HoverBackground = style.HoverBackground;
         }
-        var files = _document.Files.Length;
-        // Markdown 方式与普通代码块一样只显示语言；其它方式显示文件与增删统计
-        var plain = _body.Mode == DiffViewMode.Markdown;
-        var title = plain ? code.Language ?? "diff" : files switch
+        if (contextChanged || previous is null || codeChanged || _titleMode != targetMode || _titleLanguage != code.Language)
         {
-            0 => "diff",
-            1 when _document.Files[0].DisplayPath is { } path => "diff · " + path,
-            _ => $"diff · {files} files",
-        };
-        _title = new TextLayout(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
-            textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 420);
-        _stats = plain ? null : DiffBodyView.StatsLayout(style, _document.Additions, _document.Deletions);
+            _titleMode = targetMode;
+            _titleLanguage = code.Language;
+            var files = _document.Files.Length;
+            // Markdown 方式与普通代码块一样只显示语言；其它方式显示文件与增删统计
+            var plain = _body.Mode == DiffViewMode.Markdown;
+            var title = plain ? code.Language ?? "diff" : files switch
+            {
+                0 => "diff",
+                1 when _document.Files[0].DisplayPath is { } path => "diff · " + path,
+                _ => $"diff · {files} files",
+            };
+            _title = new TextLayout(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
+                textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 420);
+            _stats = plain ? null : DiffBodyView.StatsLayout(style, _document.Additions, _document.Deletions);
+        }
         _body.Set(context, KeyFor(context, topKey, ref segment), code.Code, _document, topKey);
-        InvalidateMeasure();
-        InvalidateVisual();
+        if (contextChanged || previous is null || codeChanged || modeChanged)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
     }
 
     private async Task CopyAsync()
@@ -170,12 +187,10 @@ public sealed class DiffBlockView : BlockView
     protected override Size ArrangeOverride(Size finalSize)
     {
         var x = finalSize.Width - 6;
-        foreach (var button in new[] { _copy, _mode })
-        {
-            x -= button.DesiredSize.Width;
-            button.Arrange(new Rect(x, (HeaderHeight - button.DesiredSize.Height) / 2, button.DesiredSize.Width, button.DesiredSize.Height));
-            x -= 2;
-        }
+        x -= _copy.DesiredSize.Width;
+        _copy.Arrange(new Rect(x, (HeaderHeight - _copy.DesiredSize.Height) / 2, _copy.DesiredSize.Width, _copy.DesiredSize.Height));
+        x -= 2 + _mode.DesiredSize.Width;
+        _mode.Arrange(new Rect(x, (HeaderHeight - _mode.DesiredSize.Height) / 2, _mode.DesiredSize.Width, _mode.DesiredSize.Height));
         _body.Arrange(new Rect(0, HeaderHeight, finalSize.Width, _body.DesiredSize.Height));
         return finalSize;
     }
@@ -188,7 +203,12 @@ public sealed class DiffBlockView : BlockView
         }
         var style = Context.Style;
         var r = style.CornerRadius.TopLeft;
-        context.DrawRectangle(style.CodeBackground, new Pen(style.CodeBorderBrush, 1), new Rect(Bounds.Size).Deflate(0.5), r, r);
+        if (_framePen is null || !ReferenceEquals(_framePenBrush, style.CodeBorderBrush))
+        {
+            _framePenBrush = style.CodeBorderBrush;
+            _framePen = new Pen(style.CodeBorderBrush, 1);
+        }
+        context.DrawRectangle(style.CodeBackground, _framePen, new Rect(Bounds.Size).Deflate(0.5), r, r);
         if (_title is not null)
         {
             _title.Draw(context, new Point(14, (HeaderHeight - _title.Height) / 2));
@@ -275,7 +295,14 @@ public sealed class DiffBodyView : Control, ISelectableSegment
 
     private readonly List<Row> _rows = [];
     private readonly Dictionary<(int Raw, double Width, int Shift), (string Text, ImmutableArray<HighlightToken> Tokens, (int, int)? Changed, TextLayout Layout)> _layouts = [];
+    private readonly Dictionary<int, TextLayout> _numberLayouts = [];
     private RenderContext? _context;
+    private MarkdownStyle? _cachedStyle;
+    private double _cachedNumberWidth;
+    private TextLayout? _plusMarker;
+    private TextLayout? _minusMarker;
+    private IPen? _borderPen;
+    private IBrush? _borderPenBrush;
     private DiffDocument _document = new([]);
     private string _text = "";
     private int[] _lineStarts = [0];
@@ -341,10 +368,15 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         if (_context is null || !ReferenceEquals(_context.Style, context.Style))
         {
             _layouts.Clear();
+            _numberLayouts.Clear();
+            _plusMarker = null;
+            _minusMarker = null;
+            _cachedStyle = null;
         }
         _context = context;
         Key = key;
-        if (!ReferenceEquals(_document, document))
+        var docChanged = !ReferenceEquals(_document, document);
+        if (docChanged)
         {
             _document = document;
             _text = code;
@@ -370,14 +402,16 @@ public sealed class DiffBodyView : Control, ISelectableSegment
             }
         }
         highlight.Request(code, document);
-        InvalidateMeasure();
-        InvalidateVisual();
+        if (contextChanged || docChanged || _rowsDirty)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
     }
 
     private void OnHighlightUpdated()
     {
-        _layouts.Clear();
-        _rowsDirty = true;
+        // CellLayout 按每行 Token 对比决定是否重建 TextLayout，未变化的行继续复用缓存
         InvalidateMeasure();
         InvalidateVisual();
     }
@@ -602,8 +636,25 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         return layout;
     }
 
-    private static bool SameTokens(ImmutableArray<HighlightToken> a, ImmutableArray<HighlightToken> b) =>
-        a.IsDefault ? b.IsDefault : !b.IsDefault && a.SequenceEqual(b);
+    private static bool SameTokens(ImmutableArray<HighlightToken> a, ImmutableArray<HighlightToken> b)
+    {
+        if (a == b)
+        {
+            return true;
+        }
+        if (a.IsDefault || b.IsDefault || a.Length != b.Length)
+        {
+            return false;
+        }
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i] != b[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     // ---- 布局 ----
 
@@ -688,6 +739,27 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         var style = _context.Style;
         var width = Bounds.Width;
         var selected = _context.Selection.GetSegmentRange(Key, _text.Length);
+        List<(int Start, int End, bool Current)>? highlights = null;
+        if (_context.Selection.HasHighlights)
+        {
+            foreach (var h in _context.Selection.GetHighlights(Key, _text.Length))
+            {
+                (highlights ??= []).Add(h);
+            }
+        }
+        if (_borderPen is null || !ReferenceEquals(_borderPenBrush, style.CodeBorderBrush))
+        {
+            _borderPenBrush = style.CodeBorderBrush;
+            _borderPen = new Pen(style.CodeBorderBrush, 1);
+        }
+        if (!ReferenceEquals(_cachedStyle, style) || !_cachedNumberWidth.Equals(_numberWidth))
+        {
+            _cachedStyle = style;
+            _cachedNumberWidth = _numberWidth;
+            _numberLayouts.Clear();
+            _plusMarker = null;
+            _minusMarker = null;
+        }
         var numberTypeface = new Typeface(style.MonospaceFontFamily);
         var numberSize = style.CodeFontSize * 0.9;
         foreach (var row in _rows)
@@ -696,7 +768,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
             {
                 case RowKind.File:
                     context.FillRectangle(style.TableHeaderBackground, new Rect(0, row.Top, width, row.Height));
-                    context.DrawLine(new Pen(style.CodeBorderBrush, 1), new Point(0, row.Top + 0.5), new Point(width, row.Top + 0.5));
+                    context.DrawLine(_borderPen, new Point(0, row.Top + 0.5), new Point(width, row.Top + 0.5));
                     row.Label!.Draw(context, new Point(14, row.Top + (row.Height - row.Label.Height) / 2));
                     if (StatsLayout(style, row.File!.Additions, row.File.Deletions) is { } stats)
                     {
@@ -721,14 +793,14 @@ public sealed class DiffBodyView : Control, ISelectableSegment
                         {
                             context.FillRectangle(background, new Rect(0, row.Top, width, row.Height));
                         }
-                        DrawCell(context, plainCell, row.Top, selected);
+                        DrawCell(context, plainCell, row.Top, selected, highlights);
                     }
                     else if (EffectiveMode == DiffViewMode.Split)
                     {
                         var half = width / 2;
-                        DrawSide(context, row.Left, 0, half, row, numberTypeface, numberSize, selected, left: true);
-                        DrawSide(context, row.Right, half, half, row, numberTypeface, numberSize, selected, left: false);
-                        context.DrawLine(new Pen(style.CodeBorderBrush, 1), new Point(Math.Round(half) + 0.5, row.Top), new Point(Math.Round(half) + 0.5, row.Top + row.Height));
+                        DrawSide(context, row.Left, 0, half, row, numberTypeface, numberSize, selected, highlights, left: true);
+                        DrawSide(context, row.Right, half, half, row, numberTypeface, numberSize, selected, highlights, left: false);
+                        context.DrawLine(_borderPen, new Point(Math.Round(half) + 0.5, row.Top), new Point(Math.Round(half) + 0.5, row.Top + row.Height));
                     }
                     else if (row.Left is { } cell)
                     {
@@ -741,14 +813,14 @@ public sealed class DiffBodyView : Control, ISelectableSegment
                         DrawNumber(context, cell.Line.OldNumber, 0, row.Top, numberTypeface, numberSize, style);
                         DrawNumber(context, cell.Line.NewNumber, _numberWidth, row.Top, numberTypeface, numberSize, style);
                         DrawMarker(context, cell.Line.Kind, _numberWidth * 2, row.Top, style);
-                        DrawCell(context, cell, row.Top, selected);
+                        DrawCell(context, cell, row.Top, selected, highlights);
                     }
                     break;
             }
         }
     }
 
-    private void DrawSide(DrawingContext context, Cell? cell, double x, double width, Row row, Typeface typeface, double size, (int Start, int End)? selected, bool left)
+    private void DrawSide(DrawingContext context, Cell? cell, double x, double width, Row row, Typeface typeface, double size, (int Start, int End)? selected, List<(int Start, int End, bool Current)>? highlights, bool left)
     {
         var style = _context!.Style;
         if (cell is null)
@@ -765,7 +837,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         }
         DrawNumber(context, left ? cell.Line.OldNumber : cell.Line.NewNumber, x, row.Top, typeface, size, style);
         DrawMarker(context, cell.Line.Kind, x + _numberWidth, row.Top, style);
-        DrawCell(context, cell, row.Top, selected);
+        DrawCell(context, cell, row.Top, selected, highlights);
     }
 
     private static (IBrush? Background, IBrush? Gutter) Backgrounds(DiffLineKind kind) => kind switch
@@ -781,27 +853,33 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         {
             return;
         }
-        var layout = new TextLayout(n.ToString(), typeface, size, style.SecondaryForeground, TextAlignment.Right, maxWidth: _numberWidth - 10, lineHeight: style.CodeLineHeight);
+        if (!_numberLayouts.TryGetValue(n, out var layout))
+        {
+            layout = new TextLayout(n.ToString(), typeface, size, style.SecondaryForeground, TextAlignment.Right, maxWidth: _numberWidth - 10, lineHeight: style.CodeLineHeight);
+            _numberLayouts[n] = layout;
+        }
         layout.Draw(context, new Point(x + 2, top));
     }
 
-    private static void DrawMarker(DrawingContext context, DiffLineKind kind, double x, double top, MarkdownStyle style)
+    private void DrawMarker(DrawingContext context, DiffLineKind kind, double x, double top, MarkdownStyle style)
     {
-        var (text, brush) = kind switch
+        TextLayout? layout;
+        if (kind == DiffLineKind.Added)
         {
-            DiffLineKind.Added => ("+", AddedText),
-            DiffLineKind.Deleted => ("−", DeletedText),
-            _ => ((string?)null, (IBrush?)null),
-        };
-        if (text is null)
+            layout = _plusMarker ??= new TextLayout("+", new Typeface(style.MonospaceFontFamily), style.CodeFontSize, AddedText, lineHeight: style.CodeLineHeight);
+        }
+        else if (kind == DiffLineKind.Deleted)
+        {
+            layout = _minusMarker ??= new TextLayout("−", new Typeface(style.MonospaceFontFamily), style.CodeFontSize, DeletedText, lineHeight: style.CodeLineHeight);
+        }
+        else
         {
             return;
         }
-        var layout = new TextLayout(text, new Typeface(style.MonospaceFontFamily), style.CodeFontSize, brush, lineHeight: style.CodeLineHeight);
         layout.Draw(context, new Point(x + (MarkerWidth - layout.WidthIncludingTrailingWhitespace) / 2, top));
     }
 
-    private void DrawCell(DrawingContext context, Cell cell, double top, (int Start, int End)? selected)
+    private void DrawCell(DrawingContext context, Cell cell, double top, (int Start, int End)? selected, List<(int Start, int End, bool Current)>? highlights)
     {
         var layout = CellLayout(cell, cell.Width);
         var origin = new Point(cell.X, top);
@@ -814,16 +892,19 @@ public sealed class DiffBodyView : Control, ISelectableSegment
                 context.FillRectangle(brush, rect.Translate(origin), 2);
             }
         }
-        foreach (var (hs, he, current) in _context!.Selection.GetHighlights(Key, _text.Length))
+        if (highlights is not null)
         {
-            var s0 = Math.Max(hs, cell.RawStart) - cell.RawStart;
-            var e0 = Math.Min(he, cell.RawStart + cell.Text.Length) - cell.RawStart;
-            if (e0 > s0)
+            foreach (var (hs, he, current) in highlights)
             {
-                var brush = current ? _context.Style.SearchCurrentBackground : _context.Style.SearchHighlightBackground;
-                foreach (var rect in layout.HitTestTextRange(s0, e0 - s0))
+                var s0 = Math.Max(hs, cell.RawStart) - cell.RawStart;
+                var e0 = Math.Min(he, cell.RawStart + cell.Text.Length) - cell.RawStart;
+                if (e0 > s0)
                 {
-                    context.FillRectangle(brush, rect.Translate(origin), 2);
+                    var brush = current ? _context!.Style.SearchCurrentBackground : _context!.Style.SearchHighlightBackground;
+                    foreach (var rect in layout.HitTestTextRange(s0, e0 - s0))
+                    {
+                        context.FillRectangle(brush, rect.Translate(origin), 2);
+                    }
                 }
             }
         }
@@ -905,8 +986,8 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         if (_highlight is not null)
         {
             _highlight.Updated += OnHighlightUpdated;
-            _layouts.Clear();
-            _rowsDirty = true;
+            InvalidateMeasure();
+            InvalidateVisual();
         }
     }
 
@@ -926,16 +1007,20 @@ public sealed class DiffBodyView : Control, ISelectableSegment
 
 /// <summary>
 /// diff 的语法着色（块状态中共享）：每个文件按扩展名选语言，旧侧（上下文 + 删除）与新侧（上下文 + 新增）分别着色，
-/// 结果按原始行号保存。后台计算，同一时刻最多一个任务，期间到达的新文本合并为一次。
+/// 结果按原始行号保存。后台计算，同一时刻最多一个任务，期间到达的新文本合并为一次；各文件两侧的增量会话跨帧复用。
 /// </summary>
-internal sealed class DiffHighlightState
+internal sealed class DiffHighlightState : IDisposable
 {
     private readonly object _lock = new();
     private readonly ISyntaxHighlighter? _highlighter;
     private readonly HighlightThemeKind _theme;
+    // 仅由后台单工作线程读写：按 (文件标识, 是否旧侧) 复用增量高亮会话
+    private readonly Dictionary<(string FileKey, bool IsOld), (string Language, IHighlightSession Session)> _sessions = [];
+    private readonly System.Text.StringBuilder _joinBuffer = new();
     private Dictionary<int, ImmutableArray<HighlightToken>> _tokens = [];
     private (string Code, DiffDocument Document)? _pending;
     private bool _running;
+    private bool _disposed;
     private string? _requested;
 
     private DiffHighlightState(ISyntaxHighlighter? highlighter, HighlightThemeKind theme)
@@ -955,6 +1040,7 @@ internal sealed class DiffHighlightState
         {
             return existing;
         }
+        existing?.Dispose();
         var state = new DiffHighlightState(highlighter, theme);
         context.State.Set(blockKey, "diff.highlight", state);
         return state;
@@ -971,6 +1057,10 @@ internal sealed class DiffHighlightState
         _requested = code;
         lock (_lock)
         {
+            if (_disposed)
+            {
+                return;
+            }
             _pending = (code, document);
             if (_running)
             {
@@ -988,6 +1078,12 @@ internal sealed class DiffHighlightState
             (string Code, DiffDocument Document) work;
             lock (_lock)
             {
+                if (_disposed)
+                {
+                    _running = false;
+                    DisposeSessionsOnWorker();
+                    return;
+                }
                 if (_pending is not { } pending)
                 {
                     _running = false;
@@ -1007,6 +1103,10 @@ internal sealed class DiffHighlightState
             }
             Dispatcher.UIThread.Post(() =>
             {
+                if (_disposed)
+                {
+                    return;
+                }
                 _tokens = result;
                 Updated?.Invoke();
             });
@@ -1016,8 +1116,10 @@ internal sealed class DiffHighlightState
     private Dictionary<int, ImmutableArray<HighlightToken>> Compute(DiffDocument document)
     {
         var result = new Dictionary<int, ImmutableArray<HighlightToken>>();
-        foreach (var file in document.Files)
+        HashSet<(string, bool)>? activeKeys = _sessions.Count > 0 ? [] : null;
+        for (var f = 0; f < document.Files.Length; f++)
         {
+            var file = document.Files[f];
             var path = file.NewPath ?? file.OldPath;
             var language = path is null ? null : System.IO.Path.GetExtension(path).TrimStart('.');
             if (string.IsNullOrEmpty(language) || !_highlighter!.SupportsLanguage(language))
@@ -1040,20 +1142,61 @@ internal sealed class DiffHighlightState
                     }
                 }
             }
-            Highlight(language, oldSide, result, onlyDeleted: true);
-            Highlight(language, newSide, result, onlyDeleted: false);
+            var fileKey = $"{f}:{path}";
+            Highlight(fileKey, language, oldSide, result, onlyDeleted: true, activeKeys);
+            Highlight(fileKey, language, newSide, result, onlyDeleted: false, activeKeys);
+        }
+        if (activeKeys is not null && _sessions.Count > activeKeys.Count)
+        {
+            List<(string, bool)>? stale = null;
+            foreach (var key in _sessions.Keys)
+            {
+                if (!activeKeys.Contains(key))
+                {
+                    (stale ??= []).Add(key);
+                }
+            }
+            if (stale is not null)
+            {
+                foreach (var key in stale)
+                {
+                    _sessions[key].Session.Dispose();
+                    _sessions.Remove(key);
+                }
+            }
         }
         return result;
     }
 
-    private void Highlight(string language, List<DiffLine> lines, Dictionary<int, ImmutableArray<HighlightToken>> result, bool onlyDeleted)
+    private void Highlight(string fileKey, string language, List<DiffLine> lines, Dictionary<int, ImmutableArray<HighlightToken>> result, bool onlyDeleted, HashSet<(string, bool)>? activeKeys)
     {
         if (lines.Count == 0)
         {
             return;
         }
-        using var session = _highlighter!.CreateSession(language, _theme);
-        var tokens = session.Update(string.Join('\n', lines.Select(l => l.Text)));
+        var sessionKey = (fileKey, onlyDeleted);
+        activeKeys?.Add(sessionKey);
+        IHighlightSession session;
+        if (_sessions.TryGetValue(sessionKey, out var cached) && cached.Language == language)
+        {
+            session = cached.Session;
+        }
+        else
+        {
+            cached.Session?.Dispose();
+            session = _highlighter!.CreateSession(language, _theme);
+            _sessions[sessionKey] = (language, session);
+        }
+        _joinBuffer.Clear();
+        for (var i = 0; i < lines.Count; i++)
+        {
+            if (i > 0)
+            {
+                _joinBuffer.Append('\n');
+            }
+            _joinBuffer.Append(lines[i].Text);
+        }
+        var tokens = session.Update(_joinBuffer.ToString());
         for (var i = 0; i < lines.Count && i < tokens.Count; i++)
         {
             // 上下文行取新侧的着色
@@ -1061,6 +1204,37 @@ internal sealed class DiffHighlightState
             {
                 result[lines[i].RawLine] = tokens[i];
             }
+        }
+    }
+
+    private void DisposeSessionsOnWorker()
+    {
+        foreach (var entry in _sessions.Values)
+        {
+            entry.Session.Dispose();
+        }
+        _sessions.Clear();
+    }
+
+    public void Dispose()
+    {
+        var disposeNow = false;
+        lock (_lock)
+        {
+            if (_disposed)
+            {
+                return;
+            }
+            _disposed = true;
+            _pending = null;
+            if (!_running)
+            {
+                disposeNow = true;
+            }
+        }
+        if (disposeNow)
+        {
+            DisposeSessionsOnWorker();
         }
     }
 }

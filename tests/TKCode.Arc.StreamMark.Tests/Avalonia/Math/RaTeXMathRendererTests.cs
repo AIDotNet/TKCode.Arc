@@ -74,6 +74,35 @@ public sealed class RaTeXMathRendererTests
     }
 
     [Fact]
+    public void Layout_InvalidFormulas_DoNotEvictValidCacheEntries()
+    {
+        var renderer = new RaTeXMathRenderer(capacity: 4);
+        var valid = new MathLayout?[4];
+        for (var i = 0; i < 4; i++)
+        {
+            valid[i] = renderer.Layout($"x_{i}^2", false, out var err);
+            Assert.Null(err);
+            Assert.NotNull(valid[i]);
+        }
+        Assert.Equal(4, renderer.CacheCount);
+
+        // 连续 100 个流式半截残缺公式进入失败缓存，不应驱逐任何有效公式
+        for (var i = 0; i < 100; i++)
+        {
+            var bad = renderer.Layout($@"\frac{{{i}}}{{", false, out var err);
+            Assert.Null(bad);
+            Assert.NotNull(err);
+        }
+
+        Assert.Equal(4, renderer.CacheCount);
+        Assert.True(renderer.ErrorCacheCount <= 16);
+        for (var i = 0; i < 4; i++)
+        {
+            Assert.Same(valid[i], renderer.Layout($"x_{i}^2", false, out _));
+        }
+    }
+
+    [Fact]
     public async Task Layout_IsThreadSafe()
     {
         var renderer = new RaTeXMathRenderer(capacity: 16);

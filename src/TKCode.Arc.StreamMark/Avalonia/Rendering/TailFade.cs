@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Media;
+using Avalonia.Media.Immutable;
 using Avalonia.Media.TextFormatting;
 using Avalonia.Rendering.Composition;
 using Avalonia.Threading;
@@ -17,11 +18,19 @@ namespace StreamMark.Avalonia.Rendering;
 /// </remarks>
 internal sealed class TailFade(TextSegmentView owner)
 {
+    // 高 TPS（如 300 TPS / 120Hz）下把同一时间窗内的批次合并成少量桶，限制每帧 Skia PushOpacity 离屏层数量
+    private const int MaxFadeBuckets = 8;
+
     private readonly List<(long FromEnd, int Length, TimeSpan Time)> _batches = [];
+    private readonly List<(long FromEnd, int Length, TimeSpan Time)> _merged = [];
+    private readonly List<FadeRun> _runs = [];
+    private readonly List<FadePiece> _pieces = [];
     private readonly List<SegmentLineVisual> _clipped = [];
+    private readonly List<SegmentLineVisual> _nextClipped = [];
     private CompositionCustomVisual? _visual;
     private bool _hasFrame;
-    private IDisposable? _settle;
+    private DispatcherTimer? _settleTimer;
+    private TimeSpan _settleDeadline;
 
     /// <summary>按当前排版与显示记录更新渐显（排版或末尾状态变化后调用）。</summary>
     public void Update(SegmentLayout? layout, IReadOnlyList<SegmentLineVisual> lines, StreamingState? state, int textLength, double fontSize, Size bounds)
@@ -39,7 +48,8 @@ internal sealed class TailFade(TextSegmentView owner)
             return;
         }
 
-        var fadeStart = (int)Math.Clamp(textLength - _batches[0].FromEnd, 0, textLength);
+        CoalesceBatches(_batches, state.FadeDuration, _merged);
+        var fadeStart = (int)Math.Clamp(textLength - _merged[0].FromEnd, 0, textLength);
         fadeStart = SkipUnfadeable(layout, fadeStart, textLength);
         if (fadeStart >= textLength)
         {
@@ -49,7 +59,7 @@ internal sealed class TailFade(TextSegmentView owner)
 
         // 渐显层要画的字形：渐显范围内各行的文字段
         var firstLine = layout.LineIndexOf(fadeStart);
-        var runs = new List<FadeRun>();
+        _runs.Clear();
         for (var i = firstLine; i < layout.LineCount; i++)
         {
             if (layout.IsEmptyLine(i))
@@ -68,7 +78,10 @@ internal sealed class TailFade(TextSegmentView owner)
                     if (shaped.GlyphRun.TryCreateImmutableGlyphRunReference() is { } reference)
                     {
                         var glyphBounds = shaped.GlyphRun.Bounds;
-                        runs.Add(new FadeRun(reference, foreground.ToImmutable(), shaped.Properties.BackgroundBrush?.ToImmutable(), glyphBounds,
+                        var immFg = foreground.ToImmutable();
+                        var immBg = shaped.Properties.BackgroundBrush?.ToImmutable();
+                        var fgColor = TrySolidColor(immFg);
+                        _runs.Add(new FadeRun(reference, immFg, fgColor, immBg, glyphBounds,
                             origin, i, glyphBounds.Translate(origin)));
                     }
                 }
@@ -81,9 +94,9 @@ internal sealed class TailFade(TextSegmentView owner)
         }
 
         // 每批文字所在的矩形（按行），最后一段向右延伸，容纳字形的右侧溢出
-        var pieces = new List<FadePiece>();
+        _pieces.Clear();
         TimeSpan newest = default;
-        foreach (var (fromEnd, length, time) in _batches)
+        foreach (var (fromEnd, length, time) in _merged)
         {
             var start = (int)Math.Clamp(textLength - fromEnd, 0, textLength);
             var end = Math.Min(textLength, start + length);
@@ -95,31 +108,32 @@ internal sealed class TailFade(TextSegmentView owner)
             }
             foreach (var rect in layout.HitTestTextRange(start, end - start))
             {
-                var line = layout.LineIndexOf(Math.Clamp(layout.HitTestPoint(rect.Center).TextPosition, 0, textLength));
+                var line = layout.LineIndexAtY(rect.Center.Y);
                 // 竖直方向放宽到整行上下（只绘制同一行的字形，不会画到相邻行）
-                pieces.Add(new FadePiece(new Rect(rect.X, rect.Y - rect.Height, rect.Width, rect.Height * 3), time, line));
+                _pieces.Add(new FadePiece(new Rect(rect.X, rect.Y - rect.Height, rect.Width, rect.Height * 3), time, line));
             }
         }
-        if (pieces.Count == 0 || runs.Count == 0)
+        if (_pieces.Count == 0 || _runs.Count == 0)
         {
-            foreach (var run in runs)
+            foreach (var run in _runs)
             {
                 run.Reference.Dispose();
             }
+            _runs.Clear();
             Clear();
             return;
         }
-        for (var i = 0; i < pieces.Count; i++)
+        for (var i = 0; i < _pieces.Count; i++)
         {
-            if (i == pieces.Count - 1 || pieces[i + 1].Line != pieces[i].Line)
+            if (i == _pieces.Count - 1 || _pieces[i + 1].Line != _pieces[i].Line)
             {
-                var clip = pieces[i].Clip;
-                pieces[i] = pieces[i] with { Clip = clip.WithWidth(clip.Width + fontSize * 2) };
+                var clip = _pieces[i].Clip;
+                _pieces[i] = _pieces[i] with { Clip = clip.WithWidth(clip.Width + fontSize * 2) };
             }
         }
 
         // 行视觉：渐显起点所在行只画起点左侧，之后的行全部交给渐显层
-        var clipped = new List<SegmentLineVisual>();
+        _nextClipped.Clear();
         for (var i = firstLine; i < layout.LineCount && i < lines.Count; i++)
         {
             if (layout.IsEmptyLine(i))
@@ -128,28 +142,63 @@ internal sealed class TailFade(TextSegmentView owner)
             }
             var line = layout.LineAt(i);
             lines[i].ClipRight = i == firstLine ? line.GetDistanceFromCharacterHit(new CharacterHit(fadeStart)) : line.Start;
-            clipped.Add(lines[i]);
+            _nextClipped.Add(lines[i]);
         }
         foreach (var line in _clipped)
         {
-            if (!clipped.Contains(line))
+            if (!_nextClipped.Contains(line))
             {
                 line.ClipRight = null;
             }
         }
         _clipped.Clear();
-        _clipped.AddRange(clipped);
+        _clipped.AddRange(_nextClipped);
 
-        var area = pieces.Aggregate(pieces[0].Clip, (a, p) => a.Union(p.Clip));
-        visual.SendHandlerMessage(new FadeFrame(runs.ToArray(), pieces.ToArray(), newest, state.FadeDuration, area));
+        var area = _pieces[0].Clip;
+        for (var i = 1; i < _pieces.Count; i++)
+        {
+            area = area.Union(_pieces[i].Clip);
+        }
+        visual.SendHandlerMessage(new FadeFrame(_runs.ToArray(), _pieces.ToArray(), newest, state.FadeDuration, area));
+        _runs.Clear();
+        _pieces.Clear();
         _hasFrame = true;
-        ScheduleSettle(newest + state.FadeDuration - now);
+        ScheduleSettle(newest + state.FadeDuration, now);
+    }
+
+    private static void CoalesceBatches(List<(long FromEnd, int Length, TimeSpan Time)> source, TimeSpan fadeDuration,
+        List<(long FromEnd, int Length, TimeSpan Time)> output)
+    {
+        output.Clear();
+        if (source.Count <= MaxFadeBuckets)
+        {
+            output.AddRange(source);
+            return;
+        }
+        var bucketTicks = Math.Max(TimeSpan.FromMilliseconds(24).Ticks, fadeDuration.Ticks / MaxFadeBuckets);
+        var current = source[0];
+        for (var i = 1; i < source.Count; i++)
+        {
+            var next = source[i];
+            // 仅合并紧邻且时间差在同一个桶内的批次，保持各行裁剪区间连续且每帧 SaveLayer 数量受控
+            if (current.FromEnd - current.Length == next.FromEnd && (next.Time - current.Time).Ticks < bucketTicks)
+            {
+                current = (current.FromEnd, current.Length + next.Length, next.Time);
+            }
+            else
+            {
+                output.Add(current);
+                current = next;
+            }
+        }
+        output.Add(current);
     }
 
     /// <summary>结束渐显：行视觉恢复完整绘制，渐显层清空。</summary>
     public void Clear()
     {
-        _settle?.Dispose();
+        _settleDeadline = default;
+        _settleTimer?.Stop();
         foreach (var line in _clipped)
         {
             line.ClipRight = null;
@@ -249,13 +298,47 @@ internal sealed class TailFade(TextSegmentView owner)
         return offset;
     }
 
-    private void ScheduleSettle(TimeSpan delay)
+    private static Color? TrySolidColor(IImmutableBrush brush)
     {
-        _settle?.Dispose();
-        _settle = DispatcherTimer.RunOnce(owner.RefreshFade, delay < TimeSpan.Zero ? TimeSpan.Zero : delay + TimeSpan.FromMilliseconds(16));
+        if (brush is ISolidColorBrush solid)
+        {
+            var alpha = (byte)Math.Clamp(Math.Round(solid.Color.A * solid.Opacity), 0, 255);
+            return Color.FromArgb(alpha, solid.Color.R, solid.Color.G, solid.Color.B);
+        }
+        return null;
     }
 
-    private sealed record FadeRun(IImmutableGlyphRunReference Reference, IImmutableBrush Foreground, IImmutableBrush? Background, Rect GlyphBounds,
+    private void ScheduleSettle(TimeSpan deadline, TimeSpan now)
+    {
+        _settleDeadline = deadline;
+        // 定时器已在跑时只推后截止时间，避免 300 TPS / 120Hz 流式期间每帧 Stop/Start 重注册系统定时器
+        if (_settleTimer is { IsEnabled: true })
+        {
+            return;
+        }
+        var delay = deadline - now;
+        var interval = delay < TimeSpan.Zero ? TimeSpan.FromMilliseconds(16) : delay + TimeSpan.FromMilliseconds(16);
+        if (_settleTimer is null)
+        {
+            _settleTimer = new DispatcherTimer(interval, DispatcherPriority.Normal, (_, _) =>
+            {
+                var remaining = _settleDeadline - StreamClock.Now;
+                if (remaining > TimeSpan.FromMilliseconds(4))
+                {
+                    _settleTimer!.Interval = remaining + TimeSpan.FromMilliseconds(16);
+                    return;
+                }
+                _settleTimer?.Stop();
+                owner.RefreshFade();
+            });
+            _settleTimer.Start();
+            return;
+        }
+        _settleTimer.Interval = interval;
+        _settleTimer.Start();
+    }
+
+    private sealed record FadeRun(IImmutableGlyphRunReference Reference, IImmutableBrush Foreground, Color? ForegroundColor, IImmutableBrush? Background, Rect GlyphBounds,
         Point Origin, int Line, Rect Bounds);
 
     private readonly record struct FadePiece(Rect Clip, TimeSpan Time, int Line);
@@ -277,6 +360,7 @@ internal sealed class TailFade(TextSegmentView owner)
         public static readonly object ClearMessage = new();
 
         private FadeFrame? _frame;
+        private readonly Dictionary<uint, IImmutableSolidColorBrush> _alphaBrushes = [];
 
         public override void OnMessage(object message)
         {
@@ -318,26 +402,76 @@ internal sealed class TailFade(TextSegmentView owner)
                 {
                     continue;
                 }
-                using (context.PushClip(piece.Clip))
-                using (context.PushOpacity(opacity, piece.Clip))
+                // 纯文字（无底色、纯色画刷）直接把透明度乘进前景色 Alpha，跳过 PushOpacity 离屏 SaveLayer（300 TPS 下大幅降 GPU 开销）
+                var needsLayer = false;
+                foreach (var run in frame.Runs)
                 {
-                    foreach (var run in frame.Runs)
+                    if (run.Line != piece.Line || !run.Bounds.Intersects(piece.Clip))
                     {
-                        if (run.Line != piece.Line || !run.Bounds.Intersects(piece.Clip))
+                        continue;
+                    }
+                    if (run.Background is not null || run.ForegroundColor is null)
+                    {
+                        needsLayer = true;
+                        break;
+                    }
+                }
+                using (context.PushClip(piece.Clip))
+                {
+                    if (needsLayer)
+                    {
+                        using (context.PushOpacity(opacity, piece.Clip))
                         {
-                            continue;
-                        }
-                        using (context.PushPreTransform(Matrix.CreateTranslation(run.Origin)))
-                        {
-                            if (run.Background is { } background)
+                            foreach (var run in frame.Runs)
                             {
-                                context.FillRectangle(background, run.GlyphBounds);
+                                if (run.Line != piece.Line || !run.Bounds.Intersects(piece.Clip))
+                                {
+                                    continue;
+                                }
+                                using (context.PushPreTransform(Matrix.CreateTranslation(run.Origin)))
+                                {
+                                    if (run.Background is { } background)
+                                    {
+                                        context.FillRectangle(background, run.GlyphBounds);
+                                    }
+                                    context.DrawGlyphRun(run.Foreground, run.Reference);
+                                }
                             }
-                            context.DrawGlyphRun(run.Foreground, run.Reference);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var run in frame.Runs)
+                        {
+                            if (run.Line != piece.Line || !run.Bounds.Intersects(piece.Clip))
+                            {
+                                continue;
+                            }
+                            var brush = BrushWithOpacity(run.ForegroundColor!.Value, opacity);
+                            using (context.PushPreTransform(Matrix.CreateTranslation(run.Origin)))
+                            {
+                                context.DrawGlyphRun(brush, run.Reference);
+                            }
                         }
                     }
                 }
             }
+        }
+
+        private IImmutableSolidColorBrush BrushWithOpacity(Color baseColor, double opacity)
+        {
+            var alpha = (byte)Math.Clamp(Math.Round(baseColor.A * opacity), 0, 255);
+            var key = ((uint)alpha << 24) | ((uint)baseColor.R << 16) | ((uint)baseColor.G << 8) | baseColor.B;
+            if (!_alphaBrushes.TryGetValue(key, out var brush))
+            {
+                if (_alphaBrushes.Count >= 512)
+                {
+                    _alphaBrushes.Clear();
+                }
+                brush = new ImmutableSolidColorBrush(Color.FromArgb(alpha, baseColor.R, baseColor.G, baseColor.B));
+                _alphaBrushes[key] = brush;
+            }
+            return brush;
         }
     }
 }

@@ -219,6 +219,7 @@ public class Markdown : TemplatedControl
     private string _query = string.Empty;
     private bool _matchCase;
     private int _applyPending;
+    private bool _viewAttached;
     private MarkdownStream? _subscribed;
     private MarkdownStream? _ownStream;
 
@@ -434,6 +435,7 @@ public class Markdown : TemplatedControl
         base.OnApplyTemplate(e);
         DetachView();
         _view = e.NameScope.Find<MarkdownView>(ViewPart);
+        Volatile.Write(ref _viewAttached, _view is not null && IsAttached);
         AttachView();
         UpdateServices();
         if (_watched is { } document)
@@ -580,6 +582,12 @@ public class Markdown : TemplatedControl
     /// </summary>
     private void OnSnapshotReady(DocumentSnapshot? snapshot)
     {
+        // During streaming, MarkdownView applies intermediate snapshots on its own RequestAnimationFrame; skip redundant
+        // Background posts on every token and only run the safety net for initial attach, static loads and completion.
+        if (snapshot is { IsComplete: false } && Volatile.Read(ref _viewAttached))
+        {
+            return;
+        }
         if (Interlocked.Exchange(ref _applyPending, 1) == 0)
         {
             // This control's dispatcher: on the worker, Dispatcher.UIThread would make one for the worker when none is current.
@@ -603,6 +611,7 @@ public class Markdown : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        Volatile.Write(ref _viewAttached, _view is not null);
         if (_watched is { } document)
         {
             document.SnapshotReady -= OnSnapshotReady;
@@ -620,6 +629,7 @@ public class Markdown : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        Volatile.Write(ref _viewAttached, false);
         if (_watched is { } document)
         {
             document.SnapshotReady -= OnSnapshotReady;

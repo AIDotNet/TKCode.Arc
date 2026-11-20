@@ -77,4 +77,65 @@ public sealed class LongCodeTests(ITestOutputHelper output)
             window.Close();
         });
     }
+
+    [Fact]
+    public async Task StreamingTailInserts_AndCodeStrips_PreserveRowCountAndHitTest()
+    {
+        await HeadlessApp.Run(async () =>
+        {
+            var view = new TranscriptView();
+            Extensions.MarkdownServices.SetServices(view, new Extensions.MarkdownServices { CodeBlocks = Extensions.CodeBlockOptions.Default with { CollapseAfterLines = 0 } });
+            var window = new Window { Width = 800, Height = 700, Content = view };
+            window.Show();
+
+            var stream = new MarkdownStream(smooth: false);
+            var entry = new MarkdownEntry(stream);
+            view.Entries.Add(entry);
+            await HeadlessApp.Settle();
+
+            // 逐步追加多个顶层块（走 O(1) 尾部直插路径）与 40 行代码块（3 个 16 行分条）
+            for (var p = 0; p < 5; p++)
+            {
+                stream.Push($"Paragraph {p} text.\n\n");
+                await entry.Document.WhenIdle();
+                view.Panel.ApplyLatest();
+                await HeadlessApp.Settle();
+            }
+
+            var sb = new StringBuilder("```cs\n");
+            for (var i = 0; i < 40; i++)
+            {
+                sb.Append("var x").Append(i).Append(" = ").Append(i).Append(";\n");
+            }
+            sb.Append("```\n");
+            stream.Push(sb.ToString());
+            stream.Complete();
+            await entry.Document.WhenIdle();
+            view.Panel.ApplyLatest();
+            await HeadlessApp.Settle();
+
+            Assert.Equal(6, view.Panel.RowCount);
+            var codeView = Assert.Single(view.Panel.RowViews.OfType<CodeBlockView>());
+            var textView = Assert.IsType<CodeTextView>(Assert.Single(codeView.Segments()));
+            // 40 行 / 16 行每条 = 3 个分条视觉
+            Assert.Equal(3, textView.StripCount);
+            Assert.Equal(40, textView.VisibleLineCount);
+
+            // 跨分条边界的 GetCharacterBounds / HitTest 一致
+            var targetOffset = textView.Text.IndexOf("var x20", StringComparison.Ordinal);
+            var bounds = textView.GetCharacterBounds(targetOffset);
+            var hit = textView.HitTest(bounds.Center);
+            Assert.InRange(hit, targetOffset - 1, targetOffset + 2);
+
+            // 切换换行后分条视觉数量与内容保持一致
+            codeView.Wrap = true;
+            await HeadlessApp.Settle();
+            Assert.Equal(3, textView.StripCount);
+            codeView.Wrap = false;
+            await HeadlessApp.Settle();
+            Assert.Equal(3, textView.StripCount);
+
+            window.Close();
+        });
+    }
 }

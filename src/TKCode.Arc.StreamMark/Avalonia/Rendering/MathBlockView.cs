@@ -16,6 +16,7 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
 {
     private MathLayout? _layout;
     private string _latex = "";
+    private bool _wasOpen;
     private string? _error;
     private TextLayout? _source;
     private double _scale = 1;
@@ -32,25 +33,147 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
     {
         var math = (MathBlock)block;
         Key = KeyFor(context, topKey, ref segment);
-        if (!contextChanged && math.Latex == _latex)
+        if (!contextChanged && math.Latex == _latex && math.IsOpen == _wasOpen)
         {
             return;
         }
         _latex = math.Latex;
-        var layout = context.Services.Registry.Math?.Layout(math.Latex.Trim(), display: true, out _error);
-        if (layout is not null)
+        _wasOpen = math.IsOpen;
+        var renderer = context.Services.Registry.Math;
+        if (renderer is null)
         {
-            _layout = layout;
+            CancelBackgroundWork();
+            _layout = null;
             _error = null;
+            _source = null;
+            InvalidateMeasure();
+            InvalidateVisual();
+            return;
         }
-        else if (!math.IsOpen || contextChanged)
+        var trimmed = math.Latex.Trim();
+        if (!math.IsOpen)
         {
-            // 已闭合仍失败：显示源码而不是旧结果
-            _layout = math.IsOpen ? _layout : null;
+            CancelBackgroundWork();
+            var layout = renderer.Layout(trimmed, display: true, out _error);
+            if (layout is not null)
+            {
+                _layout = layout;
+                _error = null;
+            }
+            else
+            {
+                // 已闭合仍失败：显示源码而不是旧结果
+                _layout = null;
+            }
+            _source = null;
+            InvalidateMeasure();
+            InvalidateVisual();
+            return;
         }
-        _source = null;
-        InvalidateMeasure();
-        InvalidateVisual();
+        // 流式中未闭合的公式：先检查括号 / 环境是否成对（类似 streamdown 的公式完整性守卫），
+        // 明显未写完时不调用原生排版引擎，保留上一帧成功结果；可能可排版时在后台防抖执行，不阻塞界面线程。
+        if (!IsLikelyRenderable(trimmed.AsSpan()))
+        {
+            if (_layout is null)
+            {
+                _source = null;
+                InvalidateMeasure();
+                InvalidateVisual();
+            }
+            return;
+        }
+        var key = HashStreamingKey(trimmed, renderer);
+        RunInBackground(
+            key,
+            async ct =>
+            {
+                await Task.Delay(50, ct).ConfigureAwait(false);
+                var result = renderer.Layout(trimmed, display: true, out var error);
+                return (result, error);
+            },
+            applied =>
+            {
+                if (applied.result is not null)
+                {
+                    _layout = applied.result;
+                    _error = null;
+                    _source = null;
+                    InvalidateMeasure();
+                    InvalidateVisual();
+                }
+                else if (_layout is null)
+                {
+                    _error = applied.error;
+                    _source = null;
+                    InvalidateMeasure();
+                    InvalidateVisual();
+                }
+            });
+        if (_layout is null)
+        {
+            _source = null;
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
+    }
+
+    private static ulong HashStreamingKey(string trimmed, IMathRenderer renderer)
+    {
+        var hash = new HashCode();
+        hash.Add(trimmed, StringComparer.Ordinal);
+        hash.Add(System.Runtime.CompilerServices.RuntimeHelpers.GetHashCode(renderer));
+        return (ulong)(uint)hash.ToHashCode() | ((ulong)(uint)trimmed.Length << 32);
+    }
+
+    /// <summary>快速检查流式公式是否已满足基本配对条件，避免半截命令反复进入原生排版器。</summary>
+    internal static bool IsLikelyRenderable(ReadOnlySpan<char> latex)
+    {
+        if (latex.IsEmpty)
+        {
+            return false;
+        }
+        var braces = 0;
+        var envs = 0;
+        for (var i = 0; i < latex.Length; i++)
+        {
+            var ch = latex[i];
+            if (ch == '\\')
+            {
+                if (i + 1 >= latex.Length)
+                {
+                    // 末尾悬空反斜杠
+                    return false;
+                }
+                var rest = latex[(i + 1)..];
+                if (rest.StartsWith("begin{"))
+                {
+                    envs++;
+                }
+                else if (rest.StartsWith("end{"))
+                {
+                    envs--;
+                    if (envs < 0)
+                    {
+                        return false;
+                    }
+                }
+                i++;
+                continue;
+            }
+            if (ch == '{')
+            {
+                braces++;
+            }
+            else if (ch == '}')
+            {
+                braces--;
+                if (braces < 0)
+                {
+                    return false;
+                }
+            }
+        }
+        return braces == 0 && envs == 0;
     }
 
     protected override Size MeasureOverride(Size availableSize)

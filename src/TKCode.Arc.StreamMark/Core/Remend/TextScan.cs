@@ -479,7 +479,13 @@ internal sealed partial class TextScan
     public static int CountDoublePairs(string text, char ch)
     {
         var scan = ScanCache.Get(text);
-        var pair = new string(ch, 2);
+        var pair = ch switch
+        {
+            '*' => "**",
+            '~' => "~~",
+            '$' => "$$",
+            _ => new string(ch, 2),
+        };
         var count = 0;
 
         for (var i = JsText.IndexOf(text, pair); i != -1; i = JsText.IndexOf(text, pair, i))

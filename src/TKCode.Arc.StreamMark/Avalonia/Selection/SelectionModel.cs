@@ -102,6 +102,9 @@ public sealed class SelectionModel
         Changed?.Invoke();
     }
 
+    /// <summary>是否存在任何查找高亮。</summary>
+    internal bool HasHighlights => _highlights.Count > 0;
+
     /// <summary>某个片段内的查找高亮区间；<c>Current</c> 表示当前结果。</summary>
     public IEnumerable<(int Start, int End, bool Current)> GetHighlights(SegmentKey key, int length)
     {

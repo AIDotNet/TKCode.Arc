@@ -82,9 +82,11 @@ internal sealed class DocumentPresenter
         {
             Restyle(snapshot, context);
         }
+        var previousComplete = Applied?.IsComplete ?? false;
         Applied = snapshot;
-        UpdateTail(context);
-        return ops.Count > 0 || contextChanged;
+        var changed = ops.Count > 0 || contextChanged;
+        UpdateTail(context, changed || previousComplete != snapshot.IsComplete);
+        return changed;
     }
 
     // 样式 / 服务变化：所有视图按原模型重新应用（视图类型可能变化，例如新增了图表渲染器）
@@ -107,12 +109,15 @@ internal sealed class DocumentPresenter
         }
     }
 
-    private void UpdateTail(RenderContext context)
+    private void UpdateTail(RenderContext context, bool invalidateExisting)
     {
         var tail = context.Streaming is null || _views.Count == 0 ? null : _views[^1].LastSegment();
         if (ReferenceEquals(tail, _tail))
         {
-            tail?.InvalidateVisual();
+            if (invalidateExisting)
+            {
+                tail?.InvalidateVisual();
+            }
             return;
         }
         if (_tail is not null)

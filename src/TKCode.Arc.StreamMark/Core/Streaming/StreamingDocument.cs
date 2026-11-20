@@ -29,6 +29,7 @@ public sealed class StreamingDocument
     // 以下字段只由工作线程访问
     private readonly DocumentComposer _composer;
     private int _composerGeneration;
+    private int _sentLength;
     private long _processedVersion = -1;
     private bool _finished;
 
@@ -279,8 +280,8 @@ public sealed class StreamingDocument
 
     private DocumentSnapshot? Process()
     {
-        string text;
-        int from;
+        string delta;
+        bool isFullLoad;
         long version;
         bool complete;
         lock (_sourceLock)
@@ -289,6 +290,7 @@ public sealed class StreamingDocument
             {
                 _composer.Reset();
                 _composerGeneration = _sourceGeneration;
+                _sentLength = 0;
                 _processedVersion = -1;
                 _finished = false;
             }
@@ -298,16 +300,21 @@ public sealed class StreamingDocument
                 return null;
             }
             complete = _completeRequested;
-            from = complete ? 0 : _composer.FrozenEnd;
-            text = _source.ToString(from, _source.Length - from);
+            isFullLoad = complete && _sentLength == 0;
+            var takeFrom = _sentLength;
+            var takeLen = _source.Length - takeFrom;
+            delta = takeLen > 0 ? _source.ToString(takeFrom, takeLen) : string.Empty;
+            _sentLength = _source.Length;
         }
 
         _processedVersion = version;
         if (complete)
         {
             _finished = true;
-            return _composer.Finish(text, version);
+            return isFullLoad
+                ? _composer.Finish(delta, version)
+                : _composer.FinishDelta(delta.AsSpan(), version);
         }
-        return _composer.Update(text, from, version);
+        return _composer.AppendDelta(delta.AsSpan(), version);
     }
 }

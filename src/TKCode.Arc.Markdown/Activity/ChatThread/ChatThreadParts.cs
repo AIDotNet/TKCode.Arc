@@ -8,6 +8,7 @@ using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
+using StreamMark.Avalonia;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -271,6 +272,10 @@ internal sealed class ChatThreadBubbleBody : Decorator
     private double _naturalFontSize;
     private FontFamily? _naturalFontFamily;
     private double _natural;
+    private MarkdownStream? _saturatedStream;
+    private double _saturatedWidth;
+    private double _saturatedFontSize;
+    private FontFamily? _saturatedFontFamily;
 
     protected override Size MeasureOverride(Size availableSize)
     {
@@ -282,7 +287,28 @@ internal sealed class ChatThreadBubbleBody : Decorator
         var inner = availableSize.Deflate(padding);
         if (child is Markdown markdown && double.IsFinite(inner.Width))
         {
+            // Once a streamed Markdown has already reached the maximum bubble width, skip measuring at +Infinity on
+            // subsequent streaming frames AND after Complete(): alternating +Infinity and finite widths invalidates
+            // every TextSegmentView's MaxWidth and forces a double full-document re-layout of the entire message.
+            if (markdown.Stream is { } activeStream && ReferenceEquals(activeStream, _saturatedStream)
+                && inner.Width <= _saturatedWidth + 0.5
+                && markdown.FontSize.Equals(_saturatedFontSize) && Equals(markdown.FontFamily, _saturatedFontFamily))
+            {
+                child.Measure(new Size(inner.Width, double.PositiveInfinity));
+                return new Size(Math.Min(inner.Width, child.DesiredSize.Width), child.DesiredSize.Height).Inflate(padding);
+            }
             var natural = NaturalWidth(markdown);
+            if (markdown.Stream is { } stream && natural >= inner.Width)
+            {
+                _saturatedStream = stream;
+                _saturatedWidth = inner.Width;
+                _saturatedFontSize = markdown.FontSize;
+                _saturatedFontFamily = markdown.FontFamily;
+            }
+            else if (markdown.Stream is null || !ReferenceEquals(markdown.Stream, _saturatedStream))
+            {
+                _saturatedStream = null;
+            }
             var width = natural > 0 && double.IsFinite(natural) ? Math.Min(Math.Ceiling(natural), inner.Width) : inner.Width;
             child.Measure(new Size(width, double.PositiveInfinity));
             return new Size(Math.Min(width, child.DesiredSize.Width), child.DesiredSize.Height).Inflate(padding);

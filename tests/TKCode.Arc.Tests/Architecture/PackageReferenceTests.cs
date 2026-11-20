@@ -17,8 +17,8 @@ public class PackageReferenceTests
         // ADR 0050: StreamMark, Markdig and TextMate come only through these two.
         ["TKCode.Arc.Markdown"] = ["TKCode.Arc", "TKCode.Arc.StreamMark"],
         ["TKCode.Arc.Highlighting"] = ["TKCode.Arc", "TKCode.Arc.StreamMark.TextMate"],
-        // StreamMark: a standalone library on Avalonia and Markdig; its plugins bring TextMate, RaTeX and Mermaid on their own.
-        ["TKCode.Arc.StreamMark"] = ["Avalonia", "Markdig"],
+        // StreamMark: a standalone library on Avalonia alone (native incremental Markdown parser, zero Markdig dependency).
+        ["TKCode.Arc.StreamMark"] = ["Avalonia"],
         ["TKCode.Arc.StreamMark.TextMate"] = ["TextMateSharp", "TextMateSharp.Grammars", "TKCode.Arc.StreamMark"],
         ["TKCode.Arc.StreamMark.RaTeX"] = ["Avalonia", "TKCode.Arc.StreamMark"],
         ["TKCode.Arc.StreamMark.Mermaid"] = ["Avalonia", "Avalonia.Skia", "Mermaider", "ShimSkiaSharp", "Svg.Animation", "Svg.Custom",

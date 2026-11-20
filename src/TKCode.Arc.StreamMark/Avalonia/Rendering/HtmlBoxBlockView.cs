@@ -17,6 +17,9 @@ public sealed class HtmlBoxBlockView : StackBlockView
     private RenderContext? _childContext;
     private RenderContext? _childParent;
     private HtmlBoxBlock? _childFor;
+    private IPen? _borderPen;
+    private IBrush? _borderPenBrush;
+    private double _borderPenWidth;
 
     protected override Thickness ContentPadding => _content;
 
@@ -29,10 +32,14 @@ public sealed class HtmlBoxBlockView : StackBlockView
             _childParent = context;
             _childFor = box;
         }
+        var boxChanged = contextChanged || previous is not HtmlBoxBlock old || old.Box != box.Box || old.Text != box.Text;
         _box = box;
         UpdateChildren(_childContext, box.Children, topKey, ref segment);
-        InvalidateMeasure();
-        InvalidateVisual();
+        if (boxChanged)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -85,9 +92,17 @@ public sealed class HtmlBoxBlockView : StackBlockView
         }
         var style = _box.Box;
         var background = HtmlPaint.Background(Context, style.Background);
-        var pen = style.BorderColor is { } borderColor && style.BorderWidth > 0 && HtmlPaint.Background(Context, borderColor) is { } borderBrush
-            ? new Pen(borderBrush, style.BorderWidth)
-            : null;
+        IPen? pen = null;
+        if (style.BorderColor is { } borderColor && style.BorderWidth > 0 && HtmlPaint.Background(Context, borderColor) is { } borderBrush)
+        {
+            if (_borderPen is null || !ReferenceEquals(_borderPenBrush, borderBrush) || !_borderPenWidth.Equals(style.BorderWidth))
+            {
+                _borderPenBrush = borderBrush;
+                _borderPenWidth = style.BorderWidth;
+                _borderPen = new Pen(borderBrush, style.BorderWidth);
+            }
+            pen = _borderPen;
+        }
         if (background is null && pen is null)
         {
             return;

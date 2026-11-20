@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text;
 using Avalonia;
 using Avalonia.Interactivity;
 using Avalonia.Platform.Storage;
@@ -153,9 +154,12 @@ public sealed record ChatReaction(string Emoji, int Count, bool Mine = false);
 /// </summary>
 public class ChatMessage : INotifyPropertyChanged
 {
+    private static readonly PropertyChangedEventArgs s_textChanged = new(nameof(Text));
+
     private string _id = string.Empty;
     private string _authorId = string.Empty;
     private string? _text;
+    private StringBuilder? _streamBuffer;
     private DateTimeOffset _createdAt;
     private IReadOnlyList<ChatAttachment>? _attachments;
     private IReadOnlyList<ChatReaction>? _reactions;
@@ -186,7 +190,64 @@ public class ChatMessage : INotifyPropertyChanged
     public string AuthorId { get => _authorId; set => Set(ref _authorId, value); }
 
     /// <summary>The message text (Markdown or plain, see <see cref="Format"/>); null for an attachment-only message.</summary>
-    public string? Text { get => _text; set => Set(ref _text, value); }
+    public string? Text
+    {
+        get => _streamBuffer is not null ? (_text ??= _streamBuffer.ToString()) : _text;
+        set
+        {
+            if (_streamBuffer is not null)
+            {
+                var current = _text ?? _streamBuffer.ToString();
+                _streamBuffer = null;
+                if (EqualityComparer<string?>.Default.Equals(current, value))
+                {
+                    _text = current;
+                    return;
+                }
+                _text = value;
+                PropertyChanged?.Invoke(this, s_textChanged);
+                return;
+            }
+            Set(ref _text, value);
+        }
+    }
+
+    /// <summary>True when the message has non-empty text without forcing a streaming buffer to materialize.</summary>
+    internal bool HasText => _streamBuffer is { Length: > 0 } || !string.IsNullOrEmpty(_text);
+
+    /// <summary>True while an incremental stream owns the text buffer (external <see cref="Text"/> writes clear it).</summary>
+    internal bool IsStreamBufferActive => _streamBuffer is not null;
+
+    /// <summary>
+    /// Appends a streamed chunk without allocating a full-message <see cref="string"/> on every token; <see cref="Text"/>
+    /// materializes on demand if read.
+    /// </summary>
+    internal void AppendStreamed(string chunk)
+    {
+        if (string.IsNullOrEmpty(chunk))
+        {
+            return;
+        }
+        if (_streamBuffer is null)
+        {
+            var initial = _text ?? string.Empty;
+            _streamBuffer = new StringBuilder(initial, Math.Max(256, (initial.Length + chunk.Length) * 2));
+        }
+        _streamBuffer.Append(chunk);
+        _text = null;
+        PropertyChanged?.Invoke(this, s_textChanged);
+    }
+
+    /// <summary>Materializes and releases the streaming buffer once the reply completes.</summary>
+    internal string? SealStreamed()
+    {
+        if (_streamBuffer is not null)
+        {
+            _text ??= _streamBuffer.ToString();
+            _streamBuffer = null;
+        }
+        return _text;
+    }
 
     /// <summary>When it was written: groups, day separators and the time label come from it.</summary>
     public DateTimeOffset CreatedAt { get => _createdAt; set => Set(ref _createdAt, value); }

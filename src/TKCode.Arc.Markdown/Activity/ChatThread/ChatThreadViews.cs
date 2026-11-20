@@ -678,8 +678,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         }
 
         // The bubble.
-        var text = message.Text;
-        var hasText = !string.IsNullOrEmpty(text);
+        var hasText = message.HasText;
         _bubble.IsVisible = hasText;
         _bubble.IsMine = row.Mine;
         _bubble.IsFailed = message.Status == ChatMessageStatus.Failed;
@@ -712,7 +711,7 @@ internal sealed class ChatThreadMessageView : TemplatedControl
         }
         else
         {
-            _plain.Text = text;
+            _plain.Text = message.Text;
             _plain.Classes.Set("mine", row.Mine);
             if (!ReferenceEquals(_body.Child, _plain))
             {

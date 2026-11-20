@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Text;
 
 namespace StreamMark.Core.Pacing;
 
@@ -60,7 +59,10 @@ public sealed record StreamPacerOptions
 public sealed class StreamPacer
 {
     private readonly StreamPacerOptions _options;
-    private readonly StringBuilder _pending = new();
+    // 滑动头指针的字符缓冲：释放前缀只推进 _head，避免每帧 StringBuilder.ToString() 与 Remove(0, cut) 搬移
+    private char[] _buffer = [];
+    private int _head;
+    private int _tail;
     private readonly Queue<(long End, TimeSpan Time)> _arrivals = new();
     private readonly long[] _revealOffsets;
     private readonly TimeSpan[] _revealTimes;
@@ -120,9 +122,40 @@ public sealed class StreamPacer
             // 空闲之后的第一帧：不能把空闲时长当作这一帧的间隔（否则会一次放出全部积压）
             _lastTick = null;
         }
-        _pending.Append(text);
+        AppendPending(text);
         _arrived += text.Length;
         _arrivals.Enqueue((_arrived, now));
+    }
+
+    private int PendingLength => _tail - _head;
+
+    private void AppendPending(ReadOnlySpan<char> text)
+    {
+        var pending = PendingLength;
+        var needed = _tail + text.Length;
+        if (needed > _buffer.Length)
+        {
+            if (_head > 0 && pending + text.Length <= _buffer.Length)
+            {
+                Array.Copy(_buffer, _head, _buffer, 0, pending);
+                _head = 0;
+                _tail = pending;
+            }
+            else
+            {
+                var nextSize = Math.Max(256, Math.Max(pending + text.Length, _buffer.Length * 2));
+                var next = new char[nextSize];
+                if (pending > 0)
+                {
+                    Array.Copy(_buffer, _head, next, 0, pending);
+                }
+                _buffer = next;
+                _head = 0;
+                _tail = pending;
+            }
+        }
+        text.CopyTo(_buffer.AsSpan(_tail));
+        _tail += text.Length;
     }
 
     /// <summary>流结束：剩余积压在 MinDrain–MaxDrain 内放完。</summary>
@@ -179,7 +212,7 @@ public sealed class StreamPacer
 
         if (_options.SkipCompletedBlocks && backlog > count)
         {
-            var boundary = _pending.ToString().LastIndexOf("\n\n", StringComparison.Ordinal);
+            var boundary = _buffer.AsSpan(_head, PendingLength).LastIndexOf("\n\n");
             if (boundary >= 0)
             {
                 count = Math.Max(count, boundary + 2);
@@ -223,12 +256,12 @@ public sealed class StreamPacer
         {
             return "";
         }
-        // 对齐到字素簇边界，避免拆开代理对、组合字符或 emoji 序列
-        var pending = _pending.ToString();
+        // 对齐到字素簇边界，避免拆开代理对、组合字符或 emoji 序列（直接在 Span 上扫描，零中间字符串分配）
+        var pending = _buffer.AsSpan(_head, PendingLength);
         var cut = 0;
         while (cut < count && cut < pending.Length)
         {
-            cut += StringInfo.GetNextTextElementLength(pending, cut);
+            cut += StringInfo.GetNextTextElementLength(pending[cut..]);
         }
         if (cut > pending.Length)
         {
@@ -243,8 +276,17 @@ public sealed class StreamPacer
         {
             return "";
         }
-        var text = pending[..cut];
-        _pending.Remove(0, cut);
+        var text = new string(pending[..cut]);
+        _head += cut;
+        if (_head == _tail)
+        {
+            _head = 0;
+            _tail = 0;
+            if (_buffer.Length > 64 * 1024)
+            {
+                _buffer = [];
+            }
+        }
 
         _revealOffsets[_revealHead] = _revealed;
         _revealTimes[_revealHead] = now;

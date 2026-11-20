@@ -1,26 +1,27 @@
+using StreamMark.Core.Model;
 using StreamMark.Core.Streaming;
 using Xunit;
 
 namespace StreamMark.Core.Tests.Streaming;
 
-/// <summary>切分器在调研中验证过的各类流式陷阱上不能过早冻结。</summary>
+/// <summary>增量块引擎在各类流式陷阱上的顶层冻结行为验证（替代原独立切分器测试）。</summary>
 public sealed class SegmenterTests
 {
     private static int FrozenAfter(string text)
     {
-        var segmenter = new StreamSegmenter();
+        var composer = new DocumentComposer();
         // 逐字符推进，模拟最细粒度的流
         for (var i = 1; i <= text.Length; i++)
         {
-            segmenter.Advance(text.AsSpan(segmenter.FrozenEnd, i - segmenter.FrozenEnd), segmenter.FrozenEnd);
+            composer.AppendDelta(text.AsSpan(i - 1, 1), i);
         }
-        return segmenter.FrozenEnd;
+        return composer.FrozenEnd;
     }
 
     [Fact]
-    public void ParagraphFollowedByBlankAndText_Freezes()
+    public void ParagraphFollowedByBlankAndCompleteLine_Freezes()
     {
-        Assert.Equal("first\n\n".Length, FrozenAfter("first\n\nsecond paragraph"));
+        Assert.Equal("first\n\n".Length, FrozenAfter("first\n\nsecond paragraph\n"));
     }
 
     [Fact]
@@ -36,16 +37,16 @@ public sealed class SegmenterTests
     }
 
     [Fact]
-    public void ClosedFence_FreezesWhenNextLineArrives()
+    public void ClosedFence_FreezesWhenNextCompleteLineArrives()
     {
-        var text = "```js\na\n\nb\n```\nafter";
+        var text = "```js\na\n\nb\n```\nafter\n";
         Assert.Equal("```js\na\n\nb\n```\n".Length, FrozenAfter(text));
     }
 
     [Fact]
     public void ListFollowedByBlankAndAnotherItem_IsNotCut()
     {
-        Assert.Equal(0, FrozenAfter("- a\n- b\n\n- c"));
+        Assert.Equal(0, FrozenAfter("- a\n- b\n\n- c\n"));
     }
 
     [Fact]
@@ -57,7 +58,7 @@ public sealed class SegmenterTests
     [Fact]
     public void ListThenParagraph_Freezes()
     {
-        Assert.Equal("- a\n- b\n\n".Length, FrozenAfter("- a\n- b\n\nParagraph"));
+        Assert.Equal("- a\n- b\n\n".Length, FrozenAfter("- a\n- b\n\nParagraph\n"));
     }
 
     [Fact]
@@ -86,40 +87,50 @@ public sealed class SegmenterTests
     }
 
     [Fact]
-    public void ReferenceDefinition_StopsFreezing()
+    public void ReferenceDefinition_ContinuesFreezingAndResolvesForwardAndBackwardLinks()
     {
-        var segmenter = new StreamSegmenter();
-        var text = "intro\n\n[a]: https://x\n\nmore\n\nand more";
-        segmenter.Advance(text, 0);
-        Assert.True(segmenter.SawDefinition);
-        // 定义行本身不能作为切点后的首行，之后也不再冻结
-        Assert.Equal(0, segmenter.FrozenEnd);
+        var composer = new DocumentComposer();
+        var text = "see [b]\n\n[a]: https://a.example\n\nuse [a]\n\nmore\n\n[b]: https://b.example\n\ntail\n";
+        var streaming = composer.AppendDelta(text.AsSpan(), 1);
+        // 出现链接定义后仍继续冻结后续已完成块，避免长文退化为 O(N)
+        Assert.True(composer.FrozenEnd > "see [b]\n\n[a]: https://a.example\n\n".Length);
+        var final = composer.Finish(text, 2);
+        var firstPara = Assert.IsType<ParagraphBlock>(final[0]);
+        Assert.Single(firstPara.Content.Links);
+        Assert.Equal("https://b.example", firstPara.Content.Links[0].Url);
+        var secondPara = Assert.IsType<ParagraphBlock>(final[1]);
+        Assert.Single(secondPara.Content.Links);
+        Assert.Equal("https://a.example", secondPara.Content.Links[0].Url);
+        // 流式快照中前向引用也已随定义到达即时解析
+        var streamingFirst = Assert.IsType<ParagraphBlock>(streaming[0]);
+        Assert.Single(streamingFirst.Content.Links);
+        Assert.Equal("https://b.example", streamingFirst.Content.Links[0].Url);
     }
 
     [Fact]
-    public void OpenFenceAtRunStart_IsReportedForFastPath()
+    public void OpenFenceAtTail_EmitsOpenCodeBlockIncrementally()
     {
-        var segmenter = new StreamSegmenter();
+        var composer = new DocumentComposer();
         var text = "intro\n\n```python\nprint(1)\n";
-        segmenter.Advance(text, 0);
-        Assert.Equal("intro\n\n".Length, segmenter.FrozenEnd);
-        Assert.True(segmenter.TryGetOpenFence("", out var fenceStart, out var contentStart, out _, out var info));
-        Assert.Equal("intro\n\n".Length, fenceStart);
-        Assert.Equal("intro\n\n```python\n".Length, contentStart);
-        Assert.Equal("python", info);
+        var snap = composer.AppendDelta(text.AsSpan(), 1);
+        Assert.Equal("intro\n\n".Length, composer.FrozenEnd);
+        var code = Assert.IsType<CodeBlock>(snap[1]);
+        Assert.True(code.IsOpen);
+        Assert.Equal("python", code.Language);
+        Assert.Equal("print(1)", code.Code);
     }
 
     [Fact]
     public void Boundary_NeverMovesBackwards()
     {
         var text = StreamingEquivalenceTests.Fixture("chat-mixed.md");
-        var segmenter = new StreamSegmenter();
+        var composer = new DocumentComposer();
         var last = 0;
         for (var i = 1; i <= text.Length; i++)
         {
-            var frozen = segmenter.Advance(text.AsSpan(segmenter.FrozenEnd, i - segmenter.FrozenEnd), segmenter.FrozenEnd);
-            Assert.True(frozen >= last);
-            last = frozen;
+            composer.AppendDelta(text.AsSpan(i - 1, 1), i);
+            Assert.True(composer.FrozenEnd >= last);
+            last = composer.FrozenEnd;
         }
     }
 }

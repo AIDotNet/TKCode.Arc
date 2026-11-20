@@ -1,3 +1,4 @@
+using System.Text;
 using Avalonia.Controls;
 using Avalonia.Threading;
 using StreamMark.Avalonia.Rendering;
@@ -14,16 +15,28 @@ namespace StreamMark.Avalonia;
 /// <remarks>
 /// 显示它的视图挂到窗口后，节奏控制器随显示帧（<see cref="TopLevel.RequestAnimationFrame"/>）推进，每帧最多放出一次文本；
 /// 未挂载或窗口不再出帧（最小化、无头环境未驱动渲染）时退回 16ms 计时器，保证流总能结束。
+/// 高频 <see cref="Push"/> 会在入口先合并再投递到界面线程，避免 300+ TPS 时向调度器队列投递大量闭包。
 /// </remarks>
 public sealed class MarkdownStream
 {
     private readonly StreamPacer _pacer;
     private readonly bool _smooth;
     private readonly DispatcherTimer _timer;
+    private readonly Action _drainIngress;
+    private readonly Action<TimeSpan> _onFrame;
+    private readonly object _ingressLock = new();
+    private readonly StringBuilder _ingress = new();
+    private TimeSpan _ingressTime;
+    private bool _completeQueued;
+    private bool _tickScheduledLocked;
+    private int _ingressPosted;
+
     private bool _completeRequested;
     private WeakReference<TopLevel>? _frameSource;
+    private WeakReference<TopLevel>? _rafTop;
+    private bool _rafPending;
     private bool _tickScheduled;
-    private int _tickGeneration;
+    private TimeSpan _scheduledAt;
 
     /// <summary>显示帧来源未在这个时间内出帧时，改由计时器推进。</summary>
     private static readonly TimeSpan FrameFallback = TimeSpan.FromMilliseconds(100);
@@ -34,7 +47,9 @@ public sealed class MarkdownStream
         _smooth = smooth;
         Document = new StreamingDocument(profile);
         State = new StreamingState(fadeDuration ?? TimeSpan.FromMilliseconds(220));
-        _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(16), DispatcherPriority.Render, (_, _) => RunScheduled(_tickGeneration));
+        _drainIngress = OnDrainPosted;
+        _onFrame = OnAnimationFrame;
+        _timer = new DispatcherTimer(TimeSpan.FromMilliseconds(16), DispatcherPriority.Render, OnFallbackTimer);
     }
 
     public StreamingDocument Document { get; }
@@ -63,55 +78,118 @@ public sealed class MarkdownStream
         {
             return;
         }
-        Dispatcher.UIThread.Post(() =>
+        bool shouldPost;
+        lock (_ingressLock)
         {
-            if (_completeRequested)
+            if (_completeQueued)
             {
                 return;
             }
-            State.IsActive = true;
-            if (!_smooth)
-            {
-                Document.Append(text);
-                State.RecordReveal(text.Length, StreamClock.Now);
-                return;
-            }
-            var idle = !_tickScheduled;
-            _pacer.Push(text, StreamClock.Now);
-            if (idle)
-            {
-                Tick();
-            }
-        });
+            _ingress.Append(text);
+            _ingressTime = StreamClock.Now;
+            // 平滑模式且下一帧已排期时，由帧回调统一拉取入口缓冲，避免 300 TPS 频繁唤醒 UI 线程
+            shouldPost = !(_smooth && _tickScheduledLocked);
+        }
+        if (shouldPost && Interlocked.Exchange(ref _ingressPosted, 1) == 0)
+        {
+            Dispatcher.UIThread.Post(_drainIngress);
+        }
     }
 
-    public void Complete() => Dispatcher.UIThread.Post(() =>
+    public void Complete()
     {
-        if (_completeRequested)
+        lock (_ingressLock)
         {
-            return;
+            if (_completeQueued)
+            {
+                return;
+            }
+            _completeQueued = true;
         }
-        _completeRequested = true;
-        _pacer.Finish(StreamClock.Now);
-        if (!_smooth || _pacer.IsDrained)
+        if (Interlocked.Exchange(ref _ingressPosted, 1) == 0)
         {
-            Finish();
+            Dispatcher.UIThread.Post(_drainIngress);
         }
-        else
-        {
-            ScheduleTick();
-        }
-    });
+    }
 
     /// <summary>立即显示全部积压（例如用户点击"跳到结尾"或窗口被隐藏）。</summary>
     public void Flush() => Dispatcher.UIThread.Post(() =>
     {
+        DrainIngress(fromScheduledTick: false);
         var text = _pacer.Flush(StreamClock.Now);
         if (text.Length > 0)
         {
             Document.Append(text);
         }
     });
+
+    private void OnDrainPosted() => DrainIngress(fromScheduledTick: false);
+
+    private void DrainIngress(bool fromScheduledTick)
+    {
+        string? text;
+        TimeSpan now;
+        bool complete;
+        lock (_ingressLock)
+        {
+            if (fromScheduledTick)
+            {
+                _tickScheduledLocked = false;
+            }
+            Volatile.Write(ref _ingressPosted, 0);
+            if (_ingress.Length > 0)
+            {
+                text = _ingress.ToString();
+                _ingress.Clear();
+                if (_ingress.Capacity > 64 * 1024)
+                {
+                    _ingress.Capacity = 4096;
+                }
+            }
+            else
+            {
+                text = null;
+            }
+            now = _ingressTime;
+            complete = _completeQueued && !_completeRequested;
+        }
+
+        if (text is not null && !_completeRequested)
+        {
+            State.IsActive = true;
+            if (!_smooth)
+            {
+                Document.Append(text);
+                State.RecordReveal(text.Length, now);
+            }
+            else
+            {
+                var idle = !_tickScheduled && !fromScheduledTick;
+                _pacer.Push(text, now);
+                if (idle)
+                {
+                    Tick();
+                }
+            }
+        }
+
+        if (complete)
+        {
+            _completeRequested = true;
+            _pacer.Finish(StreamClock.Now);
+            if (!fromScheduledTick)
+            {
+                if (!_smooth || _pacer.IsDrained)
+                {
+                    Finish();
+                }
+                else
+                {
+                    ScheduleTick();
+                }
+            }
+        }
+    }
 
     private void Tick()
     {
@@ -130,6 +208,10 @@ public sealed class MarkdownStream
         {
             Finish();
         }
+        else
+        {
+            _timer.Stop();
+        }
     }
 
     private void ScheduleTick()
@@ -139,27 +221,68 @@ public sealed class MarkdownStream
             return;
         }
         _tickScheduled = true;
-        var generation = ++_tickGeneration;
+        lock (_ingressLock)
+        {
+            _tickScheduledLocked = true;
+        }
+        _scheduledAt = StreamClock.Now;
         if (_frameSource is not null && _frameSource.TryGetTarget(out var top))
         {
-            top.RequestAnimationFrame(_ => RunScheduled(generation));
-            _timer.Interval = FrameFallback;
+            if (!_rafPending || _rafTop is null || !_rafTop.TryGetTarget(out var rafTop) || !ReferenceEquals(rafTop, top))
+            {
+                _rafPending = true;
+                _rafTop = _frameSource;
+                top.RequestAnimationFrame(_onFrame);
+            }
+            if (_timer.Interval != FrameFallback)
+            {
+                _timer.Interval = FrameFallback;
+            }
         }
         else
         {
-            _timer.Interval = TimeSpan.FromMilliseconds(16);
+            var interval = TimeSpan.FromMilliseconds(16);
+            if (_timer.Interval != interval)
+            {
+                _timer.Interval = interval;
+            }
         }
-        _timer.Start();
+        if (!_timer.IsEnabled)
+        {
+            _timer.Start();
+        }
     }
 
-    private void RunScheduled(int generation)
+    private void OnAnimationFrame(TimeSpan _)
     {
-        if (!_tickScheduled || generation != _tickGeneration)
+        _rafPending = false;
+        RunScheduled();
+    }
+
+    private void OnFallbackTimer(object? sender, EventArgs e)
+    {
+        if (!_tickScheduled)
+        {
+            _timer.Stop();
+            return;
+        }
+        // 有显示帧来源且尚未超过兜底时间时，把推进权留给 RequestAnimationFrame，避免每帧启停定时器
+        if (_frameSource is not null && _frameSource.TryGetTarget(out _) && StreamClock.Now - _scheduledAt < FrameFallback)
+        {
+            return;
+        }
+        RunScheduled();
+    }
+
+    private void RunScheduled()
+    {
+        if (!_tickScheduled)
         {
             return;
         }
         _tickScheduled = false;
-        _timer.Stop();
+        // 统一拉取上一帧至今积累的所有 Push，再一次性推进节奏控制器
+        DrainIngress(fromScheduledTick: true);
         Tick();
     }
 
@@ -167,6 +290,10 @@ public sealed class MarkdownStream
     {
         _timer.Stop();
         _tickScheduled = false;
+        lock (_ingressLock)
+        {
+            _tickScheduledLocked = false;
+        }
         Document.Complete();
         State.IsActive = false;
         Completed?.Invoke();

@@ -11,7 +11,7 @@ using StreamMark.Core.Parsing;
 namespace StreamMark.Avalonia.Plugins;
 
 /// <summary>
-/// Markdown 插件：在 <see cref="Configure"/> 中注册语法（白名单组件、Markdig 扩展、映射）、渲染（块组件视图、
+/// Markdown 插件：在 <see cref="Configure"/> 中注册语法（白名单组件、方言开关、自定义语法规则、remend 处理器）、渲染（块组件视图、
 /// 行内组件、代码围栏视图）与交互（代码块头部操作）。插件只通过委托与工厂注册，NativeAOT 安全。
 /// </summary>
 public interface IMarkdownPlugin
@@ -29,7 +29,7 @@ public sealed class MarkdownPluginBuilder
         Profile = profile;
     }
 
-    /// <summary>语法层（Core）：白名单组件、Markdig 扩展、自定义节点映射、remend 处理器。</summary>
+    /// <summary>语法层（Core）：白名单组件、方言开关、自定义块/行内语法规则、remend 处理器。</summary>
     public MarkdownProfileBuilder Profile { get; }
 
     internal IMathRenderer? Math { get; private set; }

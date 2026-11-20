@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.Text;
 using Avalonia;
 using Avalonia.Controls;
@@ -24,12 +25,33 @@ public sealed class TableBlockView : BlockView
     /// <summary>网格上方操作条的高度（与 <see cref="IconButton"/> 一致）。按钮排在这里，而不是表头单元格里。会话行高估算也要算上它。</summary>
     internal const double ActionBarHeight = 26;
 
-    private readonly List<List<TextSegmentView>> _cells = [];
+    private sealed class CellEntry
+    {
+        public readonly TextSegmentView View = new();
+        public double NaturalWidth;
+        public bool NaturalValid;
+        public double MeasuredColWidth = double.NaN;
+        public bool HeightValid;
+    }
+
+    private sealed class RowEntry
+    {
+        public readonly List<CellEntry> Cells = [];
+        public TableRow? CachedRow;
+        public int ColumnCount;
+        public int FirstSegment;
+        public int SegmentCount;
+    }
+
+    private readonly List<RowEntry> _rows = [];
     private readonly IconButton _copy = new() { Icon = MarkdownIcons.Copy, IsVisible = false };
     private readonly IconButton _fullscreen = new() { Icon = MarkdownIcons.Expand, IsVisible = false };
     private readonly BlockActionBar _actions;
+    private double[] _naturalScratch = [];
     private double[] _columnWidths = [];
+    private int _columnCount;
     private double[] _rowHeights = [];
+    private double _totalRowHeight;
     private double _offsetX;
     // 外层 HTML 居中 / 右对齐且表格窄于可用宽度时整体右移
     private double _shift;
@@ -38,9 +60,9 @@ public sealed class TableBlockView : BlockView
     public TableBlockView()
     {
         ClipToBounds = true;
-        AddChild(_copy);
-        AddChild(_fullscreen);
         _actions = new BlockActionBar(this, AddChild, RemoveChild);
+        AddChild(_fullscreen);
+        AddChild(_copy);
         global::Avalonia.Automation.AutomationProperties.SetName(_copy, "Copy");
         global::Avalonia.Automation.AutomationProperties.SetName(_fullscreen, "Fullscreen");
         _fullscreen.Click += (_, _) => OpenFullscreen();
@@ -53,6 +75,35 @@ public sealed class TableBlockView : BlockView
         };
     }
 
+    private void InsertCellChild(Control child)
+    {
+        var actionCount = 2 + _actions.Buttons.Count;
+        var visualIndex = Math.Max(0, VisualChildren.Count - actionCount);
+        var logicalIndex = Math.Max(0, LogicalChildren.Count - actionCount);
+        LogicalChildren.Insert(logicalIndex, child);
+        VisualChildren.Insert(visualIndex, child);
+    }
+
+    private static bool SameColumns(ImmutableArray<TableAlignment> a, ImmutableArray<TableAlignment> b)
+    {
+        if (a == b)
+        {
+            return true;
+        }
+        if (a.IsDefault || b.IsDefault || a.Length != b.Length)
+        {
+            return false;
+        }
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (a[i] != b[i])
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     protected override void OnUpdate(RenderContext context, MarkdownBlock? previous, MarkdownBlock block, int topKey, ref int segment, bool contextChanged)
     {
         var table = (TableBlock)block;
@@ -60,31 +111,48 @@ public sealed class TableBlockView : BlockView
         _copy.HoverBackground = context.Style.HoverBackground;
         _fullscreen.Foreground = context.Style.SecondaryForeground;
         _fullscreen.HoverBackground = context.Style.HoverBackground;
+        var actionsRebuilt = false;
         if (contextChanged || previous is null)
         {
             // 插件操作与复制 / 全屏一样只在悬停时显示
             _actions.Rebuild(context, Plugins.BlockActionTargets.Table, table, _copy.IsVisible);
+            actionsRebuilt = true;
         }
+        var columnsChanged = previous is not TableBlock prevTable || !SameColumns(prevTable.Columns, table.Columns);
+        var anyChanged = contextChanged || previous is null || _rows.Count != table.Rows.Length || columnsChanged;
+        var structureChanged = actionsRebuilt;
         for (var r = 0; r < table.Rows.Length; r++)
         {
-            if (r >= _cells.Count)
+            if (r >= _rows.Count)
             {
-                _cells.Add([]);
+                _rows.Add(new RowEntry());
+                structureChanged = true;
             }
             var row = table.Rows[r];
-            var views = _cells[r];
+            var rowEntry = _rows[r];
             var columns = Math.Max(row.Cells.Length, table.Columns.Length);
+            // 整行模型引用、列数与起始片段号均未变化时 O(1) 跳过整行单元格
+            if (!contextChanged && !columnsChanged && ReferenceEquals(rowEntry.CachedRow, row)
+                && rowEntry.ColumnCount == columns && rowEntry.FirstSegment == segment && rowEntry.SegmentCount > 0)
+            {
+                segment += rowEntry.SegmentCount;
+                continue;
+            }
+            var views = rowEntry.Cells;
             while (views.Count < columns)
             {
-                var cell = new TextSegmentView();
+                var cell = new CellEntry();
                 views.Add(cell);
-                AddChild(cell);
+                InsertCellChild(cell.View);
+                anyChanged = true;
             }
             while (views.Count > columns)
             {
-                RemoveChild(views[^1]);
+                RemoveChild(views[^1].View);
                 views.RemoveAt(views.Count - 1);
+                anyChanged = true;
             }
+            var startSegment = segment;
             for (var c = 0; c < columns; c++)
             {
                 var content = c < row.Cells.Length ? row.Cells[c] : InlineContent.Empty;
@@ -94,18 +162,39 @@ public sealed class TableBlockView : BlockView
                     TableAlignment.Right => TextAlignment.Right,
                     _ => TextAlignment.Left,
                 } : TextAlignment.Left;
-                views[c].Set(context, KeyFor(context, topKey, ref segment), content, context.Style.FontSize,
-                    row.IsHeader ? FontWeight.SemiBold : FontWeight.Normal, alignment: alignment);
+                var entry = views[c];
+                if (entry.View.SetTracked(context, KeyFor(context, topKey, ref segment), content, context.Style.FontSize,
+                    row.IsHeader ? FontWeight.SemiBold : FontWeight.Normal, alignment: alignment))
+                {
+                    entry.NaturalValid = false;
+                    entry.HeightValid = false;
+                    anyChanged = true;
+                }
             }
+            rowEntry.CachedRow = row;
+            rowEntry.ColumnCount = columns;
+            rowEntry.FirstSegment = startSegment;
+            rowEntry.SegmentCount = segment - startSegment;
         }
-        while (_cells.Count > table.Rows.Length)
+        while (_rows.Count > table.Rows.Length)
         {
-            _cells[^1].ForEach(RemoveChild);
-            _cells.RemoveAt(_cells.Count - 1);
+            foreach (var cell in _rows[^1].Cells)
+            {
+                RemoveChild(cell.View);
+            }
+            _rows.RemoveAt(_rows.Count - 1);
+            anyChanged = true;
         }
-        // 单元格在按钮之后加入，会画在按钮上面把它盖住。每次更新后把操作按钮放回最上层。
-        BringActionsToFront();
-        InvalidateMeasure();
+        if (structureChanged)
+        {
+            // 仅在操作按钮重建或结构兜底时确保按钮在最上层（新增单元格已直接插在按钮之前）
+            BringActionsToFront();
+            anyChanged = true;
+        }
+        if (anyChanged)
+        {
+            InvalidateMeasure();
+        }
     }
 
     private void BringActionsToFront()
@@ -125,44 +214,108 @@ public sealed class TableBlockView : BlockView
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var columns = _cells.Count == 0 ? 0 : _cells.Max(r => r.Count);
-        var natural = new double[columns];
-        foreach (var row in _cells)
+        var columns = 0;
+        for (var r = 0; r < _rows.Count; r++)
         {
-            for (var c = 0; c < row.Count; c++)
+            var count = _rows[r].Cells.Count;
+            if (count > columns)
             {
-                row[c].Measure(Size.Infinity);
-                natural[c] = Math.Max(natural[c], Math.Min(MaxColumn, row[c].DesiredSize.Width + CellPaddingX * 2));
+                columns = count;
             }
         }
+        _columnCount = columns;
+        if (_naturalScratch.Length < columns)
+        {
+            _naturalScratch = new double[columns];
+        }
+        Array.Clear(_naturalScratch, 0, columns);
+        if (_columnWidths.Length < columns)
+        {
+            _columnWidths = new double[columns];
+        }
+        for (var r = 0; r < _rows.Count; r++)
+        {
+            var row = _rows[r].Cells;
+            for (var c = 0; c < row.Count; c++)
+            {
+                var cell = row[c];
+                if (!cell.NaturalValid)
+                {
+                    cell.View.Measure(Size.Infinity);
+                    cell.NaturalWidth = Math.Min(MaxColumn, cell.View.DesiredSize.Width + CellPaddingX * 2);
+                    cell.NaturalValid = true;
+                    cell.HeightValid = false;
+                }
+                if (cell.NaturalWidth > _naturalScratch[c])
+                {
+                    _naturalScratch[c] = cell.NaturalWidth;
+                }
+            }
+        }
+        var total = 0.0;
         for (var c = 0; c < columns; c++)
         {
-            natural[c] = Math.Max(natural[c], MinColumn);
+            if (_naturalScratch[c] < MinColumn)
+            {
+                _naturalScratch[c] = MinColumn;
+            }
+            _columnWidths[c] = _naturalScratch[c];
+            total += _naturalScratch[c];
         }
 
-        var available = double.IsFinite(availableSize.Width) ? availableSize.Width : natural.Sum();
-        var total = natural.Sum();
-        _columnWidths = natural;
+        var available = double.IsFinite(availableSize.Width) ? availableSize.Width : total;
         if (total > available && total > 0)
         {
             // 按比例收缩，但不小于最小列宽
-            var shrinkable = natural.Sum(w => w - MinColumn);
+            var shrinkable = 0.0;
+            for (var c = 0; c < columns; c++)
+            {
+                shrinkable += _naturalScratch[c] - MinColumn;
+            }
             var excess = total - available;
-            _columnWidths = natural.Select(w => shrinkable > 0 ? w - (w - MinColumn) / shrinkable * Math.Min(excess, shrinkable) : w).ToArray();
+            if (shrinkable > 0)
+            {
+                var factor = Math.Min(excess, shrinkable) / shrinkable;
+                for (var c = 0; c < columns; c++)
+                {
+                    _columnWidths[c] = _naturalScratch[c] - (_naturalScratch[c] - MinColumn) * factor;
+                }
+            }
         }
-        _contentWidth = _columnWidths.Sum();
+        _contentWidth = 0;
+        for (var c = 0; c < columns; c++)
+        {
+            _contentWidth += _columnWidths[c];
+        }
 
-        _rowHeights = new double[_cells.Count];
-        for (var r = 0; r < _cells.Count; r++)
+        if (_rowHeights.Length != _rows.Count)
+        {
+            _rowHeights = new double[_rows.Count];
+        }
+        var totalHeight = 0.0;
+        for (var r = 0; r < _rows.Count; r++)
         {
             var height = 0.0;
-            for (var c = 0; c < _cells[r].Count; c++)
+            var row = _rows[r].Cells;
+            for (var c = 0; c < row.Count; c++)
             {
-                _cells[r][c].Measure(new Size(Math.Max(1, _columnWidths[c] - CellPaddingX * 2), double.PositiveInfinity));
-                height = Math.Max(height, _cells[r][c].DesiredSize.Height);
+                var cell = row[c];
+                var cellWidth = Math.Max(1, _columnWidths[c] - CellPaddingX * 2);
+                if (!cell.HeightValid || !cell.MeasuredColWidth.Equals(cellWidth) || !cell.View.IsMeasureValid)
+                {
+                    cell.View.Measure(new Size(cellWidth, double.PositiveInfinity));
+                    cell.MeasuredColWidth = cellWidth;
+                    cell.HeightValid = true;
+                }
+                if (cell.View.DesiredSize.Height > height)
+                {
+                    height = cell.View.DesiredSize.Height;
+                }
             }
             _rowHeights[r] = height + CellPaddingY * 2;
+            totalHeight += _rowHeights[r];
         }
+        _totalRowHeight = totalHeight;
         _copy.Measure(Size.Infinity);
         _fullscreen.Measure(Size.Infinity);
         foreach (var button in _actions.Buttons)
@@ -170,7 +323,7 @@ public sealed class TableBlockView : BlockView
             button.Measure(Size.Infinity);
         }
         _offsetX = Math.Clamp(_offsetX, 0, Math.Max(0, _contentWidth - available));
-        return new Size(Math.Min(_contentWidth, available) + 1, _rowHeights.Sum() + 1 + ActionBarHeight);
+        return new Size(Math.Min(_contentWidth, available) + 1, totalHeight + 1 + ActionBarHeight);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
@@ -183,12 +336,13 @@ public sealed class TableBlockView : BlockView
             _ => 0,
         };
         double y = ActionBarHeight;
-        for (var r = 0; r < _cells.Count; r++)
+        for (var r = 0; r < _rows.Count; r++)
         {
             var x = _shift - _offsetX;
-            for (var c = 0; c < _cells[r].Count; c++)
+            var row = _rows[r].Cells;
+            for (var c = 0; c < row.Count; c++)
             {
-                _cells[r][c].Arrange(new Rect(x + CellPaddingX, y + CellPaddingY, Math.Max(1, _columnWidths[c] - CellPaddingX * 2), _rowHeights[r] - CellPaddingY * 2));
+                row[c].View.Arrange(new Rect(x + CellPaddingX, y + CellPaddingY, Math.Max(1, _columnWidths[c] - CellPaddingX * 2), _rowHeights[r] - CellPaddingY * 2));
                 x += _columnWidths[c];
             }
             y += _rowHeights[r];
@@ -225,7 +379,7 @@ public sealed class TableBlockView : BlockView
         }
         var pen = _gridPen;
         var width = _contentWidth;
-        var height = _rowHeights.Sum();
+        var height = _totalRowHeight;
         using (context.PushTransform(Matrix.CreateTranslation(_shift - _offsetX, ActionBarHeight)))
         {
             if (Block is TableBlock { Rows.Length: > 0 } table && table.Rows[0].IsHeader)
@@ -234,16 +388,16 @@ public sealed class TableBlockView : BlockView
             }
             var y = 0.5;
             context.DrawLine(pen, new Point(0, y), new Point(width, y));
-            foreach (var h in _rowHeights)
+            for (var r = 0; r < _rowHeights.Length; r++)
             {
-                y += h;
+                y += _rowHeights[r];
                 context.DrawLine(pen, new Point(0, Math.Round(y) - 0.5), new Point(width, Math.Round(y) - 0.5));
             }
             var x = 0.5;
             context.DrawLine(pen, new Point(x, 0), new Point(x, height));
-            foreach (var w in _columnWidths)
+            for (var c = 0; c < _columnCount; c++)
             {
-                x += w;
+                x += _columnWidths[c];
                 context.DrawLine(pen, new Point(Math.Round(x) - 0.5, 0), new Point(Math.Round(x) - 0.5, height));
             }
         }
@@ -281,9 +435,9 @@ public sealed class TableBlockView : BlockView
         e.Handled = true;
     }
 
-    public override TextSegmentView? LastSegment() => _cells.Count > 0 && _cells[^1].Count > 0 ? _cells[^1][^1] : null;
+    public override TextSegmentView? LastSegment() => _rows.Count > 0 && _rows[^1].Cells.Count > 0 ? _rows[^1].Cells[^1].View : null;
 
-    public override IEnumerable<ISelectableSegment> Segments() => _cells.SelectMany(r => r);
+    public override IEnumerable<ISelectableSegment> Segments() => _rows.SelectMany(r => r.Cells.Select(c => c.View));
 
     // 全屏覆盖层中的副本不再提供全屏按钮
     internal bool IsInOverlay { get; init; }

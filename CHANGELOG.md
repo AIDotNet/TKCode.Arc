@@ -10,6 +10,52 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## 1.3.0-preview.4 - 2026-11-20
+
+Replaces Markdig in `TKCode.Arc.StreamMark` with a native two-level incremental Markdown engine (zero third-party parser
+dependencies) and lands end-to-end 300 TPS streaming performance optimizations across `TKCode.Arc.StreamMark`,
+`TKCode.Arc.StreamMark.RaTeX`, `TKCode.Arc.Markdown` and `TKCode.Arc.Highlighting`. Install it with
+`--version 1.3.0-preview.4` (or `--prerelease`).
+
+### Native incremental Markdown engine (Markdig removed)
+
+- `TKCode.Arc.StreamMark` no longer depends on `Markdig` (it now depends on `Avalonia` alone). The new native parser
+  (`SourceBuffer`, `BlockParser`, `BlockMaterializer`, `InlineParser`, `ReferenceRegistry`, `IncrementalDocumentParser`)
+  commits complete lines once, rolls back only the trailing partial line, freezes stable top-level blocks continuously
+  even after link definitions and footnotes, caches completed list items and table rows by reference inside open
+  containers, and resolves late link/footnote references selectively without re-parsing the whole document on
+  `Complete()`.
+- Added static single-shot parsing (`MarkdownParser.Parse`) and a zero-dependency syntax extension API on
+  `MarkdownProfileBuilder`: `IBlockSyntaxRule`, `IInlineSyntaxRule`, `BlockSyntaxContext`, `InlineSyntaxContext`,
+  `AddBlockRule`, `AddInlineRule`, and dialect toggles (`UseTables`, `UseTaskLists`, `UseStrikethrough`,
+  `UseAutoLinks`, `UseFootnotes`, `UseAlertBlocks`, `UseDefinitionLists`, `UseCustomContainers`, `UseMathematics`,
+  `UseCjkFriendlyEmphasis`, `UseEmojiShortcodes`, `UseAutoIdentifiers`, `UseSoftlineBreakAsHardline`).
+- **Breaking (preview-only API change from `1.3.0-preview.3`)**: Markdig-typed extension hooks in `TKCode.Arc.StreamMark`
+  (`StreamMarkPipeline`, `MarkdownProfile.Pipeline`, `MarkdownProfileBuilder.AddMarkdigExtension`, `MapBlock`,
+  `MapInline`, `MapContext`, `InlineMapContext`) are removed along with the `Markdig` package reference. Plugins that
+  previously registered Markdig extensions now use `MarkdownProfileBuilder.AddBlockRule` / `AddInlineRule` (or the
+  built-in dialect toggles such as `UseSoftlineBreakAsHardline()`).
+
+### Streaming & rendering performance (300 TPS)
+
+- **Parser & streaming**: zero-copy chunked `SourceBuffer`, O(1) `CodeBlock` cached line counts, colon-lookback SIMD
+  autolink scanning (no longer triggers on `h`/`f`/`m`), cached `FootnotesBlock`, preserved `DocumentSnapshot.Generation`
+  on `Finish()` when no late reference invalidates frozen blocks, sliding-head `StreamPacer`, and frame-coalesced
+  `MarkdownStream` ingress (reducing UI wakeups from ~300/s to display refresh rate).
+- **GPU & code highlighting UI**: `TailFade` draws plain solid-color fading glyphs directly with cached alpha brushes
+  instead of per-bucket `PushOpacity` offscreen SaveLayers and stops timer restart churn; `CodeTextView` isolates lines
+  into 16-line `CodeStripVisual` bands, caches `GenericTextRunProperties`, and skips `InvalidateMeasure()` on
+  highlight-only ticks; `CodeBlockState` throttles open-fence highlighting at 40 ms with incremental line prefix reuse.
+- **Layout & virtualization**: `TranscriptPanel` appends tail blocks and code chunks in O(1) without rebuilding all row
+  tops, skips `InvalidateMeasure()` on unchanged frames, and preserves full prefix code chunks; `TextSegmentView` reuses
+  `InlineTextSource` and guards incomplete streaming inline math before invoking `RaTeX`; `RaTeXMathRenderer` isolates
+  parse errors in a separate bounded LRU so partial formulas never evict valid cached layouts; `TableBlockView` and
+  `ListBlockView` skip unchanged rows/items in O(1).
+- **Arc `Markdown` & `ChatThread`**: `ChatThreadBubbleBody` stays width-saturated across `Complete()` (avoiding the
+  `+Infinity` double full-document relayout spike), `ChatThread` avoids arming row-growth spring animations on streamed
+  tokens and batches streamed text with a lazy buffer, and `Markdown` skips redundant background safety-net posts during
+  active streaming.
+
 ## 1.3.0-preview.3 - 2026-11-19
 
 The first published preview of 1.3. 1.3.0-preview.1 and 1.3.0-preview.2 were tagged but never published: preview.1's

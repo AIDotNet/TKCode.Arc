@@ -54,12 +54,17 @@ internal sealed class MarkdownCodeHighlighter : ISyntaxHighlighter
 
     private sealed class Session(ICodeSyntaxSession inner, uint[] colors) : IHighlightSession
     {
+        private IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>>? _lastSource;
         private ImmutableArray<CodeBlockSyntaxSpan>[] _spans = [];
         private ImmutableArray<HighlightToken>[] _tokens = [];
 
         public IReadOnlyList<ImmutableArray<HighlightToken>> Update(string code)
         {
             var source = inner.Update(code ?? string.Empty);
+            if (ReferenceEquals(source, _lastSource))
+            {
+                return _tokens;
+            }
             var spans = new ImmutableArray<CodeBlockSyntaxSpan>[source.Count];
             var tokens = new ImmutableArray<HighlightToken>[source.Count];
             for (var i = 0; i < source.Count; i++)
@@ -68,6 +73,7 @@ internal sealed class MarkdownCodeHighlighter : ISyntaxHighlighter
                 // The highlighter hands back the same array for an unchanged line; its tokens are reused too.
                 tokens[i] = i < _spans.Length && _spans[i] == source[i] ? _tokens[i] : ToTokens(source[i]);
             }
+            _lastSource = source;
             _spans = spans;
             _tokens = tokens;
             return tokens;
@@ -91,6 +97,7 @@ internal sealed class MarkdownCodeHighlighter : ISyntaxHighlighter
         public void Dispose()
         {
             inner.Dispose();
+            _lastSource = null;
             _spans = [];
             _tokens = [];
         }

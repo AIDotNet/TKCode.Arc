@@ -97,6 +97,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     private readonly List<Row> _unrealize = [];
     private (Size Extent, Size Viewport, Vector Offset) _lastScrollInfo;
     private bool _frameRequested;
+    private int _snapshotPostPending;
     private MarkdownStyle? _style;
     private MarkdownServices? _services;
     private double _width = double.NaN;
@@ -356,7 +357,20 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         InvalidateMeasure();
     }
 
-    private void OnSnapshotReady(DocumentSnapshot snapshot) => Dispatcher.UIThread.Post(RequestFrame, DispatcherPriority.Render);
+    private void OnSnapshotReady(DocumentSnapshot snapshot)
+    {
+        // 在后台线程合并多次快照通知，避免高 TPS 下向界面线程投递冗余委托
+        if (Interlocked.Exchange(ref _snapshotPostPending, 1) == 0)
+        {
+            Dispatcher.UIThread.Post(OnSnapshotPosted, DispatcherPriority.Render);
+        }
+    }
+
+    private void OnSnapshotPosted()
+    {
+        Volatile.Write(ref _snapshotPostPending, 0);
+        RequestFrame();
+    }
 
     private void RequestFrame()
     {
@@ -404,12 +418,15 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     /// <summary>把所有文档的最新快照应用到行上（每帧最多一次；测试中可直接调用）。</summary>
     public void ApplyLatest()
     {
-        ApplyAll();
-        InvalidateMeasure();
+        if (ApplyAll() || _rowsDirty || _topsDirty)
+        {
+            InvalidateMeasure();
+        }
     }
 
-    private void ApplyAll()
+    private bool ApplyAll()
     {
+        var anyChanged = false;
         var top = TopLevel.GetTopLevel(this);
         for (var i = 0; i < _entries.Count; i++)
         {
@@ -421,11 +438,12 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
             markdown.Stream?.SetFrameSource(top);
             var context = ContextFor(i, state);
             var latest = markdown.Document.Latest;
-            if (ReferenceEquals(latest, state.Applied) && ReferenceEquals(context, state.RefreshedContext) && state.Rows.Count > 0 && state.Rows[0].Block is not null)
+            var hasPlaceholder = state.Rows.Count > 0 && state.Rows[0].Block is null;
+            if (ReferenceEquals(latest, state.Applied) && ReferenceEquals(context, state.RefreshedContext) && !hasPlaceholder)
             {
                 continue;
             }
-            if (state.Rows.Count > 0 && state.Rows[0].Block is null)
+            if (hasPlaceholder)
             {
                 // 按需解析的条目刚解析完：去掉估算高度的占位行，按快照重建
                 CaptureAnchor();
@@ -433,39 +451,81 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
                 state.Slots.Clear();
                 state.Applied = null;
                 _rowsDirty = true;
+                anyChanged = true;
             }
-            var contextChanged = state.Rows.Any(r => r.View is BlockView view && !ReferenceEquals(view.Block, r.Block)) || state.Applied is null;
-            if (ReferenceEquals(latest, state.Applied) && !contextChanged)
+            var contextChanged = !ReferenceEquals(context, state.RefreshedContext);
+            if (ReferenceEquals(latest, state.Applied))
             {
-                RefreshRealizedContexts(state, context);
-                state.RefreshedContext = context;
+                if (contextChanged)
+                {
+                    RefreshRealizedContexts(state, context);
+                    state.RefreshedContext = context;
+                    anyChanged = true;
+                }
                 continue;
             }
+            anyChanged = true;
             CaptureAnchor();
-            foreach (var op in SnapshotDiff.Compute(state.Applied, latest))
+            var previous = state.Applied;
+            var canAppendTail = i == _entries.Count - 1;
+            var sharesFrozen = previous is not null && previous.SharesFrozenWith(latest);
+            foreach (var op in SnapshotDiff.Compute(previous, latest))
             {
-                var rowStart = 0;
-                for (var b = 0; b < op.Index; b++)
+                int rowStart;
+                if (op.Index == state.Slots.Count)
                 {
-                    rowStart += state.Slots[b];
+                    rowStart = state.Rows.Count;
+                }
+                else if (op.Index == state.Slots.Count - 1 && state.Slots.Count > 0)
+                {
+                    rowStart = state.Rows.Count - state.Slots[op.Index];
+                }
+                else
+                {
+                    rowStart = 0;
+                    for (var b = 0; b < op.Index; b++)
+                    {
+                        rowStart += state.Slots[b];
+                    }
                 }
                 switch (op.Kind)
                 {
                     case DiffKind.Insert:
                         {
                             var count = ChunkCount(op.Block!, context);
-                            for (var c = 0; c < count; c++)
+                            if (canAppendTail && rowStart == state.Rows.Count && !_rowsDirty)
                             {
-                                var row = new Row(state) { Block = op.Block, Chunk = c, ChunkCount = count };
-                                row.Height = Estimate(row, context);
-                                state.Rows.Insert(rowStart + c, row);
+                                Row? firstAdded = null;
+                                for (var c = 0; c < count; c++)
+                                {
+                                    var row = new Row(state) { Block = op.Block, Chunk = c, ChunkCount = count };
+                                    row.Height = Estimate(row, context);
+                                    state.Rows.Add(row);
+                                    row.Index = _rows.Count;
+                                    _rows.Add(row);
+                                    firstAdded ??= row;
+                                }
+                                state.Slots.Insert(op.Index, count);
+                                if (firstAdded is not null)
+                                {
+                                    MarkTopsDirty(firstAdded);
+                                }
                             }
-                            state.Slots.Insert(op.Index, count);
-                            _rowsDirty = true;
+                            else
+                            {
+                                for (var c = 0; c < count; c++)
+                                {
+                                    var row = new Row(state) { Block = op.Block, Chunk = c, ChunkCount = count };
+                                    row.Height = Estimate(row, context);
+                                    state.Rows.Insert(rowStart + c, row);
+                                }
+                                state.Slots.Insert(op.Index, count);
+                                _rowsDirty = true;
+                            }
                             break;
                         }
                     case DiffKind.Update:
-                        UpdateBlockRows(state, op.Index, rowStart, op.Block!, context);
+                        UpdateBlockRows(state, op.Index, rowStart, op.Block!, context, canAppendTail, sharesFrozen && !contextChanged);
                         break;
                     case DiffKind.Remove:
                         {
@@ -482,14 +542,18 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
                 }
             }
             state.Applied = latest;
-            RefreshRealizedContexts(state, context);
-            state.RefreshedContext = context;
+            if (contextChanged)
+            {
+                RefreshRealizedContexts(state, context);
+                state.RefreshedContext = context;
+            }
             // 流结束后光标要消失：末尾片段的内容可能没变，单独重绘（只是它自己的小块绘制）
-            if (latest.IsComplete)
+            if (latest.IsComplete && (previous is null || !previous.IsComplete))
             {
                 _tail?.InvalidateVisual();
             }
         }
+        return anyChanged;
     }
 
     private void CaptureAnchor()
@@ -586,20 +650,61 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     }
 
     // 一个顶层块的行原地更新；分段数变化时增删末尾的行
-    private void UpdateBlockRows(EntryState state, int index, int rowStart, MarkdownBlock block, RenderContext context)
+    private void UpdateBlockRows(EntryState state, int index, int rowStart, MarkdownBlock block, RenderContext context,
+        bool canAppendTail = false, bool keepUnchangedCodePrefix = false)
     {
         var oldCount = state.Slots[index];
         var count = ChunkCount(block, context);
-        for (var c = count; c < oldCount; c++)
+        var appendedTail = false;
+        if (count < oldCount)
         {
-            Unrealize(state.Rows[rowStart + count]);
-            state.Rows.RemoveAt(rowStart + count);
+            for (var c = count; c < oldCount; c++)
+            {
+                Unrealize(state.Rows[rowStart + count]);
+                state.Rows.RemoveAt(rowStart + count);
+            }
         }
-        for (var c = oldCount; c < count; c++)
+        else if (count > oldCount)
         {
-            state.Rows.Insert(rowStart + c, new Row(state));
+            if (canAppendTail && rowStart + oldCount == state.Rows.Count && !_rowsDirty)
+            {
+                appendedTail = true;
+                for (var c = oldCount; c < count; c++)
+                {
+                    var row = new Row(state);
+                    state.Rows.Add(row);
+                    row.Index = _rows.Count;
+                    _rows.Add(row);
+                }
+            }
+            else
+            {
+                for (var c = oldCount; c < count; c++)
+                {
+                    state.Rows.Insert(rowStart + c, new Row(state));
+                }
+            }
         }
-        for (var c = 0; c < count; c++)
+        // 流式超长代码块追加分段时，前面已满的分段（0 .. oldCount - 2）行范围与外观不变，只同步模型引用而不重置测量或重刷视图
+        var startChunk = 0;
+        if (keepUnchangedCodePrefix && block is CodeBlock code && oldCount > 1 && count >= oldCount
+            && state.Rows[rowStart].Block is CodeBlock prevCode
+            && prevCode.Info == code.Info
+            && code.Code.Length >= prevCode.Code.Length)
+        {
+            startChunk = oldCount - 1;
+            for (var c = 0; c < startChunk; c++)
+            {
+                var prefix = state.Rows[rowStart + c];
+                prefix.Block = block;
+                prefix.ChunkCount = count;
+                if (prefix.View is CodeBlockView codeView)
+                {
+                    codeView.SyncChunkMetadata(code, count);
+                }
+            }
+        }
+        for (var c = startChunk; c < count; c++)
         {
             var updated = state.Rows[rowStart + c];
             updated.Block = block;
@@ -616,11 +721,11 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
             }
         }
         state.Slots[index] = count;
-        if (count != oldCount)
+        if (count != oldCount && !appendedTail)
         {
             _rowsDirty = true;
         }
-        MarkTopsDirty(state.Rows.Count > rowStart ? state.Rows[rowStart] : null);
+        MarkTopsDirty(state.Rows.Count > rowStart + startChunk ? state.Rows[rowStart + startChunk] : null);
     }
 
     // 代码块展开 / 折叠：按新的分段数重建该块的行
@@ -673,18 +778,10 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
 
     private static int ChunkCount(MarkdownBlock block, RenderContext context)
     {
-        // 折叠的代码块只显示前若干行：不分段
-        if (block is not CodeBlock code || CodeBlockView.ShouldCollapse(code, context, block.Key, out _))
+        // 折叠的代码块只显示前若干行：不分段（复用 ShouldCollapse 已统计好的行数，避免重复扫描整块代码）
+        if (block is not CodeBlock code || CodeBlockView.ShouldCollapse(code, context, block.Key, out var lines))
         {
             return 1;
-        }
-        var lines = 1;
-        foreach (var c in code.Code)
-        {
-            if (c == '\n')
-            {
-                lines++;
-            }
         }
         return lines > ChunkThresholdLines ? (lines + LinesPerChunk - 1) / LinesPerChunk : 1;
     }
@@ -728,7 +825,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         return Estimate(row.Block!, context);
     }
 
-    private static int ChunkCountLines(Row row) => ((CodeBlock)row.Block!).Code.Count(c => c == '\n') + 1;
+    private static int ChunkCountLines(Row row) => ((CodeBlock)row.Block!).GetLineCount();
 
     // 未测量行的高度估算：按块类型与内容长度粗略估计
     private double Estimate(MarkdownBlock block, RenderContext context)
@@ -741,7 +838,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
         {
             ParagraphBlock p => Lines(p.Content.Text.Length) * style.LineHeight,
             HeadingBlock h => style.HeadingFontSize(h.Level) * 1.6 + 10,
-            CodeBlock c => (c.Code.Count(ch => ch == '\n') + 1) * style.CodeLineHeight + 48,
+            CodeBlock c => c.GetLineCount() * style.CodeLineHeight + 48,
             MathBlock => style.FontSize * 3,
             TableBlock t => t.Rows.Length * (style.LineHeight + 12) + TableBlockView.ActionBarHeight,
             ListBlock l => l.Items.Sum(i => i.Children.Sum(child => Estimate(child, context))) + l.Items.Length * 4,

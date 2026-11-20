@@ -33,6 +33,8 @@ public abstract class BlockView : Control
         OnUpdate(context, previous, block, topKey, ref segment, contextChanged);
     }
 
+    internal void ReplaceBlockReference(MarkdownBlock block) => Block = block;
+
     protected abstract void OnUpdate(RenderContext context, MarkdownBlock? previous, MarkdownBlock block, int topKey, ref int segment, bool contextChanged);
 
     protected override global::Avalonia.Automation.Peers.AutomationPeer OnCreateAutomationPeer() => new Automation.BlockAutomationPeer(this);
@@ -163,6 +165,7 @@ public abstract class BlockView : Control
 public abstract class StackBlockView : BlockView
 {
     private readonly List<BlockView> _children = [];
+    private RenderContext? _childrenContext;
 
     protected IReadOnlyList<BlockView> ChildViews => _children;
 
@@ -176,6 +179,8 @@ public abstract class StackBlockView : BlockView
 
     protected void UpdateChildren(RenderContext context, IReadOnlyList<MarkdownBlock> blocks, int topKey, ref int segment)
     {
+        var structureChanged = !ReferenceEquals(_childrenContext, context);
+        _childrenContext = context;
         for (var i = 0; i < blocks.Count; i++)
         {
             var block = blocks[i];
@@ -196,13 +201,18 @@ public abstract class StackBlockView : BlockView
                 _children.Add(view);
             }
             AddChild(view);
+            structureChanged = true;
         }
         while (_children.Count > blocks.Count)
         {
             RemoveChild(_children[^1]);
             _children.RemoveAt(_children.Count - 1);
+            structureChanged = true;
         }
-        InvalidateMeasure();
+        if (structureChanged)
+        {
+            InvalidateMeasure();
+        }
     }
 
     protected override Size MeasureOverride(Size availableSize)
@@ -271,29 +281,45 @@ public sealed class TextBlockView : BlockView
     {
         var style = context.Style;
         var key = KeyFor(context, topKey, ref segment);
+        var level = 0;
+        var changed = false;
         switch (block)
         {
             case HeadingBlock heading:
-                _text.Set(context, key, heading.Content, style.HeadingFontSize(heading.Level), heading.Level <= 4 ? FontWeight.SemiBold : FontWeight.Bold);
-                _level = heading.Level;
+                changed = _text.SetTracked(context, key, heading.Content, style.HeadingFontSize(heading.Level), heading.Level <= 4 ? FontWeight.SemiBold : FontWeight.Bold);
+                level = heading.Level;
                 // 读屏按标题级别导航
-                global::Avalonia.Automation.AutomationProperties.SetHeadingLevel(_text, heading.Level);
+                if (_level != level)
+                {
+                    global::Avalonia.Automation.AutomationProperties.SetHeadingLevel(_text, heading.Level);
+                }
                 break;
             case ParagraphBlock paragraph:
-                _text.Set(context, key, paragraph.Content, style.FontSize);
-                _level = 0;
-                global::Avalonia.Automation.AutomationProperties.SetHeadingLevel(_text, 0);
+                changed = _text.SetTracked(context, key, paragraph.Content, style.FontSize);
+                if (_level != 0)
+                {
+                    global::Avalonia.Automation.AutomationProperties.SetHeadingLevel(_text, 0);
+                }
                 break;
             case HtmlBlock html:
-                _text.Set(context, key, new InlineContent(html.Html, [new InlineSpan(0, html.Html.Length, InlineStyle.Code)], [], []), style.FontSize, foreground: style.SecondaryForeground);
-                _level = 0;
+                if (contextChanged || previous is not HtmlBlock oldHtml || oldHtml.Html != html.Html || _text.Key != key)
+                {
+                    changed = _text.SetTracked(context, key, new InlineContent(html.Html, [new InlineSpan(0, html.Html.Length, InlineStyle.Code)], [], []), style.FontSize, foreground: style.SecondaryForeground);
+                }
                 break;
         }
-        InvalidateMeasure();
-        InvalidateVisual();
+        var levelChanged = _level != level;
+        _level = level;
+        if (changed || levelChanged || contextChanged)
+        {
+            InvalidateMeasure();
+            InvalidateVisual();
+        }
     }
 
     private int _level;
+    private IPen? _rulePen;
+    private IBrush? _rulePenBrush;
 
     // H1 / H2 下方有分隔线
     private double RuleSpace => _level is 1 or 2 ? 9 : 0;
@@ -316,8 +342,14 @@ public sealed class TextBlockView : BlockView
     {
         if (RuleSpace > 0 && Context is not null)
         {
+            var brush = Context.Style.TableBorderBrush;
+            if (_rulePen is null || !ReferenceEquals(_rulePenBrush, brush))
+            {
+                _rulePenBrush = brush;
+                _rulePen = new Pen(brush, 1);
+            }
             var y = Bounds.Height - 1.5;
-            context.DrawLine(new Pen(Context.Style.TableBorderBrush, 1), new Point(0, y), new Point(Bounds.Width, y));
+            context.DrawLine(_rulePen, new Point(0, y), new Point(Bounds.Width, y));
         }
     }
 
@@ -329,8 +361,16 @@ public sealed class TextBlockView : BlockView
 /// <summary>分隔线。</summary>
 public sealed class ThematicBreakBlockView : BlockView
 {
-    protected override void OnUpdate(RenderContext context, MarkdownBlock? previous, MarkdownBlock block, int topKey, ref int segment, bool contextChanged) =>
-        InvalidateVisual();
+    private IPen? _rulePen;
+    private IBrush? _rulePenBrush;
+
+    protected override void OnUpdate(RenderContext context, MarkdownBlock? previous, MarkdownBlock block, int topKey, ref int segment, bool contextChanged)
+    {
+        if (contextChanged || previous is null)
+        {
+            InvalidateVisual();
+        }
+    }
 
     protected override Size MeasureOverride(Size availableSize) => new(0, 17);
 
@@ -340,7 +380,13 @@ public sealed class ThematicBreakBlockView : BlockView
         {
             return;
         }
+        var brush = Context.Style.TableBorderBrush;
+        if (_rulePen is null || !ReferenceEquals(_rulePenBrush, brush))
+        {
+            _rulePenBrush = brush;
+            _rulePen = new Pen(brush, 1);
+        }
         var y = Math.Round(Bounds.Height / 2) + 0.5;
-        context.DrawLine(new Pen(Context.Style.TableBorderBrush, 1), new Point(0, y), new Point(Bounds.Width, y));
+        context.DrawLine(_rulePen, new Point(0, y), new Point(Bounds.Width, y));
     }
 }

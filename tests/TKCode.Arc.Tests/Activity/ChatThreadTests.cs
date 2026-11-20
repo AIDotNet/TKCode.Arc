@@ -565,4 +565,53 @@ public class ChatThreadTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void Streamed_Long_Reply_Stays_Saturated_Across_Complete()
+    {
+        var reply = At("r1", "sam", "", s_now.AddMinutes(-1));
+        var messages = Conversation();
+        messages.Add(reply);
+        var (thread, window) = Show(messages);
+        try
+        {
+            var chunk = "This is a **sufficiently long** streamed paragraph that easily saturates the maximum bubble width in the chat thread.\n\n";
+            for (var i = 0; i < 4; i++)
+            {
+                thread.AppendToMessage("r1", chunk).ShouldBeTrue();
+                Dispatcher.UIThread.RunJobs();
+                AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+                Dispatcher.UIThread.RunJobs();
+            }
+
+            var markdown = thread.Bodies.Peek(reply)!;
+            // Flush the pacer so all streamed paragraphs lay out and saturate the bubble while IsStreaming is still true.
+            markdown.Stream?.Flush();
+            Dispatcher.UIThread.RunJobs();
+            markdown.Stream?.Document.WhenIdle().GetAwaiter().GetResult();
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+
+            markdown.IsStreaming.ShouldBeTrue();
+            var widthBefore = markdown.Bounds.Width;
+            widthBefore.ShouldBeGreaterThan(200);
+
+            thread.CompleteMessage("r1").ShouldBeTrue();
+            Dispatcher.UIThread.RunJobs();
+            markdown.Stream?.Document.WhenIdle().GetAwaiter().GetResult();
+            Dispatcher.UIThread.RunJobs();
+            AvaloniaHeadlessPlatform.ForceRenderTimerTick();
+            Dispatcher.UIThread.RunJobs();
+
+            thread.IsMessageStreaming("r1").ShouldBeFalse();
+            markdown.IsStreaming.ShouldBeFalse();
+            Math.Abs(markdown.Bounds.Width - widthBefore).ShouldBeLessThan(1.0);
+            markdown.Bounds.Height.ShouldBeGreaterThan(0);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

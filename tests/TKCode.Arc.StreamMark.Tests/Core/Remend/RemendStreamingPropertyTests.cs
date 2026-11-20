@@ -3,9 +3,8 @@
 // with the same document shapes, and Markdig stands in for mdast-util-from-markdown as the
 // CommonMark oracle for code.
 
-using Markdig;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
+using StreamMark.Core.Model;
+using StreamMark.Core.Parsing;
 using Xunit;
 using RemendApi = StreamMark.Core.Remend.Remend;
 
@@ -74,29 +73,74 @@ public sealed class RemendStreamingPropertyTests
 
     private sealed record CodeNode(string Type, string Value, string? Lang, string? Meta);
 
-    private static readonly MarkdownPipeline CommonMark = new MarkdownPipelineBuilder().Build();
+    private static readonly MarkdownProfile CommonMarkProfile = new MarkdownProfileBuilder()
+        .UseTables(false)
+        .UseTaskLists(false)
+        .UseStrikethrough(false)
+        .UseAutoLinks(false)
+        .UseFootnotes(false)
+        .UseAlertBlocks(false)
+        .UseDefinitionLists(false)
+        .UseCustomContainers(false)
+        .UseMathematics(false)
+        .UseEmojiShortcodes(false)
+        .Build();
 
     // A CommonMark parser is the oracle for what is code, including fences nested
     // in block quotes and list items that a line-based scan can miss
     private static List<CodeNode> CodeNodes(string markdown)
     {
         var found = new List<CodeNode>();
-        foreach (var node in Markdown.Parse(markdown, CommonMark).Descendants())
+        CollectCodeNodes(MarkdownParser.Parse(markdown, CommonMarkProfile), found);
+        return found;
+    }
+
+    private static void CollectCodeNodes(IEnumerable<MarkdownBlock> blocks, List<CodeNode> found)
+    {
+        foreach (var block in blocks)
         {
-            switch (node)
+            switch (block)
             {
-                case FencedCodeBlock fenced:
-                    found.Add(new CodeNode("code", fenced.Lines.ToString(), NullIfEmpty(fenced.Info), NullIfEmpty(fenced.Arguments)));
+                case CodeBlock code:
+                    var meta = code.Info is not null && code.Language is not null && code.Info.Length > code.Language.Length
+                        ? code.Info[code.Language.Length..].Trim()
+                        : null;
+                    found.Add(new CodeNode("code", code.Code, NullIfEmpty(code.Language), NullIfEmpty(meta)));
                     break;
-                case CodeBlock block:
-                    found.Add(new CodeNode("code", block.Lines.ToString(), null, null));
+                case ParagraphBlock para:
+                    CollectInlineCode(para.Content, found);
                     break;
-                case CodeInline inline:
-                    found.Add(new CodeNode("inlineCode", inline.Content, null, null));
+                case HeadingBlock heading:
+                    CollectInlineCode(heading.Content, found);
+                    break;
+                case QuoteBlock quote:
+                    CollectCodeNodes(quote.Children, found);
+                    break;
+                case ListBlock list:
+                    foreach (var item in list.Items)
+                    {
+                        CollectCodeNodes(item.Children, found);
+                    }
+                    break;
+                case ComponentBlock comp:
+                    CollectCodeNodes(comp.Children, found);
+                    break;
+                case HtmlBoxBlock box:
+                    CollectCodeNodes(box.Children, found);
                     break;
             }
         }
-        return found;
+    }
+
+    private static void CollectInlineCode(InlineContent content, List<CodeNode> found)
+    {
+        foreach (var span in content.Spans)
+        {
+            if (span.Style.HasFlag(InlineStyle.Code))
+            {
+                found.Add(new CodeNode("inlineCode", content.Text.Substring(span.Start, span.Length), null, null));
+            }
+        }
     }
 
     private static string? NullIfEmpty(string? value) => string.IsNullOrEmpty(value) ? null : value;

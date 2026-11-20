@@ -406,11 +406,16 @@ internal sealed class TextMateCodeHighlighter : ICodeSyntaxHighlighter
     {
         private readonly List<CodeBlockSyntaxSpan> _scratch = new();
         private Line[] _lines = [];
+        private ImmutableArray<CodeBlockSyntaxSpan>[] _result = [];
         private string _code = string.Empty;
 
         public IReadOnlyList<ImmutableArray<CodeBlockSyntaxSpan>> Update(string code)
         {
             code ??= string.Empty;
+            if (ReferenceEquals(code, _code) && _result.Length > 0)
+            {
+                return _result;
+            }
             var source = inner.Update(code);
             if (family != CodeBlockLanguageFamily.Diff && !HasTokens(source) && code.Length > 0 && !string.IsNullOrWhiteSpace(code))
             {
@@ -420,14 +425,30 @@ internal sealed class TextMateCodeHighlighter : ICodeSyntaxHighlighter
                 _code = string.Empty;
                 var plain = new ImmutableArray<CodeBlockSyntaxSpan>[source.Count];
                 Array.Fill(plain, ImmutableArray<CodeBlockSyntaxSpan>.Empty);
+                _result = plain;
                 return plain;
             }
+            var commonPrefix = _code.AsSpan().CommonPrefixLength(code.AsSpan());
             var lines = new Line[source.Count];
             var result = new ImmutableArray<CodeBlockSyntaxSpan>[source.Count];
             var lineStart = 0;
             var inComment = false;
             for (var i = 0; i < source.Count; i++)
             {
+                if (i < _lines.Length)
+                {
+                    var prev = _lines[i];
+                    if (prev.Start == lineStart && prev.Start + prev.Length < commonPrefix
+                        && prev.Source == source[i] && prev.StartsInComment == inComment)
+                    {
+                        // Both the line contents and its terminating '\n' fall strictly inside the unchanged prefix.
+                        lines[i] = prev;
+                        inComment = prev.EndsInComment;
+                        result[i] = prev.Spans;
+                        lineStart = prev.Start + prev.Length + 1;
+                        continue;
+                    }
+                }
                 var newline = lineStart <= code.Length ? code.IndexOf('\n', lineStart) : -1;
                 var lineEnd = newline < 0 ? code.Length : newline;
                 var startsInComment = inComment;
@@ -447,6 +468,7 @@ internal sealed class TextMateCodeHighlighter : ICodeSyntaxHighlighter
                 lineStart = newline < 0 ? code.Length + 1 : newline + 1;
             }
             _lines = lines;
+            _result = result;
             _code = code;
             return result;
         }
@@ -485,6 +507,7 @@ internal sealed class TextMateCodeHighlighter : ICodeSyntaxHighlighter
         {
             inner.Dispose();
             _lines = [];
+            _result = [];
             _code = string.Empty;
         }
 

@@ -72,6 +72,9 @@ public sealed record RemendOptions
 
     /// <summary>自定义 handler，与内置 handler 一起按优先级排序执行。</summary>
     public IReadOnlyList<RemendHandler>? Handlers { get; init; }
+
+    // 缓存解析好的执行步骤：RemendOptions 是不可变 record（除调用方可变列表外），避免每次 Complete 分配 List<Step>
+    internal Remend.Step[]? CachedSteps;
 }
 
 /// <summary>
@@ -137,7 +140,7 @@ public static class Remend
         new("inlineKatex", KatexHandler.HandleIncompleteInlineKatex, PriorityInlineKatex);
 
     // A handler in execution order; the links handler may end the chain early
-    private readonly record struct Step(RemendHandler Handler, bool EarlyReturn);
+    internal readonly record struct Step(RemendHandler Handler, bool EarlyReturn);
 
     // Enabled built-ins, already in ascending priority order
     private static List<Step> GetEnabledBuiltInHandlers(RemendOptions options)
@@ -172,12 +175,21 @@ public static class Remend
         return steps;
     }
 
-    private static List<Step> GetHandlers(RemendOptions options)
+    private static Step[] GetHandlers(RemendOptions options)
     {
+        if (options.Handlers is null && options.CachedSteps is { } cached)
+        {
+            return cached;
+        }
         var steps = GetEnabledBuiltInHandlers(options);
         if (options.Handlers is not { Count: > 0 } custom)
         {
-            return steps;
+            var built = steps.ToArray();
+            if (options.Handlers is null)
+            {
+                options.CachedSteps = built;
+            }
+            return built;
         }
         // Merge and sort by priority. Stable, like Array.prototype.sort: built-ins
         // keep their order ahead of custom handlers with an equal priority, and
@@ -192,7 +204,7 @@ public static class Remend
             }
             steps.Insert(index, step);
         }
-        return steps;
+        return steps.ToArray();
     }
 
     private static bool EndsWithIncompleteMarker(string result) =>

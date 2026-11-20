@@ -7,10 +7,13 @@ abstract StreamMark.Avalonia.Extensions.MathLayout.Draw(Avalonia.Media.DrawingCo
 abstract StreamMark.Avalonia.Extensions.MathLayout.Width.get -> double
 abstract StreamMark.Avalonia.Rendering.BlockView.OnUpdate(StreamMark.Avalonia.Rendering.RenderContext! context, StreamMark.Core.Model.MarkdownBlock? previous, StreamMark.Core.Model.MarkdownBlock! block, int topKey, ref int segment, bool contextChanged) -> void
 abstract StreamMark.Core.Model.MarkdownBlock.<Clone>$() -> StreamMark.Core.Model.MarkdownBlock!
-abstract StreamMark.Core.Parsing.InlineMapContext.AppendObject(StreamMark.Core.Model.InlineObjectKind kind, string! value, StreamMark.Core.Model.ComponentAttributes? attributes = null, string? alt = null, bool flag = false) -> void
-abstract StreamMark.Core.Parsing.InlineMapContext.AppendText(System.ReadOnlySpan<char> text, StreamMark.Core.Model.InlineStyle extraStyle = StreamMark.Core.Model.InlineStyle.None) -> void
-abstract StreamMark.Core.Parsing.InlineMapContext.Style.get -> StreamMark.Core.Model.InlineStyle
-abstract StreamMark.Core.Parsing.InlineMapContext.Walk(Markdig.Syntax.Inlines.ContainerInline! container, StreamMark.Core.Model.InlineStyle extraStyle = StreamMark.Core.Model.InlineStyle.None) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.AppendLink(System.ReadOnlySpan<char> text, string! url, string? title = null, bool isAutoLink = false, StreamMark.Core.Model.InlineStyle extraStyle = StreamMark.Core.Model.InlineStyle.None) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.AppendObject(StreamMark.Core.Model.InlineObjectKind kind, string! value, StreamMark.Core.Model.ComponentAttributes? attributes = null, string? alt = null, string? title = null, bool flag = false) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.AppendText(System.ReadOnlySpan<char> text, StreamMark.Core.Model.InlineStyle extraStyle = StreamMark.Core.Model.InlineStyle.None) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.BeginComponent(string! name, StreamMark.Core.Model.ComponentAttributes? attributes = null) -> int
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.EndComponent(int token) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.ParseInlines(System.ReadOnlySpan<char> slice, StreamMark.Core.Model.InlineStyle extraStyle = StreamMark.Core.Model.InlineStyle.None) -> void
+abstract StreamMark.Core.Parsing.InlineSyntaxContext.Style.get -> StreamMark.Core.Model.InlineStyle
 const StreamMark.Avalonia.Images.ImageDiskCache.DefaultMaxBytes = 536870912 -> long
 const StreamMark.Avalonia.Images.ImageMemoryCache.DefaultByteBudget = 100663296 -> long
 const StreamMark.Avalonia.MarkdownResourceKeys.BlockSpacing = "Md.BlockSpacing" -> string!
@@ -537,8 +540,9 @@ static StreamMark.Core.Pacing.StreamPacerOptions.operator ==(StreamMark.Core.Pac
 static StreamMark.Core.Parsing.ComponentSpec.BuiltIn.get -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Parsing.ComponentSpec!>
 static StreamMark.Core.Parsing.ComponentSpec.operator !=(StreamMark.Core.Parsing.ComponentSpec? left, StreamMark.Core.Parsing.ComponentSpec? right) -> bool
 static StreamMark.Core.Parsing.ComponentSpec.operator ==(StreamMark.Core.Parsing.ComponentSpec? left, StreamMark.Core.Parsing.ComponentSpec? right) -> bool
+static StreamMark.Core.Parsing.MarkdownParser.Parse(string! markdown, StreamMark.Core.Parsing.MarkdownProfile? profile = null) -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Model.MarkdownBlock!>
+static StreamMark.Core.Parsing.MarkdownParser.Parse(System.ReadOnlySpan<char> markdown, StreamMark.Core.Parsing.MarkdownProfile? profile = null) -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Model.MarkdownBlock!>
 static StreamMark.Core.Parsing.MarkdownProfile.Default.get -> StreamMark.Core.Parsing.MarkdownProfile!
-static StreamMark.Core.Parsing.StreamMarkPipeline.Default.get -> Markdig.MarkdownPipeline!
 static StreamMark.Core.Remend.Remend.Complete(string! text, StreamMark.Core.Remend.RemendOptions? options = null) -> string!
 static StreamMark.Core.Remend.RemendHandler.operator !=(StreamMark.Core.Remend.RemendHandler? left, StreamMark.Core.Remend.RemendHandler? right) -> bool
 static StreamMark.Core.Remend.RemendHandler.operator ==(StreamMark.Core.Remend.RemendHandler? left, StreamMark.Core.Remend.RemendHandler? right) -> bool
@@ -2158,14 +2162,32 @@ StreamMark.Core.Pacing.StreamPacerOptions.RevealHistory.init -> void
 StreamMark.Core.Pacing.StreamPacerOptions.SkipCompletedBlocks.get -> bool
 StreamMark.Core.Pacing.StreamPacerOptions.SkipCompletedBlocks.init -> void
 StreamMark.Core.Pacing.StreamPacerOptions.StreamPacerOptions() -> void
-StreamMark.Core.Parsing.BackslashMathExtension
-StreamMark.Core.Parsing.BackslashMathExtension.BackslashMathExtension() -> void
-StreamMark.Core.Parsing.BackslashMathExtension.Setup(Markdig.MarkdownPipeline! pipeline, Markdig.Renderers.IMarkdownRenderer! renderer) -> void
-StreamMark.Core.Parsing.BackslashMathExtension.Setup(Markdig.MarkdownPipelineBuilder! pipeline) -> void
-StreamMark.Core.Parsing.BackslashMathInline
-StreamMark.Core.Parsing.BackslashMathInline.BackslashMathInline() -> void
-StreamMark.Core.Parsing.BackslashMathInline.IsDisplay.get -> bool
-StreamMark.Core.Parsing.BackslashMathInline.IsDisplay.init -> void
+StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockContinueResult.Break = 3 -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockContinueResult.BreakDiscard = 4 -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockContinueResult.Continue = 1 -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockContinueResult.ContinueDiscard = 2 -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockContinueResult.None = 0 -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.BlockRuleKind
+StreamMark.Core.Parsing.BlockRuleKind.Container = 1 -> StreamMark.Core.Parsing.BlockRuleKind
+StreamMark.Core.Parsing.BlockRuleKind.RawBody = 2 -> StreamMark.Core.Parsing.BlockRuleKind
+StreamMark.Core.Parsing.BlockRuleKind.SingleLine = 0 -> StreamMark.Core.Parsing.BlockRuleKind
+StreamMark.Core.Parsing.BlockRuleState
+StreamMark.Core.Parsing.BlockRuleState.Attributes.get -> StreamMark.Core.Model.ComponentAttributes!
+StreamMark.Core.Parsing.BlockRuleState.Attributes.set -> void
+StreamMark.Core.Parsing.BlockRuleState.BlockRuleState() -> void
+StreamMark.Core.Parsing.BlockRuleState.CloseAfterLine.get -> bool
+StreamMark.Core.Parsing.BlockRuleState.CloseAfterLine.set -> void
+StreamMark.Core.Parsing.BlockRuleState.ConsumedLength.get -> int
+StreamMark.Core.Parsing.BlockRuleState.ConsumedLength.set -> void
+StreamMark.Core.Parsing.BlockRuleState.Data.get -> object?
+StreamMark.Core.Parsing.BlockRuleState.Data.set -> void
+StreamMark.Core.Parsing.BlockRuleState.Kind.get -> StreamMark.Core.Parsing.BlockRuleKind
+StreamMark.Core.Parsing.BlockRuleState.Kind.set -> void
+StreamMark.Core.Parsing.BlockRuleState.Name.get -> string!
+StreamMark.Core.Parsing.BlockRuleState.Name.set -> void
+StreamMark.Core.Parsing.BlockRuleState.SawClose.get -> bool
+StreamMark.Core.Parsing.BlockRuleState.SawClose.set -> void
 StreamMark.Core.Parsing.ComponentContent
 StreamMark.Core.Parsing.ComponentContent.Markdown = 0 -> StreamMark.Core.Parsing.ComponentContent
 StreamMark.Core.Parsing.ComponentContent.Raw = 1 -> StreamMark.Core.Parsing.ComponentContent
@@ -2184,26 +2206,56 @@ StreamMark.Core.Parsing.ComponentSpec.Kind.get -> StreamMark.Core.Parsing.Compon
 StreamMark.Core.Parsing.ComponentSpec.Kind.init -> void
 StreamMark.Core.Parsing.ComponentSpec.Name.get -> string!
 StreamMark.Core.Parsing.ComponentSpec.Name.init -> void
-StreamMark.Core.Parsing.InlineMapContext
-StreamMark.Core.Parsing.InlineMapContext.InlineMapContext() -> void
-StreamMark.Core.Parsing.MapContext
-StreamMark.Core.Parsing.MapContext.MapChildren(Markdig.Syntax.ContainerBlock! container) -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Model.MarkdownBlock!>
-StreamMark.Core.Parsing.MapContext.MapInlines(Markdig.Syntax.Inlines.ContainerInline? inline) -> StreamMark.Core.Model.InlineContent!
-StreamMark.Core.Parsing.MapContext.Profile.get -> StreamMark.Core.Parsing.MarkdownProfile!
-StreamMark.Core.Parsing.MapContext.RangeOf(Markdig.Syntax.Block! block) -> StreamMark.Core.Model.SourceRange
+StreamMark.Core.Parsing.IBlockSyntaxRule
+StreamMark.Core.Parsing.IBlockSyntaxRule.Build(in StreamMark.Core.Parsing.BlockRuleState state, System.Collections.Immutable.ImmutableArray<StreamMark.Core.Model.MarkdownBlock!> children, string? rawContent, bool isOpen, StreamMark.Core.Model.SourceRange range) -> StreamMark.Core.Model.MarkdownBlock!
+StreamMark.Core.Parsing.IBlockSyntaxRule.CanInterruptParagraph.get -> bool
+StreamMark.Core.Parsing.IBlockSyntaxRule.OpeningCharacters.get -> string!
+StreamMark.Core.Parsing.IBlockSyntaxRule.TryContinue(System.ReadOnlySpan<char> line, ref StreamMark.Core.Parsing.BlockRuleState state) -> StreamMark.Core.Parsing.BlockContinueResult
+StreamMark.Core.Parsing.IBlockSyntaxRule.TryOpen(System.ReadOnlySpan<char> line, out StreamMark.Core.Parsing.BlockRuleState state) -> bool
+StreamMark.Core.Parsing.IInlineSyntaxRule
+StreamMark.Core.Parsing.IInlineSyntaxRule.OpeningCharacters.get -> string!
+StreamMark.Core.Parsing.IInlineSyntaxRule.TryMatch(System.ReadOnlySpan<char> text, StreamMark.Core.Parsing.InlineSyntaxContext! context, out int consumed) -> bool
+StreamMark.Core.Parsing.InlineSyntaxContext
+StreamMark.Core.Parsing.InlineSyntaxContext.InlineSyntaxContext() -> void
+StreamMark.Core.Parsing.MarkdownParser
 StreamMark.Core.Parsing.MarkdownProfile
+StreamMark.Core.Parsing.MarkdownProfile.BlockRules.get -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Parsing.IBlockSyntaxRule!>
 StreamMark.Core.Parsing.MarkdownProfile.Components.get -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Parsing.ComponentSpec!>
-StreamMark.Core.Parsing.MarkdownProfile.Pipeline.get -> Markdig.MarkdownPipeline!
+StreamMark.Core.Parsing.MarkdownProfile.EnableAlertBlocks.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableAutoIdentifiers.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableAutoLinks.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableCjkFriendlyEmphasis.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableCustomContainers.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableDefinitionLists.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableEmojiShortcodes.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableFootnotes.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableMathematics.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableStrikethrough.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableTables.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.EnableTaskLists.get -> bool
+StreamMark.Core.Parsing.MarkdownProfile.InlineRules.get -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Parsing.IInlineSyntaxRule!>
 StreamMark.Core.Parsing.MarkdownProfile.RemendHandlers.get -> System.Collections.Immutable.ImmutableArray<StreamMark.Core.Remend.RemendHandler!>
+StreamMark.Core.Parsing.MarkdownProfile.SoftlineBreakAsHardline.get -> bool
 StreamMark.Core.Parsing.MarkdownProfileBuilder
+StreamMark.Core.Parsing.MarkdownProfileBuilder.AddBlockRule(StreamMark.Core.Parsing.IBlockSyntaxRule! rule) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
 StreamMark.Core.Parsing.MarkdownProfileBuilder.AddComponent(StreamMark.Core.Parsing.ComponentSpec! spec) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
-StreamMark.Core.Parsing.MarkdownProfileBuilder.AddMarkdigExtension(Markdig.IMarkdownExtension! extension) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.AddInlineRule(StreamMark.Core.Parsing.IInlineSyntaxRule! rule) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
 StreamMark.Core.Parsing.MarkdownProfileBuilder.AddRemendHandler(StreamMark.Core.Remend.RemendHandler! handler) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
 StreamMark.Core.Parsing.MarkdownProfileBuilder.Build() -> StreamMark.Core.Parsing.MarkdownProfile!
-StreamMark.Core.Parsing.MarkdownProfileBuilder.MapBlock<TNode>(System.Func<TNode!, StreamMark.Core.Parsing.MapContext!, StreamMark.Core.Model.MarkdownBlock?>! map) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
-StreamMark.Core.Parsing.MarkdownProfileBuilder.MapInline<TNode>(System.Func<TNode!, StreamMark.Core.Parsing.InlineMapContext!, bool>! map) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
 StreamMark.Core.Parsing.MarkdownProfileBuilder.MarkdownProfileBuilder() -> void
-StreamMark.Core.Parsing.StreamMarkPipeline
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseAlertBlocks(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseAutoIdentifiers(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseAutoLinks(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseCjkFriendlyEmphasis(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseCustomContainers(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseDefinitionLists(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseEmojiShortcodes(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseFootnotes(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseMathematics(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseSoftlineBreakAsHardline(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseStrikethrough(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseTables(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
+StreamMark.Core.Parsing.MarkdownProfileBuilder.UseTaskLists(bool enabled = true) -> StreamMark.Core.Parsing.MarkdownProfileBuilder!
 StreamMark.Core.Remend.LinkMode
 StreamMark.Core.Remend.LinkMode.Protocol = 0 -> StreamMark.Core.Remend.LinkMode
 StreamMark.Core.Remend.LinkMode.TextOnly = 1 -> StreamMark.Core.Remend.LinkMode

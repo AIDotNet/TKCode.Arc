@@ -210,7 +210,7 @@ public sealed class SegmentLayout : IDisposable
         return result;
     }
 
-    private int LineIndexAtY(double y)
+    internal int LineIndexAtY(double y)
     {
         int lo = 0, hi = _lines.Count - 1, result = _lines.Count - 1;
         while (lo <= hi)

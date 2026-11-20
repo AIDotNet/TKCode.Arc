@@ -30,6 +30,14 @@ public sealed class TextSegmentView : Control, ISelectableSegment
     private TextWrapping _wrapping = TextWrapping.Wrap;
 
     private SegmentLayout? _layout;
+    // 复用 ITextSource 与段落属性对象，流式每帧排版避免重复分配与重建样式字典
+    private InlineTextSource? _textSource;
+    private GenericTextParagraphProperties? _fixedHeightProps;
+    private GenericTextParagraphProperties? _naturalProps;
+    private TextRunProperties? _cachedDefaultProps;
+    private TextAlignment _cachedAlignment;
+    private TextWrapping _cachedWrapping;
+    private double _cachedLineHeight;
     // 内容变化后需要重新排版的起点（int.MaxValue 表示排版有效）
     private int _dirtyFrom = int.MaxValue;
     private readonly List<SegmentLineVisual> _lines = [];
@@ -127,6 +135,11 @@ public sealed class TextSegmentView : Control, ISelectableSegment
 
     /// <summary>设置内容与外观；内容或外观未变时不重新排版。</summary>
     public void Set(RenderContext context, SegmentKey key, InlineContent content, double fontSize, FontWeight weight = default,
+        IBrush? foreground = null, TextAlignment alignment = TextAlignment.Left, TextWrapping wrapping = TextWrapping.Wrap) =>
+        SetTracked(context, key, content, fontSize, weight, foreground, alignment, wrapping);
+
+    /// <summary>设置内容与外观，返回内容或排版相关外观是否实际发生变化。</summary>
+    internal bool SetTracked(RenderContext context, SegmentKey key, InlineContent content, double fontSize, FontWeight weight = default,
         IBrush? foreground = null, TextAlignment alignment = TextAlignment.Left, TextWrapping wrapping = TextWrapping.Wrap)
     {
         if (weight == default)
@@ -171,7 +184,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             {
                 InvalidateVisual();
             }
-            return;
+            return false;
         }
         if (_context is not null && !ReferenceEquals(_context.Selection, context.Selection))
         {
@@ -192,6 +205,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         if (from <= 0)
         {
             _runCache.Invalidate();
+            _uncoveredRuns.Clear();
             _fullRebuild = true;
         }
         else
@@ -200,6 +214,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             // 所以必须从差异点所在段落的起点失效，否则旧段落（连同它的段落结束）被复用，追加的文字另起一段，变成硬换行
             var paragraphStart = from > 0 ? content.Text.AsSpan(0, Math.Min(from, content.Text.Length)).LastIndexOfAny('\n', '\r', '\u2029') + 1 : 0;
             _runCache.InvalidateFrom(paragraphStart);
+            TrimUncoveredRuns(from);
         }
 #pragma warning restore CS0618
         var restyled = _alignment != alignment || _wrapping != wrapping;
@@ -211,42 +226,234 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         _alignment = alignment;
         _wrapping = wrapping;
         InvalidateLayout(restyled ? 0 : from);
+        return true;
     }
 
     private bool IsAttached => VisualRoot is not null;
 
-    // 新旧内容第一个不同的位置：文本公共前缀，且该位置之前的样式区间、对象完全相同
-    private static int FirstDifference(InlineContent old, InlineContent next)
+    // 缓存主字体缺字区间（例如 CJK 段落）的首字码点，避免逐行增量排版时每次向回扫描到段首（O(N) → O(1)）
+    private readonly record struct UncoveredRun(int Begin, int RunStart, int RunEnd, int HeadCodepoint);
+    private readonly List<UncoveredRun> _uncoveredRuns = [];
+
+    private void TrimUncoveredRuns(int from)
     {
-        var limit = old.Text.AsSpan().CommonPrefixLength(next.Text);
-        foreach (var span in old.Spans)
+        for (var i = _uncoveredRuns.Count - 1; i >= 0; i--)
         {
-            if (span.Start >= limit)
+            var run = _uncoveredRuns[i];
+            if (run.RunStart >= from)
+            {
+                _uncoveredRuns.RemoveAt(i);
+            }
+            else if (run.RunEnd > from)
+            {
+                _uncoveredRuns[i] = run with { RunEnd = from };
+                break;
+            }
+            else
             {
                 break;
             }
-            var match = next.Spans.FirstOrDefault(s => s.Start == span.Start);
-            if (match != span)
-            {
-                // 区间被延长（如粗体继续增长）时从区间开头重新整形
-                limit = Math.Min(limit, span.Start);
-            }
         }
-        foreach (var span in next.Spans)
+    }
+
+    private bool TryGetUncoveredHead(int begin, int start, out int headCodepoint, out int index)
+    {
+        var count = _uncoveredRuns.Count;
+        if (count > 0)
         {
-            if (span.Start < limit && !old.Spans.Contains(span))
+            // 流式追加几乎总是命中最后一个区间
+            var last = _uncoveredRuns[count - 1];
+            if (start >= last.RunStart)
             {
-                limit = Math.Min(limit, span.Start);
+                if (last.Begin == begin && start <= last.RunEnd)
+                {
+                    headCodepoint = last.HeadCodepoint;
+                    index = count - 1;
+                    return true;
+                }
+                headCodepoint = 0;
+                index = -1;
+                return false;
+            }
+            int lo = 0, hi = count - 1, found = -1;
+            while (lo <= hi)
+            {
+                var mid = (lo + hi) >>> 1;
+                if (_uncoveredRuns[mid].RunStart <= start)
+                {
+                    found = mid;
+                    lo = mid + 1;
+                }
+                else
+                {
+                    hi = mid - 1;
+                }
+            }
+            if (found >= 0)
+            {
+                var entry = _uncoveredRuns[found];
+                if (entry.Begin == begin && start <= entry.RunEnd)
+                {
+                    headCodepoint = entry.HeadCodepoint;
+                    index = found;
+                    return true;
+                }
             }
         }
-        foreach (var obj in next.Objects)
+        headCodepoint = 0;
+        index = -1;
+        return false;
+    }
+
+    private void ExtendUncoveredRun(int index, int runEnd)
+    {
+        var entry = _uncoveredRuns[index];
+        if (runEnd > entry.RunEnd)
         {
-            if (obj.Offset < limit && !old.Objects.Contains(obj))
+            _uncoveredRuns[index] = entry with { RunEnd = runEnd };
+        }
+    }
+
+    private void RecordUncoveredRun(int begin, int runStart, int runEnd, int headCodepoint)
+    {
+        var count = _uncoveredRuns.Count;
+        if (count == 0 || _uncoveredRuns[count - 1].RunStart < runStart)
+        {
+            _uncoveredRuns.Add(new UncoveredRun(begin, runStart, runEnd, headCodepoint));
+            return;
+        }
+        if (_uncoveredRuns[count - 1].RunStart == runStart)
+        {
+            var last = _uncoveredRuns[count - 1];
+            if (last.Begin == begin)
             {
-                limit = Math.Min(limit, obj.Offset);
+                _uncoveredRuns[count - 1] = last with { RunEnd = Math.Max(last.RunEnd, runEnd), HeadCodepoint = headCodepoint };
+            }
+            return;
+        }
+        int lo = 0, hi = count - 1;
+        while (lo <= hi)
+        {
+            var mid = (lo + hi) >>> 1;
+            var cmp = _uncoveredRuns[mid].RunStart.CompareTo(runStart);
+            if (cmp == 0)
+            {
+                if (_uncoveredRuns[mid].Begin == begin)
+                {
+                    _uncoveredRuns[mid] = _uncoveredRuns[mid] with { RunEnd = Math.Max(_uncoveredRuns[mid].RunEnd, runEnd), HeadCodepoint = headCodepoint };
+                }
+                return;
+            }
+            if (cmp < 0)
+            {
+                lo = mid + 1;
+            }
+            else
+            {
+                hi = mid - 1;
             }
         }
+        _uncoveredRuns.Insert(lo, new UncoveredRun(begin, runStart, runEnd, headCodepoint));
+    }
+
+    // 新旧内容第一个不同的位置：文本公共前缀，且该位置之前的样式区间、对象完全相同（按序双指针 O(S) 零分配）
+    private static int FirstDifference(InlineContent old, InlineContent next)
+    {
+        var limit = old.Text.AsSpan().CommonPrefixLength(next.Text);
+        if (limit == 0)
+        {
+            return 0;
+        }
+
+        // 若已存在的链接 / 组件 / HTML 文字样式表前部发生变化，保守退回从头重排
+        if (!TablePrefixEqual(old.Links, next.Links)
+            || !TablePrefixEqual(old.Components, next.Components)
+            || !TablePrefixEqual(old.TextStyles, next.TextStyles))
+        {
+            return 0;
+        }
+
+        var oldSpans = old.Spans;
+        var nextSpans = next.Spans;
+        int i = 0, j = 0;
+        while (i < oldSpans.Length && j < nextSpans.Length)
+        {
+            var a = oldSpans[i];
+            var b = nextSpans[j];
+            if (a.Start >= limit && b.Start >= limit)
+            {
+                break;
+            }
+            if (a == b)
+            {
+                i++;
+                j++;
+                continue;
+            }
+            limit = Math.Min(limit, Math.Min(a.Start, b.Start));
+            break;
+        }
+        if (i < oldSpans.Length && oldSpans[i].Start < limit)
+        {
+            limit = Math.Min(limit, oldSpans[i].Start);
+        }
+        if (j < nextSpans.Length && nextSpans[j].Start < limit)
+        {
+            limit = Math.Min(limit, nextSpans[j].Start);
+        }
+
+        var oldObjects = old.Objects;
+        var nextObjects = next.Objects;
+        i = 0;
+        j = 0;
+        while (i < oldObjects.Length && j < nextObjects.Length)
+        {
+            var a = oldObjects[i];
+            var b = nextObjects[j];
+            if (a.Offset >= limit && b.Offset >= limit)
+            {
+                break;
+            }
+            if (a == b)
+            {
+                i++;
+                j++;
+                continue;
+            }
+            limit = Math.Min(limit, Math.Min(a.Offset, b.Offset));
+            break;
+        }
+        if (i < oldObjects.Length && oldObjects[i].Offset < limit)
+        {
+            limit = Math.Min(limit, oldObjects[i].Offset);
+        }
+        if (j < nextObjects.Length && nextObjects[j].Offset < limit)
+        {
+            limit = Math.Min(limit, nextObjects[j].Offset);
+        }
+
         return limit;
+    }
+
+    private static bool TablePrefixEqual<T>(System.Collections.Immutable.ImmutableArray<T> a, System.Collections.Immutable.ImmutableArray<T> b)
+    {
+        if (a == b || a.IsDefaultOrEmpty)
+        {
+            return true;
+        }
+        if (b.IsDefault || b.Length < a.Length)
+        {
+            return false;
+        }
+        var comparer = EqualityComparer<T>.Default;
+        for (var i = 0; i < a.Length; i++)
+        {
+            if (!comparer.Equals(a[i], b[i]))
+            {
+                return false;
+            }
+        }
+        return true;
     }
 
     // 从 from 处起重新排版（0 = 整段）；只有变化的行会重新录制
@@ -275,6 +482,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         _cardTimer?.Stop();
         CloseCard();
         _fade.Detach();
+        _textSource?.ClearGlyphMaps();
         // 归还图片句柄；重新挂载时排版会重新取得（通常命中内存缓存）
         if (_images.Count > 0)
         {
@@ -369,13 +577,26 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         {
             _usedImages.Clear();
         }
-        var source = new InlineTextSource(this, _context, _content, _fontSize, _fontWeight, _foreground ?? _context.Style.Foreground, maxWidth);
-        var fixedHeight = new GenericTextParagraphProperties(source.DefaultProperties, _alignment, _wrapping,
-            lineHeight: _context.Style.LineHeight * (_fontSize / _context.Style.FontSize));
-        var natural = new GenericTextParagraphProperties(source.DefaultProperties, _alignment, _wrapping);
+        var foreground = _foreground ?? _context.Style.Foreground;
+        var source = _textSource ??= new InlineTextSource(this);
+        source.Reset(_context, _content, _fontSize, _fontWeight, foreground, maxWidth);
+        var lineHeight = _context.Style.LineHeight * (_fontSize / _context.Style.FontSize);
+        if (_fixedHeightProps is null || _naturalProps is null
+            || !ReferenceEquals(_cachedDefaultProps, source.DefaultProperties)
+            || _cachedAlignment != _alignment
+            || _cachedWrapping != _wrapping
+            || !_cachedLineHeight.Equals(lineHeight))
+        {
+            _cachedDefaultProps = source.DefaultProperties;
+            _cachedAlignment = _alignment;
+            _cachedWrapping = _wrapping;
+            _cachedLineHeight = lineHeight;
+            _fixedHeightProps = new GenericTextParagraphProperties(source.DefaultProperties, _alignment, _wrapping, lineHeight: lineHeight);
+            _naturalProps = new GenericTextParagraphProperties(source.DefaultProperties, _alignment, _wrapping);
+        }
         _layout ??= new SegmentLayout();
 #pragma warning disable CS0618
-        var changed = _layout.Format(source, _content.Text.Length, maxWidth, fixedHeight, natural, from, UseRunCache ? _runCache : null);
+        var changed = _layout.Format(source, _content.Text.Length, maxWidth, _fixedHeightProps, _naturalProps, from, UseRunCache ? _runCache : null);
 #pragma warning restore CS0618
         _dirtyFrom = int.MaxValue;
         // 只有所有 run 都重新生成时，"本次用到的图片"才完整；部分复用缓存时不释放
@@ -631,12 +852,15 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         // 文字由各行视觉绘制；这里只画可命中区域、选区 / 查找高亮（在文字下方）与流式光标
         context.FillRectangle(Brushes.Transparent, new Rect(Bounds.Size));
 
-        foreach (var (start, end, current) in _context.Selection.GetHighlights(Key, _content.Text.Length))
+        if (_context.Selection.HasHighlights)
         {
-            var brush = current ? _context.Style.SearchCurrentBackground : _context.Style.SearchHighlightBackground;
-            foreach (var rect in layout.HitTestTextRange(start, end - start))
+            foreach (var (start, end, current) in _context.Selection.GetHighlights(Key, _content.Text.Length))
             {
-                context.FillRectangle(brush, rect, 2);
+                var brush = current ? _context.Style.SearchCurrentBackground : _context.Style.SearchHighlightBackground;
+                foreach (var rect in layout.HitTestTextRange(start, end - start))
+                {
+                    context.FillRectangle(brush, rect, 2);
+                }
             }
         }
         if (_context.Selection.GetSegmentRange(Key, _content.Text.Length) is { } selected)
@@ -1003,30 +1227,53 @@ public sealed class TextSegmentView : Control, ISelectableSegment
     }
 
     /// <summary>为 <see cref="TextLayout"/> 提供带样式的文本段和嵌入对象。</summary>
-    private sealed class InlineTextSource : ITextSource
+    private sealed class InlineTextSource(TextSegmentView owner) : ITextSource
     {
-        private readonly TextSegmentView _owner;
-        private readonly RenderContext _context;
-        private readonly InlineContent _content;
-        private readonly double _fontSize;
-        private readonly FontWeight _weight;
-        private readonly IBrush _foreground;
-        private readonly double _maxWidth;
+        private readonly TextSegmentView _owner = owner;
+        private RenderContext _context = null!;
+        private InlineContent _content = InlineContent.Empty;
+        private double _fontSize;
+        private FontWeight _weight;
+        private IBrush _foreground = null!;
+        private double _maxWidth;
         private readonly Dictionary<(InlineStyle, int, int), TextRunProperties> _properties = [];
+        private bool _hasCustomTableEntries;
+        private int _objectCursor;
+        private int _spanCursor;
 
-        public InlineTextSource(TextSegmentView owner, RenderContext context, InlineContent content, double fontSize, FontWeight weight, IBrush foreground, double maxWidth)
+        public TextRunProperties DefaultProperties { get; private set; } = null!;
+
+        public void Reset(RenderContext context, InlineContent content, double fontSize, FontWeight weight, IBrush foreground, double maxWidth)
         {
-            _owner = owner;
+            var styleChanged = !ReferenceEquals(_context, context)
+                || !_fontSize.Equals(fontSize)
+                || _weight != weight
+                || !Equals(_foreground, foreground);
+            if (styleChanged)
+            {
+                _properties.Clear();
+                _fallbacks.Clear();
+                _maps.Clear();
+                _hasCustomTableEntries = false;
+            }
+            else if (_hasCustomTableEntries
+                && (!TablePrefixEqual(_content.Components, content.Components) || !TablePrefixEqual(_content.TextStyles, content.TextStyles)))
+            {
+                _properties.Clear();
+                _fallbacks.Clear();
+                _maps.Clear();
+                _hasCustomTableEntries = false;
+            }
             _context = context;
             _content = content;
             _fontSize = fontSize;
             _weight = weight;
             _foreground = foreground;
             _maxWidth = maxWidth;
+            _objectCursor = 0;
+            _spanCursor = 0;
             DefaultProperties = PropertiesFor(InlineStyle.None);
         }
-
-        public TextRunProperties DefaultProperties { get; }
 
         public TextRun? GetTextRun(int textSourceIndex)
         {
@@ -1038,53 +1285,111 @@ public sealed class TextSegmentView : Control, ISelectableSegment
 
             var begin = 0;
             var end = text.Length;
-            foreach (var obj in _content.Objects)
+            var objects = _content.Objects;
+            if (!objects.IsDefaultOrEmpty)
             {
-                if (obj.Offset < textSourceIndex)
+                if (_objectCursor > 0 && (_objectCursor > objects.Length || objects[_objectCursor - 1].Offset >= textSourceIndex))
                 {
-                    begin = obj.Offset + 1;
+                    _objectCursor = LowerBoundObject(objects, textSourceIndex);
                 }
-                if (obj.Offset == textSourceIndex)
+                while (_objectCursor < objects.Length && objects[_objectCursor].Offset < textSourceIndex)
                 {
-                    return CreateObjectRun(obj);
+                    _objectCursor++;
                 }
-                if (obj.Offset > textSourceIndex)
+                if (_objectCursor > 0)
                 {
+                    begin = objects[_objectCursor - 1].Offset + 1;
+                }
+                if (_objectCursor < objects.Length)
+                {
+                    var obj = objects[_objectCursor];
+                    if (obj.Offset == textSourceIndex)
+                    {
+                        return CreateObjectRun(obj);
+                    }
                     end = Math.Min(end, obj.Offset);
-                    break;
                 }
             }
 
             var style = InlineStyle.None;
             var component = -1;
             var textStyle = -1;
-            foreach (var span in _content.Spans)
+            var spans = _content.Spans;
+            if (!spans.IsDefaultOrEmpty)
             {
-                if (span.End <= textSourceIndex)
+                if (_spanCursor > 0 && (_spanCursor > spans.Length || spans[_spanCursor - 1].End > textSourceIndex))
                 {
-                    begin = Math.Max(begin, span.End);
-                    continue;
+                    _spanCursor = LowerBoundSpan(spans, textSourceIndex);
                 }
-                if (span.Start > textSourceIndex)
+                while (_spanCursor < spans.Length && spans[_spanCursor].End <= textSourceIndex)
                 {
-                    end = Math.Min(end, span.Start);
-                    break;
+                    _spanCursor++;
                 }
-                begin = Math.Max(begin, span.Start);
-                style = span.Style;
-                // 被链接策略禁止的链接显示为次要颜色的普通文字
-                if (span.LinkIndex >= 0 && style.HasFlag(InlineStyle.Link) && _owner.LinkDecisionFor(span.LinkIndex) == LinkDecision.Block)
+                if (_spanCursor > 0)
                 {
-                    style = (style & ~InlineStyle.Link) | InlineStyle.IncompleteLink;
+                    begin = Math.Max(begin, spans[_spanCursor - 1].End);
                 }
-                component = span.ComponentIndex;
-                textStyle = span.TextStyleIndex;
-                end = Math.Min(end, span.End);
-                break;
+                if (_spanCursor < spans.Length)
+                {
+                    var span = spans[_spanCursor];
+                    if (span.Start > textSourceIndex)
+                    {
+                        end = Math.Min(end, span.Start);
+                    }
+                    else
+                    {
+                        begin = Math.Max(begin, span.Start);
+                        style = span.Style;
+                        // 被链接策略禁止的链接显示为次要颜色的普通文字
+                        if (span.LinkIndex >= 0 && style.HasFlag(InlineStyle.Link) && _owner.LinkDecisionFor(span.LinkIndex) == LinkDecision.Block)
+                        {
+                            style = (style & ~InlineStyle.Link) | InlineStyle.IncompleteLink;
+                        }
+                        component = span.ComponentIndex;
+                        textStyle = span.TextStyleIndex;
+                        end = Math.Min(end, span.End);
+                    }
+                }
             }
 
             var properties = PropertiesFor(style, component, textStyle);
             return CreateCharacters(text, begin, textSourceIndex, end, properties, style, component, textStyle);
+        }
+
+        private static int LowerBoundObject(System.Collections.Immutable.ImmutableArray<InlineObject> objects, int offset)
+        {
+            int lo = 0, hi = objects.Length;
+            while (lo < hi)
+            {
+                var mid = (lo + hi) >>> 1;
+                if (objects[mid].Offset < offset)
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    hi = mid;
+                }
+            }
+            return lo;
+        }
+
+        private static int LowerBoundSpan(System.Collections.Immutable.ImmutableArray<InlineSpan> spans, int index)
+        {
+            int lo = 0, hi = spans.Length;
+            while (lo < hi)
+            {
+                var mid = (lo + hi) >>> 1;
+                if (spans[mid].End <= index)
+                {
+                    lo = mid + 1;
+                }
+                else
+                {
+                    hi = mid;
+                }
+            }
+            return lo;
         }
 
         // 回退字体：Avalonia 在为缺字的文字找回退字体时，会优先复用"上一段"的回退字体而不检查字重 / 字形，
@@ -1092,7 +1397,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         // 让每段文字的主字体就能覆盖其字符，从而不进入那条复用路径。
         // 回退字体按整段缺字文字的第一个字匹配，与从哪个位置开始取 run 无关：逐行排版会从行首重新取 run，
         // 若按行首的字匹配（如"。"与"首"在 Windows 上可能匹配到不同字体），增量结果就会与整段排版不同。
-        // begin 是同一样式范围（span / 内嵌对象之间）的起点，向前找缺字段的起点不越过它。
+        // begin 是同一样式范围（span / 内嵌对象之间）的起点，向前找缺字段的起点不越过它；已扫描过的区间缓存在 _owner 上，避免每帧倒扫。
         private TextRun CreateCharacters(string text, int begin, int start, int end, TextRunProperties properties, InlineStyle style, int component, int textStyle)
         {
             var map = GlyphMap(properties);
@@ -1109,18 +1414,30 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                     }
                     length += rune.Utf16SequenceLength;
                 }
-                var head = first;
-                for (var i = start; i > begin;)
+                int headCodepoint;
+                if (_owner.TryGetUncoveredHead(begin, start, out headCodepoint, out var cachedIndex))
                 {
-                    if (Rune.DecodeLastFromUtf16(text.AsSpan(begin, i - begin), out var previous, out var consumed) != OperationStatus.Done
-                        || Covered(map, previous))
-                    {
-                        break;
-                    }
-                    head = previous;
-                    i -= consumed;
+                    _owner.ExtendUncoveredRun(cachedIndex, start + length);
                 }
-                if (MatchFallback(head.Value, properties.Typeface) is { } fallback)
+                else
+                {
+                    var head = first;
+                    var runStart = start;
+                    for (var i = start; i > begin;)
+                    {
+                        if (Rune.DecodeLastFromUtf16(text.AsSpan(begin, i - begin), out var previous, out var consumed) != OperationStatus.Done
+                            || Covered(map, previous))
+                        {
+                            break;
+                        }
+                        head = previous;
+                        i -= consumed;
+                        runStart = i;
+                    }
+                    headCodepoint = head.Value;
+                    _owner.RecordUncoveredRun(begin, runStart, start + length, headCodepoint);
+                }
+                if (MatchFallback(headCodepoint, properties.Typeface) is { } fallback)
                 {
                     return new TextCharacters(text.AsMemory(start, length), FallbackProperties(properties, style, component, textStyle, fallback));
                 }
@@ -1151,8 +1468,12 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         private static bool Covered(CharacterToGlyphMap? map, Rune rune) =>
             map is null || Rune.IsWhiteSpace(rune) || rune.Value < 0x20 || rune.Value == InlineObject.Placeholder || map.Value.ContainsGlyph(rune.Value);
 
+        // CharacterToGlyphMap 底层持有 FontManager 的非托管字体内存，不能跨控件/进程做静态缓存，
+        // 随复用的 InlineTextSource 实例缓存（控件卸载或样式变化时清空）即可在流式每帧 O(1) 命中且生命周期安全
         private readonly Dictionary<TextRunProperties, CharacterToGlyphMap?> _maps = [];
         private readonly Dictionary<(InlineStyle, int, int, string), TextRunProperties> _fallbacks = [];
+
+        public void ClearGlyphMaps() => _maps.Clear();
 
         private CharacterToGlyphMap? GlyphMap(TextRunProperties properties)
         {
@@ -1179,7 +1500,13 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         // （按字重拆开的族如 "Yu Gothic UI Semibold"），Avalonia 只能取同族已缓存的最近字面合成斜体
         // （整份字体复制一份并常驻，还会被缓存在这个族里，之后同族的正体请求也可能取到它）。
         // 也不能先加载一下再看有没有被合成：加载本身就会创建并缓存合成字面。CJK、表情、符号字体基本没有真斜体
-        private static Typeface RealFace(FontFamily family, Typeface requested)
+        private static readonly ConcurrentDictionary<(string Key, string Name, FontWeight Weight, FontStretch Stretch), Typeface> RealFaces = new();
+
+        private static Typeface RealFace(FontFamily family, Typeface requested) =>
+            RealFaces.GetOrAdd((family.Key?.ToString() ?? "", family.Name, requested.Weight, requested.Stretch),
+                _ => ResolveRealFace(family, requested));
+
+        private static Typeface ResolveRealFace(FontFamily family, Typeface requested)
         {
             IReadOnlyList<Typeface> faces;
             try
@@ -1221,6 +1548,10 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 result = new GenericTextRunProperties(RealFace(fallback.FontFamily, properties.Typeface),
                     properties.FontRenderingEmSize, properties.TextDecorations, properties.ForegroundBrush, properties.BackgroundBrush, properties.BaselineAlignment);
                 _fallbacks[key] = result;
+                if (component >= 0 || textStyle >= 0)
+                {
+                    _hasCustomTableEntries = true;
+                }
             }
             return result;
         }
@@ -1233,11 +1564,12 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             {
                 case InlineObjectKind.Math:
                     {
-                        if (_context.Services.Registry.Math?.Layout(obj.Value, obj.Flag, out _) is { } layout)
+                        var skipNative = _owner.IsDocumentTail && _context.Streaming is { IsActive: true } && !MathBlockView.IsLikelyRenderable(obj.Value.AsSpan().Trim());
+                        if (!skipNative && _context.Services.Registry.Math?.Layout(obj.Value, obj.Flag, out _) is { } layout)
                         {
-                            return new MathRun(layout, _fontSize * 1.05, _foreground, properties);
+                            return new MathRun(layout, _fontSize * 1.05, _foreground!, properties);
                         }
-                        // 无法排版：显示源码
+                        // 无法排版（或流式中公式尚未配对完整）：显示源码
                         var code = PropertiesFor(InlineStyle.Code);
                         return new TextObjectRun(obj.Flag ? $"\\[{obj.Value}\\]" : $"\\({obj.Value}\\)", code, style.InlineCodeBackground, 3);
                     }
@@ -1359,6 +1691,10 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 background,
                 baseline);
             _properties[(style, component, textStyle)] = properties;
+            if (component >= 0 || textStyle >= 0)
+            {
+                _hasCustomTableEntries = true;
+            }
             return properties;
         }
     }

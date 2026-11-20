@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Diagnostics;
 using Avalonia.Threading;
 using StreamMark.Core.Highlighting;
 
@@ -10,11 +11,17 @@ namespace StreamMark.Avalonia.Rendering;
 /// </summary>
 internal sealed class CodeBlockState
 {
+    private static readonly TimeSpan HighlightThrottle = TimeSpan.FromMilliseconds(40);
+
     private readonly object _highlightLock = new();
+    private readonly List<int> _lineStarts = [0];
+    private readonly List<string?> _lineTexts = [];
     private IHighlightSession? _session;
     private bool _highlightRunning;
     private string? _highlightPending;
-    private int[] _lineStarts = [0];
+    private bool _highlightPendingOpen;
+    private CancellationTokenSource? _throttleCts;
+    private long _lastHighlightTimestamp;
 
     private CodeBlockState(string? language, ISyntaxHighlighter? highlighter, HighlightThemeKind theme)
     {
@@ -34,7 +41,7 @@ internal sealed class CodeBlockState
     /// <summary>每行在 <see cref="Code"/> 中的起始偏移。</summary>
     public IReadOnlyList<int> LineStarts => _lineStarts;
 
-    public int LineCount => _lineStarts.Length;
+    public int LineCount => _lineStarts.Count;
 
     /// <summary>最近一次着色结果（按行）以及对应的代码。</summary>
     public IReadOnlyList<ImmutableArray<HighlightToken>> Tokens { get; private set; } = [];
@@ -60,76 +67,194 @@ internal sealed class CodeBlockState
         return state;
     }
 
-    public void Update(string code)
+    public void Update(string code, bool isOpen = false)
     {
-        if (code == Code && Code.Length > 0)
+        if (ReferenceEquals(code, Code) || (code == Code && Code.Length > 0))
         {
+            if (!isOpen)
+            {
+                FlushOpenHighlight(code);
+            }
             return;
         }
-        // 只追加时从上一个完整行继续切分
-        var starts = new List<int>(_lineStarts.Length + 8);
+        // 只追加时从上一个完整行继续切分，保留前面已完成行的起点与切片缓存
+        var span = code.AsSpan();
         var from = 0;
-        if (code.StartsWith(Code, StringComparison.Ordinal) && _lineStarts.Length > 0)
+        if (code.Length >= Code.Length && span[..Code.Length].SequenceEqual(Code.AsSpan()) && _lineStarts.Count > 0)
         {
-            starts.AddRange(_lineStarts);
-            from = starts[^1];
+            var lastLine = _lineStarts.Count - 1;
+            from = _lineStarts[lastLine];
+            if (_lineTexts.Count > lastLine)
+            {
+                _lineTexts.RemoveRange(lastLine, _lineTexts.Count - lastLine);
+            }
         }
         else
         {
-            starts.Add(0);
+            _lineStarts.Clear();
+            _lineStarts.Add(0);
+            _lineTexts.Clear();
         }
-        for (var i = code.IndexOf('\n', from); i >= 0; i = code.IndexOf('\n', i + 1))
+        var rest = span[from..];
+        int nl;
+        while ((nl = rest.IndexOf('\n')) >= 0)
         {
-            starts.Add(i + 1);
+            from += nl + 1;
+            _lineStarts.Add(from);
+            rest = span[from..];
         }
-        _lineStarts = [.. starts];
         Code = code;
-        RequestHighlight(code);
+        RequestHighlight(code, isOpen);
     }
 
     public string LineText(int line)
     {
+        if (line < _lineTexts.Count && _lineTexts[line] is { } cached)
+        {
+            return cached;
+        }
         var start = _lineStarts[line];
-        var end = line + 1 < _lineStarts.Length ? _lineStarts[line + 1] - 1 : Code.Length;
-        return Code[start..Math.Max(start, end)].TrimEnd('\r');
+        var end = line + 1 < _lineStarts.Count ? _lineStarts[line + 1] - 1 : Code.Length;
+        if (end > start && Code[end - 1] == '\r')
+        {
+            end--;
+        }
+        var text = end <= start ? string.Empty : Code[start..end];
+        while (_lineTexts.Count <= line)
+        {
+            _lineTexts.Add(null);
+        }
+        _lineTexts[line] = text;
+        return text;
     }
 
-    // 后台增量着色：同一时刻最多一个任务，期间到达的新代码合并为一次
-    private void RequestHighlight(string code)
+    private void FlushOpenHighlight(string code)
+    {
+        CancellationTokenSource? cancel = null;
+        lock (_highlightLock)
+        {
+            if (_highlightPending is not null || _throttleCts is not null)
+            {
+                _highlightPendingOpen = false;
+                cancel = _throttleCts;
+                _throttleCts = null;
+            }
+        }
+        if (cancel is not null)
+        {
+            try
+            {
+                cancel.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
+        else if (!ReferenceEquals(TokensCode, code) && TokensCode != code)
+        {
+            RequestHighlight(code, isOpen: false);
+        }
+    }
+
+    // 后台增量着色：同一时刻最多一个任务，期间到达的新代码合并为一次；开放流式代码块按约 25fps 节流，闭合后立即着色
+    private void RequestHighlight(string code, bool isOpen)
     {
         if (Highlighter is not { } highlighter || string.IsNullOrEmpty(Language) || !highlighter.SupportsLanguage(Language))
         {
             return;
         }
         _session ??= highlighter.CreateSession(Language, Theme);
+        CancellationTokenSource? cancel = null;
+        var start = false;
         lock (_highlightLock)
         {
             _highlightPending = code;
-            if (_highlightRunning)
+            _highlightPendingOpen = isOpen;
+            if (!isOpen && _throttleCts is not null)
             {
-                return;
+                cancel = _throttleCts;
+                _throttleCts = null;
             }
-            _highlightRunning = true;
+            if (!_highlightRunning)
+            {
+                _highlightRunning = true;
+                start = true;
+            }
         }
-        var session = _session;
-        _ = Task.Run(() => RunHighlight(session));
+        if (cancel is not null)
+        {
+            try
+            {
+                cancel.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
+        if (start)
+        {
+            var session = _session;
+            _ = Task.Run(() => RunHighlightAsync(session));
+        }
     }
 
-    private void RunHighlight(IHighlightSession session)
+    private async Task RunHighlightAsync(IHighlightSession session)
     {
+        var waited = false;
         while (true)
         {
             string? code;
+            var wait = TimeSpan.Zero;
+            CancellationTokenSource? delayCts = null;
             lock (_highlightLock)
             {
                 code = _highlightPending;
-                _highlightPending = null;
+                var isOpen = _highlightPendingOpen;
                 if (code is null)
                 {
                     _highlightRunning = false;
                     return;
                 }
+                if (isOpen && !waited && _lastHighlightTimestamp != 0)
+                {
+                    var elapsed = Stopwatch.GetElapsedTime(_lastHighlightTimestamp);
+                    if (elapsed < HighlightThrottle)
+                    {
+                        wait = HighlightThrottle - elapsed;
+                        delayCts = new CancellationTokenSource();
+                        _throttleCts = delayCts;
+                    }
+                }
+                if (wait <= TimeSpan.Zero)
+                {
+                    _highlightPending = null;
+                }
             }
+            if (wait > TimeSpan.Zero && delayCts is not null)
+            {
+                try
+                {
+                    await Task.Delay(wait, delayCts.Token).ConfigureAwait(false);
+                }
+                catch (OperationCanceledException)
+                {
+                }
+                finally
+                {
+                    lock (_highlightLock)
+                    {
+                        if (ReferenceEquals(_throttleCts, delayCts))
+                        {
+                            _throttleCts = null;
+                        }
+                    }
+                    delayCts.Dispose();
+                }
+                waited = true;
+                continue;
+            }
+            waited = false;
+            _lastHighlightTimestamp = Stopwatch.GetTimestamp();
             IReadOnlyList<ImmutableArray<HighlightToken>> tokens;
             try
             {
@@ -159,19 +284,49 @@ internal sealed class CodeBlockState
         {
             return default;
         }
-        // 着色所依据的代码中这一行的文本
-        var starts = _lineStarts;
-        if (line >= starts.Length || starts[line] > TokensCode.Length)
+        if (ReferenceEquals(TokensCode, Code))
+        {
+            return Tokens[line];
+        }
+        // 着色所依据的代码中这一行的文本（零分配 Span 比较）
+        if (line >= _lineStarts.Count)
         {
             return default;
         }
-        var end = TokensCode.IndexOf('\n', starts[line]);
-        var tokenLine = TokensCode[starts[line]..(end < 0 ? TokensCode.Length : end)].TrimEnd('\r');
-        return tokenLine == lineText ? Tokens[line] : default;
+        var start = _lineStarts[line];
+        if (start > TokensCode.Length)
+        {
+            return default;
+        }
+        var rest = TokensCode.AsSpan(start);
+        var nl = rest.IndexOf('\n');
+        var tokenLine = nl < 0 ? rest : rest[..nl];
+        if (tokenLine.Length > 0 && tokenLine[^1] == '\r')
+        {
+            tokenLine = tokenLine[..^1];
+        }
+        return tokenLine.SequenceEqual(lineText.AsSpan()) ? Tokens[line] : default;
     }
 
     public void Dispose()
     {
+        CancellationTokenSource? cancel;
+        lock (_highlightLock)
+        {
+            _highlightPending = null;
+            cancel = _throttleCts;
+            _throttleCts = null;
+        }
+        if (cancel is not null)
+        {
+            try
+            {
+                cancel.Cancel();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+        }
         _session?.Dispose();
         _session = null;
     }

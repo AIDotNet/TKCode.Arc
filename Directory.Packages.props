@@ -15,8 +15,7 @@
         <PackageVersion Include="Avalonia.Fonts.Inter" Version="$(AvaloniaVersionRange)" />
         <PackageVersion Include="Avalonia.Diagnostics" Version="$(AvaloniaVersionRange)" />
         <PackageVersion Include="Avalonia.Skia" Version="$(AvaloniaVersionRange)" />
-        <!-- StreamMark (src/TKCode.Arc.StreamMark*, moved in from its own repository in 1.3.0). -->
-        <PackageVersion Include="Markdig" Version="1.6.0" />
+        <!-- StreamMark (src/TKCode.Arc.StreamMark*, moved in from its own repository in 1.3.0; native incremental Markdown parser, zero Markdig dependency). -->
         <PackageVersion Include="TextMateSharp" Version="2.0.5" />
         <PackageVersion Include="TextMateSharp.Grammars" Version="2.0.5" />
         <PackageVersion Include="Mermaider" Version="0.17.0" />
