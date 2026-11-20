@@ -5133,12 +5133,16 @@ TKCode.Arc.DonutLegendAction
 TKCode.Arc.DonutLegendAction.Select = 1 -> TKCode.Arc.DonutLegendAction
 TKCode.Arc.DonutLegendAction.Toggle = 0 -> TKCode.Arc.DonutLegendAction
 TKCode.Arc.Drawer
+TKCode.Arc.Drawer.BodyPadding.get -> Avalonia.Thickness?
+TKCode.Arc.Drawer.BodyPadding.set -> void
 TKCode.Arc.Drawer.Drawer() -> void
 TKCode.Arc.Drawer.HeaderContent.get -> object?
 TKCode.Arc.Drawer.HeaderContent.set -> void
 TKCode.Arc.Drawer.IsDragging.get -> bool
 TKCode.Arc.Drawer.IsFullScreen.get -> bool
 TKCode.Arc.Drawer.IsFullScreen.set -> void
+TKCode.Arc.Drawer.IsScrollable.get -> bool
+TKCode.Arc.Drawer.IsScrollable.set -> void
 TKCode.Arc.Drawer.PanelCornerRadius.get -> Avalonia.CornerRadius?
 TKCode.Arc.Drawer.PanelCornerRadius.set -> void
 TKCode.Arc.Drawer.PanelHeight.get -> double?
@@ -5159,6 +5163,8 @@ TKCode.Arc.DrawerSide.Left = 0 -> TKCode.Arc.DrawerSide
 TKCode.Arc.DrawerSide.Right = 2 -> TKCode.Arc.DrawerSide
 TKCode.Arc.DrawerSide.Top = 1 -> TKCode.Arc.DrawerSide
 TKCode.Arc.DrawerSurface
+TKCode.Arc.DrawerSurface.BodyPadding.get -> Avalonia.Thickness?
+TKCode.Arc.DrawerSurface.BodyPadding.set -> void
 TKCode.Arc.DrawerSurface.DragArea.get -> Avalonia.Controls.Control?
 TKCode.Arc.DrawerSurface.DrawerSurface() -> void
 TKCode.Arc.DrawerSurface.Header.get -> Avalonia.Controls.Control?
@@ -5166,6 +5172,8 @@ TKCode.Arc.DrawerSurface.HeaderContent.get -> object?
 TKCode.Arc.DrawerSurface.HeaderContent.set -> void
 TKCode.Arc.DrawerSurface.IsFullScreen.get -> bool
 TKCode.Arc.DrawerSurface.IsFullScreen.set -> void
+TKCode.Arc.DrawerSurface.IsScrollable.get -> bool
+TKCode.Arc.DrawerSurface.IsScrollable.set -> void
 TKCode.Arc.DrawerSurface.NarrowBreakpoint.get -> double
 TKCode.Arc.DrawerSurface.NarrowBreakpoint.set -> void
 TKCode.Arc.DrawerSurface.NarrowViewportGutter.get -> double
@@ -11186,6 +11194,7 @@ const TKCode.Arc.DrawerSurface.LeftPseudoClass = ":left" -> string!
 const TKCode.Arc.DrawerSurface.NarrowPseudoClass = ":narrow" -> string!
 const TKCode.Arc.DrawerSurface.NoHeaderPseudoClass = ":no-header" -> string!
 const TKCode.Arc.DrawerSurface.RightPseudoClass = ":right" -> string!
+const TKCode.Arc.DrawerSurface.ScrollablePseudoClass = ":scrollable" -> string!
 const TKCode.Arc.DrawerSurface.TopPseudoClass = ":top" -> string!
 const TKCode.Arc.DropdownMenu.CustomTriggerPseudoClass = ":custom-trigger" -> string!
 const TKCode.Arc.DropdownMenu.OpenPseudoClass = ":open" -> string!
@@ -14143,8 +14152,10 @@ static readonly TKCode.Arc.DonutChart.OtherLabelProperty -> Avalonia.StyledPrope
 static readonly TKCode.Arc.DonutChart.RingThicknessProperty -> Avalonia.StyledProperty<double>!
 static readonly TKCode.Arc.DonutChart.ShowLegendProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.DonutChart.TotalLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Drawer.BodyPaddingProperty -> Avalonia.StyledProperty<Avalonia.Thickness?>!
 static readonly TKCode.Arc.Drawer.HeaderContentProperty -> Avalonia.StyledProperty<object?>!
 static readonly TKCode.Arc.Drawer.IsFullScreenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Drawer.IsScrollableProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Drawer.PanelCornerRadiusProperty -> Avalonia.StyledProperty<Avalonia.CornerRadius?>!
 static readonly TKCode.Arc.Drawer.PanelHeightProperty -> Avalonia.StyledProperty<double?>!
 static readonly TKCode.Arc.Drawer.PanelMaxHeightProperty -> Avalonia.StyledProperty<double?>!
@@ -14152,8 +14163,10 @@ static readonly TKCode.Arc.Drawer.PanelSizeProperty -> Avalonia.StyledProperty<d
 static readonly TKCode.Arc.Drawer.ShowGrabberProperty -> Avalonia.StyledProperty<bool?>!
 static readonly TKCode.Arc.Drawer.ShowHeaderProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Drawer.SideProperty -> Avalonia.StyledProperty<TKCode.Arc.DrawerSide>!
+static readonly TKCode.Arc.DrawerSurface.BodyPaddingProperty -> Avalonia.StyledProperty<Avalonia.Thickness?>!
 static readonly TKCode.Arc.DrawerSurface.HeaderContentProperty -> Avalonia.StyledProperty<object?>!
 static readonly TKCode.Arc.DrawerSurface.IsFullScreenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DrawerSurface.IsScrollableProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.DrawerSurface.NarrowBreakpointProperty -> Avalonia.StyledProperty<double>!
 static readonly TKCode.Arc.DrawerSurface.NarrowViewportGutterProperty -> Avalonia.StyledProperty<double>!
 static readonly TKCode.Arc.DrawerSurface.PanelCornerRadiusProperty -> Avalonia.StyledProperty<Avalonia.CornerRadius?>!

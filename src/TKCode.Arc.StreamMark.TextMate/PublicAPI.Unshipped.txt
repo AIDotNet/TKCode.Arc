@@ -1,15 +1,1 @@
 #nullable enable
-StreamMark.Highlighting.TextMate.TextMatePlugin
-StreamMark.Highlighting.TextMate.TextMatePlugin.Configure(StreamMark.Avalonia.Plugins.MarkdownPluginBuilder! builder) -> void
-StreamMark.Highlighting.TextMate.TextMatePlugin.Highlighter.get -> StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter!
-StreamMark.Highlighting.TextMate.TextMatePlugin.Name.get -> string!
-StreamMark.Highlighting.TextMate.TextMatePlugin.TextMatePlugin(StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter? highlighter = null, params string![]! prewarm) -> void
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.CreateSession(string! language, StreamMark.Core.Highlighting.HighlightThemeKind theme) -> StreamMark.Core.Highlighting.IHighlightSession!
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.DarkTheme.get -> TextMateSharp.Grammars.ThemeName
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.GetThemeColors(StreamMark.Core.Highlighting.HighlightThemeKind theme) -> (uint Foreground, uint Background)
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.LightTheme.get -> TextMateSharp.Grammars.ThemeName
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.Prewarm(params string![]! languages) -> void
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.PrewarmAsync(StreamMark.Core.Highlighting.HighlightThemeKind theme, params System.Collections.Generic.IEnumerable<string!>! languages) -> System.Threading.Tasks.Task!
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.SupportsLanguage(string? language) -> bool
-StreamMark.Highlighting.TextMate.TextMateSyntaxHighlighter.TextMateSyntaxHighlighter(TextMateSharp.Grammars.ThemeName darkTheme = TextMateSharp.Grammars.ThemeName.DarkPlus, TextMateSharp.Grammars.ThemeName lightTheme = TextMateSharp.Grammars.ThemeName.LightPlus) -> void

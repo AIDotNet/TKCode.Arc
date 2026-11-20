@@ -169,5 +169,5 @@ TKCode.Arc 主要由 [nextco.work](https://nextco.work/) 赞助，其提供低�
 ## 许可证
 
 MIT。Arc 只依赖 Avalonia（MIT）和自有的 MIT 包，闭源应用可以单文件或 NativeAOT 发布。Arc（MIT）、Lucide（ISC）、
-字体（OFL）、StreamMark、TextMateSharp、Oniguruma 和 Markdig 的许可信息见
+字体（OFL）、StreamMark、TextMateSharp 和 Oniguruma 的许可信息见
 [THIRD-PARTY-NOTICES.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/THIRD-PARTY-NOTICES.md)。

@@ -1,14 +1,1 @@
 #nullable enable
-TKCode.Arc.Drawer.BodyPadding.get -> Avalonia.Thickness?
-TKCode.Arc.Drawer.BodyPadding.set -> void
-TKCode.Arc.Drawer.IsScrollable.get -> bool
-TKCode.Arc.Drawer.IsScrollable.set -> void
-TKCode.Arc.DrawerSurface.BodyPadding.get -> Avalonia.Thickness?
-TKCode.Arc.DrawerSurface.BodyPadding.set -> void
-TKCode.Arc.DrawerSurface.IsScrollable.get -> bool
-TKCode.Arc.DrawerSurface.IsScrollable.set -> void
-const TKCode.Arc.DrawerSurface.ScrollablePseudoClass = ":scrollable" -> string!
-static readonly TKCode.Arc.Drawer.BodyPaddingProperty -> Avalonia.StyledProperty<Avalonia.Thickness?>!
-static readonly TKCode.Arc.Drawer.IsScrollableProperty -> Avalonia.StyledProperty<bool>!
-static readonly TKCode.Arc.DrawerSurface.BodyPaddingProperty -> Avalonia.StyledProperty<Avalonia.Thickness?>!
-static readonly TKCode.Arc.DrawerSurface.IsScrollableProperty -> Avalonia.StyledProperty<bool>!

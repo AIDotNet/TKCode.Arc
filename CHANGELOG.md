@@ -10,7 +10,29 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.3.0 - 2026-11-20
+
+The stable release of everything shipped in `1.3.0-preview.3` and `1.3.0-preview.4`, plus the changes that ship here
+for the first time: the rebuilt `ModelTraining` explainer, the new `ArmingSwitch` (Special › Loaders) and a `Drawer`
+whose content can fill the panel ([#168](https://github.com/AIDotNet/TKCode.Arc/issues/168)). The previews bring
+StreamMark, the streaming Markdown engine under `Markdown` and `ChatThread`, into this repository as four packages
+(`TKCode.Arc.StreamMark`, `.StreamMark.TextMate`, `.StreamMark.RaTeX`, `.StreamMark.Mermaid`), replace Markdig with
+StreamMark's own incremental parser, and speed streaming up end to end. No public API of a package that shipped in
+1.2.0 is removed or renamed. Install it without `--prerelease`. The notes of each preview, with every detail, follow
+below.
+
+### Upgrading from 1.2.0
+
+- Set every `TKCode.Arc*` package to `1.3.0`. Avalonia stays on 12.1.6 or a later 12.x.
+- Apps that use `Markdown`, `ChatThread` or `TKCode.Arc.Highlighting` need no code change. They now bring
+  `TKCode.Arc.StreamMark` (and `TKCode.Arc.StreamMark.TextMate`) instead of the `TKCode.StreamMark.*` packages: remove
+  any direct `TKCode.StreamMark.*` reference, or move it to the matching `TKCode.Arc.StreamMark*` package (see
+  `1.3.0-preview.3` below); the old and the new packages hold the same types and cannot be used together.
+- Arc no longer brings Markdig. An app that used Markdig itself adds its own package reference; StreamMark plugins that
+  registered Markdig extensions move to `MarkdownProfileBuilder.AddBlockRule` / `AddInlineRule` (see
+  `1.3.0-preview.4` below).
+- `ModelTraining` looks and runs differently (see Changed). Its old label texts and token kinds still compile but are
+  marked `[Obsolete]` and no longer shown.
 
 ### Added
 
@@ -67,6 +89,12 @@ Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode
 
 - Drawer content stretches to the panel's height: the body is a `Grid` instead of a `StackPanel`, so a `Grid` with a
   `*` row fills the drawer (#168). Actions now sit at the bottom of a short body.
+- `TKCode.Arc.StreamMark`: a streaming paragraph that mixes scripts (Chinese and English) breaks its lines the same way
+  as the finished paragraph. When one font covered both scripts (or covered neither and no fallback font was found, as
+  on Linux without CJK fonts), Avalonia shaped "中文。The renderer" as one Han run, so the English got no kerning,
+  while the rows re-laid out during streaming started at a line and got it; the widths differed and so did the line
+  breaks. Text runs are now cut where the script changes and each script is shaped on its own, so English after
+  Chinese is also kerned in the finished paragraph.
 
 ## 1.3.0-preview.4 - 2026-11-20
 
@@ -2522,6 +2550,9 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0
+[1.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0-preview.3...v1.3.0-preview.4
+[1.3.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0-preview.3
 [1.2.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.1.1...v1.2.0
 [1.2.0-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.5...v1.2.0-preview.6
 [1.2.0-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0-preview.4...v1.2.0-preview.5

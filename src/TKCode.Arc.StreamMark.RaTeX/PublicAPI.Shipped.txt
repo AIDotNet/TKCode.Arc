@@ -1,1 +1,110 @@
 #nullable enable
+StreamMark.RaTeX.DisplayColor
+StreamMark.RaTeX.DisplayColor.A.get -> float
+StreamMark.RaTeX.DisplayColor.A.init -> void
+StreamMark.RaTeX.DisplayColor.B.get -> float
+StreamMark.RaTeX.DisplayColor.B.init -> void
+StreamMark.RaTeX.DisplayColor.Deconstruct(out float R, out float G, out float B, out float A) -> void
+StreamMark.RaTeX.DisplayColor.DisplayColor() -> void
+StreamMark.RaTeX.DisplayColor.DisplayColor(float R, float G, float B, float A) -> void
+StreamMark.RaTeX.DisplayColor.Equals(StreamMark.RaTeX.DisplayColor other) -> bool
+StreamMark.RaTeX.DisplayColor.G.get -> float
+StreamMark.RaTeX.DisplayColor.G.init -> void
+StreamMark.RaTeX.DisplayColor.R.get -> float
+StreamMark.RaTeX.DisplayColor.R.init -> void
+StreamMark.RaTeX.DisplayItem
+StreamMark.RaTeX.DisplayItem.CharCode.get -> uint
+StreamMark.RaTeX.DisplayItem.CharCode.init -> void
+StreamMark.RaTeX.DisplayItem.Color.get -> StreamMark.RaTeX.DisplayColor?
+StreamMark.RaTeX.DisplayItem.Color.init -> void
+StreamMark.RaTeX.DisplayItem.Commands.get -> System.Collections.Generic.IReadOnlyList<StreamMark.RaTeX.PathCommand!>?
+StreamMark.RaTeX.DisplayItem.Commands.init -> void
+StreamMark.RaTeX.DisplayItem.Dashed.get -> bool?
+StreamMark.RaTeX.DisplayItem.Dashed.init -> void
+StreamMark.RaTeX.DisplayItem.DisplayItem() -> void
+StreamMark.RaTeX.DisplayItem.Fill.get -> bool
+StreamMark.RaTeX.DisplayItem.Fill.init -> void
+StreamMark.RaTeX.DisplayItem.Font.get -> string?
+StreamMark.RaTeX.DisplayItem.Font.init -> void
+StreamMark.RaTeX.DisplayItem.Height.get -> double
+StreamMark.RaTeX.DisplayItem.Height.init -> void
+StreamMark.RaTeX.DisplayItem.Scale.get -> double
+StreamMark.RaTeX.DisplayItem.Scale.init -> void
+StreamMark.RaTeX.DisplayItem.Thickness.get -> double
+StreamMark.RaTeX.DisplayItem.Thickness.init -> void
+StreamMark.RaTeX.DisplayItem.Type.get -> string!
+StreamMark.RaTeX.DisplayItem.Type.init -> void
+StreamMark.RaTeX.DisplayItem.Width.get -> double
+StreamMark.RaTeX.DisplayItem.Width.init -> void
+StreamMark.RaTeX.DisplayItem.X.get -> double
+StreamMark.RaTeX.DisplayItem.X.init -> void
+StreamMark.RaTeX.DisplayItem.Y.get -> double
+StreamMark.RaTeX.DisplayItem.Y.init -> void
+StreamMark.RaTeX.DisplayList
+StreamMark.RaTeX.DisplayList.Depth.get -> double
+StreamMark.RaTeX.DisplayList.Depth.init -> void
+StreamMark.RaTeX.DisplayList.DisplayList() -> void
+StreamMark.RaTeX.DisplayList.Height.get -> double
+StreamMark.RaTeX.DisplayList.Height.init -> void
+StreamMark.RaTeX.DisplayList.Items.get -> System.Collections.Generic.IReadOnlyList<StreamMark.RaTeX.DisplayItem!>!
+StreamMark.RaTeX.DisplayList.Items.init -> void
+StreamMark.RaTeX.DisplayList.Version.get -> int
+StreamMark.RaTeX.DisplayList.Version.init -> void
+StreamMark.RaTeX.DisplayList.Width.get -> double
+StreamMark.RaTeX.DisplayList.Width.init -> void
+StreamMark.RaTeX.MathLayoutResult
+StreamMark.RaTeX.MathLayoutResult.Deconstruct(out StreamMark.RaTeX.DisplayList? DisplayList, out string? Error) -> void
+StreamMark.RaTeX.MathLayoutResult.DisplayList.get -> StreamMark.RaTeX.DisplayList?
+StreamMark.RaTeX.MathLayoutResult.DisplayList.init -> void
+StreamMark.RaTeX.MathLayoutResult.Equals(StreamMark.RaTeX.MathLayoutResult other) -> bool
+StreamMark.RaTeX.MathLayoutResult.Error.get -> string?
+StreamMark.RaTeX.MathLayoutResult.Error.init -> void
+StreamMark.RaTeX.MathLayoutResult.IsSuccess.get -> bool
+StreamMark.RaTeX.MathLayoutResult.MathLayoutResult() -> void
+StreamMark.RaTeX.MathLayoutResult.MathLayoutResult(StreamMark.RaTeX.DisplayList? DisplayList, string? Error) -> void
+StreamMark.RaTeX.PathCommand
+StreamMark.RaTeX.PathCommand.PathCommand() -> void
+StreamMark.RaTeX.PathCommand.Type.get -> string!
+StreamMark.RaTeX.PathCommand.Type.init -> void
+StreamMark.RaTeX.PathCommand.X.get -> double
+StreamMark.RaTeX.PathCommand.X.init -> void
+StreamMark.RaTeX.PathCommand.X1.get -> double
+StreamMark.RaTeX.PathCommand.X1.init -> void
+StreamMark.RaTeX.PathCommand.X2.get -> double
+StreamMark.RaTeX.PathCommand.X2.init -> void
+StreamMark.RaTeX.PathCommand.Y.get -> double
+StreamMark.RaTeX.PathCommand.Y.init -> void
+StreamMark.RaTeX.PathCommand.Y1.get -> double
+StreamMark.RaTeX.PathCommand.Y1.init -> void
+StreamMark.RaTeX.PathCommand.Y2.get -> double
+StreamMark.RaTeX.PathCommand.Y2.init -> void
+StreamMark.RaTeX.RaTeXEngine
+StreamMark.RaTeX.RaTeXMathLayout
+StreamMark.RaTeX.RaTeXMathLayout.DisplayList.get -> StreamMark.RaTeX.DisplayList!
+StreamMark.RaTeX.RaTeXMathLayout.RaTeXMathLayout(StreamMark.RaTeX.DisplayList! displayList) -> void
+StreamMark.RaTeX.RaTeXMathRenderer
+StreamMark.RaTeX.RaTeXMathRenderer.CacheCount.get -> int
+StreamMark.RaTeX.RaTeXMathRenderer.Clear() -> void
+StreamMark.RaTeX.RaTeXMathRenderer.Layout(string! latex, bool display, out string? error) -> StreamMark.Avalonia.Extensions.MathLayout?
+StreamMark.RaTeX.RaTeXMathRenderer.RaTeXMathRenderer(int capacity = 512) -> void
+StreamMark.RaTeX.RaTeXPlugin
+StreamMark.RaTeX.RaTeXPlugin.Configure(StreamMark.Avalonia.Plugins.MarkdownPluginBuilder! builder) -> void
+StreamMark.RaTeX.RaTeXPlugin.Name.get -> string!
+StreamMark.RaTeX.RaTeXPlugin.RaTeXPlugin(StreamMark.RaTeX.RaTeXMathRenderer? renderer = null) -> void
+override StreamMark.RaTeX.DisplayColor.GetHashCode() -> int
+override StreamMark.RaTeX.MathLayoutResult.GetHashCode() -> int
+override StreamMark.RaTeX.RaTeXMathLayout.Ascent.get -> double
+override StreamMark.RaTeX.RaTeXMathLayout.Descent.get -> double
+override StreamMark.RaTeX.RaTeXMathLayout.Draw(Avalonia.Media.DrawingContext! context, Avalonia.Point origin, double fontSize, Avalonia.Media.IBrush! foreground) -> void
+override StreamMark.RaTeX.RaTeXMathLayout.Width.get -> double
+static StreamMark.RaTeX.DisplayColor.operator !=(StreamMark.RaTeX.DisplayColor left, StreamMark.RaTeX.DisplayColor right) -> bool
+static StreamMark.RaTeX.DisplayColor.operator ==(StreamMark.RaTeX.DisplayColor left, StreamMark.RaTeX.DisplayColor right) -> bool
+static StreamMark.RaTeX.MathLayoutResult.operator !=(StreamMark.RaTeX.MathLayoutResult left, StreamMark.RaTeX.MathLayoutResult right) -> bool
+static StreamMark.RaTeX.MathLayoutResult.operator ==(StreamMark.RaTeX.MathLayoutResult left, StreamMark.RaTeX.MathLayoutResult right) -> bool
+static StreamMark.RaTeX.RaTeXEngine.Layout(string! latex, bool displayMode) -> StreamMark.RaTeX.MathLayoutResult
+static StreamMark.RaTeX.RaTeXEngine.Layout(string! latex, bool displayMode, StreamMark.RaTeX.DisplayColor? defaultColor) -> StreamMark.RaTeX.MathLayoutResult
+static StreamMark.RaTeX.RaTeXMathRenderer.Shared.get -> StreamMark.RaTeX.RaTeXMathRenderer!
+~override StreamMark.RaTeX.DisplayColor.Equals(object obj) -> bool
+~override StreamMark.RaTeX.DisplayColor.ToString() -> string
+~override StreamMark.RaTeX.MathLayoutResult.Equals(object obj) -> bool
+~override StreamMark.RaTeX.MathLayoutResult.ToString() -> string

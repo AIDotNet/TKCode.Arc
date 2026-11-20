@@ -177,4 +177,4 @@ Claude, OpenAI and DeepSeek models. Thank you for supporting the project.
 
 MIT. Arc depends only on Avalonia (MIT) and MIT packages of its own, so closed-source applications can ship it in a
 single file or a NativeAOT build. [THIRD-PARTY-NOTICES.md](https://github.com/AIDotNet/TKCode.Arc/blob/main/THIRD-PARTY-NOTICES.md)
-covers Arc (MIT), Lucide (ISC), fonts (OFL), StreamMark, TextMateSharp, Oniguruma and Markdig.
+covers Arc (MIT), Lucide (ISC), fonts (OFL), StreamMark, TextMateSharp and Oniguruma.
