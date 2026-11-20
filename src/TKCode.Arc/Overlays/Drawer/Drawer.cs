@@ -67,6 +67,17 @@ public class Drawer : ModalOverlay
     public static readonly StyledProperty<double?> PanelMaxHeightProperty =
         AvaloniaProperty.Register<Drawer, double?>(nameof(PanelMaxHeight));
 
+    /// <summary>
+    /// Whether the body scrolls vertically when its content overflows (default true). False disables the built-in
+    /// scroller so the content receives the drawer's remaining height directly.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsScrollableProperty =
+        DrawerSurface.IsScrollableProperty.AddOwner<Drawer>();
+
+    /// <summary>Padding around the body content; null (default) follows the theme (24px, or 20px when narrow).</summary>
+    public static readonly StyledProperty<Thickness?> BodyPaddingProperty =
+        DrawerSurface.BodyPaddingProperty.AddOwner<Drawer>();
+
     public bool IsFullScreen { get => GetValue(IsFullScreenProperty); set => SetValue(IsFullScreenProperty, value); }
     public bool ShowHeader { get => GetValue(ShowHeaderProperty); set => SetValue(ShowHeaderProperty, value); }
     public object? HeaderContent { get => GetValue(HeaderContentProperty); set => SetValue(HeaderContentProperty, value); }
@@ -75,6 +86,12 @@ public class Drawer : ModalOverlay
     public double? PanelHeight { get => GetValue(PanelHeightProperty); set => SetValue(PanelHeightProperty, value); }
     public double? PanelSize { get => GetValue(PanelSizeProperty); set => SetValue(PanelSizeProperty, value); }
     public double? PanelMaxHeight { get => GetValue(PanelMaxHeightProperty); set => SetValue(PanelMaxHeightProperty, value); }
+
+    /// <inheritdoc cref="IsScrollableProperty"/>
+    public bool IsScrollable { get => GetValue(IsScrollableProperty); set => SetValue(IsScrollableProperty, value); }
+
+    /// <inheritdoc cref="BodyPaddingProperty"/>
+    public Thickness? BodyPadding { get => GetValue(BodyPaddingProperty); set => SetValue(BodyPaddingProperty, value); }
 
     private DragTracker? _drag;
     private double _panStart;
@@ -97,6 +114,8 @@ public class Drawer : ModalOverlay
         surface.Bind(DrawerSurface.ShowGrabberProperty, this.GetObservable(ShowGrabberProperty));
         surface.Bind(DrawerSurface.PanelCornerRadiusProperty, this.GetObservable(PanelCornerRadiusProperty));
         surface.Bind(DrawerSurface.PanelHeightProperty, this.GetObservable(PanelHeightProperty));
+        surface.Bind(DrawerSurface.IsScrollableProperty, this.GetObservable(IsScrollableProperty));
+        surface.Bind(DrawerSurface.BodyPaddingProperty, this.GetObservable(BodyPaddingProperty));
         SyncThemeDefaults(surface);
         surface.TemplateApplied += (_, _) => AttachDrag();
         return surface;

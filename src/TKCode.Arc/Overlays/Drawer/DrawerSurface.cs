@@ -22,7 +22,7 @@ public enum DrawerSide
 [TemplatePart(HeaderPart, typeof(Control))]
 [TemplatePart(DragAreaPart, typeof(Control))]
 [PseudoClasses(NarrowPseudoClass, LeftPseudoClass, TopPseudoClass, RightPseudoClass, BottomPseudoClass,
-    FullScreenPseudoClass, GrabberPseudoClass, CustomHeaderPseudoClass, NoHeaderPseudoClass)]
+    FullScreenPseudoClass, GrabberPseudoClass, CustomHeaderPseudoClass, NoHeaderPseudoClass, ScrollablePseudoClass)]
 public class DrawerSurface : ModalSurface
 {
     public const string HeaderPart = "PART_Header";
@@ -31,6 +31,7 @@ public class DrawerSurface : ModalSurface
     public const string GrabberPseudoClass = ":grabber";
     public const string CustomHeaderPseudoClass = ":custom-header";
     public const string NoHeaderPseudoClass = ":no-header";
+    public const string ScrollablePseudoClass = ":scrollable";
     public const string NarrowPseudoClass = ":narrow";
     public const string LeftPseudoClass = ":left";
     public const string TopPseudoClass = ":top";
@@ -86,12 +87,31 @@ public class DrawerSurface : ModalSurface
     public static readonly StyledProperty<double?> PanelHeightProperty =
         AvaloniaProperty.Register<DrawerSurface, double?>(nameof(PanelHeight));
 
+    /// <summary>
+    /// Whether the body scrolls vertically when its content overflows (default true). False disables the built-in
+    /// scroller so the content receives the drawer's remaining height directly.
+    /// </summary>
+    public static readonly StyledProperty<bool> IsScrollableProperty =
+        AvaloniaProperty.Register<DrawerSurface, bool>(nameof(IsScrollable), true);
+
+    /// <summary>Padding around the body content; null (default) follows the theme (24px, or 20px when narrow).</summary>
+    public static readonly StyledProperty<Thickness?> BodyPaddingProperty =
+        AvaloniaProperty.Register<DrawerSurface, Thickness?>(nameof(BodyPadding));
+
     public bool IsFullScreen { get => GetValue(IsFullScreenProperty); set => SetValue(IsFullScreenProperty, value); }
     public bool ShowHeader { get => GetValue(ShowHeaderProperty); set => SetValue(ShowHeaderProperty, value); }
     public object? HeaderContent { get => GetValue(HeaderContentProperty); set => SetValue(HeaderContentProperty, value); }
     public bool? ShowGrabber { get => GetValue(ShowGrabberProperty); set => SetValue(ShowGrabberProperty, value); }
     public CornerRadius? PanelCornerRadius { get => GetValue(PanelCornerRadiusProperty); set => SetValue(PanelCornerRadiusProperty, value); }
     public double? PanelHeight { get => GetValue(PanelHeightProperty); set => SetValue(PanelHeightProperty, value); }
+
+    /// <inheritdoc cref="IsScrollableProperty"/>
+    public bool IsScrollable { get => GetValue(IsScrollableProperty); set => SetValue(IsScrollableProperty, value); }
+
+    /// <inheritdoc cref="BodyPaddingProperty"/>
+    public Thickness? BodyPadding { get => GetValue(BodyPaddingProperty); set => SetValue(BodyPaddingProperty, value); }
+
+    private Control? _bodyContent;
 
     public DrawerSide Side { get => GetValue(SideProperty); set => SetValue(SideProperty, value); }
     public double PanelSize { get => GetValue(PanelSizeProperty); set => SetValue(PanelSizeProperty, value); }
@@ -110,12 +130,14 @@ public class DrawerSurface : ModalSurface
     {
         CloseButtonNameProperty.OverrideDefaultValue<DrawerSurface>("Close drawer");
         AffectsMeasure<DrawerSurface>(SideProperty, PanelSizeProperty, PanelMaxHeightProperty, ViewportGutterProperty,
-            NarrowViewportGutterProperty, NarrowBreakpointProperty, IsFullScreenProperty, PanelHeightProperty);
+            NarrowViewportGutterProperty, NarrowBreakpointProperty, IsFullScreenProperty, PanelHeightProperty,
+            IsScrollableProperty);
     }
 
     public DrawerSurface()
     {
         UpdateSidePseudoClasses();
+        PseudoClasses.Set(ScrollablePseudoClass, IsScrollable);
     }
 
     protected override void OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs e)
@@ -123,6 +145,8 @@ public class DrawerSurface : ModalSurface
         base.OnApplyTemplate(e);
         Header = e.NameScope.Find<Control>(HeaderPart);
         DragArea = e.NameScope.Find<Control>(DragAreaPart) ?? Header;
+        _bodyContent = e.NameScope.Find<Control>("PART_BodyContent");
+        SyncBodyPadding();
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -144,6 +168,14 @@ public class DrawerSurface : ModalSurface
         {
             PseudoClasses.Set(CustomHeaderPseudoClass, HeaderContent is not null);
         }
+        else if (change.Property == IsScrollableProperty)
+        {
+            PseudoClasses.Set(ScrollablePseudoClass, IsScrollable);
+        }
+        else if (change.Property == BodyPaddingProperty)
+        {
+            SyncBodyPadding();
+        }
         else if (change.Property == PanelCornerRadiusProperty)
         {
             // A local value outranks the theme's per-side radius; clearing it hands the radius back to the theme.
@@ -155,6 +187,23 @@ public class DrawerSurface : ModalSurface
             {
                 ClearValue(CornerRadiusProperty);
             }
+        }
+    }
+
+    private void SyncBodyPadding()
+    {
+        if (_bodyContent is null)
+        {
+            return;
+        }
+        // A local value outranks the theme's normal and :narrow margins; clearing it hands spacing back to the theme.
+        if (BodyPadding is { } padding)
+        {
+            _bodyContent.SetValue(MarginProperty, padding);
+        }
+        else
+        {
+            _bodyContent.ClearValue(MarginProperty);
         }
     }
 
