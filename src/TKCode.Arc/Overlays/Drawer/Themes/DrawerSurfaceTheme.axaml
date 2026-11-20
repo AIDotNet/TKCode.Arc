@@ -142,17 +142,18 @@
                                         Background="{arc:ArcDesignTokenResource BorderStrong}" />
                             </Panel>
                             <ScrollViewer Name="PART_Body"
-                                          HorizontalScrollBarVisibility="Disabled"
-                                          VerticalScrollBarVisibility="Auto">
-                                <StackPanel Name="PART_BodyContent">
+                                          HorizontalScrollBarVisibility="Disabled">
+                                <Grid Name="PART_BodyContent" RowDefinitions="*,Auto">
                                     <ContentPresenter Name="PART_ContentPresenter"
+                                                      Grid.Row="0"
                                                       Content="{TemplateBinding Content}"
                                                       ContentTemplate="{TemplateBinding ContentTemplate}" />
                                     <ContentPresenter Name="PART_Actions"
+                                                      Grid.Row="1"
                                                       IsVisible="False"
                                                       HorizontalAlignment="Right"
                                                       Content="{TemplateBinding Actions}" />
-                                </StackPanel>
+                                </Grid>
                             </ScrollViewer>
                         </DockPanel>
                     </Border>
@@ -221,10 +222,16 @@
         <Style Selector="^:top /template/ Border#PART_Header, ^:bottom /template/ Border#PART_Header">
             <Setter Property="Cursor" Value="SizeNorthSouth" />
         </Style>
+        <Style Selector="^ /template/ ScrollViewer#PART_Body">
+            <Setter Property="VerticalScrollBarVisibility" Value="Disabled" />
+        </Style>
+        <Style Selector="^:scrollable /template/ ScrollViewer#PART_Body">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
         <Style Selector="^ /template/ Border#PART_DefaultHeader">
             <Setter Property="Padding" Value="{arc:DrawerSurfaceTokenResource SectionPadding}" />
         </Style>
-        <Style Selector="^ /template/ StackPanel#PART_BodyContent">
+        <Style Selector="^ /template/ Grid#PART_BodyContent">
             <Setter Property="Margin" Value="{arc:DrawerSurfaceTokenResource SectionPadding}" />
         </Style>
         <Style Selector="^ /template/ arc|ArcContentSwap#PART_Description">
@@ -242,7 +249,7 @@
         <Style Selector="^:narrow /template/ Border#PART_DefaultHeader">
             <Setter Property="Padding" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
         </Style>
-        <Style Selector="^:narrow /template/ StackPanel#PART_BodyContent">
+        <Style Selector="^:narrow /template/ Grid#PART_BodyContent">
             <Setter Property="Margin" Value="{arc:DrawerSurfaceTokenResource NarrowSectionPadding}" />
         </Style>
         <!-- Full screen: no radius, hairline or gutter. Listed after the per-side and :narrow styles so it wins. -->

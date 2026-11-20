@@ -55,7 +55,7 @@ public class DrawerTests
             surface.Classes.Contains(DrawerSurface.NarrowPseudoClass).ShouldBeTrue();
             surface.CornerRadius.ShouldBe(new CornerRadius(0, 18, 18, 0));
             var header = surface.GetVisualDescendants().OfType<Border>().Single(b => b.Name == "PART_DefaultHeader");
-            var body = surface.GetVisualDescendants().OfType<StackPanel>().Single(panel => panel.Name == "PART_BodyContent");
+            var body = surface.GetVisualDescendants().OfType<Grid>().Single(panel => panel.Name == "PART_BodyContent");
             header.Padding.ShouldBe(new Thickness(20));
             body.Margin.ShouldBe(new Thickness(20));
 
@@ -208,6 +208,63 @@ public class DrawerTests
             Dispatcher.UIThread.RunJobs();
             surface.Header.IsVisible.ShouldBeFalse();
             surface.DragArea.ShouldNotBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Stretch_Content_Fills_The_Remaining_Height_Of_A_FullScreen_Drawer()
+    {
+        var fill = new Border { VerticalAlignment = Avalonia.Layout.VerticalAlignment.Stretch };
+        var content = new Grid { RowDefinitions = new RowDefinitions("Auto,*"), Children = { new TextBlock { Text = "Head" }, fill } };
+        Grid.SetRow(fill, 1);
+        var drawer = new Drawer
+        {
+            Title = "Player", Side = DrawerSide.Bottom, IsFullScreen = true, ShowHeader = false, ShowGrabber = false,
+            IsScrollable = false, BodyPadding = new Thickness(0), Content = content
+        };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            content.Bounds.Height.ShouldBe(surface.Bounds.Height, 0.5);
+            fill.Bounds.Height.ShouldBeGreaterThan(200);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void IsScrollable_Toggles_The_Body_Scroller_And_BodyPadding_Overrides_The_Theme()
+    {
+        var drawer = new Drawer { Title = "Filters", Content = "Body" };
+        var window = TestHelpers.Show(new StackPanel { Children = { drawer } });
+        try
+        {
+            drawer.IsOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            var surface = (DrawerSurface)drawer.Surface!;
+            var scroller = surface.GetVisualDescendants().OfType<ScrollViewer>().Single(s => s.Name == "PART_Body");
+            var body = surface.GetVisualDescendants().OfType<Grid>().Single(g => g.Name == "PART_BodyContent");
+            scroller.VerticalScrollBarVisibility.ShouldBe(Avalonia.Controls.Primitives.ScrollBarVisibility.Auto);
+            drawer.IsScrollable = false;
+            Dispatcher.UIThread.RunJobs();
+            scroller.VerticalScrollBarVisibility.ShouldBe(Avalonia.Controls.Primitives.ScrollBarVisibility.Disabled);
+
+            drawer.BodyPadding = new Thickness(0);
+            Dispatcher.UIThread.RunJobs();
+            body.Margin.ShouldBe(new Thickness(0));
+            drawer.BodyPadding = null;
+            Dispatcher.UIThread.RunJobs();
+            // The test window is 400px wide, below the narrow breakpoint: 20px.
+            body.Margin.ShouldBe(new Thickness(20));
         }
         finally
         {

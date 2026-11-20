@@ -10,6 +10,19 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Added
+
+- `Drawer.IsScrollable` (default true) turns the body's built-in scroller off, so content such as a `Grid` with a `*` row
+  receives the drawer's remaining height. `Drawer.BodyPadding` sets the spacing around the body; null follows the theme
+  ([#168](https://github.com/AIDotNet/TKCode.Arc/issues/168)).
+
+### Fixed
+
+- Drawer content stretches to the panel's height: the body is a `Grid` instead of a `StackPanel`, so a `Grid` with a
+  `*` row fills the drawer (#168). Actions now sit at the bottom of a short body.
+
 ## 1.3.0-preview.4 - 2026-11-20
 
 Replaces Markdig in `TKCode.Arc.StreamMark` with a native two-level incremental Markdown engine (zero third-party parser
