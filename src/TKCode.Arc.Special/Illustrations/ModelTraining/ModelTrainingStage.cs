@@ -1,44 +1,56 @@
-using System.Globalization;
 using Avalonia;
 using Avalonia.Automation;
+using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Controls.Documents;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
-using TKCode.Arc.Motion;
+using Avalonia.Media.TextFormatting;
 
 namespace TKCode.Arc;
 
+/// <summary>What the pointer rests on in the diagram (each shows a detail tag and slows the run).</summary>
+internal enum ModelTrainingRegion
+{
+    None,
+    TrainingSet,
+    HeldOutSet,
+    Layer0,
+    Layer1,
+    Layer2,
+    Layer3,
+    Layer4
+}
+
 /// <summary>
-/// The drawn part of a <see cref="ModelTraining"/>: readouts (step, loss, learning rate), the data's batch cards, the
-/// network (4 inputs, 5 hidden units, 3 classes; each connection's thickness and color show its weight), the prediction
-/// bars, the loss curve and the phase rail. Wide (from 600px) the prediction and the curve stand in a column on the
-/// right; narrower they sit side by side under the network. Drawn from the owner's scene at the current story time, so
-/// pausing freezes it and stepping lands on the same picture. Frames allocate nothing: positions are solved when the size
-/// changes, the curve's geometry when a point is added, and texts come from a cache.
+/// The drawn diagram of a <see cref="ModelTraining"/> (Arc Model training, design reference): the training and held-out
+/// data as stacks of sheets (one bar per input feature), the network on 2.5D plates with S-curved connections whose
+/// width, opacity and colour show how much each one has learned, signals riding the connections forward, the error
+/// riding them back as a short dash, units lighting and ringing, the two class probabilities with bars, the layer names,
+/// and a detail tag for the stack or layer under a mouse. Everything is a function of the owner's run time, so pausing
+/// freezes it and a picked step shows the same picture every time. Frames allocate nothing: the layout and the curves
+/// are solved when the width or the network changes, pens and brushes are cached, texts come from a cache.
 /// </summary>
 internal sealed class ModelTrainingStage : Control
 {
-    internal static readonly StyledProperty<IBrush?> ForwardInkProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(ForwardInk));
+    internal static readonly StyledProperty<IBrush?> SheetInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(SheetInk));
 
-    internal static readonly StyledProperty<IBrush?> BackwardInkProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(BackwardInk));
+    internal static readonly StyledProperty<IBrush?> PlateBackInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(PlateBackInk));
 
-    internal static readonly StyledProperty<IBrush?> NegativeInkProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(NegativeInk));
+    internal static readonly StyledProperty<IBrush?> PlateFaceInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(PlateFaceInk));
 
-    internal static readonly StyledProperty<IBrush?> TargetInkProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(TargetInk));
+    internal static readonly StyledProperty<IBrush?> BorderInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(BorderInk));
 
-    internal static readonly StyledProperty<IBrush?> NodeFillProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(NodeFill));
+    internal static readonly StyledProperty<IBrush?> StrongBorderInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(StrongBorderInk));
 
-    internal static readonly StyledProperty<IBrush?> NodeBorderProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(NodeBorder));
-
-    internal static readonly StyledProperty<IBrush?> TrackInkProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(TrackInk));
+    internal static readonly StyledProperty<IBrush?> SubtleBorderInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(SubtleBorderInk));
 
     internal static readonly StyledProperty<IBrush?> TextInkProperty =
         AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(TextInk));
@@ -49,80 +61,57 @@ internal sealed class ModelTrainingStage : Control
     internal static readonly StyledProperty<IBrush?> MutedInkProperty =
         AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(MutedInk));
 
-    internal static readonly StyledProperty<IBrush?> AccentSubtleProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(AccentSubtle));
+    internal static readonly StyledProperty<IBrush?> AccentInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(AccentInk));
 
-    internal static readonly StyledProperty<CornerRadius> CardRadiusProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, CornerRadius>(nameof(CardRadius), new CornerRadius(8));
+    internal static readonly StyledProperty<IBrush?> BackgroundInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(BackgroundInk));
 
-    internal static readonly StyledProperty<CornerRadius> PillRadiusProperty =
-        AvaloniaProperty.Register<ModelTrainingStage, CornerRadius>(nameof(PillRadius), new CornerRadius(999));
+    internal static readonly StyledProperty<IBrush?> SurfaceMutedInkProperty =
+        AvaloniaProperty.Register<ModelTrainingStage, IBrush?>(nameof(SurfaceMutedInk));
 
     internal static readonly StyledProperty<FontFamily> FontFamilyProperty =
         TextElement.FontFamilyProperty.AddOwner<ModelTrainingStage>();
 
-    /// <summary>The width from which the prediction and the curve stand in a column on the right.</summary>
-    public const double WideWidth = 600;
-
-    private const double ReadoutHeight = 40;
-    private const double RailHeight = 30;
-    private const double NodeRadius = 9;
+    private static readonly double[] s_barShares = [0.78, 0.92, 0.56, 0.84, 0.66];
 
     private readonly ExplainerTextCache _text = new(512);
-    private readonly Dictionary<(IBrush, double, bool), IPen> _pens = new();
-    private readonly List<Point> _nodes = new();
-    private readonly List<(int From, int To)> _edges = new();
+    private readonly ModelTrainingLayout _layout = new();
+    private readonly Dictionary<int, IPen> _pens = new();
+    private Pen[] _dashPens = [];
     private ModelTraining? _owner;
-    private IReadOnlyList<double> _losses = [];
-    private int _count;
-    private Rect _data;
-    private Rect _network;
-    private Rect _prediction;
-    private Rect _chart;
-    private Rect _rail;
-    private double _layoutWidth = -1;
-    private bool _wide;
-    private Geometry? _curve;
-    private int _curvePoints = -1;
-    private int _stepShown = -1;
-    private string? _stepText;
-    private double _lossShown = double.NaN;
-    private string? _lossText;
-    private double _rateShown = double.NaN;
-    private string? _rateText;
+    private ModelTrainingRegion _hover;
+    private ImmutableDashStyle? _heldOutDash;
 
     static ModelTrainingStage()
     {
-        AffectsRender<ModelTrainingStage>(ForwardInkProperty, BackwardInkProperty, NegativeInkProperty, TargetInkProperty, NodeFillProperty,
-            NodeBorderProperty, TrackInkProperty, TextInkProperty, SecondaryInkProperty, MutedInkProperty, AccentSubtleProperty,
-            CardRadiusProperty, PillRadiusProperty);
-        AffectsMeasure<ModelTrainingStage>(FontFamilyProperty);
+        AffectsRender<ModelTrainingStage>(SheetInkProperty, PlateBackInkProperty, PlateFaceInkProperty, BorderInkProperty,
+            StrongBorderInkProperty, SubtleBorderInkProperty, TextInkProperty, SecondaryInkProperty, MutedInkProperty,
+            AccentInkProperty, BackgroundInkProperty, SurfaceMutedInkProperty, FontFamilyProperty);
+        AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<ModelTrainingStage>(AutomationControlType.Image);
+        ClipToBoundsProperty.OverrideDefaultValue<ModelTrainingStage>(false);
     }
 
     public ModelTrainingStage()
     {
-        ClipToBounds = false;
         ActualThemeVariantChanged += (_, _) =>
         {
-            _text.Clear();
-            _pens.Clear();
+            ClearCaches();
             InvalidateVisual();
         };
     }
 
-    public IBrush? ForwardInk { get => GetValue(ForwardInkProperty); set => SetValue(ForwardInkProperty, value); }
+    public IBrush? SheetInk { get => GetValue(SheetInkProperty); set => SetValue(SheetInkProperty, value); }
 
-    public IBrush? BackwardInk { get => GetValue(BackwardInkProperty); set => SetValue(BackwardInkProperty, value); }
+    public IBrush? PlateBackInk { get => GetValue(PlateBackInkProperty); set => SetValue(PlateBackInkProperty, value); }
 
-    public IBrush? NegativeInk { get => GetValue(NegativeInkProperty); set => SetValue(NegativeInkProperty, value); }
+    public IBrush? PlateFaceInk { get => GetValue(PlateFaceInkProperty); set => SetValue(PlateFaceInkProperty, value); }
 
-    public IBrush? TargetInk { get => GetValue(TargetInkProperty); set => SetValue(TargetInkProperty, value); }
+    public IBrush? BorderInk { get => GetValue(BorderInkProperty); set => SetValue(BorderInkProperty, value); }
 
-    public IBrush? NodeFill { get => GetValue(NodeFillProperty); set => SetValue(NodeFillProperty, value); }
+    public IBrush? StrongBorderInk { get => GetValue(StrongBorderInkProperty); set => SetValue(StrongBorderInkProperty, value); }
 
-    public IBrush? NodeBorder { get => GetValue(NodeBorderProperty); set => SetValue(NodeBorderProperty, value); }
-
-    public IBrush? TrackInk { get => GetValue(TrackInkProperty); set => SetValue(TrackInkProperty, value); }
+    public IBrush? SubtleBorderInk { get => GetValue(SubtleBorderInkProperty); set => SetValue(SubtleBorderInkProperty, value); }
 
     public IBrush? TextInk { get => GetValue(TextInkProperty); set => SetValue(TextInkProperty, value); }
 
@@ -130,523 +119,642 @@ internal sealed class ModelTrainingStage : Control
 
     public IBrush? MutedInk { get => GetValue(MutedInkProperty); set => SetValue(MutedInkProperty, value); }
 
-    public IBrush? AccentSubtle { get => GetValue(AccentSubtleProperty); set => SetValue(AccentSubtleProperty, value); }
+    public IBrush? AccentInk { get => GetValue(AccentInkProperty); set => SetValue(AccentInkProperty, value); }
 
-    public CornerRadius CardRadius { get => GetValue(CardRadiusProperty); set => SetValue(CardRadiusProperty, value); }
+    public IBrush? BackgroundInk { get => GetValue(BackgroundInkProperty); set => SetValue(BackgroundInkProperty, value); }
 
-    public CornerRadius PillRadius { get => GetValue(PillRadiusProperty); set => SetValue(PillRadiusProperty, value); }
+    public IBrush? SurfaceMutedInk { get => GetValue(SurfaceMutedInkProperty); set => SetValue(SurfaceMutedInkProperty, value); }
 
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
 
-    /// <summary>True while the prediction and the curve stand on the right.</summary>
-    public bool IsWide => _wide;
+    internal ModelTrainingLayout Layout => _layout;
 
-    /// <summary>The network's node centers, inputs first (tests).</summary>
-    public IReadOnlyList<Point> Nodes => _nodes;
+    internal ModelTrainingRegion Hover => _hover;
 
-    /// <summary>The loss curve's area (tests).</summary>
-    public Rect ChartRect => _chart;
+    /// <summary>Texts built so far (tests: a steady run stops growing this).</summary>
+    internal int TextMisses => _text.Misses;
 
-    /// <summary>The words a screen reader hears for the stage now.</summary>
-    public string Summary { get; private set; } = string.Empty;
-
-    public void Attach(ModelTraining owner)
+    internal void Attach(ModelTraining owner)
     {
         _owner = owner;
-        Changed();
+        NetworkChanged();
     }
 
-    public void SetRun(int count, IReadOnlyList<double> losses)
-    {
-        _count = count;
-        _losses = losses;
-        _curvePoints = -1;
-        InvalidateVisual();
-    }
-
-    public void OnLabelsChanged()
-    {
-        _stepText = null;
-        _lossText = null;
-        _rateText = null;
-        Changed();
-    }
-
-    public void Changed()
-    {
-        UpdateSummary();
-        InvalidateVisual();
-    }
-
-    public void Tick() => InvalidateVisual();
-
-    private void UpdateSummary()
+    /// <summary>The layer sizes or the seed changed: lay out again.</summary>
+    internal void NetworkChanged()
     {
         if (_owner is null)
         {
             return;
         }
-        var scene = _owner.Scene;
-        var labels = _owner.Labels;
-        var text = scene.Iteration == 0
-            ? labels.ReadyCaption(_owner.StepCount)
-            : labels.StepReadout(scene.Iteration, _owner.StepCount);
-        if (scene.Phase is > ModelTrainingPhase.Ready and < ModelTrainingPhase.Done)
-        {
-            var names = labels.PhaseNames;
-            var index = (int)scene.Phase - 1;
-            if (index < names.Length)
-            {
-                text += ", " + names[index];
-            }
-        }
-        if (!double.IsNaN(scene.Loss))
-        {
-            text += string.Create(CultureInfo.InvariantCulture, $", loss {scene.Loss:0.00}");
-        }
-        Summary = text;
-        AutomationProperties.SetName(this, text);
+        _layout.SetNetwork(_owner.LayerSizes, _owner.WeightSeed);
+        _dashPens = [];
+        InvalidateMeasure();
+        InvalidateVisual();
+    }
+
+    internal void ClearCaches()
+    {
+        _text.Clear();
+        _pens.Clear();
+        _dashPens = [];
     }
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var width = double.IsFinite(availableSize.Width) ? availableSize.Width : 680;
-        var body = width >= WideWidth ? 214 : 180 + 14 + 120;
-        return new Size(width, ReadoutHeight + body + 16 + RailHeight);
+        var width = double.IsFinite(availableSize.Width) ? availableSize.Width : 640;
+        _layout.Solve(width);
+        return new Size(width, _layout.Height);
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        if (Math.Abs(finalSize.Width - _layoutWidth) > 0.5)
+        if (_layout.Solve(finalSize.Width))
         {
-            Solve(finalSize.Width);
+            _dashPens = [];
         }
-        return finalSize;
+        return new Size(finalSize.Width, _layout.Height);
     }
 
-    private void Solve(double width)
+    protected override void OnPointerMoved(PointerEventArgs e)
     {
-        _layoutWidth = width;
-        _wide = width >= WideWidth;
-        var top = ReadoutHeight;
-        double bodyHeight;
-        if (_wide)
+        base.OnPointerMoved(e);
+        SetHover(e.Pointer.Type == PointerType.Mouse ? HitTestRegion(e.GetPosition(this)) : ModelTrainingRegion.None);
+    }
+
+    protected override void OnPointerExited(PointerEventArgs e)
+    {
+        base.OnPointerExited(e);
+        SetHover(ModelTrainingRegion.None);
+    }
+
+    /// <summary>The stack or layer at <paramref name="point"/>.</summary>
+    internal ModelTrainingRegion HitTestRegion(Point point)
+    {
+        if (_layout.TrainingHit.Contains(point))
         {
-            bodyHeight = 214;
-            _data = new Rect(0, top, 84, bodyHeight);
-            var right = 210.0;
-            _prediction = new Rect(width - right, top, right, 84);
-            _chart = new Rect(width - right, top + 98, right, bodyHeight - 98);
-            _network = new Rect(_data.Right + 24, top, Math.Max(80, width - right - 24 - _data.Right - 24), bodyHeight);
+            return ModelTrainingRegion.TrainingSet;
         }
-        else
+        if (_layout.HeldOutHit.Contains(point))
         {
-            bodyHeight = 180 + 14 + 120;
-            _data = new Rect(0, top, 64, 180);
-            _network = new Rect(_data.Right + 16, top, Math.Max(80, width - _data.Right - 16), 180);
-            var half = (width - 14) / 2;
-            _prediction = new Rect(0, top + 194, half, 120);
-            _chart = new Rect(half + 14, top + 194, half, 120);
+            return ModelTrainingRegion.HeldOutSet;
         }
-        _rail = new Rect(0, top + bodyHeight + 16, width, RailHeight);
-        // The network: three columns of nodes, spread evenly, each column centered.
-        _nodes.Clear();
-        _edges.Clear();
-        var sizes = ModelTraining.LayerSizes;
-        var inner = _network.Deflate(new Thickness(NodeRadius + 2, 22, NodeRadius + 2, 8));
-        for (var layer = 0; layer < sizes.Length; layer++)
+        for (var l = 0; l < _layout.LayerCount && l < 5; l++)
         {
-            var x = inner.X + inner.Width * layer / (sizes.Length - 1);
-            var spacing = Math.Min(40, inner.Height / Math.Max(1, sizes[layer]));
-            var startY = inner.Center.Y - spacing * (sizes[layer] - 1) / 2;
-            for (var i = 0; i < sizes[layer]; i++)
+            if (_layout.LayerHit(l).Contains(point))
             {
-                _nodes.Add(new Point(x, startY + i * spacing));
+                return ModelTrainingRegion.Layer0 + l;
             }
         }
-        var offset = 0;
-        for (var layer = 0; layer < sizes.Length - 1; layer++)
-        {
-            var next = offset + sizes[layer];
-            for (var a = 0; a < sizes[layer]; a++)
-            {
-                for (var b = 0; b < sizes[layer + 1]; b++)
-                {
-                    _edges.Add((offset + a, next + b));
-                }
-            }
-            offset = next;
-        }
-        _curvePoints = -1;
+        return ModelTrainingRegion.None;
     }
 
-    /// <summary>The layer of a node index.</summary>
-    private static int LayerOf(int node)
+    internal void SetHover(ModelTrainingRegion region)
     {
-        var sizes = ModelTraining.LayerSizes;
-        var sum = 0;
-        for (var layer = 0; layer < sizes.Length; layer++)
+        if (region == _hover)
         {
-            sum += sizes[layer];
-            if (node < sum)
-            {
-                return layer;
-            }
+            return;
         }
-        return sizes.Length - 1;
-    }
-
-    private IPen? Pen(IBrush? brush, double thickness, bool dashed = false)
-    {
-        if (brush is null)
-        {
-            return null;
-        }
-        thickness = Math.Round(thickness * 4) / 4;
-        if (!_pens.TryGetValue((brush, thickness, dashed), out var pen))
-        {
-            pen = dashed
-                ? new ImmutablePen(brush.ToImmutable(), thickness, new ImmutableDashStyle([2, 3], 0), PenLineCap.Round)
-                : new ImmutablePen(brush.ToImmutable(), thickness, null, PenLineCap.Round, PenLineJoin.Round);
-            _pens[(brush, thickness, dashed)] = pen;
-        }
-        return pen;
-    }
-
-    private static Color ColorOf(IBrush? brush) => brush is ISolidColorBrush solid ? solid.Color : Colors.Gray;
-
-    /// <summary>A soft bump: 1 at 0, 0 beyond ±<paramref name="width"/>.</summary>
-    private static double Bump(double x, double width)
-    {
-        var d = Math.Abs(x) / width;
-        return d >= 1 ? 0 : 0.5 + 0.5 * Math.Cos(d * Math.PI);
+        _hover = region;
+        _owner?.OnHoverChanged(region != ModelTrainingRegion.None);
+        InvalidateVisual();
     }
 
     public override void Render(DrawingContext context)
     {
-        if (_owner is null || _layoutWidth < 0)
+        base.Render(context);
+        if (_owner is null || _layout.Width <= 0)
         {
             return;
         }
-        var scene = _owner.Scene;
-        var now = _owner.StoryTime;
-        var animates = _owner.Animates;
-        var typeface = new Typeface(FontFamily);
-        var progress = animates ? Math.Clamp((now - scene.PhaseStart) / Math.Max(0.001, scene.PhaseDuration), 0, 1) : 1;
-        DrawReadouts(context, scene, typeface);
-        DrawData(context, scene, progress, animates, typeface);
-        DrawNetwork(context, scene, now, progress, animates, typeface);
-        DrawPrediction(context, scene, now, animates, typeface);
-        DrawChart(context, scene, now, animates, typeface);
-        DrawRail(context, scene, typeface);
+        var t = _owner.RenderTime;
+        var timeline = _owner.Timeline;
+        var ink = new Inks(this, _owner.Accent);
+        DrawStack(context, ink, timeline, t, heldOut: false);
+        DrawStack(context, ink, timeline, t, heldOut: true);
+        DrawPlates(context, ink);
+        DrawEdges(context, ink, timeline, t);
+        DrawBackward(context, ink, timeline, t);
+        DrawForward(context, ink, timeline, t);
+        DrawNodes(context, ink, timeline, t);
+        DrawLabels(context, ink);
+        DrawOutputs(context, ink, timeline, t);
+        DrawFlight(context, ink, timeline, t);
+        DrawTag(context, ink);
     }
 
-    private void DrawReadouts(DrawingContext context, ModelTrainingScene scene, Typeface typeface)
+    // ---- Data stacks ------------------------------------------------------------------------------------------------
+
+    private void DrawStack(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t, bool heldOut)
     {
-        var labels = _owner!.Labels;
-        var text = ColorOf(TextInk);
-        var muted = ColorOf(MutedInk);
-        var step = Math.Max(1, scene.Iteration);
-        if (_stepText is null || step != _stepShown)
+        var count = heldOut ? _layout.HeldOutSheets : _layout.TrainingSheets;
+        var f = FlightOf(timeline, t, heldOut, out _);
+        var hovered = _hover == (heldOut ? ModelTrainingRegion.HeldOutSet : ModelTrainingRegion.TrainingSet);
+        // The hidden sheet behind the stack fades in while the others move up a slot.
+        if (f > 0)
         {
-            _stepShown = step;
-            _stepText = labels.StepReadout(scene.Iteration, _owner.StepCount);
+            DrawSheet(context, ink, _layout.Sheet(heldOut, count - f), 1, f, heldOut, hovered);
         }
-        if (_lossText is null || !scene.Loss.Equals(_lossShown))
+        for (var i = count - 1; i >= 1; i--)
         {
-            _lossShown = scene.Loss;
-            _lossText = double.IsNaN(scene.Loss)
-                ? labels.LossCurve + " –"
-                : string.Create(CultureInfo.InvariantCulture, $"{labels.LossCurve} {scene.Loss:0.000}");
+            DrawSheet(context, ink, _layout.Sheet(heldOut, i - f), 1, 1, heldOut, hovered);
         }
-        if (_rateText is null || !_owner.LearningRate.Equals(_rateShown))
+        if (f <= 0)
         {
-            _rateShown = _owner.LearningRate;
-            _rateText = labels.RateReadout(_owner.LearningRate);
+            DrawSheet(context, ink, _layout.Sheet(heldOut, 0), 1, 1, heldOut, hovered);
         }
-        var x = 0.0;
-        var stepLayout = _text.Get(_stepText, typeface, 15, text);
-        stepLayout.Draw(context, new Point(x, 6));
-        x += stepLayout.Width + 24;
-        var lossLayout = _text.Get(_lossText, typeface, 15, text);
-        lossLayout.Draw(context, new Point(x, 6));
-        x += lossLayout.Width + 24;
-        var rate = _text.Get(_rateText, typeface, 12, muted);
-        if (x + rate.Width <= _layoutWidth)
-        {
-            rate.Draw(context, new Point(x, 9));
-        }
+        var origin = heldOut ? _layout.HeldOutText : _layout.TrainingText;
+        var owner = _owner!;
+        var labels = owner.Labels;
+        var name = heldOut ? labels.HeldOutSet : labels.TrainingSet;
+        var meta = labels.SampleCount(heldOut ? owner.HeldOutSamples : owner.Samples, labels.Unit);
+        DrawTextAtBaseline(context, name, ink.Text, origin.X, origin.Y, medium: true);
+        DrawTextAtBaseline(context, meta, ink.Muted, origin.X, origin.Y + 15, medium: false);
     }
 
-    private void DrawData(DrawingContext context, ModelTrainingScene scene, double progress, bool animates, Typeface typeface)
+    /// <summary>The eased progress (0..1) of the stack's sheet flight at <paramref name="t"/>, 0 when none flies.</summary>
+    private static double FlightOf(ModelTrainingTimeline timeline, double t, bool heldOut, out double linear)
     {
-        var labels = _owner!.Labels;
-        var muted = ColorOf(MutedInk);
-        _text.GetTrimmed(labels.Data, typeface, 12, muted, _data.Width).Draw(context, new Point(_data.X, _data.Y));
-        var used = scene.Iteration - (scene.Phase == ModelTrainingPhase.Batch && progress < 1 ? 1 : 0);
-        if (scene.Finished)
+        var kind = heldOut ? ModelTrainingPassKind.HeldOutFlight : ModelTrainingPassKind.TrainingFlight;
+        foreach (var pass in timeline.Passes)
         {
-            used = _count;
-        }
-        var left = Math.Max(0, _count - used);
-        var cardWidth = _data.Width - 12;
-        var cardHeight = _wide ? 40.0 : 34.0;
-        var radius = Math.Min(CardRadius.TopLeft, cardHeight / 2);
-        var shown = Math.Min(4, left);
-        var baseY = _data.Y + 24;
-        for (var i = shown - 1; i >= 0; i--)
-        {
-            var rect = new Rect(_data.X + i * 4, baseY + i * 6, cardWidth, cardHeight);
-            context.DrawRectangle(NodeFill, Pen(NodeBorder, 1), rect, radius, radius);
-            if (i == 0)
+            if (pass.Kind == kind && t >= pass.Start && t < pass.End)
             {
-                DrawCardFace(context, rect, used + 1, typeface);
+                linear = pass.Progress(t);
+                return ModelTrainingEase.InOutSine(linear);
             }
         }
-        // The batch in flight: the top card slides into the input layer and fades as it arrives.
-        if (scene.Phase == ModelTrainingPhase.Batch && animates && progress < 1 && _nodes.Count > 0)
-        {
-            var eased = ArcEasings.InOut.Ease(progress);
-            var from = new Point(_data.X, baseY);
-            var to = new Point(_nodes[0].X - cardWidth / 2, _network.Center.Y - cardHeight / 2);
-            var rect = new Rect(from.X + (to.X - from.X) * eased, from.Y + (to.Y - from.Y) * eased, cardWidth, cardHeight);
-            using (context.PushOpacity(1 - Math.Max(0, eased - 0.6) / 0.4))
-            {
-                context.DrawRectangle(NodeFill, Pen(ForwardInk, 1.5), rect, radius, radius);
-                DrawCardFace(context, rect, scene.Iteration, typeface);
-            }
-        }
+        linear = 0;
+        return 0;
     }
 
-    private void DrawCardFace(DrawingContext context, Rect rect, int batch, Typeface typeface)
+    private void DrawSheet(DrawingContext context, in Inks ink, Point center, double scale, double alpha, bool heldOut, bool hovered)
     {
-        if (batch < 1 || batch > _count)
+        if (alpha <= 0.01)
         {
             return;
         }
-        var label = _text.GetTrimmed(_owner!.Labels.BatchName(batch), typeface, 11, ColorOf(SecondaryInk), Math.Max(10, rect.Width - 12));
-        label.Draw(context, new Point(rect.X + 7, rect.Y + 4));
-        // Four examples as small dots.
-        for (var i = 0; i < 4; i++)
+        var w = _layout.SheetWidth * scale;
+        var h = _layout.SheetHeight * scale;
+        var rect = new Rect(center.X - w / 2, center.Y - h / 2, w, h);
+        var radius = _layout.SheetRadius * scale;
+        var strokeColor = hovered ? ArcColor.Lerp(ink.Border, ink.Accent, 0.6) : heldOut ? ink.StrongBorder : ink.Border;
+        using (context.PushOpacity(alpha))
         {
-            var c = new Point(rect.X + 10 + i * 9, rect.Bottom - 9);
-            context.DrawEllipse(i == ModelTraining.TargetClass ? TargetInk : MutedInk, null, c, 2.5, 2.5);
+            var pen = heldOut ? DashedPen(strokeColor) : Pen(strokeColor, 1, 1);
+            context.DrawRectangle(_text.Brush(ink.Sheet), pen, new RoundedRect(rect, radius));
+            var bars = Math.Clamp(_layout.Sizes[0], 1, 5);
+            var inner = w - 22 * scale;
+            var span = bars > 1 ? 0.5 * h / (bars - 1) : 0;
+            var barHeight = 3.5 * scale;
+            for (var b = 0; b < bars; b++)
+            {
+                var bar = new Rect(rect.X + 11 * scale, center.Y - 0.277 * h + b * span, inner * s_barShares[b], barHeight);
+                context.DrawRectangle(_text.Brush(ink.Muted, b == 0 ? 0.75 : 0.45), null, new RoundedRect(bar, barHeight / 2));
+            }
         }
     }
 
-    private void DrawNetwork(DrawingContext context, ModelTrainingScene scene, double now, double progress, bool animates, Typeface typeface)
+    private void DrawFlight(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
     {
-        var labels = _owner!.Labels;
-        _text.GetTrimmed(labels.Model, typeface, 12, ColorOf(MutedInk), _network.Width).Draw(context, new Point(_network.X, _network.Y));
-        if (_nodes.Count == 0)
+        for (var s = 0; s < 2; s++)
         {
-            return;
-        }
-        var updating = scene.Phase == ModelTrainingPhase.Update;
-        var mix = updating ? (animates ? ArcEasings.Standard.Ease(progress) : 1) : 1;
-        var before = scene.Before;
-        var after = scene.After;
-        // Forward: a wave from the inputs (0) to the outputs (2); backward: the other way.
-        var forward = scene.Phase == ModelTrainingPhase.Forward && animates && progress < 1;
-        var backward = scene.Phase == ModelTrainingPhase.Backward && animates && progress < 1;
-        var wave = forward ? progress * 2.4 - 0.2 : backward ? 2.2 - progress * 2.4 : double.NaN;
-        for (var i = 0; i < _edges.Count && i < after.Length; i++)
-        {
-            var (a, b) = _edges[i];
-            var w = before.Length == after.Length ? before[i] + (after[i] - before[i]) * mix : after[i];
-            var magnitude = Math.Min(1, Math.Abs(w));
-            var ink = w >= 0 ? ForwardInk : NegativeInk;
-            var pa = _nodes[a];
-            var pb = _nodes[b];
-            using (context.PushOpacity(0.18 + 0.5 * magnitude))
+            var heldOut = s == 1;
+            var f = FlightOf(timeline, t, heldOut, out var linear);
+            if (f <= 0)
             {
-                context.DrawLine(Pen(ink, 0.5 + 2.5 * magnitude)!, pa, pb);
+                continue;
             }
-            if (!double.IsNaN(wave))
+            var start = _layout.Sheet(heldOut, 0);
+            var target = _layout.Node(0, (_layout.Sizes[0] - 1) / 2);
+            var d = target - start;
+            // An arc that lifts a little first, then drops into the input layer.
+            var c1 = new Point(start.X + d.X * 0.35, start.Y - Math.Max(14, Math.Abs(d.Y) * 0.2));
+            var c2 = new Point(target.X - d.X * 0.2, target.Y - d.Y * 0.45);
+            var p = Cubic(start, c1, c2, target, f);
+            var scale = 1 - 0.66 * f;
+            var alpha = linear < 0.55 ? 1 : Math.Clamp(1 - (linear - 0.55) / 0.33, 0, 1);
+            DrawSheet(context, ink, p, scale, alpha, heldOut, hovered: false);
+        }
+    }
+
+    private static Point Cubic(Point a, Point b, Point c, Point d, double u)
+    {
+        var v = 1 - u;
+        var w0 = v * v * v;
+        var w1 = 3 * v * v * u;
+        var w2 = 3 * v * u * u;
+        var w3 = u * u * u;
+        return new Point(a.X * w0 + b.X * w1 + c.X * w2 + d.X * w3, a.Y * w0 + b.Y * w1 + c.Y * w2 + d.Y * w3);
+    }
+
+    // ---- Network ----------------------------------------------------------------------------------------------------
+
+    private void DrawPlates(DrawingContext context, in Inks ink)
+    {
+        var border = Pen(ink.Border, 1, 1);
+        for (var l = 0; l < _layout.LayerCount; l++)
+        {
+            var face = _layout.Plate(l);
+            var back = face.Translate(_layout.PlateDepth);
+            var radius = _layout.PlateWidth / 2;
+            context.DrawRectangle(_text.Brush(ink.PlateBack), border, new RoundedRect(back, radius));
+            var hovered = _hover == ModelTrainingRegion.Layer0 + l;
+            var facePen = hovered ? Pen(ArcColor.Lerp(ink.Border, ink.Accent, 0.6), 1, 1) : border;
+            context.DrawRectangle(_text.Brush(ink.PlateFace), facePen, new RoundedRect(face, radius));
+        }
+    }
+
+    private void DrawEdges(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
+    {
+        Span<double> share = stackalloc double[8];
+        for (var g = 0; g < Math.Min(8, _layout.LayerCount - 1); g++)
+        {
+            share[g] = timeline.LearnedShare(timeline.UpdatesAt(g, t));
+        }
+        foreach (var edge in _layout.Edges)
+        {
+            var s = share[Math.Min(edge.Gap, 7)];
+            var k = edge.Learned * s;
+            var width = edge.Learned > 0
+                ? edge.StartWidth + (edge.LearnedWidth - edge.StartWidth) * k
+                : edge.StartWidth * (1 - 0.18 * s);
+            var alpha = Math.Clamp(0.053 + 0.413 * width, 0, 1);
+            var color = ArcColor.Lerp(ink.Muted, ink.Accent, Quantize(0.8 * k, 20));
+            context.DrawGeometry(null, Pen(color, Quantize(width, 20), alpha), edge.Path.Geometry);
+        }
+    }
+
+    private void DrawBackward(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
+    {
+        EnsureDashPens(ink.Accent);
+        foreach (var pass in timeline.Passes)
+        {
+            if (pass.Kind != ModelTrainingPassKind.Backward || !pass.IsActive(t))
             {
-                // The signal on this connection: a dot that runs along it as the wave crosses its layer.
-                var layer = LayerOf(a);
-                var t = Math.Clamp(forward ? wave - layer : layer + 1 - wave, 0, 1);
-                if (t > 0 && t < 1)
+                continue;
+            }
+            var q = pass.Progress(t);
+            var e = ModelTrainingEase.InOutSine(q);
+            var alpha = 0.62 * Fade(q, 0.1, 0.12);
+            var head = 1 - 1.2 * e;
+            for (var i = 0; i < _layout.Edges.Count; i++)
+            {
+                var edge = _layout.Edges[i];
+                if (edge.Gap != pass.Gap)
                 {
-                    var p = forward ? t : 1 - t;
-                    var at = new Point(pa.X + (pb.X - pa.X) * p, pa.Y + (pb.Y - pa.Y) * p);
-                    using (context.PushOpacity(0.35 + 0.65 * magnitude))
+                    continue;
+                }
+                var length = edge.Path.Length;
+                if (edge.Path.ShowPart(_dashPens[i], Math.Max(0, head) * length, Math.Min(1, head + 0.2) * length))
+                {
+                    using (context.PushOpacity(alpha))
                     {
-                        context.DrawEllipse(forward ? ForwardInk : BackwardInk, null, at, 2.5, 2.5);
+                        context.DrawGeometry(null, _dashPens[i], edge.Path.Geometry);
                     }
                 }
             }
-            if (updating && animates && progress < 1)
+        }
+    }
+
+    private void DrawForward(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
+    {
+        var radius = _layout.IsNarrow ? 2.5 : 3;
+        foreach (var pass in timeline.Passes)
+        {
+            if (pass.Kind != ModelTrainingPassKind.Forward || !pass.IsActive(t))
             {
-                // The update: each connection glows once as it changes.
-                var glow = Bump(progress - 0.5, 0.5) * Math.Min(1, Math.Abs(after[i] - before[i]) * 4);
-                if (glow > 0.02)
+                continue;
+            }
+            var q = pass.Progress(t);
+            var e = ModelTrainingEase.InOutSine(q);
+            var fade = Fade(q, 0.12, 0.16);
+            var share = timeline.LearnedShare(timeline.UpdatesAt(pass.Gap, t));
+            foreach (var edge in _layout.Edges)
+            {
+                if (edge.Gap != pass.Gap)
                 {
-                    using (context.PushOpacity(glow * 0.6))
-                    {
-                        context.DrawLine(Pen(BackwardInk, 1.5)!, pa, pb);
-                    }
+                    continue;
                 }
+                var width = edge.Learned > 0
+                    ? edge.StartWidth + (edge.LearnedWidth - edge.StartWidth) * edge.Learned * share
+                    : edge.StartWidth;
+                var alpha = Math.Clamp(0.15 + 0.413 * width, 0, 1) * fade;
+                var p = edge.Path.PointAtFraction(e);
+                context.DrawEllipse(_text.Brush(ink.Accent, alpha), null, p, radius, radius);
             }
         }
-        for (var n = 0; n < _nodes.Count; n++)
+    }
+
+    private void DrawNodes(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
+    {
+        var r = _layout.NodeRadius;
+        var stroke = Pen(ink.NodeStroke, 1.25, 1);
+        var nodeFill = _text.Brush(ink.Sheet);
+        var winnerFloor = t >= timeline.FirstMeasure || t < ModelTrainingTimeline.ResetLength
+            ? 0.85 * timeline.LearnedShare(timeline.UpdatesAt(_layout.LayerCount - 2, t))
+            : 0;
+        for (var l = 0; l < _layout.LayerCount; l++)
         {
-            var center = _nodes[n];
-            context.DrawEllipse(NodeFill, Pen(NodeBorder, 1), center, NodeRadius, NodeRadius);
-            var layer = LayerOf(n);
-            var lit = double.IsNaN(wave) ? 0 : Bump(wave - layer, 0.55);
-            if (scene.Phase == ModelTrainingPhase.Batch && layer == 0 && animates)
+            var act = ActOf(timeline, l, t);
+            var (ringRadius, ringAlpha) = RingOf(timeline, l, t);
+            var n = _layout.Sizes[l];
+            for (var u = 0; u < n; u++)
             {
-                lit = Math.Max(lit, Bump(progress - 1, 0.35));
-            }
-            if (scene.Phase == ModelTrainingPhase.Loss && layer == 2 && n - (_nodes.Count - 3) == ModelTraining.TargetClass)
-            {
-                lit = 1;
-            }
-            if (lit > 0.01)
-            {
-                var ink = backward ? BackwardInk : scene.Phase == ModelTrainingPhase.Loss ? TargetInk : ForwardInk;
-                using (context.PushOpacity(lit))
+                var c = _layout.Node(l, u);
+                if (ringAlpha > 0.01)
                 {
-                    context.DrawEllipse(ink, null, center, NodeRadius - 3, NodeRadius - 3);
+                    context.DrawEllipse(null, Pen(ink.Accent, 1.25, ringAlpha), c, ringRadius, ringRadius);
+                }
+                context.DrawEllipse(nodeFill, stroke, c, r, r);
+                var a = act;
+                if (l == _layout.LayerCount - 1 && u == 0)
+                {
+                    a = Math.Max(a, winnerFloor);
+                }
+                if (a > 0.01)
+                {
+                    var inner = r - 2;
+                    context.DrawEllipse(_text.Brush(ink.Accent, a), null, c, inner, inner);
                 }
             }
         }
     }
 
-    /// <summary>The probabilities of the three classes for a loss: the right one gets e^−loss, the others share the rest.</summary>
-    private static double ClassProbability(int index, double loss)
+    /// <summary>How lit layer <paramref name="layer"/>'s units are: a flash when a batch or a forward pass lands.</summary>
+    private static double ActOf(ModelTrainingTimeline timeline, int layer, double t)
     {
-        var p = ModelTraining.TargetProbability(loss);
-        if (index == ModelTraining.TargetClass)
+        var act = 0.0;
+        foreach (var pass in timeline.Passes)
         {
-            return p;
-        }
-        return (1 - p) * (index == 0 ? 0.6 : 0.4);
-    }
-
-    private void DrawPrediction(DrawingContext context, ModelTrainingScene scene, double now, bool animates, Typeface typeface)
-    {
-        var labels = _owner!.Labels;
-        var muted = ColorOf(MutedInk);
-        _text.GetTrimmed(labels.Prediction, typeface, 12, muted, _prediction.Width).Draw(context, new Point(_prediction.X, _prediction.Y));
-        var loss = scene.Loss;
-        var grow = double.IsNaN(loss) ? 0 : animates ? ArcEasings.Standard.Ease(Math.Clamp((now - scene.LossAt) / 0.5, 0, 1)) : 1;
-        var top = _prediction.Y + 22;
-        var rowHeight = _wide ? 20.0 : 26.0;
-        var trackX = _prediction.X + 18;
-        var trackWidth = Math.Max(20, _prediction.Width - 18 - 52);
-        for (var i = 0; i < 3; i++)
-        {
-            var y = top + i * rowHeight;
-            var name = i switch
+            double land;
+            if (pass.Kind is ModelTrainingPassKind.TrainingFlight or ModelTrainingPassKind.HeldOutFlight)
             {
-                0 => "A",
-                1 => "B",
-                _ => "C"
-            };
-            _text.Get(name, typeface, 11, muted).Draw(context, new Point(_prediction.X, y));
-            var track = new Rect(trackX, y + 4, trackWidth, 7);
-            var r = Math.Min(PillRadius.TopLeft, track.Height / 2);
-            context.DrawRectangle(TrackInk, null, track, r, r);
-            if (!double.IsNaN(loss))
-            {
-                var p = ClassProbability(i, loss);
-                var fill = new Rect(track.X, track.Y, Math.Max(track.Height, track.Width * p * grow), track.Height);
-                using (context.PushOpacity(i == ModelTraining.TargetClass ? 1 : 0.55))
+                if (layer != 0)
                 {
-                    context.DrawRectangle(i == ModelTraining.TargetClass ? TargetInk : ForwardInk, null, fill, r, r);
+                    continue;
                 }
+                land = pass.End;
             }
-            if (i == ModelTraining.TargetClass)
+            else if (pass.Kind == ModelTrainingPassKind.Forward && pass.Gap + 1 == layer)
             {
-                _text.Get(labels.Target, typeface, 11, ColorOf(TargetInk)).Draw(context, new Point(track.Right + 6, y));
-            }
-        }
-    }
-
-    private void DrawChart(DrawingContext context, ModelTrainingScene scene, double now, bool animates, Typeface typeface)
-    {
-        var labels = _owner!.Labels;
-        var muted = ColorOf(MutedInk);
-        _text.GetTrimmed(labels.LossCurve, typeface, 12, muted, _chart.Width).Draw(context, new Point(_chart.X, _chart.Y));
-        var plot = new Rect(_chart.X, _chart.Y + 20, _chart.Width, Math.Max(10, _chart.Height - 24));
-        context.DrawLine(Pen(TrackInk, 1)!, plot.BottomLeft, plot.BottomRight);
-        context.DrawLine(Pen(TrackInk, 1, dashed: true)!, plot.TopLeft, plot.TopRight);
-        if (_count < 2 || _losses.Count < _count)
-        {
-            return;
-        }
-        var max = 0.0;
-        for (var i = 0; i < _count; i++)
-        {
-            max = Math.Max(max, _losses[i]);
-        }
-        max = Math.Max(0.5, max * 1.1);
-        var plotted = Math.Min(scene.Plotted, _count);
-        if (plotted != _curvePoints)
-        {
-            _curvePoints = plotted;
-            _curve = null;
-            if (plotted >= 2)
-            {
-                var geometry = new StreamGeometry();
-                using (var g = geometry.Open())
-                {
-                    g.BeginFigure(PointOf(plot, 0, max), false);
-                    for (var i = 1; i < plotted; i++)
-                    {
-                        g.LineTo(PointOf(plot, i, max));
-                    }
-                    g.EndFigure(false);
-                }
-                _curve = geometry;
-            }
-        }
-        if (_curve is not null)
-        {
-            context.DrawGeometry(null, Pen(ForwardInk, 2), _curve);
-        }
-        for (var i = 0; i < plotted; i++)
-        {
-            var newest = i == plotted - 1;
-            var appear = newest && animates ? Math.Clamp((now - scene.PlottedAt) / 0.3, 0, 1) : 1;
-            var radius = newest ? 3.5 + (1 - appear) * 3 : 2.5;
-            using (context.PushOpacity(appear))
-            {
-                context.DrawEllipse(newest ? ForwardInk : SecondaryInk, null, PointOf(plot, i, max), radius, radius);
-            }
-        }
-    }
-
-    private Point PointOf(Rect plot, int index, double max)
-        => new(plot.X + 4 + (plot.Width - 8) * index / Math.Max(1, _count - 1), plot.Bottom - plot.Height * Math.Clamp(_losses[index] / max, 0, 1));
-
-    private void DrawRail(DrawingContext context, ModelTrainingScene scene, Typeface typeface)
-    {
-        var names = _owner!.Labels.PhaseNames;
-        var gap = 6.0;
-        var width = (_rail.Width - gap * 4) / 5;
-        var current = scene.Phase is > ModelTrainingPhase.Ready and < ModelTrainingPhase.Done ? (int)scene.Phase - 1 : -1;
-        for (var i = 0; i < 5; i++)
-        {
-            var rect = new Rect(_rail.X + i * (width + gap), _rail.Y, width, _rail.Height);
-            var r = Math.Min(PillRadius.TopLeft, rect.Height / 2);
-            var isCurrent = i == current;
-            var isDone = scene.Finished || (current >= 0 && i < current);
-            if (isCurrent)
-            {
-                context.DrawRectangle(AccentSubtle, Pen(ForwardInk, 1), rect, r, r);
+                land = pass.End;
             }
             else
             {
-                context.DrawRectangle(null, Pen(NodeBorder, 1), rect, r, r);
+                continue;
             }
-            var name = i < names.Length ? names[i] : string.Empty;
-            var color = ColorOf(isCurrent ? TextInk : isDone ? SecondaryInk : MutedInk);
-            var layout = _text.GetTrimmed(name, typeface, 12, color, Math.Max(10, rect.Width - 12));
-            layout.Draw(context, new Point(rect.Center.X - layout.Width / 2, rect.Center.Y - layout.Height / 2));
+            var d = t - land;
+            if (d < 0 || d > 0.7)
+            {
+                continue;
+            }
+            var a = d < 0.1 ? 0.7 * d / 0.1 : 0.7 * (1 - (d - 0.1) / 0.55);
+            act = Math.Max(act, a);
         }
+        return Math.Max(0, act);
+    }
+
+    /// <summary>The ring around layer <paramref name="layer"/>'s units as the error passes through it.</summary>
+    private (double Radius, double Alpha) RingOf(ModelTrainingTimeline timeline, int layer, double t)
+    {
+        var best = 2.0;
+        foreach (var pass in timeline.Passes)
+        {
+            if (pass.Kind != ModelTrainingPassKind.Backward)
+            {
+                continue;
+            }
+            if (pass.Gap + 1 == layer)
+            {
+                best = Math.Min(best, Ring(t - pass.Start));
+            }
+            if (pass.Gap == 0 && layer == 0)
+            {
+                best = Math.Min(best, Ring(t - pass.End));
+            }
+        }
+        if (best >= 1)
+        {
+            return (0, 0);
+        }
+        var r = _layout.NodeRadius;
+        return (r + 7 * ModelTrainingEase.OutCubic(best), 0.57 * (1 - best));
+
+        static double Ring(double d) => d < 0 || d > 0.55 ? 2 : d / 0.55;
+    }
+
+    private void DrawLabels(DrawingContext context, in Inks ink)
+    {
+        var labels = _owner!.Labels;
+        for (var l = 0; l < _layout.LayerCount; l++)
+        {
+            var name = l == 0 ? labels.Input : l == _layout.LayerCount - 1 ? labels.Output : labels.Hidden;
+            var layout = _text.Get(name, Face(false), 12, ink.Secondary);
+            DrawLayout(context, layout, _layout.LayerX(l) - layout.WidthIncludingTrailingWhitespace / 2, _layout.LabelBaseline - layout.Baseline);
+        }
+    }
+
+    private void DrawOutputs(DrawingContext context, in Inks ink, ModelTrainingTimeline timeline, double t)
+    {
+        var owner = _owner!;
+        var p = timeline.WinnerProbability(t);
+        var last = _layout.LayerCount - 1;
+        var x = _layout.OutputTextX;
+        var right = _layout.Width - 4;
+        var outputs = Math.Min(2, _layout.Sizes[last]);
+        for (var c = 0; c < outputs; c++)
+        {
+            var probability = c == 0 ? p : 1 - p;
+            var lead = c == 0 ? Math.Clamp((p - 0.6) / 0.25, 0, 1) : 0;
+            var node = _layout.Node(last, c);
+            var nameColor = ArcColor.Lerp(ink.Secondary, ink.Text, lead);
+            var valueColor = ArcColor.Lerp(ink.Muted, ink.Text, lead);
+            var name = owner.ClassAt(c);
+            var value = FormatProbability(probability);
+            if (_layout.IsNarrow)
+            {
+                DrawTextAtBaseline(context, name, nameColor, x, node.Y - 4, medium: false);
+                DrawTextAtBaseline(context, value, valueColor, x, node.Y + 11, medium: false);
+                continue;
+            }
+            DrawTextAtBaseline(context, name, nameColor, x, node.Y - 5, medium: false);
+            var valueLayout = _text.Get(value, Face(false), 12, valueColor);
+            DrawLayout(context, valueLayout, right - valueLayout.WidthIncludingTrailingWhitespace, node.Y - 5 - valueLayout.Baseline);
+            var track = new Rect(x, node.Y + 3, Math.Max(0, right - x), 3);
+            context.DrawRectangle(_text.Brush(ink.SurfaceMuted), Pen(ink.SubtleBorder, 1, 1), new RoundedRect(track, 1.5));
+            var fill = track.WithWidth(track.Width * probability);
+            context.DrawRectangle(_text.Brush(ArcColor.Lerp(ink.Muted, ink.Accent, lead)), null, new RoundedRect(fill, 1.5));
+        }
+    }
+
+    private static string FormatProbability(double p)
+    {
+        // Two decimals without allocating a new string for every frame: the 101 values are interned once.
+        var i = Math.Clamp((int)Math.Round(p * 100), 0, 100);
+        return s_probabilities[i];
+    }
+
+    private static readonly string[] s_probabilities = BuildProbabilities();
+
+    private static string[] BuildProbabilities()
+    {
+        var values = new string[101];
+        for (var i = 0; i <= 100; i++)
+        {
+            values[i] = (i / 100.0).ToString("0.00", System.Globalization.CultureInfo.InvariantCulture);
+        }
+        return values;
+    }
+
+    // ---- Hover detail ------------------------------------------------------------------------------------------------
+
+    private void DrawTag(DrawingContext context, in Inks ink)
+    {
+        if (_hover == ModelTrainingRegion.None || _owner is null)
+        {
+            return;
+        }
+        var text = _owner.DetailOf(_hover);
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+        var layout = _text.Get(text, Face(true), 12, ink.Background);
+        var width = layout.WidthIncludingTrailingWhitespace + 16;
+        const double height = 21.6;
+        double x;
+        double y;
+        switch (_hover)
+        {
+            case ModelTrainingRegion.TrainingSet:
+                x = _layout.TrainingText.X;
+                y = _layout.TrainingText.Y + 18;
+                if (_layout.IsNarrow)
+                {
+                    y = _layout.TrainingText.Y + 20;
+                }
+                break;
+            case ModelTrainingRegion.HeldOutSet:
+                x = _layout.HeldOutText.X;
+                y = _layout.IsNarrow ? _layout.HeldOutText.Y + 20 : _layout.HeldOutHit.Y - 8 - height;
+                break;
+            default:
+                var l = _hover - ModelTrainingRegion.Layer0;
+                var back = _layout.Plate(l).Translate(_layout.PlateDepth);
+                y = back.Y - 8 - height;
+                x = l == _layout.LayerCount - 1 ? back.Right - width : _layout.LayerX(l) - width / 2;
+                break;
+        }
+        x = Math.Clamp(x, 0, Math.Max(0, _layout.Width - width));
+        y = Math.Max(0, y);
+        var pill = new Rect(x, y, width, height);
+        context.DrawRectangle(_text.Brush(ink.Text), null, new RoundedRect(pill, height / 2));
+        DrawLayout(context, layout, x + 8, y + (height - layout.Height) / 2);
+    }
+
+    // ---- Helpers ----------------------------------------------------------------------------------------------------
+
+    private void DrawTextAtBaseline(DrawingContext context, string text, Color color, double x, double baseline, bool medium)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return;
+        }
+        var layout = _text.Get(text, Face(medium), 12, color);
+        DrawLayout(context, layout, x, baseline - layout.Baseline);
+    }
+
+    private static void DrawLayout(DrawingContext context, TextLayout layout, double x, double y) => layout.Draw(context, new Point(x, y));
+
+    private Typeface Face(bool medium) => new(FontFamily, FontStyle.Normal, medium ? FontWeight.Medium : FontWeight.Normal);
+
+    private IPen Pen(Color color, double thickness, double alpha)
+    {
+        var level = ExplainerTextCache.AlphaLevel(alpha);
+        var key = HashCode.Combine(color, (int)Math.Round(thickness * 100), level);
+        if (!_pens.TryGetValue(key, out var pen))
+        {
+            if (_pens.Count > 2048)
+            {
+                _pens.Clear();
+            }
+            pen = new ImmutablePen(_text.Brush(color, alpha), thickness, null, PenLineCap.Round);
+            _pens[key] = pen;
+        }
+        return pen;
+    }
+
+    private IPen DashedPen(Color color)
+    {
+        _heldOutDash ??= new ImmutableDashStyle([3, 3], 0);
+        var key = HashCode.Combine(color, -1);
+        if (!_pens.TryGetValue(key, out var pen))
+        {
+            pen = new ImmutablePen(_text.Brush(color), 1, _heldOutDash, PenLineCap.Flat);
+            _pens[key] = pen;
+        }
+        return pen;
+    }
+
+    private void EnsureDashPens(Color accent)
+    {
+        var count = _layout.Edges.Count;
+        var thickness = _layout.IsNarrow ? 2 : 2.25;
+        if (_dashPens.Length == count && count > 0 && _dashPens[0].Brush is ISolidColorBrush b && b.Color == accent
+            && Math.Abs(_dashPens[0].Thickness - thickness) < 0.001)
+        {
+            return;
+        }
+        _dashPens = new Pen[count];
+        var brush = new ImmutableSolidColorBrush(accent);
+        for (var i = 0; i < count; i++)
+        {
+            _dashPens[i] = new Pen(brush, thickness, new DashStyle(new Avalonia.Collections.AvaloniaList<double>(), 0), PenLineCap.Round);
+        }
+    }
+
+    private static double Fade(double q, double fadeIn, double fadeOut)
+        => Math.Clamp(Math.Min(q / fadeIn, (1 - q) / fadeOut), 0, 1);
+
+    private static double Quantize(double value, int steps) => Math.Round(value * steps) / steps;
+
+    /// <summary>The theme colours this frame draws with.</summary>
+    private readonly struct Inks
+    {
+        public Inks(ModelTrainingStage stage, IBrush? accent)
+        {
+            Sheet = ColorOf(stage.SheetInk, Colors.White);
+            PlateBack = ColorOf(stage.PlateBackInk, Colors.WhiteSmoke);
+            PlateFace = ColorOf(stage.PlateFaceInk, Colors.White);
+            Border = ColorOf(stage.BorderInk, Colors.LightGray);
+            StrongBorder = ColorOf(stage.StrongBorderInk, Colors.Gray);
+            SubtleBorder = ColorOf(stage.SubtleBorderInk, Colors.Gainsboro);
+            Text = ColorOf(stage.TextInk, Colors.Black);
+            Secondary = ColorOf(stage.SecondaryInk, Colors.DimGray);
+            Muted = ColorOf(stage.MutedInk, Colors.Gray);
+            Accent = ColorOf(accent ?? stage.AccentInk, Colors.DimGray);
+            Background = ColorOf(stage.BackgroundInk, Colors.White);
+            SurfaceMuted = ColorOf(stage.SurfaceMutedInk, Colors.WhiteSmoke);
+            // The unit outline sits between the strong border and the muted text on dark backgrounds (Arc: L .53).
+            var dark = Background.R + Background.G + Background.B < 384;
+            NodeStroke = dark ? ArcColor.Lerp(StrongBorder, Muted, 0.55) : StrongBorder;
+        }
+
+        public Color Sheet { get; }
+        public Color PlateBack { get; }
+        public Color PlateFace { get; }
+        public Color Border { get; }
+        public Color StrongBorder { get; }
+        public Color SubtleBorder { get; }
+        public Color Text { get; }
+        public Color Secondary { get; }
+        public Color Muted { get; }
+        public Color Accent { get; }
+        public Color Background { get; }
+        public Color SurfaceMuted { get; }
+        public Color NodeStroke { get; }
+
+        private static Color ColorOf(IBrush? brush, Color fallback) => brush is ISolidColorBrush solid ? solid.Color : fallback;
     }
 }

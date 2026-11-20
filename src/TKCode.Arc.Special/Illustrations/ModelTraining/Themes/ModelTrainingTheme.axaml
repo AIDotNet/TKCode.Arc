@@ -4,90 +4,324 @@
                     x:ClassModifier="internal"
                     x:Class="TKCode.Arc.ModelTrainingTheme">
 
-    <!-- The card: header (title, status, two-line caption), the stage, and the footer with playback and speed. -->
+    <!--
+        Arc Model training (design reference): no card. The diagram and the readout panel (beside it from 720 px, under it
+        below), the step bar (play / pause and five steps) and a centred caption, 20 apart.
+    -->
     <ControlTheme x:Key="{x:Type arc:ModelTraining}" TargetType="arc:ModelTraining">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
-        <Setter Property="MaxWidth" Value="780" />
-        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
-        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
-        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusSurface}" />
+        <Setter Property="MaxWidth" Value="904" />
+        <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
-        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="CaptionStageInk" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:ModelTraining">
-                <Border Background="{TemplateBinding Background}"
-                        BorderBrush="{TemplateBinding BorderBrush}"
-                        BorderThickness="{TemplateBinding BorderThickness}"
-                        CornerRadius="{TemplateBinding CornerRadius}"
-                        ClipToBounds="False">
-                    <Grid RowDefinitions="Auto,Auto">
-                        <StackPanel Margin="{TemplateBinding BodyPadding}">
-                            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
-                                <TextBlock Text="{TemplateBinding Title}"
-                                           MinHeight="{arc:ModelTrainingTokenResource HeaderRowHeight}"
-                                           VerticalAlignment="Center"
-                                           FontFamily="{arc:ArcDesignTokenResource DisplayFontFamily}"
-                                           FontSize="{arc:ArcDesignTokenResource TypeBase}"
-                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
-                                           LineHeight="{arc:ModelTrainingTokenResource TitleLineHeight}"
-                                           Padding="0,2"
-                                           TextTrimming="CharacterEllipsis"
-                                           Foreground="{arc:ArcDesignTokenResource Foreground}" />
-                                <arc:ExplainerStatus Name="PART_Status" Grid.Column="1" Margin="12,0,0,0" VerticalAlignment="Center" />
-                                <arc:ArcContentSwap Name="PART_Caption"
-                                                    Grid.Row="1"
-                                                    Grid.ColumnSpan="2"
-                                                    Mode="Crossfade"
-                                                    HorizontalContentAlignment="Left"
-                                                    VerticalContentAlignment="Top"
-                                                    Margin="{arc:ModelTrainingTokenResource CaptionMargin}"
-                                                    MinHeight="{arc:ModelTrainingTokenResource CaptionMinHeight}" />
-                                <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="1" />
+                <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="{arc:ModelTrainingTokenResource SectionGap}" Background="{TemplateBinding Background}">
+                    <arc:ModelTrainingBodyPanel Name="PART_Body"
+                                                WideWidth="{arc:ModelTrainingTokenResource WideWidth}"
+                                                PanelWidth="{arc:ModelTrainingTokenResource PanelWidth}"
+                                                ColumnGap="{arc:ModelTrainingTokenResource PanelGap}"
+                                                RowGap="{arc:ModelTrainingTokenResource StackedGap}">
+                        <arc:ModelTrainingStage Name="PART_Stage" />
+                        <StackPanel Name="PART_Panel" Spacing="{arc:ModelTrainingTokenResource PanelSpacing}">
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="{arc:ModelTrainingTokenResource PanelSpacing}">
+                                <StackPanel Spacing="{arc:ModelTrainingTokenResource StatSpacing}">
+                                    <TextBlock Name="PART_LossLabel" Classes="statLabel" />
+                                    <TextBlock Name="PART_LossValue" Classes="statValue" />
+                                    <TextBlock Name="PART_LossMeta" Classes="statMeta" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="{arc:ModelTrainingTokenResource StatSpacing}">
+                                    <TextBlock Name="PART_EpochLabel" Classes="statLabel" />
+                                    <TextBlock Name="PART_EpochValue" Classes="statValue" />
+                                    <TextBlock Name="PART_EpochMeta" Classes="statMeta" />
+                                </StackPanel>
                             </Grid>
-                            <arc:ModelTrainingStage Name="PART_Stage" Margin="0,20,0,0" />
+                            <arc:ModelTrainingChart Name="PART_Chart" Height="{arc:ModelTrainingTokenResource ChartHeight}" />
+                            <Border BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
+                                    BorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                    Padding="{arc:ModelTrainingTokenResource EvalPadding}">
+                                <Grid ColumnDefinitions="24,*,Auto" ColumnSpacing="{arc:ModelTrainingTokenResource EvalColumnGap}">
+                                    <arc:ModelTrainingEvalMark Name="PART_EvalMark" VerticalAlignment="Center" />
+                                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                                        <TextBlock Name="PART_EvalName"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   LineHeight="18.2"
+                                                   LetterSpacing="-0.13"
+                                                   TextTrimming="CharacterEllipsis" />
+                                        <TextBlock Name="PART_EvalTarget" Classes="statMeta" />
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2"
+                                                Orientation="Horizontal"
+                                                VerticalAlignment="Center"
+                                                Spacing="{arc:ModelTrainingTokenResource EvalTagGap}">
+                                        <TextBlock Name="PART_EvalScore"
+                                                   MinWidth="{arc:ModelTrainingTokenResource ScoreMinWidth}"
+                                                   VerticalAlignment="Center"
+                                                   TextAlignment="Right"
+                                                   FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                   FontFeatures="+tnum" />
+                                        <Panel VerticalAlignment="Center">
+                                            <Border Name="PART_TagPendingBox" Classes="tag pending">
+                                                <TextBlock Name="PART_TagPending" />
+                                            </Border>
+                                            <Border Name="PART_TagScoringBox" Classes="tag scoring">
+                                                <TextBlock Name="PART_TagScoring" />
+                                            </Border>
+                                            <Border Name="PART_TagPassedBox" Classes="tag passed">
+                                                <TextBlock Name="PART_TagPassed" />
+                                            </Border>
+                                        </Panel>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
                         </StackPanel>
-                        <Border Grid.Row="1"
-                                Margin="0,20,0,0"
-                                BorderThickness="{arc:ArcDesignTokenResource EdgeThicknessTop}"
-                                BorderBrush="{arc:ArcDesignTokenResource Border}"
-                                Padding="{TemplateBinding FooterPadding}"
-                                IsVisible="{TemplateBinding AreControlsVisible}">
-                            <arc:AgentLoopFooterPanel>
-                                <StackPanel Orientation="Horizontal" Spacing="{arc:ModelTrainingTokenResource ButtonGap}" VerticalAlignment="Center">
-                                    <arc:ExplainerIconButton Name="PART_PlayButton" />
-                                    <arc:ExplainerIconButton Name="PART_StepButton" />
-                                    <arc:ExplainerIconButton Name="PART_RestartButton" />
-                                </StackPanel>
-                                <StackPanel Orientation="Horizontal" Spacing="{arc:ModelTrainingTokenResource SpeedGap}" VerticalAlignment="Center">
-                                    <TextBlock Name="PART_SpeedLabel" VerticalAlignment="Center" Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                                    <arc:SegmentedControl Name="PART_Speed" VerticalAlignment="Center" />
-                                </StackPanel>
-                            </arc:AgentLoopFooterPanel>
-                        </Border>
+                    </arc:ModelTrainingBodyPanel>
+                    <Grid Name="PART_Controls"
+                          Grid.Row="1"
+                          ColumnDefinitions="Auto,*"
+                          ColumnSpacing="{arc:ModelTrainingTokenResource ControlsGap}"
+                          IsVisible="{TemplateBinding AreControlsVisible}">
+                        <arc:ExplainerIconButton Name="PART_PlayButton"
+                                                 Width="{arc:ModelTrainingTokenResource PlayButtonSize}"
+                                                 Height="{arc:ModelTrainingTokenResource PlayButtonSize}"
+                                                 MinWidth="{arc:ModelTrainingTokenResource PlayButtonSize}"
+                                                 VerticalAlignment="Center" />
+                        <Grid Name="PART_Steps"
+                              Grid.Column="1"
+                              Height="{arc:ModelTrainingTokenResource StepBarHeight}"
+                              ColumnSpacing="{arc:ModelTrainingTokenResource StepGap}" />
                     </Grid>
-                </Border>
+                    <TextBlock Name="PART_Caption"
+                               Grid.Row="2"
+                               MinHeight="36.4"
+                               LetterSpacing="-0.13"
+                               TextAlignment="Center"
+                               HorizontalAlignment="Center"
+                               TextWrapping="Wrap"
+                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                               LineHeight="18.2"
+                               Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                    <arc:ExplainerAnnouncer Name="PART_Announcer" Grid.Row="2" />
+                </Grid>
             </ControlTemplate>
         </Setter>
+
+        <Style Selector="^ /template/ TextBlock.statLabel">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LetterSpacing" Value="-0.12" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.statValue">
+            <Setter Property="FontSize" Value="{arc:ModelTrainingTokenResource StatValueSize}" />
+            <Setter Property="LetterSpacing" Value="-0.22" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="FontFeatures" Value="+tnum" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ TextBlock.statMeta">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LetterSpacing" Value="-0.12" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="FontFeatures" Value="+tnum" />
+            <Setter Property="TextTrimming" Value="CharacterEllipsis" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+        <Style Selector="^:untrained /template/ TextBlock.statValue">
+            <Setter Property="Opacity" Value="0.4" />
+        </Style>
+        <Style Selector="^:untrained /template/ TextBlock.statMeta">
+            <Setter Property="Opacity" Value="0.72" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock.statValue">
+            <Setter Property="FontSize" Value="{arc:ModelTrainingTokenResource CompactStatValueSize}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Caption">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LineHeight" Value="16.8" />
+            <Setter Property="MinHeight" Value="33.6" />
+        </Style>
+        <Style Selector="^:reduced /template/ Grid#PART_Controls">
+            <Setter Property="ColumnSpacing" Value="0" />
+        </Style>
+
+        <!-- The evaluation tags: the current one shows, the others shrink to 0.92 and fade. -->
+        <Style Selector="^ /template/ Border.tag">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="Padding" Value="{arc:ModelTrainingTokenResource TagPadding}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="Opacity" Value="0" />
+            <Setter Property="RenderTransform" Value="scale(0.92)" />
+        </Style>
+        <Style Selector="^ /template/ Border.tag > TextBlock">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="LineHeight" Value="16.2" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        </Style>
+        <Style Selector="^ /template/ Border.pending">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^ /template/ Border.pending > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^ /template/ Border.scoring">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        </Style>
+        <Style Selector="^ /template/ Border.scoring > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^ /template/ Border.passed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^ /template/ Border.passed > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+        <Style Selector="^:eval-failed /template/ Border.passed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:eval-failed /template/ Border.passed > TextBlock">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+        <Style Selector="^:eval-pending /template/ Border.pending">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:eval-scoring /template/ Border.scoring">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+        <Style Selector="^:eval-passed /template/ Border.passed, ^:eval-failed /template/ Border.passed">
+            <Setter Property="Opacity" Value="1" />
+            <Setter Property="RenderTransform" Value="scale(1)" />
+        </Style>
+
+        <!-- Arc: the incoming tag fades in over 0.2 s and settles from 0.92 on a 0.44 s spring; readouts fade 0.36 s. -->
+        <Style Selector="^:motion-full /template/ Border.tag">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" Easing="{arc:ArcDesignTokenResource EaseEnter}" />
+                    <TransformOperationsTransition Property="RenderTransform" Duration="0:0:0.44" Easing="{arc:ArcDesignTokenResource EaseEnter}" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-full /template/ TextBlock.statValue, ^:motion-full /template/ TextBlock.statMeta">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.36" Easing="{arc:ArcDesignTokenResource EaseEnter}" />
+                </Transitions>
+            </Setter>
+        </Style>
     </ControlTheme>
 
-    <!-- The stage's inks: the forward pass and positive weights in the accent, negative weights in series 2, the backward
-         pass in the warning color, the right answer in the success color. -->
+    <!-- The step bar's steps: muted, the current one in the foreground with its number and bar in the accent. -->
+    <ControlTheme x:Key="{x:Type arc:ModelTrainingStepButton}" TargetType="arc:ModelTrainingStepButton">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="Padding" Value="0" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ModelTrainingStepButton">
+                <Panel Background="{TemplateBinding Background}">
+                    <StackPanel VerticalAlignment="Center" Spacing="{arc:ModelTrainingTokenResource StepLabelGap}">
+                        <StackPanel Orientation="Horizontal" Spacing="{arc:ModelTrainingTokenResource StepNumberGap}">
+                            <TextBlock Name="PART_Number" Text="{TemplateBinding Number}" LineHeight="15.6" FontFeatures="+tnum" />
+                            <TextBlock Name="PART_Name" Text="{TemplateBinding Text}" LineHeight="15.6" LetterSpacing="-0.12" TextTrimming="CharacterEllipsis" />
+                        </StackPanel>
+                        <Panel Height="{arc:ModelTrainingTokenResource TrackHeight}">
+                            <Border Name="PART_Track"
+                                    Background="{arc:ArcDesignTokenResource Border}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                            <Border Name="PART_Fill"
+                                    Background="{arc:ArcDesignTokenResource TextMuted}"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}" />
+                        </Panel>
+                    </StackPanel>
+                    <Border Name="PART_FocusRing"
+                            IsVisible="False"
+                            IsHitTestVisible="False"
+                            Margin="-4,0"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            BorderThickness="{arc:ArcDesignTokenResource FocusEdgeThickness}"
+                            BorderBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Style Selector="^:pointerover">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^:current /template/ TextBlock#PART_Number">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:current /template/ Border#PART_Fill">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+        <Style Selector="^:compact /template/ TextBlock#PART_Name">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:focus-visible /template/ Border#PART_FocusRing">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <BrushTransition Property="Foreground" Duration="0:0:0.15" Easing="{arc:ArcDesignTokenResource EaseEnter}" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+
+    <!-- The diagram's inks (Arc: sheets and units on the raised surface, plates muted behind the surface face). -->
     <ControlTheme x:Key="{x:Type arc:ModelTrainingStage}" TargetType="arc:ModelTrainingStage">
-        <Setter Property="ForwardInk" Value="{arc:ArcDesignTokenResource Series1}" />
-        <Setter Property="NegativeInk" Value="{arc:ArcDesignTokenResource Series2}" />
-        <Setter Property="BackwardInk" Value="{arc:ArcDesignTokenResource Warning}" />
-        <Setter Property="TargetInk" Value="{arc:ArcDesignTokenResource Success}" />
-        <Setter Property="NodeFill" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
-        <Setter Property="NodeBorder" Value="{arc:ArcDesignTokenResource Border}" />
-        <Setter Property="TrackInk" Value="{arc:ArcDesignTokenResource ControlTrack}" />
+        <Setter Property="SheetInk" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="PlateBackInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="PlateFaceInk" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="StrongBorderInk" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="SubtleBorderInk" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
         <Setter Property="TextInk" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
         <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
-        <Setter Property="AccentSubtle" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
-        <Setter Property="CardRadius" Value="{arc:ArcDesignTokenResource RadiusStep10}" />
-        <Setter Property="PillRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BackgroundInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="SurfaceMutedInk" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ModelTrainingChart}" TargetType="arc:ModelTrainingChart">
+        <Setter Property="GridInk" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="AxisInk" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="MutedInk" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SecondaryInk" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="BackgroundInk" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:ModelTrainingEvalMark}" TargetType="arc:ModelTrainingEvalMark">
+        <Setter Property="TrackInk" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="SuccessInk" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="DangerInk" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="BorderInk" Value="{arc:ArcDesignTokenResource Border}" />
     </ControlTheme>
 </ResourceDictionary>

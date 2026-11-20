@@ -309,6 +309,40 @@ public abstract class Explainer : TemplatedControl
     /// <summary>Picks up a change of <see cref="IsClockHeld"/>.</summary>
     private protected void ClockHoldChanged() => UpdateLoop();
 
+    /// <summary>
+    /// A multiplier on the clock's pace while the story plays or steps (default 1), for a story that slows down smoothly
+    /// (a pointer resting on part of the diagram) instead of holding still.
+    /// </summary>
+    private protected virtual double ClockRate => 1;
+
+    /// <summary>
+    /// Moves the story to <paramref name="time"/> at once, forward or back (a reader picking a chapter), and keeps the
+    /// playing state; going back starts the scene over and runs the beats up to that time again.
+    /// </summary>
+    private protected void Seek(double time)
+    {
+        EnsureBuilt();
+        _started = true;
+        _userDriven = true;
+        _stepTarget = null;
+        IsStepping = false;
+        _loopWait = -1;
+        time = Math.Clamp(time, 0, _script.Length);
+        if (time < _now || IsFinished)
+        {
+            _script.Rewind();
+            ResetScene();
+            _now = 0;
+            IsFinished = false;
+            UpdateCanStep();
+        }
+        AdvanceTo(time);
+        CheckFinished();
+        UpdatePseudoClasses();
+        UpdateButtons();
+        UpdateLoop();
+    }
+
     /// <summary>Builds the beats of the story from the current data into <paramref name="script"/>.</summary>
     private protected abstract void BuildStory(ExplainerScript script);
 
@@ -556,7 +590,7 @@ public abstract class Explainer : TemplatedControl
         }
         else if ((IsPlaying && !IsClockHeld) || _stepTarget is not null)
         {
-            var target = _now + dt * (_stepTarget is not null ? StepSpeed : Speed);
+            var target = _now + dt * (_stepTarget is not null ? StepSpeed : Speed) * ClockRate;
             if (_stepTarget is { } step && target >= step)
             {
                 target = step;

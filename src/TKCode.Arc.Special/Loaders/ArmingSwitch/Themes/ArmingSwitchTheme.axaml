@@ -1,0 +1,119 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ArmingSwitchTheme">
+
+    <!--
+        Arc Arming switch (design reference). Wide card (720 px and up): Surface, a 1 px Border edge, radius 24, padding
+        24; the title (20 px, medium, -0.6 tracking), description (13 px TextSecondary), status chip and hint (13 px
+        TextSecondary) in a column beside the drawn plate (1 : 1.55, gap 24). Narrow: stacked, gap 16, no card chrome, a
+        BorderSubtle line above the hint, the title at body size; below 420 px padding and gaps tighten to 16 / 12.
+        The chip's tones: TextMuted (safe), TextSecondary (cover up), Warning (armed, running), Success, Danger.
+        The plate draws itself from ArmingSwitchToken; the cover and the ring follow the accent.
+    -->
+    <ControlTheme x:Key="{x:Type arc:ArmingSwitch}" TargetType="arc:ArmingSwitch">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusStep24}" />
+        <Setter Property="Padding" Value="24" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="13" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="AccentInk" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="Template">
+            <ControlTemplate>
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:ArmingSwitchLayout Name="PART_Layout">
+                        <arc:ArmingSwitchHeader Name="PART_Header">
+                            <StackPanel Spacing="2">
+                                <TextBlock Name="PART_Title"
+                                           Text="{TemplateBinding Title}"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Name="PART_Description"
+                                           Text="{TemplateBinding Description}"
+                                           IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="13"
+                                           LineHeight="18.2"
+                                           TextWrapping="Wrap"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </StackPanel>
+                            <arc:ArmingSwitchChip Name="PART_Status"
+                                                  HorizontalAlignment="Left"
+                                                  FontFamily="{TemplateBinding FontFamily}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                  SafeTone="{arc:ArcDesignTokenResource TextMuted}"
+                                                  OpenTone="{arc:ArcDesignTokenResource TextSecondary}"
+                                                  ArmedTone="{arc:ArcDesignTokenResource Warning}"
+                                                  DoneTone="{arc:ArcDesignTokenResource Success}"
+                                                  FailedTone="{arc:ArcDesignTokenResource Danger}" />
+                        </arc:ArmingSwitchHeader>
+                        <arc:ArmingSwitchStage Name="PART_Stage"
+                                               FocusRingBrush="{arc:ArcDesignTokenResource FocusRing}" />
+                        <Border Name="PART_Footer">
+                            <arc:ArcContentSwap Name="PART_Hint"
+                                                Mode="BlurSwap"
+                                                HorizontalContentAlignment="Left"
+                                                VerticalContentAlignment="Top"
+                                                TextElement.FontSize="13" />
+                        </Border>
+                    </arc:ArmingSwitchLayout>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ TextBlock#PART_Title">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="LineHeight" Value="22" />
+            <Setter Property="FontWeight" Value="Medium" />
+            <Setter Property="LetterSpacing" Value="-0.6" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArmingSwitchLayout#PART_Layout">
+            <Setter Property="IsWide" Value="True" />
+            <Setter Property="ColumnGap" Value="24" />
+            <Setter Property="RowGap" Value="16" />
+        </Style>
+        <Style Selector="^ /template/ arc|ArmingSwitchHeader#PART_Header">
+            <Setter Property="IsStacked" Value="True" />
+            <Setter Property="Gap" Value="16" />
+        </Style>
+
+        <Style Selector="^:narrow">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Padding" Value="20" />
+            <Style Selector="^ /template/ arc|ArmingSwitchLayout#PART_Layout">
+                <Setter Property="IsWide" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArmingSwitchHeader#PART_Header">
+                <Setter Property="IsStacked" Value="False" />
+            </Style>
+            <Style Selector="^ /template/ TextBlock#PART_Title">
+                <Setter Property="FontSize" Value="15" />
+                <Setter Property="LineHeight" Value="21" />
+                <Setter Property="FontWeight" Value="Normal" />
+                <Setter Property="LetterSpacing" Value="-0.15" />
+            </Style>
+            <Style Selector="^ /template/ Border#PART_Footer">
+                <Setter Property="BorderThickness" Value="0,1,0,0" />
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+                <Setter Property="Padding" Value="0,16,0,0" />
+            </Style>
+        </Style>
+        <Style Selector="^:tight">
+            <Setter Property="Padding" Value="16" />
+            <Style Selector="^ /template/ arc|ArmingSwitchLayout#PART_Layout">
+                <Setter Property="RowGap" Value="12" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

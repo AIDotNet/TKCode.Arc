@@ -3,101 +3,225 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
+using Avalonia.Controls.Documents;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
 using Avalonia.Interactivity;
+using Avalonia.Media;
 using Avalonia.Threading;
-using TKCode.Arc.Primitives;
+using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
 
 /// <summary>
-/// An animated explainer of a model's training loop. Each step draws a batch from the data, runs it forward through a
-/// small network (a wave of activations, left to right), compares the prediction with the right answer to get the loss
-/// (bars show the probability the model gave each class, and the loss is −ln of the right one), runs the loss backward
-/// (a wave of gradients, right to left) and nudges every weight (the connections change thickness and color). The loss
-/// lands on a curve that falls step by step. The first step stops at every phase with a caption; later steps repeat the
-/// loop faster. Play, pause, step, restart and a 0.5× / 1× / 2× speed control drive it; under reduced motion it opens on
-/// its end and steps apply in place. The network and the numbers are illustrative.
+/// An animated illustration of how a model learns, told in five steps that loop seamlessly (about 21 s at speed 1). A
+/// batch leaves a stack of training data and drops into the input layer of a small network drawn on 2.5D plates; signals
+/// ride every connection forward to a prediction; the error rides them back as a short dash and each connection it
+/// passes grows a little stronger; over the epochs batches stream through, the useful connections thicken and take the
+/// accent while the rest stay light, the loss curve falls beside the network and the loss, epoch and output readouts
+/// count in step; at the end the held-out data runs through once, the score counts up and the evaluation passes its
+/// target. A step bar with play and pause replays the story or jumps to any step (while paused, a step shows its still
+/// frame); a caption explains the current step; a mouse resting on a stack or a layer shows a detail and slows the
+/// story down. Under reduced motion it shows the finished run as a still frame. The network and the numbers are
+/// illustrative.
+/// <para>
+/// The <see cref="Explainer"/> clock drives it: <see cref="Explainer.AutoPlay"/> starts it on first sight,
+/// <see cref="Explainer.Pause"/> holds it, <see cref="Explainer.StepForward"/> plays to the next step,
+/// <see cref="Explainer.Restart"/> starts over and <see cref="Explainer.Speed"/> scales it (0 holds it still). A playing
+/// run always loops without a pause, so <see cref="Explainer.IsLooping"/> has no effect; <see cref="Explainer.Finished"/>
+/// is raised at the end of every run. <see cref="Explainer.AreControlsVisible"/> shows the step bar. The header-only
+/// members (<see cref="Explainer.Model"/>) have no effect.
+/// </para>
 /// </summary>
 [TemplatePart(StagePart, typeof(ModelTrainingStage))]
-[TemplatePart(ExplainerChapterKit.StatusPart, typeof(ExplainerStatus))]
-[TemplatePart(ExplainerChapterKit.CaptionPart, typeof(ArcContentSwap))]
-[TemplatePart(ExplainerChapterKit.SpeedPart, typeof(SegmentedControl))]
+[TemplatePart(StepsPart, typeof(Grid))]
+[TemplatePart(CaptionPart, typeof(TextBlock))]
+[PseudoClasses(CompactPseudoClass, UntrainedPseudoClass, EvalPendingPseudoClass, EvalScoringPseudoClass, EvalPassedPseudoClass,
+    EvalFailedPseudoClass, ReducedPseudoClass)]
 public class ModelTraining : Explainer
 {
-    /// <summary>The drawn data, network, prediction and loss curve.</summary>
+    /// <summary>The drawn diagram: data stacks, network and outputs.</summary>
     public const string StagePart = "PART_Stage";
 
-    /// <summary>How many training steps the story runs (2 to 20, default 6).</summary>
+    internal const string StepsPart = "PART_Steps";
+    internal const string CaptionPart = "PART_Caption";
+    internal const string CompactPseudoClass = ":compact";
+    internal const string UntrainedPseudoClass = ":untrained";
+    internal const string EvalPendingPseudoClass = ":eval-pending";
+    internal const string EvalScoringPseudoClass = ":eval-scoring";
+    internal const string EvalPassedPseudoClass = ":eval-passed";
+    internal const string EvalFailedPseudoClass = ":eval-failed";
+    internal const string ReducedPseudoClass = ":reduced";
+
+    /// <summary>The number of steps in the step bar.</summary>
+    internal const int StepTotal = 5;
+
+    /// <summary>The pace a resting mouse slows the story to.</summary>
+    internal const double HoverRate = 0.6;
+
+    private static readonly IReadOnlyList<string> s_sampleClasses = ["Cat", "Dog"];
+    private static readonly IReadOnlyList<int> s_sampleHidden = [4, 4];
+
+    /// <summary>
+    /// How many training steps (batches) the story shows: the first one slowly over the batch, forward and backward steps,
+    /// the rest streaming through the epochs step (2 to 20, default 6).
+    /// </summary>
     public static readonly StyledProperty<int> StepCountProperty =
         AvaloniaProperty.Register<ModelTraining, int>(nameof(StepCount), 6, coerce: static (_, v) => Math.Clamp(v, 2, 20));
 
-    /// <summary>The examples per batch, named in the batch caption (default 32).</summary>
+    /// <summary>The samples per batch, named in the batch caption and the training data's detail (default 32).</summary>
     public static readonly StyledProperty<int> BatchSizeProperty =
         AvaloniaProperty.Register<ModelTraining, int>(nameof(BatchSize), 32, coerce: static (_, v) => Math.Max(1, v));
 
-    /// <summary>The learning rate, named in the readout and the update caption; a larger rate moves the weights further each step (default 0.05).</summary>
+    /// <summary>
+    /// How far each update moves the weights toward their trained values (approximate; default 0.05): a larger rate makes
+    /// the connections strengthen sooner, a smaller one later. The finished model looks the same.
+    /// </summary>
     public static readonly StyledProperty<double> LearningRateProperty =
         AvaloniaProperty.Register<ModelTraining, double>(nameof(LearningRate), 0.05,
             coerce: static (_, v) => double.IsFinite(v) ? Math.Clamp(v, 0.0001, 1) : 0.05);
 
     /// <summary>
-    /// The loss of each step, in order; null (the default) uses a sample curve that falls from 2.30 and levels off. Extra
-    /// values are ignored, missing ones continue the sample curve. Values are clamped to 0.01 – 5.
+    /// The loss curve as values spread evenly over the training, first to last (at least two); null (the default) draws a
+    /// curve from <see cref="LossFrom"/> to <see cref="LossTo"/>. When set, its first and last values replace them.
     /// </summary>
     public static readonly StyledProperty<IReadOnlyList<double>?> LossValuesProperty =
         AvaloniaProperty.Register<ModelTraining, IReadOnlyList<double>?>(nameof(LossValues));
 
-    /// <summary>Every word the card shows or announces.</summary>
+    /// <summary>Every word the illustration shows or announces.</summary>
     public static readonly StyledProperty<ModelTrainingLabels> LabelsProperty =
         AvaloniaProperty.Register<ModelTraining, ModelTrainingLabels>(nameof(Labels), new ModelTrainingLabels());
 
-    /// <summary>The phase of the current step.</summary>
+    /// <summary>The two classes the model learns to tell apart, shown beside the output layer (default Cat and Dog).</summary>
+    public static readonly StyledProperty<IReadOnlyList<string>?> ClassNamesProperty =
+        AvaloniaProperty.Register<ModelTraining, IReadOnlyList<string>?>(nameof(ClassNames));
+
+    /// <summary>The units of the input layer, one per feature; each data sheet shows one line per feature (2 to 5, default 3).</summary>
+    public static readonly StyledProperty<int> InputCountProperty =
+        AvaloniaProperty.Register<ModelTraining, int>(nameof(InputCount), 3, coerce: static (_, v) => Math.Clamp(v, 2, 5));
+
+    /// <summary>The units of the two hidden layers, each 2 to 6 (default 4 and 4).</summary>
+    public static readonly StyledProperty<IReadOnlyList<int>?> HiddenUnitsProperty =
+        AvaloniaProperty.Register<ModelTraining, IReadOnlyList<int>?>(nameof(HiddenUnits));
+
+    /// <summary>The samples in the training data, shown under its stack (default 12,800).</summary>
+    public static readonly StyledProperty<int> SamplesProperty =
+        AvaloniaProperty.Register<ModelTraining, int>(nameof(Samples), 12800, coerce: static (_, v) => Math.Max(0, v));
+
+    /// <summary>The samples in the held-out data (default 1,600).</summary>
+    public static readonly StyledProperty<int> HeldOutSamplesProperty =
+        AvaloniaProperty.Register<ModelTraining, int>(nameof(HeldOutSamples), 1600, coerce: static (_, v) => Math.Max(0, v));
+
+    /// <summary>The epochs the story trains for; the epoch readout and the chart's axis count to it (default 12).</summary>
+    public static readonly StyledProperty<int> EpochsProperty =
+        AvaloniaProperty.Register<ModelTraining, int>(nameof(Epochs), 12, coerce: static (_, v) => Math.Clamp(v, 1, 9999));
+
+    /// <summary>The loss after the first batch, where the curve starts (default 0.69).</summary>
+    public static readonly StyledProperty<double> LossFromProperty =
+        AvaloniaProperty.Register<ModelTraining, double>(nameof(LossFrom), 0.69);
+
+    /// <summary>The loss after the last epoch, where the curve ends; the validation point sits just above it (default 0.08).</summary>
+    public static readonly StyledProperty<double> LossToProperty =
+        AvaloniaProperty.Register<ModelTraining, double>(nameof(LossTo), 0.08);
+
+    /// <summary>The accuracy on the held-out data in percent; the evaluation counts up to it (default 94.2).</summary>
+    public static readonly StyledProperty<double> AccuracyProperty =
+        AvaloniaProperty.Register<ModelTraining, double>(nameof(Accuracy), 94.2);
+
+    /// <summary>The accuracy the evaluation must reach in percent, shown under its name (default 90).</summary>
+    public static readonly StyledProperty<double> TargetProperty =
+        AvaloniaProperty.Register<ModelTraining, double>(nameof(Target), 90);
+
+    /// <summary>
+    /// The step (0 to 4) shown before the story plays and where playing starts; −1 (the default) shows the finished,
+    /// evaluated model and plays from the start. Under reduced motion it picks the still frame shown.
+    /// </summary>
+    public static readonly StyledProperty<int> DefaultStepProperty =
+        AvaloniaProperty.Register<ModelTraining, int>(nameof(DefaultStep), -1, coerce: static (_, v) => Math.Clamp(v, -1, StepTotal - 1));
+
+    /// <summary>Shows the sentence under the step bar that explains the current step (default true).</summary>
+    public static readonly StyledProperty<bool> IsCaptionVisibleProperty =
+        AvaloniaProperty.Register<ModelTraining, bool>(nameof(IsCaptionVisible), true);
+
+    /// <summary>
+    /// The colour of the signals, the error dash, the learned connections, the loss curve and the current step; null (the
+    /// default) uses the accent. The passed evaluation keeps the success colour.
+    /// </summary>
+    public static readonly StyledProperty<IBrush?> AccentProperty =
+        AvaloniaProperty.Register<ModelTraining, IBrush?>(nameof(Accent));
+
+    /// <summary>The diagram's accessible description; null (the default) builds one from the classes and the numbers.</summary>
+    public static readonly StyledProperty<string?> DescriptionProperty =
+        AvaloniaProperty.Register<ModelTraining, string?>(nameof(Description));
+
+    /// <summary>Where the run is.</summary>
     public static readonly DirectProperty<ModelTraining, ModelTrainingPhase> PhaseProperty =
         AvaloniaProperty.RegisterDirect<ModelTraining, ModelTrainingPhase>(nameof(Phase), o => o.Phase);
 
-    /// <summary>The current step, from 1; 0 before the first.</summary>
+    /// <summary>The training step (batch) the run is on, from 1; 0 before the first.</summary>
     public static readonly DirectProperty<ModelTraining, int> IterationProperty =
         AvaloniaProperty.RegisterDirect<ModelTraining, int>(nameof(Iteration), o => o.Iteration);
 
-    /// <summary>The last loss measured; NaN before the first.</summary>
+    /// <summary>The loss the readout shows; NaN before the first batch has been measured.</summary>
     public static readonly DirectProperty<ModelTraining, double> CurrentLossProperty =
         AvaloniaProperty.RegisterDirect<ModelTraining, double>(nameof(CurrentLoss), o => o.CurrentLoss);
 
-    /// <summary>Raised when a step finishes its update, with the step and its loss.</summary>
+    /// <summary>The step the step bar marks as current (0 batch, 1 forward pass, 2 backward pass, 3 epochs, 4 evaluate).</summary>
+    public static readonly DirectProperty<ModelTraining, int> CurrentStepProperty =
+        AvaloniaProperty.RegisterDirect<ModelTraining, int>(nameof(CurrentStep), o => o.CurrentStep);
+
+    /// <summary>Raised when a training step's weight update finishes, with the step and the loss after it.</summary>
     public static readonly RoutedEvent<ModelTrainingIterationEventArgs> IterationCompletedEvent =
         RoutedEvent.Register<ModelTraining, ModelTrainingIterationEventArgs>(nameof(IterationCompleted), RoutingStrategies.Bubble);
 
-    internal static readonly StyledProperty<Thickness> BodyPaddingProperty =
-        AvaloniaProperty.Register<ModelTraining, Thickness>(nameof(BodyPadding), new Thickness(24, 24, 24, 0));
+    internal static readonly StyledProperty<IBrush?> CaptionStageInkProperty =
+        AvaloniaProperty.Register<ModelTraining, IBrush?>(nameof(CaptionStageInk));
 
-    internal static readonly StyledProperty<Thickness> FooterPaddingProperty =
-        AvaloniaProperty.Register<ModelTraining, Thickness>(nameof(FooterPadding), new Thickness(24, 16, 24, 24));
-
-    /// <summary>The network's layer sizes: inputs, hidden units, classes.</summary>
-    internal static readonly int[] LayerSizes = [4, 5, 3];
-
-    /// <summary>The class that is the right answer for every batch (the middle one).</summary>
-    internal const int TargetClass = 1;
-
-    /// <summary>Phase lengths in seconds at speed 1 for the first step: batch, forward, loss, backward, update.</summary>
-    internal static readonly double[] PhaseSeconds = [0.7, 1.3, 0.9, 1.3, 0.9];
-
-    /// <summary>How much faster the steps after the first run.</summary>
-    internal const double RepeatPace = 0.45;
-
-    private readonly ModelTrainingScene _scene = new();
-    private readonly ExplainerChapterKit _kit;
+    private readonly ModelTrainingTimeline _timeline = new();
+    private readonly ModelTrainingStepButton[] _steps = new ModelTrainingStepButton[StepTotal];
+    private readonly string?[] _epochTexts = new string?[64];
     private ModelTrainingStage? _stage;
-    private double[] _losses = [];
+    private ModelTrainingChart? _chart;
+    private ModelTrainingEvalMark? _evalMark;
+    private ModelTrainingBodyPanel? _body;
+    private Grid? _stepBar;
+    private TextBlock? _caption;
+    private TextBlock? _lossLabel;
+    private TextBlock? _lossValue;
+    private TextBlock? _lossMeta;
+    private TextBlock? _epochLabel;
+    private TextBlock? _epochValue;
+    private TextBlock? _epochMeta;
+    private TextBlock? _evalName;
+    private TextBlock? _evalTarget;
+    private TextBlock? _evalScore;
+    private TextBlock? _tagPending;
+    private TextBlock? _tagScoring;
+    private TextBlock? _tagPassed;
+    private Control? _playButton;
     private ModelTrainingPhase _phase;
     private int _iteration;
     private double _currentLoss = double.NaN;
-    private string? _caption;
-    private string? _sentence;
+    private int _currentStep = StepTotal - 1;
+    private int _stillStep = -1;
+    private int _captionStep = -1;
+    private bool _captionCompact;
+    private int _timelineVersion;
+    private int _shownEpoch = -1;
+    private double _shownLoss = double.NaN;
+    private double _shownScore = double.NaN;
+    private int _shownEval = -1;
+    private bool _compact;
+    private bool _seeking;
+    private bool _playingBeforeEnd;
+    private bool _loopPending;
+    private bool _hovered;
     private bool _rebuildPending;
-    private bool _pauseCheckPending;
+    private bool _defaultApplied;
+    private bool _moved;
+    private double _rate = 1;
+    private double _rateVelocity;
+    private double _lastWall;
 
     static ModelTraining()
     {
@@ -105,117 +229,328 @@ public class ModelTraining : Explainer
         AutomationProperties.ControlTypeOverrideProperty.OverrideDefaultValue<ModelTraining>(AutomationControlType.Group);
     }
 
-    /// <summary>Creates the explainer with a six-step sample run.</summary>
+    /// <summary>Creates the illustration with its sample task (two classes of photos, six training steps, twelve epochs).</summary>
     public ModelTraining()
     {
-        _kit = new ExplainerChapterKit(this);
         AutomationProperties.SetName(this, Title);
+        for (var i = 0; i < StepTotal; i++)
+        {
+            var button = new ModelTrainingStepButton(i);
+            var index = i;
+            button.Click += (_, _) => GoToStep(index);
+            _steps[i] = button;
+        }
+        BuildTimeline();
     }
 
-    /// <summary>How many training steps the story runs (2 to 20, default 6).</summary>
+    /// <inheritdoc cref="StepCountProperty"/>
     public int StepCount { get => GetValue(StepCountProperty); set => SetValue(StepCountProperty, value); }
 
-    /// <summary>The examples per batch, named in the batch caption (default 32).</summary>
+    /// <inheritdoc cref="BatchSizeProperty"/>
     public int BatchSize { get => GetValue(BatchSizeProperty); set => SetValue(BatchSizeProperty, value); }
 
-    /// <summary>The learning rate, named in the readout and the update caption; a larger rate moves the weights further each step (default 0.05).</summary>
+    /// <inheritdoc cref="LearningRateProperty"/>
     public double LearningRate { get => GetValue(LearningRateProperty); set => SetValue(LearningRateProperty, value); }
 
-    /// <summary>
-    /// The loss of each step, in order; null (the default) uses a sample curve that falls from 2.30 and levels off. Extra
-    /// values are ignored, missing ones continue the sample curve. Values are clamped to 0.01 – 5.
-    /// </summary>
+    /// <inheritdoc cref="LossValuesProperty"/>
     public IReadOnlyList<double>? LossValues { get => GetValue(LossValuesProperty); set => SetValue(LossValuesProperty, value); }
 
-    /// <summary>Every word the card shows or announces.</summary>
+    /// <inheritdoc cref="LabelsProperty"/>
     public ModelTrainingLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
-    /// <summary>The phase of the current step.</summary>
+    /// <inheritdoc cref="ClassNamesProperty"/>
+    public IReadOnlyList<string>? ClassNames { get => GetValue(ClassNamesProperty); set => SetValue(ClassNamesProperty, value); }
+
+    /// <inheritdoc cref="InputCountProperty"/>
+    public int InputCount { get => GetValue(InputCountProperty); set => SetValue(InputCountProperty, value); }
+
+    /// <inheritdoc cref="HiddenUnitsProperty"/>
+    public IReadOnlyList<int>? HiddenUnits { get => GetValue(HiddenUnitsProperty); set => SetValue(HiddenUnitsProperty, value); }
+
+    /// <inheritdoc cref="SamplesProperty"/>
+    public int Samples { get => GetValue(SamplesProperty); set => SetValue(SamplesProperty, value); }
+
+    /// <inheritdoc cref="HeldOutSamplesProperty"/>
+    public int HeldOutSamples { get => GetValue(HeldOutSamplesProperty); set => SetValue(HeldOutSamplesProperty, value); }
+
+    /// <inheritdoc cref="EpochsProperty"/>
+    public int Epochs { get => GetValue(EpochsProperty); set => SetValue(EpochsProperty, value); }
+
+    /// <inheritdoc cref="LossFromProperty"/>
+    public double LossFrom { get => GetValue(LossFromProperty); set => SetValue(LossFromProperty, value); }
+
+    /// <inheritdoc cref="LossToProperty"/>
+    public double LossTo { get => GetValue(LossToProperty); set => SetValue(LossToProperty, value); }
+
+    /// <inheritdoc cref="AccuracyProperty"/>
+    public double Accuracy { get => GetValue(AccuracyProperty); set => SetValue(AccuracyProperty, value); }
+
+    /// <inheritdoc cref="TargetProperty"/>
+    public double Target { get => GetValue(TargetProperty); set => SetValue(TargetProperty, value); }
+
+    /// <inheritdoc cref="DefaultStepProperty"/>
+    public int DefaultStep { get => GetValue(DefaultStepProperty); set => SetValue(DefaultStepProperty, value); }
+
+    /// <inheritdoc cref="IsCaptionVisibleProperty"/>
+    public bool IsCaptionVisible { get => GetValue(IsCaptionVisibleProperty); set => SetValue(IsCaptionVisibleProperty, value); }
+
+    /// <inheritdoc cref="AccentProperty"/>
+    public IBrush? Accent { get => GetValue(AccentProperty); set => SetValue(AccentProperty, value); }
+
+    /// <inheritdoc cref="DescriptionProperty"/>
+    public string? Description { get => GetValue(DescriptionProperty); set => SetValue(DescriptionProperty, value); }
+
+    /// <inheritdoc cref="PhaseProperty"/>
     public ModelTrainingPhase Phase { get => _phase; private set => SetAndRaise(PhaseProperty, ref _phase, value); }
 
-    /// <summary>The current step, from 1; 0 before the first.</summary>
+    /// <inheritdoc cref="IterationProperty"/>
     public int Iteration { get => _iteration; private set => SetAndRaise(IterationProperty, ref _iteration, value); }
 
-    /// <summary>The last loss measured; NaN before the first.</summary>
+    /// <inheritdoc cref="CurrentLossProperty"/>
     public double CurrentLoss { get => _currentLoss; private set => SetAndRaise(CurrentLossProperty, ref _currentLoss, value); }
 
-    /// <summary>Raised when a step finishes its update, with the step and its loss.</summary>
+    /// <inheritdoc cref="CurrentStepProperty"/>
+    public int CurrentStep { get => _currentStep; private set => SetAndRaise(CurrentStepProperty, ref _currentStep, value); }
+
+    /// <inheritdoc cref="IterationCompletedEvent"/>
     public event EventHandler<ModelTrainingIterationEventArgs>? IterationCompleted
     {
         add => AddHandler(IterationCompletedEvent, value);
         remove => RemoveHandler(IterationCompletedEvent, value);
     }
 
-    internal Thickness BodyPadding { get => GetValue(BodyPaddingProperty); set => SetValue(BodyPaddingProperty, value); }
+    /// <summary>The colour of the step name that starts the caption on compact cards.</summary>
+    internal IBrush? CaptionStageInk { get => GetValue(CaptionStageInkProperty); set => SetValue(CaptionStageInkProperty, value); }
 
-    internal Thickness FooterPadding { get => GetValue(FooterPaddingProperty); set => SetValue(FooterPaddingProperty, value); }
+    internal ModelTrainingTimeline Timeline => _timeline;
 
-    internal ModelTrainingScene Scene => _scene;
+    internal int TimelineVersion => _timelineVersion;
+
+    internal ModelTrainingStepButton[] StepButtons => _steps;
 
     internal double StoryTime => Now;
 
-    internal bool Animates => IsTravelEnabled;
+    internal bool IsCompact => _compact;
 
-    /// <summary>The losses the story plays (one per step).</summary>
-    internal IReadOnlyList<double> Losses => _losses;
+    internal double PaceRate => _rate;
 
-    internal string? CaptionText => _kit.CaptionText;
+    /// <summary>The run time the diagram shows: the still of the default step before the story has started.</summary>
+    internal double RenderTime
+    {
+        get
+        {
+            if (IsAtStart)
+            {
+                return _timeline.StillTime(DefaultStep >= 0 ? DefaultStep : StepTotal - 1);
+            }
+            return Math.Min(Now, _timeline.Length);
+        }
+    }
 
-    internal string? StatusText => _kit.StatusText;
+    /// <summary>True before the story has first played, stepped or jumped (the illustration then shows its still).</summary>
+    private bool IsAtStart => !_moved && Now <= 0 && !IsPlaying && !IsStepping;
+
+    /// <summary>The layer sizes: inputs, the two hidden layers, two outputs.</summary>
+    internal int[] LayerSizes
+    {
+        get
+        {
+            var hidden = HiddenUnits ?? s_sampleHidden;
+            var first = hidden.Count > 0 ? Math.Clamp(hidden[0], 2, 6) : 4;
+            var second = hidden.Count > 1 ? Math.Clamp(hidden[1], 2, 6) : first;
+            return [InputCount, first, second, 2];
+        }
+    }
+
+    internal int WeightSeed => 1;
+
+    /// <summary>The caption of the current step (tests).</summary>
+    internal string CaptionText => CaptionFor(CurrentStep);
+
+    private protected override double ClockRate => ArcMotion.IsFull(this) ? _rate : 1;
+
+    private protected override double LoopDelay => 0;
 
     private protected override double StepSpeed => 2 * Math.Max(1, Speed);
 
-    /// <summary>The sample loss curve: an exponential fall from 2.30 to about 0.4 with a little stable noise.</summary>
-    internal static double SampleLoss(int step)
+    /// <summary>The name of class <paramref name="index"/> (0 or 1).</summary>
+    internal string ClassAt(int index)
     {
-        var smooth = 0.38 + (2.3 - 0.38) * Math.Exp(-0.55 * step);
-        var noise = Math.Sin(step * 2.7 + 0.4) * 0.07 * Math.Exp(-0.15 * step);
-        return Math.Round(smooth + (step == 0 ? 0 : noise), 3);
+        var classes = ClassNames;
+        if (classes is not null && index < classes.Count && !string.IsNullOrEmpty(classes[index]))
+        {
+            return classes[index];
+        }
+        return s_sampleClasses[Math.Clamp(index, 0, 1)];
     }
 
-    /// <summary>The probability the model gives the right class for a loss (cross-entropy: p = e^−loss).</summary>
-    internal static double TargetProbability(double loss) => Math.Exp(-loss);
+    /// <summary>The epoch count as text (cached).</summary>
+    internal string EpochText(int epoch)
+    {
+        if (epoch >= 0 && epoch < _epochTexts.Length)
+        {
+            return _epochTexts[epoch] ??= epoch.ToString(CultureInfo.InvariantCulture);
+        }
+        return epoch.ToString(CultureInfo.InvariantCulture);
+    }
+
+    /// <summary>
+    /// Jumps to step <paramref name="step"/> (0 batch … 4 evaluate): while the story plays it goes on from that step's start;
+    /// otherwise it shows that step's still frame.
+    /// </summary>
+    public void GoToStep(int step)
+    {
+        step = Math.Clamp(step, 0, StepTotal - 1);
+        _defaultApplied = true;
+        if (IsPlaying && ArcMotion.IsFull(this))
+        {
+            _stillStep = -1;
+            SeekQuietly(_timeline.StageStart(step));
+        }
+        else
+        {
+            if (IsPlaying)
+            {
+                Pause();
+            }
+            _stillStep = step;
+            SeekQuietly(_timeline.StillTime(step));
+        }
+        UpdateSteps();
+        Announce(CaptionFor(step));
+    }
+
+    /// <summary>The detail a mouse resting on <paramref name="region"/> shows.</summary>
+    internal string? DetailOf(ModelTrainingRegion region)
+    {
+        var labels = Labels;
+        var sizes = LayerSizes;
+        return region switch
+        {
+            ModelTrainingRegion.TrainingSet => labels.TrainingDetail(Samples, labels.Unit, BatchSize),
+            ModelTrainingRegion.HeldOutSet => labels.HeldOutDetail(HeldOutSamples, labels.Unit),
+            ModelTrainingRegion.Layer0 => labels.InputDetail(sizes[0]),
+            ModelTrainingRegion.Layer1 => labels.HiddenDetail(sizes[1], sizes[0] * sizes[1]),
+            ModelTrainingRegion.Layer2 => labels.HiddenDetail(sizes[2], sizes[1] * sizes[2]),
+            ModelTrainingRegion.Layer3 => labels.OutputDetail(ClassAt(0), ClassAt(1)),
+            _ => null
+        };
+    }
+
+    internal void OnHoverChanged(bool hovered)
+    {
+        if (_hovered == hovered)
+        {
+            return;
+        }
+        _hovered = hovered;
+        if (IsPlaying)
+        {
+            RequestFrames(1.2);
+        }
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        _kit.Apply(e.NameScope);
-        _stage = e.NameScope.Find<ModelTrainingStage>(StagePart);
+        var scope = e.NameScope;
+        _stage = scope.Find<ModelTrainingStage>(StagePart);
+        _chart = scope.Find<ModelTrainingChart>("PART_Chart");
+        _evalMark = scope.Find<ModelTrainingEvalMark>("PART_EvalMark");
+        _body = scope.Find<ModelTrainingBodyPanel>("PART_Body");
+        _caption = scope.Find<TextBlock>(CaptionPart);
+        _lossLabel = scope.Find<TextBlock>("PART_LossLabel");
+        _lossValue = scope.Find<TextBlock>("PART_LossValue");
+        _lossMeta = scope.Find<TextBlock>("PART_LossMeta");
+        _epochLabel = scope.Find<TextBlock>("PART_EpochLabel");
+        _epochValue = scope.Find<TextBlock>("PART_EpochValue");
+        _epochMeta = scope.Find<TextBlock>("PART_EpochMeta");
+        _evalName = scope.Find<TextBlock>("PART_EvalName");
+        _evalTarget = scope.Find<TextBlock>("PART_EvalTarget");
+        _evalScore = scope.Find<TextBlock>("PART_EvalScore");
+        _tagPending = scope.Find<TextBlock>("PART_TagPending");
+        _tagScoring = scope.Find<TextBlock>("PART_TagScoring");
+        _tagPassed = scope.Find<TextBlock>("PART_TagPassed");
+        _playButton = scope.Find<Control>(PlayButtonPart);
+        if (_stepBar is not null)
+        {
+            _stepBar.Children.Clear();
+        }
+        _stepBar = scope.Find<Grid>(StepsPart);
+        if (_stepBar is not null)
+        {
+            _stepBar.ColumnDefinitions.Clear();
+            for (var i = 0; i < StepTotal; i++)
+            {
+                _stepBar.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+                var button = _steps[i];
+                (button.Parent as Panel)?.Children.Remove(button);
+                Grid.SetColumn(button, i);
+                _stepBar.Children.Add(button);
+            }
+        }
         _stage?.Attach(this);
-        _kit.SetSpeedLabel(Labels.Speed);
-        UpdateStatus(force: true);
-        _kit.SetCaption(CurrentCaption(), animate: false);
+        _chart?.Attach(this);
+        _evalMark?.Attach(this);
+        UpdateLabels();
+        UpdateMotionChrome();
         UpdateSizing(Bounds.Width);
+        Refresh(force: true);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == StepCountProperty || change.Property == LossValuesProperty ||
-            change.Property == LearningRateProperty || change.Property == BatchSizeProperty)
+        var property = change.Property;
+        if (property == StepCountProperty || property == LossValuesProperty || property == LearningRateProperty ||
+            property == EpochsProperty || property == LossFromProperty || property == LossToProperty ||
+            property == AccuracyProperty || property == TargetProperty)
         {
+            BuildTimeline();
             ScheduleRebuild();
         }
-        else if (change.Property == LabelsProperty)
+        else if (property == InputCountProperty || property == HiddenUnitsProperty)
         {
-            _kit.SetSpeedLabel(Labels.Speed);
-            UpdateStatus(force: true);
-            _kit.SetCaption(CurrentCaption(), animate: false);
-            _stage?.OnLabelsChanged();
+            _stage?.NetworkChanged();
+            UpdateDescription();
         }
-        else if (change.Property == TitleProperty)
+        else if (property == LabelsProperty || property == ClassNamesProperty || property == BatchSizeProperty ||
+                 property == SamplesProperty || property == HeldOutSamplesProperty || property == DescriptionProperty)
+        {
+            UpdateLabels();
+            Refresh(force: true);
+        }
+        else if (property == TitleProperty)
         {
             AutomationProperties.SetName(this, Title);
+            UpdateDescription();
         }
-        else if (change.Property == SpeedProperty)
+        else if (property == AccentProperty)
         {
-            _kit.UpdateSpeed();
+            _stage?.InvalidateVisual();
+            _chart?.InvalidateVisual();
+            _evalMark?.InvalidateVisual();
         }
-        else if (change.Property == IsSteppingProperty || change.Property == IsFinishedProperty)
+        else if (property == CaptionStageInkProperty)
         {
-            UpdateStatus();
+            UpdateCaption(CurrentStep, force: true);
         }
-        else if (change.Property == BoundsProperty)
+        else if (property == DefaultStepProperty)
+        {
+            Refresh(force: true);
+        }
+        else if (property == IsCaptionVisibleProperty)
+        {
+            if (_caption is not null)
+            {
+                _caption.IsVisible = IsCaptionVisible;
+            }
+        }
+        else if (property == ArcMotion.LevelProperty)
+        {
+            UpdateMotionChrome();
+        }
+        else if (property == BoundsProperty)
         {
             UpdateSizing(change.GetNewValue<Rect>().Width);
         }
@@ -223,181 +558,147 @@ public class ModelTraining : Explainer
 
     private protected override void BuildStory(ExplainerScript script)
     {
-        var count = StepCount;
-        _losses = new double[count];
-        var given = LossValues;
-        for (var i = 0; i < count; i++)
+        var timeline = _timeline;
+        var n = timeline.Steps;
+        script.At(0, () => EnterPhase(ModelTrainingPhase.Batch, 1));
+        script.At(ModelTrainingTimeline.ForwardStart, () => EnterPhase(ModelTrainingPhase.Forward, 1), isStop: true);
+        script.At(timeline.FirstMeasure, () =>
         {
-            var value = given is not null && i < given.Count && double.IsFinite(given[i]) ? given[i] : SampleLoss(i);
-            _losses[i] = Math.Clamp(value, 0.01, 5);
-        }
-        _scene.Prepare(count);
-        _stage?.SetRun(count, _losses);
-        var t = 0.3;
-        for (var step = 1; step <= count; step++)
+            EnterPhase(ModelTrainingPhase.Loss, 1);
+            CurrentLoss = timeline.LossAt(0);
+        });
+        script.At(ModelTrainingTimeline.BackwardStart, () => EnterPhase(ModelTrainingPhase.Backward, 1), isStop: true);
+        script.At(timeline.UpdateEnd(1) - 0.8, () => EnterPhase(ModelTrainingPhase.Update, 1));
+        script.At(ModelTrainingTimeline.EpochsStart, () => EnterPhase(ModelTrainingPhase.Epochs, 2), isStop: true);
+        for (var k = 1; k <= n; k++)
         {
-            var first = step == 1;
-            var pace = first ? 1 : RepeatPace;
-            var gap = first ? 0.35 : 0.12;
-            for (var p = 0; p < 5; p++)
+            var step = k;
+            if (k >= 2)
             {
-                var phase = (ModelTrainingPhase)(p + 1);
-                var duration = PhaseSeconds[p] * pace;
-                var at = t;
-                var n = step;
-                script.At(at, () => EnterPhase(n, phase, at, duration));
-                if (phase == ModelTrainingPhase.Loss)
-                {
-                    script.At(at + duration * 0.5, () => MeasureLoss(n));
-                }
-                if (phase == ModelTrainingPhase.Update)
-                {
-                    script.At(at + duration * 0.6, () => PlotLoss(n));
-                    script.At(at + duration, () => CompleteStep(n));
-                }
-                t += duration;
-                if (first || phase == ModelTrainingPhase.Update)
-                {
-                    script.At(t + gap * 0.5, AnnounceSentence, isStop: true);
-                }
-                t += gap;
+                script.At(ModelTrainingTimeline.EpochsStart + (k - 2) * ModelTrainingTimeline.CyclePeriod, () => Iteration = step);
             }
+            script.At(timeline.UpdateEnd(k), () => CompleteStep(step));
         }
-        script.At(t + 0.2, Finish, isStop: true);
-        script.Length = t + 0.2;
+        script.At(timeline.EvaluateStart, () => EnterPhase(ModelTrainingPhase.Evaluate, n), isStop: true);
+        script.At(timeline.Length, () => EnterPhase(ModelTrainingPhase.Done, n), isStop: true);
+        script.Length = timeline.Length;
     }
 
-    private void EnterPhase(int step, ModelTrainingPhase phase, double at, double duration)
+    private void EnterPhase(ModelTrainingPhase phase, int iteration)
     {
-        Iteration = step;
         Phase = phase;
-        _scene.Iteration = step;
-        _scene.Phase = phase;
-        _scene.PhaseStart = at;
-        _scene.PhaseDuration = duration;
-        if (phase == ModelTrainingPhase.Update)
+        Iteration = iteration;
+        if (!_seeking && phase is ModelTrainingPhase.Batch or ModelTrainingPhase.Forward or ModelTrainingPhase.Backward or ModelTrainingPhase.Epochs or ModelTrainingPhase.Evaluate)
         {
-            _scene.StartUpdate(step, at, duration);
+            AnnounceBeat(CaptionFor(_timeline.StageAt(Now)));
         }
-        var labels = Labels;
-        if (step == 1)
-        {
-            _caption = phase switch
-            {
-                ModelTrainingPhase.Batch => labels.BatchCaption(BatchSize),
-                ModelTrainingPhase.Forward => labels.ForwardCaption,
-                ModelTrainingPhase.Loss => labels.LossCaption(TargetProbability(_losses[0]), _losses[0]),
-                ModelTrainingPhase.Backward => labels.BackwardCaption,
-                _ => labels.UpdateCaption(LearningRate)
-            };
-            _sentence = _caption;
-        }
-        else if (phase == ModelTrainingPhase.Batch)
-        {
-            _caption = labels.RepeatCaption(step, StepCount);
-        }
-        _kit.SetCaption(_caption ?? CurrentCaption(), Animates);
-        UpdateStatus();
-        _stage?.Changed();
-        Beat(duration);
-    }
-
-    private void MeasureLoss(int step)
-    {
-        var loss = _losses[step - 1];
-        CurrentLoss = loss;
-        _scene.Loss = loss;
-        _scene.LossAt = Now;
-        if (step > 1)
-        {
-            _sentence = string.Create(CultureInfo.InvariantCulture, $"{Labels.StepReadout(step, StepCount)}: loss {loss:0.00}");
-        }
-        _stage?.Changed();
-    }
-
-    private void PlotLoss(int step)
-    {
-        _scene.Plotted = step;
-        _scene.PlottedAt = Now;
-        _stage?.Changed();
     }
 
     private void CompleteStep(int step)
     {
-        RaiseEvent(new ModelTrainingIterationEventArgs(IterationCompletedEvent, this, step, _losses[step - 1]));
-    }
-
-    private void Finish()
-    {
-        Phase = ModelTrainingPhase.Done;
-        _scene.Phase = ModelTrainingPhase.Done;
-        _scene.Finished = true;
-        _caption = Labels.DoneCaption(_losses[0], _losses[^1]);
-        _sentence = _caption;
-        _kit.SetCaption(_caption, Animates);
-        UpdateStatus();
-        _stage?.Changed();
-    }
-
-    private void AnnounceSentence() => AnnounceBeat(_sentence);
-
-    private void Beat(double seconds)
-    {
-        if (Animates)
+        var loss = _timeline.LossAt(step / (double)_timeline.Steps);
+        CurrentLoss = loss;
+        if (!_seeking)
         {
-            RequestFrames(seconds + 0.6);
+            RaiseEvent(new ModelTrainingIterationEventArgs(IterationCompletedEvent, this, step, loss));
         }
     }
-
-    private string CurrentCaption() => _caption ?? Labels.ReadyCaption(StepCount);
 
     private protected override void ResetScene()
     {
-        var hadContent = _scene.HasStarted;
-        _scene.Reset();
-        _caption = null;
-        _sentence = null;
         Phase = ModelTrainingPhase.Ready;
         Iteration = 0;
         CurrentLoss = double.NaN;
-        _kit.SetCaption(CurrentCaption(), Animates && hadContent);
-        UpdateStatus();
-        _stage?.Changed();
-        if (hadContent)
-        {
-            RequestFrames(0.6);
-        }
+        Refresh(force: true);
     }
 
     private protected override void OnTimeChanged()
     {
-        _stage?.Tick();
-        UpdateStatus();
-    }
-
-    private protected override void OnFinished()
-    {
-        UpdateStatus();
-        Announce(_caption);
+        var wall = WallTime;
+        var dt = Math.Clamp(wall - _lastWall, 0, 0.1);
+        _lastWall = wall;
+        StepRate(dt);
+        if (IsPlaying)
+        {
+            _stillStep = -1;
+        }
+        _playingBeforeEnd = IsPlaying;
+        if (Now > 0)
+        {
+            _moved = true;
+        }
+        Refresh(force: false);
     }
 
     private protected override void OnPlaybackChanged()
     {
-        UpdateStatus();
-        if (!IsPlaying && !_pauseCheckPending)
+        if (IsPlaying || IsStepping)
         {
-            _pauseCheckPending = true;
-            Dispatcher.UIThread.Post(AnnouncePause, DispatcherPriority.Background);
+            _moved = true;
         }
+        if (IsPlaying)
+        {
+            _stillStep = -1;
+            if (!_defaultApplied && Now <= 0 && DefaultStep > 0)
+            {
+                // Playing starts from the default step.
+                _defaultApplied = true;
+                Dispatcher.UIThread.Post(() =>
+                {
+                    if (IsPlaying && Now < _timeline.StageStart(DefaultStep))
+                    {
+                        SeekQuietly(_timeline.StageStart(DefaultStep));
+                    }
+                }, DispatcherPriority.Background);
+            }
+        }
+        Refresh(force: true);
     }
 
-    private void AnnouncePause()
+    private protected override void OnFinished()
     {
-        _pauseCheckPending = false;
-        if (!IsPlaying && !IsStepping && !IsFinished && _scene.HasStarted && IsReaderDriven)
+        Refresh(force: true);
+        if (!_playingBeforeEnd || IsLooping || _loopPending || !ArcMotion.IsFull(this) || Speed <= 0)
         {
-            Announce(_sentence ?? _caption);
+            return;
         }
+        // A playing run loops: the relax at the start of the next run turns the finished model back into an untrained one.
+        _loopPending = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _loopPending = false;
+            if (IsFinished && IsAttached && !IsPlaying && _stillStep < 0)
+            {
+                Restart();
+            }
+        }, DispatcherPriority.Send);
+    }
+
+    private void SeekQuietly(double time)
+    {
+        _moved = true;
+        _seeking = true;
+        try
+        {
+            Seek(time);
+        }
+        finally
+        {
+            _seeking = false;
+        }
+        _playingBeforeEnd = IsPlaying;
+        Refresh(force: true);
+    }
+
+    private void BuildTimeline()
+    {
+        _timeline.Build(StepCount, Epochs, LossFrom, LossTo, LossValues, Accuracy, Target, LearningRate);
+        _timelineVersion++;
+        _shownEpoch = -1;
+        _shownLoss = double.NaN;
+        _shownScore = double.NaN;
+        _shownEval = -1;
+        UpdateDescription();
     }
 
     private void ScheduleRebuild()
@@ -411,21 +712,213 @@ public class ModelTraining : Explainer
         {
             _rebuildPending = false;
             Rebuild();
+            Refresh(force: true);
         }, DispatcherPriority.Background);
     }
 
-    private void UpdateStatus(bool force = false)
+    /// <summary>Moves the hover pace toward its target on a critically damped spring.</summary>
+    private void StepRate(double dt)
     {
-        var phase = _kit.PhaseOf(_scene.HasStarted);
-        var labels = Labels;
-        var text = phase switch
+        var target = _hovered ? HoverRate : 1;
+        if (dt <= 0 || (Math.Abs(_rate - target) < 0.0005 && Math.Abs(_rateVelocity) < 0.0005))
         {
-            ExplainerChapterPhase.Playing => labels.Training,
-            ExplainerChapterPhase.Paused => labels.Paused,
-            ExplainerChapterPhase.Done => labels.Trained,
-            _ => labels.Ready
+            _rate = dt <= 0 ? _rate : target;
+            _rateVelocity = dt <= 0 ? _rateVelocity : 0;
+            return;
+        }
+        const double omega = 9;
+        var steps = Math.Max(1, (int)Math.Ceiling(dt / 0.008));
+        var h = dt / steps;
+        for (var i = 0; i < steps; i++)
+        {
+            var a = omega * omega * (target - _rate) - 2 * omega * _rateVelocity;
+            _rateVelocity += a * h;
+            _rate += _rateVelocity * h;
+        }
+    }
+
+    // ---- Presentation ---------------------------------------------------------------------------------------------
+
+    private void Refresh(bool force)
+    {
+        var t = RenderTime;
+        var timeline = _timeline;
+        var step = timeline.StageAt(t);
+        CurrentStep = step;
+        UpdateSteps();
+        UpdateReadouts(t, force);
+        UpdateCaption(step, force);
+        _stage?.InvalidateVisual();
+        _chart?.InvalidateVisual();
+        _evalMark?.InvalidateVisual();
+    }
+
+    private void UpdateSteps()
+    {
+        var t = RenderTime;
+        var timeline = _timeline;
+        var step = timeline.StageAt(t);
+        var still = IsAtStart || _stillStep >= 0 || IsFinished;
+        for (var i = 0; i < StepTotal; i++)
+        {
+            var button = _steps[i];
+            double progress;
+            int state;
+            if (i < step)
+            {
+                state = 2;
+                progress = 1;
+            }
+            else if (i == step)
+            {
+                state = 1;
+                progress = still ? 1 : timeline.StageProgress(i, t);
+            }
+            else
+            {
+                state = 0;
+                progress = 0;
+            }
+            // The relax at the start of a run empties the previous run's bars.
+            if (!still && t < 0.7)
+            {
+                var previous = 1 - ModelTrainingEase.InOutCubic(t / 0.7);
+                progress = Math.Max(progress, previous);
+                if (i > 0)
+                {
+                    state = previous > 0.01 ? 2 : 0;
+                }
+            }
+            button.SetState(state);
+            button.Progress = progress;
+        }
+    }
+
+    private void UpdateReadouts(double t, bool force)
+    {
+        var timeline = _timeline;
+        var labels = Labels;
+        var measured = timeline.IsMeasured(t);
+        PseudoClasses.Set(UntrainedPseudoClass, !measured);
+        var epoch = timeline.EpochAt(t);
+        if (force || epoch != _shownEpoch)
+        {
+            _shownEpoch = epoch;
+            SetText(_epochValue, EpochText(epoch));
+        }
+        var loss = measured ? timeline.LossAt(timeline.HeadAt(t)) : timeline.LossFrom;
+        var rounded = Math.Round(loss, 2);
+        if (force || rounded != _shownLoss)
+        {
+            _shownLoss = rounded;
+            SetText(_lossValue, rounded.ToString("0.00", CultureInfo.InvariantCulture));
+            SetText(_lossMeta, measured ? labels.StartedAt(timeline.LossFrom) : labels.NoBatch);
+        }
+        var evalState = timeline.EvalStateAt(t);
+        var score = Math.Round(timeline.ScoreAt(t), 1);
+        if (force || evalState != _shownEval || score != _shownScore)
+        {
+            _shownEval = evalState;
+            _shownScore = score;
+            SetText(_evalScore, evalState == 0 ? string.Empty : score.ToString("0.0", CultureInfo.InvariantCulture) + "%");
+            var passed = timeline.PassesTarget;
+            PseudoClasses.Set(EvalPendingPseudoClass, evalState == 0);
+            PseudoClasses.Set(EvalScoringPseudoClass, evalState == 1);
+            PseudoClasses.Set(EvalPassedPseudoClass, evalState == 2 && passed);
+            PseudoClasses.Set(EvalFailedPseudoClass, evalState == 2 && !passed);
+            SetText(_tagPassed, passed ? labels.Passed : labels.BelowTarget);
+        }
+    }
+
+    private void UpdateCaption(int step, bool force)
+    {
+        if (_caption is null || (!force && step == _captionStep && _compact == _captionCompact))
+        {
+            return;
+        }
+        _captionStep = step;
+        _captionCompact = _compact;
+        var text = CaptionFor(step);
+        var inlines = _caption.Inlines ??= new InlineCollection();
+        inlines.Clear();
+        if (_compact)
+        {
+            inlines.Add(new Run(Labels.StepAt(step) + ". ") { FontWeight = FontWeight.Medium, Foreground = CaptionStageInk });
+        }
+        inlines.Add(new Run(text));
+    }
+
+    private string CaptionFor(int step)
+    {
+        var labels = Labels;
+        var timeline = _timeline;
+        return step switch
+        {
+            0 => labels.BatchCaption(BatchSize),
+            1 => labels.ForwardCaption,
+            2 => labels.BackwardCaption,
+            3 => labels.EpochsCaption(timeline.Epochs, timeline.LossFrom, timeline.LossTo),
+            _ => labels.EvaluateCaption(timeline.Accuracy, timeline.Target, timeline.PassesTarget)
         };
-        _kit.SetStatus(phase, text, force);
+    }
+
+    private void UpdateLabels()
+    {
+        var labels = Labels;
+        SetText(_lossLabel, labels.LossCurve);
+        SetText(_epochLabel, labels.Epoch);
+        SetText(_epochMeta, labels.EpochOf(_timeline.Epochs));
+        SetText(_evalName, labels.Evaluation);
+        SetText(_evalTarget, labels.TargetReadout(_timeline.Target));
+        SetText(_tagPending, labels.Pending);
+        SetText(_tagScoring, labels.Scoring);
+        SetText(_tagPassed, _timeline.PassesTarget ? labels.Passed : labels.BelowTarget);
+        for (var i = 0; i < StepTotal; i++)
+        {
+            var name = labels.StepAt(i);
+            _steps[i].Text = name;
+            AutomationProperties.SetName(_steps[i], labels.StepName(i + 1, StepTotal, name));
+        }
+        if (_stepBar is not null)
+        {
+            AutomationProperties.SetName(_stepBar, labels.StepsName);
+        }
+        _captionStep = -1;
+        UpdateDescription();
+    }
+
+    private void UpdateDescription()
+    {
+        if (_stage is null)
+        {
+            return;
+        }
+        AutomationProperties.SetName(_stage, Description ?? BuildDescription());
+    }
+
+    /// <summary>The diagram's default accessible description, from the classes and the numbers.</summary>
+    internal string BuildDescription()
+    {
+        var timeline = _timeline;
+        var sizes = LayerSizes;
+        var unit = Labels.Unit;
+        var verdict = timeline.PassesTarget ? "so it passes" : "so it falls short";
+        return string.Create(CultureInfo.InvariantCulture,
+            $"{Title}: a network with {sizes[0]} inputs, hidden layers of {sizes[1]} and {sizes[2]} units and two outputs, " +
+            $"{ClassAt(0)} and {ClassAt(1)}, learns from batches of {BatchSize} {unit}. Forward passes give predictions, the " +
+            $"error flows back and strengthens the useful connections, and over {timeline.Epochs} epochs the loss drops from " +
+            $"{timeline.LossFrom:0.00} to {timeline.LossTo:0.00}. On held-out data it scores {timeline.Accuracy:0.0}% against " +
+            $"a target of {timeline.Target:0.#}%, {verdict}.");
+    }
+
+    private void UpdateMotionChrome()
+    {
+        var full = ArcMotion.IsFull(this);
+        PseudoClasses.Set(ReducedPseudoClass, !full);
+        if (_playButton is not null)
+        {
+            _playButton.IsVisible = full;
+        }
     }
 
     private void UpdateSizing(double width)
@@ -434,113 +927,29 @@ public class ModelTraining : Explainer
         {
             return;
         }
-        var padding = ExplainerChapterKit.CardPadding(width);
-        var body = new Thickness(padding, padding, padding, AreControlsVisible ? 0 : padding);
-        if (body != BodyPadding)
+        var compact = width < 600;
+        if (compact != _compact)
         {
-            SetCurrentValue(BodyPaddingProperty, body);
+            _compact = compact;
+            PseudoClasses.Set(CompactPseudoClass, compact);
+            foreach (var button in _steps)
+            {
+                button.SetCompact(compact);
+            }
+            _captionStep = -1;
+            UpdateCaption(CurrentStep, force: true);
         }
-        var footer = new Thickness(padding, 16, padding, padding);
-        if (footer != FooterPadding)
+        if (_body is not null)
         {
-            SetCurrentValue(FooterPaddingProperty, footer);
+            _body.RowGap = compact ? 20 : 24;
         }
-        _kit.SetSpeedLabelVisible(width >= 420);
     }
-}
 
-/// <summary>What the training story has shown so far; the stage draws it at the current story time.</summary>
-internal sealed class ModelTrainingScene
-{
-    private double[] _start = [];
-    private double[] _goal = [];
-
-    /// <summary>The weights before the current update and after it (35 connections: 4×5 + 5×3).</summary>
-    public double[] Before { get; private set; } = [];
-
-    public double[] After { get; private set; } = [];
-
-    public double UpdateStart { get; private set; }
-
-    public double UpdateDuration { get; private set; } = 1;
-
-    public int Iteration { get; set; }
-
-    public ModelTrainingPhase Phase { get; set; }
-
-    public double PhaseStart { get; set; }
-
-    public double PhaseDuration { get; set; } = 1;
-
-    public double Loss { get; set; } = double.NaN;
-
-    public double LossAt { get; set; }
-
-    /// <summary>The steps whose loss is on the curve.</summary>
-    public int Plotted { get; set; }
-
-    public double PlottedAt { get; set; }
-
-    public bool Finished { get; set; }
-
-    public bool HasStarted => Iteration > 0 || Finished;
-
-    /// <summary>The number of connections.</summary>
-    public static int WeightCount => ModelTraining.LayerSizes[0] * ModelTraining.LayerSizes[1] + ModelTraining.LayerSizes[1] * ModelTraining.LayerSizes[2];
-
-    /// <summary>Sets up the weights for a run: random-looking start values that drift toward fixed trained values.</summary>
-    public void Prepare(int steps)
+    private static void SetText(TextBlock? block, string? text)
     {
-        var n = WeightCount;
-        _start = new double[n];
-        _goal = new double[n];
-        for (var i = 0; i < n; i++)
+        if (block is not null && block.Text != text)
         {
-            _start[i] = Noise(i * 7 + 3) * 0.55;
-            _goal[i] = Noise(i * 13 + 101);
+            block.Text = text;
         }
-        Reset();
-    }
-
-    /// <summary>The weights after <paramref name="updates"/> updates.</summary>
-    public double[] WeightsAfter(int updates)
-    {
-        var w = new double[_start.Length];
-        var f = 1 - Math.Pow(0.62, updates);
-        for (var i = 0; i < w.Length; i++)
-        {
-            w[i] = _start[i] + (_goal[i] - _start[i]) * f;
-        }
-        return w;
-    }
-
-    public void StartUpdate(int step, double at, double duration)
-    {
-        Before = WeightsAfter(step - 1);
-        After = WeightsAfter(step);
-        UpdateStart = at;
-        UpdateDuration = duration;
-    }
-
-    public void Reset()
-    {
-        Before = WeightsAfter(0);
-        After = Before;
-        UpdateStart = 0;
-        UpdateDuration = 1;
-        Iteration = 0;
-        Phase = ModelTrainingPhase.Ready;
-        PhaseStart = 0;
-        PhaseDuration = 1;
-        Loss = double.NaN;
-        Plotted = 0;
-        Finished = false;
-    }
-
-    /// <summary>A stable value in [−1, 1] for an index.</summary>
-    private static double Noise(int seed)
-    {
-        var x = Math.Sin(seed * 12.9898 + 78.233) * 43758.5453;
-        return (x - Math.Floor(x)) * 2 - 1;
     }
 }

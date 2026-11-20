@@ -17,6 +17,51 @@ Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode
 - `Drawer.IsScrollable` (default true) turns the body's built-in scroller off, so content such as a `Grid` with a `*` row
   receives the drawer's remaining height. `Drawer.BodyPadding` sets the spacing around the body; null follows the theme
   ([#168](https://github.com/AIDotNet/TKCode.Arc/issues/168)).
+- `ModelTraining`: `ClassNames`, `InputCount`, `HiddenUnits`, `Samples`, `HeldOutSamples`, `Epochs`, `LossFrom`,
+  `LossTo`, `Accuracy`, `Target`, `DefaultStep`, `IsCaptionVisible`, `Accent`, `Description`, `CurrentStep` and
+  `GoToStep(int)`; `ModelTrainingPhase.Epochs` and `.Evaluate`; `ModelTrainingLabels` texts for the steps, the data
+  stacks, the layers, the readouts, the evaluation, the hover details and the step captions (`Steps`, `StepsName`,
+  `StepName`, `TrainingSet`, `HeldOutSet`, `Unit`, `SampleCount`, `Input`, `Hidden`, `Output`, `Epoch`, `NoBatch`,
+  `StartedAt`, `EpochOf`, `Validation`, `Evaluation`, `TargetReadout`, `Pending`, `Scoring`, `Passed`, `BelowTarget`,
+  `TrainingDetail`, `HeldOutDetail`, `InputDetail`, `HiddenDetail`, `OutputDetail`, `EpochsCaption`,
+  `EvaluateCaption`); `ModelTrainingToken` geometry for the panel, the chart, the evaluation row and the step bar.
+- `ArmingSwitch` (`TKCode.Arc.Special`, Special › Loaders): an aircraft-style guarded switch for an action that must
+  never fire by accident (a production release, deleting a workspace). A brushed aluminium plate, drawn in perspective,
+  carries a chrome bat toggle under a translucent hinged safety cover and a lamp with a hold ring. Lift the cover (click,
+  drag, Enter, Space or the arrows), throw the toggle up until it snaps over centre and the lamp flickers on, then hold
+  the lamp for `HoldDuration` (1.2 s, 0.3 to 6 s) to run `ConfirmAction` (`Func<Task<bool>>`; `false` or an exception
+  fails). `Status` (`ArmingSwitchStatus`: Safe, Open, Armed, Running, Done, Failed) with `StatusChanged`
+  (`ArmingSwitchStatusChangedEventArgs`), `IsCoverOpen` / `CoverOpenChanged`, `IsArmed` / `ArmedChanged`, `Confirmed`;
+  `IsAutoSafeEnabled` drops the cover after a success, `IsLocked` refuses every part with a rattle; per-status chip texts
+  and hints, `AccentBrush` and `CoverBrush`; `OpenCover()`, `CloseCover()`, `Arm()`, `MakeSafe()`. Closing the cover makes
+  an armed switch safe; Escape makes everything safe. Honours reduced and off motion (the hold still fills)
+  ([ADR 0047](design/decisions/0047-arc-alignment-design-reference.md),
+  [spec](design/components/special/loaders/arming-switch.md)).
+
+### Changed
+
+- `ModelTraining` (TKCode.Arc.Special) is rebuilt to match Arc's Model training (design reference, ADR 0047): no card;
+  stacks of training and held-out data, a 3-4-4-2 network on 2.5D plates whose useful connections thicken and take the
+  accent, class probabilities, loss and epoch readouts with a loss chart beside the network (under it below 720 px), a
+  held-out evaluation that passes its target, a step bar (play / pause and five steps: batch, forward pass, backward
+  pass, epochs, evaluate) and a caption. The run loops seamlessly (about 21 s at speed 1); picking a step while playing
+  goes on from it, while paused shows its still frame; a mouse resting on a stack or a layer shows a detail and slows
+  the run to 0.6×; reduced motion shows the finished run without a play button. The sample task is now a cat / dog
+  photo classifier whose loss falls from 0.69 to 0.08 over 12 epochs (the old sample curve fell from 2.30).
+  `StepCount` now counts the training steps (batches) the story shows, `Iteration` is the current one,
+  `IterationCompleted` is raised after each weight update, `LossValues` is spread evenly over the run, and
+  `LearningRate` sets (approximately) how soon the connections strengthen. A playing run always loops, so
+  `IsLooping` has no effect; the header-only `Explainer.Model` is not shown.
+
+### Deprecated
+
+- `ModelTrainingLabels.PhaseNames`: use `Steps` (it forwards to it).
+- `ModelTrainingLabels.Ready`, `Training`, `Paused`, `Trained` (no status line), `Speed` (no speed control), `Data`,
+  `Model`, `Prediction`, `Target`, `StepReadout`, `RateReadout`, `BatchName`, `ReadyCaption`, `LossCaption`,
+  `UpdateCaption`, `RepeatCaption` and `DoneCaption`: no longer shown; setting them has no effect (use `TrainingSet`,
+  the layer names, `EpochsCaption` and `EvaluateCaption`).
+- The `ModelTraining` token kinds `TitleLineHeight`, `HeaderRowHeight`, `CaptionMargin`, `CaptionMinHeight`,
+  `ButtonGap` and `SpeedGap` are no longer used; they stay for theme overrides.
 
 ### Fixed
 
