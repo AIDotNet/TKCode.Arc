@@ -6,6 +6,7 @@ using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
+using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
@@ -99,6 +100,43 @@ public class CardTests
             card.BorderBrush.ShouldNotBeNull();
             window.MouseMove(new Point(890, 690));
             Dispatcher.UIThread.RunJobs();
+            card.Classes.Contains(Card.HoverPseudoClass).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Hover_Survives_A_Child_Capturing_The_Pointer_And_Ends_When_The_Pointer_Leaves()
+    {
+        // A text box or drop-down inside the card captures the pointer, which clears the pointer-over chain: the card keeps
+        // its lift while the pointer is still over it (#174).
+        var field = new Border { Height = 30, Background = Brushes.Gray };
+        var card = CreateCard(action: field);
+        var window = Show(card);
+        try
+        {
+            window.MouseMove(card.TranslatePoint(new Point(140, 60), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            card.Classes.Contains(Card.HoverPseudoClass).ShouldBeTrue();
+
+            var pointer = new Pointer(Pointer.GetNextFreeId(), PointerType.Mouse, true);
+            pointer.Capture(field);
+
+            PointerEventArgs At(RoutedEvent<PointerEventArgs> e, Point inCard) => new(e, card, pointer, window,
+                card.TranslatePoint(inCard, window)!.Value,
+                0, new PointerPointProperties(RawInputModifiers.None, PointerUpdateKind.Other), KeyModifiers.None);
+
+            card.RaiseEvent(At(InputElement.PointerExitedEvent, new Point(140, 60)));
+            card.Classes.Contains(Card.HoverPseudoClass).ShouldBeTrue();
+
+            card.RaiseEvent(At(InputElement.PointerMovedEvent, new Point(-40, 60)));
+            card.Classes.Contains(Card.HoverPseudoClass).ShouldBeFalse();
+
+            pointer.Capture(null);
+            card.RaiseEvent(At(InputElement.PointerExitedEvent, new Point(-40, 60)));
             card.Classes.Contains(Card.HoverPseudoClass).ShouldBeFalse();
         }
         finally

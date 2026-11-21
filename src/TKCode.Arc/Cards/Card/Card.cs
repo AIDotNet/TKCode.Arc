@@ -642,8 +642,32 @@ public class Card : ContentControl
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
+        // A child that captures the pointer (a text box, a drop-down) makes Avalonia clear the pointer-over chain although the
+        // pointer has not left the card; keeping the hover then stops the lift from replaying when the capture ends (#174).
+        if (IsPointerInsideWithCapturedDescendant(e))
+        {
+            return;
+        }
         SetHover(false);
     }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+        // While a descendant holds the capture, the exit that was skipped above never comes again: end the hover once the
+        // pointer has actually left the card.
+        if (PseudoClasses.Contains(HoverPseudoClass) && e.Pointer.Captured is Visual captured && !ReferenceEquals(captured, this)
+            && !new Rect(Bounds.Size).Contains(e.GetPosition(this)))
+        {
+            SetHover(false);
+        }
+    }
+
+    private bool IsPointerInsideWithCapturedDescendant(PointerEventArgs e)
+        => e.Pointer.Captured is Visual captured
+            && !ReferenceEquals(captured, this)
+            && this.IsVisualAncestorOf(captured)
+            && new Rect(Bounds.Size).Contains(e.GetPosition(this));
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {

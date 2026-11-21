@@ -1,1 +1,2 @@
 #nullable enable
+override TKCode.Arc.Card.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
