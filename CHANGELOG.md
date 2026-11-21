@@ -10,6 +10,36 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## 1.3.1-preview.1 - 2026-11-21
+
+A patch preview for two issues: a `Card` whose lift replayed when a text box or drop-down inside it took the pointer
+([#174](https://github.com/AIDotNet/TKCode.Arc/issues/174)), and the font feedback of
+[#173](https://github.com/AIDotNet/TKCode.Arc/issues/173). No existing public API changes. Install it with
+`--version 1.3.1-preview.1` (or `--prerelease`).
+
+### Added
+
+- `ArcThemeBuilder` extensions `BodyFontFamily(FontFamily)`, `DisplayFontFamily(FontFamily)`, `MonoFontFamily(FontFamily)`
+  and `FontFamily(FontFamily)` (body and display together) set the font family tokens from a `FontFamily` instead of
+  a string. A fallback chain such as `"My Sans SC, fonts:Inter#Inter, $Default"` keeps its text, so it parses back to the
+  same chain ([#173](https://github.com/AIDotNet/TKCode.Arc/issues/173)).
+
+### Fixed
+
+- `Card`: a descendant that captures the pointer (an `Input`, a `Select` or any drop-down inside the card) no longer ends
+  the card's hover while the pointer is still over it, so the lift, border and shadow do not drop and replay on every
+  click or selection. The hover ends once the pointer leaves the card, also while a child still holds the capture
+  ([#174](https://github.com/AIDotNet/TKCode.Arc/issues/174)).
+
+### Documentation
+
+- The Theming guide has a Fonts section: why `FontFamily` on a window or panel does not reach Arc controls (their themes
+  read `BodyFontFamily`), how to set a custom or composite chain, how to override the family for one subtree, and what to
+  do when a custom CFF `.otf` font makes a pressed `Button` label shimmer (`IsPressScaleEnabled="False"`, a TrueType or
+  subset build of the font). `ArcWindow` already follows `BodyFontFamily`.
+- Not changed: the slow `DatePicker` open and `Toast` entrance reported in #173 depend on the font's rasterizing cost
+  and could not be reproduced here; the issue asks for a trace.
+
 ## 1.3.0 - 2026-11-20
 
 The stable release of everything shipped in `1.3.0-preview.3` and `1.3.0-preview.4`, plus the changes that ship here
@@ -2550,6 +2580,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1-preview.1
 [1.3.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0
 [1.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0-preview.3...v1.3.0-preview.4
 [1.3.0-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0-preview.3
