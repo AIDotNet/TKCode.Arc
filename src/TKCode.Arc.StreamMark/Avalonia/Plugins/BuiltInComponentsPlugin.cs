@@ -52,6 +52,7 @@ public sealed class CollapsibleBlockView : BlockView
     private bool _open;
     private bool _hoverHeader;
     private bool _hasSummary;
+    private string _stateName = "";
 
     public CollapsibleBlockView()
     {
@@ -62,11 +63,24 @@ public sealed class CollapsibleBlockView : BlockView
 
     public bool IsOpen => _open;
 
-    private string StateName => "collapsible.open:" + ((ComponentBlock?)Block)?.Name;
+    private static string StateNameFor(ComponentBlock component, int topKey, int segment)
+    {
+        var baseName = "collapsible.open:" + component.Name;
+        if (segment == 0 && component.Key == topKey)
+        {
+            return baseName;
+        }
+        if (component.Range.Length > 0 && component.Key != topKey)
+        {
+            return string.Concat(baseName, "@", (component.Key - topKey).ToString(System.Globalization.CultureInfo.InvariantCulture));
+        }
+        return StateKey(baseName, segment);
+    }
 
     protected override void OnUpdate(RenderContext context, MarkdownBlock? previous, MarkdownBlock block, int topKey, ref int segment, bool contextChanged)
     {
         var component = (ComponentBlock)block;
+        var startSegment = segment;
         // 标题：details 取 <summary> 子块的文字，think 取 title 属性
         var summary = component.Children.FirstOrDefault(c => c is ComponentBlock { Name: "summary" }) as ComponentBlock;
         var titleContent = summary?.Children.FirstOrDefault() is ParagraphBlock p
@@ -80,8 +94,9 @@ public sealed class CollapsibleBlockView : BlockView
         {
             segment += Math.Max(0, CountSegments(summary, context.Plugins) - 1);
         }
+        _stateName = StateNameFor(component, topKey, startSegment);
         var defaultOpen = component.Attributes["open"] is not null;
-        _open = context.State.Get(topKey, StateName, defaultOpen);
+        _open = context.State.Get(topKey, _stateName, defaultOpen);
         var children = component.Children.Where(c => !ReferenceEquals(c, summary)).ToList();
         _content.Update(context, children, topKey, ref segment);
         _content.IsVisible = _open;
@@ -98,7 +113,7 @@ public sealed class CollapsibleBlockView : BlockView
             return;
         }
         _open = !_open;
-        Context.State.Set(TopKey, StateName, _open);
+        Context.State.Set(TopKey, _stateName, _open);
         _content.IsVisible = _open;
         InvalidateMeasure();
         InvalidateVisual();

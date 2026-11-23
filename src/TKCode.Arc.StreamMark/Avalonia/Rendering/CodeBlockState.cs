@@ -51,19 +51,22 @@ internal sealed class CodeBlockState
     /// <summary>高亮结果更新（界面线程）。</summary>
     public event Action? HighlightUpdated;
 
+    internal const string StateName = "code.state";
+
     /// <summary>取得（或创建）块的共享状态；语言、高亮器或明暗主题变化时重建。</summary>
-    public static CodeBlockState For(RenderContext context, int blockKey, string? language)
+    public static CodeBlockState For(RenderContext context, int blockKey, string? language, int segment = 0)
     {
         var highlighter = context.Plugins.Highlighter;
         var theme = context.Style.HighlightTheme;
-        var existing = context.State.Get<CodeBlockState?>(blockKey, "code.state", null);
+        var stateKey = BlockView.StateKey(StateName, segment);
+        var existing = context.State.Get<CodeBlockState?>(blockKey, stateKey, null);
         if (existing is not null && existing.Language == language && ReferenceEquals(existing.Highlighter, highlighter) && existing.Theme == theme)
         {
             return existing;
         }
         existing?.Dispose();
         var state = new CodeBlockState(language, highlighter, theme);
-        context.State.Set(blockKey, "code.state", state);
+        context.State.Set(blockKey, stateKey, state);
         return state;
     }
 
