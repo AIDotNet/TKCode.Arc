@@ -14,6 +14,10 @@ public static class MarkdownResourceKeys
     public const string MonospaceFontFamily = "Md.MonospaceFontFamily";
     public const string FontSize = "Md.FontSize";
     public const string LineHeight = "Md.LineHeight";
+    /// <summary>代码块、差异块及图表 / 公式源码的字号，未设置时为 <c>Math.Round(FontSize * 0.9)</c>。</summary>
+    public const string CodeFontSize = "Md.CodeFontSize";
+    /// <summary>代码块、差异块的行高（同时用于会话视图的高度估算），未设置时为 <c>Math.Round(CodeFontSize * 1.55)</c>。</summary>
+    public const string CodeLineHeight = "Md.CodeLineHeight";
     public const string BlockSpacing = "Md.BlockSpacing";
     public const string CodeBackground = "Md.CodeBackground";
     public const string CodeBorderBrush = "Md.CodeBorderBrush";

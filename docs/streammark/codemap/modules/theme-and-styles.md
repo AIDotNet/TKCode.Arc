@@ -15,7 +15,7 @@ StreamMark 的全部外观（颜色、字体、行高、间距、圆角、明暗
 ## Entry points
 | Symbol | File | Role |
 |---|---|---|
-| `MarkdownResourceKeys` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownResourceKeys.cs:7` | 公开契约：20 个 `Md.*` 键常量（:9–31），宿主覆盖这些键即可换肤 |
+| `MarkdownResourceKeys` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownResourceKeys.cs:7` | 公开契约：24 个 `Md.*` 键常量，宿主覆盖这些键即可换肤 |
 | `MarkdownResourceAlias` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownResourceAlias.cs:8` | `record MarkdownResourceAlias(object Key)`：把一个 `Md.*` 键指向宿主另一个资源键（不写死值） |
 | `StreamMarkTheme` | `src/TKCode.Arc.StreamMark/Avalonia/Themes/StreamMarkTheme.axaml:1`、`.axaml.cs:7` | 默认主题：`Styles.Resources` 里的 Light / Dark 主题字典 + 3 个不随明暗变化的键 |
 | `MarkdownStyle.Resolve` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:66` | 唯一的解析入口：从控件可见资源 → 不可变 `MarkdownStyle`（含全部硬编码回退值） |
@@ -24,9 +24,9 @@ StreamMark 的全部外观（颜色、字体、行高、间距、圆角、明暗
 ## Key types and functions
 | Symbol | File | Role |
 |---|---|---|
-| `MarkdownStyle` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:15` | 不可变快照：14 个 `IBrush` + `FontFamily` / `MonospaceFontFamily` / `FontSize` / `LineHeight` / `BlockSpacing` / `CornerRadius` / `IsDark`，全部 `required … { get; init; }`（:17–37） |
-| `MarkdownStyle.Resolve` 内的局部 `Get<T>(key, fallback)` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:70` | 单个键的解析：`TryFindResource(key, variant)` → 解别名 → `is T` 命中 / `Color` 转 `ImmutableSolidColorBrush` → 否则返回 `fallback`（:72–92） |
-| `MarkdownStyle.CodeFontSize` / `CodeLineHeight` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:39` / `:41` | 派生值：`round(FontSize * 0.9)` / `round(CodeFontSize * 1.55)`（不是资源键） |
+| `MarkdownStyle` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:15` | 不可变快照：16 个 `IBrush` + `FontFamily` / `MonospaceFontFamily` / `FontSize` / `LineHeight` / `BlockSpacing` / `CornerRadius` / `IsDark` 为 `required … { get; init; }`，`CodeFontSize` / `CodeLineHeight` 为可选 `{ get; init; }` |
+| `MarkdownStyle.Resolve` 内的局部 `Get<T>(key, fallback)` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:81` | 单个键的解析：`TryFindResource(key, variant)` → 解别名 → `is T` 命中 / `Color` 转 `ImmutableSolidColorBrush` → 否则返回 `fallback` |
+| `MarkdownStyle.CodeFontSize` / `CodeLineHeight` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:46` / `:53` | 可覆盖资源键 `Md.CodeFontSize` / `Md.CodeLineHeight`；未设置时分别回落为 `Math.Round(FontSize * 0.9)` / `Math.Round(CodeFontSize * 1.55)` |
 | `MarkdownStyle.HeadingFontSize` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:46` | 标题字号倍数：1 → 1.75，2 → 1.5，3 → 1.25，4 → 1.1，5/6 → 1.0 |
 | `MarkdownStyle.AlertBrush` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:56` | 提示块强调色：TIP / IMPORTANT / WARNING / CAUTION 硬编码（按 `IsDark` 分两套），其它 kind 返回 `LinkForeground` |
 | `MarkdownStyle.HighlightTheme` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:43` | `IsDark ? Dark : Light` 的 `HighlightThemeKind`，是高亮器 / Mermaid 的明暗入口 |
@@ -50,15 +50,15 @@ StreamMark 的全部外观（颜色、字体、行高、间距、圆角、明暗
 - 无状态的部分：`AlertBrush`（:56）与 `HeadingFontSize`（:46）每次调用现算，`TIP` 等用 `Brushes.*` 静态画刷；`MarkBackground` 的默认值是每次解析新建，非资源值（:106）。
 
 ## Contracts it exposes
-- `Md.*` 键清单（`MarkdownResourceKeys.cs:9–31`，共 20 个），按类别：
-  - 文字 / 交互色（7）：`Foreground`、`SecondaryForeground`、`LinkForeground`、`SelectionBackground`、`HoverBackground`、`ListMarkerForeground`（默认 = `SecondaryForeground`，:105）、`MarkBackground`。
-  - 代码与图表容器（8）：`CodeBackground`、`CodeBorderBrush`、`InlineCodeBackground`、`InlineCodeForeground`（默认 = `Foreground`，:104）、`QuoteBorderBrush`、`TableBorderBrush`、`TableHeaderBackground`、`CornerRadius`。
-  - 字体与度量（5）：`FontFamily`、`MonospaceFontFamily`、`FontSize`、`LineHeight`、`BlockSpacing`。
+- `Md.*` 键清单（`MarkdownResourceKeys.cs`，共 24 个），按类别：
+  - 文字 / 交互色（9）：`Foreground`、`SecondaryForeground`、`LinkForeground`、`SelectionBackground`、`HoverBackground`、`ListMarkerForeground`（默认 = `SecondaryForeground`）、`MarkBackground`、`SearchHighlightBackground`、`SearchCurrentBackground`。
+  - 代码与图表容器（8）：`CodeBackground`、`CodeBorderBrush`、`InlineCodeBackground`、`InlineCodeForeground`（默认 = `Foreground`）、`QuoteBorderBrush`、`TableBorderBrush`、`TableHeaderBackground`、`CornerRadius`。
+  - 字体与度量（7）：`FontFamily`、`MonospaceFontFamily`、`FontSize`、`LineHeight`、`CodeFontSize`（默认 = `Math.Round(FontSize * 0.9)`）、`CodeLineHeight`（默认 = `Math.Round(CodeFontSize * 1.55)`）、`BlockSpacing`。
   覆盖范围说明：`Md.TableBorderBrush` 被表格外框与分隔线、行内代码边框、脚注分隔线共用（`BlockView.cs:215`、`ContainerViews.cs:94`、`:320`）；`Md.CodeBackground` / `Md.CodeBorderBrush` 同时用于代码块、图表块与引用来源卡片（`CodeBlockView.cs:339`、`DiagramBlockView.cs:223`、`SourceCard.cs:86`）。
 - `MarkdownResourceAlias` 的宿主契约：值可以是任意宿主资源键；目标值类型要与取值处一致（`IBrush` 或 `Color`）；`Color` 仅在 `Get<IBrush>` 时自动转 `ImmutableSolidColorBrush`（`MarkdownStyle.cs:88`）；找不到目标键**不报错**，直接走 `fallback`（:81）。
 - 宿主映射示例：Arc 的 `Markdown` 控件（`src/TKCode.Arc.Markdown/Content/Markdown/Markdown.cs:s_aliases`，16 条）把颜色、`MonospaceFontFamily` 与 `CornerRadius` 指向 `ArcDesignTokenKind`；未映射的键（字号、行高、间距）取 `StreamMarkTheme` 默认值或 `Markdown` 自己写入的排版资源。原来的 `StreamMark.Theme.AtomUI` 在并入 Arc（2026-11-19）时删除。
-- 默认字体 / 行高约定：默认字典故意**不设** `Md.FontFamily` / `Md.FontSize` / `Md.LineHeight`（`StreamMarkTheme.axaml:5` 注释、`docs/streammark/decisions.md:28`），字体字号沿用控件继承的 `TextElement` 值，行高 = 字号 × 1.6（`MarkdownStyle.cs:119`）；等宽字体默认 `Menlo, Consolas, "DejaVu Sans Mono", monospace`（`StreamMarkTheme.axaml:36`，回退值 `Menlo, Consolas, monospace`，`MarkdownStyle.cs:117`）。
-- 20 个键中只有 14 个在默认字典里有条目（Light / Dark 各 11 个画刷 + 3 个非主题键），其余 6 个（`FontFamily`、`FontSize`、`LineHeight`、`InlineCodeForeground`、`ListMarkerForeground`、`MarkBackground`）故意依赖 `Resolve` 的 fallback。
+- 默认字体 / 行高约定：默认字典故意**不设** `Md.FontFamily` / `Md.FontSize` / `Md.LineHeight` / `Md.CodeFontSize` / `Md.CodeLineHeight`（`StreamMarkTheme.axaml:5` 注释、`docs/streammark/decisions.md:28`），正文沿用控件继承的 `TextElement` 字体与字号、行高 = 字号 × 1.6，代码字号 = 正文字号 × 0.9、代码行高 = 代码字号 × 1.55；等宽字体默认 `Menlo, Consolas, "DejaVu Sans Mono", monospace`（`StreamMarkTheme.axaml:37`，回退值 `Menlo, Consolas, monospace`）。
+- 24 个键中只有 14 个在默认字典里有条目（Light / Dark 各 11 个画刷 + 3 个非主题键），其余 10 个（`FontFamily`、`FontSize`、`LineHeight`、`CodeFontSize`、`CodeLineHeight`、`InlineCodeForeground`、`ListMarkerForeground`、`MarkBackground`、`SearchHighlightBackground`、`SearchCurrentBackground`）故意依赖 `Resolve` 的 fallback。
 
 ## How to extend
 - To add 一个新的 `Md.*` 键（必须同步的位置，缺一处都有症状）：
