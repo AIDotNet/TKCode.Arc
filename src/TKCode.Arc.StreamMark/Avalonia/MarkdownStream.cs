@@ -56,6 +56,13 @@ public sealed class MarkdownStream
 
     public StreamingState State { get; }
 
+    /// <summary>是否在流式输出期间在末尾显示块状光标（默认 <c>true</c>）。</summary>
+    public bool ShowCaret
+    {
+        get => State.ShowCaret;
+        set => State.SetShowCaret(value);
+    }
+
     /// <summary>流（包括平滑放出的积压）已全部结束。</summary>
     public event Action? Completed;
 

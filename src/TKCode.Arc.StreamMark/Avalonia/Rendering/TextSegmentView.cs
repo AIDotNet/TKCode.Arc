@@ -44,6 +44,8 @@ public sealed class TextSegmentView : Control, ISelectableSegment
     private readonly List<SegmentLineVisual> _lines = [];
     private readonly TailFade _fade;
     private bool _isDocumentTail;
+    private bool _attached;
+    private StreamingState? _subscribedStreaming;
 #pragma warning disable CS0618 // TextRunCache 是 Avalonia 12 的预览 API（[Unstable]），只在这里使用
     // 已整形文本段的缓存：流式追加时只为变化处之后的文本重新整形
     private readonly TextRunCache _runCache = new();
@@ -74,6 +76,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 return;
             }
             _isDocumentTail = value;
+            SyncStreamingSubscription();
             InvalidateVisual();
             // 不再是末尾时，正在渐显的文字继续渐显完（到时由定时器结束）
             if (value)
@@ -190,12 +193,12 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         if (_context is not null && !ReferenceEquals(_context.Selection, context.Selection))
         {
             _context.Selection.Changed -= OnSelectionChanged;
-            if (IsAttached)
+            if (_attached)
             {
                 context.Selection.Changed += OnSelectionChanged;
             }
         }
-        else if (_context is null && IsAttached)
+        else if (_context is null && _attached)
         {
             context.Selection.Changed += OnSelectionChanged;
         }
@@ -226,11 +229,10 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         _foreground = foreground;
         _alignment = alignment;
         _wrapping = wrapping;
+        SyncStreamingSubscription();
         InvalidateLayout(restyled ? 0 : from);
         return true;
     }
-
-    private bool IsAttached => VisualRoot is not null;
 
     // 缓存主字体缺字区间（例如 CJK 段落）的首字码点，避免逐行增量排版时每次向回扫描到段首（O(N) → O(1)）
     private readonly record struct UncoveredRun(int Begin, int RunStart, int RunEnd, int HeadCodepoint);
@@ -467,19 +469,23 @@ public sealed class TextSegmentView : Control, ISelectableSegment
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        _attached = true;
         if (_context is not null)
         {
             _context.Selection.Changed += OnSelectionChanged;
         }
+        SyncStreamingSubscription();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        _attached = false;
         if (_context is not null)
         {
             _context.Selection.Changed -= OnSelectionChanged;
         }
+        SyncStreamingSubscription();
         _cardTimer?.Stop();
         CloseCard();
         _fade.Detach();
@@ -493,6 +499,44 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             }
             _images.Clear();
             InvalidateLayout();
+        }
+    }
+
+    private void SyncStreamingSubscription()
+    {
+        var target = _attached && _isDocumentTail ? _context?.Streaming : null;
+        if (ReferenceEquals(target, _subscribedStreaming))
+        {
+            return;
+        }
+        if (_subscribedStreaming is not null)
+        {
+            _subscribedStreaming.CaretVisibilityChanged -= OnCaretVisibilityChanged;
+        }
+        _subscribedStreaming = target;
+        if (target is not null)
+        {
+            target.CaretVisibilityChanged += OnCaretVisibilityChanged;
+        }
+    }
+
+    private void OnCaretVisibilityChanged()
+    {
+        if (global::Avalonia.Threading.Dispatcher.UIThread.CheckAccess())
+        {
+            InvalidateVisual();
+        }
+        else
+        {
+            global::Avalonia.Threading.Dispatcher.UIThread.Post(InvalidateCaretVisual, global::Avalonia.Threading.DispatcherPriority.Render);
+        }
+    }
+
+    private void InvalidateCaretVisual()
+    {
+        if (_attached && _isDocumentTail)
+        {
+            InvalidateVisual();
         }
     }
 

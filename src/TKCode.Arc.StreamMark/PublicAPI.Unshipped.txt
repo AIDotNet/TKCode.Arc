@@ -1,1 +1,3 @@
 #nullable enable
+StreamMark.Avalonia.MarkdownStream.ShowCaret.get -> bool
+StreamMark.Avalonia.MarkdownStream.ShowCaret.set -> void
