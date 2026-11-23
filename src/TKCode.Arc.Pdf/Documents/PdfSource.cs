@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.IO;
 
 namespace TKCode.Arc;
@@ -18,7 +19,12 @@ public enum PdfSourceKind
     Uri
 }
 
-/// <summary>A PDF to open: a file, bytes, a stream or an address. In XAML, write an absolute URI or a path.</summary>
+/// <summary>
+/// A PDF to open: a file, bytes, a stream or an address. In XAML, write an absolute URI or a path. A binding may also give
+/// a path or address (<see cref="string"/>), a <see cref="System.Uri"/> or the bytes of a document; <see cref="PdfSourceConverter"/>
+/// turns them into a source.
+/// </summary>
+[TypeConverter(typeof(PdfSourceConverter))]
 public sealed class PdfSource
 {
     private PdfSource(PdfSourceKind kind, string? displayName)

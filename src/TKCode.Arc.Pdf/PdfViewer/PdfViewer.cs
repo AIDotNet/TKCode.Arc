@@ -41,7 +41,7 @@ public partial class PdfViewer : PageViewer
 
     #region Properties
 
-    /// <summary>The PDF to open; changing it stops the open in progress and closes the document the viewer opened. In XAML, a path or an absolute URI. Wins over <see cref="Document"/>.</summary>
+    /// <summary>The PDF to open; changing it stops the open in progress and closes the document the viewer opened. In XAML, a path or an absolute URI; a binding may also give a path or address (<c>string</c>), a <see cref="System.Uri"/> or the document's bytes. Wins over <see cref="Document"/>.</summary>
     public static readonly StyledProperty<PdfSource?> SourceProperty =
         AvaloniaProperty.Register<PdfViewer, PdfSource?>(nameof(Source));
 

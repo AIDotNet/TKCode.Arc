@@ -1,1 +1,5 @@
 #nullable enable
+TKCode.Arc.PdfSourceConverter
+TKCode.Arc.PdfSourceConverter.PdfSourceConverter() -> void
+override TKCode.Arc.PdfSourceConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Type! sourceType) -> bool
+override TKCode.Arc.PdfSourceConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object! value) -> object?

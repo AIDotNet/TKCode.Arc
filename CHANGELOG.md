@@ -10,6 +10,17 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Fixed
+
+- `PdfViewer.Source` (and `Pdf.Source`) now takes what a view model usually keeps: a binding that gives it a path or
+  absolute address (`string`), a `Uri` or the document's bytes (`byte[]`, `ReadOnlyMemory<byte>`) opens that document,
+  and a change in the view model opens the new one. Before, only a `PdfSource` reached the property: any other value
+  failed to convert, so the viewer stayed empty and did not follow the view model, while the same path written in XAML
+  worked ([#175](https://github.com/AIDotNet/TKCode.Arc/issues/175)). The new `PdfSourceConverter` does the conversion;
+  an empty or blank string gives no source. A `PdfDocument` you opened yourself still goes to `Document`.
+
 ## 1.3.1-preview.1 - 2026-11-21
 
 A patch preview for two issues: a `Card` whose lift replayed when a text box or drop-down inside it took the pointer
