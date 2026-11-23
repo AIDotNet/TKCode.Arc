@@ -47,6 +47,12 @@ public abstract class BlockView : Control
 
     protected static SegmentKey KeyFor(RenderContext context, int topKey, ref int segment) => new(context.Entry, topKey, segment++);
 
+    /// <summary>
+    /// 同一顶层块内子块的状态名：顶层块（segment == 0）保持原名，嵌套子块按片段号区分，避免同一列表/引用内的多个子块互相覆盖。
+    /// </summary>
+    internal static string StateKey(string name, int segment) =>
+        segment == 0 ? name : string.Concat(name, "#", segment.ToString(System.Globalization.CultureInfo.InvariantCulture));
+
     protected void AddChild(Control child)
     {
         LogicalChildren.Add(child);

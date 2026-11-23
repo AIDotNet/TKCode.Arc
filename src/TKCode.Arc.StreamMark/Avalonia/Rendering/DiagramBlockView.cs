@@ -23,6 +23,7 @@ public sealed class DiagramBlockView : BlockView
 {
     private const double HeaderHeight = 34;
     private const double Padding = 14;
+    private const string ShowCodeState = "diagram.code";
 
     /// <summary>
     /// 图表高度的安全上限（设备无关像素）。图表按宽度适配、不因为高而缩小——和浏览器里 <c>max-width: 100%</c> 的 SVG 一致，
@@ -57,7 +58,7 @@ public sealed class DiagramBlockView : BlockView
         _toggle.Click += (_, _) =>
         {
             _showCode = !_showCode;
-            Context?.State.Set(TopKey, "diagram.code", _showCode);
+            Context?.State.Set(TopKey, StateKey(ShowCodeState, _code.Key.Segment), _showCode);
             _toggle.Icon = _showCode ? MarkdownIcons.Diagram : MarkdownIcons.Code;
             UpdateVisibility();
         };
@@ -74,10 +75,11 @@ public sealed class DiagramBlockView : BlockView
     {
         var code = (CodeBlock)block;
         var style = context.Style;
-        var shared = CodeBlockState.For(context, topKey, code.Language);
+        var segmentKey = KeyFor(context, topKey, ref segment);
+        var shared = CodeBlockState.For(context, topKey, code.Language, segmentKey.Segment);
         shared.Update(code.Code);
-        _code.Set(context, KeyFor(context, topKey, ref segment), shared, 0, int.MaxValue);
-        _showCode = context.State.Get(topKey, "diagram.code", false);
+        _code.Set(context, segmentKey, shared, 0, int.MaxValue);
+        _showCode = context.State.Get(topKey, StateKey(ShowCodeState, segmentKey.Segment), false);
         _toggle.Icon = _showCode ? MarkdownIcons.Diagram : MarkdownIcons.Code;
         foreach (var button in new[] { _toggle, _copy, _fullscreen })
         {
