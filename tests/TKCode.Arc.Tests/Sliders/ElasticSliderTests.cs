@@ -267,4 +267,131 @@ public class ElasticSliderTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void IsBubbleVisible_Defaults_To_True_And_Suppresses_Tag_When_False()
+    {
+        var defaultSlider = new ElasticSlider();
+        defaultSlider.IsBubbleVisible.ShouldBeTrue();
+
+        var commits = new List<double>();
+        var (slider, window) = Show(new ElasticSlider { Label = "Volume", Value = 20, IsBubbleVisible = false });
+        slider.ValueCommitted += (_, e) => commits.Add(e.Value);
+        try
+        {
+            var readout = TestHelpers.Descendant<TextBlock>(slider, "PART_Readout");
+            var thumb = slider.Rail!.Thumbs[0];
+            thumb.Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(21);
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+
+            var (origin, y) = RailPoint(slider, window);
+            window.MouseDown(new Point(origin.X + 12 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(50);
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.DraggingPseudoClass).ShouldBeTrue();
+            readout.Opacity.ShouldBe(1);
+
+            window.MouseMove(new Point(origin.X + 12 + 210, y));
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(70);
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+
+            window.MouseUp(new Point(origin.X + 12 + 210, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(70);
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.DraggingPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+            commits.ShouldBe([21, 70]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Toggling_IsBubbleVisible_Updates_Active_Key_Drag_And_Linger_Tag()
+    {
+        var (slider, window) = Show(new ElasticSlider { Label = "Brightness", Value = 40 });
+        try
+        {
+            var readout = TestHelpers.Descendant<TextBlock>(slider, "PART_Readout");
+            var thumb = slider.Rail!.Thumbs[0];
+
+            // While keyboard-active: toggling hides/restores the tag and :tag pseudo-class.
+            thumb.Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.ArrowRight, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeTrue();
+            readout.Opacity.ShouldBe(0);
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeTrue();
+            readout.Opacity.ShouldBe(0);
+
+            // Clear keyboard state before testing drag and linger.
+            window.FocusManager!.Focus(null);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+
+            var (origin, y) = RailPoint(slider, window);
+            window.MouseDown(new Point(origin.X + 12 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeTrue();
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeTrue();
+
+            // After release (linger): toggling to false hides the tag and clears linger.
+            window.MouseUp(new Point(origin.X + 12 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeTrue();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeTrue();
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+            readout.Opacity.ShouldBe(1);
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsTagShown.ShouldBeFalse();
+            slider.Classes.Contains(ElasticSlider.TagPseudoClass).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
