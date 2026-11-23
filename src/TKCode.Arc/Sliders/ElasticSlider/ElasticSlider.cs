@@ -76,9 +76,13 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     public static readonly StyledProperty<Func<double, string>?> ValueFormatterProperty =
         AvaloniaProperty.Register<ElasticSlider, Func<double, string>?>(nameof(ValueFormatter));
 
-    /// <summary>Shows the value beside the label. The tag still appears while dragging or using keys.</summary>
+    /// <summary>Shows the value beside the label. The tag still appears while dragging or using keys unless <see cref="IsBubbleVisible"/> is false.</summary>
     public static readonly StyledProperty<bool> IsValueVisibleProperty =
         AvaloniaProperty.Register<ElasticSlider, bool>(nameof(IsValueVisible), true);
+
+    /// <summary>Shows the floating value tag above the thumb while dragging or using keys (default true).</summary>
+    public static readonly StyledProperty<bool> IsBubbleVisibleProperty =
+        AvaloniaProperty.Register<ElasticSlider, bool>(nameof(IsBubbleVisible), true);
 
     /// <summary>
     /// Diameter of the thumbs in device-independent pixels. The theme sets it from the token; set it on the control, or
@@ -112,6 +116,8 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     /// <inheritdoc cref="ValueFormatterProperty"/>
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
+    /// <inheritdoc cref="IsBubbleVisibleProperty"/>
+    public bool IsBubbleVisible { get => GetValue(IsBubbleVisibleProperty); set => SetValue(IsBubbleVisibleProperty, value); }
     /// <inheritdoc cref="ThumbDiameterProperty"/>
     public double ThumbDiameter { get => GetValue(ThumbDiameterProperty); set => SetValue(ThumbDiameterProperty, value); }
     /// <inheritdoc cref="TrackThicknessProperty"/>
@@ -368,6 +374,15 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         {
             UpdateHeaderPseudoClass();
         }
+        else if (change.Property == IsBubbleVisibleProperty)
+        {
+            if (!IsBubbleVisible)
+            {
+                _lingerTimer?.Stop();
+                _linger = false;
+            }
+            UpdateBubble();
+        }
     }
 
     /// <summary>The header row (label and readout) is empty without a label and with the readout hidden.</summary>
@@ -540,7 +555,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private void UpdateBubble()
     {
-        var shown = _dragging || _keyed || _linger;
+        var shown = IsBubbleVisible && (_dragging || _keyed || _linger);
         _rail?.ShowBubble(0, shown);
         PseudoClasses.Set(TagPseudoClass, shown);
         PseudoClasses.Set(DraggingPseudoClass, _dragging);
@@ -548,6 +563,10 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
 
     private void HoldBubble()
     {
+        if (!IsBubbleVisible)
+        {
+            return;
+        }
         _lingerTimer ??= CreateLingerTimer();
         _lingerTimer.Stop();
         _linger = true;
@@ -768,7 +787,14 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
             lift.Jump(1);
         }
         Emit(next);
-        HoldBubble();
+        if (IsBubbleVisible)
+        {
+            HoldBubble();
+        }
+        else
+        {
+            UpdateBubble();
+        }
         RaiseCommitted();
     }
 

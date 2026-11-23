@@ -125,9 +125,13 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public static readonly StyledProperty<Func<double, string>?> ValueFormatterProperty =
         AvaloniaProperty.Register<Slider, Func<double, string>?>(nameof(ValueFormatter));
 
-    /// <summary>Shows the value beside the label. The bubble still appears while dragging or keyboard focused.</summary>
+    /// <summary>Shows the value beside the label. The bubble still appears while dragging or keyboard focused unless <see cref="IsBubbleVisible"/> is false.</summary>
     public static readonly StyledProperty<bool> IsValueVisibleProperty =
         AvaloniaProperty.Register<Slider, bool>(nameof(IsValueVisible), true);
+
+    /// <summary>Shows the floating value bubble above the thumb while dragging or keyboard focused (default true).</summary>
+    public static readonly StyledProperty<bool> IsBubbleVisibleProperty =
+        AvaloniaProperty.Register<Slider, bool>(nameof(IsBubbleVisible), true);
 
     /// <summary>
     /// Diameter of the thumbs in device-independent pixels. The theme sets it from the <c>SliderToken</c>; set it on the
@@ -174,6 +178,8 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     public int MinStepsBetweenThumbs { get => GetValue(MinStepsBetweenThumbsProperty); set => SetValue(MinStepsBetweenThumbsProperty, value); }
     public Func<double, string>? ValueFormatter { get => GetValue(ValueFormatterProperty); set => SetValue(ValueFormatterProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
+    /// <inheritdoc cref="IsBubbleVisibleProperty"/>
+    public bool IsBubbleVisible { get => GetValue(IsBubbleVisibleProperty); set => SetValue(IsBubbleVisibleProperty, value); }
     /// <inheritdoc cref="ThumbDiameterProperty"/>
     public double ThumbDiameter { get => GetValue(ThumbDiameterProperty); set => SetValue(ThumbDiameterProperty, value); }
     /// <inheritdoc cref="TrackThicknessProperty"/>
@@ -553,6 +559,14 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         {
             UpdateHeaderPseudoClass();
         }
+        else if (change.Property == IsBubbleVisibleProperty)
+        {
+            if (!IsBubbleVisible)
+            {
+                ClearLinger();
+            }
+            UpdateBubbles();
+        }
         else if (change.Property == IsEffectivelyEnabledProperty)
         {
             UpdateThumbs();
@@ -721,7 +735,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
         }
         for (var i = 0; i < 2; i++)
         {
-            var shown = i < Count && (_dragging == i || _keyFocus == i || _linger == i);
+            var shown = IsBubbleVisible && i < Count && (_dragging == i || _keyFocus == i || _linger == i);
             _rail.ShowBubble(i, shown);
         }
     }
@@ -741,6 +755,10 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
 
     private void HoldBubble(int index)
     {
+        if (!IsBubbleVisible)
+        {
+            return;
+        }
         _lingerTimer ??= CreateLingerTimer();
         _lingerTimer.Stop();
         _linger = index;

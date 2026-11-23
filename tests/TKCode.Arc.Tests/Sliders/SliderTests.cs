@@ -384,4 +384,156 @@ public class SliderTests
             window.Close();
         }
     }
+
+    [AvaloniaFact]
+    public void IsBubbleVisible_Defaults_To_True_And_Suppresses_Bubbles_When_False()
+    {
+        var defaultSlider = new Slider();
+        defaultSlider.IsBubbleVisible.ShouldBeTrue();
+
+        var commits = new List<double>();
+        var (slider, window) = Show(new Slider { Label = "Volume", Value = 20, IsBubbleVisible = false });
+        slider.ValueCommitted += (_, e) => commits.Add(e.Value);
+        try
+        {
+            Thumb(slider, 0).Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            Key(window, PhysicalKey.ArrowRight);
+            slider.Value.ShouldBe(21);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            var rail = slider.Rail!;
+            var origin = rail.TranslatePoint(default, window)!.Value;
+            var y = origin.Y + rail.Bounds.Height / 2;
+            window.MouseDown(new Point(origin.X + 11 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(50);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            window.MouseMove(new Point(origin.X + 11 + 210, y));
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(70);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            window.MouseUp(new Point(origin.X + 11 + 210, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.Value.ShouldBe(70);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+            commits.ShouldBe([21, 70]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void IsBubbleVisible_False_Suppresses_Both_Bubbles_In_Range_Mode()
+    {
+        var commits = new List<(double Low, double High)>();
+        var (slider, window) = Show(new Slider
+        {
+            Label = "Price",
+            IsRange = true,
+            LowerValue = 20,
+            UpperValue = 80,
+            IsBubbleVisible = false,
+        });
+        slider.ValueCommitted += (_, e) => commits.Add((e.LowerValue, e.UpperValue));
+        try
+        {
+            Thumb(slider, 0).Focus(NavigationMethod.Tab);
+            Key(window, PhysicalKey.ArrowRight);
+            slider.LowerValue.ShouldBe(21);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+            slider.IsBubbleShown(1).ShouldBeFalse();
+
+            Thumb(slider, 1).Focus(NavigationMethod.Tab);
+            Key(window, PhysicalKey.ArrowLeft);
+            slider.UpperValue.ShouldBe(79);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+            slider.IsBubbleShown(1).ShouldBeFalse();
+
+            var rail = slider.Rail!;
+            var origin = rail.TranslatePoint(default, window)!.Value;
+            var y = origin.Y + rail.Bounds.Height / 2;
+            window.MouseDown(new Point(origin.X + 11 + 270, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.UpperValue.ShouldBe(90);
+            slider.IsBubbleShown(0).ShouldBeFalse();
+            slider.IsBubbleShown(1).ShouldBeFalse();
+
+            window.MouseUp(new Point(origin.X + 11 + 270, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+            slider.IsBubbleShown(1).ShouldBeFalse();
+            commits.ShouldBe([(21, 80), (21, 79), (21, 90)]);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Toggling_IsBubbleVisible_Updates_Active_Focus_Drag_And_Linger_Bubbles()
+    {
+        var (slider, window) = Show(new Slider { Label = "Volume", Value = 40 });
+        try
+        {
+            // While keyboard focused: toggling hides and restores the bubble.
+            Thumb(slider, 0).Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeTrue();
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeTrue();
+
+            // Clear keyboard focus before testing pointer drag and linger.
+            window.FocusManager!.Focus(null);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            var rail = slider.Rail!;
+            var origin = rail.TranslatePoint(default, window)!.Value;
+            var y = origin.Y + rail.Bounds.Height / 2;
+
+            // While dragging: toggling hides and restores the bubble.
+            window.MouseDown(new Point(origin.X + 11 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeTrue();
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeTrue();
+
+            // After release (linger): toggling to false hides it and clears linger.
+            window.MouseUp(new Point(origin.X + 11 + 150, y), MouseButton.Left);
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeTrue();
+
+            slider.IsBubbleVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+
+            slider.IsBubbleVisible = true;
+            Dispatcher.UIThread.RunJobs();
+            slider.IsBubbleShown(0).ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }
