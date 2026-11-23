@@ -30,11 +30,11 @@ updated: 2026-11-19
 | `DisplayItem` | `src/TKCode.Arc.StreamMark.RaTeX/DisplayList.cs:18` | 扁平结构（非多态）：`Type` ∈ GlyphPath/Line/Rect/Path，未知类型由绘制端跳过（`src/TKCode.Arc.StreamMark.RaTeX/DisplayList.cs:20`） |
 | `PathCommand` / `DisplayColor` | `src/TKCode.Arc.StreamMark.RaTeX/DisplayList.cs:36`、`:48` | MoveTo/LineTo/CubicTo/QuadTo/Close；颜色为 float RGBA |
 | `DisplayListJsonContext` | `src/TKCode.Arc.StreamMark.RaTeX/DisplayList.cs:50` | `JsonKnownNamingPolicy.SnakeCaseLower` 源生成上下文（AOT 安全；`char_code`、`display_mode` 这类 snake_case 字段名靠它对齐 `ratex.h:34-41`） |
-| `native/ratex/patches/0001-enclose-border-uses-current-color.patch` | `native/ratex/patches/0001-enclose-border-uses-current-color.patch:1` | 唯一补丁：改 `crates/ratex-layout/src/engine.rs` 的 `layout_enclose`，把 `\fbox`/`\boxed` 边框从 `Color::BLACK` 改成 `options.color` |
+| `native/ratex/ratex-upstream.json` | `native/ratex/ratex-upstream.json` | 上游提交、`patches` 列表（2026-11-23 升级至 `d49c6fad` 后上游已包含 `\fbox`/`\boxed` 边框颜色修复，当前无本地补丁）与各 RID 目标 |
 
 ## Contracts and traps
 - **库名约定**：`"ratex_ffi"` 在各平台解析到 `libratex_ffi.dylib` / `libratex_ffi.so` / `ratex_ffi.dll`；RID 与文件名的对应写在 `ratex-upstream.json` 的 `build.perRid`，`sync-native.sh` 与 CI 的包检查用同一组文件名。
 - **ABI 与协议**：三个函数的签名与 `RatexOptions` 布局以上游 `crates/ratex-ffi/include/ratex.h` 为准（检出后在 `artifacts/src/ratex-*/` 下）；显示列表 JSON 协议 v1 用 snake_case 源生成上下文（`DisplayListJsonContext`）反序列化，未知字段 / 条目类型被忽略。
 - **线程**：原生错误状态是线程局部的，托管侧可并发调用；`ratex_get_last_error` 的指针只在同线程下一次调用前有效，立即拷贝成 `string`。
-- **升级上游**：改清单里的 `commit`，重新复制该提交的 `fonts/*.ttf` 与 `licenses/*` 到 `Fonts/`；补丁打不上会让构建失败——上游已包含修复时删掉补丁并清理托管侧依赖它的判断（[[ratex-fbox-upstream-patch]]）。
+- **升级上游**：改清单里的 `commit`，重新复制该提交的 `fonts/*.ttf` 与 `licenses/*` 到 `Fonts/`；若有本地补丁且打不上会让构建失败，上游已包含修复时从清单移除并删除补丁文件。
 - **漏复制原生库的症状**：运行时 `DllNotFoundException: ratex_ffi`（AOT 下启动即崩），不是编译错误；仓库内可执行项目要设 `ArcStreamMarkNative=true`。

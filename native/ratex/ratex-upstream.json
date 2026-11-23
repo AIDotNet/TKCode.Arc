@@ -1,8 +1,8 @@
 {
   "schema": 1,
   "repo": "https://github.com/erweixin/RaTeX.git",
-  "commit": "ae391d727ac615437c63c308f4538d971a84bede",
-  "commitDate": "2026-07-28T08:41:16Z",
+  "commit": "d49c6fad83b4dcdfd269f6dacb523d093e77d9d2",
+  "commitDate": "2026-11-22T15:56:14Z",
   "crate": "ratex-ffi",
   "license": "MIT (fonts: SIL OFL 1.1)",
   "fonts": "src/TKCode.Arc.StreamMark.RaTeX/Fonts holds fonts/*.ttf and licenses/* of this commit; copy them again when the commit changes.",
@@ -16,11 +16,6 @@
       "win-arm64": { "target": "aarch64-pc-windows-gnullvm", "tool": "zigbuild", "lib": "ratex_ffi.dll" }
     }
   },
-  "patches": [
-    {
-      "file": "patches/0001-enclose-border-uses-current-color.patch",
-      "reason": "\\fbox / \\boxed borders take the current color instead of fixed black, so they show on dark themes. To be sent upstream; when upstream has it, drop the patch and the managed check in RaTeXMathLayout that depends on it."
-    }
-  ],
-  "updatedAt": "2026-11-19"
+  "patches": [],
+  "updatedAt": "2026-11-23"
 }

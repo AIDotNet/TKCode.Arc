@@ -15,7 +15,6 @@
 - [主题要用资源别名而不是画刷](host-resource-alias.md) — 否则宿主 token 下文字透明
 - [原生库有两条分发路径](native-library-two-paths.md) — 交叉发布时复制错架构的来历
 - [Rust 1.100 起 win-arm64 链接缺 _Unwind_*，发布构建固定 Rust](rust-gnullvm-unwind.md) — 升级 Rust 前先编 win-arm64
-- [RaTeX 的本地补丁应提交上游](ratex-fbox-upstream-patch.md) — 上游修复后要移除补丁并重新接线
 - [StreamPacer.GetRevealTime 还没有生产消费者](pacer-reveal-time-unwired.md) — 排查渐显不生效时的第一个怀疑对象
 - [CI runner 的字体环境与本机不同](ci-font-environments.md) — Linux 只有 DejaVu、macOS 苹方 600 加载成 Medium；字体断言按真实加载结果
 - [回退字体曾依赖取 run 的起点与匹配历史](fallback-font-position-history.md) — Windows 上流式断行与整段排版不一致的原因（alpha.19 修复）

@@ -24,8 +24,8 @@
              Microsoft.Extensions.DependencyInjection (-di) and the test packages (-tests), the last ones as the
              repository's own tests use them (Directory.Packages.props). -->
         <ArcTemplateMvvmVersion>8.4.2</ArcTemplateMvvmVersion>
-        <ArcTemplateDiVersion>10.0.14</ArcTemplateDiVersion>
-        <ArcTemplateTestSdkVersion>18.11.0</ArcTemplateTestSdkVersion>
+        <ArcTemplateDiVersion>10.0.15</ArcTemplateDiVersion>
+        <ArcTemplateTestSdkVersion>18.12.0</ArcTemplateTestSdkVersion>
         <ArcTemplateXunitVersion>3.2.2</ArcTemplateXunitVersion>
         <ArcTemplateXunitRunnerVersion>3.1.5</ArcTemplateXunitRunnerVersion>
         <!-- The first version of a library made with tkcode-arc-lib (__LIBRARY_VERSION__): a prerelease while TKCode.Arc is

@@ -1,6 +1,6 @@
 # Third-party notices: PDFium in TKCode.Arc.Pdf.Native
 
-`TKCode.Arc.Pdf.Native` ships PDFium's native library, as built by [pdfium-binaries](https://github.com/bblanchon/pdfium-binaries) (release `chromium/8111`, the builds without V8 and XFA; `tools/pdf/sync-native.sh` downloads and verifies them), with the third-party components PDFium links in. The package carries the complete license text of each component, unabridged, as `licenses/<file>` (the table below names the file); the texts that require reproduction and are not the plain Apache License 2.0 are repeated after the table. An application that ships these libraries must carry these notices.
+`TKCode.Arc.Pdf.Native` ships PDFium's native library, as built by [pdfium-binaries](https://github.com/bblanchon/pdfium-binaries) (release `chromium/8165`, the builds without V8 and XFA; `tools/pdf/sync-native.sh` downloads and verifies them), with the third-party components PDFium links in. The package carries the complete license text of each component, unabridged, as `licenses/<file>` (the table below names the file); the texts that require reproduction and are not the plain Apache License 2.0 are repeated after the table. An application that ships these libraries must carry these notices.
 
 | Component | License | Copyright, as the license file states it | File under `licenses/` |
 |---|---|---|---|

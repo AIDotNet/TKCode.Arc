@@ -20,22 +20,9 @@ public sealed class RaTeXMathLayout : MathLayout
     private readonly List<(double FontSize, DrawOp[] Ops)> _plans = new(MaxCachedSizes);
 
     public RaTeXMathLayout(DisplayList displayList)
-        : this(displayList, false)
-    {
-    }
-
-    /// <param name="displayList">RaTeX 显示列表。</param>
-    /// <param name="blackFramesAreDefault">
-    /// RaTeX 的 <c>\fbox</c> / <c>\boxed</c> 边框固定为黑色（ratex-layout <c>layout_enclose</c> 中
-    /// <c>unwrap_or(Color::BLACK)</c>，未使用默认颜色）。为 true 时把纯黑的细边框矩形视为默认颜色。
-    /// </param>
-    internal RaTeXMathLayout(DisplayList displayList, bool blackFramesAreDefault)
     {
         DisplayList = displayList ?? throw new ArgumentNullException(nameof(displayList));
-        _blackFramesAreDefault = blackFramesAreDefault;
     }
-
-    private readonly bool _blackFramesAreDefault;
 
     /// <summary>RaTeX 原始显示列表（em 单位）。</summary>
     public DisplayList DisplayList { get; }
@@ -130,8 +117,7 @@ public sealed class RaTeXMathLayout : MathLayout
                     batch.Flush(ops);
                     if (item.Width > 0 && item.Height > 0)
                     {
-                        var rectBrush = _blackFramesAreDefault && IsFrameRule(item) ? null : BrushFor(item.Color);
-                        ops.Add(new RectOp(rectBrush, new Rect(item.X * em, item.Y * em, item.Width * em, item.Height * em)));
+                        ops.Add(new RectOp(BrushFor(item.Color), new Rect(item.X * em, item.Y * em, item.Width * em, item.Height * em)));
                     }
                     break;
                 case "Path":
@@ -248,9 +234,6 @@ public sealed class RaTeXMathLayout : MathLayout
         }
         return any ? geometry : null;
     }
-
-    private static bool IsFrameRule(DisplayItem item) =>
-        item.Color is { R: 0, G: 0, B: 0, A: 1 } && Math.Min(item.Width, item.Height) <= 0.05;
 
     /// <summary>哨兵颜色（默认颜色）返回 null，表示绘制时使用 foreground。</summary>
     private static IBrush? BrushFor(DisplayColor? color)

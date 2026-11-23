@@ -1,12 +1,12 @@
 {
   "schema": 1,
   "repo": "https://github.com/mackron/miniaudio",
-  "version": "0.11.25",
-  "commit": "9634bedb5b5a2ca38c1ee7108a9358a4e233f14d",
+  "version": "0.11.26",
+  "commit": "877ea4a7c2601c7b0f2a44e83dfac42e6470fea6",
   "license": "Public domain (Unlicense) or MIT-0, at the user's choice",
   "header": {
-    "url": "https://raw.githubusercontent.com/mackron/miniaudio/9634bedb5b5a2ca38c1ee7108a9358a4e233f14d/miniaudio.h",
-    "sha256": "ac7af4de748b7e26b777f37e01cee313a308a7296a3eb080e2906b320cc55c89"
+    "url": "https://raw.githubusercontent.com/mackron/miniaudio/877ea4a7c2601c7b0f2a44e83dfac42e6470fea6/miniaudio.h",
+    "sha256": "6b376c7fbb1352ba1e0e432ab66069b335ea9405e45cb6c30b97ef0f3c9c3e0e"
   },
   "build": {
     "optimize": "-O2",

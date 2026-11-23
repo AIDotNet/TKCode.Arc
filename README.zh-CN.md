@@ -117,7 +117,7 @@ Arc 遵循[语义化版本](https://semver.org/)：从 1.0.0 起，破坏性 API
 | | |
 |---|---|
 | **.NET** | `net8.0`、`net10.0` 和 `net11.0`。`TKCode.Arc.Terminal`、`TKCode.Arc.StreamMark.RaTeX` 与 `TKCode.Arc.StreamMark.Mermaid` 面向 `net10.0` 和 `net11.0`。 |
-| **Avalonia** | Avalonia 12.1.5 及之后的任意 12.x 版本（`[12.1.5, 13.0.0)`），应用升级 Avalonia 无需等待 Arc 发版。 |
+| **Avalonia** | Avalonia 12.2.0 及之后的任意 12.x 版本（`[12.2.0, 13.0.0)`），应用升级 Avalonia 无需等待 Arc 发版。 |
 | **桌面** | Windows、macOS 和 Linux。 |
 | **浏览器** | 组件库站点本身运行在 WebAssembly 上，音频、视频和 PDF 都有浏览器后端。 |
 | **移动端** | `TKCode.Arc.Mobile` 目前在桌面的手机外框中预览，尚未在 Android 或 iOS 真机上验证。 |

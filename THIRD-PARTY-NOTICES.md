@@ -206,7 +206,7 @@ POSSIBILITY OF SUCH DAMAGE.
 ### RaTeX and the KaTeX fonts (`TKCode.Arc.StreamMark.RaTeX`)
 
 `TKCode.Arc.StreamMark.RaTeX` ships `libratex_ffi`, built from RaTeX (https://github.com/erweixin/RaTeX, MIT License) at
-the commit pinned in `native/ratex/ratex-upstream.json` with the patches in `native/ratex/patches/`, and embeds the
+the commit pinned in `native/ratex/ratex-upstream.json`, and embeds the
 KaTeX fonts that RaTeX distributes (SIL Open Font License 1.1). The font license and notice ship in the package under
 `licenses/` (sources: `src/TKCode.Arc.StreamMark.RaTeX/Fonts/SIL-OFL-1.1.txt` and `KaTeX-fonts-NOTICE.txt`).
 
@@ -218,7 +218,7 @@ other packages.
 
 ## miniaudio — desktop audio playback
 
-`TKCode.Arc.Audio.Native` compiles miniaudio 0.11.25 (David Reid, https://github.com/mackron/miniaudio) into its native
+`TKCode.Arc.Audio.Native` compiles miniaudio 0.11.26 (David Reid, https://github.com/mackron/miniaudio) into its native
 library. miniaudio is offered as public domain (Unlicense) or MIT No Attribution; TKCode.Arc uses it under MIT-0:
 
 ```

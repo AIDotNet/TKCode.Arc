@@ -9,19 +9,19 @@
 # PDF JavaScript cannot run. To move to a newer release, change the tag and every checksum below, in one commit.
 set -euo pipefail
 
-tag="chromium/8111"
+tag="chromium/8165"
 base="https://github.com/bblanchon/pdfium-binaries/releases/download/$tag"
 all_rids="win-x64 win-arm64 linux-x64 linux-arm64 osx-x64 osx-arm64"
 
-# The archive and its checksum for a RID. Computed from the release assets on 2026-11-08.
+# The archive and its checksum for a RID. Computed from the release assets on 2026-11-23.
 archive_of() {
   case "$1" in
-    win-x64)     echo "pdfium-win-x64.tgz 3452d11031050ec65e57f180215b57b9e6d465e3fbedafa8a77ad90885c7d23e" ;;
-    win-arm64)   echo "pdfium-win-arm64.tgz 99ec8b76d5ac30602a8488da745397393ff6cddc824ef36f398146f6b4f76d4e" ;;
-    linux-x64)   echo "pdfium-linux-x64.tgz bdc60126399f39fe768566a18d4be055a7b3681bc9e248e8a6656b4f6cae0aa2" ;;
-    linux-arm64) echo "pdfium-linux-arm64.tgz 042de247138f96341534cccf24ed21c2550a7245b936bb4a60d2340120000f05" ;;
-    osx-x64)     echo "pdfium-mac-x64.tgz e7fece4693f65a7e47f84fa38099068d573d4dcbd46b1a3c8d2c26581c308466" ;;
-    osx-arm64)   echo "pdfium-mac-arm64.tgz 46c674298c60123f1195c2a03c65ee08c4783c84874ce4f5b3a054abb3ecaf30" ;;
+    win-x64)     echo "pdfium-win-x64.tgz ca7338ae7779b8b1b82f4580305c4d762d214f8df1d54b47647fe3cc75989ded" ;;
+    win-arm64)   echo "pdfium-win-arm64.tgz d65e405c59cffe6fe36c0935b90d40ddf3ce75ef284f3168a28dcf00d0388131" ;;
+    linux-x64)   echo "pdfium-linux-x64.tgz ba7865e16c0271daab75256790be06c26272190afe6e2a70eae0bb39bb99089c" ;;
+    linux-arm64) echo "pdfium-linux-arm64.tgz 338f5dcc907a20331812ae8ab01b16ff18966f4a247d790c8ad8fb49029d768b" ;;
+    osx-x64)     echo "pdfium-mac-x64.tgz 07285915b564e46a432a9909dbc1f15892885ca6489e3faeefc70dee77ed371a" ;;
+    osx-arm64)   echo "pdfium-mac-arm64.tgz 112e74d717f3e0310273b70f3c8780e8a61ff11b34834124465c8305c841d350" ;;
     *) return 1 ;;
   esac
 }

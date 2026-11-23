@@ -6,7 +6,7 @@ updated: 2026-10-16
 source: init
 evidence: [THIRD-PARTY-NOTICES.md, README.md, docs/streammark/research/, .gitmodules]
 ---
-- RaTeX（原生公式引擎）—— https://github.com/erweixin/RaTeX ，按 `native/ratex/ratex-upstream.json` 固定的提交由 `tools/streammark/build-ratex.sh` 检出，本地补丁见 [[ratex-fbox-upstream-patch]]。
+- RaTeX（原生公式引擎）—— https://github.com/erweixin/RaTeX ，按 `native/ratex/ratex-upstream.json` 固定的提交由 `tools/streammark/build-ratex.sh` 检出。
 - remend —— 移植自 vercel/streamdown 的 `packages/remend`（Apache-2.0，remend 1.4.0）；C# 与 TypeScript 的刻意差异记在 `src/TKCode.Arc.StreamMark/Core/Remend/DEVIATIONS.md`。
 - 上游生态调研：`docs/streammark/research/01-streamdown.md` … `05-native-streaming.md`（含 @lobehub/streamdown、smd、Incremark、Zed、Codex CLI、Gemini CLI 等的做法），结论汇总在 `docs/streammark/decisions.md`。
 - 许可与第三方声明：`LICENSE`（MIT）、`THIRD-PARTY-NOTICES.md`。

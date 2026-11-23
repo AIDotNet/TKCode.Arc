@@ -122,7 +122,7 @@ migration notes.
 | | |
 |---|---|
 | **.NET** | `net8.0`, `net10.0` and `net11.0`. `TKCode.Arc.Terminal`, `TKCode.Arc.StreamMark.RaTeX` and `TKCode.Arc.StreamMark.Mermaid` target `net10.0` and `net11.0`. |
-| **Avalonia** | Avalonia 12.1.5 or any later 12.x release (`[12.1.5, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
+| **Avalonia** | Avalonia 12.2.0 or any later 12.x release (`[12.2.0, 13.0.0)`), so apps can update Avalonia without waiting for an Arc release. |
 | **Desktop** | Windows, macOS and Linux. |
 | **Browser** | The gallery itself runs on WebAssembly, and audio, video and PDF have browser backends. |
 | **Mobile** | `TKCode.Arc.Mobile` is previewed in a desktop phone frame and is not yet verified on Android or iOS devices. `TKCode.Arc.Terminal` carries libghostty-vt for Android (arm64, x64 and arm, API 29 or later) and iOS (devices and the simulator, as an xcframework the iOS SDK embeds), with or without NativeAOT; `tools/dev/TerminalMobileSample` checks it on the iOS simulator and an Android emulator. |

@@ -14,8 +14,8 @@
 #   wasm/*_nowasm_fallback.js            decoders for browsers without WebAssembly; a .NET WebAssembly app does not start on those.
 set -euo pipefail
 
-version="6.4.299"
-expected="86269b40170eb41740ea05ad2102d71d33de4f122b34eb2f478be0ea7779c415"
+version="6.5.438"
+expected="7461aefcd27c4ef0dd76f9ca5760f09466eb6b3f934432670c12132e7b3d6faa"
 url="https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-$version.tgz"
 
 sha256_of() {

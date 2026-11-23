@@ -1,6 +1,6 @@
 # Third-party notices: pdf.js in TKCode.Arc.Pdf.Browser
 
-`TKCode.Arc.Pdf.Browser` ships files from the npm package [`pdfjs-dist`](https://www.npmjs.com/package/pdfjs-dist) version 6.4.299 (`tools/pdf/sync-pdfjs.sh` downloads it and verifies its SHA-256). The package carries the complete license text of each component, unabridged, next to its files under `staticwebassets/pdfjs/` (the table below names the file, relative to that folder); a host serves them at `_content/TKCode.Arc.Pdf.Browser/pdfjs/`. An application that ships these files must carry these notices.
+`TKCode.Arc.Pdf.Browser` ships files from the npm package [`pdfjs-dist`](https://www.npmjs.com/package/pdfjs-dist) version 6.5.438 (`tools/pdf/sync-pdfjs.sh` downloads it and verifies its SHA-256). The package carries the complete license text of each component, unabridged, next to its files under `staticwebassets/pdfjs/` (the table below names the file, relative to that folder); a host serves them at `_content/TKCode.Arc.Pdf.Browser/pdfjs/`. An application that ships these files must carry these notices.
 
 | Component | Files | License | Copyright, as the license file states it | License file |
 |---|---|---|---|---|

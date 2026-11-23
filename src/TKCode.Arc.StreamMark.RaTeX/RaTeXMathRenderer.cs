@@ -75,7 +75,7 @@ public sealed class RaTeXMathRenderer : IMathRenderer
 
         // 排版放在锁外：原生调用可并发，偶发的重复排版无害
         var result = RaTeXEngine.Layout(latex, display, RaTeXMathLayout.DefaultColorSentinel);
-        var entry = new Entry(key, result.DisplayList is { } list ? new RaTeXMathLayout(list, HasUncoloredFrame(latex)) : null, result.Error);
+        var entry = new Entry(key, result.DisplayList is { } list ? new RaTeXMathLayout(list) : null, result.Error);
 
         lock (_gate)
         {
@@ -111,10 +111,6 @@ public sealed class RaTeXMathRenderer : IMathRenderer
         error = entry.Error;
         return entry.Layout;
     }
-
-    // native/patches/0001 修复了 ratex-layout 中 \fbox / \boxed 边框固定为黑色的问题，
-    // 边框已使用默认颜色，不再需要在绘制端把黑色细边框替换为前景色
-    private static bool HasUncoloredFrame(string latex) => false;
 
     /// <summary>清空缓存。</summary>
     public void Clear()

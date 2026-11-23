@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The PDFium C API of chromium/8111, each signature checked against its headers (fpdfview.h, fpdf_doc.h, fpdf_text.h). Call it
+/// The PDFium C API of chromium/8165, each signature checked against its headers (fpdfview.h, fpdf_doc.h, fpdf_text.h). Call it
 /// only on <see cref="PdfiumThread"/>: PDFium is not thread-safe. C's <c>unsigned long</c> is 32 bits on Windows and 64 elsewhere,
 /// hence <see cref="CULong"/>. Strings are bytes the caller encoded (UTF-8, null-terminated) or buffers PDFium fills (UTF-16LE).
 /// </summary>
