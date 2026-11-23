@@ -486,6 +486,7 @@ public partial class Sidebar : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        ReattachBoundSources();
         if (_content is not null && _list is not null && (_dirtyAll || (_sections.Count == 0 && Sections.Count > 0)))
         {
             // Back on screen after a detach: the rows were released, build them again.
@@ -513,6 +514,7 @@ public partial class Sidebar : TemplatedControl
             _navigable.Clear();
             _markerTarget = default;
         }
+        DetachBoundSources();
     }
 
     private void OnListPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
