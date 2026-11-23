@@ -2,7 +2,8 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="StreamMark.Avalonia.Themes.StreamMarkTheme">
     <!-- 默认外观；宿主覆盖同名 Md.* 资源即可替换。
-         Md.FontFamily / Md.FontSize / Md.LineHeight 默认不设置：沿用控件继承的字体，行高取字号的 1.6 倍。 -->
+         Md.FontFamily / Md.FontSize / Md.LineHeight / Md.CodeFontSize / Md.CodeLineHeight 默认不设置：
+         正文沿用控件继承的字体、行高取字号的 1.6 倍；代码字号取正文字号的 0.9 倍、代码行高取代码字号的 1.55 倍。 -->
     <Styles.Resources>
         <ResourceDictionary>
             <ResourceDictionary.ThemeDictionaries>

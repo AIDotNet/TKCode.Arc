@@ -14,6 +14,9 @@ namespace StreamMark.Avalonia.Rendering;
 /// </summary>
 public sealed class MarkdownStyle
 {
+    private readonly double? _codeFontSize;
+    private readonly double? _codeLineHeight;
+
     public required IBrush Foreground { get; init; }
     public required IBrush SecondaryForeground { get; init; }
     public required IBrush LinkForeground { get; init; }
@@ -40,9 +43,19 @@ public sealed class MarkdownStyle
     public required CornerRadius CornerRadius { get; init; }
     public required bool IsDark { get; init; }
 
-    public double CodeFontSize => Math.Round(FontSize * 0.9);
+    /// <summary>代码块字号；未显式设置时为 <c>Math.Round(FontSize * 0.9)</c>。</summary>
+    public double CodeFontSize
+    {
+        get => _codeFontSize ?? Math.Round(FontSize * 0.9);
+        init => _codeFontSize = value;
+    }
 
-    public double CodeLineHeight => Math.Round(CodeFontSize * 1.55);
+    /// <summary>代码块行高；未显式设置时为 <c>Math.Round(CodeFontSize * 1.55)</c>。</summary>
+    public double CodeLineHeight
+    {
+        get => _codeLineHeight ?? Math.Round(CodeFontSize * 1.55);
+        init => _codeLineHeight = value;
+    }
 
     public HighlightThemeKind HighlightTheme => IsDark ? HighlightThemeKind.Dark : HighlightThemeKind.Light;
 
@@ -101,6 +114,8 @@ public sealed class MarkdownStyle
         // 未显式配置字体时沿用继承的 TextElement 字体（宿主设在窗口上的字体）
         var fontSize = Get<double>(MarkdownResourceKeys.FontSize, control.GetValue(TextElement.FontSizeProperty));
         var fontFamily = Get<FontFamily>(MarkdownResourceKeys.FontFamily, control.GetValue(TextElement.FontFamilyProperty));
+        var codeFontSize = Get<double>(MarkdownResourceKeys.CodeFontSize, Math.Round(fontSize * 0.9));
+        var codeLineHeight = Get<double>(MarkdownResourceKeys.CodeLineHeight, Math.Round(codeFontSize * 1.55));
         return new MarkdownStyle
         {
             Foreground = foreground,
@@ -123,6 +138,8 @@ public sealed class MarkdownStyle
             MonospaceFontFamily = Get<FontFamily>(MarkdownResourceKeys.MonospaceFontFamily, new FontFamily("Menlo, Consolas, monospace")),
             FontSize = fontSize,
             LineHeight = Get<double>(MarkdownResourceKeys.LineHeight, Math.Round(fontSize * 1.6)),
+            CodeFontSize = codeFontSize,
+            CodeLineHeight = codeLineHeight,
             BlockSpacing = Get<double>(MarkdownResourceKeys.BlockSpacing, 12),
             CornerRadius = Get<CornerRadius>(MarkdownResourceKeys.CornerRadius, new CornerRadius(6)),
             IsDark = isDark,
