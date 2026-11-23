@@ -1594,13 +1594,12 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         }
 
         // 回退字体只用字体族里真实存在的字面。系统字体缺少所需字重或字形时（如苹方最粗只有中粗 600、
-        // Apple Color Emoji 只有常规体），Avalonia 会合成粗体 / 斜体，合成时把整份字体文件复制进内存并常驻
-        // （Apple Color Emoji 约 600MB）。所以不能用 GlyphTypeface 去试探不存在的字重：
-        // 粗体取不低于 500 的最粗真实字面，没有就用常规字重。
-        // 回退字体一律用正体，不请求 Italic：FamilyTypefaces 在 Windows 上会列出并不存在的斜体字面
-        // （按字重拆开的族如 "Yu Gothic UI Semibold"），Avalonia 只能取同族已缓存的最近字面合成斜体
-        // （整份字体复制一份并常驻，还会被缓存在这个族里，之后同族的正体请求也可能取到它）。
-        // 也不能先加载一下再看有没有被合成：加载本身就会创建并缓存合成字面。CJK、表情、符号字体基本没有真斜体
+        // Apple Color Emoji 只有常规体），Avalonia 12.1 曾把整份字体文件复制进内存来合成粗体 / 斜体
+        // （Apple Color Emoji 约 600MB）；Avalonia 12.2 起由 Skia 零拷贝模拟，同时如实标记 DirectWrite
+        // 内部合成的字面（Windows 上 Segoe UI Emoji 的 FamilyTypefaces 会列出合成的 700 / Oblique）。
+        // 粗体按离请求最近的不低于 600 的字重、其次 ≥500 的最粗字重依次验证，跳过带 FontSimulations 的
+        // 模拟字面，找不到真实粗体就退回常规字重；回退字体一律用正体，不请求 Italic（避免 Windows 按字重
+        // 拆开的族缓存合成斜体）。
         private static readonly ConcurrentDictionary<(string Key, string Name, FontWeight Weight, FontStretch Stretch), Typeface> RealFaces = new();
 
         private static Typeface RealFace(FontFamily family, Typeface requested) =>
@@ -1622,23 +1621,45 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             {
                 return new Typeface(family, FontStyle.Normal, requested.Weight, requested.Stretch);
             }
-            var weights = faces.Where(f => f.Style == FontStyle.Normal).Select(f => (int)f.Weight).ToList();
+            var weights = faces.Where(f => f.Style == FontStyle.Normal).Select(f => (int)f.Weight).Distinct().ToList();
             if (weights.Count == 0)
             {
-                weights = faces.Select(f => (int)f.Weight).ToList();
+                weights = faces.Select(f => (int)f.Weight).Distinct().ToList();
             }
-            int weight;
             if ((int)requested.Weight >= 600)
             {
-                // 优先离请求最近的不低于 600 的字重，其次最粗的中等字重（CI 镜像里的苹方可能只到 500）
-                var heavy = weights.Where(w => w >= 600).OrderBy(w => Math.Abs(w - (int)requested.Weight)).ThenByDescending(w => w).ToList();
-                weight = heavy.Count > 0 ? heavy[0] : weights.Where(w => w >= 500).DefaultIfEmpty(400).Max();
+                // 优先离请求最近的不低于 600 的真实字重，其次最粗的中等字重（CI 镜像里的苹方可能只到 500），
+                // 跳过平台合成的字面（如 Windows DirectWrite 为单字重彩色表情字体 Segoe UI Emoji 列出的 700）。
+                var candidates = weights
+                    .Where(w => w >= 600)
+                    .OrderBy(w => Math.Abs(w - (int)requested.Weight))
+                    .ThenByDescending(w => w)
+                    .Concat(weights.Where(w => w >= 500 && w < 600).OrderByDescending(w => w));
+                foreach (var w in candidates)
+                {
+                    var candidate = new Typeface(family, FontStyle.Normal, (FontWeight)w, requested.Stretch);
+                    if (!IsSimulated(candidate))
+                    {
+                        return candidate;
+                    }
+                }
+                var regular = weights.OrderBy(w => Math.Abs(w - (int)FontWeight.Normal)).First();
+                return new Typeface(family, FontStyle.Normal, (FontWeight)regular, requested.Stretch);
             }
-            else
-            {
-                weight = weights.OrderBy(w => Math.Abs(w - (int)requested.Weight)).First();
-            }
+            var weight = weights.OrderBy(w => Math.Abs(w - (int)requested.Weight)).First();
             return new Typeface(family, FontStyle.Normal, (FontWeight)weight, requested.Stretch);
+        }
+
+        private static bool IsSimulated(Typeface typeface)
+        {
+            try
+            {
+                return typeface.GlyphTypeface.FontSimulations != FontSimulations.None;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private TextRunProperties FallbackProperties(TextRunProperties properties, InlineStyle style, int component, int textStyle, Typeface fallback)
