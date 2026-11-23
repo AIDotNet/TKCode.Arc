@@ -5228,6 +5228,8 @@ TKCode.Arc.ElasticSlider
 TKCode.Arc.ElasticSlider.ElasticSlider() -> void
 TKCode.Arc.ElasticSlider.EndIcon.get -> object?
 TKCode.Arc.ElasticSlider.EndIcon.set -> void
+TKCode.Arc.ElasticSlider.IsBubbleVisible.get -> bool
+TKCode.Arc.ElasticSlider.IsBubbleVisible.set -> void
 TKCode.Arc.ElasticSlider.IsValueVisible.get -> bool
 TKCode.Arc.ElasticSlider.IsValueVisible.set -> void
 TKCode.Arc.ElasticSlider.Label.get -> string?
@@ -8944,6 +8946,8 @@ TKCode.Arc.Skeleton.Skeleton() -> void
 TKCode.Arc.Slider
 TKCode.Arc.Slider.EndContent.get -> object?
 TKCode.Arc.Slider.EndContent.set -> void
+TKCode.Arc.Slider.IsBubbleVisible.get -> bool
+TKCode.Arc.Slider.IsBubbleVisible.set -> void
 TKCode.Arc.Slider.IsRange.get -> bool
 TKCode.Arc.Slider.IsRange.set -> void
 TKCode.Arc.Slider.IsValueVisible.get -> bool
@@ -11986,6 +11990,7 @@ override TKCode.Arc.Card.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.A
 override TKCode.Arc.Card.OnPointerCaptureLost(Avalonia.Input.PointerCaptureLostEventArgs! e) -> void
 override TKCode.Arc.Card.OnPointerEntered(Avalonia.Input.PointerEventArgs! e) -> void
 override TKCode.Arc.Card.OnPointerExited(Avalonia.Input.PointerEventArgs! e) -> void
+override TKCode.Arc.Card.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
 override TKCode.Arc.Card.OnPointerPressed(Avalonia.Input.PointerPressedEventArgs! e) -> void
 override TKCode.Arc.Card.OnPointerReleased(Avalonia.Input.PointerReleasedEventArgs! e) -> void
 override TKCode.Arc.Card.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
@@ -14192,6 +14197,7 @@ static readonly TKCode.Arc.DropdownMenu.OpenedEvent -> Avalonia.Interactivity.Ro
 static readonly TKCode.Arc.DropdownMenu.SideProperty -> Avalonia.StyledProperty<TKCode.Arc.MenuSide>!
 static readonly TKCode.Arc.DropdownMenu.TriggerProperty -> Avalonia.StyledProperty<object?>!
 static readonly TKCode.Arc.ElasticSlider.EndIconProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.ElasticSlider.IsBubbleVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.ElasticSlider.IsValueVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.ElasticSlider.LabelProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.ElasticSlider.MarksProperty -> Avalonia.DirectProperty<TKCode.Arc.ElasticSlider!, System.Collections.Generic.IList<TKCode.Arc.SliderMark!>!>!
@@ -15133,6 +15139,7 @@ static readonly TKCode.Arc.Skeleton.IsLoadingProperty -> Avalonia.StyledProperty
 static readonly TKCode.Arc.Skeleton.LabelProperty -> Avalonia.StyledProperty<string!>!
 static readonly TKCode.Arc.Skeleton.LinesProperty -> Avalonia.StyledProperty<int>!
 static readonly TKCode.Arc.Slider.EndContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Slider.IsBubbleVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Slider.IsRangeProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Slider.IsValueVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Slider.LabelProperty -> Avalonia.StyledProperty<string?>!

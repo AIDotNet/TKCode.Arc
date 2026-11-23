@@ -1,8 +1,1 @@
 #nullable enable
-override TKCode.Arc.Card.OnPointerMoved(Avalonia.Input.PointerEventArgs! e) -> void
-static readonly TKCode.Arc.ElasticSlider.IsBubbleVisibleProperty -> Avalonia.StyledProperty<bool>!
-static readonly TKCode.Arc.Slider.IsBubbleVisibleProperty -> Avalonia.StyledProperty<bool>!
-TKCode.Arc.ElasticSlider.IsBubbleVisible.get -> bool
-TKCode.Arc.ElasticSlider.IsBubbleVisible.set -> void
-TKCode.Arc.Slider.IsBubbleVisible.get -> bool
-TKCode.Arc.Slider.IsBubbleVisible.set -> void

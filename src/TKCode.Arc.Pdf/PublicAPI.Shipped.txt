@@ -155,6 +155,8 @@ TKCode.Arc.PdfSource.Kind.get -> TKCode.Arc.PdfSourceKind
 TKCode.Arc.PdfSource.OpenStream.get -> System.Func<System.IO.Stream!>?
 TKCode.Arc.PdfSource.Uri.get -> System.Uri?
 TKCode.Arc.PdfSource.WithDisplayName(string? displayName) -> TKCode.Arc.PdfSource!
+TKCode.Arc.PdfSourceConverter
+TKCode.Arc.PdfSourceConverter.PdfSourceConverter() -> void
 TKCode.Arc.PdfSourceKind
 TKCode.Arc.PdfSourceKind.Bytes = 1 -> TKCode.Arc.PdfSourceKind
 TKCode.Arc.PdfSourceKind.File = 0 -> TKCode.Arc.PdfSourceKind
@@ -238,6 +240,8 @@ override TKCode.Arc.PdfLink.Equals(object? obj) -> bool
 override TKCode.Arc.PdfLink.GetHashCode() -> int
 override TKCode.Arc.PdfLink.ToString() -> string!
 override TKCode.Arc.PdfSource.ToString() -> string!
+override TKCode.Arc.PdfSourceConverter.CanConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Type! sourceType) -> bool
+override TKCode.Arc.PdfSourceConverter.ConvertFrom(System.ComponentModel.ITypeDescriptorContext? context, System.Globalization.CultureInfo? culture, object! value) -> object?
 override TKCode.Arc.PdfViewer.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
 override TKCode.Arc.PdfViewer.OnCreateAutomationPeer() -> Avalonia.Automation.Peers.AutomationPeer!
 override TKCode.Arc.PdfViewer.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void

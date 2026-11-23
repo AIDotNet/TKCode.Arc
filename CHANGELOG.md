@@ -10,6 +10,36 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## 1.3.1 - 2026-11-23
+
+The stable patch release of everything shipped in `1.3.1-preview.1` (`Card` hover fix [#174](https://github.com/AIDotNet/TKCode.Arc/issues/174), `ArcThemeBuilder` `FontFamily` overloads [#173](https://github.com/AIDotNet/TKCode.Arc/issues/173)) and `1.3.1-preview.2` (`PdfViewer.Source` binding conversion [#175](https://github.com/AIDotNet/TKCode.Arc/issues/175)), plus the changes that ship here for the first time: `Slider` / `ElasticSlider` bubble visibility ([#176](https://github.com/AIDotNet/TKCode.Arc/issues/176)), `Sidebar` section and expanded-state data binding ([#177](https://github.com/AIDotNet/TKCode.Arc/issues/177)), StreamMark code block typography resources ([#178](https://github.com/AIDotNet/TKCode.Arc/issues/178)), nested block state isolation ([#179](https://github.com/AIDotNet/TKCode.Arc/issues/179)), `MarkdownStream.ShowCaret` ([#180](https://github.com/AIDotNet/TKCode.Arc/issues/180)), and dependency/native updates led by Avalonia `12.2.0`. No existing public API is removed or renamed. Install it without `--prerelease`. The notes of each preview follow below.
+
+### Upgrading from 1.3.0
+
+- Set every `TKCode.Arc*` package to `1.3.1`.
+- Avalonia moves from `12.1.6` to `12.2.0` (package range `[12.2.0, 13.0.0)`). Update your application's Avalonia packages to `12.2.0` or any later `12.x` release.
+- No existing public API changes; no code changes are required.
+
+### Added
+
+- `Slider.IsBubbleVisible` and `ElasticSlider.IsBubbleVisible` (`TKCode.Arc`, default `true`): set to `false` to hide the floating value bubble / drag tag during pointer interaction and dragging ([#176](https://github.com/AIDotNet/TKCode.Arc/issues/176)).
+- `Sidebar.SectionsSource`, `SectionHeaderMember` / `SectionHeaderMemberBinding`, `SectionItemsMember` / `SectionItemsMemberBinding`, `SectionIsCollapsibleMember` / `SectionIsCollapsibleMemberBinding`, `SectionIsExpandedMember` / `SectionIsExpandedMemberBinding`, `SectionIsVisibleMember` / `SectionIsVisibleMemberBinding`, and `IsExpandedMember` / `IsExpandedMemberBinding` (`TKCode.Arc.Blocks`): bind grouped navigation sections and item/section expanded state directly from view-model collections, with `SidebarSection` passthrough, instance preservation across collection updates, and coexistence with `ItemsSource` and explicit `Sections` ([#177](https://github.com/AIDotNet/TKCode.Arc/issues/177)).
+- `MarkdownResourceKeys.CodeFontSize` (`"Md.CodeFontSize"`) and `MarkdownResourceKeys.CodeLineHeight` (`"Md.CodeLineHeight"`), with `init` setters on `MarkdownStyle.CodeFontSize` and `MarkdownStyle.CodeLineHeight` (`TKCode.Arc.StreamMark`): override fenced code block font size and line height independently from body typography via Avalonia resources or `MarkdownResourceAlias` ([#178](https://github.com/AIDotNet/TKCode.Arc/issues/178)).
+- `MarkdownStream.ShowCaret` (`TKCode.Arc.StreamMark`, default `true`): hide or toggle the streaming caret at construction time or mid-stream from any thread, with immediate repaint on change ([#180](https://github.com/AIDotNet/TKCode.Arc/issues/180)).
+
+### Changed
+
+- Updated dependencies:
+  - Avalonia `12.1.6` → `12.2.0` (package range `[12.2.0, 13.0.0)`).
+  - Mermaider `0.17.0` → `0.18.0` (`TKCode.Arc.StreamMark.Mermaid`).
+  - Template package references (`TKCode.Arc.Templates`): `Microsoft.Extensions.DependencyInjection` `10.0.14` → `10.0.15`, `Microsoft.NET.Test.Sdk` `18.11.0` → `18.12.0`.
+  - .NET SDK pin (`global.json`): `11.0.100-rc.2.26504.105` → `11.0.100` (GA).
+  - Native and browser assets: PDFium `chromium/8111` → `chromium/8165` (`TKCode.Arc.Pdf.Native`), pdf.js `6.4.299` → `6.5.438` (`TKCode.Arc.Pdf.Browser`), miniaudio `0.11.25` → `0.11.26` (`TKCode.Arc.Audio.Native`), and RaTeX `ae391d72` → `d49c6fad` (`v0.1.16+`, `TKCode.Arc.StreamMark.RaTeX`; dropped local `0001-enclose-border-uses-current-color.patch` now that upstream includes the fix).
+
+### Fixed
+
+- `TKCode.Arc.StreamMark`: nested code, diagram, diff, and collapsible blocks inside containers (such as blockquotes, callouts, lists, and collapsible sections) now isolate their `BlockStateStore` keys per block instead of colliding on the outer segment index, preventing sibling nested blocks from sharing highlight, collapsed, or rendered diagram state ([#179](https://github.com/AIDotNet/TKCode.Arc/issues/179)).
+
 ## 1.3.1-preview.2 - 2026-11-23
 
 A patch preview for [#175](https://github.com/AIDotNet/TKCode.Arc/issues/175): `PdfViewer.Source` now follows a binding
@@ -2599,6 +2629,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1
 [1.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1-preview.1...v1.3.1-preview.2
 [1.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1-preview.1
 [1.3.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0

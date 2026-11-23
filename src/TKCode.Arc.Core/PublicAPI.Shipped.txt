@@ -1470,6 +1470,10 @@ static TKCode.Arc.ArcPalette.GetSeed(TKCode.Arc.ArcAccentPreset preset) -> Avalo
 static TKCode.Arc.ArcPalette.Neutrals(bool isDark) -> TKCode.Arc.ArcNeutralColors!
 static TKCode.Arc.ArcPalette.Resolve(Avalonia.Media.Color seed, bool isDark) -> TKCode.Arc.ArcAccentColors
 static TKCode.Arc.ArcThemeBuilderExtensions.Accent(this TKCode.Arc.ArcThemeBuilder! builder, TKCode.Arc.ArcAccentPreset preset) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.ArcThemeBuilderExtensions.BodyFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.ArcThemeBuilderExtensions.DisplayFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.ArcThemeBuilderExtensions.FontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
+static TKCode.Arc.ArcThemeBuilderExtensions.MonoFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
 static TKCode.Arc.ArcTokens.Bind(Avalonia.StyledElement! target, Avalonia.AvaloniaProperty! property, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind, Avalonia.Data.BindingPriority priority = Avalonia.Data.BindingPriority.Template) -> System.IDisposable!
 static TKCode.Arc.ArcTokens.BindCornerRadius<TTarget>(this TTarget! target, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> TTarget!
 static TKCode.Arc.ArcTokens.Get<T>(Avalonia.Controls.Control! owner, TKCode.Arc.DesignTokens.ArcDesignTokenKind kind) -> T

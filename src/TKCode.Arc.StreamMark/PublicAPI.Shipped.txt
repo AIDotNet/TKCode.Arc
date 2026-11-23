@@ -393,6 +393,8 @@ StreamMark.Avalonia.MarkdownStream.Document.get -> StreamMark.Core.Streaming.Str
 StreamMark.Avalonia.MarkdownStream.Flush() -> void
 StreamMark.Avalonia.MarkdownStream.MarkdownStream(StreamMark.Core.Pacing.StreamPacerOptions? pacing = null, bool smooth = true, System.TimeSpan? fadeDuration = null, StreamMark.Core.Parsing.MarkdownProfile? profile = null) -> void
 StreamMark.Avalonia.MarkdownStream.Push(string! text) -> void
+StreamMark.Avalonia.MarkdownStream.ShowCaret.get -> bool
+StreamMark.Avalonia.MarkdownStream.ShowCaret.set -> void
 StreamMark.Avalonia.MarkdownStream.State.get -> StreamMark.Avalonia.Rendering.StreamingState!
 StreamMark.Avalonia.MarkdownView
 StreamMark.Avalonia.MarkdownView.ApplyLatest() -> void
@@ -710,7 +712,9 @@ StreamMark.Avalonia.Rendering.MarkdownStyle.CodeBackground.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeBorderBrush.get -> Avalonia.Media.IBrush!
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeBorderBrush.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeFontSize.get -> double
+StreamMark.Avalonia.Rendering.MarkdownStyle.CodeFontSize.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeLineHeight.get -> double
+StreamMark.Avalonia.Rendering.MarkdownStyle.CodeLineHeight.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CornerRadius.get -> Avalonia.CornerRadius
 StreamMark.Avalonia.Rendering.MarkdownStyle.CornerRadius.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.FontFamily.get -> Avalonia.Media.FontFamily!
@@ -1833,6 +1837,8 @@ const StreamMark.Avalonia.Images.ImageMemoryCache.DefaultByteBudget = 100663296 
 const StreamMark.Avalonia.MarkdownResourceKeys.BlockSpacing = "Md.BlockSpacing" -> string!
 const StreamMark.Avalonia.MarkdownResourceKeys.CodeBackground = "Md.CodeBackground" -> string!
 const StreamMark.Avalonia.MarkdownResourceKeys.CodeBorderBrush = "Md.CodeBorderBrush" -> string!
+const StreamMark.Avalonia.MarkdownResourceKeys.CodeFontSize = "Md.CodeFontSize" -> string!
+const StreamMark.Avalonia.MarkdownResourceKeys.CodeLineHeight = "Md.CodeLineHeight" -> string!
 const StreamMark.Avalonia.MarkdownResourceKeys.CornerRadius = "Md.CornerRadius" -> string!
 const StreamMark.Avalonia.MarkdownResourceKeys.FontFamily = "Md.FontFamily" -> string!
 const StreamMark.Avalonia.MarkdownResourceKeys.FontSize = "Md.FontSize" -> string!

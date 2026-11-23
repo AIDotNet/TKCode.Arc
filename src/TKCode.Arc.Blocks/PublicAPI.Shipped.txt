@@ -24750,6 +24750,10 @@ TKCode.Arc.Sidebar.IsEnabledMember.get -> string?
 TKCode.Arc.Sidebar.IsEnabledMember.set -> void
 TKCode.Arc.Sidebar.IsEnabledMemberBinding.get -> Avalonia.Data.BindingBase?
 TKCode.Arc.Sidebar.IsEnabledMemberBinding.set -> void
+TKCode.Arc.Sidebar.IsExpandedMember.get -> string?
+TKCode.Arc.Sidebar.IsExpandedMember.set -> void
+TKCode.Arc.Sidebar.IsExpandedMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.IsExpandedMemberBinding.set -> void
 TKCode.Arc.Sidebar.IsFilterVisible.get -> bool
 TKCode.Arc.Sidebar.IsFilterVisible.set -> void
 TKCode.Arc.Sidebar.IsVisibleMember.get -> string?
@@ -24774,7 +24778,29 @@ TKCode.Arc.Sidebar.NoMatchesText.set -> void
 TKCode.Arc.Sidebar.PageShift.get -> Avalonia.Media.ITransform!
 TKCode.Arc.Sidebar.ResizeMode.get -> TKCode.Arc.SidebarResizeMode
 TKCode.Arc.Sidebar.ResizeMode.set -> void
+TKCode.Arc.Sidebar.SectionHeaderMember.get -> string?
+TKCode.Arc.Sidebar.SectionHeaderMember.set -> void
+TKCode.Arc.Sidebar.SectionHeaderMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.SectionHeaderMemberBinding.set -> void
+TKCode.Arc.Sidebar.SectionIsCollapsibleMember.get -> string?
+TKCode.Arc.Sidebar.SectionIsCollapsibleMember.set -> void
+TKCode.Arc.Sidebar.SectionIsCollapsibleMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.SectionIsCollapsibleMemberBinding.set -> void
+TKCode.Arc.Sidebar.SectionIsExpandedMember.get -> string?
+TKCode.Arc.Sidebar.SectionIsExpandedMember.set -> void
+TKCode.Arc.Sidebar.SectionIsExpandedMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.SectionIsExpandedMemberBinding.set -> void
+TKCode.Arc.Sidebar.SectionIsVisibleMember.get -> string?
+TKCode.Arc.Sidebar.SectionIsVisibleMember.set -> void
+TKCode.Arc.Sidebar.SectionIsVisibleMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.SectionIsVisibleMemberBinding.set -> void
+TKCode.Arc.Sidebar.SectionItemsMember.get -> string?
+TKCode.Arc.Sidebar.SectionItemsMember.set -> void
+TKCode.Arc.Sidebar.SectionItemsMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Sidebar.SectionItemsMemberBinding.set -> void
 TKCode.Arc.Sidebar.Sections.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.SidebarSection!>!
+TKCode.Arc.Sidebar.SectionsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.Sidebar.SectionsSource.set -> void
 TKCode.Arc.Sidebar.SelectCommand.get -> System.Windows.Input.ICommand?
 TKCode.Arc.Sidebar.SelectCommand.set -> void
 TKCode.Arc.Sidebar.SelectedItem.get -> TKCode.Arc.SidebarItem?
@@ -36404,6 +36430,7 @@ static readonly TKCode.Arc.Sidebar.IconMemberProperty -> Avalonia.StyledProperty
 static readonly TKCode.Arc.Sidebar.IsCollapseButtonVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Sidebar.IsCollapsedProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Sidebar.IsEnabledMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.IsExpandedMemberProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Sidebar.IsFilterVisibleProperty -> Avalonia.StyledProperty<bool>!
 static readonly TKCode.Arc.Sidebar.IsVisibleMemberProperty -> Avalonia.StyledProperty<string?>!
 static readonly TKCode.Arc.Sidebar.ItemInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.SidebarItemInvokedEventArgs!>!
@@ -36413,6 +36440,12 @@ static readonly TKCode.Arc.Sidebar.LabelMemberProperty -> Avalonia.StyledPropert
 static readonly TKCode.Arc.Sidebar.LabelProperty -> Avalonia.StyledProperty<string!>!
 static readonly TKCode.Arc.Sidebar.NoMatchesTextProperty -> Avalonia.StyledProperty<string!>!
 static readonly TKCode.Arc.Sidebar.ResizeModeProperty -> Avalonia.StyledProperty<TKCode.Arc.SidebarResizeMode>!
+static readonly TKCode.Arc.Sidebar.SectionHeaderMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.SectionIsCollapsibleMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.SectionIsExpandedMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.SectionIsVisibleMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.SectionItemsMemberProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Sidebar.SectionsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
 static readonly TKCode.Arc.Sidebar.SelectCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
 static readonly TKCode.Arc.Sidebar.SelectedItemProperty -> Avalonia.StyledProperty<TKCode.Arc.SidebarItem?>!
 static readonly TKCode.Arc.Sidebar.SelectedKeyProperty -> Avalonia.StyledProperty<string?>!

@@ -1,5 +1,1 @@
 #nullable enable
-static TKCode.Arc.ArcThemeBuilderExtensions.BodyFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
-static TKCode.Arc.ArcThemeBuilderExtensions.DisplayFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
-static TKCode.Arc.ArcThemeBuilderExtensions.MonoFontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
-static TKCode.Arc.ArcThemeBuilderExtensions.FontFamily(this TKCode.Arc.ArcThemeBuilder! builder, Avalonia.Media.FontFamily! family) -> TKCode.Arc.ArcThemeBuilder!
