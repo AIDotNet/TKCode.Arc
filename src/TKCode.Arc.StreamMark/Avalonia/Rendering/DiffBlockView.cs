@@ -75,7 +75,7 @@ public sealed class DiffBlockView : BlockView
                 return;
             }
             _body.Mode = value;
-            Context?.State.Set(TopKey, ModeState, value);
+            Context?.State.Set(TopKey, StateKey(ModeState, _body.Key.Segment), value);
             if (Context is not null && Block is not null)
             {
                 // 标题随方式变化
@@ -115,13 +115,14 @@ public sealed class DiffBlockView : BlockView
     {
         var code = (CodeBlock)block;
         var style = context.Style;
+        var segmentKey = KeyFor(context, topKey, ref segment);
         var codeChanged = !ReferenceEquals(_code, code.Code) && _code != code.Code;
         if (codeChanged)
         {
             _code = code.Code;
             _document = UnifiedDiff.Parse(code.Code);
         }
-        var targetMode = context.State.Get(topKey, ModeState, context.Services.CodeBlocks.DiffMode);
+        var targetMode = context.State.Get(topKey, StateKey(ModeState, segmentKey.Segment), context.Services.CodeBlocks.DiffMode);
         var modeChanged = _body.Mode != targetMode;
         _body.Mode = targetMode;
         if (contextChanged || previous is null || modeChanged)
@@ -149,7 +150,7 @@ public sealed class DiffBlockView : BlockView
                 textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 420);
             _stats = plain ? null : DiffBodyView.StatsLayout(style, _document.Additions, _document.Deletions);
         }
-        _body.Set(context, KeyFor(context, topKey, ref segment), code.Code, _document, topKey);
+        _body.Set(context, segmentKey, code.Code, _document, topKey);
         if (contextChanged || previous is null || codeChanged || modeChanged)
         {
             InvalidateMeasure();
@@ -313,6 +314,8 @@ public sealed class DiffBodyView : Control, ISelectableSegment
 
     public SegmentKey Key { get; private set; }
 
+    internal DiffHighlightState? HighlightState => _highlight;
+
     protected override global::Avalonia.Automation.Peers.AutomationPeer OnCreateAutomationPeer() => new Automation.TextSegmentAutomationPeer(this, () => _text);
 
     public string Text => _text;
@@ -388,7 +391,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
             _lineStarts = [.. starts];
             _rowsDirty = true;
         }
-        var highlight = DiffHighlightState.For(context, blockKey);
+        var highlight = DiffHighlightState.For(context, blockKey, key.Segment);
         if (!ReferenceEquals(_highlight, highlight))
         {
             if (_highlight is not null)
@@ -1031,18 +1034,19 @@ internal sealed class DiffHighlightState : IDisposable
 
     public event Action? Updated;
 
-    public static DiffHighlightState For(RenderContext context, int blockKey)
+    public static DiffHighlightState For(RenderContext context, int blockKey, int segment = 0)
     {
         var highlighter = context.Plugins.Highlighter;
         var theme = context.Style.HighlightTheme;
-        var existing = context.State.Get<DiffHighlightState?>(blockKey, "diff.highlight", null);
+        var stateKey = BlockView.StateKey("diff.highlight", segment);
+        var existing = context.State.Get<DiffHighlightState?>(blockKey, stateKey, null);
         if (existing is not null && ReferenceEquals(existing._highlighter, highlighter) && existing._theme == theme)
         {
             return existing;
         }
         existing?.Dispose();
         var state = new DiffHighlightState(highlighter, theme);
-        context.State.Set(blockKey, "diff.highlight", state);
+        context.State.Set(blockKey, stateKey, state);
         return state;
     }
 

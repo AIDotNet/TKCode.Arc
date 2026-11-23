@@ -23,7 +23,7 @@ updated: 2026-10-16
 | `SegmentLineVisual` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/SegmentLineVisual.cs` | 一行一个非输入元素的 `Visual`，只在该行变化时重新录制；`ClipRight` 让渐显部分交给渐显层 |
 | `TailFade` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/TailFade.cs` | 末尾逐字渐显：排版变化时（`ArrangeOverride` / 末尾状态变化 / 结束定时器）计算渐显字形与各批矩形，经 `CompositionCustomVisual.SendHandlerMessage` 交给渲染线程的 `FadeHandler`，渲染线程逐帧按批次不透明度绘制 |
 | `MarkdownStyle.Resolve` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/MarkdownStyle.cs:66` | 从控件可见资源一次性解析不可变样式快照 |
-| `MarkdownStream` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownStream.cs:13` | 网络分片 → `StreamPacer` → `StreamingDocument`，并记录渐显时间；任意线程可 `Push` / `Complete` |
+| `MarkdownStream` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownStream.cs:20` | 网络分片 → `StreamPacer` → `StreamingDocument`，并记录渐显时间；任意线程可 `Push` / `Complete`，`ShowCaret` 控制是否显示流式光标（默认 `true`，流式期间可切换） |
 | `MarkdownResourceKeys` | `src/TKCode.Arc.StreamMark/Avalonia/MarkdownResourceKeys.cs:7` | 全部 `Md.*` 资源键的声明处 |
 | `StreamMarkTheme` | `src/TKCode.Arc.StreamMark/Avalonia/Themes/StreamMarkTheme.axaml:1` | 默认主题字典（Light / Dark 两套画刷 + 等宽字体 / 间距 / 圆角） |
 
@@ -41,7 +41,7 @@ updated: 2026-10-16
 | `HtmlBoxBlockView` + `HtmlPaint` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/HtmlBoxBlockView.cs:11` / `HtmlPaint.cs:9` | HTML 盒子：外边距 / 边框 / 背景 / 宽度，文字样式经 `RenderContext.WithHtml` 下传；`HtmlPaint` 处理作者颜色的对比度 |
 | `QuoteBlockView` / `AlertBlockView` / `ListBlockView` / `ListItemBlockView` / `FootnotesBlockView` / `DefinitionListBlockView` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/ContainerViews.cs:12` / `:29` / `:100` / `:201` / `:286` / `:330` | 引用、GitHub 提示块、列表（项目符号按嵌套深度）、列表项（符号 / 复选框与首行基线对齐；启用任务交互时复选框可点击、可聚焦，见 `RenderContext.TaskToggle`）、脚注（转成有序 `ListBlock`）、定义列表 |
 | `RenderContext` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/RenderContext.cs:12` | 一个文档共享的渲染上下文：`Style` / `Services` / `Selection` / `Entry` / `Streaming` / `State` / `ImageBaseUri` / `Inherited` / `TaskToggle`（internal：宿主启用任务交互时设置，为 null 则复选框只读） |
-| `StreamingState` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/StreamingState.cs:7` | 渐显与光标状态：`RecordReveal`（:29）记录每批文本的显示时间，`GetFadingBatches` 返回仍在渐显的各批（距末尾字符数、长度、时间），`GetFadingTail` 返回字符数与首末不透明度；`_trimmed` 记录已移出队列批次的终点（队列第一批的起点） |
+| `StreamingState` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/StreamingState.cs:7` | 渐显与光标状态：`RecordReveal` 记录每批文本的显示时间，`GetFadingBatches` 返回仍在渐显的各批（距末尾字符数、长度、时间），`GetFadingTail` 返回字符数与首末不透明度；`_trimmed` 记录已移出队列批次的终点（队列第一批的起点）；`ShowCaret`（`init`，可经 `MarkdownStream.ShowCaret` / `SetShowCaret` 切换）变化时触发 `internal CaretVisibilityChanged` 通知尾部 `TextSegmentView` 重绘 |
 | `InlineTextSource`（`TextSegmentView` 私有嵌套） | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/TextSegmentView.cs:687` | `ITextSource` 实现：按 span / 对象 / 书写系统切分 run（`ScriptCut`）、解析字重字形与回退字体、生成 `DrawableTextRun` |
 | `DrawableTextRun` 家族 | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/InlineRuns.cs:18` / `:34` / `:69` / `:135` | 行内公式、独立排版的文字对象（公式源码 / 图片替代文字）、行内图片（骨架 / 标签 / 缩放）、任务复选框 |
 | `IconButton` + `MarkdownIcons` | `src/TKCode.Arc.StreamMark/Avalonia/Rendering/IconButton.cs:12` / `:121` | 自绘小图标按钮（不依赖宿主 Button 模板）与 16×16 线图标 |

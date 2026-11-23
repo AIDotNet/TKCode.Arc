@@ -81,7 +81,7 @@ public sealed class CodeBlockView : BlockView
         _wrap.Click += (_, _) =>
         {
             Wrap = !Wrap;
-            Context?.State.Set(TopKey, WrapState, Wrap);
+            Context?.State.Set(TopKey, StateKey(WrapState, _segmentKey.Segment), Wrap);
             _wrap.InvalidateVisual();
             InvalidateMeasure();
         };
@@ -142,7 +142,7 @@ public sealed class CodeBlockView : BlockView
     /// <summary>按选项与块状态判断代码块是否应折叠（会话视图分段时也用）。</summary>
     internal static bool ShouldCollapse(CodeBlock code, RenderContext context, int key, out int lines)
     {
-        var existing = context.State.Get<CodeBlockState?>(key, "code.state", null);
+        var existing = context.State.Get<CodeBlockState?>(key, CodeBlockState.StateName, null);
         lines = existing is not null && ReferenceEquals(existing.Code, code.Code)
             ? existing.LineCount
             : code.GetLineCount();
@@ -150,10 +150,10 @@ public sealed class CodeBlockView : BlockView
         return IsCollapsible(code, options, lines) && !context.State.Get(key, ExpandedState, false);
     }
 
-    private static bool ShouldCollapse(CodeBlock code, RenderContext context, int key, int lines)
+    private static bool ShouldCollapse(CodeBlock code, RenderContext context, int key, int segment, int lines)
     {
         var options = context.Services.CodeBlocks;
-        return IsCollapsible(code, options, lines) && !context.State.Get(key, ExpandedState, false);
+        return IsCollapsible(code, options, lines) && !context.State.Get(key, StateKey(ExpandedState, segment), false);
     }
 
     private static bool IsCollapsible(CodeBlock code, Extensions.CodeBlockOptions options, int lines) =>
@@ -166,7 +166,7 @@ public sealed class CodeBlockView : BlockView
         {
             return;
         }
-        Context.State.Set(TopKey, ExpandedState, _collapsed);
+        Context.State.Set(TopKey, StateKey(ExpandedState, _segmentKey.Segment), _collapsed);
         var segment = _segmentKey.Segment;
         Update(Context, code, TopKey, ref segment);
         RaiseEvent(new global::Avalonia.Interactivity.RoutedEventArgs(ExpandedChangedEvent, this));
@@ -227,20 +227,22 @@ public sealed class CodeBlockView : BlockView
                 button.InvalidateVisual();
             }
         }
-        Wrap = context.State.Get(topKey, WrapState, false);
-        var shared = CodeBlockState.For(context, topKey, code.Language);
+        _segmentKey = KeyFor(context, topKey, ref segment);
+        var seg = _segmentKey.Segment;
+        Wrap = context.State.Get(topKey, StateKey(WrapState, seg), false);
+        var shared = CodeBlockState.For(context, topKey, code.Language, seg);
         shared.Update(code.Code, code.IsOpen);
         var options = context.Services.CodeBlocks;
         if (code.IsOpen)
         {
             // 看着流式写出来的代码块完成后不折叠（避免突然收起）
-            context.State.Set(topKey, ExpandedState, true);
+            context.State.Set(topKey, StateKey(ExpandedState, seg), true);
         }
         var oldCollapsed = _collapsed;
         var oldCollapsible = _collapsible;
         var oldLineCount = _lineCount;
         _lineCount = shared.LineCount;
-        _collapsed = ShouldCollapse(code, context, topKey, _lineCount) && _chunkCount == 1;
+        _collapsed = ShouldCollapse(code, context, topKey, seg, _lineCount) && _chunkCount == 1;
         _collapsible = _chunkCount == 1 && IsCollapsible(code, options, _lineCount) || _chunkCount > 1 && IsLastChunk && IsCollapsible(code, options, _lineCount);
         _expand.IsVisible = _collapsible;
         _expand.Foreground = style.SecondaryForeground;
@@ -249,7 +251,6 @@ public sealed class CodeBlockView : BlockView
         _expand.Label = _collapsed ? options.ExpandText(_lineCount) : options.CollapseText();
         _download.IsVisible = options.ShowDownload && IsFirstChunk;
         var lineStart = _linesPerChunk == int.MaxValue ? 0 : _chunk * _linesPerChunk;
-        _segmentKey = KeyFor(context, topKey, ref segment);
         var codeChanged = _code.Set(context, _segmentKey, shared, lineStart, _collapsed ? options.CollapsedLines : _linesPerChunk);
         var numbersChanged = UpdateLineNumbers(context, code, shared, lineStart);
         var frameChanged = contextChanged || previous is null || numbersChanged || oldCollapsed != _collapsed || oldCollapsible != _collapsible;
@@ -545,6 +546,12 @@ public sealed class CodeTextView : Control, ISelectableSegment
 
     /// <summary>当前代码分条视觉数（测试与诊断用）。</summary>
     internal int StripCount => _strips.Count;
+
+    internal CodeBlockState? State => _state;
+
+    internal string VisibleLineText(int index) => _lines[index].Text;
+
+    internal ImmutableArray<HighlightToken> VisibleLineTokens(int index) => _lines[index].Tokens;
 
     public SegmentKey Key { get; private set; }
 

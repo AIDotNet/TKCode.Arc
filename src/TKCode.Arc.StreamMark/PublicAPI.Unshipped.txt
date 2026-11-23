@@ -1,4 +1,6 @@
 #nullable enable
+StreamMark.Avalonia.MarkdownStream.ShowCaret.get -> bool
+StreamMark.Avalonia.MarkdownStream.ShowCaret.set -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeFontSize.init -> void
 StreamMark.Avalonia.Rendering.MarkdownStyle.CodeLineHeight.init -> void
 const StreamMark.Avalonia.MarkdownResourceKeys.CodeFontSize = "Md.CodeFontSize" -> string!
