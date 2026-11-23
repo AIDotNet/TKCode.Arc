@@ -10,7 +10,15 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.3.1-preview.2 - 2026-11-23
+
+A patch preview for [#175](https://github.com/AIDotNet/TKCode.Arc/issues/175): `PdfViewer.Source` now follows a binding
+to a path, an address or bytes. No existing public API changes. Install it with `--version 1.3.1-preview.2` (or
+`--prerelease`).
+
+### Added
+
+- `PdfSourceConverter` (`TKCode.Arc.Pdf`), the type converter of `PdfSource`.
 
 ### Fixed
 
@@ -2591,6 +2599,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1-preview.1...v1.3.1-preview.2
 [1.3.1-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1-preview.1
 [1.3.0]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.2.0...v1.3.0
 [1.3.0-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0-preview.3...v1.3.0-preview.4
