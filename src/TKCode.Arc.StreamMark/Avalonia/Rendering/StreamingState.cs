@@ -11,6 +11,7 @@ public sealed class StreamingState
     private long _revealed;
     // 已移出队列的批次的终点：队列第一批的起点
     private long _trimmed;
+    private volatile bool _showCaret = true;
 
     public StreamingState(TimeSpan fadeDuration)
     {
@@ -23,10 +24,30 @@ public sealed class StreamingState
     public bool IsActive { get; internal set; }
 
     /// <summary>是否显示末尾光标。</summary>
-    public bool ShowCaret { get; init; } = true;
+    public bool ShowCaret
+    {
+        get => _showCaret;
+        init => _showCaret = value;
+    }
 
     /// <summary>是否启用新文本渐显。</summary>
     public bool FadeEnabled { get; init; } = true;
+
+    internal event Action? CaretVisibilityChanged;
+
+    internal void SetShowCaret(bool value)
+    {
+        bool changed;
+        lock (_lock)
+        {
+            changed = _showCaret != value;
+            _showCaret = value;
+        }
+        if (changed)
+        {
+            CaretVisibilityChanged?.Invoke();
+        }
+    }
 
     internal void RecordReveal(int count, TimeSpan now)
     {
