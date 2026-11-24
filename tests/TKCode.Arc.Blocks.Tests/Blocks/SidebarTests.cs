@@ -850,6 +850,214 @@ public class SidebarTests
         }
     }
 
+    private static void ClickAt(Window window, Control control)
+    {
+        var center = control.TranslatePoint(new Point(control.Bounds.Width / 2, control.Bounds.Height / 2), window)!.Value;
+        window.MouseDown(center, MouseButton.Left);
+        window.MouseUp(center, MouseButton.Left);
+        Dispatcher.UIThread.RunJobs();
+    }
+
+    private static Control Part(Control owner, string name)
+        => owner.GetVisualDescendants().OfType<Control>().First(c => c.Name == name);
+
+    [AvaloniaFact]
+    public void Trailing_Placement_End_Puts_A_Rows_Trailing_Icon_At_The_End_And_The_Default_Keeps_It_After_The_Label()
+    {
+        var s = new Sample();
+        var badge = new Border { Width = 8, Height = 8 };
+        s.Views.TrailingIcon = badge;
+        var window = Show(s.Sidebar);
+        try
+        {
+            s.Sidebar.TrailingPlacement.ShouldBe(SidebarTrailingPlacement.AfterLabel);
+            var views = Row(s.Sidebar, s.Views);
+            var label = Part(views, "PART_Label");
+            double LabelRight() => label.TranslatePoint(new Point(label.Bounds.Width, 0), views)!.Value.X;
+            var slot = Part(views, "PART_Trailing");
+            double IconLeft() => badge.TranslatePoint(default, views)!.Value.X;
+            double SlotLeft() => slot.TranslatePoint(default, views)!.Value.X;
+            double SlotRight() => slot.TranslatePoint(new Point(slot.Bounds.Width, 0), views)!.Value.X;
+
+            // Default: right after the label's text (the trailing margin is 6).
+            var defaultLeft = IconLeft();
+            SlotLeft().ShouldBe(LabelRight() + 6, 0.5);
+
+            // End: at the end of the row, inside the row's 12px inline padding; the label keeps its text width.
+            s.Sidebar.TrailingPlacement = SidebarTrailingPlacement.End;
+            Dispatcher.UIThread.RunJobs();
+            SlotRight().ShouldBe(views.Bounds.Width - 12, 0.5);
+            IconLeft().ShouldBeGreaterThan(LabelRight() + 40);
+            label.Bounds.Width.ShouldBeLessThan(80);
+
+            // A row built later follows the placement too, and a parent's chevron stays last.
+            var board = new Border { Width = 8, Height = 8 };
+            s.Projects.TrailingIcon = board;
+            Dispatcher.UIThread.RunJobs();
+            var projects = Row(s.Sidebar, s.Projects);
+            var chevron = Part(projects, "PART_Chevron");
+            board.TranslatePoint(new Point(8, 0), projects)!.Value.X
+                .ShouldBeLessThanOrEqualTo(chevron.TranslatePoint(default, projects)!.Value.X);
+            var added = new SidebarItem { Key = "board", Label = "Board", TrailingIcon = new Border { Width = 8, Height = 8 } };
+            s.Workspace.Items.Add(added);
+            Dispatcher.UIThread.RunJobs();
+            Row(s.Sidebar, added).IsTrailingAtEnd.ShouldBeTrue();
+
+            // Back to the default: exactly where it was.
+            s.Sidebar.TrailingPlacement = SidebarTrailingPlacement.AfterLabel;
+            Dispatcher.UIThread.RunJobs();
+            IconLeft().ShouldBe(defaultLeft, 0.01);
+            Row(s.Sidebar, added).IsTrailingAtEnd.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Section_Header_Trailing_Template_Builds_Content_At_The_Right_End_With_The_Section_As_Data()
+    {
+        var s = new Sample();
+        s.Sidebar.SectionHeaderTrailingTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<SidebarSection>(
+            (_, _) => new Button { Variant = ButtonVariant.Text, Width = 20, Height = 20 });
+        var window = Show(s.Sidebar);
+        try
+        {
+            var favorites = s.Sidebar.HeaderOf(s.Favorites).ShouldNotBeNull();
+            var workspace = s.Sidebar.HeaderOf(s.Workspace).ShouldNotBeNull();
+            var button = favorites.TrailingContent.ShouldBeOfType<Button>();
+            button.DataContext.ShouldBeSameAs(s.Favorites);
+            workspace.TrailingContent.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(s.Workspace);
+            favorites.Classes.ShouldContain(":has-trailing");
+            button.IsEffectivelyVisible.ShouldBeTrue();
+
+            // At the right end of the title row (inside the row's 12px inline padding), past the title and its chevron.
+            var right = button.TranslatePoint(new Point(button.Bounds.Width, 0), favorites)!.Value.X;
+            right.ShouldBe(favorites.Bounds.Width - 12, 0.5);
+            var chevron = Part(favorites, "PART_Chevron");
+            var chevronRight = chevron.TranslatePoint(new Point(chevron.Bounds.Width, 0), favorites)!.Value.X;
+            button.TranslatePoint(default, favorites)!.Value.X.ShouldBeGreaterThan(chevronRight + 40);
+            // Vertically centered on the title.
+            var title = Part(favorites, "PART_Title");
+            var titleMid = title.TranslatePoint(new Point(0, title.Bounds.Height / 2), favorites)!.Value.Y;
+            button.TranslatePoint(new Point(0, 10), favorites)!.Value.Y.ShouldBe(titleMid, 1);
+
+            // A new template rebuilds the content; no template, no content.
+            s.Sidebar.SectionHeaderTrailingTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<SidebarSection>(
+                (_, _) => new Border { Width = 12, Height = 12 });
+            favorites.TrailingContent.ShouldBeOfType<Border>().DataContext.ShouldBeSameAs(s.Favorites);
+            s.Sidebar.SectionHeaderTrailingTemplate = null;
+            favorites.TrailingContent.ShouldBeNull();
+            favorites.Classes.ShouldNotContain(":has-trailing");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Click_On_A_Section_Headers_Trailing_Content_Does_Not_Collapse_The_Section()
+    {
+        var s = new Sample();
+        var clicks = 0;
+        s.Sidebar.SectionHeaderTrailingTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<SidebarSection>((section, _) =>
+        {
+            if (section == s.Workspace)
+            {
+                // Content that does not handle the pointer itself.
+                return new Border { Width = 16, Height = 16, Background = Avalonia.Media.Brushes.Red };
+            }
+            var button = new Button { Variant = ButtonVariant.Text, Width = 20, Height = 20 };
+            button.Click += (_, _) => clicks++;
+            return button;
+        });
+        s.Workspace.IsCollapsible = true;
+        var window = Show(s.Sidebar);
+        try
+        {
+            var favorites = s.Sidebar.HeaderOf(s.Favorites)!;
+            ClickAt(window, (Control)favorites.TrailingContent!);
+            clicks.ShouldBe(1);
+            s.Favorites.IsExpanded.ShouldBeTrue();
+
+            var workspace = s.Sidebar.HeaderOf(s.Workspace)!;
+            ClickAt(window, (Control)workspace.TrailingContent!);
+            s.Workspace.IsExpanded.ShouldBeTrue();
+            workspace.Classes.ShouldNotContain(":pressed");
+
+            // Enter on the focused trailing button is the button's, not the heading's.
+            var button = (Button)favorites.TrailingContent!;
+            button.Focus(NavigationMethod.Tab);
+            window.KeyPressQwerty(PhysicalKey.Enter, RawInputModifiers.None);
+            Dispatcher.UIThread.RunJobs();
+            s.Favorites.IsExpanded.ShouldBeTrue();
+
+            // The title itself still opens and closes the section.
+            ClickAt(window, Part(favorites, "PART_Title"));
+            s.Favorites.IsExpanded.ShouldBeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Section_Headers_Trailing_Content_Fades_On_The_Rail_And_Tab_Skips_It()
+    {
+        var s = new Sample();
+        s.Sidebar.SectionHeaderTrailingTemplate = new Avalonia.Controls.Templates.FuncDataTemplate<SidebarSection>(
+            (_, _) => new Button { Variant = ButtonVariant.Text, Width = 20, Height = 20 });
+        var window = Show(s.Sidebar);
+        try
+        {
+            var favorites = s.Sidebar.HeaderOf(s.Favorites)!;
+            var button = (Button)favorites.TrailingContent!;
+            var titleRow = Part(favorites, "PART_TitleRow");
+
+            // Tab from the collapse button through the sidebar (and around), recording where focus lands.
+            IReadOnlyList<Control> TabOrder()
+            {
+                var seen = new List<Control>();
+                s.Sidebar.GetVisualDescendants().OfType<SidebarIconButton>().First(b => b.Name == "PART_CollapseButton")
+                    .Focus(NavigationMethod.Tab);
+                for (var i = 0; i < 20; i++)
+                {
+                    window.KeyPressQwerty(PhysicalKey.Tab, RawInputModifiers.None);
+                    Dispatcher.UIThread.RunJobs();
+                    if (Focused(window) is not { } focused || seen.Contains(focused))
+                    {
+                        break;
+                    }
+                    seen.Add(focused);
+                }
+                return seen;
+            }
+
+            TabOrder().ShouldContain(button);
+
+            s.Sidebar.ToggleCollapsed();
+            Dispatcher.UIThread.RunJobs();
+            favorites.Classes.ShouldContain(":rail");
+            titleRow.Opacity.ShouldBe(0);
+            titleRow.IsHitTestVisible.ShouldBeFalse();
+            TabOrder().ShouldNotContain(button);
+            // Clipped by the rail: the content keeps its open-width place, past the pane's right edge.
+            button.TranslatePoint(default, s.Sidebar)!.Value.X.ShouldBeGreaterThan(s.Sidebar.Bounds.Width);
+
+            s.Sidebar.ToggleCollapsed();
+            Dispatcher.UIThread.RunJobs();
+            titleRow.Opacity.ShouldBe(1);
+            TabOrder().ShouldContain(button);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void A_Control_Icon_Such_As_A_Colored_Dot_Is_Centered_In_The_Icon_Slot()
     {

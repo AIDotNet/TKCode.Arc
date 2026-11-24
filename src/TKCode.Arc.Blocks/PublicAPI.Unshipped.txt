@@ -1,1 +1,10 @@
 #nullable enable
+TKCode.Arc.Sidebar.SectionHeaderTrailingTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.Sidebar.SectionHeaderTrailingTemplate.set -> void
+TKCode.Arc.Sidebar.TrailingPlacement.get -> TKCode.Arc.SidebarTrailingPlacement
+TKCode.Arc.Sidebar.TrailingPlacement.set -> void
+TKCode.Arc.SidebarTrailingPlacement
+TKCode.Arc.SidebarTrailingPlacement.AfterLabel = 0 -> TKCode.Arc.SidebarTrailingPlacement
+TKCode.Arc.SidebarTrailingPlacement.End = 1 -> TKCode.Arc.SidebarTrailingPlacement
+static readonly TKCode.Arc.Sidebar.SectionHeaderTrailingTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.Sidebar.TrailingPlacementProperty -> Avalonia.StyledProperty<TKCode.Arc.SidebarTrailingPlacement>!

@@ -1,1 +1,93 @@
 #nullable enable
+override TKCode.Arc.TimePicker.OnTextInput(Avalonia.Input.TextInputEventArgs! e) -> void
+static readonly TKCode.Arc.TimePicker.DropDownLayoutProperty -> Avalonia.StyledProperty<TKCode.Arc.TimePickerDropDownLayout>!
+static readonly TKCode.Arc.TimePicker.PrecisionProperty -> Avalonia.StyledProperty<TKCode.Arc.TimePickerPrecision>!
+static readonly TKCode.Arc.TimePicker.PrefixProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.TimePicker.SecondStepProperty -> Avalonia.StyledProperty<int>!
+TKCode.Arc.DesignTokens.TimePickerTokenKind.ColumnGap = 9 -> TKCode.Arc.DesignTokens.TimePickerTokenKind
+TKCode.Arc.DesignTokens.TimePickerTokenKind.ColumnMinWidth = 8 -> TKCode.Arc.DesignTokens.TimePickerTokenKind
+TKCode.Arc.DesignTokens.TimePickerTokenKind.ColumnOptionInset = 10 -> TKCode.Arc.DesignTokens.TimePickerTokenKind
+TKCode.Arc.TimePicker.DropDownLayout.get -> TKCode.Arc.TimePickerDropDownLayout
+TKCode.Arc.TimePicker.DropDownLayout.set -> void
+TKCode.Arc.TimePicker.Precision.get -> TKCode.Arc.TimePickerPrecision
+TKCode.Arc.TimePicker.Precision.set -> void
+TKCode.Arc.TimePicker.Prefix.get -> object?
+TKCode.Arc.TimePicker.Prefix.set -> void
+TKCode.Arc.TimePicker.SecondStep.get -> int
+TKCode.Arc.TimePicker.SecondStep.set -> void
+TKCode.Arc.TimePickerDropDownLayout
+TKCode.Arc.TimePickerDropDownLayout.Auto = 0 -> TKCode.Arc.TimePickerDropDownLayout
+TKCode.Arc.TimePickerDropDownLayout.Columns = 2 -> TKCode.Arc.TimePickerDropDownLayout
+TKCode.Arc.TimePickerDropDownLayout.List = 1 -> TKCode.Arc.TimePickerDropDownLayout
+TKCode.Arc.TimePickerPrecision
+TKCode.Arc.TimePickerPrecision.Minute = 0 -> TKCode.Arc.TimePickerPrecision
+TKCode.Arc.TimePickerPrecision.Second = 1 -> TKCode.Arc.TimePickerPrecision
+const TKCode.Arc.TabItem.CardPseudoClass = ":card" -> string!
+const TKCode.Arc.TabItem.ClosablePseudoClass = ":closable" -> string!
+const TKCode.Arc.TabItem.CloseButtonPart = "PART_CloseButton" -> string!
+const TKCode.Arc.TabItem.ItemsPart = "PART_Items" -> string!
+const TKCode.Arc.Tabs.AddButtonPart = "PART_AddButton" -> string!
+const TKCode.Arc.Tabs.CardPseudoClass = ":card" -> string!
+const TKCode.Arc.Tabs.ListRowPart = "PART_ListRow" -> string!
+static readonly TKCode.Arc.TabItem.IsClosableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Tabs.AddTabCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.Tabs.AddTabLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Tabs.AreTabsClosableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Tabs.CloseTabCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.Tabs.CloseTabLabelProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Tabs.IsAddButtonVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Tabs.TabAddRequestedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.Tabs.TabCloseRequestedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.TabCloseRequestedEventArgs!>!
+static readonly TKCode.Arc.Tabs.VariantProperty -> Avalonia.StyledProperty<TKCode.Arc.TabsVariant>!
+TKCode.Arc.DesignTokens.TabItemTokenKind.CardFocusRingMargin = 16 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CardFocusRingRadius = 17 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CardHoverBackground = 15 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CardMargin = 14 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CardRadius = 13 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.ClosableInlinePadding = 6 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CloseButtonRadius = 10 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CloseButtonSize = 8 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CloseGap = 7 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CloseGlyphSize = 9 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.CloseHoverBackground = 11 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabItemTokenKind.ClosePressedBackground = 12 -> TKCode.Arc.DesignTokens.TabItemTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddButtonMargin = 15 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddButtonRadius = 16 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddButtonSize = 14 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddFocusRingMargin = 21 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddFocusRingRadius = 22 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.AddGlyphSize = 20 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardAddButtonMargin = 18 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardAddButtonRadius = 19 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardAddButtonSize = 17 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardBaselineThickness = 11 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardIndicatorRadius = 12 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardListPadding = 9 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardScrollButtonMargin = 13 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.DesignTokens.TabsTokenKind.CardShellRadius = 10 -> TKCode.Arc.DesignTokens.TabsTokenKind
+TKCode.Arc.TabCloseRequestedEventArgs
+TKCode.Arc.TabCloseRequestedEventArgs.Container.get -> TKCode.Arc.TabItem!
+TKCode.Arc.TabCloseRequestedEventArgs.Index.get -> int
+TKCode.Arc.TabCloseRequestedEventArgs.Item.get -> object?
+TKCode.Arc.TabCloseRequestedEventArgs.TabCloseRequestedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, object? item, int index, TKCode.Arc.TabItem! container) -> void
+TKCode.Arc.TabItem.IsClosable.get -> bool
+TKCode.Arc.TabItem.IsClosable.set -> void
+TKCode.Arc.Tabs.AddTabCommand.get -> System.Windows.Input.ICommand?
+TKCode.Arc.Tabs.AddTabCommand.set -> void
+TKCode.Arc.Tabs.AddTabLabel.get -> string!
+TKCode.Arc.Tabs.AddTabLabel.set -> void
+TKCode.Arc.Tabs.AreTabsClosable.get -> bool
+TKCode.Arc.Tabs.AreTabsClosable.set -> void
+TKCode.Arc.Tabs.CloseTabCommand.get -> System.Windows.Input.ICommand?
+TKCode.Arc.Tabs.CloseTabCommand.set -> void
+TKCode.Arc.Tabs.CloseTabLabel.get -> string!
+TKCode.Arc.Tabs.CloseTabLabel.set -> void
+TKCode.Arc.Tabs.IsAddButtonVisible.get -> bool
+TKCode.Arc.Tabs.IsAddButtonVisible.set -> void
+TKCode.Arc.Tabs.TabAddRequested -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.Tabs.TabCloseRequested -> System.EventHandler<TKCode.Arc.TabCloseRequestedEventArgs!>?
+TKCode.Arc.Tabs.Variant.get -> TKCode.Arc.TabsVariant
+TKCode.Arc.Tabs.Variant.set -> void
+TKCode.Arc.TabsVariant
+TKCode.Arc.TabsVariant.Card = 1 -> TKCode.Arc.TabsVariant
+TKCode.Arc.TabsVariant.Pill = 0 -> TKCode.Arc.TabsVariant

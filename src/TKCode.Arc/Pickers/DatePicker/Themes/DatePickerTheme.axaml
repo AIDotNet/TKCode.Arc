@@ -10,6 +10,16 @@
         <Setter Property="Placeholder" Value="{arc:PickerLangResource DatePlaceholder}" />
         <Setter Property="PlaceholderText" Value="{CompiledBinding Placeholder, RelativeSource={RelativeSource Self}, x:DataType=arc:DatePicker}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- A template, not a control: the setter builds one calendar icon for each picker (a control value would be
+             shared). Prefix="{x:Null}" hides it; any other content replaces it. -->
+        <Setter Property="Prefix">
+            <Template>
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CalendarDays}"
+                              Size="16"
+                              IsHitTestVisible="False"
+                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </Template>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:DatePicker">
                 <arc:Field Name="PART_Field"
@@ -25,13 +35,8 @@
                                         Size="{TemplateBinding Size}"
                                         IsInvalid="{TemplateBinding IsInvalid}"
                                         IsReadOnly="{TemplateBinding IsReadOnly}"
-                                        VerticalContentAlignment="Stretch">
-                            <arc:FieldFrame.Prefix>
-                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.CalendarDays}"
-                                              Size="16"
-                                              IsHitTestVisible="False"
-                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                            </arc:FieldFrame.Prefix>
+                                        VerticalContentAlignment="Stretch"
+                                        Prefix="{TemplateBinding Prefix}">
                             <arc:FieldFrame.Suffix>
                                 <arc:FieldIconButton Name="PART_DropDownButton"
                                                      Focusable="False"

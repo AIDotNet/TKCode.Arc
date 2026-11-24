@@ -6,6 +6,7 @@ using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
+using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Media;
@@ -295,10 +296,22 @@ internal sealed class SidebarListPanel : Panel
 
 /// <summary>
 /// Lays out a row's label and the icon that trails it: the label keeps what room is left, and the icon sits right after
-/// the label's text (not at the end of the row), so "More" and its chevron read as one.
+/// the label's text (not at the end of the row), so "More" and its chevron read as one. With <see cref="TrailingAtEnd"/>
+/// (<see cref="SidebarTrailingPlacement.End"/>) the icon sits at the end of the panel instead.
 /// </summary>
 internal sealed class SidebarInlinePanel : Panel
 {
+    public static readonly StyledProperty<bool> TrailingAtEndProperty =
+        AvaloniaProperty.Register<SidebarInlinePanel, bool>(nameof(TrailingAtEnd));
+
+    /// <summary>The trailing icon sits at the panel's right end rather than right after the label's text.</summary>
+    public bool TrailingAtEnd { get => GetValue(TrailingAtEndProperty); set => SetValue(TrailingAtEndProperty, value); }
+
+    static SidebarInlinePanel()
+    {
+        AffectsArrange<SidebarInlinePanel>(TrailingAtEndProperty);
+    }
+
     protected override Size MeasureOverride(Size availableSize)
     {
         if (Children.Count < 2)
@@ -326,6 +339,16 @@ internal sealed class SidebarInlinePanel : Panel
             return finalSize;
         }
         var label = Children[0];
+        if (TrailingAtEnd && Children.Count > 1)
+        {
+            // The label keeps its text width (up to what the icon leaves) and the icon takes the end of the panel.
+            var end = Children[1];
+            var endWidth = end.IsVisible ? Math.Min(end.DesiredSize.Width, finalSize.Width) : 0;
+            var labelWidth = Math.Max(0, Math.Min(label.DesiredSize.Width, finalSize.Width - endWidth));
+            label.Arrange(new Rect(0, 0, labelWidth, finalSize.Height));
+            end.Arrange(new Rect(finalSize.Width - endWidth, 0, endWidth, finalSize.Height));
+            return finalSize;
+        }
         var x = Math.Min(label.DesiredSize.Width, finalSize.Width);
         label.Arrange(new Rect(0, 0, x, finalSize.Height));
         if (Children.Count > 1)
@@ -430,6 +453,10 @@ internal sealed class SidebarRow : TemplatedControl
     public static readonly StyledProperty<bool> IsRailProperty =
         AvaloniaProperty.Register<SidebarRow, bool>(nameof(IsRail));
 
+    /// <summary>The trailing icon sits at the end of the row (<see cref="Sidebar.TrailingPlacement"/>).</summary>
+    public static readonly StyledProperty<bool> IsTrailingAtEndProperty =
+        AvaloniaProperty.Register<SidebarRow, bool>(nameof(IsTrailingAtEnd));
+
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public Geometry? Glyph { get => GetValue(GlyphProperty); set => SetValue(GlyphProperty, value); }
     public object? IconContent { get => GetValue(IconContentProperty); set => SetValue(IconContentProperty, value); }
@@ -444,6 +471,7 @@ internal sealed class SidebarRow : TemplatedControl
     public bool IsSelected { get => GetValue(IsSelectedProperty); set => SetValue(IsSelectedProperty, value); }
     public bool IsCurrent { get => GetValue(IsCurrentProperty); set => SetValue(IsCurrentProperty, value); }
     public bool IsRail { get => GetValue(IsRailProperty); set => SetValue(IsRailProperty, value); }
+    public bool IsTrailingAtEnd { get => GetValue(IsTrailingAtEndProperty); set => SetValue(IsTrailingAtEndProperty, value); }
 
     private bool _pressed;
 
@@ -628,12 +656,17 @@ internal sealed class SidebarRow : TemplatedControl
 
 /// <summary>
 /// The heading of a <see cref="SidebarSection"/> and the space above it: a small muted title (a disclosure button with a
-/// chevron when the section is collapsible). On the icon rail the title fades and a 1px line marks the section break.
+/// chevron when the section is collapsible) and, at the right end of the title row, the content built by
+/// <see cref="Sidebar.SectionHeaderTrailingTemplate"/>. On the icon rail the title row fades and a 1px line marks the
+/// section break.
 /// </summary>
+[TemplatePart(TrailingPresenterPart, typeof(ContentPresenter))]
 [PseudoClasses(TitledPseudoClass, GapPseudoClass, CollapsiblePseudoClass, ExpandedPseudoClass, RailPseudoClass,
-    SidebarPointer.HoveredPseudoClass, SidebarPointer.PressedPseudoClass)]
+    HasTrailingPseudoClass, SidebarPointer.HoveredPseudoClass, SidebarPointer.PressedPseudoClass)]
 internal sealed class SidebarSectionHeader : TemplatedControl
 {
+    public const string TrailingPresenterPart = "PART_TrailingPresenter";
+    public const string HasTrailingPseudoClass = ":has-trailing";
     public const string TitledPseudoClass = ":titled";
     public const string GapPseudoClass = ":gap";
     public const string CollapsiblePseudoClass = ":collapsible";
@@ -656,13 +689,19 @@ internal sealed class SidebarSectionHeader : TemplatedControl
     public static readonly StyledProperty<bool> IsRailProperty =
         AvaloniaProperty.Register<SidebarSectionHeader, bool>(nameof(IsRail));
 
+    /// <summary>The control at the right end of the title row (built from <see cref="Sidebar.SectionHeaderTrailingTemplate"/>).</summary>
+    public static readonly StyledProperty<object?> TrailingContentProperty =
+        AvaloniaProperty.Register<SidebarSectionHeader, object?>(nameof(TrailingContent));
+
     public string? Title { get => GetValue(TitleProperty); set => SetValue(TitleProperty, value); }
     public bool HasGap { get => GetValue(HasGapProperty); set => SetValue(HasGapProperty, value); }
     public bool IsCollapsible { get => GetValue(IsCollapsibleProperty); set => SetValue(IsCollapsibleProperty, value); }
     public bool IsExpanded { get => GetValue(IsExpandedProperty); set => SetValue(IsExpandedProperty, value); }
     public bool IsRail { get => GetValue(IsRailProperty); set => SetValue(IsRailProperty, value); }
+    public object? TrailingContent { get => GetValue(TrailingContentProperty); set => SetValue(TrailingContentProperty, value); }
 
     private bool _pressed;
+    private ContentPresenter? _trailingPresenter;
 
     static SidebarSectionHeader()
     {
@@ -684,10 +723,28 @@ internal sealed class SidebarSectionHeader : TemplatedControl
     /// <summary>Only a titled, collapsible heading outside the rail is a control (a disclosure button).</summary>
     public bool IsInteractive => IsCollapsible && !string.IsNullOrEmpty(Title) && !IsRail;
 
+    /// <summary>
+    /// True when <paramref name="source"/> is (inside) the trailing content: its pointer and keyboard input belong to that
+    /// content (an add or sort button), never to the heading's disclosure.
+    /// </summary>
+    public bool IsInTrailing(object? source)
+        => _trailingPresenter is { } presenter && source is Visual visual &&
+           (ReferenceEquals(visual, presenter) || presenter.IsVisualAncestorOf(visual));
+
+    protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
+    {
+        base.OnApplyTemplate(e);
+        _trailingPresenter = e.NameScope.Find<ContentPresenter>(TrailingPresenterPart);
+    }
+
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == TitleProperty)
+        if (change.Property == TrailingContentProperty)
+        {
+            PseudoClasses.Set(HasTrailingPseudoClass, change.GetNewValue<object?>() is not null);
+        }
+        else if (change.Property == TitleProperty)
         {
             PseudoClasses.Set(TitledPseudoClass, !string.IsNullOrEmpty(change.GetNewValue<string?>()));
             AutomationProperties.SetName(this, change.GetNewValue<string?>());
@@ -723,8 +780,19 @@ internal sealed class SidebarSectionHeader : TemplatedControl
     protected override void OnPointerEntered(PointerEventArgs e)
     {
         base.OnPointerEntered(e);
-        PseudoClasses.Set(SidebarPointer.HoveredPseudoClass, IsInteractive && e.Pointer.Type != PointerType.Touch);
+        UpdateHovered(e);
     }
+
+    protected override void OnPointerMoved(PointerEventArgs e)
+    {
+        base.OnPointerMoved(e);
+        UpdateHovered(e);
+    }
+
+    /// <summary>The title brightens under a fine pointer, but not over the trailing content (a click there does not toggle).</summary>
+    private void UpdateHovered(PointerEventArgs e)
+        => PseudoClasses.Set(SidebarPointer.HoveredPseudoClass,
+            IsInteractive && e.Pointer.Type != PointerType.Touch && !IsInTrailing(e.Source));
 
     protected override void OnPointerExited(PointerEventArgs e)
     {
@@ -735,7 +803,8 @@ internal sealed class SidebarSectionHeader : TemplatedControl
     protected override void OnPointerPressed(PointerPressedEventArgs e)
     {
         base.OnPointerPressed(e);
-        if (!e.Handled && IsInteractive && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
+        // A press on the trailing content (even content that does not handle it, such as an icon) never toggles the section.
+        if (!e.Handled && IsInteractive && !IsInTrailing(e.Source) && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
             _pressed = true;
             PseudoClasses.Set(SidebarPointer.PressedPseudoClass, true);

@@ -1,0 +1,81 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.TabGlyphButtonTheme">
+    <!-- The close button of a tab (.close) and the add button at the end of the list (.add, .add.card in the card variant).
+         Built by Tabs and TabItem only when they need one. -->
+    <ControlTheme x:Key="{x:Type arc:TabGlyphButton}" TargetType="arc:TabGlyphButton">
+        <Setter Property="FocusAdorner" Value="{x:Null}" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:TabGlyphButton">
+                <Panel Name="PART_Host">
+                    <Border Background="{TemplateBinding Background}"
+                            CornerRadius="{TemplateBinding CornerRadius}">
+                        <arc:ArcGlyph Data="{TemplateBinding Glyph}"
+                                      Size="{TemplateBinding GlyphSize}"
+                                      StrokeThickness="2"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center" />
+                    </Border>
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="Cursor" Value="Hand" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="ClipToBounds" Value="False" />
+
+        <Style Selector="^.close">
+            <Setter Property="Focusable" Value="False" />
+            <Setter Property="Width" Value="{arc:TabItemTokenResource CloseButtonSize}" />
+            <Setter Property="Height" Value="{arc:TabItemTokenResource CloseButtonSize}" />
+            <Setter Property="GlyphSize" Value="{arc:TabItemTokenResource CloseGlyphSize}" />
+            <Setter Property="CornerRadius" Value="{arc:TabItemTokenResource CloseButtonRadius}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        </Style>
+        <Style Selector="^.close:pointerover">
+            <Setter Property="Background" Value="{arc:TabItemTokenResource CloseHoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.close:pressed">
+            <Setter Property="Background" Value="{arc:TabItemTokenResource ClosePressedBackground}" />
+        </Style>
+
+        <Style Selector="^.add">
+            <Setter Property="Width" Value="{arc:TabsTokenResource AddButtonSize}" />
+            <Setter Property="Height" Value="{arc:TabsTokenResource AddButtonSize}" />
+            <Setter Property="Margin" Value="{arc:TabsTokenResource AddButtonMargin}" />
+            <Setter Property="CornerRadius" Value="{arc:TabsTokenResource AddButtonRadius}" />
+            <Setter Property="GlyphSize" Value="{arc:TabsTokenResource AddGlyphSize}" />
+        </Style>
+        <Style Selector="^.add.card">
+            <Setter Property="Width" Value="{arc:TabsTokenResource CardAddButtonSize}" />
+            <Setter Property="Height" Value="{arc:TabsTokenResource CardAddButtonSize}" />
+            <Setter Property="Margin" Value="{arc:TabsTokenResource CardAddButtonMargin}" />
+            <Setter Property="CornerRadius" Value="{arc:TabsTokenResource CardAddButtonRadius}" />
+        </Style>
+        <Style Selector="^.add:pointerover">
+            <Setter Property="Background" Value="{arc:TabItemTokenResource CloseHoverBackground}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^.add:pressed">
+            <Setter Property="Background" Value="{arc:TabItemTokenResource ClosePressedBackground}" />
+        </Style>
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arc:TabItemTokenResource DisabledOpacity}" />
+            <Setter Property="Cursor" Value="No" />
+        </Style>
+
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" />
+                    <arc:ArcBrushTransition Property="Foreground" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -207,6 +207,39 @@ public class SidebarItemsSourceTests
     }
 
     [AvaloniaFact]
+    public void Section_header_trailing_template_gets_the_section_data_as_data_context()
+    {
+        var projects = new SectionNode { Title = "Projects", Items = new ObservableCollection<MenuNode> { new MenuNode { Key = "a", Title = "Atlas" } } };
+        var teams = new SectionNode { Title = "Teams", Items = new ObservableCollection<MenuNode> { new MenuNode { Key = "t", Title = "Core" } } };
+        var data = new ObservableCollection<SectionNode> { projects, teams };
+        var sidebar = MakeSections(data);
+        var declared = new SidebarSection { Header = "Declared", Items = { new SidebarItem { Key = "d", Label = "D" } } };
+        sidebar.Sections.Add(declared);
+        sidebar.SectionHeaderTrailingTemplate = new FuncDataTemplate<object>((_, _) => new Button());
+        var window = TestHelpers.Show(sidebar);
+        try
+        {
+            Dispatcher.UIThread.RunJobs();
+            var bound = sidebar.Sections[0];
+            sidebar.HeaderOf(bound).ShouldNotBeNull().TrailingContent.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(projects);
+            sidebar.HeaderOf(sidebar.Sections[1])!.TrailingContent.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(teams);
+            // A section declared in Sections is its own data.
+            sidebar.HeaderOf(declared)!.TrailingContent.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(declared);
+
+            // A section added to the source gets its content too.
+            var later = new SectionNode { Title = "Later", Items = new ObservableCollection<MenuNode> { new MenuNode { Key = "l", Title = "L" } } };
+            data.Add(later);
+            Dispatcher.UIThread.RunJobs();
+            var laterSection = sidebar.Sections.First(x => x.Header == "Later");
+            sidebar.HeaderOf(laterSection)!.TrailingContent.ShouldBeOfType<Button>().DataContext.ShouldBeSameAs(later);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
     public void Data_objects_become_items_with_mapped_members_and_children()
     {
         var parent = new MenuNode { Key = "p", Title = "Parent", Children = { new MenuNode { Key = "c", Title = "Child" } } };

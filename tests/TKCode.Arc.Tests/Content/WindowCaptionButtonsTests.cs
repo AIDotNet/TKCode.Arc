@@ -46,7 +46,7 @@ public class WindowCaptionButtonsTests
     [AvaloniaFact]
     public void The_Buttons_Minimize_Maximize_Restore_And_Close_Their_Window()
     {
-        var buttons = new WindowCaptionButtons();
+        var buttons = new WindowCaptionButtons { SystemShowsCaptionTips = false };
         var window = Open(new Border { Child = buttons });
         var maximize = Button(buttons, WindowCaptionButtons.MaximizeButtonPart);
         var glyph = Part<ArcGlyph>(buttons, WindowCaptionButtons.MaximizeGlyphPart);
@@ -85,7 +85,11 @@ public class WindowCaptionButtonsTests
     [AvaloniaFact]
     public void The_Buttons_Look_Like_The_Title_Bar_Ones()
     {
-        var buttons = new WindowCaptionButtons { HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left };
+        var buttons = new WindowCaptionButtons
+        {
+            HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Left,
+            SystemShowsCaptionTips = false
+        };
         var window = Open(new Border { Child = buttons });
         try
         {
@@ -127,6 +131,64 @@ public class WindowCaptionButtonsTests
             Role(Button(buttons, WindowCaptionButtons.MaximizeButtonPart)).ShouldBe(WindowDecorationsElementRole.None);
             Press(Button(buttons, WindowCaptionButtons.MaximizeButtonPart));
             window.WindowState.ShouldBe(WindowState.Normal);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Where_The_System_Shows_Its_Own_Tips_The_Arc_Tips_Stay_Off_While_The_Buttons_Have_Roles()
+    {
+        // #191: on Windows a button with a caption role gets the system's tooltip (HTMINBUTTON, HTMAXBUTTON, HTCLOSE), so
+        // the Arc one stays off there and only one shows. The roles stay: maximize needs its role for Snap Layouts.
+        var buttons = new WindowCaptionButtons { SystemShowsCaptionTips = true };
+        var preview = new WindowCaptionButtons { SystemShowsCaptionTips = true, IsPreview = true };
+        var window = Open(new StackPanel { Children = { buttons, preview } });
+        try
+        {
+            var minimize = Button(buttons, WindowCaptionButtons.MinimizeButtonPart);
+            var maximize = Button(buttons, WindowCaptionButtons.MaximizeButtonPart);
+            var close = Button(buttons, WindowCaptionButtons.CloseButtonPart);
+            Role(maximize).ShouldBe(WindowDecorationsElementRole.MaximizeButton);
+            Tooltip.GetTip(minimize).ShouldBeNull();
+            Tooltip.GetTip(maximize).ShouldBeNull();
+            Tooltip.GetTip(close).ShouldBeNull();
+            Avalonia.Automation.AutomationProperties.GetName(close).ShouldBe("Close");
+
+            // Maximized, the theme's Restore tip stays off too.
+            window.WindowState = WindowState.Maximized;
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.GetTip(maximize).ShouldBeNull();
+            window.WindowState = WindowState.Normal;
+
+            // Hovering opens no Arc tooltip.
+            window.MouseMove(close.TranslatePoint(new Point(15, 15), window)!.Value);
+            Dispatcher.UIThread.RunJobs();
+            Tooltip.SetIsOpen(close, true);
+            Tooltip.GetPopup(close).ShouldBeNull();
+            Tooltip.SetIsOpen(close, false);
+
+            // A preview has no roles, so the system shows nothing over it and the Arc tips stay.
+            Role(Button(preview, WindowCaptionButtons.MaximizeButtonPart)).ShouldBe(WindowDecorationsElementRole.None);
+            Tooltip.GetTip(Button(preview, WindowCaptionButtons.MaximizeButtonPart)).ShouldBe("Maximize");
+            Tooltip.GetTip(Button(preview, WindowCaptionButtons.CloseButtonPart)).ShouldBe("Close");
+
+            // Once the buttons stop driving the window they lose their roles and get their Arc tips back.
+            buttons.IsPreview = true;
+            Role(maximize).ShouldBe(WindowDecorationsElementRole.None);
+            Tooltip.GetTip(minimize).ShouldBe("Minimize");
+            Tooltip.GetTip(maximize).ShouldBe("Maximize");
+            Tooltip.GetTip(close).ShouldBe("Close");
+            buttons.IsPreview = false;
+            Tooltip.GetTip(close).ShouldBeNull();
+
+            // Where the system shows no tips of its own (macOS, Linux), the driven buttons keep the Arc tips.
+            buttons.SystemShowsCaptionTips = false;
+            Role(close).ShouldBe(WindowDecorationsElementRole.CloseButton);
+            Tooltip.GetTip(minimize).ShouldBe("Minimize");
+            Tooltip.GetTip(close).ShouldBe("Close");
         }
         finally
         {
@@ -290,7 +352,7 @@ public class WindowCaptionButtonsTests
     public void Tooltips_Follow_The_Language()
     {
         var languages = ArcLanguageManager.Current!;
-        var buttons = new WindowCaptionButtons();
+        var buttons = new WindowCaptionButtons { SystemShowsCaptionTips = false };
         var window = Open(new Border { Child = buttons });
         try
         {

@@ -84,7 +84,6 @@
                     <arc:WindowCaptionButton Name="PART_MinimizeButton"
                                              Width="{TemplateBinding ButtonSize}"
                                              Height="{TemplateBinding ButtonSize}"
-                                             arc:Tooltip.Tip="{arc:TitleBarLangResource Minimize}"
                                              AutomationProperties.Name="{arc:TitleBarLangResource Minimize}">
                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}" Size="{TemplateBinding GlyphSize}" />
                     </arc:WindowCaptionButton>
@@ -98,7 +97,6 @@
                                              Width="{TemplateBinding ButtonSize}"
                                              Height="{TemplateBinding ButtonSize}"
                                              IsVisible="{TemplateBinding ShowCloseButton}"
-                                             arc:Tooltip.Tip="{arc:TitleBarLangResource Close}"
                                              AutomationProperties.Name="{arc:TitleBarLangResource Close}">
                         <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{TemplateBinding GlyphSize}" />
                     </arc:WindowCaptionButton>
@@ -108,12 +106,27 @@
 
         <!-- Maximize, or restore while maximized: tooltip and name follow the state (the glyph follows in code). -->
         <Style Selector="^ /template/ arc|WindowCaptionButton#PART_MaximizeButton">
-            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Maximize}" />
             <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Maximize}" />
         </Style>
         <Style Selector="^:maximized /template/ arc|WindowCaptionButton#PART_MaximizeButton">
-            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Restore}" />
             <Setter Property="AutomationProperties.Name" Value="{arc:TitleBarLangResource Restore}" />
+        </Style>
+
+        <!--
+            The Arc tooltips (#191). :system-caption-tips is set in code while the buttons carry the caption roles on Windows,
+            where the system shows its own (localized) tooltip over them; the Arc one stays off then, so only one shows.
+        -->
+        <Style Selector="^:not(:system-caption-tips) /template/ arc|WindowCaptionButton#PART_MinimizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Minimize}" />
+        </Style>
+        <Style Selector="^:not(:system-caption-tips) /template/ arc|WindowCaptionButton#PART_MaximizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Maximize}" />
+        </Style>
+        <Style Selector="^:not(:system-caption-tips):maximized /template/ arc|WindowCaptionButton#PART_MaximizeButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Restore}" />
+        </Style>
+        <Style Selector="^:not(:system-caption-tips) /template/ arc|WindowCaptionButton#PART_CloseButton">
+            <Setter Property="arc:Tooltip.Tip" Value="{arc:TitleBarLangResource Close}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>

@@ -6,6 +6,14 @@
     <ControlTheme x:Key="{x:Type arc:TimePicker}" TargetType="arc:TimePicker">
         <Setter Property="Placeholder" Value="{arc:PickerLangResource TimePlaceholder}" />
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <!-- A template, not a control: the setter builds one clock for each picker (a control value would be shared). -->
+        <Setter Property="Prefix">
+            <Template>
+                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock3}"
+                              Size="16"
+                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
+            </Template>
+        </Setter>
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TimePicker">
                 <arc:Field Name="PART_Field"
@@ -19,12 +27,8 @@
                                         Cursor="Hand"
                                         Spacing="{arc:TimePickerTokenResource AffixGap}"
                                         Size="{TemplateBinding Size}"
-                                        IsInvalid="{TemplateBinding IsInvalid}">
-                            <arc:FieldFrame.Prefix>
-                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Clock3}"
-                                              Size="16"
-                                              Foreground="{arc:ArcDesignTokenResource TextMuted}" />
-                            </arc:FieldFrame.Prefix>
+                                        IsInvalid="{TemplateBinding IsInvalid}"
+                                        Prefix="{TemplateBinding Prefix}">
                             <arc:FieldFrame.Suffix>
                                 <arc:ArcGlyph Name="PART_Chevron"
                                               Data="{x:Static arc:ArcIcons.ChevronDown}"
@@ -43,7 +47,7 @@
                                                 PlaceholderForeground="{arc:ArcDesignTokenResource TextMuted}" />
                         </arc:FieldFrame>
                         <arc:ArcPopup Name="PART_Popup"
-                                      Placement="Bottom"
+                                      Placement="BottomEdgeAlignedLeft"
                                       MarginToAnchor="{arc:TimePickerTokenResource PopupGap}"
                                       EnterOffset="6"
                                       EnterScale="0.97"
@@ -99,19 +103,32 @@
                         BorderThickness="{TemplateBinding BorderThickness}"
                         CornerRadius="{TemplateBinding CornerRadius}"
                         Padding="{TemplateBinding Padding}">
-                    <ScrollViewer Name="PART_Scroll"
-                                  HorizontalScrollBarVisibility="Disabled"
-                                  VerticalScrollBarVisibility="Auto">
-                        <arc:TimePickerList Name="PART_List"
-                                            RowHeight="{arc:TimePickerTokenResource OptionHeight}"
-                                            RowInset="{arc:TimePickerTokenResource OptionInset}"
-                                            RowRadius="{arc:TimePickerTokenResource OptionRadius}"
-                                            DotDiameter="{arc:TimePickerTokenResource DotDiameter}"
-                                            HighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
-                                            Foreground="{arc:ArcDesignTokenResource Foreground}"
-                                            FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
-                                            FontSize="{arc:ArcDesignTokenResource TypeSM}" />
-                    </ScrollViewer>
+                    <Panel>
+                        <ScrollViewer Name="PART_Scroll"
+                                      HorizontalScrollBarVisibility="Disabled"
+                                      VerticalScrollBarVisibility="Auto">
+                            <arc:TimePickerList Name="PART_List"
+                                                RowInset="{arc:TimePickerTokenResource OptionInset}" />
+                        </ScrollViewer>
+                        <!-- Column layout: hours, minutes, seconds and AM / PM, each scrolling on its own. -->
+                        <arc:TimePickerColumnsPanel Name="PART_Columns"
+                                                    IsVisible="False"
+                                                    Spacing="{arc:TimePickerTokenResource ColumnGap}"
+                                                    ColumnMinWidth="{arc:TimePickerTokenResource ColumnMinWidth}">
+                            <ScrollViewer Name="PART_HourScroll" Classes="column">
+                                <arc:TimePickerList Name="PART_HourList" Classes="column" />
+                            </ScrollViewer>
+                            <ScrollViewer Name="PART_MinuteScroll" Classes="column">
+                                <arc:TimePickerList Name="PART_MinuteList" Classes="column" />
+                            </ScrollViewer>
+                            <ScrollViewer Name="PART_SecondScroll" Classes="column">
+                                <arc:TimePickerList Name="PART_SecondList" Classes="column" />
+                            </ScrollViewer>
+                            <ScrollViewer Name="PART_MeridiemScroll" Classes="column">
+                                <arc:TimePickerList Name="PART_MeridiemList" Classes="column" />
+                            </ScrollViewer>
+                        </arc:TimePickerColumnsPanel>
+                    </Panel>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -120,5 +137,24 @@
         <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
         <Setter Property="Padding" Value="{arc:TimePickerTokenResource ListInset}" />
+
+        <Style Selector="^ /template/ arc|TimePickerList">
+            <Setter Property="RowHeight" Value="{arc:TimePickerTokenResource OptionHeight}" />
+            <Setter Property="RowRadius" Value="{arc:TimePickerTokenResource OptionRadius}" />
+            <Setter Property="DotDiameter" Value="{arc:TimePickerTokenResource DotDiameter}" />
+            <Setter Property="HighlightBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TimePickerList.column">
+            <Setter Property="RowInset" Value="{arc:TimePickerTokenResource ColumnOptionInset}" />
+            <Setter Property="CentersText" Value="True" />
+        </Style>
+        <!-- Columns are narrow: they scroll by wheel, touch and keyboard without a bar over the values. -->
+        <Style Selector="^ /template/ ScrollViewer.column">
+            <Setter Property="HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="VerticalScrollBarVisibility" Value="Hidden" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

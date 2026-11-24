@@ -3,6 +3,7 @@ using Avalonia.Animation.Easings;
 using Avalonia.Controls;
 using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Primitives;
+using Avalonia.Layout;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.VisualTree;
@@ -51,6 +52,7 @@ internal sealed class ShareSheetStage : Panel
     private Task<bool>? _sizeRun;
     private Task<bool>? _radiusRun;
     private readonly List<Task> _exits = new();
+    private Point _origin;
 
     public ShareSheetStage()
     {
@@ -62,6 +64,24 @@ internal sealed class ShareSheetStage : Panel
 
     /// <summary>In the bottom sheet the stage takes the width it is given and only its height springs.</summary>
     public bool IsSheet { get; set; }
+
+    /// <summary>
+    /// Where the shape's top-left corner sits in its overlay layer, before layout rounds it to the pixel grid (the owner
+    /// sets it when it places the shape). Faces are placed on the grid from this point, so a face whose place in the
+    /// layer stays put while the shape springs around it stays on the same pixel (#189).
+    /// </summary>
+    public Point Origin
+    {
+        get => _origin;
+        set
+        {
+            if (_origin != value)
+            {
+                _origin = value;
+                InvalidateArrange();
+            }
+        }
+    }
 
     /// <summary>The face the stage is sized to.</summary>
     public Control? Current { get; private set; }
@@ -389,6 +409,9 @@ internal sealed class ShareSheetStage : Panel
 
     protected override Size ArrangeOverride(Size finalSize)
     {
+        // The shape's own size, not the size layout rounded it to: the owner places the shape from the same size.
+        var shape = IsSheet ? finalSize : ShapeSize;
+        var scale = LayoutHelper.GetLayoutScale(this);
         foreach (var child in Children)
         {
             var desired = child.DesiredSize;
@@ -406,23 +429,37 @@ internal sealed class ShareSheetStage : Panel
                 switch (Align)
                 {
                     case ShareSheetAlign.Center:
-                        x = (finalSize.Width - width) / 2;
-                        y = (finalSize.Height - height) / 2;
+                        x = (shape.Width - width) / 2;
+                        y = (shape.Height - height) / 2;
                         break;
                     case ShareSheetAlign.Start:
                         x = 0;
                         y = 0;
                         break;
                     default:
-                        x = finalSize.Width - width;
+                        x = shape.Width - width;
                         y = 0;
                         break;
                 }
+                // Layout rounds the shape's place and the face's offset in it each on their own, so while the size
+                // springs the two roundings take turns and the face hops a pixel back and forth. Round the face's place
+                // in the layer instead and offset it by whole pixels from the shape's corner, which the owner rounds
+                // the same way.
+                x = Snap(_origin.X + x, scale) - Snap(_origin.X, scale);
+                y = Snap(_origin.Y + y, scale) - Snap(_origin.Y, scale);
             }
             child.Arrange(new Rect(x, y, width, height));
         }
         return finalSize;
     }
+
+    private double Snap(double value, double scale) => UseLayoutRounding ? ToPixel(value, scale) : value;
+
+    /// <summary>
+    /// Rounds a layout value to the nearest device pixel, halves up. The small bias keeps a place that sits on a half
+    /// pixel (an odd-sized face centered on a button) on one side, where floating-point noise would flip it each frame.
+    /// </summary>
+    internal static double ToPixel(double value, double scale) => Math.Floor(value * scale + 0.5 + 1e-6) / scale;
 
     /// <summary>A face's opacity, blur, scale and sideways shift.</summary>
     private sealed class FaceMotion : IDisposable

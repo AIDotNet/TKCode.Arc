@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Controls.Primitives;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.VisualTree;
@@ -8,11 +9,12 @@ using TKCode.Arc.Motion;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The glass material under a glass control's content, in four layers: the shadow (drawn here, outside the shape only), the
-/// frost (<see cref="GlassPaneFrost"/>: the blurred copy of <see cref="GlassBackdrop.SourceProperty"/>, clipped to the
-/// shape), then the gloss (<see cref="GlassPaneGloss"/>: tint, top glaze, pointer sheen and edge light). It takes no input;
-/// the owner forwards the pointer with <see cref="PointAt"/>. Under <see cref="ReduceTransparency"/> the frost is removed
-/// and the gloss paints an opaque surface with a plain border.
+/// The glass material under a glass control's content, in three layers: the frost (<see cref="GlassPaneFrost"/>: the
+/// blurred copy of <see cref="GlassBackdrop.SourceProperty"/>, or in the <see cref="GlassBackdropMode.Native"/> mode the
+/// compositor's blur of what is behind, clipped to the shape), then the gloss (<see cref="GlassPaneGloss"/>: the shadow
+/// outside the shape, tint, top glaze, pointer sheen and edge light). It takes no input; the owner forwards the pointer with
+/// <see cref="PointAt"/>. Under <see cref="ReduceTransparency"/> the frost is removed and the gloss paints an opaque surface
+/// with a plain border.
 /// </summary>
 internal sealed class GlassPane : Control
 {
@@ -63,6 +65,9 @@ internal sealed class GlassPane : Control
     public static readonly StyledProperty<BoxShadows> BoxShadowProperty =
         AvaloniaProperty.Register<GlassPane, BoxShadows>(nameof(BoxShadow));
 
+    // One volatile cache serves every pane: it is a mode, the compositor keeps each visual's backdrop state itself.
+    private static readonly VolatileBackdropEffectCache s_volatile = new();
+
     private readonly GlassPaneClip _clip;
     private readonly GlassPaneFrost _frost;
     private readonly GlassPaneGloss _gloss;
@@ -75,7 +80,6 @@ internal sealed class GlassPane : Control
     static GlassPane()
     {
         IsHitTestVisibleProperty.OverrideDefaultValue<GlassPane>(false);
-        AffectsRender<GlassPane>(BoxShadowProperty, CornerRadiusProperty, ReduceTransparencyProperty);
     }
 
     public GlassPane()
@@ -114,7 +118,10 @@ internal sealed class GlassPane : Control
     public double SheenIntensity { get => GetValue(SheenIntensityProperty); set => SetValue(SheenIntensityProperty, value); }
     public BoxShadows BoxShadow { get => GetValue(BoxShadowProperty); set => SetValue(BoxShadowProperty, value); }
 
-    /// <summary>True while the blurred backdrop shows through (a usable source and transparency allowed).</summary>
+    /// <summary>
+    /// True while the blurred backdrop shows through: transparency allowed, and a usable source (brush mode) or the native
+    /// mode outside a popup window.
+    /// </summary>
     public bool IsFrosted => _frost.IsVisible;
 
     /// <summary>True under the ArcDesign <c>ReduceTransparency</c> token: an opaque surface.</summary>
@@ -134,17 +141,23 @@ internal sealed class GlassPane : Control
     {
         base.OnPropertyChanged(change);
         var property = change.Property;
-        if (property == GlassBackdrop.SourceProperty || property == ReduceTransparencyProperty)
+        if (property == GlassBackdrop.SourceProperty || property == ReduceTransparencyProperty ||
+            property == GlassBackdrop.ModeProperty || property == GlassBackdrop.CacheProperty)
         {
             UpdateSource();
         }
         else if (property == GlassBackdrop.IsLiveProperty)
         {
             _frost.SetLive(change.GetNewValue<bool>());
+            if (_frost.IsNative)
+            {
+                UpdateSource();
+            }
         }
         else if (property == BlurRadiusProperty)
         {
             _frost.SetBlur(BlurRadius);
+            _clip.Reach = _frost.IsNative ? _frost.Reach : 0;
         }
         else if (property == CornerRadiusProperty)
         {
@@ -154,7 +167,8 @@ internal sealed class GlassPane : Control
         if (property == TintProperty || property == FallbackTintProperty || property == SolidFillProperty ||
             property == SolidStrokeProperty || property == EdgeWidthProperty || property == EdgeLightProperty ||
             property == EdgeShadeProperty || property == GlazeProperty || property == SheenProperty ||
-            property == SheenRadiusProperty || property == SheenIntensityProperty || property == ReduceTransparencyProperty)
+            property == SheenRadiusProperty || property == SheenIntensityProperty || property == ReduceTransparencyProperty ||
+            property == BoxShadowProperty || property == CornerRadiusProperty)
         {
             _gloss.InvalidateBrushes();
         }
@@ -178,18 +192,23 @@ internal sealed class GlassPane : Control
     }
 
     /// <summary>
-    /// Decides whether the backdrop can show through: a source that is attached to the same window and is not this pane or
-    /// one of its ancestors (a copy of an ancestor would contain the pane itself).
+    /// Decides whether the backdrop can show through. The native mode needs only a window behind the pane (a popup in its
+    /// own window has nothing drawn behind it). The brush mode needs a source that is attached to the same window and is
+    /// not this pane or one of its ancestors (a copy of an ancestor would contain the pane itself).
     /// </summary>
     private void UpdateSource()
     {
+        var native = _attached && !ReduceTransparency && GlassBackdrop.GetMode(this) == GlassBackdropMode.Native &&
+                     TopLevel.GetTopLevel(this) is { } top && top is not PopupRoot;
         var source = GlassBackdrop.GetSource(this);
-        var usable = _attached && !ReduceTransparency && source is not null && !ReferenceEquals(source, this) &&
+        var usable = !native && _attached && !ReduceTransparency && source is not null && !ReferenceEquals(source, this) &&
                      !source.IsVisualAncestorOf(this) && TopLevel.GetTopLevel(source) is { } root &&
                      ReferenceEquals(root, TopLevel.GetTopLevel(this));
         _source = usable ? source : null;
         _frost.SetSource(_source);
-        _frost.IsVisible = _source is not null;
+        _frost.SetNative(native, native ? NativeCache() : null);
+        _clip.Reach = native ? _frost.Reach : 0;
+        _frost.IsVisible = native || _source is not null;
         if (_source is not null && !_layoutHooked)
         {
             LayoutUpdated += OnLayoutUpdated;
@@ -202,6 +221,13 @@ internal sealed class GlassPane : Control
         }
         _gloss.InvalidateBrushes();
     }
+
+    /// <summary>
+    /// The native backdrop cache: the one set on <see cref="GlassBackdrop.CacheProperty"/>, else volatile for a live backdrop
+    /// (it changes everywhere on every frame, so a snapshot saves nothing), else the compositor's choice.
+    /// </summary>
+    private BackdropEffectCache? NativeCache() =>
+        GlassBackdrop.GetCache(this) ?? (GlassBackdrop.GetIsLive(this) ? s_volatile : null);
 
     /// <summary>The copy is a picture taken when the frost draws: redraw it when the pane moves against the source.</summary>
     private void OnLayoutUpdated(object? sender, EventArgs e)
@@ -234,17 +260,6 @@ internal sealed class GlassPane : Control
         _gloss.Arrange(rect);
         return finalSize;
     }
-
-    public override void Render(DrawingContext context)
-    {
-        var shadow = BoxShadow;
-        if (shadow.Count == 0 || Bounds.Width <= 0 || Bounds.Height <= 0)
-        {
-            return;
-        }
-        // A box shadow is painted outside the shape only, so it does not darken the translucent glass.
-        context.DrawRectangle(Brushes.Transparent, null, new RoundedRect(new Rect(Bounds.Size), CornerRadius), shadow);
-    }
 }
 
 /// <summary>Reads the color of a solid brush token (ArcDesign and control token colors resolve to brushes).</summary>
@@ -255,11 +270,29 @@ internal static class GlassPaneColors
         : Colors.Transparent;
 }
 
-/// <summary>Clips the frost (and its blur, which spreads past the edges) to the pane's rounded shape.</summary>
+/// <summary>
+/// Clips the frost (and its blur, which spreads past the edges) to the pane's rounded shape. A native frost is laid out
+/// larger than the pane by <see cref="Reach"/>, so the compositor's blur reads the backdrop past the edge instead of
+/// mirroring it there; the clip cuts it back to the shape.
+/// </summary>
 internal sealed class GlassPaneClip : Decorator
 {
     private CornerRadius _cornerRadius;
     private RectangleGeometry? _geometry;
+    private double _reach;
+
+    public double Reach
+    {
+        get => _reach;
+        set
+        {
+            if (Math.Abs(_reach - value) > 0.01)
+            {
+                _reach = value;
+                InvalidateArrange();
+            }
+        }
+    }
 
     public CornerRadius CornerRadius
     {
@@ -273,9 +306,9 @@ internal sealed class GlassPaneClip : Decorator
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        var size = base.ArrangeOverride(finalSize);
+        Child?.Arrange(new Rect(finalSize).Inflate(_reach));
         UpdateClip(finalSize);
-        return size;
+        return finalSize;
     }
 
     private void UpdateClip(Size size)
@@ -299,9 +332,11 @@ internal sealed class GlassPaneClip : Decorator
 }
 
 /// <summary>
-/// The blurred backdrop: the source visual painted again with a <see cref="VisualBrush"/> where it lies under the pane, and
-/// blurred by an effect on this layer. The brush records the source when this layer renders, so it is redrawn only when
-/// the pane moves (<see cref="GlassPane"/> watches the layout), the theme changes, or every frame for a live source.
+/// The blurred backdrop. Brush mode: the source visual painted again with a <see cref="VisualBrush"/> where it lies under
+/// the pane, and blurred by an effect on this layer; the brush records the source when this layer renders, so it is redrawn
+/// only when the pane moves (<see cref="GlassPane"/> watches the layout), the theme changes, or every frame for a live
+/// source. Native mode: this layer draws nothing; its <see cref="Visual.BackdropEffect"/> has the compositor blur what is
+/// drawn behind it.
 /// </summary>
 internal sealed class GlassPaneFrost : Control
 {
@@ -314,6 +349,8 @@ internal sealed class GlassPaneFrost : Control
     private Visual? _source;
     private LiveLoop? _live;
     private bool _wantsLive;
+    private bool _native;
+    private BackdropEffectCache? _cache;
     private double _blur = -1;
 
     static GlassPaneFrost()
@@ -323,6 +360,12 @@ internal sealed class GlassPaneFrost : Control
 
     /// <summary>The source the frost copies, or null.</summary>
     public Visual? Source => _source;
+
+    /// <summary>True when the compositor blurs the backdrop (<see cref="GlassBackdropMode.Native"/>).</summary>
+    public bool IsNative => _native;
+
+    /// <summary>How far past the pane's edge the blur reads the backdrop.</summary>
+    public double Reach => Math.Max(2, Math.Max(0, _blur) * 2);
 
     /// <summary>How many times the frost painted the source (tests read it).</summary>
     internal int Paints { get; private set; }
@@ -353,7 +396,27 @@ internal sealed class GlassPaneFrost : Control
             return;
         }
         _blur = radius;
-        Effect = radius > 0 ? new ImmutableBlurEffect(radius) : null;
+        ApplyBlur();
+    }
+
+    /// <summary>Switches between the brush copy and the compositor's backdrop effect, with its cache.</summary>
+    public void SetNative(bool native, BackdropEffectCache? cache)
+    {
+        if (_native == native && ReferenceEquals(_cache, cache))
+        {
+            return;
+        }
+        _native = native;
+        _cache = cache;
+        ApplyBlur();
+    }
+
+    private void ApplyBlur()
+    {
+        var blur = _blur > 0 ? new ImmutableBlurEffect(_blur) : null;
+        Effect = _native ? null : blur;
+        BackdropEffect = _native ? blur : null;
+        BackdropEffectCache = _native ? _cache : null;
     }
 
     private void UpdateLive()
@@ -411,9 +474,10 @@ internal sealed class GlassPaneFrost : Control
 }
 
 /// <summary>
-/// The surface of the glass: the tint, a glaze fading down from the top edge, the sheen that follows the pointer, the
-/// 1px edge light (bright at the top left, a faint shade at the bottom right) and, near the pointer, a brighter stretch of
-/// that edge. Under reduced transparency: the opaque fill and a plain border only.
+/// The surface of the glass: the shadow outside the shape, the tint, a glaze fading down from the top edge, the sheen that
+/// follows the pointer, the 1px edge light (bright at the top left, a faint shade at the bottom right) and, near the
+/// pointer, a brighter stretch of that edge. Under reduced transparency: the opaque fill (with the shadow) and a plain
+/// border only.
 /// </summary>
 internal sealed class GlassPaneGloss : Control
 {
@@ -556,6 +620,12 @@ internal sealed class GlassPaneGloss : Control
         var pane = _pane;
         var radius = pane.CornerRadius;
         var shape = new RoundedRect(bounds, radius);
+        if (pane.BoxShadow is { Count: > 0 } shadow)
+        {
+            // A box shadow is painted outside the shape only, so it does not darken the translucent glass. It is drawn
+            // here, above the frost, so a native frost does not read (and blur) the pane's own shadow at its edge.
+            context.DrawRectangle(Brushes.Transparent, null, shape, shadow);
+        }
         var edge = Math.Max(0, pane.EdgeWidth);
         var inner = new RoundedRect(bounds.Deflate(edge / 2), Deflate(radius, edge / 2));
         if (pane.IsSolid)

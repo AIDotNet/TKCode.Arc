@@ -77,6 +77,32 @@ public class FocusRingClipTests
         }
     }
 
+    [AvaloniaFact]
+    public void Card_TabItem_Focused_By_Tab_Shows_Its_Whole_Ring()
+    {
+        var tabs = new Tabs { Variant = TabsVariant.Card, AreTabsClosable = true, VerticalAlignment = VerticalAlignment.Top, Margin = new Thickness(24) };
+        foreach (var header in new[] { "Overview", "Activity", "Settings" })
+        {
+            tabs.Items.Add(new TabItem { Header = header, Content = new TextBlock { Text = header + " panel" } });
+        }
+        var window = TestHelpers.Show(tabs);
+        try
+        {
+            var tab = (TabItem)tabs.ContainerFromIndex(1)!;
+            ShouldShowWholeRing(tab);
+            // The card's ring follows its corners and stays flush with its bottom edge, inside the strip.
+            var ring = tab.GetVisualDescendants().OfType<Border>().First(b => b.Name == "PART_FocusRing");
+            ring.Margin.Bottom.ShouldBe(0);
+            ring.CornerRadius.BottomLeft.ShouldBe(0);
+            // The close button of the focused tab shows, as on hover.
+            tab.CloseButton!.IsVisible.ShouldBeTrue();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     private static void ShouldShowWholeRing(Control control)
     {
         control.Focus(NavigationMethod.Tab).ShouldBeTrue();

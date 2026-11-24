@@ -62,7 +62,8 @@ public sealed class ReorderableListReorderedEventArgs : RoutedEventArgs
 /// Keyboard: ↑/↓ on a grip moves the row one place at once (Arc), Space / Enter picks it up so arrows preview the
 /// move, Space / Enter drops it and Escape cancels; every step is announced. A mutable <see cref="ItemsControl.ItemsSource"/>
 /// (or inline items) is reordered in place; <see cref="Reordered"/> reports each move. Drag motion is render
-/// transforms only.
+/// transforms only. The dragged row is drawn in the window's overlay layer, so a scroll viewer around the list does not
+/// clip it or its shadow; the other rows stay in the list and clip as usual.
 /// </summary>
 [TemplatePart(AnnouncerPart, typeof(TextBlock))]
 public class ReorderableList : ItemsControl
@@ -117,6 +118,7 @@ public class ReorderableList : ItemsControl
         public int Position { get; set; }
         public Point LastPointer { get; set; }
         public double Offset { get; set; }
+        public ReorderableListDragPreview? Preview { get; set; }
     }
 
     private readonly ReorderableListVelocityTracker _velocity = new();
@@ -134,9 +136,21 @@ public class ReorderableList : ItemsControl
                 FollowPointer(drag);
             }
         });
+        // Removed mid-drag (this runs before the rows detach and lose pointer capture): cancel, which also takes the
+        // preview off the window's overlay layer.
+        DetachedFromVisualTree += (_, _) =>
+        {
+            if (_drag is not null && !_finishing)
+            {
+                Finish(commit: false);
+            }
+        };
     }
 
     internal bool IsDragging => _drag is not null;
+
+    /// <summary>The overlay preview of the dragged row (null outside a drag, or when the list has no layer to draw it on).</summary>
+    internal ReorderableListDragPreview? DragPreview => _drag?.Preview;
 
     internal string TitleOf(object? item)
     {
@@ -414,7 +428,28 @@ public class ReorderableList : ItemsControl
         };
         container.SetLifted(true);
         container.SetDragging(!keyboard);
+        // The lifted row floats above every clipping ancestor (#193); the row itself stays behind as the drag's model.
+        drag.Preview = ReorderableListDragPreview.Show(this, container);
+        if (drag.Preview is not null)
+        {
+            LayoutUpdated += OnDragLayoutUpdated;
+        }
         return drag;
+    }
+
+    /// <summary>Layout moved the list (scrolling, resizing): the preview follows the row.</summary>
+    private void OnDragLayoutUpdated(object? sender, EventArgs e) => _drag?.Preview?.Sync();
+
+    /// <summary>Removes the overlay preview; the row shows again where the preview was and settles from there.</summary>
+    private void ClosePreview(DragState drag)
+    {
+        if (drag.Preview is not { } preview)
+        {
+            return;
+        }
+        LayoutUpdated -= OnDragLayoutUpdated;
+        drag.Preview = null;
+        preview.Close();
     }
 
     internal bool BeginPointerDrag(ReorderableListItem container, PointerPressedEventArgs e)
@@ -569,6 +604,7 @@ public class ReorderableList : ItemsControl
         {
             _autoScroll.Stop();
             _drag = null;
+            ClosePreview(drag);
             if (drag.Pointer is { } pointer && ReferenceEquals(pointer.Captured, drag.Container.Handle))
             {
                 pointer.Capture(null);

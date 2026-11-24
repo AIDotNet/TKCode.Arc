@@ -29,7 +29,8 @@ public enum UnavailableCaptionButtonMode
 /// in and follow it: maximize shows restore while the window is maximized and is disabled while the window cannot grow
 /// (<c>CanResize</c> or <c>CanMaximize</c> false), minimize while <c>CanMinimize</c> is false; with
 /// <see cref="UnavailableCaptionButtons"/> set to <c>Hide</c> they are hidden instead. On Windows they tell the
-/// system what they are, so the maximize button opens Snap Layouts. <see cref="TitleBar"/> draws its own caption buttons
+/// system what they are, so the maximize button opens Snap Layouts, and the system's own tooltips show over them in place
+/// of the Arc ones. <see cref="TitleBar"/> draws its own caption buttons
 /// with this control; show one set per window.
 /// </summary>
 [TemplatePart(MinimizeButtonPart, typeof(AvaloniaButton))]
@@ -46,6 +47,9 @@ public class WindowCaptionButtons : TemplatedControl
 
     /// <summary>Set while the window is maximized: the maximize button shows restore.</summary>
     public const string MaximizedPseudoClass = ":maximized";
+
+    // Set while the buttons carry caption roles where the system shows its own tooltips over them (Windows, #191).
+    internal const string SystemCaptionTipsPseudoClass = ":system-caption-tips";
 
     /// <summary>Shows the minimize button. True by default.</summary>
     public static readonly StyledProperty<bool> ShowMinimizeButtonProperty =
@@ -96,6 +100,7 @@ public class WindowCaptionButtons : TemplatedControl
     private AvaloniaButton? _maximize;
     private AvaloniaButton? _close;
     private ArcGlyph? _maximizeGlyph;
+    private bool _systemShowsCaptionTips = OperatingSystem.IsWindows();
 
     /// <inheritdoc cref="ShowMinimizeButtonProperty"/>
     public bool ShowMinimizeButton
@@ -160,6 +165,24 @@ public class WindowCaptionButtons : TemplatedControl
     {
         get => GetValue(RestoreGlyphSizeProperty);
         set => SetValue(RestoreGlyphSizeProperty, value);
+    }
+
+    /// <summary>
+    /// Whether the system shows its own tooltip over a button that carries a caption role. Windows does (it answers the
+    /// non-client hit test with HTMINBUTTON, HTMAXBUTTON or HTCLOSE and shows its localized tooltip there, #191), so the
+    /// Arc tooltip stays off for those buttons and only one shows. The seam lets a test take either path on any system.
+    /// </summary>
+    internal bool SystemShowsCaptionTips
+    {
+        get => _systemShowsCaptionTips;
+        set
+        {
+            if (_systemShowsCaptionTips != value)
+            {
+                _systemShowsCaptionTips = value;
+                SyncRoles();
+            }
+        }
     }
 
     /// <summary>The window the buttons drive, or null (a preview, or not in a window).</summary>
@@ -269,6 +292,9 @@ public class WindowCaptionButtons : TemplatedControl
     /// While the buttons drive a window they tell the system what they are: on Windows a press on them is the system's
     /// minimize, maximize or close, and pointing at maximize opens Snap Layouts on Windows 11. Elsewhere the roles let the
     /// press through to the buttons. Buttons that drive nothing have no role, so a preview never acts as the window's.
+    /// Where the system shows its own tooltip over a button with a role (<see cref="SystemShowsCaptionTips"/>), the theme's
+    /// Arc tooltips are turned off (<see cref="SystemCaptionTipsPseudoClass"/>, read by the theme), so the two never show
+    /// together (#191).
     /// </summary>
     private void SyncRoles()
     {
@@ -276,6 +302,8 @@ public class WindowCaptionButtons : TemplatedControl
         SetRole(_minimize, driven ? WindowDecorationsElementRole.MinimizeButton : WindowDecorationsElementRole.None);
         SetRole(_maximize, driven ? WindowDecorationsElementRole.MaximizeButton : WindowDecorationsElementRole.None);
         SetRole(_close, driven ? WindowDecorationsElementRole.CloseButton : WindowDecorationsElementRole.None);
+        // The theme gives the buttons their Arc tooltips only without this pseudo class.
+        PseudoClasses.Set(SystemCaptionTipsPseudoClass, driven && SystemShowsCaptionTips);
     }
 
     private static void SetRole(AvaloniaButton? button, WindowDecorationsElementRole role)

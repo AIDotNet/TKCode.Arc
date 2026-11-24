@@ -620,6 +620,7 @@ public partial class Sidebar : TemplatedControl
     {
         base.OnPropertyChanged(change);
         OnBoundSourceChanged(change);
+        OnTrailingPropertyChanged(change);
         if (change.Property == SelectedItemProperty)
         {
             var item = change.GetNewValue<SidebarItem?>();
@@ -982,6 +983,11 @@ public partial class Sidebar : TemplatedControl
         {
             RemoveItem(node);
         }
+        if (sectionNode.Header is { } header)
+        {
+            // The trailing control was built for this heading; let it go with it.
+            header.TrailingContent = null;
+        }
         var section = sectionNode.Section;
         section.PropertyChanged -= OnSectionPropertyChanged;
         section.Items.CollectionChanged -= OnItemsChanged;
@@ -1115,6 +1121,7 @@ public partial class Sidebar : TemplatedControl
         // Every section has a heading control (the space above it); the first untitled one stays hidden (see Refresh).
         var header = new SidebarSectionHeader(this, sectionNode);
         sectionNode.Header = header;
+        UpdateHeaderTrailing(sectionNode);
         root.Children.Add(header);
         var body = new StackPanel { Spacing = _list!.RowGap };
         var bodyHost = new SidebarHeightSpring { Child = body };
@@ -1212,7 +1219,7 @@ public partial class Sidebar : TemplatedControl
         var node = new SidebarNode(section, item, parent);
         _byItem[item] = node;
         item.PropertyChanged += OnItemPropertyChanged;
-        var row = new SidebarRow(this, node);
+        var row = new SidebarRow(this, node) { IsTrailingAtEnd = TrailingPlacement == SidebarTrailingPlacement.End };
         Tooltip.SetSide(row, TooltipSide.Right);
         node.Row = row;
         UpdateRowContent(node);
@@ -1948,6 +1955,11 @@ public partial class Sidebar : TemplatedControl
                 break;
             case Key.Enter:
             case Key.Space:
+                if (node.Header is { } heading && heading.IsInTrailing(e.Source))
+                {
+                    // A key on a heading's trailing content belongs to that content, not to the section's disclosure.
+                    return;
+                }
                 Activate(node, NavigationMethod.Directional);
                 e.Handled = true;
                 break;

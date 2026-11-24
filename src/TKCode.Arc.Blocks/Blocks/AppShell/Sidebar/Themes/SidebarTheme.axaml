@@ -335,7 +335,7 @@
                             </Panel>
                             <!-- Everything after the icon is one group: on the rail it fades as one layer per row. -->
                             <Grid Name="PART_TextGroup" Grid.Column="1" ColumnDefinitions="*,Auto,Auto,Auto">
-                                <arc:SidebarInlinePanel VerticalAlignment="Center">
+                                <arc:SidebarInlinePanel VerticalAlignment="Center" TrailingAtEnd="{TemplateBinding IsTrailingAtEnd}">
                                     <TextBlock Name="PART_Label"
                                                Text="{TemplateBinding Label}"
                                                TextTrimming="CharacterEllipsis"
@@ -606,19 +606,27 @@
                                 Background="{TemplateBinding Background}"
                                 CornerRadius="{arc:SidebarTokenResource RowRadius}" />
                         <arc:SidebarOpenWidthHost Margin="{arc:SidebarTokenResource RowInlinePadding}">
-                            <arc:ArcShrinkRow Spacing="4">
-                                <TextBlock Name="PART_Title"
-                                           Text="{TemplateBinding Title}"
-                                           TextTrimming="CharacterEllipsis"
-                                           VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
-                                <arc:ArcGlyph Name="PART_Chevron"
-                                              Data="{x:Static arc:ArcIcons.ChevronDown}"
-                                              Size="{arc:SidebarTokenResource SectionChevronSize}"
-                                              StrokeThickness="{arc:SidebarTokenResource ChevronStroke}"
-                                              IsVisible="{TemplateBinding IsCollapsible}"
-                                              VerticalAlignment="Center"
-                                              RenderTransformOrigin="50%,50%" />
-                            </arc:ArcShrinkRow>
+                            <!-- The title and its chevron on the left; the trailing content (add, sort, ...) at the row's right end. -->
+                            <Grid ColumnDefinitions="*,Auto">
+                                <arc:ArcShrinkRow Spacing="4" HorizontalAlignment="Left">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               TextTrimming="CharacterEllipsis"
+                                               VerticalAlignment="Center" arc:ArcShrinkRow.IsShrinkable="True" />
+                                    <arc:ArcGlyph Name="PART_Chevron"
+                                                  Data="{x:Static arc:ArcIcons.ChevronDown}"
+                                                  Size="{arc:SidebarTokenResource SectionChevronSize}"
+                                                  StrokeThickness="{arc:SidebarTokenResource ChevronStroke}"
+                                                  IsVisible="{TemplateBinding IsCollapsible}"
+                                                  VerticalAlignment="Center"
+                                                  RenderTransformOrigin="50%,50%" />
+                                </arc:ArcShrinkRow>
+                                <ContentPresenter Name="PART_TrailingPresenter"
+                                                  Grid.Column="1"
+                                                  Content="{TemplateBinding TrailingContent}"
+                                                  Margin="{arc:SidebarTokenResource TrailingMargin}"
+                                                  VerticalAlignment="Center" />
+                            </Grid>
                         </arc:SidebarOpenWidthHost>
                         <Border Name="PART_FocusRing"
                                 IsVisible="False"
@@ -668,6 +676,13 @@
         <Style Selector="^:rail /template/ Panel#PART_TitleRow">
             <Setter Property="Opacity" Value="0" />
             <Setter Property="IsHitTestVisible" Value="False" />
+        </Style>
+        <!-- The trailing content fades with the title row; on the rail Tab skips it too. -->
+        <Style Selector="^:not(:has-trailing) /template/ ContentPresenter#PART_TrailingPresenter">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:rail /template/ ContentPresenter#PART_TrailingPresenter">
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None" />
         </Style>
         <Style Selector="^:rail:gap /template/ Border#PART_Separator">
             <Setter Property="Opacity" Value="1" />
