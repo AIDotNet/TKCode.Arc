@@ -50,6 +50,8 @@ public enum ContentSwapMode
 /// keeps its own size, placed by <see cref="HorizontalContentAlignment"/> / <see cref="VerticalContentAlignment"/>
 /// like the incoming one (Left / Top and Right / Bottom pin it to that edge, so left-aligned text never jumps; Center
 /// and Stretch center it on the slot). The first content never animates.
+/// <see cref="ContentTemplate"/> applies to data only: a control is shown as itself and keeps the DataContext it inherits
+/// (a presenter that has a template would set the control's DataContext to the control).
 /// </summary>
 public class ArcContentSwap : Control
 {
@@ -221,8 +223,9 @@ public class ArcContentSwap : Control
         }
         else if (change.Property == ContentTemplateProperty && _current is not null)
         {
-            // Only with content: a presenter builds a template it is given while its content is null (with null).
-            _current.Presenter.ContentTemplate = _current.Presenter.Content is null ? null : ContentTemplate;
+            // Only for data: a presenter builds a template it is given while its content is null (with null), and gives a
+            // control it shows through a template the control itself as DataContext.
+            _current.Presenter.ContentTemplate = TemplateFor(_current.Presenter.Content);
         }
         else if (change.Property == HorizontalContentAlignmentProperty || change.Property == VerticalContentAlignmentProperty)
         {
@@ -269,7 +272,7 @@ public class ArcContentSwap : Control
             var presenter = new ContentPresenter
             {
                 Content = content,
-                ContentTemplate = content is null ? null : ContentTemplate,
+                ContentTemplate = TemplateFor(content),
                 RenderTransform = translate,
                 HorizontalContentAlignment = HorizontalContentAlignment,
                 VerticalContentAlignment = VerticalContentAlignment
@@ -282,25 +285,35 @@ public class ArcContentSwap : Control
     }
 
     /// <summary>
-    /// Changes a layer's content without ever building the content template for null. A presenter builds the template it has
-    /// whenever its content changes, and one that is attached while the content is null is built with null: a user's template that
-    /// reads its data would throw. So the template is dropped before the content is cleared, and put back after content arrives.
+    /// The template a layer uses for <paramref name="content"/>: <see cref="ContentTemplate"/> for data, none for null or a
+    /// control. A presenter builds a template it has with null content too, and when it shows a control through a template it
+    /// sets its own DataContext to that control, so the control's bindings would resolve against itself, not the DataContext
+    /// it inherits (#190).
+    /// </summary>
+    private IDataTemplate? TemplateFor(object? content) => content is null or Control ? null : ContentTemplate;
+
+    /// <summary>
+    /// Changes a layer's content without ever building the content template for null or for a control. A presenter builds the
+    /// template it has whenever its content changes, and one that is attached while the content is null is built with null: a
+    /// user's template that reads its data would throw. So the template is dropped before null or a control arrives, and put
+    /// back after data arrives.
     /// </summary>
     private void SetContent(ContentPresenter presenter, object? content)
     {
-        if (content is null)
+        var template = TemplateFor(content);
+        if (template is null)
         {
             presenter.ContentTemplate = null;
-            presenter.Content = null;
+            presenter.Content = content;
         }
-        else if (ReferenceEquals(presenter.ContentTemplate, ContentTemplate))
+        else if (ReferenceEquals(presenter.ContentTemplate, template))
         {
             presenter.Content = content;
         }
         else
         {
             presenter.Content = content;
-            presenter.ContentTemplate = ContentTemplate;
+            presenter.ContentTemplate = template;
         }
     }
 

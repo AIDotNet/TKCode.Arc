@@ -9,17 +9,23 @@
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:TabItem">
-                <!-- The focus ring is built by the tab the first time it is keyboard focused and hosted over this frame. -->
+                <!-- The focus ring is built by the tab the first time it is keyboard focused and hosted over this frame.
+                     The close button (after the header) is added by the tab only once it is closable. -->
                 <Border Name="PART_Frame"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="{arc:TabItemTokenResource TriggerRadius}"
-                            Padding="{TemplateBinding Padding}"
-                            ClipToBounds="True">
+                        Background="{TemplateBinding Background}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        ClipToBounds="True">
+                    <arc:ArcShrinkRow Name="PART_Items"
+                                      HorizontalAlignment="Center"
+                                      VerticalAlignment="Center"
+                                      Spacing="{arc:TabItemTokenResource CloseGap}">
                         <ContentPresenter Name="PART_HeaderPresenter"
-                                          HorizontalAlignment="Center"
                                           VerticalAlignment="Center"
+                                          arc:ArcShrinkRow.IsShrinkable="True"
                                           Content="{TemplateBinding Header}"
                                           ContentTemplate="{TemplateBinding HeaderTemplate}" />
+                    </arc:ArcShrinkRow>
                 </Border>
             </ControlTemplate>
         </Setter>
@@ -27,6 +33,7 @@
         <Setter Property="MinWidth" Value="{arc:TabItemTokenResource TriggerMinWidth}" />
         <Setter Property="MinHeight" Value="{arc:ArcDesignTokenResource ControlSizeSM}" />
         <Setter Property="Padding" Value="{arc:TabItemTokenResource InlinePadding}" />
+        <Setter Property="CornerRadius" Value="{arc:TabItemTokenResource TriggerRadius}" />
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
@@ -44,6 +51,23 @@
         <Style Selector="^:selected">
             <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentStrong}" />
         </Style>
+        <Style Selector="^:closable">
+            <Setter Property="Padding" Value="{arc:TabItemTokenResource ClosableInlinePadding}" />
+        </Style>
+
+        <!-- Card variant (set by Tabs): cards with rounded top corners on the strip; the selected one is the strip's
+             gliding card, so only the others fill on hover. -->
+        <Style Selector="^:card">
+            <Setter Property="CornerRadius" Value="{arc:TabItemTokenResource CardRadius}" />
+            <Setter Property="Margin" Value="{arc:TabItemTokenResource CardMargin}" />
+        </Style>
+        <Style Selector="^:card:pointerover:not(:selected)">
+            <Setter Property="Background" Value="{arc:TabItemTokenResource CardHoverBackground}" />
+        </Style>
+        <Style Selector="^:card:selected">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:TabItemTokenResource DisabledOpacity}" />
             <Setter Property="Cursor" Value="No" />
@@ -53,6 +77,7 @@
             <Setter Property="Transitions">
                 <Transitions>
                     <arc:ArcBrushTransition Property="Foreground" />
+                    <arc:ArcBrushTransition Property="Background" />
                 </Transitions>
             </Setter>
         </Style>

@@ -7,7 +7,10 @@ using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Styling;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using static TKCode.Arc.Tests.Buttons.ButtonsTestSupport;
 
 namespace TKCode.Arc.Tests.Buttons;
@@ -69,6 +72,39 @@ public class FloatingButtonGroupTests
             Tooltip.GetTip(share).ShouldBeNull();
             AutomationProperties.GetName(undo).ShouldBe("Undo");
             AutomationProperties.GetHelpText(undo).ShouldBe("⌘Z");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Shortcut_Tip_Text_Keeps_The_Bubble_Foreground_Under_Host_Styles()
+    {
+        // Issue #190: the label had no foreground of its own and the shortcut bound its color below style priority, so a
+        // host's `FloatingButtonGroupItem TextBlock` style turned both dark on the dark bubble.
+        var group = Board(out var undo, out _, out _, out _);
+        group.Styles.Add(new Style(x => x.OfType<FloatingButtonGroupItem>().Descendant().OfType<TextBlock>())
+        {
+            Setters = { new Setter(TextBlock.ForegroundProperty, Brushes.Black) }
+        });
+        var window = TestHelpers.Show(group);
+        try
+        {
+            Tooltip.SetIsOpen(undo, true);
+            Dispatcher.UIThread.RunJobs();
+            var bubble = (Tooltip)Tooltip.GetPopup(undo)!.Surface!;
+            bubble.UpdateLayout();
+            var expected = ((ISolidColorBrush)bubble.Foreground!).Color;
+            expected.ShouldNotBe(Colors.Black);
+            var label = bubble.GetVisualDescendants().OfType<TextBlock>().Single(t => t.Text == "Undo");
+            var shortcut = bubble.GetVisualDescendants().OfType<TextBlock>().Single(t => t.Text == "⌘Z");
+            ((ISolidColorBrush)label.Foreground!).Color.ShouldBe(expected);
+            ((ISolidColorBrush)shortcut.Foreground!).Color.ShouldBe(expected);
+            shortcut.Opacity.ShouldBe(0.58);
+            Tooltip.SetIsOpen(undo, false);
+            Dispatcher.UIThread.RunJobs();
         }
         finally
         {

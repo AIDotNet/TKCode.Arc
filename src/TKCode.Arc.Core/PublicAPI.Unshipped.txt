@@ -1,1 +1,4 @@
 #nullable enable
+override TKCode.Arc.ArcGlyph.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.ArcGlyph.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.ArcGlyph.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void

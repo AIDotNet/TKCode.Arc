@@ -14,6 +14,7 @@ using Avalonia.Interactivity;
 using Avalonia.Media;
 using Avalonia.Media.Immutable;
 using Avalonia.VisualTree;
+using System.Windows.Input;
 using AvaloniaButton = Avalonia.Controls.Button;
 
 namespace TKCode.Arc;
@@ -28,6 +29,19 @@ public enum TabsActivationMode
     Manual
 }
 
+/// <summary>The look of a <see cref="Tabs"/> list.</summary>
+public enum TabsVariant
+{
+    /// <summary>Triggers in a muted rounded shell with a raised pill under the selected one (Arc default).</summary>
+    Pill,
+
+    /// <summary>
+    /// Browser-style cards on a full-width muted strip: the selected card glides along a baseline and opens into the panel
+    /// below. Suits closable tabs and an add button.
+    /// </summary>
+    Card
+}
+
 /// <summary>
 /// Arc tabs: switch between related views of the same object. A single selection pill glides between the
 /// triggers on a morph spring, the incoming panel slides 8px in from the side of travel while the outgoing one
@@ -39,6 +53,12 @@ public enum TabsActivationMode
 /// or generated from <see cref="ItemsControl.ItemsSource"/>: <see cref="ItemsControl.ItemTemplate"/> renders the
 /// trigger and <see cref="ContentTemplate"/> the panel.
 /// </para>
+/// <para>
+/// <see cref="Variant"/> switches to browser-style cards. Tabs can be closable (<see cref="TabItem.IsClosable"/> or
+/// <see cref="AreTabsClosable"/>): closing raises <see cref="TabCloseRequested"/> and the app removes the item; when the
+/// selected tab is removed the selection moves to the next tab, or to the previous one at the end.
+/// <see cref="IsAddButtonVisible"/> shows an add button after the last tab that raises <see cref="TabAddRequested"/>.
+/// </para>
 /// </summary>
 [TemplatePart(ListViewportPart, typeof(ScrollViewer))]
 [TemplatePart(ListPanelPart, typeof(Panel))]
@@ -46,8 +66,9 @@ public enum TabsActivationMode
 [TemplatePart(ScrollLeftPart, typeof(AvaloniaButton))]
 [TemplatePart(ScrollRightPart, typeof(AvaloniaButton))]
 [TemplatePart(ContentHostPart, typeof(Control))]
-[PseudoClasses(OverflowPseudoClass, ScrolledStartPseudoClass, ScrolledEndPseudoClass)]
-public class Tabs : SelectingItemsControl
+[TemplatePart(ListRowPart, typeof(DockPanel))]
+[PseudoClasses(OverflowPseudoClass, ScrolledStartPseudoClass, ScrolledEndPseudoClass, CardPseudoClass)]
+public partial class Tabs : SelectingItemsControl
 {
     public const string ListViewportPart = "PART_ListViewport";
     public const string ListPanelPart = "PART_ListPanel";
@@ -55,6 +76,15 @@ public class Tabs : SelectingItemsControl
     public const string ScrollLeftPart = "PART_ScrollLeft";
     public const string ScrollRightPart = "PART_ScrollRight";
     public const string ContentHostPart = "PART_ContentHost";
+
+    /// <summary>The row that holds the scrolling list and, at its end, the add button.</summary>
+    public const string ListRowPart = "PART_ListRow";
+
+    /// <summary>Name of the add button, built the first time <see cref="IsAddButtonVisible"/> is true.</summary>
+    public const string AddButtonPart = "PART_AddButton";
+
+    /// <summary>Set while <see cref="Variant"/> is <see cref="TabsVariant.Card"/>.</summary>
+    public const string CardPseudoClass = ":card";
 
     /// <summary>Set while the tab list is wider than its frame.</summary>
     public const string OverflowPseudoClass = ":overflow";
@@ -70,6 +100,9 @@ public class Tabs : SelectingItemsControl
 
     /// <summary>Room kept free for a scroll button when a tab is scrolled into view (Arc: 34px).</summary>
     internal const double RevealInset = 34;
+
+    /// <summary>How far the selected card runs past the list's bottom so its bottom stroke is clipped away.</summary>
+    internal const double CardIndicatorOverhang = 2;
 
     #region Properties
 
@@ -92,6 +125,49 @@ public class Tabs : SelectingItemsControl
     /// <summary>Accessible name of the right scroll button.</summary>
     public static readonly StyledProperty<string> ScrollRightLabelProperty =
         AvaloniaProperty.Register<Tabs, string>(nameof(ScrollRightLabel), "Scroll tabs right");
+
+    /// <summary>The look of the list: the Arc pill (default) or browser-style cards.</summary>
+    public static readonly StyledProperty<TabsVariant> VariantProperty =
+        AvaloniaProperty.Register<Tabs, TabsVariant>(nameof(Variant));
+
+    /// <summary>
+    /// Whether every tab is closable, as if each set <see cref="TabItem.IsClosable"/> (handy with
+    /// <see cref="ItemsControl.ItemsSource"/>). A tab's own <see cref="TabItem.IsClosable"/> still makes it closable when this is
+    /// false. Default false.
+    /// </summary>
+    public static readonly StyledProperty<bool> AreTabsClosableProperty =
+        AvaloniaProperty.Register<Tabs, bool>(nameof(AreTabsClosable));
+
+    /// <summary>Whether an add button follows the last tab (it stays in view when the list scrolls). Default false.</summary>
+    public static readonly StyledProperty<bool> IsAddButtonVisibleProperty =
+        AvaloniaProperty.Register<Tabs, bool>(nameof(IsAddButtonVisible));
+
+    /// <summary>Accessible name of the add button.</summary>
+    public static readonly StyledProperty<string> AddTabLabelProperty =
+        AvaloniaProperty.Register<Tabs, string>(nameof(AddTabLabel), "Add tab");
+
+    /// <summary>Accessible name of the close buttons.</summary>
+    public static readonly StyledProperty<string> CloseTabLabelProperty =
+        AvaloniaProperty.Register<Tabs, string>(nameof(CloseTabLabel), "Close tab");
+
+    /// <summary>Executed when the add button is pressed, after <see cref="TabAddRequested"/> unless a handler handled it.</summary>
+    public static readonly StyledProperty<ICommand?> AddTabCommandProperty =
+        AvaloniaProperty.Register<Tabs, ICommand?>(nameof(AddTabCommand));
+
+    /// <summary>
+    /// Executed with the tab's item (see <see cref="TabCloseRequestedEventArgs.Item"/>) when the user closes a tab, after
+    /// <see cref="TabCloseRequested"/> unless a handler handled it.
+    /// </summary>
+    public static readonly StyledProperty<ICommand?> CloseTabCommandProperty =
+        AvaloniaProperty.Register<Tabs, ICommand?>(nameof(CloseTabCommand));
+
+    /// <summary>Raised when the user closes a closable tab (close button, middle click, Delete); the app removes the item.</summary>
+    public static readonly RoutedEvent<TabCloseRequestedEventArgs> TabCloseRequestedEvent =
+        RoutedEvent.Register<Tabs, TabCloseRequestedEventArgs>(nameof(TabCloseRequested), RoutingStrategies.Bubble);
+
+    /// <summary>Raised when the user presses the add button; the app adds an item (and usually selects it).</summary>
+    public static readonly RoutedEvent<RoutedEventArgs> TabAddRequestedEvent =
+        RoutedEvent.Register<Tabs, RoutedEventArgs>(nameof(TabAddRequested), RoutingStrategies.Bubble);
 
     /// <summary>The panel content of the selected tab.</summary>
     public static readonly DirectProperty<Tabs, object?> SelectedContentProperty =
@@ -136,6 +212,69 @@ public class Tabs : SelectingItemsControl
         set => SetValue(ScrollRightLabelProperty, value);
     }
 
+    /// <inheritdoc cref="VariantProperty"/>
+    public TabsVariant Variant
+    {
+        get => GetValue(VariantProperty);
+        set => SetValue(VariantProperty, value);
+    }
+
+    /// <inheritdoc cref="AreTabsClosableProperty"/>
+    public bool AreTabsClosable
+    {
+        get => GetValue(AreTabsClosableProperty);
+        set => SetValue(AreTabsClosableProperty, value);
+    }
+
+    /// <inheritdoc cref="IsAddButtonVisibleProperty"/>
+    public bool IsAddButtonVisible
+    {
+        get => GetValue(IsAddButtonVisibleProperty);
+        set => SetValue(IsAddButtonVisibleProperty, value);
+    }
+
+    /// <inheritdoc cref="AddTabLabelProperty"/>
+    public string AddTabLabel
+    {
+        get => GetValue(AddTabLabelProperty);
+        set => SetValue(AddTabLabelProperty, value);
+    }
+
+    /// <inheritdoc cref="CloseTabLabelProperty"/>
+    public string CloseTabLabel
+    {
+        get => GetValue(CloseTabLabelProperty);
+        set => SetValue(CloseTabLabelProperty, value);
+    }
+
+    /// <inheritdoc cref="AddTabCommandProperty"/>
+    public ICommand? AddTabCommand
+    {
+        get => GetValue(AddTabCommandProperty);
+        set => SetValue(AddTabCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="CloseTabCommandProperty"/>
+    public ICommand? CloseTabCommand
+    {
+        get => GetValue(CloseTabCommandProperty);
+        set => SetValue(CloseTabCommandProperty, value);
+    }
+
+    /// <inheritdoc cref="TabCloseRequestedEvent"/>
+    public event EventHandler<TabCloseRequestedEventArgs>? TabCloseRequested
+    {
+        add => AddHandler(TabCloseRequestedEvent, value);
+        remove => RemoveHandler(TabCloseRequestedEvent, value);
+    }
+
+    /// <inheritdoc cref="TabAddRequestedEvent"/>
+    public event EventHandler<RoutedEventArgs>? TabAddRequested
+    {
+        add => AddHandler(TabAddRequestedEvent, value);
+        remove => RemoveHandler(TabAddRequestedEvent, value);
+    }
+
     private object? _selectedContent;
 
     /// <inheritdoc cref="SelectedContentProperty"/>
@@ -163,6 +302,7 @@ public class Tabs : SelectingItemsControl
     private AvaloniaButton? _scrollRight;
     private TabsPanelHost? _contentHost;
     private MotionValue<double>? _scroll;
+    private DockPanel? _listRow;
     private (bool Start, bool End, double Fade) _edgeMaskKey;
     private Rect _pillTarget;
     private bool _overflow;
@@ -170,6 +310,7 @@ public class Tabs : SelectingItemsControl
     private bool _scrolledEnd;
     private int _focusIndex = -1;
     private bool _revealPending;
+    private bool _revealPendingInstant;
 
     static Tabs()
     {
@@ -178,6 +319,12 @@ public class Tabs : SelectingItemsControl
         // The list reveals the selected tab itself (RevealIndex, on the smooth spring). The stock scroll-into-view of the
         // selected item would also jump the list and, because the request bubbles, scroll any page the tabs sit in.
         AutoScrollToSelectedItemProperty.OverrideDefaultValue<Tabs>(false);
+    }
+
+    public Tabs()
+    {
+        // Items is the same view for inline items and ItemsSource; it reports a removal before the selection model does.
+        Items.CollectionChanged += OnItemsCollectionChanged;
     }
 
     /// <summary>Selects the tab at <paramref name="index"/> when it exists and is enabled.</summary>
@@ -201,9 +348,10 @@ public class Tabs : SelectingItemsControl
     protected override void PrepareContainerForItemOverride(Control container, object? item, int index)
     {
         base.PrepareContainerForItemOverride(container, item, index);
-        if (container is TabItem tab && !ReferenceEquals(container, item))
+        if (container is TabItem tab)
         {
-            if (ContentTemplate is { } template && !tab.IsSet(ContentControl.ContentTemplateProperty))
+            ApplyOwnerState(tab);
+            if (!ReferenceEquals(container, item) && ContentTemplate is { } template && !tab.IsSet(ContentControl.ContentTemplateProperty))
             {
                 tab.ContentTemplate = template;
             }
@@ -250,6 +398,7 @@ public class Tabs : SelectingItemsControl
         {
             _listPanel.Arranged = null;
         }
+        DetachAddButton();
 
         base.OnApplyTemplate(e);
 
@@ -260,7 +409,9 @@ public class Tabs : SelectingItemsControl
         _scrollLeft = null;
         _scrollRight = null;
         _contentHost = e.NameScope.Find<TabsPanelHost>(ContentHostPart);
+        _listRow = e.NameScope.Find<DockPanel>(ListRowPart);
         _pillTarget = default;
+        UpdateAddButton();
 
         if (_viewport is not null)
         {
@@ -273,6 +424,7 @@ public class Tabs : SelectingItemsControl
             _listPanel.Arranged = OnListArranged;
         }
         _revealPending = true;
+        _revealPendingInstant = true;
         UpdateContent(0, animate: false);
     }
 
@@ -287,16 +439,42 @@ public class Tabs : SelectingItemsControl
         {
             var from = change.GetOldValue<int>();
             var to = change.GetNewValue<int>();
+            if (to < 0 && _removedSelection >= 0)
+            {
+                // The selected tab is being removed; the next selection follows at once (Tabs.Closing.cs), so the old
+                // panel and pill stay until then instead of emptying for a moment.
+                return;
+            }
             var direction = from >= 0 && to >= 0 && from != to ? Math.Sign(to - from) : 0;
             _focusIndex = to;
             UpdateContent(direction, animate: true);
             UpdateIndicator(animate: true);
             UpdateTabStops();
-            RevealIndex(to);
+            // A tab that is not laid out yet (just added, or before the first layout) is revealed once it is.
+            _revealPending = !RevealIndex(to);
+            _revealPendingInstant = !IsLoaded;
         }
         else if (change.Property == ContentTemplateProperty)
         {
             UpdateContent(0, animate: false);
+        }
+        else if (change.Property == VariantProperty)
+        {
+            PseudoClasses.Set(CardPseudoClass, change.GetNewValue<TabsVariant>() == TabsVariant.Card);
+            UpdateOwnerStates();
+            UpdateScrollButtonVariant(_scrollLeft);
+            UpdateScrollButtonVariant(_scrollRight);
+            UpdateAddButton();
+            // The card's rect differs from the pill's; the list arranges again with the new paddings and then snaps it.
+            _pillTarget = default;
+        }
+        else if (change.Property == AreTabsClosableProperty || change.Property == CloseTabLabelProperty)
+        {
+            UpdateOwnerStates();
+        }
+        else if (change.Property == IsAddButtonVisibleProperty)
+        {
+            UpdateAddButton();
         }
     }
 
@@ -362,7 +540,8 @@ public class Tabs : SelectingItemsControl
         _contentHost?.Show(content, template, direction, animate && IsLoaded);
     }
 
-    private bool IsTabEnabled(int index) => ContainerFromIndex(index) is not { } container || container.IsEffectivelyEnabled;
+    // A tab can take focus and selection when it is enabled and visible (hidden items are skipped, AGENTS.md item rules).
+    private bool IsTabEnabled(int index) => ContainerFromIndex(index) is not { } container || (container.IsEffectivelyEnabled && container.IsVisible);
 
     private void UpdateTabStops()
     {
@@ -413,6 +592,12 @@ public class Tabs : SelectingItemsControl
         {
             e.Handled = true;
             SelectedIndex = current;
+            return;
+        }
+        if (e.Key == Key.Delete && e.KeyModifiers == KeyModifiers.None && current >= 0 && tab.IsEffectivelyClosable)
+        {
+            e.Handled = true;
+            RequestClose(tab, NavigationMethod.Tab);
             return;
         }
         base.OnKeyDown(e);
@@ -485,12 +670,8 @@ public class Tabs : SelectingItemsControl
         // Passive layout changes (fonts, resizes, items) snap the pill; an equal target leaves a glide in flight alone.
         UpdateIndicator(animate: false, onlyWhenMoved: true);
         UpdateOverflow();
-        if (_revealPending && SelectedIndex >= 0 && ContainerFromIndex(SelectedIndex) is { Bounds.Width: > 0 })
-        {
-            // The selected tab starts in view (Arc reveals it on mount), without motion.
-            _revealPending = false;
-            RevealIndex(SelectedIndex, instant: true);
-        }
+        // The selected tab starts in view (Arc reveals it on mount), without motion.
+        RevealPending();
     }
 
     private void UpdateIndicator(bool animate, bool onlyWhenMoved = false)
@@ -512,6 +693,12 @@ public class Tabs : SelectingItemsControl
             return;
         }
         var target = new Rect(origin.Value, container.Bounds.Size).Deflate(0.5);
+        if (Variant == TabsVariant.Card)
+        {
+            // The card runs past the bottom of the list, over the strip's baseline; the viewport clips its bottom edge, so it
+            // reads as open into the panel below.
+            target = new Rect(target.X, target.Y, target.Width, target.Height + container.Margin.Bottom + CardIndicatorOverhang);
+        }
         if (onlyWhenMoved && _pill.HasTarget && Near(target, _pillTarget))
         {
             return;
@@ -527,7 +714,20 @@ public class Tabs : SelectingItemsControl
 
     #region Overflow scrolling
 
-    private void OnViewportScrollChanged(object? sender, ScrollChangedEventArgs e) => UpdateOverflow();
+    private void OnViewportScrollChanged(object? sender, ScrollChangedEventArgs e)
+    {
+        UpdateOverflow();
+        // The list's extent catches up after the list arranges; a reveal that waited for it runs now.
+        RevealPending();
+    }
+
+    private void RevealPending()
+    {
+        if (_revealPending && SelectedIndex >= 0 && RevealIndex(SelectedIndex, _revealPendingInstant))
+        {
+            _revealPending = false;
+        }
+    }
 
     private void OnViewportSizeChanged(object? sender, SizeChangedEventArgs e) => UpdateOverflow();
 
@@ -606,6 +806,8 @@ public class Tabs : SelectingItemsControl
         _scrollRight = CreateScrollButton(ScrollRightPart, ArcIcons.ChevronRight, HorizontalAlignment.Right, TabsTokenKind.ScrollEndRadius, ScrollRightLabelProperty);
         _scrollLeft.Click += OnScrollLeftClick;
         _scrollRight.Click += OnScrollRightClick;
+        UpdateScrollButtonVariant(_scrollLeft);
+        UpdateScrollButtonVariant(_scrollRight);
         host.Children.Add(_scrollLeft);
         host.Children.Add(_scrollRight);
         return true;
@@ -664,23 +866,32 @@ public class Tabs : SelectingItemsControl
         ScrollTo(from + direction * _viewport.Viewport.Width * 0.75);
     }
 
-    private void RevealIndex(int index, bool instant = false)
+    /// <summary>
+    /// Scrolls the list so the tab at <paramref name="index"/> is in view (clear of the scroll buttons). False when that
+    /// cannot be worked out yet: the tab is not laid out, or the viewport's extent does not cover it yet.
+    /// </summary>
+    private bool RevealIndex(int index, bool instant = false)
     {
         if (_viewport is null || index < 0 || ContainerFromIndex(index) is not { } container || container.Bounds.Width <= 0)
         {
-            return;
+            return false;
         }
         var origin = container.TranslatePoint(default, _viewport);
         if (origin is null)
         {
-            return;
+            return false;
         }
-        var max = Math.Max(0, _viewport.Extent.Width - _viewport.Viewport.Width);
         var offset = _viewport.Offset.X;
-        var left = offset > 1 ? RevealInset : 0;
-        var right = _viewport.Viewport.Width - (offset < max - 1 ? RevealInset : 0);
         var itemLeft = origin.Value.X;
         var itemRight = itemLeft + container.Bounds.Width;
+        if (offset + itemRight > _viewport.Extent.Width + 0.5)
+        {
+            // The scroll viewer updates its extent after the list arranges; until then a reveal would clamp to a stale end.
+            return false;
+        }
+        var max = Math.Max(0, _viewport.Extent.Width - _viewport.Viewport.Width);
+        var left = offset > 1 ? RevealInset : 0;
+        var right = _viewport.Viewport.Width - (offset < max - 1 ? RevealInset : 0);
         var delta = itemLeft < left ? itemLeft - left : itemRight > right ? itemRight - right : 0;
         if (Math.Abs(delta) > 0.5)
         {
@@ -694,6 +905,7 @@ public class Tabs : SelectingItemsControl
                 ScrollTo(offset + delta);
             }
         }
+        return true;
     }
 
     private void ScrollTo(double x)

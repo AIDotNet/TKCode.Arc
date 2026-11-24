@@ -15,31 +15,29 @@
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:Tabs">
                 <StackPanel Orientation="Vertical">
-                    <Border Name="PART_ListShell"
-                            HorizontalAlignment="Left"
-                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                            BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
-                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
-                            ClipToBounds="True">
-                        <!-- The scroll buttons (PART_ScrollLeft, PART_ScrollRight) are built in code the first time the list
-                             overflows; most tab lists never do. -->
+                    <!-- Shell, list padding and selection pill take their look from the styles below, so the card variant
+                         can restyle them. -->
+                    <Border Name="PART_ListShell" ClipToBounds="True">
                         <Panel>
-                            <ScrollViewer Name="PART_ListViewport"
-                                          HorizontalScrollBarVisibility="Hidden"
-                                          VerticalScrollBarVisibility="Disabled"
-                                          BringIntoViewOnFocusChange="False">
-                                <arc:TabsListPanel Name="PART_ListPanel" Margin="{arc:TabsTokenResource ListPadding}">
-                                    <arc:GlidingIndicator Name="PART_SelectionPill"
-                                                          Fill="{arc:ArcDesignTokenResource Surface}"
-                                                          Stroke="{arc:ArcDesignTokenResource Border}"
-                                                          StrokeThickness="1"
-                                                          CornerRadius="{arc:TabsTokenResource PillRadius}"
-                                                          BoxShadow="{arc:ArcDesignTokenResource ShadowResting}"
-                                                          Spring="Morph" />
-                                    <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
-                                </arc:TabsListPanel>
-                            </ScrollViewer>
+                            <!-- Card variant: the line under the strip, broken by the selected card. -->
+                            <Border Name="PART_Baseline" VerticalAlignment="Bottom" IsVisible="False" />
+                            <!-- The add button (PART_AddButton) is docked at the end of this row in code once it is shown; the
+                                 row stays at its content width, so the button follows the last tab. -->
+                            <DockPanel Name="PART_ListRow" HorizontalAlignment="Left">
+                                <!-- The scroll buttons (PART_ScrollLeft, PART_ScrollRight) are built in code the first time the
+                                     list overflows; most tab lists never do. -->
+                                <Panel>
+                                    <ScrollViewer Name="PART_ListViewport"
+                                                  HorizontalScrollBarVisibility="Hidden"
+                                                  VerticalScrollBarVisibility="Disabled"
+                                                  BringIntoViewOnFocusChange="False">
+                                        <arc:TabsListPanel Name="PART_ListPanel">
+                                            <arc:GlidingIndicator Name="PART_SelectionPill" StrokeThickness="1" Spring="Morph" />
+                                            <ItemsPresenter Name="PART_ItemsPresenter" ItemsPanel="{TemplateBinding ItemsPanel}" />
+                                        </arc:TabsListPanel>
+                                    </ScrollViewer>
+                                </Panel>
+                            </DockPanel>
                         </Panel>
                     </Border>
                     <arc:TabsPanelHost Name="PART_ContentHost"
@@ -57,5 +55,42 @@
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
 
+        <!-- Pill variant (default): a muted rounded shell around the triggers and a raised pill under the selected one. -->
+        <Style Selector="^ /template/ Border#PART_ListShell">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+        <Style Selector="^ /template/ arc|TabsListPanel#PART_ListPanel">
+            <Setter Property="Margin" Value="{arc:TabsTokenResource ListPadding}" />
+        </Style>
+        <Style Selector="^ /template/ arc|GlidingIndicator#PART_SelectionPill">
+            <Setter Property="Fill" Value="{arc:ArcDesignTokenResource Surface}" />
+            <Setter Property="Stroke" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="CornerRadius" Value="{arc:TabsTokenResource PillRadius}" />
+            <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowResting}" />
+        </Style>
+
+        <!-- Card variant: a full-width muted strip on a baseline; the selected card glides along it, open at the bottom so it
+             runs into the panel below. -->
+        <Style Selector="^:card /template/ Border#PART_ListShell">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="{arc:TabsTokenResource CardShellRadius}" />
+        </Style>
+        <Style Selector="^:card /template/ Border#PART_Baseline">
+            <Setter Property="IsVisible" Value="True" />
+            <Setter Property="Height" Value="{arc:TabsTokenResource CardBaselineThickness}" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+        <Style Selector="^:card /template/ arc|TabsListPanel#PART_ListPanel">
+            <Setter Property="Margin" Value="{arc:TabsTokenResource CardListPadding}" />
+        </Style>
+        <Style Selector="^:card /template/ arc|GlidingIndicator#PART_SelectionPill">
+            <Setter Property="CornerRadius" Value="{arc:TabsTokenResource CardIndicatorRadius}" />
+            <Setter Property="BoxShadow" Value="none" />
+        </Style>
     </ControlTheme>
 </ResourceDictionary>

@@ -44,6 +44,8 @@ public sealed class DatePickerSelectedDateChangedEventArgs : RoutedEventArgs
 /// glides in the calendar and the footer confirms it before the popup returns to the field. Escape closes and keeps
 /// focus in the field; <see cref="MinDate"/>, <see cref="MaxDate"/> and <see cref="DisabledDates"/> reach the
 /// calendar and also reject typed dates. Label, description, error and size come from the field foundation.
+/// The calendar icon before the text is the theme's default <see cref="FieldTextBox.Prefix"/> (one per picker): set
+/// <c>Prefix</c> to other content to replace it, or to <c>null</c> to hide it and close its gap.
 /// </summary>
 [TemplatePart(PopupPart, typeof(ArcPopup))]
 [TemplatePart(DropDownButtonPart, typeof(AvaloniaButton))]

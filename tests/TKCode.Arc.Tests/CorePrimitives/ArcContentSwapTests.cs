@@ -3,6 +3,7 @@ using TKCode.Arc.Primitives;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.Presenters;
+using Avalonia.Controls.Templates;
 using Avalonia.Headless.XUnit;
 using Avalonia.Layout;
 using Avalonia.Media;
@@ -329,6 +330,64 @@ public class ArcContentSwapTests
 
             var shown = swap.GetVisualChildren().OfType<ContentPresenter>().Single(p => Equals(p.Content, "After"));
             shown.Opacity.ShouldBe(1, 0.001);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Control_Content_Keeps_The_Inherited_DataContext_With_A_ContentTemplate()
+    {
+        // Issue #190: a presenter that has a template sets its child's DataContext to the content, so a control shown
+        // through a template that passes controls on (the tooltip's text template) lost the DataContext it inherits.
+        var model = new object();
+        var built = 0;
+        var template = new FuncDataTemplate<object>((data, _) =>
+        {
+            built++;
+            return data as Control ?? new TextBlock { Text = data?.ToString() };
+        });
+        var child = new TextBlock { Text = "child" };
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.None, ContentTemplate = template, Content = child };
+        var window = TestHelpers.Show(new StackPanel { DataContext = model, Children = { swap } });
+        try
+        {
+            child.DataContext.ShouldBeSameAs(model);
+            child.GetVisualParent().ShouldBeOfType<ContentPresenter>().ContentTemplate.ShouldBeNull();
+            built.ShouldBe(0);
+
+            // Data still goes through the template, and a control after it gets the inherited DataContext back.
+            swap.Content = "text";
+            window.UpdateLayout();
+            built.ShouldBe(1);
+            swap.GetVisualDescendants().OfType<TextBlock>().ShouldContain(t => t.Text == "text");
+            swap.Content = child;
+            window.UpdateLayout();
+            child.DataContext.ShouldBeSameAs(model);
+            built.ShouldBe(1);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Control_Content_Keeps_The_DataContext_When_The_Template_Arrives_Later()
+    {
+        var model = new object();
+        var child = new TextBlock { Text = "child" };
+        var swap = new ArcContentSwap { Mode = ContentSwapMode.BlurSwap, Content = child };
+        var window = Show(swap);
+        try
+        {
+            ((StackPanel)swap.Parent!).DataContext = model;
+            swap.ContentTemplate = new FuncDataTemplate<object>((data, _) => data as Control ?? new TextBlock());
+            window.UpdateLayout();
+            child.DataContext.ShouldBeSameAs(model);
+            child.GetVisualParent().ShouldBeOfType<ContentPresenter>().ContentTemplate.ShouldBeNull();
         }
         finally
         {

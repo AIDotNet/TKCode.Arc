@@ -455,6 +455,9 @@ public static class MotionScheduler
                     _drivers.Remove(driver);
                 }
             }
+            // The snapshot must not keep finished drivers (and through them their owners) alive until the next frame,
+            // which may never come for this window.
+            _snapshot.Clear();
             if (_drivers.Count > 0)
             {
                 Request();

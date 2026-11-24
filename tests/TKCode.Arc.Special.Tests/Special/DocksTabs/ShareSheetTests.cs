@@ -745,6 +745,79 @@ public class ShareSheetTests
         }
     }
 
+    /// <summary>Where layout put <paramref name="face"/> in <paramref name="layer"/> (render transforms left out).</summary>
+    private static Point LaidOutAt(Visual face, Visual layer)
+    {
+        var at = default(Point);
+        for (Visual? v = face; v is not null && !ReferenceEquals(v, layer); v = v.GetVisualParent<Visual>())
+        {
+            at += v.Bounds.Position;
+        }
+        return at;
+    }
+
+    [AvaloniaTheory]
+    [InlineData(ShareSheetAlign.Center, 1000d, false)]
+    [InlineData(ShareSheetAlign.Center, 1001d, false)]
+    [InlineData(ShareSheetAlign.Start, 1001d, false)]
+    [InlineData(ShareSheetAlign.End, 1001d, false)]
+    [InlineData(ShareSheetAlign.Center, 1001d, true)]
+    public void Faces_hold_still_on_the_pixel_grid_while_the_shape_springs(ShareSheetAlign align, double windowWidth, bool reduced)
+    {
+        // #189: the shape's position and the face's offset inside it were rounded to whole pixels apart, so while the
+        // size sprang the face's text and icons hopped a pixel back and forth. Away from the window's edges the face
+        // stays where its alignment puts it; only the shape around it moves.
+        var clock = new Motion.ManualFrameClock();
+        using var installed = clock.Install();
+        var sheet = Build();
+        sheet.Align = align;
+        // Reduced motion still springs the shape (the faces only fade), so it has the same rounding to get right.
+        var window = ShowWide(sheet, reduced ? Motion.ArcMotionLevel.Reduced : Motion.ArcMotionLevel.Full);
+        // An odd width puts the button's center on a half pixel; the height keeps the panel clear of the window's edges.
+        window.Width = windowWidth;
+        window.Height = 1200;
+        try
+        {
+            Frames(clock, 2);
+            sheet.Open();
+            Dispatcher.UIThread.RunJobs();
+            var stage = sheet.FloatingStage!;
+            var layer = sheet.OverlayRoot!.GetVisualParent<Visual>()!;
+            var panel = sheet.PanelFace!;
+            var open = new List<Point>();
+            for (var i = 0; i < 70; i++)
+            {
+                Frames(clock, 1);
+                window.UpdateLayout();
+                open.Add(LaidOutAt(panel, layer));
+            }
+            stage.IsMoving.ShouldBeFalse();
+            open.Select(p => p.X).Distinct().Count().ShouldBe(1, $"panel x per frame: {string.Join(", ", open.Select(p => p.X))}");
+            open.Select(p => p.Y).Distinct().Count().ShouldBe(1, $"panel y per frame: {string.Join(", ", open.Select(p => p.Y))}");
+
+            sheet.Close();
+            Dispatcher.UIThread.RunJobs();
+            var button = stage.Current!;
+            var fold = new List<Point>();
+            for (var i = 0; i < 40 && sheet.IsFloating; i++)
+            {
+                window.UpdateLayout();
+                if (button.GetVisualParent() is not null)
+                {
+                    fold.Add(LaidOutAt(button, layer));
+                }
+                Frames(clock, 1);
+            }
+            fold.Count.ShouldBeGreaterThan(5);
+            fold.Select(p => p.X).Distinct().Count().ShouldBe(1, $"button x per frame: {string.Join(", ", fold.Select(p => p.X))}");
+            fold.Select(p => p.Y).Distinct().Count().ShouldBe(1, $"button y per frame: {string.Join(", ", fold.Select(p => p.Y))}");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
     [AvaloniaFact]
     public void Detaching_while_open_unmounts_the_shape()
     {

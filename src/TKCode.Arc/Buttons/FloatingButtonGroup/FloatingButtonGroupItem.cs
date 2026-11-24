@@ -200,13 +200,12 @@ public class FloatingButtonGroupItem : AvaloniaButton
         {
             return Label;
         }
-        var shortcut = new TextBlock { Text = Shortcut, Opacity = 0.58 };
-        ArcTokens.Bind(shortcut, TextBlock.ForegroundProperty, DesignTokens.ArcDesignTokenKind.Background);
+        // TooltipText keeps the bubble's foreground under host and app TextBlock styles (#190); the shortcut is the quieter tone.
         return new StackPanel
         {
             Orientation = Orientation.Horizontal,
             Spacing = 12,
-            Children = { new TextBlock { Text = Label }, shortcut }
+            Children = { new TooltipText { Text = Label }, new TooltipText { Text = Shortcut, Opacity = 0.58 } }
         };
     }
 

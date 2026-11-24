@@ -10,7 +10,7 @@ using Avalonia.VisualTree;
 namespace TKCode.Arc;
 
 /// <summary>
-/// The TimePicker's options, drawn in one control: one row per minute step (up to 1440), of which only the rows in
+/// The TimePicker's options (or one column of them), drawn in one control: one row per minute step (up to 1440), of which only the rows in
 /// the scroll viewport are drawn, with their text shaped once and cached. The active row's fill changes on an 80ms
 /// tween (Arc moves the highlight often from the keyboard, so it is almost instant) and the chosen time carries a
 /// 6px dot, so only one row is ever highlighted. Pointer movement makes a row active; a click chooses it.
@@ -36,6 +36,10 @@ internal sealed class TimePickerList : Control
     public static readonly StyledProperty<double> DotDiameterProperty =
         AvaloniaProperty.Register<TimePickerList, double>(nameof(DotDiameter), 6);
 
+    /// <summary>Centres each row's text (the column layout) instead of starting it at <see cref="RowInset"/>.</summary>
+    public static readonly StyledProperty<bool> CentersTextProperty =
+        AvaloniaProperty.Register<TimePickerList, bool>(nameof(CentersText));
+
     public FontFamily FontFamily { get => GetValue(FontFamilyProperty); set => SetValue(FontFamilyProperty, value); }
     public double FontSize { get => GetValue(FontSizeProperty); set => SetValue(FontSizeProperty, value); }
     public IBrush? Foreground { get => GetValue(ForegroundProperty); set => SetValue(ForegroundProperty, value); }
@@ -44,6 +48,7 @@ internal sealed class TimePickerList : Control
     public double RowRadius { get => GetValue(RowRadiusProperty); set => SetValue(RowRadiusProperty, value); }
     public double RowInset { get => GetValue(RowInsetProperty); set => SetValue(RowInsetProperty, value); }
     public double DotDiameter { get => GetValue(DotDiameterProperty); set => SetValue(DotDiameterProperty, value); }
+    public bool CentersText { get => GetValue(CentersTextProperty); set => SetValue(CentersTextProperty, value); }
 
     // TextLayout: the rows are drawn on every scroll frame and highlight fade, and a cached FormattedText re-shapes on
     // each DrawText.
@@ -58,7 +63,7 @@ internal sealed class TimePickerList : Control
     static TimePickerList()
     {
         AffectsMeasure<TimePickerList>(RowHeightProperty);
-        AffectsRender<TimePickerList>(HighlightBrushProperty, RowRadiusProperty, RowInsetProperty, DotDiameterProperty);
+        AffectsRender<TimePickerList>(HighlightBrushProperty, RowRadiusProperty, RowInsetProperty, DotDiameterProperty, CentersTextProperty);
         ClipToBoundsProperty.OverrideDefaultValue<TimePickerList>(false);
     }
 
@@ -162,6 +167,14 @@ internal sealed class TimePickerList : Control
         {
             ClearTexts();
             InvalidateVisual();
+            if (CentersText && change.Property != ForegroundProperty)
+            {
+                InvalidateMeasure();
+            }
+        }
+        else if (change.Property == CentersTextProperty || change.Property == RowInsetProperty || change.Property == DotDiameterProperty)
+        {
+            InvalidateMeasure();
         }
     }
 
@@ -176,8 +189,26 @@ internal sealed class TimePickerList : Control
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        var width = double.IsInfinity(availableSize.Width) ? 0 : availableSize.Width;
+        var width = double.IsInfinity(availableSize.Width) ? NaturalWidth() : availableSize.Width;
         return new Size(width, _count * RowHeight);
+    }
+
+    /// <summary>
+    /// Width the rows need when nothing constrains it: a centred column fits its widest value with the chosen dot clear
+    /// of it on both sides; the list takes the width it is given.
+    /// </summary>
+    private double NaturalWidth()
+    {
+        if (!CentersText || _count == 0)
+        {
+            return 0;
+        }
+        var widest = 0.0;
+        for (var i = 0; i < _count; i++)
+        {
+            widest = Math.Max(widest, TextAt(i).WidthIncludingTrailingWhitespace);
+        }
+        return Math.Ceiling(widest + 2 * (RowInset + DotDiameter * 2));
     }
 
     protected override void OnPointerMoved(PointerEventArgs e)
@@ -262,7 +293,8 @@ internal sealed class TimePickerList : Control
         {
             var text = TextAt(i);
             var y = i * RowHeight + (RowHeight - text.Height) / 2;
-            text.Draw(context, new Point(RowInset, y));
+            var x = CentersText ? Math.Round((Bounds.Width - text.WidthIncludingTrailingWhitespace) / 2) : RowInset;
+            text.Draw(context, new Point(x, y));
         }
         if (SelectedIndex >= first && SelectedIndex <= last && Foreground is { } dot)
         {

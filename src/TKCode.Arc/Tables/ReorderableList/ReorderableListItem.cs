@@ -19,7 +19,8 @@ namespace TKCode.Arc;
 /// <summary>
 /// Row container of a <see cref="ReorderableList"/>: the grip handle, the item content and the rolling position
 /// number. Drag motion is a render transform (vertical offset and the 1.02 lift scale) driven by springs, so a
-/// drag never relayouts the list.
+/// drag never relayouts the list. While a row is dragged it is drawn by a <see cref="ReorderableListDragPreview"/> in the
+/// window's overlay layer (so the list's scroll viewport does not clip it) and is itself transparent.
 /// </summary>
 [TemplatePart(HandlePart, typeof(ReorderableListHandle))]
 [PseudoClasses(LiftedPseudoClass, DraggingPseudoClass)]
@@ -60,6 +61,9 @@ internal sealed class ReorderableListItem : ContentControl
 
     public ReorderableListHandle? Handle => _handle;
 
+    /// <summary>The overlay preview drawing this row while it is dragged (null otherwise).</summary>
+    internal ReorderableListDragPreview? Preview { get; set; }
+
     /// <summary>Current vertical drag offset (render transform).</summary>
     public double Offset => _offset?.Value ?? 0;
 
@@ -77,6 +81,7 @@ internal sealed class ReorderableListItem : ContentControl
             PositionDirection = _position == 0 || position > _position ? 1 : -1;
             _position = position;
             PositionText = position.ToString("00", CultureInfo.InvariantCulture);
+            Preview?.Touch();
         }
         _handle?.Describe(_list.TitleOf(Content), position, count);
     }
@@ -160,6 +165,7 @@ internal sealed class ReorderableListItem : ContentControl
             _lift.Transitions = null;
         }
         _lift.Opacity = lifted ? 1 : 0;
+        Preview?.Touch();
     }
 
     public void SetDragging(bool dragging)
@@ -195,11 +201,17 @@ internal sealed class ReorderableListItem : ContentControl
     {
         var scale = _scale?.Value ?? 1;
         _transform.Matrix = Matrix.CreateScale(scale, scale) * Matrix.CreateTranslation(0, _offset?.Value ?? 0);
+        if (Preview is { } preview)
+        {
+            preview.Sync();
+            preview.Touch();
+        }
     }
 
     /// <summary>Snaps transforms (recycled or detached containers).</summary>
     public void ResetMotion()
     {
+        Preview?.Close();
         _offset?.Jump(0);
         _scale?.Jump(1);
         _settle = null;

@@ -21,6 +21,15 @@ internal sealed class TimePickerToken : AbstractControlDesignToken
     /// <summary>Line height of the value copy (14px × 1.4).</summary>
     public double ValueLineHeight { get; set; }
 
+    /// <summary>Column layout (seconds or <c>DropDownLayout="Columns"</c>): narrowest a column gets (the drop-down grows past a narrow trigger).</summary>
+    public double ColumnMinWidth { get; set; }
+
+    /// <summary>Gap between two columns.</summary>
+    public double ColumnGap { get; set; }
+
+    /// <summary>Inset of the chosen dot from a column's edge (the value is centred).</summary>
+    public double ColumnOptionInset { get; set; }
+
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
@@ -32,5 +41,8 @@ internal sealed class TimePickerToken : AbstractControlDesignToken
         OptionRadius = 21;
         DotDiameter = 6;
         ValueLineHeight = 14 * 1.4;
+        ColumnMinWidth = 56;
+        ColumnGap = 4;
+        ColumnOptionInset = 8;
     }
 }

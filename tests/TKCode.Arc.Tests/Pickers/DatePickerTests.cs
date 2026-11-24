@@ -1,6 +1,8 @@
+using Avalonia;
 using System.Globalization;
 using Avalonia.Automation;
 using Avalonia.Controls;
+using Avalonia.Controls.Presenters;
 using Avalonia.Headless;
 using Avalonia.Headless.XUnit;
 using Avalonia.Input;
@@ -288,5 +290,38 @@ public class DatePickerTests
         PickerDateFormat.FormatParts(date, PickerDateFormat.MediumPattern(EnUs), EnUs, parts);
         parts.Select(p => p.Text).ShouldBe(["Oct", " ", "20", ", ", "2026"]);
         parts.Select(p => p.Rolls).ShouldBe([true, false, true, false, true]);
+    }
+
+    // ---------------------------------------------------------------- #195: prefix
+
+    [AvaloniaFact]
+    public void Prefix_Defaults_To_A_Calendar_Per_Instance_And_Can_Be_Hidden_Or_Replaced()
+    {
+        var first = new DatePicker { Culture = EnUs };
+        var second = new DatePicker { Culture = EnUs };
+        var hidden = new DatePicker { Culture = EnUs, Prefix = null };
+        var custom = new DatePicker { Culture = EnUs, Prefix = "Due" };
+        var window = Show(new StackPanel { Children = { first, second, hidden, custom } });
+        try
+        {
+            var a = first.Prefix.ShouldBeOfType<ArcGlyph>();
+            var b = second.Prefix.ShouldBeOfType<ArcGlyph>();
+            a.ShouldNotBeSameAs(b);
+            a.Data.ShouldBeSameAs(ArcIcons.CalendarDays);
+            a.IsEffectivelyVisible.ShouldBeTrue();
+
+            var frame = TestHelpers.Descendant<FieldFrame>(hidden, FieldTextBox.FramePart);
+            frame.Prefix.ShouldBeNull();
+            TestHelpers.Descendant<ContentPresenter>(frame, FieldFrame.PrefixPart).IsVisible.ShouldBeFalse();
+            var withIcon = TestHelpers.Descendant<ScrollViewer>(first, "PART_ScrollViewer").TranslatePoint(default, first)!.Value.X;
+            var without = TestHelpers.Descendant<ScrollViewer>(hidden, "PART_ScrollViewer").TranslatePoint(default, hidden)!.Value.X;
+            (withIcon - without).ShouldBeGreaterThan(16);
+
+            TestHelpers.Descendant<FieldFrame>(custom, FieldTextBox.FramePart).Prefix.ShouldBe("Due");
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 }

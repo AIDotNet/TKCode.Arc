@@ -1,1 +1,10 @@
 #nullable enable
+TKCode.Arc.GlassBackdropMode
+TKCode.Arc.GlassBackdropMode.Brush = 0 -> TKCode.Arc.GlassBackdropMode
+TKCode.Arc.GlassBackdropMode.Native = 1 -> TKCode.Arc.GlassBackdropMode
+static TKCode.Arc.GlassBackdrop.GetCache(Avalonia.Visual! element) -> Avalonia.Media.BackdropEffectCache?
+static TKCode.Arc.GlassBackdrop.GetMode(Avalonia.Visual! element) -> TKCode.Arc.GlassBackdropMode
+static TKCode.Arc.GlassBackdrop.SetCache(Avalonia.Visual! element, Avalonia.Media.BackdropEffectCache? value) -> void
+static TKCode.Arc.GlassBackdrop.SetMode(Avalonia.Visual! element, TKCode.Arc.GlassBackdropMode value) -> void
+static readonly TKCode.Arc.GlassBackdrop.CacheProperty -> Avalonia.AttachedProperty<Avalonia.Media.BackdropEffectCache?>!
+static readonly TKCode.Arc.GlassBackdrop.ModeProperty -> Avalonia.AttachedProperty<TKCode.Arc.GlassBackdropMode>!

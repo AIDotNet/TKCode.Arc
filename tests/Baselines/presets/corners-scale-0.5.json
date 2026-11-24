@@ -799,10 +799,18 @@
       "MoreRingRadius": "8"
     },
     "TabItem": {
+      "CardFocusRingRadius": "6.5,6.5,0,0",
+      "CardRadius": "5,5,0,0",
+      "CloseButtonRadius": "3",
       "FocusRingRadius": "9.5",
       "TriggerRadius": "7.5"
     },
     "Tabs": {
+      "AddButtonRadius": "7.5",
+      "AddFocusRingRadius": "5",
+      "CardAddButtonRadius": "4",
+      "CardIndicatorRadius": "5,5,0,0",
+      "CardShellRadius": "6,6,0,0",
       "ContentFocusRingRadius": "11",
       "PillRadius": "7.5",
       "ScrollEndRadius": "0,8.5,8.5,0",
@@ -1722,10 +1730,18 @@
       "MoreRingRadius": "8"
     },
     "TabItem": {
+      "CardFocusRingRadius": "6.5,6.5,0,0",
+      "CardRadius": "5,5,0,0",
+      "CloseButtonRadius": "3",
       "FocusRingRadius": "9.5",
       "TriggerRadius": "7.5"
     },
     "Tabs": {
+      "AddButtonRadius": "7.5",
+      "AddFocusRingRadius": "5",
+      "CardAddButtonRadius": "4",
+      "CardIndicatorRadius": "5,5,0,0",
+      "CardShellRadius": "6,6,0,0",
       "ContentFocusRingRadius": "11",
       "PillRadius": "7.5",
       "ScrollEndRadius": "0,8.5,8.5,0",

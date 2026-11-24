@@ -8,6 +8,7 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
+using Avalonia.Layout;
 using Avalonia.LogicalTree;
 using Avalonia.Media;
 using Avalonia.Threading;
@@ -719,6 +720,15 @@ public class ShareSheet : TemplatedControl
         if (bounds.Height > 2 * margin + size.Height)
         {
             y = Math.Clamp(y, margin, bounds.Height - margin - size.Height);
+        }
+        // The stage places its faces on the pixel grid from the unrounded corner; the corner itself goes on the grid
+        // here, rounded as the stage rounds it, so layout has nothing left to round (#189).
+        _floatStage.Origin = new Point(x, y);
+        if (_overlayRoot.UseLayoutRounding)
+        {
+            var scale = LayoutHelper.GetLayoutScale(_overlayRoot);
+            x = ShareSheetStage.ToPixel(x, scale);
+            y = ShareSheetStage.ToPixel(y, scale);
         }
         if (Canvas.GetLeft(_overlayRoot) != x)
         {
