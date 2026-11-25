@@ -172,7 +172,16 @@ public class CodeEditorGotoSymbolTests
     {
         var (editor, window) = Show(Code, e => e.LanguageFeatures.DefinitionProvider.Register("plaintext", new Definitions(FooDefinition)));
         editor.SetPosition(new TextPosition(3, 10));
-        window.KeyPressQwerty(PhysicalKey.F12, RawInputModifiers.Alt);
+        // Peek Definition: Alt+F12, or Ctrl+Shift+F10 on Linux (Monaco's keybinding)
+        if (OperatingSystem.IsLinux())
+        {
+            window.KeyPressQwerty(PhysicalKey.F10, RawInputModifiers.Control | RawInputModifiers.Shift);
+        }
+        else
+        {
+            window.KeyPressQwerty(PhysicalKey.F12, RawInputModifiers.Alt);
+        }
+
         Render(window);
 
         var controller = ReferencesController.Get(editor).ShouldNotBeNull();

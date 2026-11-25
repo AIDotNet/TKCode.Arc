@@ -230,7 +230,9 @@ public sealed partial class CodeEditor
         }
 
         var gutterWidth = view.GutterWidth;
-        var textWidth = Math.Max(0, size.Width - gutterWidth);
+        // zones span the text area (upstream: the layout's contentWidth), left of the minimap and the vertical scroll bar
+        var textRight = Math.Min(Math.Min(size.Width, view.TextAreaRight), size.Width - view.OverlayRightInset);
+        var textWidth = Math.Max(0, textRight - gutterWidth);
 
         // zones: the visible whitespaces
         var byWhitespace = new Dictionary<string, ViewZoneEntry>(StringComparer.Ordinal);

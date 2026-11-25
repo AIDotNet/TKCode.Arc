@@ -179,6 +179,25 @@ public class CodeEditorWidgetTests
     }
 
     [AvaloniaFact]
+    public void A_view_zone_stays_left_of_the_minimap_and_the_scroll_bar()
+    {
+        // upstream lays zones out over the content width; a zone over the minimap would put its right edge (a peek
+        // widget's close button) under the minimap or the scroll bar
+        var editor = new CodeEditor { Text = Lines(200), Width = 900, Height = 200, ShowMinimap = true };
+        var window = TestHelpers.Show(editor);
+        Render(window);
+        var view = TestHelpers.Descendant<CodeEditorView>(editor);
+        view.IsMinimapVisible.ShouldBeTrue();
+        var control = new Border();
+        editor.ChangeViewZones(accessor => accessor.AddZone(new CodeEditorViewZone { AfterLineNumber = 1, HeightInLines = 2, Control = control }));
+        Render(window);
+
+        control.Bounds.Width.ShouldBeGreaterThan(0);
+        control.Bounds.Right.ShouldBeLessThanOrEqualTo(view.TextAreaRight + 0.01);
+        control.Bounds.Right.ShouldBeLessThanOrEqualTo(view.Bounds.Width - view.OverlayRightInset + 0.01);
+    }
+
+    [AvaloniaFact]
     public void A_view_zone_makes_room_between_lines_and_hosts_its_control()
     {
         var (editor, view, window) = Show(Lines(10));
@@ -201,7 +220,7 @@ public class CodeEditorWidgetTests
         view.GetY(3).ShouldBe(y3 + (view.LineHeight * 2), 0.01);
         var bounds = editor.GetViewZoneBounds(zoneId).ShouldNotBeNull();
         bounds.Top.ShouldBe(y3, 0.01);
-        control.Bounds.ShouldBe(new Rect(view.GutterWidth, y3, view.Bounds.Width - view.GutterWidth, view.LineHeight * 2));
+        control.Bounds.ShouldBe(new Rect(view.GutterWidth, y3, Math.Min(view.TextAreaRight, view.Bounds.Width - view.OverlayRightInset) - view.GutterWidth, view.LineHeight * 2));
         margin.Bounds.ShouldBe(new Rect(0, y3, view.GutterWidth, view.LineHeight * 2));
 
         // the zone is not text: a hit there is the zone's

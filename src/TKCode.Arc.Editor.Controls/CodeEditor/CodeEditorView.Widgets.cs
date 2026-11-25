@@ -109,7 +109,7 @@ internal sealed partial class CodeEditorView
     }
 
     // the room the scroll bars take at the right and bottom edges when they show
-    private double OverlayRightInset => _verticalScrollBar is { IsVisible: true } bar ? bar.Bounds.Width : 0;
+    internal double OverlayRightInset => _verticalScrollBar is { IsVisible: true } bar ? bar.Bounds.Width : 0;
 
     private double OverlayBottomInset => _horizontalScrollBar is { IsVisible: true } bar ? bar.Bounds.Height : 0;
 }
