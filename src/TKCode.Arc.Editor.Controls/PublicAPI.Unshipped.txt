@@ -1,0 +1,271 @@
+#nullable enable
+TKCode.Arc.ArcCodeEditorBuilderExtensions
+TKCode.Arc.CodeEditor
+TKCode.Arc.CodeEditor.CodeEditor() -> void
+TKCode.Arc.CodeEditor.ColorDecorators.get -> bool
+TKCode.Arc.CodeEditor.ColorDecorators.set -> void
+TKCode.Arc.CodeEditor.Folding.get -> bool
+TKCode.Arc.CodeEditor.Folding.set -> void
+TKCode.Arc.CodeEditor.FormatOnPaste.get -> bool
+TKCode.Arc.CodeEditor.FormatOnPaste.set -> void
+TKCode.Arc.CodeEditor.FormatOnType.get -> bool
+TKCode.Arc.CodeEditor.FormatOnType.set -> void
+TKCode.Arc.CodeEditor.InsertSnippet(string! snippet) -> void
+TKCode.Arc.CodeEditor.InsertSpaces.get -> bool
+TKCode.Arc.CodeEditor.InsertSpaces.set -> void
+TKCode.Arc.CodeEditor.IsReadOnly.get -> bool
+TKCode.Arc.CodeEditor.IsReadOnly.set -> void
+TKCode.Arc.CodeEditor.LanguageId.get -> string!
+TKCode.Arc.CodeEditor.LanguageId.set -> void
+TKCode.Arc.CodeEditor.LinkOpening -> System.EventHandler<TKCode.Arc.CodeEditorLinkOpeningEventArgs!>?
+TKCode.Arc.CodeEditor.LinkedEditing.get -> bool
+TKCode.Arc.CodeEditor.LinkedEditing.set -> void
+TKCode.Arc.CodeEditor.ShowIndentGuides.get -> bool
+TKCode.Arc.CodeEditor.ShowIndentGuides.set -> void
+TKCode.Arc.CodeEditor.ShowLineNumbers.get -> bool
+TKCode.Arc.CodeEditor.ShowLineNumbers.set -> void
+TKCode.Arc.CodeEditor.ShowMinimap.get -> bool
+TKCode.Arc.CodeEditor.ShowMinimap.set -> void
+TKCode.Arc.CodeEditor.SmoothScrolling.get -> bool
+TKCode.Arc.CodeEditor.SmoothScrolling.set -> void
+TKCode.Arc.CodeEditor.StickyScroll.get -> bool
+TKCode.Arc.CodeEditor.StickyScroll.set -> void
+TKCode.Arc.CodeEditor.StickyScrollMaxLineCount.get -> int
+TKCode.Arc.CodeEditor.StickyScrollMaxLineCount.set -> void
+TKCode.Arc.CodeEditor.TabFocusMode.get -> bool
+TKCode.Arc.CodeEditor.TabFocusMode.set -> void
+TKCode.Arc.CodeEditor.TabSize.get -> int
+TKCode.Arc.CodeEditor.TabSize.set -> void
+TKCode.Arc.CodeEditor.Text.get -> string!
+TKCode.Arc.CodeEditor.Text.set -> void
+TKCode.Arc.CodeEditor.TextChanged -> System.EventHandler?
+TKCode.Arc.CodeEditor.WordWrap.get -> bool
+TKCode.Arc.CodeEditor.WordWrap.set -> void
+TKCode.Arc.CodeEditorLanguageClientExtensions
+TKCode.Arc.CodeEditorLinkOpeningEventArgs
+TKCode.Arc.CodeEditorLinkOpeningEventArgs.FromUserGesture.get -> bool
+TKCode.Arc.CodeEditorLinkOpeningEventArgs.Handled.get -> bool
+TKCode.Arc.CodeEditorLinkOpeningEventArgs.Handled.set -> void
+TKCode.Arc.CodeEditorLinkOpeningEventArgs.Target.get -> string!
+TKCode.Arc.CodeEditorLinkOpeningEventArgs.Uri.get -> System.Uri?
+TKCode.Arc.CodeEditorToken
+TKCode.Arc.CodeEditorToken.CodeEditorToken() -> void
+TKCode.Arc.CodeEditorToken.ColorPickerPadding.get -> Avalonia.Thickness
+TKCode.Arc.CodeEditorToken.ColorPickerPadding.set -> void
+TKCode.Arc.CodeEditorToken.ColorPickerWidth.get -> double
+TKCode.Arc.CodeEditorToken.ColorPickerWidth.set -> void
+TKCode.Arc.CodeEditorToken.CursorWidth.get -> double
+TKCode.Arc.CodeEditorToken.CursorWidth.set -> void
+TKCode.Arc.CodeEditorToken.FoldingWidth.get -> double
+TKCode.Arc.CodeEditorToken.FoldingWidth.set -> void
+TKCode.Arc.CodeEditorToken.GutterLeadingPadding.get -> double
+TKCode.Arc.CodeEditorToken.GutterLeadingPadding.set -> void
+TKCode.Arc.CodeEditorToken.GutterPadding.get -> double
+TKCode.Arc.CodeEditorToken.GutterPadding.set -> void
+TKCode.Arc.CodeEditorToken.HoverMaxHeight.get -> double
+TKCode.Arc.CodeEditorToken.HoverMaxHeight.set -> void
+TKCode.Arc.CodeEditorToken.HoverMaxWidth.get -> double
+TKCode.Arc.CodeEditorToken.HoverMaxWidth.set -> void
+TKCode.Arc.CodeEditorToken.HoverRowPadding.get -> Avalonia.Thickness
+TKCode.Arc.CodeEditorToken.HoverRowPadding.set -> void
+TKCode.Arc.CodeEditorToken.IndentGuideWidth.get -> double
+TKCode.Arc.CodeEditorToken.IndentGuideWidth.set -> void
+TKCode.Arc.CodeEditorToken.LineHeightRatio.get -> double
+TKCode.Arc.CodeEditorToken.LineHeightRatio.set -> void
+TKCode.Arc.CodeEditorToken.MinHeight.get -> double
+TKCode.Arc.CodeEditorToken.MinHeight.set -> void
+TKCode.Arc.CodeEditorToken.MinimapMaxColumn.get -> double
+TKCode.Arc.CodeEditorToken.MinimapMaxColumn.set -> void
+TKCode.Arc.CodeEditorToken.MinimapSliderActiveOpacity.get -> double
+TKCode.Arc.CodeEditorToken.MinimapSliderActiveOpacity.set -> void
+TKCode.Arc.CodeEditorToken.MinimapSliderHoverOpacity.get -> double
+TKCode.Arc.CodeEditorToken.MinimapSliderHoverOpacity.set -> void
+TKCode.Arc.CodeEditorToken.MinimapSliderOpacity.get -> double
+TKCode.Arc.CodeEditorToken.MinimapSliderOpacity.set -> void
+TKCode.Arc.CodeEditorToken.OverviewRulerWidth.get -> double
+TKCode.Arc.CodeEditorToken.OverviewRulerWidth.set -> void
+TKCode.Arc.CodeEditorToken.StickyScrollBorderThickness.get -> double
+TKCode.Arc.CodeEditorToken.StickyScrollBorderThickness.set -> void
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.ButtonSize = 7 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.DisabledOpacity = 11 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.FindTogglesWidth = 4 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.GlyphSize = 9 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.Margin = 1 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.MatchesCountMinWidth = 10 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.NarrowEditorWidth = 12 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.Padding = 2 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.ReplaceToggleWidth = 8 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.ReplaceTogglesWidth = 5 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.ToggleSize = 3 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.TogglesMargin = 6 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind.Width = 0 -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension.CodeEditorFindWidgetTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension.CodeEditorFindWidgetTokenResourceExtension(TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind kind) -> void
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokens
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.DetailsMaxHeight = 11 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.DetailsPadding = 10 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.DetailsWidth = 1 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.IconSize = 4 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.IconStrokeWidth = 5 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.ListWidth = 0 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.MaxVisibleItems = 3 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.Padding = 9 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.RowCornerRadius = 8 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.RowHeight = 2 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.RowPadding = 6 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind.RowSpacing = 7 -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension.CodeEditorSuggestWidgetTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension.CodeEditorSuggestWidgetTokenResourceExtension(TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind kind) -> void
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokens
+TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.ColorPickerPadding = 9 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.ColorPickerWidth = 10 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.CursorWidth = 1 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.FoldingWidth = 17 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.GutterLeadingPadding = 3 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.GutterPadding = 2 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.HoverMaxHeight = 7 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.HoverMaxWidth = 6 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.HoverRowPadding = 8 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.IndentGuideWidth = 5 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.LineHeightRatio = 0 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.MinHeight = 4 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.MinimapMaxColumn = 13 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.MinimapSliderActiveOpacity = 16 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.MinimapSliderHoverOpacity = 15 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.MinimapSliderOpacity = 14 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.OverviewRulerWidth = 12 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenKind.StickyScrollBorderThickness = 11 -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension.CodeEditorTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension.CodeEditorTokenResourceExtension(TKCode.Arc.DesignTokens.CodeEditorTokenKind kind) -> void
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.CodeEditorTokenKind
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.CodeEditorTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.CodeEditorTokens
+TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.CharHighlightOpacity = 6 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.CollapsedRegionHeight = 5 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.IndicatorWidth = 1 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.MinHeight = 7 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.MovedBlocksWidth = 3 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.OverviewRulerWidth = 0 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.RevertColumnWidth = 2 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenKind.SeparatorWidth = 4 -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension.DiffEditorTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension.DiffEditorTokenResourceExtension(TKCode.Arc.DesignTokens.DiffEditorTokenKind kind) -> void
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.DiffEditorTokenKind
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.DiffEditorTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.DiffEditorTokens
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind.ItemHeight = 0 -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind.ItemPadding = 1 -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind.ListPadding = 2 -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind.MaxVisibleItems = 3 -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind.MinWidth = 4 -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension.SnippetChoiceListTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.SnippetChoiceListTokenResourceExtension.SnippetChoiceListTokenResourceExtension(TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind kind) -> void
+TKCode.Arc.DesignTokens.SnippetChoiceListTokens
+TKCode.Arc.DiffComputedEventArgs
+TKCode.Arc.DiffComputedEventArgs.ChangeCount.get -> int
+TKCode.Arc.DiffComputedEventArgs.DiffComputedEventArgs(int changeCount, int insertedLineCount, int removedLineCount, int movedBlockCount, bool isIdentical, bool hitTimeout) -> void
+TKCode.Arc.DiffComputedEventArgs.HitTimeout.get -> bool
+TKCode.Arc.DiffComputedEventArgs.InsertedLineCount.get -> int
+TKCode.Arc.DiffComputedEventArgs.IsIdentical.get -> bool
+TKCode.Arc.DiffComputedEventArgs.MovedBlockCount.get -> int
+TKCode.Arc.DiffComputedEventArgs.RemovedLineCount.get -> int
+TKCode.Arc.DiffEditor
+TKCode.Arc.DiffEditor.DiffComputed -> System.EventHandler<TKCode.Arc.DiffComputedEventArgs!>?
+TKCode.Arc.DiffEditor.DiffEditor() -> void
+TKCode.Arc.DiffEditor.HideUnchangedRegions.get -> bool
+TKCode.Arc.DiffEditor.HideUnchangedRegions.set -> void
+TKCode.Arc.DiffEditor.IgnoreTrimWhitespace.get -> bool
+TKCode.Arc.DiffEditor.IgnoreTrimWhitespace.set -> void
+TKCode.Arc.DiffEditor.IsReadOnly.get -> bool
+TKCode.Arc.DiffEditor.IsReadOnly.set -> void
+TKCode.Arc.DiffEditor.LanguageId.get -> string!
+TKCode.Arc.DiffEditor.LanguageId.set -> void
+TKCode.Arc.DiffEditor.ModifiedText.get -> string!
+TKCode.Arc.DiffEditor.ModifiedText.set -> void
+TKCode.Arc.DiffEditor.OriginalText.get -> string!
+TKCode.Arc.DiffEditor.OriginalText.set -> void
+TKCode.Arc.DiffEditor.RenderSideBySide.get -> bool
+TKCode.Arc.DiffEditor.RenderSideBySide.set -> void
+TKCode.Arc.DiffEditorToken
+TKCode.Arc.DiffEditorToken.CharHighlightOpacity.get -> double
+TKCode.Arc.DiffEditorToken.CharHighlightOpacity.set -> void
+TKCode.Arc.DiffEditorToken.CollapsedRegionHeight.get -> double
+TKCode.Arc.DiffEditorToken.CollapsedRegionHeight.set -> void
+TKCode.Arc.DiffEditorToken.DiffEditorToken() -> void
+TKCode.Arc.DiffEditorToken.IndicatorWidth.get -> double
+TKCode.Arc.DiffEditorToken.IndicatorWidth.set -> void
+TKCode.Arc.DiffEditorToken.MinHeight.get -> double
+TKCode.Arc.DiffEditorToken.MinHeight.set -> void
+TKCode.Arc.DiffEditorToken.MovedBlocksWidth.get -> double
+TKCode.Arc.DiffEditorToken.MovedBlocksWidth.set -> void
+TKCode.Arc.DiffEditorToken.OverviewRulerWidth.get -> double
+TKCode.Arc.DiffEditorToken.OverviewRulerWidth.set -> void
+TKCode.Arc.DiffEditorToken.RevertColumnWidth.get -> double
+TKCode.Arc.DiffEditorToken.RevertColumnWidth.set -> void
+TKCode.Arc.DiffEditorToken.SeparatorWidth.get -> double
+TKCode.Arc.DiffEditorToken.SeparatorWidth.set -> void
+const TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokens.Identity = "CodeEditorFindWidget" -> string!
+const TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokens.Identity = "CodeEditorSuggestWidget" -> string!
+const TKCode.Arc.DesignTokens.CodeEditorTokens.Identity = "CodeEditor" -> string!
+const TKCode.Arc.DesignTokens.DiffEditorTokens.Identity = "DiffEditor" -> string!
+const TKCode.Arc.DesignTokens.SnippetChoiceListTokens.Identity = "SnippetChoiceList" -> string!
+override TKCode.Arc.CodeEditorToken.CalculateTokenValues(bool isDarkMode) -> void
+override TKCode.Arc.DiffEditorToken.CalculateTokenValues(bool isDarkMode) -> void
+static TKCode.Arc.ArcCodeEditorBuilderExtensions.UseArcCodeEditor(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!
+static TKCode.Arc.CodeEditorLanguageClientExtensions.AttachLanguageClient(this TKCode.Arc.CodeEditor! editor, TKCode.Arc.Editor.Lsp.LanguageClient! client, System.Uri! documentUri, string? languageId = null) -> System.IDisposable!
+static TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokens.Key(TKCode.Arc.DesignTokens.CodeEditorFindWidgetTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokens.Key(TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.CodeEditorTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.CodeEditorTokens.Key(TKCode.Arc.DesignTokens.CodeEditorTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.DiffEditorTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.DiffEditorTokens.Key(TKCode.Arc.DesignTokens.DiffEditorTokenKind kind) -> object!
+static TKCode.Arc.DesignTokens.SnippetChoiceListTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.SnippetChoiceListTokens.Key(TKCode.Arc.DesignTokens.SnippetChoiceListTokenKind kind) -> object!
+static readonly TKCode.Arc.CodeEditor.ColorDecoratorsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.FoldingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.FormatOnPasteProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.FormatOnTypeProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.InsertSpacesProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.IsReadOnlyProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.LanguageIdProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.CodeEditor.LinkedEditingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.ShowIndentGuidesProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.ShowLineNumbersProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.ShowMinimapProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.SmoothScrollingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.StickyScrollMaxLineCountProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.CodeEditor.StickyScrollProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.TabFocusModeProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.CodeEditor.TabSizeProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.CodeEditor.TextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.CodeEditor.WordWrapProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DiffEditor.HideUnchangedRegionsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DiffEditor.IgnoreTrimWhitespaceProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DiffEditor.IsReadOnlyProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.DiffEditor.LanguageIdProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DiffEditor.ModifiedTextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DiffEditor.OriginalTextProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.DiffEditor.RenderSideBySideProperty -> Avalonia.StyledProperty<bool>!

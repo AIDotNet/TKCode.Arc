@@ -1,0 +1,104 @@
+#nullable enable
+override TKCode.Arc.Editor.TextPosition.GetHashCode() -> int
+override TKCode.Arc.Editor.TextPosition.ToString() -> string!
+override TKCode.Arc.Editor.TextRange.Equals(object? obj) -> bool
+override TKCode.Arc.Editor.TextRange.GetHashCode() -> int
+override TKCode.Arc.Editor.TextRange.ToString() -> string!
+override TKCode.Arc.Editor.TextSelection.Equals(object? obj) -> bool
+override TKCode.Arc.Editor.TextSelection.GetHashCode() -> int
+override TKCode.Arc.Editor.TextSelection.ToString() -> string!
+static TKCode.Arc.Editor.TextPosition.operator !=(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextPosition.operator <(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextPosition.operator <=(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextPosition.operator ==(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextPosition.operator >(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextPosition.operator >=(TKCode.Arc.Editor.TextPosition left, TKCode.Arc.Editor.TextPosition right) -> bool
+static TKCode.Arc.Editor.TextRange.AreIntersecting(TKCode.Arc.Editor.TextRange a, TKCode.Arc.Editor.TextRange b) -> bool
+static TKCode.Arc.Editor.TextRange.AreIntersectingOrTouching(TKCode.Arc.Editor.TextRange a, TKCode.Arc.Editor.TextRange b) -> bool
+static TKCode.Arc.Editor.TextRange.CompareRangesUsingEnds(TKCode.Arc.Editor.TextRange a, TKCode.Arc.Editor.TextRange b) -> int
+static TKCode.Arc.Editor.TextRange.CompareRangesUsingStarts(TKCode.Arc.Editor.TextRange a, TKCode.Arc.Editor.TextRange b) -> int
+static TKCode.Arc.Editor.TextRange.operator !=(TKCode.Arc.Editor.TextRange left, TKCode.Arc.Editor.TextRange right) -> bool
+static TKCode.Arc.Editor.TextRange.operator ==(TKCode.Arc.Editor.TextRange left, TKCode.Arc.Editor.TextRange right) -> bool
+static TKCode.Arc.Editor.TextSelection.FromRange(TKCode.Arc.Editor.TextRange range, TKCode.Arc.Editor.SelectionDirection direction = TKCode.Arc.Editor.SelectionDirection.LeftToRight) -> TKCode.Arc.Editor.TextSelection
+static TKCode.Arc.Editor.TextSelection.implicit operator TKCode.Arc.Editor.TextRange(TKCode.Arc.Editor.TextSelection selection) -> TKCode.Arc.Editor.TextRange
+static TKCode.Arc.Editor.TextSelection.operator !=(TKCode.Arc.Editor.TextSelection left, TKCode.Arc.Editor.TextSelection right) -> bool
+static TKCode.Arc.Editor.TextSelection.operator ==(TKCode.Arc.Editor.TextSelection left, TKCode.Arc.Editor.TextSelection right) -> bool
+TKCode.Arc.Editor.SelectionDirection
+TKCode.Arc.Editor.SelectionDirection.LeftToRight = 0 -> TKCode.Arc.Editor.SelectionDirection
+TKCode.Arc.Editor.SelectionDirection.RightToLeft = 1 -> TKCode.Arc.Editor.SelectionDirection
+TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextPosition.Column.get -> int
+TKCode.Arc.Editor.TextPosition.Column.init -> void
+TKCode.Arc.Editor.TextPosition.CompareTo(TKCode.Arc.Editor.TextPosition other) -> int
+TKCode.Arc.Editor.TextPosition.Deconstruct(out int LineNumber, out int Column) -> void
+TKCode.Arc.Editor.TextPosition.Delta(int deltaLineNumber = 0, int deltaColumn = 0) -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextPosition.Equals(TKCode.Arc.Editor.TextPosition other) -> bool
+TKCode.Arc.Editor.TextPosition.IsBefore(TKCode.Arc.Editor.TextPosition other) -> bool
+TKCode.Arc.Editor.TextPosition.IsBeforeOrEqual(TKCode.Arc.Editor.TextPosition other) -> bool
+TKCode.Arc.Editor.TextPosition.LineNumber.get -> int
+TKCode.Arc.Editor.TextPosition.LineNumber.init -> void
+TKCode.Arc.Editor.TextPosition.TextPosition() -> void
+TKCode.Arc.Editor.TextPosition.TextPosition(int LineNumber, int Column) -> void
+TKCode.Arc.Editor.TextPosition.With(int? lineNumber = null, int? column = null) -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.CollapseToEnd() -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.CollapseToStart() -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.ContainsPosition(TKCode.Arc.Editor.TextPosition position) -> bool
+TKCode.Arc.Editor.TextRange.ContainsRange(TKCode.Arc.Editor.TextRange other) -> bool
+TKCode.Arc.Editor.TextRange.Delta(int lineCount) -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.End.get -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextRange.EndColumn.get -> int
+TKCode.Arc.Editor.TextRange.EndLineNumber.get -> int
+TKCode.Arc.Editor.TextRange.Equals(TKCode.Arc.Editor.TextRange other) -> bool
+TKCode.Arc.Editor.TextRange.IntersectRanges(TKCode.Arc.Editor.TextRange other) -> TKCode.Arc.Editor.TextRange?
+TKCode.Arc.Editor.TextRange.IsEmpty.get -> bool
+TKCode.Arc.Editor.TextRange.IsSingleLine.get -> bool
+TKCode.Arc.Editor.TextRange.PlusRange(TKCode.Arc.Editor.TextRange other) -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.SetEndPosition(int endLineNumber, int endColumn) -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.SetStartPosition(int startLineNumber, int startColumn) -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextRange.Start.get -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextRange.StartColumn.get -> int
+TKCode.Arc.Editor.TextRange.StartLineNumber.get -> int
+TKCode.Arc.Editor.TextRange.StrictContainsPosition(TKCode.Arc.Editor.TextPosition position) -> bool
+TKCode.Arc.Editor.TextRange.StrictContainsRange(TKCode.Arc.Editor.TextRange other) -> bool
+TKCode.Arc.Editor.TextRange.TextRange() -> void
+TKCode.Arc.Editor.TextRange.TextRange(int startLineNumber, int startColumn, int endLineNumber, int endColumn) -> void
+TKCode.Arc.Editor.TextRange.TextRange(TKCode.Arc.Editor.TextPosition start, TKCode.Arc.Editor.TextPosition? end = null) -> void
+TKCode.Arc.Editor.TextSelection
+TKCode.Arc.Editor.TextSelection.Direction.get -> TKCode.Arc.Editor.SelectionDirection
+TKCode.Arc.Editor.TextSelection.EndColumn.get -> int
+TKCode.Arc.Editor.TextSelection.EndLineNumber.get -> int
+TKCode.Arc.Editor.TextSelection.Equals(TKCode.Arc.Editor.TextSelection other) -> bool
+TKCode.Arc.Editor.TextSelection.IsEmpty.get -> bool
+TKCode.Arc.Editor.TextSelection.Position.get -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextSelection.PositionColumn.get -> int
+TKCode.Arc.Editor.TextSelection.PositionLineNumber.get -> int
+TKCode.Arc.Editor.TextSelection.Range.get -> TKCode.Arc.Editor.TextRange
+TKCode.Arc.Editor.TextSelection.SelectionStart.get -> TKCode.Arc.Editor.TextPosition
+TKCode.Arc.Editor.TextSelection.SelectionStartColumn.get -> int
+TKCode.Arc.Editor.TextSelection.SelectionStartLineNumber.get -> int
+TKCode.Arc.Editor.TextSelection.SetEndPosition(int endLineNumber, int endColumn) -> TKCode.Arc.Editor.TextSelection
+TKCode.Arc.Editor.TextSelection.SetStartPosition(int startLineNumber, int startColumn) -> TKCode.Arc.Editor.TextSelection
+TKCode.Arc.Editor.TextSelection.StartColumn.get -> int
+TKCode.Arc.Editor.TextSelection.StartLineNumber.get -> int
+TKCode.Arc.Editor.TextSelection.TextSelection() -> void
+TKCode.Arc.Editor.TextSelection.TextSelection(int selectionStartLineNumber, int selectionStartColumn, int positionLineNumber, int positionColumn) -> void
+TKCode.Arc.Editor.TextSelection.TextSelection(TKCode.Arc.Editor.TextPosition selectionStart, TKCode.Arc.Editor.TextPosition? position = null) -> void
+~override TKCode.Arc.Editor.TextPosition.Equals(object obj) -> bool
+TKCode.Arc.Editor.DefaultEndOfLine
+TKCode.Arc.Editor.DefaultEndOfLine.CRLF = 2 -> TKCode.Arc.Editor.DefaultEndOfLine
+TKCode.Arc.Editor.DefaultEndOfLine.LF = 1 -> TKCode.Arc.Editor.DefaultEndOfLine
+TKCode.Arc.Editor.EndOfLinePreference
+TKCode.Arc.Editor.EndOfLinePreference.CRLF = 2 -> TKCode.Arc.Editor.EndOfLinePreference
+TKCode.Arc.Editor.EndOfLinePreference.LF = 1 -> TKCode.Arc.Editor.EndOfLinePreference
+TKCode.Arc.Editor.EndOfLinePreference.TextDefined = 0 -> TKCode.Arc.Editor.EndOfLinePreference
+TKCode.Arc.Editor.EndOfLineSequence
+TKCode.Arc.Editor.EndOfLineSequence.CRLF = 1 -> TKCode.Arc.Editor.EndOfLineSequence
+TKCode.Arc.Editor.EndOfLineSequence.LF = 0 -> TKCode.Arc.Editor.EndOfLineSequence
+TKCode.Arc.Editor.ITextSnapshot
+TKCode.Arc.Editor.ITextSnapshot.Read() -> string?
+TKCode.Arc.Editor.TrackedRangeStickiness
+TKCode.Arc.Editor.TrackedRangeStickiness.AlwaysGrowsWhenTypingAtEdges = 0 -> TKCode.Arc.Editor.TrackedRangeStickiness
+TKCode.Arc.Editor.TrackedRangeStickiness.GrowsOnlyWhenTypingAfter = 3 -> TKCode.Arc.Editor.TrackedRangeStickiness
+TKCode.Arc.Editor.TrackedRangeStickiness.GrowsOnlyWhenTypingBefore = 2 -> TKCode.Arc.Editor.TrackedRangeStickiness
+TKCode.Arc.Editor.TrackedRangeStickiness.NeverGrowsWhenTypingAtEdges = 1 -> TKCode.Arc.Editor.TrackedRangeStickiness

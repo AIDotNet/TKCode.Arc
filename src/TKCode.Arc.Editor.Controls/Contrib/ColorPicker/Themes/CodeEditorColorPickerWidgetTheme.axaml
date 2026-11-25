@@ -1,0 +1,57 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorColorPickerWidgetTheme">
+
+    <!--
+        The color picker of the code editor's color decorators (upstream's ColorPickerWidget: a header with the color's
+        presentation, which a click cycles, and the original color, which a click restores; a body to pick the color).
+        The body is Arc's ColorPicker.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorColorPickerWidget}" TargetType="arc:CodeEditorColorPickerWidget">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Padding" Value="{arc:CodeEditorTokenResource ColorPickerPadding}" />
+        <Setter Property="Width" Value="{arc:CodeEditorTokenResource ColorPickerWidth}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ChipBorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeEditorColorPickerWidget">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{TemplateBinding Shadow}"
+                        Padding="{TemplateBinding Padding}">
+                    <StackPanel Spacing="{arc:ArcDesignTokenResource Space2}">
+                        <Grid ColumnDefinitions="*,Auto">
+                            <arc:Button Name="PART_Presentation"
+                                        Variant="Ghost"
+                                        Size="Small"
+                                        HorizontalAlignment="Stretch"
+                                        HorizontalContentAlignment="Left"
+                                        FontFamily="{arc:ArcDesignTokenResource MonoFontFamily}"
+                                        Content="{TemplateBinding PresentationLabel}" />
+                            <Border Name="PART_Original"
+                                    Grid.Column="1"
+                                    Width="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                    Height="{arc:ArcDesignTokenResource ControlSizeSM}"
+                                    CornerRadius="{TemplateBinding CornerRadius}"
+                                    Background="{TemplateBinding OriginalColorBrush}"
+                                    BorderBrush="{TemplateBinding ChipBorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    Cursor="Hand" />
+                        </Grid>
+                        <arc:ColorPicker Name="PART_Picker" Size="Small" />
+                    </StackPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

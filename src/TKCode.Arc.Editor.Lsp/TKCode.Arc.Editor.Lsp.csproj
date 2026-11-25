@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Editor.Lsp</AssemblyName>
+        <!-- The bridge sits next to the engine, in its own namespace (design/decisions/0056-code-editor-package.md). -->
+        <RootNamespace>TKCode.Arc.Editor.Lsp</RootNamespace>
+        <PackageId>TKCode.Arc.Editor.Lsp</PackageId>
+        <Description>Language Server Protocol client for the TKCode.Arc.Editor engine: JSON-RPC over streams, document sync, diagnostics and the language features (completion, hover, navigation, rename, code actions, formatting, semantic tokens, inlay hints and more) from any language server. No UI dependency; AOT and trimming safe.</Description>
+        <PackageTags>editor;code;lsp;language-server;json-rpc;monaco</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc.Editor/TKCode.Arc.Editor.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Lsp.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Controls" />
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+    </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>$(ArcTestTargetFramework)</TargetFramework>
+        <OutputType>Exe</OutputType>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" />
+        <PackageReference Include="xunit.v3" />
+        <PackageReference Include="xunit.runner.visualstudio" />
+        <PackageReference Include="Shouldly" />
+        <ProjectReference Include="../../src/TKCode.Arc.Editor/TKCode.Arc.Editor.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <!-- monaco-editor's language tokenization cases, converted by tools/editor/monarch-convert -->
+        <None Include="Languages/BuiltIn/TestData/*.json" CopyToOutputDirectory="PreserveNewest" />
+        <!-- diff results of the upstream diff computers, made by tools/editor/diff-fixtures -->
+        <None Include="Diff/TestData/*.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+</Project>

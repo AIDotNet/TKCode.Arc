@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorWidgetSurfaceTheme">
+
+    <!--
+        The surfaces of the code editor's widgets (code action menu, rename box, messages, peek views): Arc's popover
+        look. The widgets are built in code and bind their rows and texts to the brushes set here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorWidgetSurface}" TargetType="arc:CodeEditorWidgetSurface">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="BoxShadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SelectionBackground" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HoverBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="AccentForeground" Value="{arc:ArcDesignTokenResource Accent}" />
+    </ControlTheme>
+
+    <ControlTheme x:Key="{x:Type arc:CodeEditorPeekSurface}" TargetType="arc:CodeEditorPeekSurface">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="TextElement.Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="TextElement.FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="TextElement.FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SelectionBackground" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="HoverBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="AccentForeground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FrameBrush" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HeaderBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="ResultsBackground" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="PreviewBackground" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="MatchHighlightBackground" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+    </ControlTheme>
+</ResourceDictionary>

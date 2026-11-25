@@ -1,0 +1,17 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorStickyScrollWidgetTheme">
+
+    <!--
+        The lines that stick at the top of the code editor (sticky scroll). The widget draws the lines through the
+        editor's view; its background is the editor's (the controller binds it). Upstream: editorStickyScroll.border and
+        editorStickyScrollHover.background.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorStickyScrollWidget}" TargetType="arc:CodeEditorStickyScrollWidget">
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:CodeEditorTokenResource StickyScrollBorderThickness}" />
+        <Setter Property="HoverBrush" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+    </ControlTheme>
+</ResourceDictionary>

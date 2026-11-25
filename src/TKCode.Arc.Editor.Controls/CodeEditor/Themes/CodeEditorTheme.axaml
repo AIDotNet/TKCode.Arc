@@ -1,0 +1,98 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorTheme">
+
+    <!--
+        The code editor (design/architecture/code-editor.md section 7): a bordered surface with the editor view in it.
+        The view draws the line numbers, the current line, the selections, the text and the cursors with the brushes
+        set here, so a new theme changes what it draws; decoration styles name the theme colors below
+        (CodeEditorThemeColor: ErrorBrush, FindMatchBrush, ...). ONE SETTER LINE PER THEME COLOR.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditor}" TargetType="arc:CodeEditor">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MinHeight" Value="{arc:CodeEditorTokenResource MinHeight}" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeEditor">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Panel>
+                        <arc:CodeEditorView Name="PART_View"
+                                            LineHeightRatio="{arc:CodeEditorTokenResource LineHeightRatio}"
+                                            CursorWidth="{arc:CodeEditorTokenResource CursorWidth}"
+                                            GutterPadding="{arc:CodeEditorTokenResource GutterPadding}"
+                                            GutterLeadingPadding="{arc:CodeEditorTokenResource GutterLeadingPadding}"
+                                            SelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                            CursorBrush="{arc:ArcDesignTokenResource Foreground}"
+                                            LineNumberBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            ActiveLineNumberBrush="{arc:ArcDesignTokenResource Foreground}"
+                                            CurrentLineBrush="{arc:ArcDesignTokenResource SurfaceRaised}"
+                                            IndentGuideWidth="{arc:CodeEditorTokenResource IndentGuideWidth}"
+                                            IndentGuideBrush="{arc:ArcDesignTokenResource Border}"
+                                            ActiveIndentGuideBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                            ErrorBrush="{arc:ArcDesignTokenResource Danger}"
+                                            WarningBrush="{arc:ArcDesignTokenResource Warning}"
+                                            InfoBrush="{arc:ArcDesignTokenResource Accent}"
+                                            HintBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            FindMatchBrush="{arc:ArcDesignTokenResource WarningSubtle}"
+                                            FindMatchHighlightBrush="{arc:ArcDesignTokenResource WarningSubtle}"
+                                            FindRangeHighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                            WordHighlightBrush="{arc:ArcDesignTokenResource Border}"
+                                            WordHighlightStrongBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                            SelectionHighlightBrush="{arc:ArcDesignTokenResource Border}"
+                                            BracketMatchBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                            BracketMatchBorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                            LinkedEditingBrush="{arc:ArcDesignTokenResource DangerSubtle}"
+                                            RangeHighlightBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                            InlayHintForegroundBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            InlayHintBackgroundBrush="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                            GutterGlyphBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            SnippetTabstopHighlightBrush="{arc:ArcDesignTokenResource Border}"
+                                            SnippetFinalTabstopHighlightBorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                            LinkBrush="{arc:ArcDesignTokenResource Accent}"
+                                            ColorDecoratorBorderBrush="{arc:ArcDesignTokenResource BorderStrong}"
+                                            OverviewRulerWidth="{arc:CodeEditorTokenResource OverviewRulerWidth}"
+                                            MinimapMaxColumn="{arc:CodeEditorTokenResource MinimapMaxColumn}"
+                                            MinimapSliderOpacity="{arc:CodeEditorTokenResource MinimapSliderOpacity}"
+                                            MinimapSliderHoverOpacity="{arc:CodeEditorTokenResource MinimapSliderHoverOpacity}"
+                                            MinimapSliderActiveOpacity="{arc:CodeEditorTokenResource MinimapSliderActiveOpacity}"
+                                            MinimapBackgroundBrush="{TemplateBinding Background}"
+                                            MinimapSliderBrush="{arc:ArcDesignTokenResource Foreground}"
+                                            MinimapSelectionBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                            OverviewRulerCursorBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                            OverviewRulerBorderBrush="{arc:ArcDesignTokenResource BorderSubtle}"
+                                            FoldBackgroundBrush="{arc:ArcDesignTokenResource AccentSubtle}"
+                                            FoldingWidth="{arc:CodeEditorTokenResource FoldingWidth}"
+                                            DropTargetBrush="{arc:ArcDesignTokenResource Foreground}"
+                                            SelectionAnchorBrush="{arc:ArcDesignTokenResource Accent}" />
+                        <!-- View zones, content widgets and overlay widgets (find, suggest, hover, peek); no background,
+                             so where no widget is the pointer reaches the view. -->
+                        <arc:CodeEditorWidgetHost Name="PART_WidgetHost" ClipToBounds="True" />
+                        <!-- Overlay bars in Arc's ScrollArea look (the base theme's ScrollBar); hidden while nothing scrolls. -->
+                        <ScrollBar Name="PART_VerticalScrollBar"
+                                   Orientation="Vertical"
+                                   Visibility="Auto"
+                                   HorizontalAlignment="Right" />
+                        <ScrollBar Name="PART_HorizontalScrollBar"
+                                   Orientation="Horizontal"
+                                   Visibility="Auto"
+                                   VerticalAlignment="Bottom" />
+                    </Panel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>
