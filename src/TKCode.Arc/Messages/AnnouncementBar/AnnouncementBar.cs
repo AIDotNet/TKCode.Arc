@@ -322,22 +322,10 @@ public class AnnouncementBar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
-        if (_ringButton is not null)
-        {
-            _ringButton.IsCheckedChanged -= OnRingChanged;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _dismiss?.Click -= OnDismissClick;
+        _ringButton?.IsCheckedChanged -= OnRingChanged;
         _presence = e.NameScope.Find<MessagesPresenceFrame>(PresencePart);
         _viewport = e.NameScope.Find<AnnouncementBarViewport>(ViewportPart);
         _previous = e.NameScope.Find<AvaloniaButton>(PreviousPart);
@@ -484,10 +472,7 @@ public class AnnouncementBar : TemplatedControl
         }
         else if (change.Property == IsPausedProperty)
         {
-            if (_ringButton is not null)
-            {
-                _ringButton.IsChecked = IsPaused;
-            }
+            _ringButton?.IsChecked = IsPaused;
             UpdateControls();
             UpdateRunning();
         }

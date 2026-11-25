@@ -308,19 +308,13 @@ public partial class AskYourData
         }
         _rowsShown = Math.Max(0, rows);
         ResetRows(total);
-        if (_rows is not null)
-        {
-            _rows.Value = _rowsShown;
-        }
+        _rows?.Value = _rowsShown;
     }
 
     /// <summary>Reserves the count's width for the total (or the count so far) in tabular numerals.</summary>
     private void ResetRows(long? total)
     {
-        if (_rowsReserve is not null)
-        {
-            _rowsReserve.Text = AskYourDataFormat.Grouped(Math.Max(total ?? 0, _rowsShown));
-        }
+        _rowsReserve?.Text = AskYourDataFormat.Grouped(Math.Max(total ?? 0, _rowsShown));
         if (total is null && _rows is not null)
         {
             _rows.IsInstant = true;

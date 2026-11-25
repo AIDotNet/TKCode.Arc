@@ -283,10 +283,7 @@ public class RulerSlider : RangeBase
         base.OnApplyTemplate(e);
         _drag?.Dispose();
         _drag = null;
-        if (_tape is not null)
-        {
-            _tape.Owner = null;
-        }
+        _tape?.Owner = null;
         _tape = e.NameScope.Find<RulerTape>(TapePart);
         _readout = e.NameScope.Find<SliderNumberText>(ReadoutPart);
         if (_readout is { } readout)

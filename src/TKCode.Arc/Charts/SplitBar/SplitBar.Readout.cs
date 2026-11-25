@@ -73,10 +73,7 @@ public partial class SplitBar
                 line.RenderTransform = new TranslateTransform();
             }
         }
-        if (_sumDigits is not null)
-        {
-            _sumDigits.WheelMotion = DigitMotion;
-        }
+        _sumDigits?.WheelMotion = DigitMotion;
         ApplyReadoutVisuals();
     }
 
@@ -122,10 +119,7 @@ public partial class SplitBar
         {
             line.Show(this, highlighted, instant: !animate);
         }
-        if (_readout is not null)
-        {
-            _readout.Current = _currentLine;
-        }
+        _readout?.Current = _currentLine;
     }
 
     private void SwitchLine(int next, bool animate)

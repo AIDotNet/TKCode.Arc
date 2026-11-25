@@ -299,10 +299,7 @@ public class BlogGrid : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_filters is not null)
-        {
-            _filters.ItemPressed -= OnFilterPressed;
-        }
+        _filters?.ItemPressed -= OnFilterPressed;
         _stage = e.NameScope.Find<BlogStage>(StagePart);
         _index = e.NameScope.Find<Control>("PART_Index");
         _header = e.NameScope.Find<Control>("PART_Header");
@@ -312,10 +309,7 @@ public class BlogGrid : TemplatedControl
         _pagination = e.NameScope.Find<BlockSwap>(PaginationPart);
         _readerHost = e.NameScope.Find<Panel>(ReaderHostPart);
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
-        if (_filters is not null)
-        {
-            _filters.ItemPressed += OnFilterPressed;
-        }
+        _filters?.ItemPressed += OnFilterPressed;
         BuildPagination();
         RefreshData();
     }
@@ -425,10 +419,7 @@ public class BlogGrid : TemplatedControl
 
     private void ApplyFilterSelection()
     {
-        if (_filters is not null)
-        {
-            _filters.SelectedIndex = Array.IndexOf(_tabs as string[] ?? _tabs.ToArray(), Category);
-        }
+        _filters?.SelectedIndex = Array.IndexOf(_tabs as string[] ?? _tabs.ToArray(), Category);
     }
 
     private List<BlogPost> FilteredPosts() =>

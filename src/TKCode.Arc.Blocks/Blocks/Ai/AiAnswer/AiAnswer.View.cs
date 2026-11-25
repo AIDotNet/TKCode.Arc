@@ -122,10 +122,7 @@ public partial class AiAnswer
         }
         else if (property == MaxComposerLinesProperty)
         {
-            if (_composer is not null)
-            {
-                _composer.MaxLines = Math.Max(1, change.GetNewValue<int>());
-            }
+            _composer?.MaxLines = Math.Max(1, change.GetNewValue<int>());
         }
         else if (property == IsReasoningExpandedProperty)
         {
@@ -176,14 +173,8 @@ public partial class AiAnswer
         _syncingPanels = true;
         try
         {
-            if (_reasoning is not null)
-            {
-                _reasoning.IsExpanded = IsReasoningExpanded;
-            }
-            if (_sources is not null)
-            {
-                _sources.IsExpanded = IsSourcesExpanded;
-            }
+            _reasoning?.IsExpanded = IsReasoningExpanded;
+            _sources?.IsExpanded = IsSourcesExpanded;
         }
         finally
         {
@@ -347,18 +338,9 @@ public partial class AiAnswer
     private void ShowPage(PageChange change)
     {
         var empty = IsEmptyPage;
-        if (_article is not null)
-        {
-            _article.IsVisible = !empty;
-        }
-        if (_empty is not null)
-        {
-            _empty.IsVisible = empty;
-        }
-        if (_newThread is not null)
-        {
-            _newThread.IsEnabled = !empty;
-        }
+        _article?.IsVisible = !empty;
+        _empty?.IsVisible = empty;
+        _newThread?.IsEnabled = !empty;
         UpdateDock();
         UpdateQuestionHeading();
         // Arc's section is labelled by its heading: the question, or the empty page's heading.
@@ -390,10 +372,7 @@ public partial class AiAnswer
     /// <summary>The follow-up box needs a responder: a finished answer shown without one has no box (Arc's static answer).</summary>
     private void UpdateDock()
     {
-        if (_dock is not null)
-        {
-            _dock.IsVisible = Responder is not null;
-        }
+        _dock?.IsVisible = Responder is not null;
     }
 
     /// <summary>The parts of one version: text, reasoning, sources, note, footer, related questions; then the status.</summary>
@@ -424,10 +403,7 @@ public partial class AiAnswer
                 _document.SetMarkdown(version.Markdown);
             }
         }
-        if (_sources is not null)
-        {
-            _sources.ActiveNumber = 0;
-        }
+        _sources?.ActiveNumber = 0;
         _shownVersion = version;
         UpdateSteps(version, running);
         ShowNote(version, running);
@@ -463,10 +439,7 @@ public partial class AiAnswer
             _sources.LabelText = Labels.SourceCount(count);
             _sources.IsVisible = count > 0;
         }
-        if (_steps is not null)
-        {
-            _steps.IsVisible = version is not null && (showsReasoning || count > 0);
-        }
+        _steps?.IsVisible = version is not null && (showsReasoning || count > 0);
         SyncPanels();
     }
 
@@ -509,10 +482,7 @@ public partial class AiAnswer
     /// <summary>The footer: the action bar (hidden, its height kept, while the version is written) and the model line.</summary>
     private void UpdateFooter(AiAnswerVersion? version, bool running)
     {
-        if (_footer is not null)
-        {
-            _footer.IsVisible = version is not null;
-        }
+        _footer?.IsVisible = version is not null;
         if (_actions is not null)
         {
             _actions.IsBusy = running;
@@ -563,10 +533,7 @@ public partial class AiAnswer
             _actions.Models = others;
             _actions.Providers = Providers;
         }
-        if (_modelLine is not null)
-        {
-            _modelLine.Providers = Providers;
-        }
+        _modelLine?.Providers = Providers;
     }
 
     private static bool SameModel(AiModel a, AiModel? b) =>
@@ -584,10 +551,7 @@ public partial class AiAnswer
 
     private void UpdateFeedbackReasons()
     {
-        if (_actions is not null)
-        {
-            _actions.FeedbackReasons = FeedbackReasons.Count > 0 ? FeedbackReasons : Labels.FeedbackReasons;
-        }
+        _actions?.FeedbackReasons = FeedbackReasons.Count > 0 ? FeedbackReasons : Labels.FeedbackReasons;
     }
 
     private void OnFeedbackReasonsChanged(object? sender, NotifyCollectionChangedEventArgs e) => UpdateFeedbackReasons();
@@ -682,14 +646,8 @@ public partial class AiAnswer
             AiAnswerStatus.Writing => Labels.AnnounceWriting,
             _ => null
         });
-        if (_composer is not null)
-        {
-            _composer.IsGenerating = busy;
-        }
-        if (_share is not null)
-        {
-            _share.IsEnabled = status != AiAnswerStatus.Empty;
-        }
+        _composer?.IsGenerating = busy;
+        _share?.IsEnabled = status != AiAnswerStatus.Empty;
         UpdatePlaceholder();
         UpdateTitle();
         RaiseEvent(new AiAnswerStatusEventArgs(StatusChangedEvent, this, old, status));
@@ -770,19 +728,13 @@ public partial class AiAnswer
             _share.IsVisible = ShareLinkProvider is not null;
             _share.IsEnabled = !IsEmptyPage;
         }
-        if (_actions is not null)
-        {
-            _actions.HasShare = ShareLinkProvider is not null;
-        }
+        _actions?.HasShare = ShareLinkProvider is not null;
     }
 
     /// <summary>"Share", "Copied" or "Failed" (the pill keeps the width of the longest); a change swaps like Arc's labels.</summary>
     private void UpdateShareLabel(bool instant)
     {
-        if (_share is not null)
-        {
-            _share.Glyph = _shareState == ShareState.Copied ? ArcIcons.Check : ArcIcons.Link2;
-        }
+        _share?.Glyph = _shareState == ShareState.Copied ? ArcIcons.Check : ArcIcons.Link2;
         if (_shareLabel is null)
         {
             return;

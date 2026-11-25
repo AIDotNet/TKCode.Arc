@@ -227,37 +227,22 @@ public partial class AgentMemory
 
     private void HookParts()
     {
-        if (_savedSetting is not null)
-        {
-            _savedSetting.Toggled += OnSavedToggled;
-        }
-        if (_historySetting is not null)
-        {
-            _historySetting.Toggled += OnHistoryToggled;
-        }
-        if (_filters is not null)
-        {
-            _filters.PropertyChanged += OnFiltersPropertyChanged;
-        }
+        _savedSetting?.Toggled += OnSavedToggled;
+        _historySetting?.Toggled += OnHistoryToggled;
+        _filters?.PropertyChanged += OnFiltersPropertyChanged;
         if (_search is not null)
         {
             _search.OpenRequested += OnSearchOpenRequested;
             _search.CloseRequested += OnSearchCloseRequested;
             _search.PropertyChanged += OnSearchPropertyChanged;
         }
-        if (_pill is not null)
-        {
-            _pill.Click += OnPillClick;
-        }
+        _pill?.Click += OnPillClick;
         if (_list is not null)
         {
             _list.EdgesChanged += OnListEdgesChanged;
             _list.SizeChanged += OnListSizeChanged;
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click += OnClearSearchClick;
-        }
+        _clearSearch?.Click += OnClearSearchClick;
         if (_addField is not null)
         {
             _addField.Submitted += OnAddSubmitted;
@@ -267,37 +252,22 @@ public partial class AgentMemory
 
     private void UnhookParts()
     {
-        if (_savedSetting is not null)
-        {
-            _savedSetting.Toggled -= OnSavedToggled;
-        }
-        if (_historySetting is not null)
-        {
-            _historySetting.Toggled -= OnHistoryToggled;
-        }
-        if (_filters is not null)
-        {
-            _filters.PropertyChanged -= OnFiltersPropertyChanged;
-        }
+        _savedSetting?.Toggled -= OnSavedToggled;
+        _historySetting?.Toggled -= OnHistoryToggled;
+        _filters?.PropertyChanged -= OnFiltersPropertyChanged;
         if (_search is not null)
         {
             _search.OpenRequested -= OnSearchOpenRequested;
             _search.CloseRequested -= OnSearchCloseRequested;
             _search.PropertyChanged -= OnSearchPropertyChanged;
         }
-        if (_pill is not null)
-        {
-            _pill.Click -= OnPillClick;
-        }
+        _pill?.Click -= OnPillClick;
         if (_list is not null)
         {
             _list.EdgesChanged -= OnListEdgesChanged;
             _list.SizeChanged -= OnListSizeChanged;
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click -= OnClearSearchClick;
-        }
+        _clearSearch?.Click -= OnClearSearchClick;
         if (_addField is not null)
         {
             _addField.Submitted -= OnAddSubmitted;
@@ -311,43 +281,25 @@ public partial class AgentMemory
     {
         var labels = Labels;
         var name = AssistantName;
-        if (_titleText is not null)
-        {
-            _titleText.Text = Title ?? labels.Title;
-        }
-        if (_subtitleText is not null)
-        {
-            _subtitleText.Text = Subtitle ?? labels.Subtitle(name);
-        }
+        _titleText?.Text = Title ?? labels.Title;
+        _subtitleText?.Text = Subtitle ?? labels.Subtitle(name);
         if (_meter is not null)
         {
             _meter.FullText = labels.MeterFull;
             _meter.AccessibleName = labels.MeterName;
             _meter.ValueText = labels.MeterValueText;
         }
-        if (_savedSetting is not null)
-        {
-            _savedSetting.Title = labels.SavedMemoriesTitle;
-        }
-        if (_historySetting is not null)
-        {
-            _historySetting.Title = labels.ChatHistoryTitle;
-        }
+        _savedSetting?.Title = labels.SavedMemoriesTitle;
+        _historySetting?.Title = labels.ChatHistoryTitle;
         UpdateSettings();
-        if (_filters is not null)
-        {
-            _filters.AccessibleName = labels.FilterName;
-        }
+        _filters?.AccessibleName = labels.FilterName;
         if (_search is not null)
         {
             _search.PlaceholderText = labels.SearchPlaceholder;
             _search.SearchName = labels.Search;
             _search.CloseName = labels.CloseSearch;
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Content = labels.ClearSearch;
-        }
+        _clearSearch?.Content = labels.ClearSearch;
         if (_list is not null)
         {
             AutomationProperties.SetName(_list, labels.SectionName);

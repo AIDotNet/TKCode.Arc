@@ -149,16 +149,10 @@ internal sealed class AiPanelBox : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
         _input = e.NameScope.Find<AiPanelInput>(InputPart);
         _send = e.NameScope.Find<AiSendButton>(SendPart);
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         RefreshNames();
         RefreshSend();
     }

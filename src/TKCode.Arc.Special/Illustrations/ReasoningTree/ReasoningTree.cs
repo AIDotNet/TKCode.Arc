@@ -277,10 +277,7 @@ public class ReasoningTree : Explainer
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_beam is not null)
-        {
-            _beam.SelectionChanged -= OnBeamSelectionChanged;
-        }
+        _beam?.SelectionChanged -= OnBeamSelectionChanged;
         _stage = e.NameScope.Find<ReasoningTreeStage>(StagePart);
         _status = e.NameScope.Find<ReasoningTreeStatus>(StatusPart);
         _beam = e.NameScope.Find<SegmentedControl>(BeamPart);
@@ -525,10 +522,7 @@ public class ReasoningTree : Explainer
 
     private void UpdateTexts()
     {
-        if (_beamLabel is not null)
-        {
-            _beamLabel.Text = Bounds.Width > 0 && Bounds.Width < CompactWidth ? Labels.BeamWidthShort : Labels.BeamWidth;
-        }
+        _beamLabel?.Text = Bounds.Width > 0 && Bounds.Width < CompactWidth ? Labels.BeamWidthShort : Labels.BeamWidth;
         if (_beam is not null)
         {
             AutomationProperties.SetName(_beam, Labels.BeamWidth);
@@ -612,15 +606,9 @@ public class ReasoningTree : Explainer
     /// <summary>A view model's list and its thoughts can outlive the card: they are observed only while it is attached.</summary>
     private void WatchSource()
     {
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged -= OnThoughtsChanged;
-        }
+        _watchedSource?.CollectionChanged -= OnThoughtsChanged;
         _watchedSource = IsAttached ? ThoughtsSource as INotifyCollectionChanged : null;
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged += OnThoughtsChanged;
-        }
+        _watchedSource?.CollectionChanged += OnThoughtsChanged;
         WatchThoughts();
     }
 

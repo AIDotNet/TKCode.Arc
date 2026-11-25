@@ -265,10 +265,7 @@ public class HeroSection : TemplatedControl
     {
         var width = Bounds.Width > 0 ? Bounds.Width : ArcViewport.GetSize(this)?.Width ?? 1280;
         _scene?.UpdateSize(width, ViewportHeight);
-        if (_dots is not null)
-        {
-            _dots.IsStacked = width <= 900;
-        }
+        _dots?.IsStacked = width <= 900;
     }
 
     protected override Size MeasureOverride(Size availableSize)

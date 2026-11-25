@@ -483,10 +483,7 @@ public class AvatarUpload : TemplatedControl
         _workingType = contentType;
         ErrorMessage = null;
         _cropper?.SetImage(image);
-        if (_cropper is not null)
-        {
-            _cropper.MaxZoom = Math.Max(1, MaxZoom);
-        }
+        _cropper?.MaxZoom = Math.Max(1, MaxZoom);
         State = AvatarUploadState.Editing;
         UpdateState();
         Dispatcher.UIThread.Post(() =>
@@ -887,47 +884,20 @@ public class AvatarUpload : TemplatedControl
         {
             _stage.Tapped += OnStageTapped;
         }
-        if (_pick is not null)
-        {
-            _pick.Click += OnPickClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_cancelUpload is not null)
-        {
-            _cancelUpload.Click += OnCancelUploadClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
-        if (_cancelEdit is not null)
-        {
-            _cancelEdit.Click += OnCancelEditClick;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click += OnZoomInClick;
-        }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click += OnZoomOutClick;
-        }
+        _pick?.Click += OnPickClick;
+        _remove?.Click += OnRemoveClick;
+        _retry?.Click += OnRetryClick;
+        _cancelUpload?.Click += OnCancelUploadClick;
+        _save?.Click += OnSaveClick;
+        _cancelEdit?.Click += OnCancelEditClick;
+        _zoomIn?.Click += OnZoomInClick;
+        _zoomOut?.Click += OnZoomOutClick;
         if (_cropper is not null)
         {
             _cropper.Committed += OnCropperCommitted;
             _cropper.PropertyChanged += OnCropperChanged;
         }
-        if (_zoom is not null)
-        {
-            _zoom.PropertyChanged += OnZoomSliderChanged;
-        }
+        _zoom?.PropertyChanged += OnZoomSliderChanged;
     }
 
     private void Unhook()
@@ -936,47 +906,20 @@ public class AvatarUpload : TemplatedControl
         {
             _stage.Tapped -= OnStageTapped;
         }
-        if (_pick is not null)
-        {
-            _pick.Click -= OnPickClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_cancelUpload is not null)
-        {
-            _cancelUpload.Click -= OnCancelUploadClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
-        if (_cancelEdit is not null)
-        {
-            _cancelEdit.Click -= OnCancelEditClick;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click -= OnZoomInClick;
-        }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click -= OnZoomOutClick;
-        }
+        _pick?.Click -= OnPickClick;
+        _remove?.Click -= OnRemoveClick;
+        _retry?.Click -= OnRetryClick;
+        _cancelUpload?.Click -= OnCancelUploadClick;
+        _save?.Click -= OnSaveClick;
+        _cancelEdit?.Click -= OnCancelEditClick;
+        _zoomIn?.Click -= OnZoomInClick;
+        _zoomOut?.Click -= OnZoomOutClick;
         if (_cropper is not null)
         {
             _cropper.Committed -= OnCropperCommitted;
             _cropper.PropertyChanged -= OnCropperChanged;
         }
-        if (_zoom is not null)
-        {
-            _zoom.PropertyChanged -= OnZoomSliderChanged;
-        }
+        _zoom?.PropertyChanged -= OnZoomSliderChanged;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -1023,18 +966,12 @@ public class AvatarUpload : TemplatedControl
             _ => ErrorMessage ?? EffectiveDescription
         };
         PseudoClasses.Set(NoRemovePseudoClass, !AllowRemove);
-        if (_ring is not null)
-        {
-            _ring.Value = state == AvatarUploadState.Uploading ? Progress : 0;
-        }
+        _ring?.Value = state == AvatarUploadState.Uploading ? Progress : 0;
         if (_stage is not null)
         {
             AutomationProperties.SetName(_stage, labels.Picture);
         }
-        if (_pick is not null)
-        {
-            _pick.Content = Source is null ? labels.Upload : labels.Change;
-        }
+        _pick?.Content = Source is null ? labels.Upload : labels.Change;
         SetContent(_remove, labels.Remove);
         SetContent(_retry, labels.Retry);
         SetContent(_cancelUpload, state == AvatarUploadState.Failed ? labels.Cancel : labels.CancelUpload);

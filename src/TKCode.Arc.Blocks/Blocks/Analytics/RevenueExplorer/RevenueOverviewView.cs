@@ -265,15 +265,9 @@ internal sealed class RevenueOverviewView : Control
         get => _viewport;
         set
         {
-            if (_viewport is not null)
-            {
-                _viewport.Changed -= InvalidateVisual;
-            }
+            _viewport?.Changed -= InvalidateVisual;
             _viewport = value;
-            if (value is not null)
-            {
-                value.Changed += InvalidateVisual;
-            }
+            value?.Changed += InvalidateVisual;
             InvalidateVisual();
         }
     }

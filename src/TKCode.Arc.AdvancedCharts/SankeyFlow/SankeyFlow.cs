@@ -389,10 +389,7 @@ public partial class SankeyFlow : Control, IChartsBAccessible, Avalonia.Renderin
         else if (change.Property == IsParticlesEnabledProperty)
         {
             var enabled = change.GetNewValue<bool>();
-            if (_toggle is not null)
-            {
-                _toggle.IsChecked = enabled;
-            }
+            _toggle?.IsChecked = enabled;
             SyncParticles();
             ParticlesChanged?.Invoke(this, new SankeyFlowParticlesChangedEventArgs(enabled));
         }
@@ -820,10 +817,7 @@ public partial class SankeyFlow : Control, IChartsBAccessible, Avalonia.Renderin
         else
         {
             _particleLoop?.Stop();
-            if (_particleLayer is not null)
-            {
-                _particleLayer.IsVisible = false;
-            }
+            _particleLayer?.IsVisible = false;
         }
     }
 

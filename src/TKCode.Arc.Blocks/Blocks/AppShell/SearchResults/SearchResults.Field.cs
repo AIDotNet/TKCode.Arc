@@ -59,10 +59,7 @@ public partial class SearchResults
             _popup.OverlayInputPassThroughElement = _fieldFrame;
             _popup.Closed += OnPopupClosed;
         }
-        if (_suggestionList is not null)
-        {
-            _suggestionList.Chosen += OnSuggestionChosen;
-        }
+        _suggestionList?.Chosen += OnSuggestionChosen;
     }
 
     private void DetachField()
@@ -82,10 +79,7 @@ public partial class SearchResults
             _popup.Closed -= OnPopupClosed;
             _popup.IsOpen = false;
         }
-        if (_suggestionList is not null)
-        {
-            _suggestionList.Chosen -= OnSuggestionChosen;
-        }
+        _suggestionList?.Chosen -= OnSuggestionChosen;
         _suggestionsOpen = false;
     }
 
@@ -353,10 +347,7 @@ public partial class SearchResults
         _edited = false;
         CloseSuggestions();
         SetCurrentValue(QueryProperty, text);
-        if (_field is not null)
-        {
-            _field.CaretIndex = text.Length;
-        }
+        _field?.CaretIndex = text.Length;
         SubmitQuery(text);
         FocusSearch(NavigationMethod.Pointer, selectAll: false);
     }

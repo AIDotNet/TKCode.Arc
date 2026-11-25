@@ -222,10 +222,7 @@ internal sealed class StarterPromptCard : AvaloniaButton
         {
             _fade?.Jump(1);
             _offset?.Jump(0);
-            if (_content is not null)
-            {
-                _content.Opacity = 1;
-            }
+            _content?.Opacity = 1;
             _rise.Y = 0;
             Apply(prompt, category, labels);
             return;
@@ -261,10 +258,7 @@ internal sealed class StarterPromptCard : AvaloniaButton
         var value = new MotionValue<double>(this, _content?.Opacity ?? 1, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_content is not null)
-            {
-                _content.Opacity = v;
-            }
+            _content?.Opacity = v;
         };
         return value;
     }

@@ -102,10 +102,7 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
         base.OnApplyTemplate(e);
         foreach (var button in new[] { _retry, _reindex, _delete, _cancel, _confirmDelete })
         {
-            if (button is not null)
-            {
-                button.Click -= OnButtonClick;
-            }
+            button?.Click -= OnButtonClick;
         }
         _confirm?.RemoveHandler(KeyDownEvent, OnConfirmKeyDown);
         T? Find<T>(string name) where T : class => e.NameScope.Find<T>(name);
@@ -126,10 +123,7 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
         _confirmDelete = Find<Button>(ConfirmDeletePart);
         foreach (var button in new[] { _retry, _reindex, _delete, _cancel, _confirmDelete })
         {
-            if (button is not null)
-            {
-                button.Click += OnButtonClick;
-            }
+            button?.Click += OnButtonClick;
         }
         _confirm?.AddHandler(KeyDownEvent, OnConfirmKeyDown, RoutingStrategies.Bubble);
         Refresh();
@@ -167,15 +161,9 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
             Refresh();
             return;
         }
-        if (_document is not null)
-        {
-            _document.PropertyChanged -= OnDocumentChanged;
-        }
+        _document?.PropertyChanged -= OnDocumentChanged;
         _document = document;
-        if (_document is not null)
-        {
-            _document.PropertyChanged += OnDocumentChanged;
-        }
+        _document?.PropertyChanged += OnDocumentChanged;
         Refresh();
     }
 
@@ -204,10 +192,7 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
         var status = document.Status;
         var kind = labels.KindName(document.Kind);
 
-        if (_kindGlyph is not null)
-        {
-            _kindGlyph.Data = KindGlyph(document.Kind);
-        }
+        _kindGlyph?.Data = KindGlyph(document.Kind);
         SetText(_name, document.Name);
         var facts = new List<string> { kind, KnowledgeBaseText.FormatSize(document.SizeBytes, culture) };
         if (document.ChunkCount > 0 && status != KnowledgeDocumentStatus.Failed)
@@ -244,15 +229,9 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
         {
             Tooltip.SetTip(_delete, labels.Delete(name));
         }
-        if (_retry is not null)
-        {
-            _retry.Content = labels.Retry;
-        }
+        _retry?.Content = labels.Retry;
         SetText(_confirmText, labels.ConfirmDelete(name, document.ChunkCount));
-        if (_cancel is not null)
-        {
-            _cancel.Content = labels.Cancel;
-        }
+        _cancel?.Content = labels.Cancel;
         if (_confirmDelete is not null)
         {
             _confirmDelete.Content = labels.ConfirmDeleteButton;
@@ -282,10 +261,7 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
             return;
         }
         var labels = _owner.Labels;
-        if (_ring is not null)
-        {
-            _ring.Value = document.IsBusy ? Math.Max(0.04, document.Progress) : 0;
-        }
+        _ring?.Value = document.IsBusy ? Math.Max(0.04, document.Progress) : 0;
         var stage = labels.StatusName(document.Status);
         SetText(_statusText, document.IsBusy
             ? string.Format(_owner.FormatCulture, "{0} {1:0}%", stage, document.Progress * 100)
@@ -449,10 +425,7 @@ internal sealed class KnowledgeBaseDocumentRow : TemplatedControl
                 _confirm.Opacity = 0;
                 Dispatcher.UIThread.Post(() =>
                 {
-                    if (_confirm is not null)
-                    {
-                        _confirm.Opacity = 1;
-                    }
+                    _confirm?.Opacity = 1;
                 }, DispatcherPriority.Render);
             }
             else

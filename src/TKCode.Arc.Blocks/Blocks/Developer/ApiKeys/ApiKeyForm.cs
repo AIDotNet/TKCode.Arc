@@ -118,18 +118,9 @@ internal sealed class ApiKeyForm : TemplatedControl
             _name.RemoveHandler(KeyDownEvent, OnNameKeyDown);
             _name.TextChanged -= OnNameChanged;
         }
-        if (_environment is not null)
-        {
-            _environment.SelectionChanged -= OnEnvironmentChanged;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_generate is not null)
-        {
-            _generate.Click -= OnGenerateClick;
-        }
+        _environment?.SelectionChanged -= OnEnvironmentChanged;
+        _cancel?.Click -= OnCancelClick;
+        _generate?.Click -= OnGenerateClick;
 
         _name = e.NameScope.Find<Input>(NamePart);
         _environmentLabel = e.NameScope.Find<TextBlock>(EnvironmentLabelPart);
@@ -153,18 +144,9 @@ internal sealed class ApiKeyForm : TemplatedControl
             _name.AddHandler(KeyDownEvent, OnNameKeyDown, RoutingStrategies.Tunnel);
             _name.TextChanged += OnNameChanged;
         }
-        if (_environment is not null)
-        {
-            _environment.SelectionChanged += OnEnvironmentChanged;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_generate is not null)
-        {
-            _generate.Click += OnGenerateClick;
-        }
+        _environment?.SelectionChanged += OnEnvironmentChanged;
+        _cancel?.Click += OnCancelClick;
+        _generate?.Click += OnGenerateClick;
         _scopes.Clear();
         ApplyLabels();
         BuildScopes(_pendingScopes, keepChecks: false);
@@ -261,10 +243,7 @@ internal sealed class ApiKeyForm : TemplatedControl
             _name.MaxLength = _maxLength;
             AutomationProperties.SetName(_name, _labels.NameLabel);
         }
-        if (_environmentLabel is not null)
-        {
-            _environmentLabel.Text = _labels.EnvironmentLabel;
-        }
+        _environmentLabel?.Text = _labels.EnvironmentLabel;
         if (_environment is not null)
         {
             var index = _environment.SelectedIndex;
@@ -278,26 +257,14 @@ internal sealed class ApiKeyForm : TemplatedControl
             _syncing = false;
             AutomationProperties.SetName(_environment, _labels.EnvironmentLabel);
         }
-        if (_scopesLabel is not null)
-        {
-            _scopesLabel.Text = _labels.ScopesLabel;
-        }
+        _scopesLabel?.Text = _labels.ScopesLabel;
         if (_scopeGrid is not null)
         {
             AutomationProperties.SetName(_scopeGrid, _labels.ScopesLabel);
         }
-        if (_scopeError is not null)
-        {
-            _scopeError.Text = _labels.ScopeRequired;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Content = _labels.Cancel;
-        }
-        if (_generate is not null)
-        {
-            _generate.Content = _labels.Generate;
-        }
+        _scopeError?.Text = _labels.ScopeRequired;
+        _cancel?.Content = _labels.Cancel;
+        _generate?.Content = _labels.Generate;
         if (_name?.IsInvalid == true)
         {
             _name.ErrorMessage = _labels.NameRequired;
@@ -477,10 +444,7 @@ internal sealed class ApiKeyForm : TemplatedControl
             Grid.SetColumn(_environmentField, _stacked ? 0 : 1);
             Grid.SetRow(_environmentField, _stacked ? 1 : 0);
         }
-        if (_scopeGrid is not null)
-        {
-            _scopeGrid.Columns = _stacked ? 1 : 2;
-        }
+        _scopeGrid?.Columns = _stacked ? 1 : 2;
         if (_actions is not null && _hint is not null && _cancel is not null && _generate is not null)
         {
             // Stacked: the hint takes the first line, the buttons the second at the end.
@@ -495,27 +459,18 @@ internal sealed class ApiKeyForm : TemplatedControl
     private void ApplyBusy()
     {
         PseudoClasses.Set(BusyPseudoClass, _busy);
-        if (_generate is not null)
-        {
-            _generate.IsLoading = _busy;
-        }
+        _generate?.IsLoading = _busy;
         if (_name is not null)
         {
             // Read-only rather than disabled: Enter in the field submits, and the focus must not drop.
             _name.IsReadOnly = _busy;
         }
-        if (_environment is not null)
-        {
-            _environment.IsEnabled = !_busy;
-        }
+        _environment?.IsEnabled = !_busy;
         foreach (var (_, box) in _scopes)
         {
             box.IsEnabled = !_busy;
         }
-        if (_cancel is not null)
-        {
-            _cancel.IsEnabled = !_busy;
-        }
+        _cancel?.IsEnabled = !_busy;
     }
 }
 
@@ -547,24 +502,12 @@ internal sealed class ApiKeyReveal : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_secret is not null)
-        {
-            _secret.Copied -= OnCopied;
-        }
-        if (_done is not null)
-        {
-            _done.Click -= OnDone;
-        }
+        _secret?.Copied -= OnCopied;
+        _done?.Click -= OnDone;
         _secret = e.NameScope.Find<DeveloperSecretField>(SecretPart);
         _done = e.NameScope.Find<Button>(DonePart);
-        if (_secret is not null)
-        {
-            _secret.Copied += OnCopied;
-        }
-        if (_done is not null)
-        {
-            _done.Click += OnDone;
-        }
+        _secret?.Copied += OnCopied;
+        _done?.Click += OnDone;
         ApplyLabels();
         if (_pending is not null)
         {
@@ -607,10 +550,7 @@ internal sealed class ApiKeyReveal : TemplatedControl
             _secret.CopyText = _labels.Copy;
             _secret.CopiedText = _labels.Copied;
         }
-        if (_done is not null)
-        {
-            _done.Content = _labels.Done;
-        }
+        _done?.Content = _labels.Done;
     }
 
     private void OnCopied(object? sender, EventArgs e) => Copied?.Invoke(this, EventArgs.Empty);

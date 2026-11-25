@@ -22,8 +22,37 @@ internal sealed record HierarchicalKind(string Value)
     public bool Intersects(HierarchicalKind other) => Contains(other) || other.Contains(this);
 
     /// <summary>The sub-kind of this kind made of <paramref name="parts"/>.</summary>
-    public HierarchicalKind Append(params string[] parts) =>
-        new(Value.Length > 0 ? string.Join(Sep, [Value, .. parts]) : string.Join(Sep, parts));
+    public HierarchicalKind Append(params ReadOnlySpan<string> parts)
+    {
+        if (parts.IsEmpty)
+        {
+            return this;
+        }
+        if (parts.Length == 1)
+        {
+            return new(Value.Length > 0 ? string.Concat(Value, Sep, parts[0]) : parts[0]);
+        }
+        if (parts.Length == 2)
+        {
+            return new(Value.Length > 0
+                ? string.Concat(Value, Sep, parts[0], Sep, parts[1])
+                : string.Concat(parts[0], Sep, parts[1]));
+        }
+        var sb = new System.Text.StringBuilder(Value.Length + parts.Length * 12);
+        if (Value.Length > 0)
+        {
+            sb.Append(Value);
+        }
+        foreach (var part in parts)
+        {
+            if (sb.Length > 0)
+            {
+                sb.Append('.');
+            }
+            sb.Append(part);
+        }
+        return new(sb.ToString());
+    }
 
     public override string ToString() => Value;
 }

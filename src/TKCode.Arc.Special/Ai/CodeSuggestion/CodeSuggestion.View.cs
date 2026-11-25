@@ -89,14 +89,8 @@ public partial class CodeSuggestion
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_codeArea is not null)
-        {
-            _codeArea.KeyDown -= OnCodeAreaKeyDown;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.PropertyChanged -= OnScrollChanged;
-        }
+        _codeArea?.KeyDown -= OnCodeAreaKeyDown;
+        _scroll?.PropertyChanged -= OnScrollChanged;
         if (_view is not null)
         {
             _view.DarkChanged -= OnDarkChanged;
@@ -124,14 +118,8 @@ public partial class CodeSuggestion
         _statusLabel = e.NameScope.Find<ArcContentSwap>(StatusLabelPart);
         _actions = e.NameScope.Find<ArcContentSwap>(ActionsPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_codeArea is not null)
-        {
-            _codeArea.KeyDown += OnCodeAreaKeyDown;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.PropertyChanged += OnScrollChanged;
-        }
+        _codeArea?.KeyDown += OnCodeAreaKeyDown;
+        _scroll?.PropertyChanged += OnScrollChanged;
         if (_view is not null)
         {
             _view.Rows.Clear();
@@ -141,18 +129,9 @@ public partial class CodeSuggestion
         _labelText = null;
         _countAdded = -1;
         _countRemoved = -1;
-        if (_statusIcon is not null)
-        {
-            _statusIcon.Content = null;
-        }
-        if (_statusLabel is not null)
-        {
-            _statusLabel.Content = null;
-        }
-        if (_actions is not null)
-        {
-            _actions.Content = null;
-        }
+        _statusIcon?.Content = null;
+        _statusLabel?.Content = null;
+        _actions?.Content = null;
         PseudoClasses.Set(ErrorPseudoClass, EffectiveStatus == CodeSuggestionStatus.Error);
         UpdateResponsive();
         UpdateTexts();
@@ -178,10 +157,7 @@ public partial class CodeSuggestion
     {
         var labels = Labels;
         AutomationProperties.SetName(this, labels.CardName(Instruction));
-        if (_title is not null)
-        {
-            _title.Text = Instruction;
-        }
+        _title?.Text = Instruction;
         var model = Model;
         if (_model is not null)
         {
@@ -200,10 +176,7 @@ public partial class CodeSuggestion
                 ArcTokens.Bind(_mark, ArcGlyph.ForegroundProperty, ArcDesignTokenKind.Foreground);
             }
         }
-        if (_fileName is not null)
-        {
-            _fileName.Text = FileName;
-        }
+        _fileName?.Text = FileName;
         if (_folder is not null)
         {
             var path = EffectiveFilePath;

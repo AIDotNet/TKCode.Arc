@@ -50,15 +50,9 @@ internal sealed class AiConversationMenuPanel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroll is not null)
-        {
-            _scroll.Content = null;
-        }
+        _scroll?.Content = null;
         _scroll = e.NameScope.Find<ScrollArea>(ScrollPart);
-        if (_scroll is not null)
-        {
-            _scroll.Content = List;
-        }
+        _scroll?.Content = List;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

@@ -52,10 +52,7 @@ internal sealed class SearchResultsField : AvaloniaTextBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_clearButton is not null)
-        {
-            _clearButton.Click -= OnClearClick;
-        }
+        _clearButton?.Click -= OnClearClick;
         base.OnApplyTemplate(e);
         _clearButton = e.NameScope.Find<FieldIconButton>(ClearButtonPart);
         _clearPresence = e.NameScope.Find<PresenceHost>(ClearPresencePart);
@@ -99,10 +96,7 @@ internal sealed class SearchResultsField : AvaloniaTextBox
     {
         var filled = !string.IsNullOrEmpty(Text);
         PseudoClasses.Set(FilledPseudoClass, filled);
-        if (_clearPresence is not null)
-        {
-            _clearPresence.IsPresent = filled;
-        }
+        _clearPresence?.IsPresent = filled;
     }
 
     private void OnClearClick(object? sender, RoutedEventArgs e)

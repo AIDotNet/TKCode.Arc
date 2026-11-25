@@ -259,7 +259,6 @@ public class MenuEntry : TemplatedControl
 
     #endregion
 
-    private Geometry? _iconGeometry;
     private object? _iconContent;
     private bool _hasIconSlot;
     private bool _showsRadioDot;
@@ -275,8 +274,8 @@ public class MenuEntry : TemplatedControl
 
     internal Geometry? IconGeometry
     {
-        get => _iconGeometry;
-        private set => SetAndRaise(IconGeometryProperty, ref _iconGeometry, value);
+        get;
+        private set => SetAndRaise(IconGeometryProperty, ref field, value);
     }
 
     internal object? IconContent

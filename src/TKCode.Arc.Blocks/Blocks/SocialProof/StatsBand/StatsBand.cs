@@ -355,9 +355,6 @@ public class StatsBand : TemplatedControl
         {
             item.SetTime(_time, count, draw);
         }
-        if (_rules is not null)
-        {
-            _rules.Time = _time;
-        }
+        _rules?.Time = _time;
     }
 }

@@ -439,18 +439,9 @@ public class LlmCostCalculator : TemplatedControl
         SetupSlider(_inputSlider, LlmCostCalculatorMath.InputStops);
         SetupSlider(_outputSlider, LlmCostCalculatorMath.OutputStops);
         SetupSlider(_requestsSlider, LlmCostCalculatorMath.RequestStops);
-        if (_presets is not null)
-        {
-            _presets.SelectionChanged += OnPresetChanged;
-        }
-        if (_cacheSwitch is not null)
-        {
-            _cacheSwitch.IsCheckedChanged += OnCacheToggled;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
+        _presets?.SelectionChanged += OnPresetChanged;
+        _cacheSwitch?.IsCheckedChanged += OnCacheToggled;
+        _retry?.Click += OnRetryClick;
         // The large total and the rolling figures are read through the status region and the row names instead.
         foreach (var digits in new[] { _total, _inputCost, _cachedCost, _outputCost, _perRequestCost })
         {
@@ -483,23 +474,11 @@ public class LlmCostCalculator : TemplatedControl
     {
         foreach (var slider in new[] { _inputSlider, _outputSlider, _requestsSlider })
         {
-            if (slider is not null)
-            {
-                slider.ValueChanged -= OnSliderChanged;
-            }
+            slider?.ValueChanged -= OnSliderChanged;
         }
-        if (_presets is not null)
-        {
-            _presets.SelectionChanged -= OnPresetChanged;
-        }
-        if (_cacheSwitch is not null)
-        {
-            _cacheSwitch.IsCheckedChanged -= OnCacheToggled;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
+        _presets?.SelectionChanged -= OnPresetChanged;
+        _cacheSwitch?.IsCheckedChanged -= OnCacheToggled;
+        _retry?.Click -= OnRetryClick;
         foreach (var row in _rows)
         {
             row.Picked = null;
@@ -586,15 +565,9 @@ public class LlmCostCalculator : TemplatedControl
     /// <summary>Listens to the app's list while the panel is shown, so adding or removing a model updates it.</summary>
     private void ObserveModels()
     {
-        if (_observedModels is not null)
-        {
-            _observedModels.CollectionChanged -= OnModelsCollectionChanged;
-        }
+        _observedModels?.CollectionChanged -= OnModelsCollectionChanged;
         _observedModels = VisualRoot is not null ? Models as INotifyCollectionChanged : null;
-        if (_observedModels is not null)
-        {
-            _observedModels.CollectionChanged += OnModelsCollectionChanged;
-        }
+        _observedModels?.CollectionChanged += OnModelsCollectionChanged;
     }
 
     private void OnModelsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -637,10 +610,7 @@ public class LlmCostCalculator : TemplatedControl
         {
             row.SetCompact(_compact);
         }
-        if (_skeleton is not null)
-        {
-            _skeleton.IsCompact = _compact;
-        }
+        _skeleton?.IsCompact = _compact;
     }
 
     #region Inputs
@@ -737,10 +707,7 @@ public class LlmCostCalculator : TemplatedControl
             SetSlider(_inputSlider, LlmCostCalculatorMath.InputStops, usage.InputTokens, Labels.InputTokens);
             SetSlider(_outputSlider, LlmCostCalculatorMath.OutputStops, usage.OutputTokens, Labels.OutputTokens);
             SetSlider(_requestsSlider, LlmCostCalculatorMath.RequestStops, usage.RequestsPerDay, Labels.RequestsPerDay);
-            if (_cacheSwitch is not null)
-            {
-                _cacheSwitch.IsChecked = usage.Cached;
-            }
+            _cacheSwitch?.IsChecked = usage.Cached;
             PseudoClasses.Set(CachedPseudoClass, usage.Cached);
             if (_presets is not null)
             {
@@ -905,26 +872,11 @@ public class LlmCostCalculator : TemplatedControl
     {
         var labels = Labels;
         var title = Title ?? labels.Title;
-        if (_title is not null)
-        {
-            _title.Text = title;
-        }
-        if (_description is not null)
-        {
-            _description.Text = Description ?? labels.Description;
-        }
-        if (_note is not null)
-        {
-            _note.Text = Note ?? labels.Note;
-        }
-        if (_totalUnit is not null)
-        {
-            _totalUnit.Text = labels.PerMonth;
-        }
-        if (_cacheSwitch is not null)
-        {
-            _cacheSwitch.Content = labels.CachedInput;
-        }
+        _title?.Text = title;
+        _description?.Text = Description ?? labels.Description;
+        _note?.Text = Note ?? labels.Note;
+        _totalUnit?.Text = labels.PerMonth;
+        _cacheSwitch?.Content = labels.CachedInput;
         SetText(_inputLabel, labels.Input);
         SetText(_cachedLabel, labels.Cached);
         SetText(_outputLabel, labels.Output);
@@ -932,10 +884,7 @@ public class LlmCostCalculator : TemplatedControl
         SetText(_errorTitle, labels.ErrorTitle);
         SetText(_emptyTitle, labels.EmptyTitle);
         SetText(_emptyText, labels.EmptyText);
-        if (_retry is not null)
-        {
-            _retry.Content = labels.TryAgain;
-        }
+        _retry?.Content = labels.TryAgain;
         if (_list is not null)
         {
             AutomationProperties.SetName(_list, labels.ModelList);
@@ -974,10 +923,7 @@ public class LlmCostCalculator : TemplatedControl
         var enabled = state != ViewState.Loading;
         foreach (var control in new Control?[] { _presets, _inputSlider, _outputSlider, _requestsSlider, _cacheSwitch })
         {
-            if (control is not null)
-            {
-                control.IsEnabled = enabled;
-            }
+            control?.IsEnabled = enabled;
         }
         SetLayer(_list, state == ViewState.List);
         SetLayer(_error, state == ViewState.Error);
@@ -994,14 +940,8 @@ public class LlmCostCalculator : TemplatedControl
             _errorText.Text = ErrorText;
             _errorText.IsVisible = !string.IsNullOrEmpty(ErrorText);
         }
-        if (_retry is not null)
-        {
-            _retry.IsVisible = AllowsRetry;
-        }
-        if (_cacheShare is not null)
-        {
-            _cacheShare.Text = labels.CacheShare(CacheHitRate);
-        }
+        _retry?.IsVisible = AllowsRetry;
+        _cacheShare?.Text = labels.CacheShare(CacheHitRate);
 
         // Costs, ranks and bars.
         var models = _rows.Select(r => r.Model).ToList();

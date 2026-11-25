@@ -237,10 +237,7 @@ public partial class DictationButton : TemplatedControl
             _dictation.Committed += OnDictationCommitted;
             _dictation.Cancelled += OnDictationCancelled;
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         _labelKey = null;
         UpdateWidthClasses(Bounds.Width);
         Refresh();
@@ -256,10 +253,7 @@ public partial class DictationButton : TemplatedControl
             _dictation.Committed -= OnDictationCommitted;
             _dictation.Cancelled -= OnDictationCancelled;
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
     }
 
     /// <inheritdoc />
@@ -427,10 +421,7 @@ public partial class DictationButton : TemplatedControl
         SetAndRaise(StatusProperty, ref _status, e.Status);
         var active = e.Status is DictationStatus.Starting or DictationStatus.Listening or DictationStatus.Processing;
         PseudoClasses.Set(DictatingPseudoClass, active);
-        if (_field is not null)
-        {
-            _field.IsReadOnly = active;
-        }
+        _field?.IsReadOnly = active;
         if (e.Status is DictationStatus.Denied or DictationStatus.Error)
         {
             _sendAfterCommit = false;

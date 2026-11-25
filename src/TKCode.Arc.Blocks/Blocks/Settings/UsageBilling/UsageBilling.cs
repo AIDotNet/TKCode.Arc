@@ -349,10 +349,7 @@ public class UsageBilling : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_setLimit is not null)
-        {
-            _setLimit.Click -= OnSetLimitClick;
-        }
+        _setLimit?.Click -= OnSetLimitClick;
         if (_limitInput is not null)
         {
             _limitInput.PropertyChanged -= OnLimitInputPropertyChanged;
@@ -381,10 +378,7 @@ public class UsageBilling : TemplatedControl
         _limitEditor = scope.Find<SpringSizeDecorator>(LimitEditorPart);
         _limitInput = scope.Find<MoneyInput>(LimitInputPart);
 
-        if (_setLimit is not null)
-        {
-            _setLimit.Click += OnSetLimitClick;
-        }
+        _setLimit?.Click += OnSetLimitClick;
         if (_limitInput is not null)
         {
             _limitInput.PropertyChanged += OnLimitInputPropertyChanged;
@@ -392,10 +386,7 @@ public class UsageBilling : TemplatedControl
             // A limit is set once and adjusted rarely: no quick add chips, the field stays a calm single line.
             _limitInput.QuickAddAmounts = Array.Empty<decimal>();
         }
-        if (_limitRow is not null)
-        {
-            _limitRow.Icon = s_gauge;
-        }
+        _limitRow?.Icon = s_gauge;
         UpdateEditorNavigation();
         if (_chart is not null)
         {
@@ -467,28 +458,16 @@ public class UsageBilling : TemplatedControl
         {
             return;
         }
-        if (_watchedMeters is not null)
-        {
-            _watchedMeters.CollectionChanged -= OnMetersChanged;
-        }
+        _watchedMeters?.CollectionChanged -= OnMetersChanged;
         _watchedMeters = wanted;
-        if (_watchedMeters is not null)
-        {
-            _watchedMeters.CollectionChanged += OnMetersChanged;
-        }
+        _watchedMeters?.CollectionChanged += OnMetersChanged;
     }
 
     private void WatchDaily()
     {
-        if (_observedDaily is not null)
-        {
-            _observedDaily.CollectionChanged -= OnDailySpendChanged;
-        }
+        _observedDaily?.CollectionChanged -= OnDailySpendChanged;
         _observedDaily = _watching ? DailySpend as INotifyCollectionChanged : null;
-        if (_observedDaily is not null)
-        {
-            _observedDaily.CollectionChanged += OnDailySpendChanged;
-        }
+        _observedDaily?.CollectionChanged += OnDailySpendChanged;
     }
 
     #endregion
@@ -765,16 +744,10 @@ public class UsageBilling : TemplatedControl
             _spent.CultureName = culture.Name;
             _spent.Value = (double)CurrentTotal;
         }
-        if (_projected is not null)
-        {
-            _projected.Text = labels.Projected(Money(ProjectedTotal));
-        }
+        _projected?.Text = labels.Projected(Money(ProjectedTotal));
 
         var status = _limitStatus;
-        if (_status is not null)
-        {
-            _status.IsPresent = status is UsageBillingLimitStatus.Near or UsageBillingLimitStatus.Reached;
-        }
+        _status?.IsPresent = status is UsageBillingLimitStatus.Near or UsageBillingLimitStatus.Reached;
         if (_statusBadge is not null && status is UsageBillingLimitStatus.Near or UsageBillingLimitStatus.Reached)
         {
             var reached = status == UsageBillingLimitStatus.Reached;
@@ -782,26 +755,14 @@ public class UsageBilling : TemplatedControl
             _statusBadge.Content = reached ? labels.LimitReached : labels.NearLimit;
         }
 
-        if (_limitLabel is not null)
-        {
-            _limitLabel.Text = labels.SpendingLimit;
-        }
-        if (_setLimit is not null)
-        {
-            _setLimit.Content = labels.SetLimit;
-        }
+        _limitLabel?.Text = labels.SpendingLimit;
+        _setLimit?.Content = labels.SetLimit;
         var limit = EffectiveLimit;
         if (limit is { } l)
         {
             var share = (double)(CurrentTotal / l);
-            if (_limitPercent is not null)
-            {
-                _limitPercent.Text = Math.Min(share, 9.99).ToString("P0", culture);
-            }
-            if (_limitCaption is not null)
-            {
-                _limitCaption.Text = labels.LimitProgress(Money(CurrentTotal), Money(l));
-            }
+            _limitPercent?.Text = Math.Min(share, 9.99).ToString("P0", culture);
+            _limitCaption?.Text = labels.LimitProgress(Money(CurrentTotal), Money(l));
             if (_limitBar is not null)
             {
                 _limitBar.Show(share, 1, AlertThreshold is > 0 and < 1 ? AlertThreshold : double.NaN);
@@ -819,14 +780,8 @@ public class UsageBilling : TemplatedControl
             _usageGroup.Header = labels.Usage;
             _usageGroup.IsVisible = _views.Count > 0;
         }
-        if (_usageTotalLabel is not null)
-        {
-            _usageTotalLabel.Text = labels.UsageTotal;
-        }
-        if (_usageTotal is not null)
-        {
-            _usageTotal.Text = Money(MeteredTotal);
-        }
+        _usageTotalLabel?.Text = labels.UsageTotal;
+        _usageTotal?.Text = Money(MeteredTotal);
         if (_limitRow is not null)
         {
             _limitRow.Header = labels.SpendingLimit;
@@ -888,10 +843,7 @@ public class UsageBilling : TemplatedControl
         _chart.ValueLabel = labels.DaySpend;
         _chart.CategoryLabel = labels.Day;
         _chart.Period = count > 0 ? RangeText(span.Start, span.Start.AddDays(count - 1), labels.Culture) : string.Empty;
-        if (_dailyGroup is not null)
-        {
-            _dailyGroup.IsVisible = count > 0;
-        }
+        _dailyGroup?.IsVisible = count > 0;
     }
 
     private static double MinorUnits(double value, double scale) =>

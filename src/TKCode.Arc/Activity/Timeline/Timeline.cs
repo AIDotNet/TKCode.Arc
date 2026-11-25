@@ -272,10 +272,7 @@ public class Timeline : ItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged -= OnScrollChanged;
-        }
+        _scroller?.ScrollChanged -= OnScrollChanged;
         if (_list is not null)
         {
             _list.Owner = null;
@@ -287,16 +284,10 @@ public class Timeline : ItemsControl
         _hasViewport = false;
         // Subscribed before the list's first layout: a listener added later is only told about changes, so a page that
         // has already settled (a timeline shown in a scrolling host) would never learn its viewport.
-        if (_list is not null)
-        {
-            _list.EffectiveViewportChanged += OnListViewportChanged;
-        }
+        _list?.EffectiveViewportChanged += OnListViewportChanged;
         _sticky = e.NameScope.Find<TimelineDayHeader>(StickyPart);
         _liveRegion = e.NameScope.Find<ActivityLiveRegion>(LiveRegionPart);
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged += OnScrollChanged;
-        }
+        _scroller?.ScrollChanged += OnScrollChanged;
         if (_sticky is not null)
         {
             _sticky.IsOverlay = true;
@@ -349,10 +340,7 @@ public class Timeline : ItemsControl
             {
                 header.Background = HeaderBackground;
             }
-            if (_sticky is not null)
-            {
-                _sticky.Background = HeaderBackground;
-            }
+            _sticky?.Background = HeaderBackground;
         }
         else if (change.Property == MaxHeightProperty)
         {
@@ -704,10 +692,7 @@ public class Timeline : ItemsControl
             {
                 day.Index = i;
                 day.NextIndex = _rows.Count;
-                if (previous is not null)
-                {
-                    previous.NextIndex = i;
-                }
+                previous?.NextIndex = i;
                 previous = day;
                 _days[day.Day] = day;
             }
@@ -1241,10 +1226,7 @@ public class Timeline : ItemsControl
         var value = new MotionValue<double>(this, 0, MotionVectors.Double);
         value.Changed += y =>
         {
-            if (_scroller is not null)
-            {
-                _scroller.Offset = _scroller.Offset.WithY(Math.Max(0, y));
-            }
+            _scroller?.Offset = _scroller.Offset.WithY(Math.Max(0, y));
         };
         return value;
     }

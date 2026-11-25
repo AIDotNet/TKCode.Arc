@@ -205,15 +205,9 @@ public partial class EnvVariables
 
     private void ObserveSource()
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = (VariablesSource ?? Variables) as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -923,22 +917,10 @@ public partial class EnvVariables
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_importButton is not null)
-        {
-            _importButton.Click -= OnImportClick;
-        }
-        if (_addButton is not null)
-        {
-            _addButton.Click -= OnAddClick;
-        }
-        if (_search is not null)
-        {
-            _search.PropertyChanged -= OnSearchPropertyChanged;
-        }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged -= OnViewSwitchChanged;
-        }
+        _importButton?.Click -= OnImportClick;
+        _addButton?.Click -= OnAddClick;
+        _search?.PropertyChanged -= OnSearchPropertyChanged;
+        _viewSwitch?.SelectionChanged -= OnViewSwitchChanged;
         _shell = e.NameScope.Find<Control>(ShellPart);
         _header = e.NameScope.Find<EnvSplitPanel>("PART_Header");
         _titleText = e.NameScope.Find<TextBlock>("PART_Title");
@@ -955,23 +937,14 @@ public partial class EnvVariables
         _viewSwitch = e.NameScope.Find<SegmentedControl>("PART_ViewSwitch");
         _viewSlot = e.NameScope.Find<Decorator>("PART_ViewSlot");
         _announcer = e.NameScope.Find<DeveloperAnnouncer>("PART_Announcer");
-        if (_importButton is not null)
-        {
-            _importButton.Click += OnImportClick;
-        }
-        if (_addButton is not null)
-        {
-            _addButton.Click += OnAddClick;
-        }
+        _importButton?.Click += OnImportClick;
+        _addButton?.Click += OnAddClick;
         if (_search is not null)
         {
             _search.Text = SearchText;
             _search.PropertyChanged += OnSearchPropertyChanged;
         }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged += OnViewSwitchChanged;
-        }
+        _viewSwitch?.SelectionChanged += OnViewSwitchChanged;
         _banner = null;
         _addPanel = null;
         RebuildViews();
@@ -1064,23 +1037,14 @@ public partial class EnvVariables
 
     private void UpdateHeader()
     {
-        if (_titleText is not null)
-        {
-            _titleText.Text = Title ?? Labels.Title;
-        }
+        _titleText?.Text = Title ?? Labels.Title;
         if (_projectText is not null)
         {
             _projectText.Text = ProjectName;
             _projectText.IsVisible = !string.IsNullOrEmpty(ProjectName);
         }
-        if (_metaDot is not null)
-        {
-            _metaDot.IsVisible = !string.IsNullOrEmpty(ProjectName);
-        }
-        if (_summaryText is not null)
-        {
-            _summaryText.Text = Labels.KeysSummary(EnvVariableRules.CountKeys(SourceItems), EffectiveEnvironments.Count);
-        }
+        _metaDot?.IsVisible = !string.IsNullOrEmpty(ProjectName);
+        _summaryText?.Text = Labels.KeysSummary(EnvVariableRules.CountKeys(SourceItems), EffectiveEnvironments.Count);
         if (_importButton is not null)
         {
             _importButton.IsVisible = !IsReadOnly;
@@ -1091,10 +1055,7 @@ public partial class EnvVariables
             _addButton.IsVisible = !IsReadOnly;
             SetButtonContent(_addButton, ArcIcons.Plus, Labels.AddButton);
         }
-        if (_actions is not null)
-        {
-            _actions.IsVisible = !IsReadOnly;
-        }
+        _actions?.IsVisible = !IsReadOnly;
     }
 
     private static void SetButtonContent(Button button, Avalonia.Media.Geometry icon, string text)
@@ -1140,10 +1101,7 @@ public partial class EnvVariables
             // Set here: the template's token margin wins over a pseudo-class style.
             _header.Margin = narrow ? new Thickness(16, 20, 16, 16) : new Thickness(24, 20, 24, 16);
         }
-        if (_toolbar is not null)
-        {
-            _toolbar.IsStacked = narrow;
-        }
+        _toolbar?.IsStacked = narrow;
         _variablesPane?.SetLayout(compact, narrow);
         _comparePane?.SetLayout(compact, narrow);
         _addPanel?.SetNarrow(narrow);

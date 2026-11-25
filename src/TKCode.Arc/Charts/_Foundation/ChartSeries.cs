@@ -112,15 +112,9 @@ public class ChartSeries : AvaloniaObject
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnValuesCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnValuesCollectionChanged;
         _observed = values;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnValuesCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnValuesCollectionChanged;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

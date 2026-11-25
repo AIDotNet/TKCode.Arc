@@ -322,14 +322,8 @@ public class ProviderKeys : TemplatedControl
             _description.Text = Description;
             _description.IsVisible = !string.IsNullOrEmpty(Description);
         }
-        if (_footerText is not null)
-        {
-            _footerText.Text = Footer;
-        }
-        if (_footer is not null)
-        {
-            _footer.IsVisible = !string.IsNullOrEmpty(Footer);
-        }
+        _footerText?.Text = Footer;
+        _footer?.IsVisible = !string.IsNullOrEmpty(Footer);
         AutomationProperties.SetName(this, Title);
     }
 

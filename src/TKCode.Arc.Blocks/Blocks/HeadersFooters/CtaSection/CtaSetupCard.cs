@@ -82,10 +82,7 @@ internal sealed class CtaSetupStep : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _stack = e.NameScope.Find<SiteFaceStack>(FacesPart);
-        if (_stack is not null)
-        {
-            _stack.Images = Faces;
-        }
+        _stack?.Images = Faces;
         BuildFaceMotion();
         ApplyFacesNow();
     }
@@ -102,10 +99,7 @@ internal sealed class CtaSetupStep : TemplatedControl
         else if (change.Property == FacesProperty)
         {
             WatchFaces();
-            if (_stack is not null)
-            {
-                _stack.Images = Faces;
-            }
+            _stack?.Images = Faces;
             BuildFaceMotion();
             ApplyFacesNow();
         }
@@ -119,15 +113,9 @@ internal sealed class CtaSetupStep : TemplatedControl
 
     private void WatchFaces()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnFacesChanged;
-        }
+        _observed?.CollectionChanged -= OnFacesChanged;
         _observed = _watching ? Faces as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnFacesChanged;
-        }
+        _observed?.CollectionChanged += OnFacesChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -156,10 +144,7 @@ internal sealed class CtaSetupStep : TemplatedControl
             value.Dispose();
         }
         var count = FaceCount;
-        if (_stack is not null)
-        {
-            _stack.IsVisible = count > 0;
-        }
+        _stack?.IsVisible = count > 0;
         _fade = new MotionValue<double>[count];
         _slide = new MotionValue<double>[count];
         for (var i = 0; i < count; i++)
@@ -374,15 +359,9 @@ internal sealed class CtaSetupCard : TemplatedControl
 
     private void WatchSteps()
     {
-        if (_observedSteps is not null)
-        {
-            _observedSteps.CollectionChanged -= OnStepsChanged;
-        }
+        _observedSteps?.CollectionChanged -= OnStepsChanged;
         _observedSteps = _watching ? Steps as INotifyCollectionChanged : null;
-        if (_observedSteps is not null)
-        {
-            _observedSteps.CollectionChanged += OnStepsChanged;
-        }
+        _observedSteps?.CollectionChanged += OnStepsChanged;
     }
 
     /// <summary>True when the rows show <see cref="EffectiveSteps"/> as they are now.</summary>

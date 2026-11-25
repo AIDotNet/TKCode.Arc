@@ -184,10 +184,7 @@ public class ModelSummary : TemplatedControl
         }
         Notice = text;
         PseudoClasses.Set(HasNoticePseudoClass, true);
-        if (_noticeSwap is not null)
-        {
-            _noticeSwap.Content = new ModelSummaryNoticeContent(text);
-        }
+        _noticeSwap?.Content = new ModelSummaryNoticeContent(text);
         if (_attached)
         {
             StartNoticeTimer();
@@ -239,10 +236,7 @@ public class ModelSummary : TemplatedControl
     {
         Notice = null;
         PseudoClasses.Set(HasNoticePseudoClass, false);
-        if (_noticeSwap is not null)
-        {
-            _noticeSwap.Content = null;
-        }
+        _noticeSwap?.Content = null;
     }
 
     #endregion
@@ -259,14 +253,8 @@ public class ModelSummary : TemplatedControl
         _output = e.NameScope.Find<ModelSummaryFact>(OutputPart);
         _effort = e.NameScope.Find<ModelSummaryFact>(EffortPart);
         _noticeSwap = e.NameScope.Find<ArcContentSwap>(NoticePart);
-        if (_description is not null)
-        {
-            _description.ContentTemplate = DescriptionTemplate;
-        }
-        if (_facts is not null)
-        {
-            _facts.IsCompact = IsCompact;
-        }
+        _description?.ContentTemplate = DescriptionTemplate;
+        _facts?.IsCompact = IsCompact;
         if (_noticeSwap is not null)
         {
             _noticeSwap.ContentTemplate = NoticeTemplate;
@@ -344,10 +332,7 @@ public class ModelSummary : TemplatedControl
         }
         IsCompact = compact;
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_facts is not null)
-        {
-            _facts.IsCompact = compact;
-        }
+        _facts?.IsCompact = compact;
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -393,15 +378,9 @@ public class ModelSummary : TemplatedControl
         {
             return;
         }
-        if (_observedModel is not null)
-        {
-            _observedModel.PropertyChanged -= OnModelPropertyChanged;
-        }
+        _observedModel?.PropertyChanged -= OnModelPropertyChanged;
         _observedModel = target;
-        if (target is not null)
-        {
-            target.PropertyChanged += OnModelPropertyChanged;
-        }
+        target?.PropertyChanged += OnModelPropertyChanged;
     }
 
     private void OnModelPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

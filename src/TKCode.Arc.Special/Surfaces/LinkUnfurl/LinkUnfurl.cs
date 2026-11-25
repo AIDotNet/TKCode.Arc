@@ -208,7 +208,6 @@ public sealed partial class LinkUnfurl : TemplatedControl
     private bool _converting;
     private bool _interacted;
     private bool _autoPlayed;
-    private bool _isSending;
     private string? _sendError;
     private string? _startingText;
     private TokenSpan? _pressedToken;
@@ -326,8 +325,8 @@ public sealed partial class LinkUnfurl : TemplatedControl
     /// <summary>True while a send is pending: the message is read-only and the send button holds.</summary>
     public bool IsSending
     {
-        get => _isSending;
-        private set => SetAndRaise(IsSendingProperty, ref _isSending, value);
+        get;
+        private set => SetAndRaise(IsSendingProperty, ref field, value);
     }
 
     /// <summary>The message of the last failed send, shown under the composer as an alert; null when there is none.</summary>
@@ -503,10 +502,7 @@ public sealed partial class LinkUnfurl : TemplatedControl
             _editor.RemoveHandler(PointerReleasedEvent, OnEditorPointerReleased);
             _editor.TokenRenderer = null;
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
         if (_lane is not null)
         {
             _lane.Owner = null;
@@ -522,10 +518,7 @@ public sealed partial class LinkUnfurl : TemplatedControl
         _send = e.NameScope.Find<LinkUnfurlSendButton>(SendPart);
         _error = e.NameScope.Find<TextBlock>(ErrorPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_content is not null)
-        {
-            _content.RenderTransform = _contentShift;
-        }
+        _content?.RenderTransform = _contentShift;
         if (_editor is not null)
         {
             _editor.TokenRenderer = _renderer;
@@ -554,10 +547,7 @@ public sealed partial class LinkUnfurl : TemplatedControl
                 }
             }
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         UpdateNames();
         RebuildSamples();
         UpdateError();
@@ -662,10 +652,7 @@ public sealed partial class LinkUnfurl : TemplatedControl
         {
             AutomationProperties.SetName(_samples, Labels.SamplesGroup);
         }
-        if (_try is not null)
-        {
-            _try.Text = Labels.Try;
-        }
+        _try?.Text = Labels.Try;
         if (_send is not null)
         {
             AutomationProperties.SetName(_send, IsSending ? Labels.Sending : Labels.Send);

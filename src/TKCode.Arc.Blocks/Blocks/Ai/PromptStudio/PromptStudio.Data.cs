@@ -100,10 +100,7 @@ public partial class PromptStudio
         }
         else if (property == NowProperty)
         {
-            if (_versionMenu is not null)
-            {
-                _versionMenu.Now = Now;
-            }
+            _versionMenu?.Now = Now;
         }
         else if (property == IsCompareModeProperty || property == CompareVersionProperty)
         {
@@ -629,10 +626,7 @@ public partial class PromptStudio
         }
         if (e.Property == PromptPopoverMenu.IsOpenProperty)
         {
-            if (_modelPill is not null)
-            {
-                _modelPill.IsOpen = _modelMenu.IsOpen;
-            }
+            _modelPill?.IsOpen = _modelMenu.IsOpen;
             return;
         }
         if (_syncingModel)

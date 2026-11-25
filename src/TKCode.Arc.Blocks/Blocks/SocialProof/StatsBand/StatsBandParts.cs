@@ -805,10 +805,7 @@ internal sealed class StatsBandItem : TemplatedControl
     /// <summary>Whether the row holds a picture (the band keeps the row in every stat if any stat has one).</summary>
     public void SetHasVisualRow(bool value)
     {
-        if (_visual is not null)
-        {
-            _visual.IsVisible = value;
-        }
+        _visual?.IsVisible = value;
     }
 
     /// <summary>On a phone the picture moves beside the number.</summary>
@@ -832,10 +829,7 @@ internal sealed class StatsBandItem : TemplatedControl
         _visual.Height = _isPhone ? 40 : 56;
         _visual.VerticalAlignment = _isPhone ? VerticalAlignment.Bottom : VerticalAlignment.Top;
         _visual.AlignEnd = _isPhone;
-        if (_number is not null)
-        {
-            _number.Margin = _isPhone ? new Thickness(0, 0, 0, 12) : new Thickness(0, 0, 0, 20);
-        }
+        _number?.Margin = _isPhone ? new Thickness(0, 0, 0, 12) : new Thickness(0, 0, 0, 20);
     }
 
     /// <summary>Sets the entrance clock: the time in ms since the band came into view.</summary>
@@ -917,10 +911,7 @@ internal sealed class StatsBandItem : TemplatedControl
             _active = new MotionValue<double>(this, active ? 0 : 1, MotionVectors.Double);
             _active.Changed += value =>
             {
-                if (_visual is not null)
-                {
-                    _visual.ActiveAmount = Math.Clamp(value, 0, 1);
-                }
+                _visual?.ActiveAmount = Math.Clamp(value, 0, 1);
             };
         }
         _ = _active.AnimateTo(active ? 1 : 0, MotionSpec.Tween(ArcMotionPresets.Standard, ArcEasings.Standard));

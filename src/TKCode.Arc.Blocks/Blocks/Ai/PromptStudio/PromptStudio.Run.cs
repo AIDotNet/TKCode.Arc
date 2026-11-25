@@ -432,10 +432,7 @@ public partial class PromptStudio
     private void UpdateRunParts()
     {
         var busy = IsBusy;
-        if (_runButton is not null)
-        {
-            _runButton.IsRunning = busy;
-        }
+        _runButton?.IsRunning = busy;
         _runCommand.CanExecuteNow = !busy;
         _stopCommand.CanExecuteNow = busy;
     }

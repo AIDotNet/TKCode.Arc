@@ -389,10 +389,7 @@ internal sealed class DockIndicatorLayer : Control
     {
         if (pointer is not { } at || panes is null || panes.Count == 0)
         {
-            if (_ghost is not null)
-            {
-                _ghost.IsVisible = false;
-            }
+            _ghost?.IsVisible = false;
             return;
         }
         if (_ghost is null)

@@ -244,18 +244,12 @@ public class AiFeatureLaunch : TemplatedControl
 
     private static void Hook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -306,10 +300,7 @@ public class AiFeatureLaunch : TemplatedControl
     private void UpdatePlayState()
     {
         PseudoClasses.Set(PausedPseudoClass, !IsDemoPlaying);
-        if (_playGlyph is not null)
-        {
-            _playGlyph.Data = IsDemoPlaying ? ArcIcons.Pause : ArcIcons.Play;
-        }
+        _playGlyph?.Data = IsDemoPlaying ? ArcIcons.Pause : ArcIcons.Play;
         if (_play is not null)
         {
             AutomationProperties.SetName(_play, IsDemoPlaying ? Labels.Pause : Labels.Play);
@@ -319,18 +310,9 @@ public class AiFeatureLaunch : TemplatedControl
     private void UpdateLabels()
     {
         var labels = Labels;
-        if (_badgeText is not null)
-        {
-            _badgeText.Text = labels.Badge;
-        }
-        if (_try is not null)
-        {
-            _try.Content = labels.Try;
-        }
-        if (_later is not null)
-        {
-            _later.Content = labels.Later;
-        }
+        _badgeText?.Text = labels.Badge;
+        _try?.Content = labels.Try;
+        _later?.Content = labels.Later;
         if (_close is not null)
         {
             AutomationProperties.SetName(_close, labels.Close);

@@ -896,10 +896,7 @@ internal sealed class ExplodedViewLayerHost : ContentControl
     private void ApplyContentOpacity()
     {
         // On the cached wrapper, not inside it: the grid fades with the separation without re-rendering its bitmap.
-        if (_cachePart is not null)
-        {
-            _cachePart.Opacity = _kind == ExplodedLayerKind.Grid ? Math.Clamp(_spread, 0, 1) : 1;
-        }
+        _cachePart?.Opacity = _kind == ExplodedLayerKind.Grid ? Math.Clamp(_spread, 0, 1) : 1;
     }
 
     private void ApplyOutline()
@@ -921,14 +918,8 @@ internal sealed class ExplodedViewLayerHost : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_cachePart is not null)
-        {
-            _cachePart.CacheMode = null;
-        }
-        if (_outline is not null)
-        {
-            _outline.CacheMode = null;
-        }
+        _cachePart?.CacheMode = null;
+        _outline?.CacheMode = null;
         _cachePart = e.NameScope.Find<Control>(CachePart);
         _outline = e.NameScope.Find<ExplodedViewLayerOutline>(OutlinePart);
         ApplyContentOpacity();

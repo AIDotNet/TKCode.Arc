@@ -115,24 +115,12 @@ internal sealed partial class LspProviders :
         {
             result = await Request(connection, "textDocument/semanticTokens/full", new TextDocumentParams(document.Identifier), s_json.TextDocumentParams, token);
         }
-        if (result is not { ValueKind: JsonValueKind.Object } value)
+        return ReadStruct(result, s_json.LspSemanticTokensResult) switch
         {
-            return null;
-        }
-        // SemanticTokens | SemanticTokensDelta
-        if (value.TryGetProperty("edits", out _))
-        {
-            if (Read(value, s_json.LspSemanticTokensDelta) is not { } delta)
-            {
-                return null;
-            }
-            return new SemanticTokensOrEdits { Edits = LspConvert.ToSemanticTokensEdits(delta) };
-        }
-        if (Read(value, s_json.LspSemanticTokens) is not { } tokens)
-        {
-            return null;
-        }
-        return new SemanticTokensOrEdits { Tokens = LspConvert.ToSemanticTokens(tokens) };
+            LspSemanticTokensDelta delta => LspConvert.ToSemanticTokensEdits(delta),
+            LspSemanticTokens tokens => LspConvert.ToSemanticTokens(tokens),
+            _ => null,
+        };
     }
 
     public void ReleaseDocumentSemanticTokens(string? resultId)

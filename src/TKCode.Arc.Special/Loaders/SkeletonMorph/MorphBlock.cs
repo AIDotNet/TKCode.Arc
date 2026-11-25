@@ -117,13 +117,12 @@ public class MorphBlock : ContentControl
         set => SetValue(LineHeightProperty, value);
     }
 
-    private bool _isResolved;
 
     /// <inheritdoc cref="IsResolvedProperty"/>
     public bool IsResolved
     {
-        get => _isResolved;
-        private set => SetAndRaise(IsResolvedProperty, ref _isResolved, value);
+        get;
+        private set => SetAndRaise(IsResolvedProperty, ref field, value);
     }
 
     /// <summary>The blur the content sharpens out of (theme: MorphBlockToken.RevealBlur).</summary>

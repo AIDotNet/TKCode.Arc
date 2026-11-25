@@ -86,8 +86,8 @@ internal static class DiffAlignment
                 }
 
                 result.Add(new LineRangeAlignment(
-                    LineRangeDiffExtensions.OfLength(origNext!.Value.LineNumber, 1),
-                    LineRangeDiffExtensions.OfLength(modNext!.Value.LineNumber, 1),
+                    LineRange.OfLength(origNext!.Value.LineNumber, 1),
+                    LineRange.OfLength(modNext!.Value.LineNumber, 1),
                     origLineHeight + origNext.Value.HeightInPx,
                     modLineHeight + modNext.Value.HeightInPx,
                     null));

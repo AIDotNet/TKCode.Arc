@@ -113,34 +113,16 @@ internal sealed class IntegrationRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_name is not null)
-        {
-            _name.Click -= OnNameClick;
-        }
-        if (_configure is not null)
-        {
-            _configure.Click -= OnConfigureClick;
-        }
-        if (_pill is not null)
-        {
-            _pill.Click -= OnPillClick;
-        }
+        _name?.Click -= OnNameClick;
+        _configure?.Click -= OnConfigureClick;
+        _pill?.Click -= OnPillClick;
         _name = e.NameScope.Find<IntegrationNameButton>(NamePart);
         _configureHost = e.NameScope.Find<IntegrationReveal>(ConfigureHostPart);
         _configure = e.NameScope.Find<Button>(ConfigurePart);
         _pill = e.NameScope.Find<IntegrationConnectPill>(PillPart);
-        if (_name is not null)
-        {
-            _name.Click += OnNameClick;
-        }
-        if (_configure is not null)
-        {
-            _configure.Click += OnConfigureClick;
-        }
-        if (_pill is not null)
-        {
-            _pill.Click += OnPillClick;
-        }
+        _name?.Click += OnNameClick;
+        _configure?.Click += OnConfigureClick;
+        _pill?.Click += OnPillClick;
         SyncAll(animate: false);
     }
 
@@ -149,24 +131,15 @@ internal sealed class IntegrationRow : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == ItemProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged -= OnItemChanged;
-            }
+            _observed?.PropertyChanged -= OnItemChanged;
             _observed = Item;
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged += OnItemChanged;
-            }
+            _observed?.PropertyChanged += OnItemChanged;
             SyncAll(animate: false);
         }
         else if (change.Property == IsCompactProperty)
         {
             PseudoClasses.Set(CompactPseudoClass, IsCompact);
-            if (_configureHost is not null)
-            {
-                _configureHost.IsSuppressed = IsCompact;
-            }
+            _configureHost?.IsSuppressed = IsCompact;
         }
         else if (change.Property == IsTightProperty)
         {
@@ -198,10 +171,7 @@ internal sealed class IntegrationRow : TemplatedControl
     {
         SyncText();
         SyncStatus(animate);
-        if (_configureHost is not null)
-        {
-            _configureHost.IsSuppressed = IsCompact;
-        }
+        _configureHost?.IsSuppressed = IsCompact;
     }
 
     private void SyncText()
@@ -229,10 +199,7 @@ internal sealed class IntegrationRow : TemplatedControl
     {
         var status = Item?.Status ?? IntegrationStatus.Idle;
         PseudoClasses.Set(ConnectedPseudoClass, status == IntegrationStatus.Connected);
-        if (_pill is not null)
-        {
-            _pill.Status = status;
-        }
+        _pill?.Status = status;
         _configureHost?.Show(status == IntegrationStatus.Connected, animate);
     }
 

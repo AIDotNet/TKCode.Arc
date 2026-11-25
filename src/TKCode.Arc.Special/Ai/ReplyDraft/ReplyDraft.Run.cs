@@ -131,10 +131,7 @@ public partial class ReplyDraft
         _failure = null;
         _readyFailure = null;
         Draft = string.Empty;
-        if (_heightBox is not null)
-        {
-            _heightBox.IsHeld = false;
-        }
+        _heightBox?.IsHeld = false;
         SetStatus(ReplyDraftStatus.Idle);
         RestoreDraftView();
         if (this.IsAttachedToVisualTree())
@@ -175,10 +172,7 @@ public partial class ReplyDraft
         var labels = Labels;
         if (mode == ReplyDraftMode.Draft)
         {
-            if (_heightBox is not null)
-            {
-                _heightBox.IsHeld = hold && _draftSwap.Content is ReplyDraftEditor or ReplyDraftStreamText or ReplyDraftAlert;
-            }
+            _heightBox?.IsHeld = hold && _draftSwap.Content is ReplyDraftEditor or ReplyDraftStreamText or ReplyDraftAlert;
             _streamView = null;
             if (_editor is not null)
             {
@@ -283,14 +277,8 @@ public partial class ReplyDraft
         _streamView = null;
         _editor = editor;
         ShowDraftView(editor, swap);
-        if (oldEditor is not null)
-        {
-            oldEditor.TextChanged -= OnEditorTextChanged;
-        }
-        if (_heightBox is not null)
-        {
-            _heightBox.IsHeld = false;
-        }
+        oldEditor?.TextChanged -= OnEditorTextChanged;
+        _heightBox?.IsHeld = false;
         Draft = text;
         SetStatus(ReplyDraftStatus.Ready);
         Announce(Labels.ReadyAnnouncement, EffectiveSimulated);
@@ -307,10 +295,7 @@ public partial class ReplyDraft
             text = text.TrimEnd('.') + ". " + Labels.Simulated + ".";
         }
         _failure = text;
-        if (_heightBox is not null)
-        {
-            _heightBox.IsHeld = false;
-        }
+        _heightBox?.IsHeld = false;
         if (request.Mode == ReplyDraftMode.Rewrite && _editor is not null)
         {
             // A failed rewrite keeps the draft as it was.
@@ -443,10 +428,7 @@ public partial class ReplyDraft
     /// <summary>Regenerate works once something was asked for; Insert only on a finished, non-empty draft.</summary>
     private void UpdateButtons()
     {
-        if (_regenerate is not null)
-        {
-            _regenerate.IsEnabled = _started && Status != ReplyDraftStatus.Inserting;
-        }
+        _regenerate?.IsEnabled = _started && Status != ReplyDraftStatus.Inserting;
         if (_insert is not null)
         {
             _insert.IsEnabled = Status is ReplyDraftStatus.Ready or ReplyDraftStatus.Inserting

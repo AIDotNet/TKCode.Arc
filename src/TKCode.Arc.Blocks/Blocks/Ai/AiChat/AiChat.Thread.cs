@@ -41,10 +41,7 @@ public partial class AiChat
 
     private void OnCurrentConversationChanged(AiChatConversation? previous, AiChatConversation? next)
     {
-        if (_titlePill is not null)
-        {
-            _titlePill.Current = next;
-        }
+        _titlePill?.Current = next;
         UpdateTitle();
         if (_turns is null)
         {

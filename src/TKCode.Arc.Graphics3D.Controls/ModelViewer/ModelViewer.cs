@@ -338,20 +338,11 @@ public class ModelViewer : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_viewport is not null)
-        {
-            _viewport.FrameRendering -= OnFrameRendering;
-        }
+        _viewport?.FrameRendering -= OnFrameRendering;
 
-        if (_resetButton is not null)
-        {
-            _resetButton.Click -= OnResetClick;
-        }
+        _resetButton?.Click -= OnResetClick;
 
-        if (_autoRotateButton is not null)
-        {
-            _autoRotateButton.Click -= OnAutoRotateClick;
-        }
+        _autoRotateButton?.Click -= OnAutoRotateClick;
 
         _viewport = e.NameScope.Find<Viewport3D>(ViewportPart);
         _resetButton = e.NameScope.Find<AvaloniaButton>(ResetButtonPart);
@@ -364,15 +355,9 @@ public class ModelViewer : TemplatedControl
             ApplyViewportSettings();
         }
 
-        if (_resetButton is not null)
-        {
-            _resetButton.Click += OnResetClick;
-        }
+        _resetButton?.Click += OnResetClick;
 
-        if (_autoRotateButton is not null)
-        {
-            _autoRotateButton.Click += OnAutoRotateClick;
-        }
+        _autoRotateButton?.Click += OnAutoRotateClick;
 
         ApplyLabels();
     }
@@ -465,10 +450,7 @@ public class ModelViewer : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _languages = ArcLanguageManager.Current;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
 
         ApplyLabels();
     }

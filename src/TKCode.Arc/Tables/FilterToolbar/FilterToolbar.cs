@@ -501,22 +501,10 @@ public class FilterToolbar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_menu is not null)
-        {
-            _menu.FilterSelected -= OnFilterSelected;
-        }
-        if (_clearAll is not null)
-        {
-            _clearAll.Click -= OnClearAll;
-        }
-        if (_search is not null)
-        {
-            _search.KeyDown -= OnSearchKeyDown;
-        }
-        if (_layout is not null)
-        {
-            _layout.StackedChanged -= OnStackedChanged;
-        }
+        _menu?.FilterSelected -= OnFilterSelected;
+        _clearAll?.Click -= OnClearAll;
+        _search?.KeyDown -= OnSearchKeyDown;
+        _layout?.StackedChanged -= OnStackedChanged;
         foreach (var slot in _slots.Values)
         {
             _chips?.Children.Remove(slot);
@@ -534,18 +522,9 @@ public class FilterToolbar : TemplatedControl
             _menu.Fields = Fields;
             _menu.FilterSelected += OnFilterSelected;
         }
-        if (_clearAll is not null)
-        {
-            _clearAll.Click += OnClearAll;
-        }
-        if (_search is not null)
-        {
-            _search.KeyDown += OnSearchKeyDown;
-        }
-        if (_layout is not null)
-        {
-            _layout.StackedChanged += OnStackedChanged;
-        }
+        _clearAll?.Click += OnClearAll;
+        _search?.KeyDown += OnSearchKeyDown;
+        _layout?.StackedChanged += OnStackedChanged;
         _templateReady = true;
         _seen = Current.ToList();
         Sync(animate: false);

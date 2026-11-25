@@ -541,10 +541,7 @@ public class ModelTraining : Explainer
         }
         else if (property == IsCaptionVisibleProperty)
         {
-            if (_caption is not null)
-            {
-                _caption.IsVisible = IsCaptionVisible;
-            }
+            _caption?.IsVisible = IsCaptionVisible;
         }
         else if (property == ArcMotion.LevelProperty)
         {
@@ -915,10 +912,7 @@ public class ModelTraining : Explainer
     {
         var full = ArcMotion.IsFull(this);
         PseudoClasses.Set(ReducedPseudoClass, !full);
-        if (_playButton is not null)
-        {
-            _playButton.IsVisible = full;
-        }
+        _playButton?.IsVisible = full;
     }
 
     private void UpdateSizing(double width)
@@ -939,10 +933,7 @@ public class ModelTraining : Explainer
             _captionStep = -1;
             UpdateCaption(CurrentStep, force: true);
         }
-        if (_body is not null)
-        {
-            _body.RowGap = compact ? 20 : 24;
-        }
+        _body?.RowGap = compact ? 20 : 24;
     }
 
     private static void SetText(TextBlock? block, string? text)

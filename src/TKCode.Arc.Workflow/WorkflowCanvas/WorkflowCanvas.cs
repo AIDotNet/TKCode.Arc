@@ -354,10 +354,7 @@ public partial class WorkflowCanvas : TemplatedControl
             // One Tab stop for all cards; the arrow keys move between them.
             KeyboardNavigation.SetTabNavigation(_world, KeyboardNavigationMode.Once);
         }
-        if (_grid is not null)
-        {
-            _grid.IsVisible = ShowGrid;
-        }
+        _grid?.IsVisible = ShowGrid;
         Rebuild();
     }
 
@@ -422,10 +419,7 @@ public partial class WorkflowCanvas : TemplatedControl
         }
         else if (change.Property == ShowGridProperty)
         {
-            if (_grid is not null)
-            {
-                _grid.IsVisible = ShowGrid;
-            }
+            _grid?.IsVisible = ShowGrid;
         }
         else if (change.Property == QueueRunVisualsProperty)
         {

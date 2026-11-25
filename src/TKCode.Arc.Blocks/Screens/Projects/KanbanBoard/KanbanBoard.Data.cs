@@ -75,15 +75,9 @@ public partial class KanbanBoard
         {
             return;
         }
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= handler;
-        }
+        observed?.CollectionChanged -= handler;
         observed = next;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += handler;
-        }
+        observed?.CollectionChanged += handler;
     }
 
     private void OnCardsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

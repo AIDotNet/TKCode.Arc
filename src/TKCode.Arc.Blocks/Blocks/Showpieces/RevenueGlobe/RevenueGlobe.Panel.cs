@@ -32,18 +32,9 @@ public partial class RevenueGlobe
     {
         _currencyFormatter = FormatCurrency;
         _countFormatter = v => ShowpieceFormat.Grouped(v, 0, Culture);
-        if (_revenueTicker is not null)
-        {
-            _revenueTicker.Formatter = _currencyFormatter;
-        }
-        if (_lastHourTicker is not null)
-        {
-            _lastHourTicker.Formatter = _currencyFormatter;
-        }
-        if (_paymentsTicker is not null)
-        {
-            _paymentsTicker.Formatter = _countFormatter;
-        }
+        _revenueTicker?.Formatter = _currencyFormatter;
+        _lastHourTicker?.Formatter = _currencyFormatter;
+        _paymentsTicker?.Formatter = _countFormatter;
         foreach (var row in _regionRowList)
         {
             row.AmountFormatter = _currencyFormatter;
@@ -142,18 +133,9 @@ public partial class RevenueGlobe
         }
         _scene.MaxCityRevenue = max;
 
-        if (_revenueTicker is not null)
-        {
-            _revenueTicker.Value = _revenue;
-        }
-        if (_paymentsTicker is not null)
-        {
-            _paymentsTicker.Value = _paymentCount;
-        }
-        if (_lastHourTicker is not null)
-        {
-            _lastHourTicker.Value = _lastHour;
-        }
+        _revenueTicker?.Value = _revenue;
+        _paymentsTicker?.Value = _paymentCount;
+        _lastHourTicker?.Value = _lastHour;
         var labels = Labels;
         foreach (var row in _regionRowList)
         {

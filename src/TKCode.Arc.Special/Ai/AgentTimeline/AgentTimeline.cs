@@ -458,26 +458,11 @@ public class AgentTimeline : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClick;
-        }
-        if (_restartButton is not null)
-        {
-            _restartButton.Click -= OnRestartClick;
-        }
-        if (_speed is not null)
-        {
-            _speed.SelectionChanged -= OnSpeedSelectionChanged;
-        }
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged -= OnScrollChanged;
-        }
-        if (_plot is not null)
-        {
-            _plot.Host = null;
-        }
+        _playButton?.Click -= OnPlayClick;
+        _restartButton?.Click -= OnRestartClick;
+        _speed?.SelectionChanged -= OnSpeedSelectionChanged;
+        _scroller?.ScrollChanged -= OnScrollChanged;
+        _plot?.Host = null;
 
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _status = e.NameScope.Find<AgentTimelineStatusLine>(StatusPart);
@@ -492,10 +477,7 @@ public class AgentTimeline : TemplatedControl
         _card = e.NameScope.Find<AgentTimelineCard>(CardPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
 
-        if (_plot is not null)
-        {
-            _plot.Host = this;
-        }
+        _plot?.Host = this;
         if (_playButton is not null)
         {
             _playButton.Click += OnPlayClick;
@@ -503,19 +485,10 @@ public class AgentTimeline : TemplatedControl
             _playButton.Content = _playGlyph;
             _playGlyphKey = null;
         }
-        if (_restartButton is not null)
-        {
-            _restartButton.Click += OnRestartClick;
-        }
+        _restartButton?.Click += OnRestartClick;
         UpdatePlayable();
-        if (_speed is not null)
-        {
-            _speed.SelectionChanged += OnSpeedSelectionChanged;
-        }
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged += OnScrollChanged;
-        }
+        _speed?.SelectionChanged += OnSpeedSelectionChanged;
+        _scroller?.ScrollChanged += OnScrollChanged;
         _paletteDirty = true;
         EnsurePalette();
         ApplyModel();
@@ -685,14 +658,8 @@ public class AgentTimeline : TemplatedControl
     private void UpdatePlayable()
     {
         var playable = _model.Rows.Length > 0 || _clock.IsLive;
-        if (_playButton is not null)
-        {
-            _playButton.IsEnabled = playable;
-        }
-        if (_restartButton is not null)
-        {
-            _restartButton.IsEnabled = playable;
-        }
+        _playButton?.IsEnabled = playable;
+        _restartButton?.IsEnabled = playable;
     }
 
     private void Observe<T>(IList<T> list)
@@ -775,10 +742,7 @@ public class AgentTimeline : TemplatedControl
     {
         var run = Run;
         ActualTitle = Title ?? run?.Title ?? Labels.DefaultTitle;
-        if (_title is not null)
-        {
-            _title.Text = ActualTitle;
-        }
+        _title?.Text = ActualTitle;
         AutomationProperties.SetName(this, ActualTitle);
         _status?.SetWords(Labels);
         if (_plot is not null)
@@ -902,10 +866,7 @@ public class AgentTimeline : TemplatedControl
             _narrow = narrow;
             PseudoClasses.Set(NarrowPseudoClass, narrow);
         }
-        if (_labels is not null)
-        {
-            _labels.IsNarrow = narrow;
-        }
+        _labels?.IsNarrow = narrow;
         if (scrollable != _scrollable)
         {
             _scrollable = scrollable;

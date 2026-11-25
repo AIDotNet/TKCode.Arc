@@ -78,14 +78,8 @@ public partial class CartDrawer
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_cartButton is not null)
-        {
-            _cartButton.Click -= OnCartButtonClick;
-        }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed -= OnScrimPressed;
-        }
+        _cartButton?.Click -= OnCartButtonClick;
+        _scrim?.PointerPressed -= OnScrimPressed;
         _root = e.NameScope.Find<Panel>(RootPart);
         _shopScroller = e.NameScope.Find<ScrollViewer>(ShopScrollerPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
@@ -104,24 +98,15 @@ public partial class CartDrawer
         _bumpValue = null;
         _rippleValue = null;
 
-        if (_title is not null)
-        {
-            _title.Text = Title;
-        }
-        if (_ripple is not null)
-        {
-            _ripple.RenderTransform = _rippleScale;
-        }
+        _title?.Text = Title;
+        _ripple?.RenderTransform = _rippleScale;
         if (_cartButton is not null)
         {
             _cartButton.RenderTransform = _bump;
             _cartButton.Content = BuildCartButtonContent();
             _cartButton.Click += OnCartButtonClick;
         }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed += OnScrimPressed;
-        }
+        _scrim?.PointerPressed += OnScrimPressed;
         RebuildGrid();
         SeedInitialQuantities();
         Recompute(animate: false);
@@ -449,10 +434,7 @@ public partial class CartDrawer
             var (scale, opacity) = CartDrawerMath.Ripple(t);
             _rippleScale.ScaleX = scale;
             _rippleScale.ScaleY = scale;
-            if (_ripple is not null)
-            {
-                _ripple.Opacity = opacity;
-            }
+            _ripple?.Opacity = opacity;
         };
         return value;
     }
@@ -481,10 +463,7 @@ public partial class CartDrawer
         _narrow = narrow;
         PseudoClasses.Set(CompactPseudoClass, compact);
         PseudoClasses.Set(NarrowPseudoClass, narrow);
-        if (_cartText is not null)
-        {
-            _cartText.IsVisible = !narrow;
-        }
+        _cartText?.IsVisible = !narrow;
         if (changed)
         {
             ApplyCardLayout();

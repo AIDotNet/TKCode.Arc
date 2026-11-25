@@ -166,10 +166,7 @@ internal sealed class ToastStackItem : TemplatedControl
         _x = CreateValue(0);
         _content.Changed += v =>
         {
-            if (_contentRoot is not null)
-            {
-                _contentRoot.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _contentRoot?.Opacity = Math.Clamp(v, 0, 1);
         };
         Opacity = 0;
         ApplyRecord();
@@ -247,21 +244,12 @@ internal sealed class ToastStackItem : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _action?.Click -= OnActionClick;
+        _close?.Click -= OnCloseClick;
         _contentRoot = e.NameScope.Find<Control>(ContentPart);
         _action = e.NameScope.Find<AvaloniaButton>(ActionPart);
         _close = e.NameScope.Find<AvaloniaButton>(ClosePart);
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _action?.Click += OnActionClick;
         if (_close is not null)
         {
             _close.Click += OnCloseClick;

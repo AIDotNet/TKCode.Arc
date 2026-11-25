@@ -222,10 +222,7 @@ public class TabItem : HeaderedContentControl, ISelectable
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _close?.Click -= OnCloseClick;
         _closeSlot = null;
         _close = null;
         _items = e.NameScope.Find<ArcShrinkRow>(ItemsPart);

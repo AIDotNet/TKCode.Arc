@@ -233,10 +233,7 @@ public class BuildingBlocks : TemplatedControl
         _replayHost = e.NameScope.Find<PresenceHost>(ReplayHostPart);
         _replay = e.NameScope.Find<AvaloniaButton>(ReplayPart);
         _replayText = e.NameScope.Find<TextBlock>(ReplayTextPart);
-        if (_replay is not null)
-        {
-            _replay.Click += OnReplayClick;
-        }
+        _replay?.Click += OnReplayClick;
         if (_stage is not null)
         {
             _stage.PropertyChanged += OnStagePropertyChanged;
@@ -252,10 +249,7 @@ public class BuildingBlocks : TemplatedControl
 
     private void Unhook()
     {
-        if (_replay is not null)
-        {
-            _replay.Click -= OnReplayClick;
-        }
+        _replay?.Click -= OnReplayClick;
         if (_stage is not null)
         {
             _stage.PropertyChanged -= OnStagePropertyChanged;
@@ -433,17 +427,11 @@ public class BuildingBlocks : TemplatedControl
         }
         AutomationProperties.SetHelpText(this, Status is null ? labels.Simulated : null);
         _mark?.Show(_phase, ArcMotion.GetEffectiveLevel(this));
-        if (_replayText is not null)
-        {
-            _replayText.Text = labels.Replay;
-        }
+        _replayText?.Text = labels.Replay;
         if (_replay is not null)
         {
             AutomationProperties.SetName(_replay, labels.Replay);
         }
-        if (_replayHost is not null)
-        {
-            _replayHost.IsPresent = ShowsReplay;
-        }
+        _replayHost?.IsPresent = ShowsReplay;
     }
 }

@@ -592,7 +592,11 @@ internal interface IVariableResolver
 }
 
 /// <summary>The placeholders of a snippet in document order and the one with the highest index.</summary>
-internal sealed record PlaceholderInfo(List<Placeholder> All, Placeholder? Last);
+internal sealed class PlaceholderInfo(List<Placeholder> all, Placeholder? last)
+{
+    public List<Placeholder> All { get; } = all;
+    public Placeholder? Last { get; } = last;
+}
 
 /// <summary>A parsed snippet: the root of the tree (upstream's TextmateSnippet).</summary>
 internal sealed class TextmateSnippet : Marker

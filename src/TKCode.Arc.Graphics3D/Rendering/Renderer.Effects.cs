@@ -53,7 +53,7 @@ vec2 arcEquirectUv(vec3 d) {
 """;
 
     /// <summary>A full-screen fragment program. <paramref name="samplers"/> are bound to units 0, 1, 2, ... in order.</summary>
-    private GpuProgram GetEffect(string key, Func<string> fragmentBody, params string[] samplers)
+    private GpuProgram GetEffect(string key, Func<string> fragmentBody, params ReadOnlySpan<string> samplers)
     {
         if (_effects.TryGetValue(key, out var program))
         {

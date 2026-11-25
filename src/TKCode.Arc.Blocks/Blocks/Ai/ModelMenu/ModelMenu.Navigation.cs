@@ -1133,10 +1133,7 @@ public partial class ModelMenu
         var presence = _openSub == ModelMenuPage.Effort ? _effortSub : _moreSub;
         var focusInside = presence?.Panel.IsKeyboardFocusWithin == true;
         _openSub = null;
-        if (_subTrigger is not null)
-        {
-            _subTrigger.IsExpanded = false;
-        }
+        _subTrigger?.IsExpanded = false;
         _subTrigger = null;
         _zone = null;
         presence?.Hide(immediate: !animated);

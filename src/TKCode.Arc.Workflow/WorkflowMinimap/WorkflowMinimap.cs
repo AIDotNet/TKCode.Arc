@@ -148,15 +148,9 @@ public class WorkflowMinimap : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.SceneChanged -= InvalidateVisual;
-        }
+        _observed?.SceneChanged -= InvalidateVisual;
         _observed = canvas;
-        if (canvas is not null)
-        {
-            canvas.SceneChanged += InvalidateVisual;
-        }
+        canvas?.SceneChanged += InvalidateVisual;
     }
 
     /// <summary>

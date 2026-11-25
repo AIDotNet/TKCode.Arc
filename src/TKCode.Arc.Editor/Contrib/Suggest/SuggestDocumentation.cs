@@ -25,7 +25,7 @@ internal static partial class SuggestDocumentation
 
         var blocks = new List<SuggestDocumentationBlock>();
         var paragraph = new StringBuilder();
-        var lines = documentation.Value.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
+        var lines = documentation.Content.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
 
         void FlushParagraph()
         {

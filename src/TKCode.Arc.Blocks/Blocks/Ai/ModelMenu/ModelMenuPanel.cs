@@ -214,14 +214,8 @@ internal sealed class ModelMenuPanel : TemplatedControl
         if (changed)
         {
             SetActive(null, ModelMenuMove.Keyboard);
-            if (_pageHost is not null)
-            {
-                _pageHost.Child = view.Root;
-            }
-            if (_scroll is not null)
-            {
-                _scroll.Offset = default;
-            }
+            _pageHost?.Child = view.Root;
+            _scroll?.Offset = default;
         }
         _pageDirection = direction;
         PlayPageEnter(direction);

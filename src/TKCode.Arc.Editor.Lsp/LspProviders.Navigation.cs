@@ -32,7 +32,7 @@ internal sealed partial class LspProviders :
             return null;
         }
         var result = await Request(connection, method, PositionParams(document, position), s_json.TextDocumentPositionParams, token);
-        return result is { } value ? LspConvert.ToLocationLinks(value) : null;
+        return LspConvert.ToLocationLinks(ReadStruct(result, s_json.LspLocationResult));
     }
 
     public async Task<IReadOnlyList<Location>?> ProvideReferences(TextModel model, TextPosition position, ReferenceContext context, CancellationToken token)
@@ -67,7 +67,7 @@ internal sealed partial class LspProviders :
             return null;
         }
         var result = await Request(connection, "textDocument/documentSymbol", new TextDocumentParams(document.Identifier), s_json.TextDocumentParams, token);
-        return result is { } value ? LspConvert.ToDocumentSymbols(value) : null;
+        return LspConvert.ToDocumentSymbols(Read(result, s_json.LspDocumentSymbolItemArray));
     }
 
     string? IFoldingRangeProvider.Id => "lsp:" + _client.MarkerOwner;

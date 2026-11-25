@@ -82,10 +82,7 @@ internal sealed class ProgressSwapText : Control
                  change.Property == FontSizeProperty || change.Property == FontWeightProperty ||
                  change.Property == LineHeightProperty || change.Property == IsWrappingProperty)
         {
-            if (_current is not null)
-            {
-                _current.Layout = null;
-            }
+            _current?.Layout = null;
             InvalidateMeasure();
         }
     }

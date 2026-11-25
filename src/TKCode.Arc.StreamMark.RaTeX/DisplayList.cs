@@ -47,6 +47,8 @@ public sealed class PathCommand
 
 public readonly record struct DisplayColor(float R, float G, float B, float A);
 
-[JsonSourceGenerationOptions(PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
+[JsonSourceGenerationOptions(
+    GenerationMode = JsonSourceGenerationMode.Metadata,
+    PropertyNamingPolicy = JsonKnownNamingPolicy.SnakeCaseLower)]
 [JsonSerializable(typeof(DisplayList))]
 internal sealed partial class DisplayListJsonContext : JsonSerializerContext;

@@ -181,27 +181,15 @@ internal sealed class AgentMemorySearchBox : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _toggle?.Click -= OnToggleClick;
+        _close?.Click -= OnCloseClick;
         _input?.RemoveHandler(KeyDownEvent, OnInputKeyDown);
         base.OnApplyTemplate(e);
         _toggle = e.NameScope.Find<AgentMemoryButton>(TogglePart);
         _input = e.NameScope.Find<AgentMemoryInput>(InputPart);
         _close = e.NameScope.Find<AgentMemoryButton>(ClosePart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _toggle?.Click += OnToggleClick;
+        _close?.Click += OnCloseClick;
         _input?.AddHandler(KeyDownEvent, OnInputKeyDown, RoutingStrategies.Tunnel);
         ApplyState(animate: false);
         UpdateAutomation();
@@ -271,27 +259,15 @@ internal sealed class AgentMemorySearchBox : TemplatedControl
 
     private void SetContentVisible(bool visible)
     {
-        if (_input is not null)
-        {
-            _input.IsVisible = visible;
-        }
-        if (_close is not null)
-        {
-            _close.IsVisible = visible;
-        }
+        _input?.IsVisible = visible;
+        _close?.IsVisible = visible;
     }
 
     private void ApplyContentOpacity(double value)
     {
         var opacity = Math.Clamp(value, 0, 1);
-        if (_input is not null)
-        {
-            _input.Opacity = opacity;
-        }
-        if (_close is not null)
-        {
-            _close.Opacity = opacity;
-        }
+        _input?.Opacity = opacity;
+        _close?.Opacity = opacity;
     }
 
     private void UpdateAutomation()

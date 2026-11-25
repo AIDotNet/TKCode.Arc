@@ -538,22 +538,10 @@ public partial class SpeculativeDecoding
             _slider.ValueChanged -= OnSliderChanged;
             _slider.ValueCommitted -= OnSliderCommitted;
         }
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClicked;
-        }
-        if (_restartButton is not null)
-        {
-            _restartButton.Click -= OnRestartClicked;
-        }
+        _switch?.IsCheckedChanged -= OnSwitchChanged;
+        _retry?.Click -= OnRetryClick;
+        _playButton?.Click -= OnPlayClicked;
+        _restartButton?.Click -= OnRestartClicked;
         _stage = e.NameScope.Find<SpeculativeDecodingStage>(StagePart);
         _status = e.NameScope.Find<SpeculativeDecodingStatusLine>(StatusPart);
         _slider = e.NameScope.Find<Slider>(DraftLengthPart);
@@ -576,22 +564,10 @@ public partial class SpeculativeDecoding
             _slider.ValueChanged += OnSliderChanged;
             _slider.ValueCommitted += OnSliderCommitted;
         }
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged += OnSwitchChanged;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click += OnPlayClicked;
-        }
-        if (_restartButton is not null)
-        {
-            _restartButton.Click += OnRestartClicked;
-        }
+        _switch?.IsCheckedChanged += OnSwitchChanged;
+        _retry?.Click += OnRetryClick;
+        _playButton?.Click += OnPlayClicked;
+        _restartButton?.Click += OnRestartClicked;
         ApplyLabels();
         SyncSlider();
         SyncSwitch();
@@ -709,15 +685,9 @@ public partial class SpeculativeDecoding
 
     private void Observe<T>(ref AvaloniaList<T>? field, AvaloniaList<T>? list)
     {
-        if (field is not null)
-        {
-            field.CollectionChanged -= OnCollectionChanged;
-        }
+        field?.CollectionChanged -= OnCollectionChanged;
         field = list;
-        if (field is not null)
-        {
-            field.CollectionChanged += OnCollectionChanged;
-        }
+        field?.CollectionChanged += OnCollectionChanged;
     }
 
     private void OnStatusChanged()
@@ -747,22 +717,10 @@ public partial class SpeculativeDecoding
     {
         var ready = Status == SpeculativeDecodingStatus.Ready;
         var playable = ready && _plan.Rounds.Count > 0;
-        if (_playButton is not null)
-        {
-            _playButton.IsEnabled = playable;
-        }
-        if (_restartButton is not null)
-        {
-            _restartButton.IsEnabled = playable;
-        }
-        if (_slider is not null)
-        {
-            _slider.IsEnabled = ready;
-        }
-        if (_switch is not null)
-        {
-            _switch.IsEnabled = ready;
-        }
+        _playButton?.IsEnabled = playable;
+        _restartButton?.IsEnabled = playable;
+        _slider?.IsEnabled = ready;
+        _switch?.IsEnabled = ready;
     }
 
     private void UpdateRetry()
@@ -791,26 +749,11 @@ public partial class SpeculativeDecoding
             _slider.Label = labels.DraftLength;
             _slider.ValueFormatter = value => labels.DraftLengthValue((int)Math.Round(value));
         }
-        if (_switch is not null)
-        {
-            _switch.Content = labels.Compare;
-        }
-        if (_retry is not null)
-        {
-            _retry.Content = labels.Retry;
-        }
-        if (_speedup is not null)
-        {
-            _speedup.Label = labels.Speedup;
-        }
-        if (_acceptance is not null)
-        {
-            _acceptance.Label = labels.Acceptance;
-        }
-        if (_tokensPerPass is not null)
-        {
-            _tokensPerPass.Label = labels.TokensPerPass;
-        }
+        _switch?.Content = labels.Compare;
+        _retry?.Content = labels.Retry;
+        _speedup?.Label = labels.Speedup;
+        _acceptance?.Label = labels.Acceptance;
+        _tokensPerPass?.Label = labels.TokensPerPass;
         if (_stage is not null)
         {
             _stage.Labels = labels;

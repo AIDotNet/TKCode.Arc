@@ -536,18 +536,9 @@ internal sealed class WeekCalendarQuickCreate : WeekCalendarEditor
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_save is not null)
-        {
-            _save.Click -= OnSave;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancel;
-        }
-        if (_calendars is not null)
-        {
-            _calendars.Picked -= OnPicked;
-        }
+        _save?.Click -= OnSave;
+        _cancel?.Click -= OnCancel;
+        _calendars?.Picked -= OnPicked;
         _title = e.NameScope.Find<WeekCalendarTitleBox>(TitlePart);
         _when = e.NameScope.Find<TextBlock>(WhenPart);
         _calendars = e.NameScope.Find<WeekCalendarCalendarChoice>(CalendarsPart);
@@ -560,10 +551,7 @@ internal sealed class WeekCalendarQuickCreate : WeekCalendarEditor
             _title.Placeholder = labels.TitlePlaceholder;
             AutomationProperties.SetName(_title, labels.TitleLabel);
         }
-        if (_hint is not null)
-        {
-            _hint.Text = labels.SaveHint;
-        }
+        _hint?.Text = labels.SaveHint;
         if (_cancel is not null)
         {
             _cancel.Content = labels.Cancel;
@@ -790,10 +778,7 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
             _delete.IsVisible = !IsEventReadOnly;
             _delete.Click += OnDelete;
         }
-        if (_separator is not null)
-        {
-            _separator.Text = labels.RangeSeparator;
-        }
+        _separator?.Text = labels.RangeSeparator;
         if (_date is not null)
         {
             AutomationProperties.SetName(_date, labels.DateLabel);
@@ -819,35 +804,17 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
         {
             AutomationProperties.SetName(_end, labels.EndLabel);
         }
-        if (_calendars is not null)
-        {
-            _calendars.Picked += OnPicked;
-        }
+        _calendars?.Picked += OnPicked;
         Refresh();
-        if (_title is not null)
-        {
-            _title.Text = Event.Title;
-        }
-        if (_location is not null)
-        {
-            _location.Text = Event.Location;
-        }
+        _title?.Text = Event.Title;
+        _location?.Text = Event.Location;
     }
 
     private void Unhook()
     {
-        if (_close is not null)
-        {
-            _close.Click -= OnClose;
-        }
-        if (_done is not null)
-        {
-            _done.Click -= OnClose;
-        }
-        if (_delete is not null)
-        {
-            _delete.Click -= OnDelete;
-        }
+        _close?.Click -= OnClose;
+        _done?.Click -= OnClose;
+        _delete?.Click -= OnDelete;
         if (_date is not null)
         {
             _date.TemplateApplied -= OnFieldTemplateApplied;
@@ -861,10 +828,7 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
                 select.SelectionChanged -= OnTimeChanged;
             }
         }
-        if (_calendars is not null)
-        {
-            _calendars.Picked -= OnPicked;
-        }
+        _calendars?.Picked -= OnPicked;
     }
 
     // The date and time fields are 32 high with radius 10 in Arc's details; the main package's are 36–44 high.
@@ -917,20 +881,14 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
             var labels = Owner.Labels;
             var paint = Owner.Paint;
             paint.EnsureReady();
-            if (_bar is not null)
-            {
-                _bar.Background = paint.For(Event.CalendarId).Bar;
-            }
+            _bar?.Background = paint.For(Event.CalendarId).Bar;
             var (start, end) = Wall();
             var startDay = DateOnly.FromDateTime(start);
             var startMinute = (int)Math.Round(start.TimeOfDay.TotalMinutes);
             var minutes = (int)Math.Round((end - start).TotalMinutes);
             var endMinute = startMinute + minutes;
             var editable = !IsEventReadOnly && !Event.IsAllDay;
-            if (_schedule is not null)
-            {
-                _schedule.IsVisible = editable;
-            }
+            _schedule?.IsVisible = editable;
             if (_summaryRow is not null && _summary is not null)
             {
                 _summaryRow.IsVisible = !editable;
@@ -949,14 +907,8 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
                         WeekCalendarTime.TimeRange(startMinute, endMinute, culture) + ", " + labels.Duration(minutes), paint);
                 }
             }
-            if (_date is not null)
-            {
-                _date.SelectedDate = startDay;
-            }
-            if (_start is not null)
-            {
-                _start.SelectedValue = WeekCalendarTimeGrid.SnapDown(startMinute);
-            }
+            _date?.SelectedDate = startDay;
+            _start?.SelectedValue = WeekCalendarTimeGrid.SnapDown(startMinute);
             if (_end is not null)
             {
                 var from = WeekCalendarTimeGrid.SnapDown(startMinute) + WeekCalendarEditMetrics.SnapMinutes;
@@ -967,29 +919,14 @@ internal sealed class WeekCalendarDetails : WeekCalendarEditor
                 }
                 _end.SelectedValue = Math.Clamp(WeekCalendarTimeGrid.SnapNearest(endMinute), from, 24 * 60);
             }
-            if (_duration is not null)
-            {
-                _duration.Text = labels.Duration(minutes);
-            }
-            if (_locationRow is not null)
-            {
-                _locationRow.IsVisible = !string.IsNullOrWhiteSpace(Event.Location);
-            }
+            _duration?.Text = labels.Duration(minutes);
+            _locationRow?.IsVisible = !string.IsNullOrWhiteSpace(Event.Location);
             var people = Event.Attendees;
-            if (_peopleRow is not null)
-            {
-                _peopleRow.IsVisible = people is { Count: > 0 };
-            }
+            _peopleRow?.IsVisible = people is { Count: > 0 };
             if (people is { Count: > 0 })
             {
-                if (_people is not null)
-                {
-                    _people.People = people;
-                }
-                if (_peopleText is not null)
-                {
-                    _peopleText.Text = labels.Attendees(people[0].Name, people.Count - 1);
-                }
+                _people?.People = people;
+                _peopleText?.Text = labels.Attendees(people[0].Name, people.Count - 1);
             }
             if (_calendars is not null)
             {

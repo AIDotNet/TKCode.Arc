@@ -631,10 +631,7 @@ public class TreeTable : TemplatedControl
                 ? new HashSet<object>(_arrived.Where(id => _byKey.TryGetValue(id, out var l) && l.Expanded))
                 : new HashSet<object>();
             _host.Reconcile(_lines, handoff, animate, flip, rebuildCells);
-            if (_empty is not null)
-            {
-                _empty.IsVisible = _rowLines.Count == 0;
-            }
+            _empty?.IsVisible = _rowLines.Count == 0;
 
             // Pull focus up to the nearest visible ancestor when its row collapsed away.
             if (focused is not null && !_byKey.ContainsKey(focused.Key) && focused.Line.Kind == TreeTableLineKind.Row)
@@ -1398,10 +1395,7 @@ public class TreeTable : TemplatedControl
 
     private void Announce(string message)
     {
-        if (_status is not null)
-        {
-            _status.Text = message;
-        }
+        _status?.Text = message;
     }
 
     internal string? LastAnnouncement => _status?.Text;
@@ -1409,10 +1403,7 @@ public class TreeTable : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
+        _scroll?.ScrollChanged -= OnScrollChanged;
         var headerSlot = e.NameScope.Find<Border>(HeaderSlotPart);
         var rowsSlot = e.NameScope.Find<Border>(RowsSlotPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
@@ -1430,15 +1421,9 @@ public class TreeTable : TemplatedControl
         _host = new TreeTableRowsHost(this);
         headerSlot.Child = _header;
         rowsSlot.Child = _host;
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _scroll?.ScrollChanged += OnScrollChanged;
         _templated = true;
-        if (_empty is not null)
-        {
-            _empty.Text = EmptyMessage;
-        }
+        _empty?.Text = EmptyMessage;
         UpdatePalette();
         foreach (var column in Columns)
         {

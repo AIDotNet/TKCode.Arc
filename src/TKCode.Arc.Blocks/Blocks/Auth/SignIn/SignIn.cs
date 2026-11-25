@@ -136,7 +136,6 @@ public partial class SignIn : TemplatedControl
 
     #region State
 
-    private SignInStep _step;
     private SignInAccount? _account;
     private SignInMethod? _method;
     private bool _isBusy;
@@ -477,8 +476,8 @@ public partial class SignIn : TemplatedControl
     /// <inheritdoc cref="StepProperty"/>
     public SignInStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="AccountProperty"/>

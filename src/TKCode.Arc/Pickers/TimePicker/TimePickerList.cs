@@ -142,10 +142,7 @@ internal sealed class TimePickerList : Control
     {
         base.OnAttachedToVisualTree(e);
         _scroll = this.FindAncestorOfType<ScrollViewer>();
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _scroll?.ScrollChanged += OnScrollChanged;
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

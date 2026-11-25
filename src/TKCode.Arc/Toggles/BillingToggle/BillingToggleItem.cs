@@ -44,13 +44,12 @@ internal sealed class BillingToggleItem : TogglesItem
     public IBrush? ActiveBadgeBackground { get => GetValue(ActiveBadgeBackgroundProperty); set => SetValue(ActiveBadgeBackgroundProperty, value); }
     public IBrush? ActiveBadgeForeground { get => GetValue(ActiveBadgeForegroundProperty); set => SetValue(ActiveBadgeForegroundProperty, value); }
 
-    private string? _currentBadge;
 
     /// <summary>The badge text shown now: the active text while selected (when given), otherwise the badge.</summary>
     public string? CurrentBadge
     {
-        get => _currentBadge;
-        private set => SetAndRaise(CurrentBadgeProperty, ref _currentBadge, value);
+        get;
+        private set => SetAndRaise(CurrentBadgeProperty, ref field, value);
     }
 
     private IReadOnlyList<string> _sizerLabels = [];

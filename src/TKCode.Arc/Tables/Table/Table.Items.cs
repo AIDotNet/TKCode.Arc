@@ -56,14 +56,8 @@ public partial class Table
             return;
         }
         _sourcesDetached = true;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
-        if (_observedSelection is not null)
-        {
-            _observedSelection.CollectionChanged -= OnSelectedCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
+        _observedSelection?.CollectionChanged -= OnSelectedCollectionChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -74,10 +68,7 @@ public partial class Table
             return;
         }
         _sourcesDetached = false;
-        if (_observedSelection is not null)
-        {
-            _observedSelection.CollectionChanged += OnSelectedCollectionChanged;
-        }
+        _observedSelection?.CollectionChanged += OnSelectedCollectionChanged;
         if (_observedSource is not null)
         {
             _observedSource.CollectionChanged += OnSourceCollectionChanged;

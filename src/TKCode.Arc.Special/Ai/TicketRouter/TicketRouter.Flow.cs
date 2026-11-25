@@ -253,10 +253,7 @@ public partial class TicketRouter
         _ticket.FlightKey = null;
         _ticket.Show(message, Labels);
         _ticket.IsVisible = true;
-        if (_notice is not null)
-        {
-            _notice.IsVisible = false;
-        }
+        _notice?.IsVisible = false;
         if (instant)
         {
             _ticketFade.Set(true);
@@ -470,10 +467,7 @@ public partial class TicketRouter
         }
         Enter(TicketRouterPhase.Landing);
         _flightDone = false;
-        if (_ticket is not null)
-        {
-            _ticket.FlightKey = routed.Key;
-        }
+        _ticket?.FlightKey = routed.Key;
         SyncLanes(animate: true);
         Fly(_stage, ViewOf(lane), routed, stage: true);
         RaiseEvent(new TicketRoutedEventArgs(TicketRoutedEvent, routed));
@@ -563,10 +557,7 @@ public partial class TicketRouter
 
     private void ShowError(bool shown)
     {
-        if (_error is not null)
-        {
-            _error.IsVisible = shown;
-        }
+        _error?.IsVisible = shown;
     }
 
     /// <summary>Puts the current classification into the strip's chips, the meter and the route target.</summary>
@@ -623,20 +614,14 @@ public partial class TicketRouter
         if (IsPaused)
         {
             CancelClassifier(restart: true);
-            if (_classifying is not null)
-            {
-                _classifying.IsShimmering = false;
-            }
+            _classifying?.IsShimmering = false;
             Announce(Labels.AnnouncePaused);
         }
         else
         {
             if (_phase == TicketRouterPhase.Classifying)
             {
-                if (_classifying is not null)
-                {
-                    _classifying.IsShimmering = true;
-                }
+                _classifying?.IsShimmering = true;
                 if (_reclassify && Classifier is { } classifier && _current is not null)
                 {
                     _ = ClassifyAsync(classifier, _current);
@@ -724,10 +709,7 @@ public partial class TicketRouter
             _laneViews.Add(view);
             _lanes.Children.Add(view);
         }
-        if (_connector is not null)
-        {
-            _connector.LaneCount = lanes.Count;
-        }
+        _connector?.LaneCount = lanes.Count;
     }
 
     /// <summary>Brings every lane in line with the history: its visible rows (newest first), its count and its name.</summary>

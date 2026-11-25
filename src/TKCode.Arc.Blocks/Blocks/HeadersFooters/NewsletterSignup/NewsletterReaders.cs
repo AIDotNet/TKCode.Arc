@@ -122,10 +122,7 @@ internal sealed class NewsletterReaders : TemplatedControl
             _youFade.Changed += v => _you.Opacity = v;
             _you.Opacity = IsDone ? 1 : 0;
         }
-        if (_youHost is not null)
-        {
-            _youHost.IsExpanded = IsDone;
-        }
+        _youHost?.IsExpanded = IsDone;
         SyncFaces();
     }
 
@@ -153,15 +150,9 @@ internal sealed class NewsletterReaders : TemplatedControl
         }
         else if (property == FacesProperty)
         {
-            if (_observedFaces is not null)
-            {
-                _observedFaces.CollectionChanged -= OnFacesChanged;
-            }
+            _observedFaces?.CollectionChanged -= OnFacesChanged;
             _observedFaces = Faces as INotifyCollectionChanged;
-            if (_observedFaces is not null)
-            {
-                _observedFaces.CollectionChanged += OnFacesChanged;
-            }
+            _observedFaces?.CollectionChanged += OnFacesChanged;
             SyncFaces();
         }
         else if (property == IsTinyProperty)
@@ -180,19 +171,13 @@ internal sealed class NewsletterReaders : TemplatedControl
 
     private void SyncFaces()
     {
-        if (_faces is not null)
-        {
-            _faces.Images = Faces;
-        }
+        _faces?.Images = Faces;
         PseudoClasses.Set(NoFacesPseudoClass, (Faces?.Count ?? 0) == 0);
     }
 
     private void ApplyDone()
     {
-        if (_youHost is not null)
-        {
-            _youHost.IsExpanded = IsDone;
-        }
+        _youHost?.IsExpanded = IsDone;
         if (_youFade is null)
         {
             return;

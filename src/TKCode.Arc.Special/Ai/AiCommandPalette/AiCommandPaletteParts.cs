@@ -126,10 +126,7 @@ internal sealed class AiCommandPaletteHint : TemplatedControl
 
     private void Sync()
     {
-        if (_keys is not null)
-        {
-            _keys.Content = string.IsNullOrEmpty(Keys) ? null : AiCommandPaletteKeycap.Row(Keys);
-        }
+        _keys?.Content = string.IsNullOrEmpty(Keys) ? null : AiCommandPaletteKeycap.Row(Keys);
     }
 }
 
@@ -277,10 +274,7 @@ internal sealed class AiCommandPaletteRow : TemplatedControl
             _copyOpacity = new MotionValue<double>(this, 1, MotionVectors.Double);
             _copyOpacity.Changed += v =>
             {
-                if (_copy is not null)
-                {
-                    _copy.Opacity = v;
-                }
+                _copy?.Opacity = v;
             };
         }
         if (level == ArcMotionLevel.Full)

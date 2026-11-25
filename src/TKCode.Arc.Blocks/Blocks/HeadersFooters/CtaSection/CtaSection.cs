@@ -352,10 +352,7 @@ public class CtaSection : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
+        _dismiss?.Click -= OnDismissClick;
         _centeredActions = e.NameScope.Find<Panel>(CenteredActionsPart);
         _splitActions = e.NameScope.Find<Panel>(SplitActionsPart);
         _bannerActions = e.NameScope.Find<DockPanel>(BannerActionsPart);
@@ -366,14 +363,8 @@ public class CtaSection : TemplatedControl
         _dismiss = e.NameScope.Find<Avalonia.Controls.Button>(DismissPart);
         _noteFaces = e.NameScope.Find<SiteFaceStack>(NoteFacesPart);
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
-        if (_noteFaces is not null)
-        {
-            _noteFaces.Images = _faces;
-        }
+        _dismiss?.Click += OnDismissClick;
+        _noteFaces?.Images = _faces;
         RebuildActions();
         RebuildPoints();
         ApplyStageContent();
@@ -449,15 +440,9 @@ public class CtaSection : TemplatedControl
 
     private static void Observe(ref AvaloniaList<string>? slot, AvaloniaList<string>? next, NotifyCollectionChangedEventHandler handler)
     {
-        if (slot is not null)
-        {
-            slot.CollectionChanged -= handler;
-        }
+        slot?.CollectionChanged -= handler;
         slot = next;
-        if (slot is not null)
-        {
-            slot.CollectionChanged += handler;
-        }
+        slot?.CollectionChanged += handler;
     }
 
     private void OnPointsChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildPoints();

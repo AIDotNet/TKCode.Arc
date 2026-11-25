@@ -194,10 +194,7 @@ internal abstract class ShowpieceStage : Control
             {
                 return;
             }
-            if (_camera is not null)
-            {
-                _camera.Changed -= OnCameraChanged;
-            }
+            _camera?.Changed -= OnCameraChanged;
             _camera = value;
             if (value is not null)
             {
@@ -476,10 +473,7 @@ internal abstract class ShowpieceStage : Control
         }
         _motionKnown = true;
         _motionLevel = level;
-        if (_camera is not null)
-        {
-            _camera.MotionLevel = level;
-        }
+        _camera?.MotionLevel = level;
         OnMotionLevelChanged(level);
         InvalidateVisual();
     }

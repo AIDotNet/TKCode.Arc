@@ -170,10 +170,7 @@ public partial class WorkflowCanvas
                 _world.RenderTransform = new MatrixTransform(view.Matrix);
             }
         }
-        if (_grid is not null)
-        {
-            _grid.View = view;
-        }
+        _grid?.View = view;
         _settingView = true;
         try
         {

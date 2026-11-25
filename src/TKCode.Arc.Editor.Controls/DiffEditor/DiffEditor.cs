@@ -250,22 +250,13 @@ public sealed partial class DiffEditor : TemplatedControl
         }
         else if (change.Property == LanguageIdProperty)
         {
-            if (_originalEditor is not null)
-            {
-                _originalEditor.LanguageId = LanguageId;
-            }
+            _originalEditor?.LanguageId = LanguageId;
 
-            if (_modifiedEditor is not null)
-            {
-                _modifiedEditor.LanguageId = LanguageId;
-            }
+            _modifiedEditor?.LanguageId = LanguageId;
         }
         else if (change.Property == IsReadOnlyProperty)
         {
-            if (_modifiedEditor is not null)
-            {
-                _modifiedEditor.IsReadOnly = IsReadOnly;
-            }
+            _modifiedEditor?.IsReadOnly = IsReadOnly;
 
             UpdateRevertColumn();
         }
@@ -382,10 +373,7 @@ public sealed partial class DiffEditor : TemplatedControl
     // bar and the overview ruler are at the right edge
     private static void HideOriginalVerticalScrollBar(ScrollBar? bar)
     {
-        if (bar is not null)
-        {
-            bar.Visibility = ScrollBarVisibility.Hidden;
-        }
+        bar?.Visibility = ScrollBarVisibility.Hidden;
     }
 
     private void OnModifiedTextChanged(object? sender, EventArgs e)

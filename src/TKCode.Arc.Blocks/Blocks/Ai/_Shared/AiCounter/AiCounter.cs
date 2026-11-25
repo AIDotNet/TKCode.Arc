@@ -190,10 +190,7 @@ internal class AiCounter : TemplatedControl
             Text = over ? Format(OverText, length - max) : Format(LeftText, max - length);
             PseudoClasses.Set(NearPseudoClass, IsNear);
             PseudoClasses.Set(OverPseudoClass, over);
-            if (_ring is not null)
-            {
-                _ring.Value = Used;
-            }
+            _ring?.Value = Used;
         }
         UpdateName(shown, length, max);
     }

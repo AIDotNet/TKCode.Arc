@@ -146,18 +146,12 @@ internal class ArenaStandings : TemplatedControl
         _listFade = new MotionValue<double>(this, 1, MotionVectors.Double);
         _listFade.Changed += opacity =>
         {
-            if (_list is not null)
-            {
-                _list.Opacity = opacity;
-            }
+            _list?.Opacity = opacity;
         };
         _emptyFade = new MotionValue<double>(this, 0, MotionVectors.Double);
         _emptyFade.Changed += opacity =>
         {
-            if (_empty is not null)
-            {
-                _empty.Opacity = opacity;
-            }
+            _empty?.Opacity = opacity;
         };
     }
 
@@ -307,27 +301,15 @@ internal class ArenaStandings : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
+        _reset?.Click -= OnResetClick;
         _bodySize = e.NameScope.Find<SpringSizeDecorator>(BodySizePart);
         _body = e.NameScope.Find<ArenaStandingsBody>(BodyPart);
         _list = e.NameScope.Find<RankedBarList>(ListPart);
         _empty = e.NameScope.Find<TextBlock>(EmptyPart);
         _reset = e.NameScope.Find<Button>(ResetPart);
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
-        if (_list is not null)
-        {
-            _list.Opacity = _listFade.Value;
-        }
-        if (_empty is not null)
-        {
-            _empty.Opacity = _emptyFade.Value;
-        }
+        _reset?.Click += OnResetClick;
+        _list?.Opacity = _listFade.Value;
+        _empty?.Opacity = _emptyFade.Value;
         _placed = false;
         Sync(animate: false);
         SyncReset();

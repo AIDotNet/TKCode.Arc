@@ -714,10 +714,7 @@ public class TokenTextEditor : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_box is not null)
-        {
-            _box.Owner = null;
-        }
+        _box?.Owner = null;
         _box = e.NameScope.Find<TokenTextBox>(TextBoxPart);
         _heightPlaced = false;
         _heightTarget = -1;

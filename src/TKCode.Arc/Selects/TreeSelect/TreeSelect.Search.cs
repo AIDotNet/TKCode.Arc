@@ -30,10 +30,7 @@ public partial class TreeSelect
         {
             EnsureSearch();
         }
-        if (_search is not null)
-        {
-            _search.IsVisible = show;
-        }
+        _search?.IsVisible = show;
     }
 
     /// <summary>The search input exists only for a searchable field, from its first open.</summary>
@@ -169,10 +166,7 @@ public partial class TreeSelect
 
     private void UpdateEmpty()
     {
-        if (_emptyHost is not null)
-        {
-            _emptyHost.IsPresent = _query.Length > 0 && _rows.Count == 0;
-        }
+        _emptyHost?.IsPresent = _query.Length > 0 && _rows.Count == 0;
     }
 
     #endregion

@@ -427,14 +427,8 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
             _trigger.SizeChanged -= OnTriggerSizeChanged;
         }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _popup?.Closed -= OnPopupClosed;
+        _clear?.Click -= OnClearClick;
 
         _trigger = e.NameScope.Find<Border>(TriggerPart);
         _value = e.NameScope.Find<SelectValueRoll>(ValuePart);
@@ -458,10 +452,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
             _popup.OverlayInputPassThroughElement = _trigger;
             _popup.Closed += OnPopupClosed;
         }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _clear?.Click += OnClearClick;
         WireMenu();
         _rendered = false;
         UpdateValue(animate: false);
@@ -553,10 +544,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
         }
         else if (property == ColumnWidthProperty)
         {
-            if (_panel is not null)
-            {
-                _panel.ColumnWidth = ColumnWidth;
-            }
+            _panel?.ColumnWidth = ColumnWidth;
         }
         else if (property == MaxDropDownHeightProperty && _panel is not null)
         {
@@ -638,15 +626,9 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
     /// <summary>Re-reads the roots and re-resolves the selection (data, children or value selector changed).</summary>
     private void Reload()
     {
-        if (_rootsNotifier is not null)
-        {
-            _rootsNotifier.CollectionChanged -= OnRootsChanged;
-        }
+        _rootsNotifier?.CollectionChanged -= OnRootsChanged;
         _rootsNotifier = ItemsSource as INotifyCollectionChanged;
-        if (_rootsNotifier is not null)
-        {
-            _rootsNotifier.CollectionChanged += OnRootsChanged;
-        }
+        _rootsNotifier?.CollectionChanged += OnRootsChanged;
         ReadRoots();
     }
 
@@ -838,10 +820,7 @@ public class Cascader : TemplatedControl, ISelectFieldAutomation, ICascaderColum
 
     private void UpdateClear()
     {
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = IsClearable && !IsReadOnly && _path.Count > 0 && IsEffectivelyEnabled;
-        }
+        _clearHost?.IsPresent = IsClearable && !IsReadOnly && _path.Count > 0 && IsEffectivelyEnabled;
     }
 
     private void OnClearClick(object? sender, RoutedEventArgs e)

@@ -779,10 +779,7 @@ public partial class LoginSplit
     private void SetStatus(string? text, bool announce = true)
     {
         StatusText = text;
-        if (_status is not null)
-        {
-            _status.Content = text is null ? null : StatusLine(text);
-        }
+        _status?.Content = text is null ? null : StatusLine(text);
         if (announce && text is not null)
         {
             _announcer?.Announce(text);

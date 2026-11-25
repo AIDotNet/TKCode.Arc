@@ -81,26 +81,11 @@ public partial class ActivityTerrain
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged -= OnMetricSwitchChanged;
-        }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged -= OnViewSwitchChanged;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
-        if (_canvas is not null)
-        {
-            _canvas.Owner = null;
-        }
-        if (_card is not null)
-        {
-            _card.Content = null;
-        }
+        _metricSwitch?.SelectionChanged -= OnMetricSwitchChanged;
+        _viewSwitch?.SelectionChanged -= OnViewSwitchChanged;
+        _reset?.Click -= OnResetClick;
+        _canvas?.Owner = null;
+        _card?.Content = null;
 
         _metricSwitch = e.NameScope.Find<SegmentedControl>(MetricSwitchPart);
         _viewSwitch = e.NameScope.Find<SegmentedControl>(ViewSwitchPart);
@@ -136,18 +121,9 @@ public partial class ActivityTerrain
             _card.FadeOutDuration = ArcMotionPresets.Fast;
             _card.Content = _cardView;
         }
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged += OnMetricSwitchChanged;
-        }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged += OnViewSwitchChanged;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
+        _metricSwitch?.SelectionChanged += OnMetricSwitchChanged;
+        _viewSwitch?.SelectionChanged += OnViewSwitchChanged;
+        _reset?.Click += OnResetClick;
         _peakButtons.Clear();
         _metricOptionsDirty = true;
         _containerWidth = double.NaN;
@@ -182,18 +158,9 @@ public partial class ActivityTerrain
         var wide = width >= ActivityTerrainMath.WideWidth;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(WidePseudoClass, wide);
-        if (_plot is not null)
-        {
-            _plot.Height = ActivityTerrainMath.PlotHeight(width);
-        }
-        if (_body is not null)
-        {
-            _body.IsWide = wide;
-        }
-        if (_stats is not null)
-        {
-            _stats.Layout = wide ? ActivityTerrainStatsLayout.Column : narrow ? ActivityTerrainStatsLayout.Narrow : ActivityTerrainStatsLayout.Row;
-        }
+        _plot?.Height = ActivityTerrainMath.PlotHeight(width);
+        _body?.IsWide = wide;
+        _stats?.Layout = wide ? ActivityTerrainStatsLayout.Column : narrow ? ActivityTerrainStatsLayout.Narrow : ActivityTerrainStatsLayout.Row;
         _canvas?.SetNarrow(narrow);
     }
 
@@ -456,10 +423,7 @@ public partial class ActivityTerrain
     private void UpdateStats()
     {
         var metric = _metric;
-        if (_summaryTitle is not null)
-        {
-            _summaryTitle.Content = metric?.SummaryTitle ?? (metric is null ? string.Empty : Format(SummaryTitleFormat, LabelOf(metric)));
-        }
+        _summaryTitle?.Content = metric?.SummaryTitle ?? (metric is null ? string.Empty : Format(SummaryTitleFormat, LabelOf(metric)));
         if (_total is not null)
         {
             _total.Formatter = ValueFormatter;
@@ -469,18 +433,9 @@ public partial class ActivityTerrain
         var tone = ToneOf(change);
         PseudoClasses.Set(ChangeGoodPseudoClass, tone > 0);
         PseudoClasses.Set(ChangeBadPseudoClass, tone < 0);
-        if (_change is not null)
-        {
-            _change.Value = change ?? 0;
-        }
-        if (_changeGlyph is not null)
-        {
-            _changeGlyph.Data = change is < 0 ? ShowpieceIcons.ArrowDownRight : ArcIcons.ArrowUpRight;
-        }
-        if (_busiestDay is not null)
-        {
-            _busiestDay.Content = metric is null ? string.Empty : DayNameList[_summary.BusiestDay];
-        }
+        _change?.Value = change ?? 0;
+        _changeGlyph?.Data = change is < 0 ? ShowpieceIcons.ArrowDownRight : ArcIcons.ArrowUpRight;
+        _busiestDay?.Content = metric is null ? string.Empty : DayNameList[_summary.BusiestDay];
         _busiestCaption?.Update(BusiestDayFormat, UnitOf(metric), _summary.DayTotals[_summary.BusiestDay], _summary.WorkingShare, ValueFormatter);
         UpdatePeaks();
     }
@@ -698,10 +653,7 @@ public partial class ActivityTerrain
         Pitch = _canvas.PitchDegrees;
         Zoom = _canvas.OrbitCamera.Zoom;
         IsViewDefault = FocusedCell is null && _canvas.IsCameraAtRest;
-        if (_resetPresence is not null)
-        {
-            _resetPresence.IsPresent = !IsViewDefault;
-        }
+        _resetPresence?.IsPresent = !IsViewDefault;
     }
 
     private void OnViewModeChanged(ActivityTerrainViewMode mode)
@@ -982,9 +934,6 @@ public partial class ActivityTerrain
 
     private void UpdateHint()
     {
-        if (_hint is not null)
-        {
-            _hint.Text = _touched ? TouchHintText : HintText;
-        }
+        _hint?.Text = _touched ? TouchHintText : HintText;
     }
 }

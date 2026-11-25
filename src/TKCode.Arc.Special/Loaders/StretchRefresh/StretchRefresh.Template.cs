@@ -115,14 +115,8 @@ public partial class StretchRefresh
         _feedRing = ns.Find<Border>(FeedRingPart);
         _announcer = ns.Find<ExplainerAnnouncer>(AnnouncerPart);
 
-        if (_sheet is not null)
-        {
-            _sheet.RenderTransform = _sheetShift;
-        }
-        if (_anchor is not null)
-        {
-            _anchor.RenderTransform = _anchorShift;
-        }
+        _sheet?.RenderTransform = _sheetShift;
+        _anchor?.RenderTransform = _anchorShift;
         if (_markHost is not null)
         {
             _markHost.RenderTransformOrigin = RelativePoint.Center;
@@ -177,10 +171,7 @@ public partial class StretchRefresh
             {
                 if (ArcMotion.IsFull(_headerIcon))
                 {
-                    if (_spin is not null)
-                    {
-                        _spin.Angle = (_spin.Angle + dt * 360 / 0.85) % 360;
-                    }
+                    _spin?.Angle = (_spin.Angle + dt * 360 / 0.85) % 360;
                     if (_spinGlyph is not null && _spinGlyph.Opacity < 1)
                     {
                         _spinGlyph.Opacity = 1;
@@ -195,10 +186,7 @@ public partial class StretchRefresh
             _headerIcon.Show(IdleGlyphKey, CreateSpinGlyph(), animate: false);
         }
         _subtitle?.ShowText(Subtitle, animate: false);
-        if (_subtitle is not null)
-        {
-            _subtitle.IsVisible = !string.IsNullOrEmpty(Subtitle);
-        }
+        _subtitle?.IsVisible = !string.IsNullOrEmpty(Subtitle);
         _status?.ShowText(Labels.PullHint, animate: false);
         UpdateNames();
         UpdateInks();
@@ -219,14 +207,8 @@ public partial class StretchRefresh
     {
         var inset = Math.Max(BorderThickness.Left, BorderThickness.Top);
         _innerRadius = Math.Max(0, CornerRadius.TopLeft - inset);
-        if (_header is not null)
-        {
-            _header.CornerRadius = new CornerRadius(_innerRadius, _innerRadius, 0, 0);
-        }
-        if (_wellFill is not null)
-        {
-            _wellFill.CornerRadius = new CornerRadius(0, 0, _innerRadius, _innerRadius);
-        }
+        _header?.CornerRadius = new CornerRadius(_innerRadius, _innerRadius, 0, 0);
+        _wellFill?.CornerRadius = new CornerRadius(0, 0, _innerRadius, _innerRadius);
         Apply();
     }
 
@@ -355,14 +337,8 @@ public partial class StretchRefresh
             _peelRadius = r;
             _peelInner = _innerRadius;
             var corners = new CornerRadius(r, r, _innerRadius, _innerRadius);
-            if (_sheetSurface is not null)
-            {
-                _sheetSurface.CornerRadius = corners;
-            }
-            if (_feedRing is not null)
-            {
-                _feedRing.CornerRadius = corners;
-            }
+            _sheetSurface?.CornerRadius = corners;
+            _feedRing?.CornerRadius = corners;
         }
         if (_anchor is not null)
         {

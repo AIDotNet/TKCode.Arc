@@ -147,15 +147,9 @@ internal sealed class SiteFaceStack : Control
 
     private void WatchImages()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnImagesChanged;
-        }
+        _observed?.CollectionChanged -= OnImagesChanged;
         _observed = _watching ? Images as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnImagesChanged;
-        }
+        _observed?.CollectionChanged += OnImagesChanged;
     }
 
     private void OnImagesChanged(object? sender, NotifyCollectionChangedEventArgs e)

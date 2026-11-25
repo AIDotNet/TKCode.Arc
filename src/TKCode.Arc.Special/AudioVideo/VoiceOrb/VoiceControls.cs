@@ -182,40 +182,22 @@ public class VoiceControls : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_start is not null)
-        {
-            _start.Click -= OnStartClick;
-        }
-        if (_end is not null)
-        {
-            _end.Click -= OnEndClick;
-        }
-        if (_mute is not null)
-        {
-            _mute.IsCheckedChanged -= OnMuteToggled;
-        }
+        _start?.Click -= OnStartClick;
+        _end?.Click -= OnEndClick;
+        _mute?.IsCheckedChanged -= OnMuteToggled;
         _start = e.NameScope.Find<Button>(StartPart);
         _mute = e.NameScope.Find<ToggleButton>(MutePart);
         _end = e.NameScope.Find<Button>(EndPart);
         _clock = e.NameScope.Find<TextBlock>(ClockPart);
         _muteGlyph = e.NameScope.Find<ArcContentSwap>(MuteGlyphPart);
-        if (_start is not null)
-        {
-            _start.Click += OnStartClick;
-        }
-        if (_end is not null)
-        {
-            _end.Click += OnEndClick;
-        }
+        _start?.Click += OnStartClick;
+        _end?.Click += OnEndClick;
         if (_mute is not null)
         {
             _mute.IsChecked = IsMuted;
             _mute.IsCheckedChanged += OnMuteToggled;
         }
-        if (_clock is not null)
-        {
-            _clock.FontFeatures = new Avalonia.Media.FontFeatureCollection { new Avalonia.Media.FontFeature { Tag = "tnum", Value = 1 } };
-        }
+        _clock?.FontFeatures = new Avalonia.Media.FontFeatureCollection { new Avalonia.Media.FontFeature { Tag = "tnum", Value = 1 } };
         UpdateTexts();
         UpdateMuteGlyph(false);
         UpdatePseudoClasses();

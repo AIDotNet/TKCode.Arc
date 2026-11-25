@@ -188,10 +188,7 @@ public partial class SignIn
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_signUp is not null)
-        {
-            _signUp.Click -= OnSignUpClick;
-        }
+        _signUp?.Click -= OnSignUpClick;
         _card = e.NameScope.Find<Border>(CardPart);
         _viewport = e.NameScope.Find<SignInViewport>(ViewportPart);
         _host = e.NameScope.Find<SignInStepHost>(StepsPart);
@@ -200,10 +197,7 @@ public partial class SignIn
         _signUp = e.NameScope.Find<SignInTextButton>(SignUpPart);
         _switch = e.NameScope.Find<Control>(SwitchPart);
         _announcer = e.NameScope.Find<AuthAnnouncer>(AnnouncerPart);
-        if (_signUp is not null)
-        {
-            _signUp.Click += OnSignUpClick;
-        }
+        _signUp?.Click += OnSignUpClick;
         _current = null;
         if (_host is not null)
         {
@@ -487,19 +481,13 @@ public partial class SignIn
 
     private void SyncFooter()
     {
-        if (_signUpPrompt is not null)
-        {
-            _signUpPrompt.Text = SignUpPrompt;
-        }
+        _signUpPrompt?.Text = SignUpPrompt;
         if (_signUp is not null)
         {
             _signUp.Text = SignUpLabel;
             AutomationProperties.SetName(_signUp, SignUpLabel);
         }
-        if (_switch is not null)
-        {
-            _switch.IsVisible = IsSignUpVisible;
-        }
+        _switch?.IsVisible = IsSignUpVisible;
     }
 
     private void SyncEmailStep(SignInEmailStep? step)

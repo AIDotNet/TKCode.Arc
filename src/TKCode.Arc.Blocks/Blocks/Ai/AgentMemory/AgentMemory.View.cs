@@ -199,28 +199,16 @@ public partial class AgentMemory
         var memories = _attached ? MemoriesSource as INotifyCollectionChanged : null;
         if (!ReferenceEquals(memories, _observedMemories))
         {
-            if (_observedMemories is not null)
-            {
-                _observedMemories.CollectionChanged -= OnSourceMemoriesChanged;
-            }
+            _observedMemories?.CollectionChanged -= OnSourceMemoriesChanged;
             _observedMemories = memories;
-            if (memories is not null)
-            {
-                memories.CollectionChanged += OnSourceMemoriesChanged;
-            }
+            memories?.CollectionChanged += OnSourceMemoriesChanged;
         }
         var captured = _attached ? CapturedSource as INotifyCollectionChanged : null;
         if (!ReferenceEquals(captured, _observedCaptured))
         {
-            if (_observedCaptured is not null)
-            {
-                _observedCaptured.CollectionChanged -= OnSourceCapturedChanged;
-            }
+            _observedCaptured?.CollectionChanged -= OnSourceCapturedChanged;
             _observedCaptured = captured;
-            if (captured is not null)
-            {
-                captured.CollectionChanged += OnSourceCapturedChanged;
-            }
+            captured?.CollectionChanged += OnSourceCapturedChanged;
         }
         WatchGroups();
     }
@@ -1006,10 +994,7 @@ public partial class AgentMemory
                 _search.Text = SearchText;
             }
         }
-        if (_filters is not null)
-        {
-            _filters.IsConcealed = IsSearchOpen;
-        }
+        _filters?.IsConcealed = IsSearchOpen;
     }
 
     /// <summary>Every reading row marks the current query.</summary>

@@ -270,36 +270,18 @@ public partial class AiSetupWizard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_stepper is not null)
-        {
-            _stepper.StepSelected -= OnStepSelected;
-        }
+        _back?.Click -= OnBackClick;
+        _next?.Click -= OnNextClick;
+        _stepper?.StepSelected -= OnStepSelected;
         _stepper = e.NameScope.Find<Stepper>(StepperPart);
         _page = e.NameScope.Find<ArcContentSwap>(PagePart);
         _back = e.NameScope.Find<Button>(BackPart);
         _next = e.NameScope.Find<Button>(NextPart);
         _title = e.NameScope.Find<TextBlock>("PART_Title");
         _announcer = e.NameScope.Find<AiAnnouncer>("PART_Announcer");
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_stepper is not null)
-        {
-            _stepper.StepSelected += OnStepSelected;
-        }
+        _back?.Click += OnBackClick;
+        _next?.Click += OnNextClick;
+        _stepper?.StepSelected += OnStepSelected;
         if (_configuration.ProviderId is null && _configuration.DataSourceIds.Count == 0)
         {
             Configuration = DefaultConfiguration();
@@ -341,10 +323,7 @@ public partial class AiSetupWizard : TemplatedControl
         {
             var compact = Bounds.Width > 0 && Bounds.Width <= CompactWidth;
             PseudoClasses.Set(CompactPseudoClass, compact);
-            if (_stepper is not null)
-            {
-                _stepper.Orientation = compact ? Orientation.Horizontal : Orientation.Vertical;
-            }
+            _stepper?.Orientation = compact ? Orientation.Horizontal : Orientation.Vertical;
         }
     }
 
@@ -382,14 +361,8 @@ public partial class AiSetupWizard : TemplatedControl
     private void UpdateChrome()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = IsCompleted ? labels.CompletedTitle : labels.Title;
-        }
-        if (_stepper is not null)
-        {
-            _stepper.CurrentIndex = IsCompleted ? 5 : (int)CurrentStep;
-        }
+        _title?.Text = IsCompleted ? labels.CompletedTitle : labels.Title;
+        _stepper?.CurrentIndex = IsCompleted ? 5 : (int)CurrentStep;
         if (_back is not null)
         {
             _back.Content = labels.Back;

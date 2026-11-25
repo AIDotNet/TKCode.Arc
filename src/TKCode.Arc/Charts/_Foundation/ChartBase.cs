@@ -265,7 +265,6 @@ public abstract class ChartBase : TemplatedControl
     private bool _revealed;
     private MotionValue<double>? _revealProgress;
     private MotionValue<double>? _revealFade;
-    private string _summary = string.Empty;
     private string _dataTable = string.Empty;
     private string _announcement = string.Empty;
     private ChartLegend? _legend;
@@ -382,9 +381,9 @@ public abstract class ChartBase : TemplatedControl
     /// <inheritdoc cref="SummaryProperty"/>
     public string Summary
     {
-        get => _summary;
-        private set => SetAndRaise(SummaryProperty, ref _summary, value);
-    }
+        get;
+        private set => SetAndRaise(SummaryProperty, ref field, value);
+    } = string.Empty;
 
     /// <inheritdoc cref="DataTableTextProperty"/>
     public string DataTableText
@@ -493,10 +492,7 @@ public abstract class ChartBase : TemplatedControl
         }
         OnTemplatePlots(e.NameScope, _plots);
         _legend = e.NameScope.Find<ChartLegend>(LegendPart);
-        if (_legend is not null)
-        {
-            _legend.Owner = this;
-        }
+        _legend?.Owner = this;
         OnTemplateApplied(e.NameScope);
         SyncLegend();
         InvalidatePlots();
@@ -557,15 +553,9 @@ public abstract class ChartBase : TemplatedControl
     /// <summary>Listens to <paramref name="items"/> while shown (null or detached: to nothing); true when it can change.</summary>
     private bool WatchItems(IEnumerable? items)
     {
-        if (_observedItems is not null)
-        {
-            _observedItems.CollectionChanged -= OnItemsCollectionChanged;
-        }
+        _observedItems?.CollectionChanged -= OnItemsCollectionChanged;
         _observedItems = _watching ? items as INotifyCollectionChanged : null;
-        if (_observedItems is not null)
-        {
-            _observedItems.CollectionChanged += OnItemsCollectionChanged;
-        }
+        _observedItems?.CollectionChanged += OnItemsCollectionChanged;
         return _observedItems is not null;
     }
 

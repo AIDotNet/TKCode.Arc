@@ -117,14 +117,8 @@ internal sealed class PromptPartTabs : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_system is not null)
-        {
-            _system.Click -= OnTabClick;
-        }
-        if (_user is not null)
-        {
-            _user.Click -= OnTabClick;
-        }
+        _system?.Click -= OnTabClick;
+        _user?.Click -= OnTabClick;
         _system = e.NameScope.Find<PromptPartTab>(SystemTabPart);
         _user = e.NameScope.Find<PromptPartTab>(UserTabPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);

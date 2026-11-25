@@ -83,10 +83,7 @@ internal sealed class LightboxGalleryView : TemplatedControl
         Unhook(_zoomOut, OnZoomOut);
         Unhook(_previous, OnPrevious);
         Unhook(_next, OnNext);
-        if (Viewport is not null)
-        {
-            Viewport.Owner = null;
-        }
+        Viewport?.Owner = null;
         Viewport = e.NameScope.Find<LightboxGalleryViewport>(ViewportPart);
         Chrome = e.NameScope.Find<Panel>(ChromePart);
         Counter = e.NameScope.Find<TextBlock>(CounterPart);
@@ -97,29 +94,20 @@ internal sealed class LightboxGalleryView : TemplatedControl
         _zoomOut = Hook(e, ZoomOutPart, OnZoomOut);
         _previous = Hook(e, PreviousPart, OnPrevious);
         _next = Hook(e, NextPart, OnNext);
-        if (Viewport is not null)
-        {
-            Viewport.Owner = _owner;
-        }
+        Viewport?.Owner = _owner;
         PartsChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private static Button? Hook(TemplateAppliedEventArgs e, string name, EventHandler<RoutedEventArgs> handler)
     {
         var button = e.NameScope.Find<Button>(name);
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
         return button;
     }
 
     private static void Unhook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)

@@ -240,10 +240,7 @@ internal sealed class AgentTimelineCard : Control
         }
         else
         {
-            if (_swap is not null)
-            {
-                _swap.Content = content;
-            }
+            _swap?.Content = content;
             Move(target, full);
             if (level == ArcMotionLevel.Off)
             {

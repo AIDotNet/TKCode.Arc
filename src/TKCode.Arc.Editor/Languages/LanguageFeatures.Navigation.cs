@@ -71,8 +71,10 @@ internal interface IDocumentHighlightProvider
 }
 
 /// <summary>Ranges that are edited together and the word pattern they keep to (upstream's LinkedEditingRanges).</summary>
-internal sealed record LinkedEditingRanges(IReadOnlyList<TextRange> Ranges)
+internal sealed class LinkedEditingRanges(IReadOnlyList<TextRange> ranges)
 {
+    public IReadOnlyList<TextRange> Ranges { get; } = ranges;
+
     public Regex? WordPattern { get; init; }
 }
 
@@ -208,8 +210,10 @@ internal sealed record Link(TextRange Range)
 }
 
 /// <summary>The links of a document (upstream's ILinksList).</summary>
-internal sealed record LinksList(IReadOnlyList<Link> Links)
+internal sealed class LinksList(IReadOnlyList<Link> links)
 {
+    public IReadOnlyList<Link> Links { get; } = links;
+
     public Action? Dispose { get; init; }
 }
 

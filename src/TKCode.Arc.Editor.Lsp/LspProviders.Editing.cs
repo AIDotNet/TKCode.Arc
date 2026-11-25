@@ -39,14 +39,32 @@ internal sealed partial class LspProviders :
         {
             return null;
         }
+        if (!_capabilities.CodeActionResolve)
+        {
+            var entries = Read(result, s_json.LspCodeActionOrCommandArray);
+            if (entries is null)
+            {
+                return null;
+            }
+            var converted = new List<CodeAction>(entries.Length);
+            foreach (var entry in entries)
+            {
+                if (LspConvert.ToCodeAction(entry) is { } action)
+                {
+                    converted.Add(action);
+                }
+            }
+            return new CodeActionList(converted);
+        }
         var actions = new List<CodeAction>();
         foreach (var element in result.EnumerateArray())
         {
-            if (LspConvert.ToCodeAction(element) is not { } action)
+            if (ReadStruct(element, s_json.LspCodeActionOrCommand) is not { } entry
+                || LspConvert.ToCodeAction(entry) is not { } action)
             {
                 continue;
             }
-            if (_capabilities.CodeActionResolve)
+            if (entry is LspCodeAction)
             {
                 _codeActions.AddOrUpdate(action, new RawValue(element.Clone()));
             }
@@ -62,12 +80,9 @@ internal sealed partial class LspProviders :
         {
             return null;
         }
-        // A bare command has nothing to resolve.
-        if (raw.Value.TryGetProperty("command", out var command) && command.ValueKind == JsonValueKind.String)
-        {
-            return null;
-        }
-        return await RequestRaw(connection, "codeAction/resolve", raw.Value, token) is { } result ? LspConvert.ToCodeAction(result) : null;
+        return ReadStruct(await RequestRaw(connection, "codeAction/resolve", raw.Value, token), s_json.LspCodeActionOrCommand) is { } entry
+            ? LspConvert.ToCodeAction(entry)
+            : null;
     }
 
     // ---- rename ----
@@ -128,32 +143,29 @@ internal sealed partial class LspProviders :
         {
             return null;
         }
-        if (LspConvert.IsNull(result) || result.ValueKind != JsonValueKind.Object)
+        if (LspConvert.IsNull(result) || ReadStruct(result, s_json.LspPrepareRenameResult) is not { } prepared)
         {
             return Rejected(position, "The element can't be renamed.");
         }
-        // Range | { range, placeholder } | { defaultBehavior }
-        if (LspConvert.GetBool(result, "defaultBehavior"))
+        switch (prepared)
         {
-            var validated = model.ValidatePosition(position);
-            var word = WordHelper.GetWordAtText(validated.Column, WordHelper.DefaultWordRegExp, model.GetLineContent(validated.LineNumber), 0);
-            if (word is null)
-            {
+            case LspPrepareRenameDefaultBehavior { DefaultBehavior: true }:
+                var validated = model.ValidatePosition(position);
+                var word = WordHelper.GetWordAtText(validated.Column, WordHelper.DefaultWordRegExp, model.GetLineContent(validated.LineNumber), 0);
+                if (word is null)
+                {
+                    return Rejected(position, "The element can't be renamed.");
+                }
+                return new RenameLocationResult(new TextRange(validated.LineNumber, word.StartColumn, validated.LineNumber, word.EndColumn), word.Word);
+            case LspPrepareRenamePlaceholder withPlaceholder:
+                var placeholderRange = model.ValidateRange(LspConvert.ToRange(withPlaceholder.Range));
+                return new RenameLocationResult(placeholderRange, withPlaceholder.Placeholder ?? model.GetValueInRange(placeholderRange));
+            case LspRange plain:
+                var plainRange = model.ValidateRange(LspConvert.ToRange(plain));
+                return new RenameLocationResult(plainRange, model.GetValueInRange(plainRange));
+            default:
                 return Rejected(position, "The element can't be renamed.");
-            }
-            return new RenameLocationResult(new TextRange(validated.LineNumber, word.StartColumn, validated.LineNumber, word.EndColumn), word.Word);
         }
-        if (result.TryGetProperty("range", out var rangeElement) && Read(rangeElement, s_json.LspRange) is { } withPlaceholder)
-        {
-            var range = model.ValidateRange(LspConvert.ToRange(withPlaceholder));
-            return new RenameLocationResult(range, LspConvert.GetString(result, "placeholder") ?? model.GetValueInRange(range));
-        }
-        if (Read(result, s_json.LspRange) is { } plain)
-        {
-            var range = model.ValidateRange(LspConvert.ToRange(plain));
-            return new RenameLocationResult(range, model.GetValueInRange(range));
-        }
-        return Rejected(position, "The element can't be renamed.");
     }
 
     private static RenameLocationResult Rejected(TextPosition position, string reason) =>

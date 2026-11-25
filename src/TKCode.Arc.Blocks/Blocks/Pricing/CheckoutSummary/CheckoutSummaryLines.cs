@@ -94,10 +94,7 @@ internal sealed class CheckoutSummaryLines : TemplatedControl
         set
         {
             _totalText = value;
-            if (_totalLabel is not null)
-            {
-                _totalLabel.Text = value;
-            }
+            _totalLabel?.Text = value;
         }
     }
 
@@ -244,10 +241,7 @@ internal sealed class CheckoutSummaryLines : TemplatedControl
         _panel = e.NameScope.Find<Panel>(RowsPart);
         _totalLabel = e.NameScope.Find<TextBlock>(TotalLabelPart);
         _total = e.NameScope.Find<RollingDigits>(TotalPart);
-        if (_totalLabel is not null)
-        {
-            _totalLabel.Text = _totalText;
-        }
+        _totalLabel?.Text = _totalText;
         _rows.Clear();
         SetLines(_views, animate: false);
         ApplyTotal();

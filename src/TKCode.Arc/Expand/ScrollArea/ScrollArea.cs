@@ -291,14 +291,8 @@ public class ScrollArea : ScrollViewer
         SetCurrentValue(VerticalScrollBarVisibilityProperty, vertical ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled);
         SetCurrentValue(HorizontalScrollBarVisibilityProperty, horizontal ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled);
         // Both axes: each track stops 13px short of the corner so they never cross.
-        if (_vertical is not null)
-        {
-            _vertical.Margin = new Thickness(0, 3, 1, orientation == ScrollAreaOrientation.Both ? 13 : 3);
-        }
-        if (_horizontal is not null)
-        {
-            _horizontal.Margin = new Thickness(3, 0, orientation == ScrollAreaOrientation.Both ? 13 : 3, 1);
-        }
+        _vertical?.Margin = new Thickness(0, 3, 1, orientation == ScrollAreaOrientation.Both ? 13 : 3);
+        _horizontal?.Margin = new Thickness(3, 0, orientation == ScrollAreaOrientation.Both ? 13 : 3, 1);
     }
 
     /// <summary>Writes fades, thumbs and edges for the current offset (no layout).</summary>

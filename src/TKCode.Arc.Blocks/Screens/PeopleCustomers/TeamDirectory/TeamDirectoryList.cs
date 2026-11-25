@@ -262,10 +262,7 @@ internal sealed class TeamDirectoryRow : ToggleButton
         var p = Person;
         var available = p.Availability == TeamDirectoryAvailability.Available;
         AutomationProperties.SetName(this, string.IsNullOrEmpty(p.Role) ? p.Name : $"{p.Name}, {p.Role}");
-        if (_name is not null)
-        {
-            _name.Text = p.Name;
-        }
+        _name?.Text = p.Name;
         if (_role is not null)
         {
             _role.Text = p.Role;

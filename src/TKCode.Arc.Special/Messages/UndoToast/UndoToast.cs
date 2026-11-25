@@ -284,31 +284,16 @@ public class UndoToast : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndoClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_root is not null)
-        {
-            _root.RenderTransform = null;
-        }
+        _undo?.Click -= OnUndoClick;
+        _close?.Click -= OnCloseClick;
+        _root?.RenderTransform = null;
         _root = e.NameScope.Find<Panel>(RootPart);
         _ring = e.NameScope.Find<ArcRing>(RingPart);
         _seconds = e.NameScope.Find<TextBlock>(SecondsPart);
         _undo = e.NameScope.Find<Button>(UndoPart);
         _close = e.NameScope.Find<Button>(ClosePart);
-        if (_undo is not null)
-        {
-            _undo.Click += OnUndoClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _undo?.Click += OnUndoClick;
+        _close?.Click += OnCloseClick;
         if (_root is not null)
         {
             _root.RenderTransform = _transform;
@@ -426,10 +411,7 @@ public class UndoToast : TemplatedControl
         _scale.Changed += _ => ApplyTransform();
         _opacity.Changed += v =>
         {
-            if (_root is not null)
-            {
-                _root.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _root?.Opacity = Math.Clamp(v, 0, 1);
         };
         _timeline = new MotionTimeline(this);
         _timeline.Changed += UpdateCountdown;
@@ -448,10 +430,7 @@ public class UndoToast : TemplatedControl
         ++_generation;
         var wasVisible = _visible;
         _visible = true;
-        if (_root is not null)
-        {
-            _root.IsVisible = true;
-        }
+        _root?.IsVisible = true;
         InvalidateMeasure();
         var level = ArcMotion.GetEffectiveLevel(this);
         if (inPlace)
@@ -576,10 +555,7 @@ public class UndoToast : TemplatedControl
         {
             return;
         }
-        if (_root is not null)
-        {
-            _root.IsVisible = false;
-        }
+        _root?.IsVisible = false;
         InvalidateMeasure();
     }
 
@@ -600,10 +576,7 @@ public class UndoToast : TemplatedControl
 
     private void UpdateCountdown(double progress)
     {
-        if (_ring is not null)
-        {
-            _ring.Value = Math.Clamp(1 - progress, 0, 1);
-        }
+        _ring?.Value = Math.Clamp(1 - progress, 0, 1);
         if (_seconds is null)
         {
             return;

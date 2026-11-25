@@ -16,12 +16,12 @@ public sealed class SemanticTokensDtoTests
         switch (expected)
         {
             case FullSemanticTokensDto full:
-                var a = actual.ShouldBeOfType<FullSemanticTokensDto>();
+                var a = actual.Value.ShouldBeOfType<FullSemanticTokensDto>();
                 a.Id.ShouldBe(full.Id);
                 a.Data.ShouldBe(full.Data);
                 break;
             case DeltaSemanticTokensDto delta:
-                var d = actual.ShouldBeOfType<DeltaSemanticTokensDto>();
+                var d = actual.Value.ShouldBeOfType<DeltaSemanticTokensDto>();
                 d.Id.ShouldBe(delta.Id);
                 d.Deltas.Count.ShouldBe(delta.Deltas.Count);
                 for (var i = 0; i < delta.Deltas.Count; i++)

@@ -157,14 +157,8 @@ public class FieldFrame : ContentControl
 
     private void UpdateSpacing()
     {
-        if (_prefix is not null)
-        {
-            _prefix.Margin = new Thickness(0, 0, Spacing, 0);
-        }
-        if (_suffix is not null)
-        {
-            _suffix.Margin = new Thickness(SuffixSpacing ?? Spacing, 0, 0, 0);
-        }
+        _prefix?.Margin = new Thickness(0, 0, Spacing, 0);
+        _suffix?.Margin = new Thickness(SuffixSpacing ?? Spacing, 0, 0, 0);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

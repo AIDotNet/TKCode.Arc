@@ -458,15 +458,9 @@ internal partial class AiAnswerDocument : TemplatedControl
         var target = IsRevealing && _phase != Phase.Finished ? LastText() : null;
         if (!ReferenceEquals(target, _cursorText))
         {
-            if (_cursorText is not null)
-            {
-                _cursorText.ShowsCursor = false;
-            }
+            _cursorText?.ShowsCursor = false;
             _cursorText = target;
-            if (target is not null)
-            {
-                target.ShowsCursor = true;
-            }
+            target?.ShowsCursor = true;
         }
         if (_cursorText is not null)
         {
@@ -583,15 +577,9 @@ internal partial class AiAnswerDocument : TemplatedControl
         {
             return;
         }
-        if (_sourcesHook is not null)
-        {
-            _sourcesHook.CollectionChanged -= OnSourcesCollectionChanged;
-        }
+        _sourcesHook?.CollectionChanged -= OnSourcesCollectionChanged;
         _sourcesHook = next;
-        if (_sourcesHook is not null)
-        {
-            _sourcesHook.CollectionChanged += OnSourcesCollectionChanged;
-        }
+        _sourcesHook?.CollectionChanged += OnSourcesCollectionChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

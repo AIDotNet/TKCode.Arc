@@ -82,10 +82,7 @@ internal sealed class AiChatTurnView : TemplatedControl
         set
         {
             _owner = value;
-            if (_reply is not null)
-            {
-                _reply.Owner = value;
-            }
+            _reply?.Owner = value;
             ApplyLabels();
         }
     }
@@ -97,10 +94,7 @@ internal sealed class AiChatTurnView : TemplatedControl
         set
         {
             _isLast = value;
-            if (_reply is not null)
-            {
-                _reply.IsLast = value;
-            }
+            _reply?.IsLast = value;
         }
     }
 
@@ -111,10 +105,7 @@ internal sealed class AiChatTurnView : TemplatedControl
         set
         {
             _isNarrow = value;
-            if (_user is not null)
-            {
-                _user.IsNarrow = value;
-            }
+            _user?.IsNarrow = value;
             _reply?.SetNarrow(value);
         }
     }
@@ -132,14 +123,8 @@ internal sealed class AiChatTurnView : TemplatedControl
 
     private void ApplyTouch()
     {
-        if (_user is not null)
-        {
-            _user.AlwaysVisible = _isTouch;
-        }
-        if (_reply is not null)
-        {
-            _reply.AlwaysShowsActions = _isTouch;
-        }
+        _user?.AlwaysVisible = _isTouch;
+        _reply?.AlwaysShowsActions = _isTouch;
     }
 
     /// <summary>Where the turn is in the thread, for its accessible name ("Message 3 of 8").</summary>
@@ -165,10 +150,7 @@ internal sealed class AiChatTurnView : TemplatedControl
         {
             _fade.Changed += v =>
             {
-                if (_body is not null)
-                {
-                    _body.Opacity = Math.Clamp(v, 0, 1);
-                }
+                _body?.Opacity = Math.Clamp(v, 0, 1);
             };
         }
         if (_reply is not null)
@@ -178,10 +160,7 @@ internal sealed class AiChatTurnView : TemplatedControl
             _reply.VersionPager = _pager;
             _reply.SetNarrow(_isNarrow);
         }
-        if (_user is not null)
-        {
-            _user.IsNarrow = _isNarrow;
-        }
+        _user?.IsNarrow = _isNarrow;
         ApplyLabels();
         Push();
         ApplyTouch();
@@ -253,10 +232,7 @@ internal sealed class AiChatTurnView : TemplatedControl
         var count = Turn?.Versions.Count ?? 0;
         _pager.Count = count;
         _pager.Index = Turn?.SelectedVersionIndex ?? 0;
-        if (_reply is not null)
-        {
-            _reply.HasVersions = count > 1;
-        }
+        _reply?.HasVersions = count > 1;
     }
 
     /// <summary>Every word from the chat's labels.</summary>
@@ -373,10 +349,7 @@ internal sealed class AiChatTurnView : TemplatedControl
 
     private void UpdateReveal()
     {
-        if (_reply is not null)
-        {
-            _reply.IsRevealed = _hover || IsKeyboardFocusWithin;
-        }
+        _reply?.IsRevealed = _hover || IsKeyboardFocusWithin;
     }
 
     #endregion

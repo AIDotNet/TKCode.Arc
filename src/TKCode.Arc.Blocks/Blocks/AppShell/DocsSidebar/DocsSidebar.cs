@@ -345,10 +345,7 @@ public class DocsSidebar : TemplatedControl
             _sidebar.ItemInvoked -= OnItemInvoked;
             _sidebar.PropertyChanged -= OnSidebarPropertyChanged;
         }
-        if (_versionMenu is not null)
-        {
-            _versionMenu.ItemClicked -= OnVersionClicked;
-        }
+        _versionMenu?.ItemClicked -= OnVersionClicked;
         base.OnApplyTemplate(e);
         _sidebar = e.NameScope.Find<Sidebar>(SidebarPart);
         _versionMenu = e.NameScope.Find<DropdownMenu>(VersionMenuPart);
@@ -361,10 +358,7 @@ public class DocsSidebar : TemplatedControl
             _sidebar.ItemInvoked += OnItemInvoked;
             _sidebar.PropertyChanged += OnSidebarPropertyChanged;
         }
-        if (_versionMenu is not null)
-        {
-            _versionMenu.ItemClicked += OnVersionClicked;
-        }
+        _versionMenu?.ItemClicked += OnVersionClicked;
         UpdateTexts();
         BuildVersions();
         Rebuild();
@@ -511,14 +505,8 @@ public class DocsSidebar : TemplatedControl
     private void UpdateTexts()
     {
         var labels = Labels;
-        if (_productRun is not null)
-        {
-            _productRun.Text = ProductName;
-        }
-        if (_docsRun is not null)
-        {
-            _docsRun.Text = " " + labels.Docs;
-        }
+        _productRun?.Text = ProductName;
+        _docsRun?.Text = " " + labels.Docs;
         if (_sidebar is not null)
         {
             _sidebar.FilterPlaceholder = labels.Search;
@@ -555,10 +543,7 @@ public class DocsSidebar : TemplatedControl
     private void UpdateVersion()
     {
         var current = EffectiveVersion;
-        if (_versionText is not null)
-        {
-            _versionText.Text = current?.Name;
-        }
+        _versionText?.Text = current?.Name;
         if (_versionButton is not null && current is not null)
         {
             AutomationProperties.SetName(_versionButton, Labels.VersionName(current.Name));

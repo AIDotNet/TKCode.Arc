@@ -64,10 +64,7 @@ internal sealed class SearchResultsSurface : ContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _close?.Click -= OnCloseClick;
         base.OnApplyTemplate(e);
         _close = e.NameScope.Find<AvaloniaButton>(CloseButtonPart);
         if (_close is not null)

@@ -62,15 +62,9 @@ internal sealed class ButtonsChevronTrigger : Button
 
     private void WatchMenu()
     {
-        if (_observedMenu is not null)
-        {
-            _observedMenu.PropertyChanged -= OnMenuPropertyChanged;
-        }
+        _observedMenu?.PropertyChanged -= OnMenuPropertyChanged;
         _observedMenu = _watching ? _menu : null;
-        if (_observedMenu is not null)
-        {
-            _observedMenu.PropertyChanged += OnMenuPropertyChanged;
-        }
+        _observedMenu?.PropertyChanged += OnMenuPropertyChanged;
     }
 
     public bool IsMenuOpen => _menu?.IsOpen == true;

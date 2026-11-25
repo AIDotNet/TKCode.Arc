@@ -672,14 +672,8 @@ public class FileDropzone : TemplatedControl
             _trigger.PointerExited -= OnTriggerExited;
             _trigger.PropertyChanged -= OnTriggerPropertyChanged;
         }
-        if (_insideHost is not null)
-        {
-            _insideHost.Child = null;
-        }
-        if (_belowHost is not null)
-        {
-            _belowHost.Child = null;
-        }
+        _insideHost?.Child = null;
+        _belowHost?.Child = null;
         _zoneRoot = e.NameScope.Find<Panel>(ZoneRootPart);
         _zone = e.NameScope.Find<FileDropzoneZone>(ZonePart);
         _trigger = e.NameScope.Find<AvaloniaButton>(TriggerPart);
@@ -774,10 +768,7 @@ public class FileDropzone : TemplatedControl
             parent.Child = null;
         }
         var host = ListPlacement == FileDropzoneListPlacement.Inside ? _insideHost : _belowHost;
-        if (host is not null)
-        {
-            host.Child = _list;
-        }
+        host?.Child = _list;
     }
 
     private void RefreshCopy()

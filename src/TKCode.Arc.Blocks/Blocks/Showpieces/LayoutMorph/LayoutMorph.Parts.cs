@@ -74,10 +74,7 @@ public partial class LayoutMorph
         _tag = scope.Find<ShowpieceHoverCard>("PART_Tag");
         _tagTitle = scope.Find<TextBlock>("PART_TagTitle");
         _tagLine = scope.Find<TextBlock>("PART_TagLine");
-        if (_tag is not null)
-        {
-            _tag.Placement = TagPlacement;
-        }
+        _tag?.Placement = TagPlacement;
         _panelGrid = scope.Find<Grid>("PART_PanelGrid");
         _who = scope.Find<Border>("PART_Who");
         _whoSwap = scope.Find<ArcContentSwap>("PART_WhoSwap");
@@ -95,10 +92,7 @@ public partial class LayoutMorph
 
     private void UpdateHint()
     {
-        if (_hint is not null)
-        {
-            _hint.Content = HintOf(Layout);
-        }
+        _hint?.Content = HintOf(Layout);
     }
 
     // Bottom panel ------------------------------------------------------------------------------------------------------------
@@ -166,17 +160,11 @@ public partial class LayoutMorph
                     number.Value = value;
                     number.IsVisible = true;
                 }
-                if (plain is not null)
-                {
-                    plain.IsVisible = false;
-                }
+                plain?.IsVisible = false;
             }
             else
             {
-                if (number is not null)
-                {
-                    number.IsVisible = false;
-                }
+                number?.IsVisible = false;
                 if (plain is not null)
                 {
                     plain.Text = fact?.Value;
@@ -330,10 +318,7 @@ public partial class LayoutMorph
         if (!ReferenceEquals(item, _tagItem))
         {
             _tagItem = item;
-            if (_tagTitle is not null)
-            {
-                _tagTitle.Text = item.Title;
-            }
+            _tagTitle?.Text = item.Title;
             if (_tagLine is not null)
             {
                 _tagLine.Text = item.SecondLine;
@@ -355,35 +340,20 @@ public partial class LayoutMorph
 
     private void ApplyDialogTemplate(INameScope scope)
     {
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _close?.Click -= OnCloseClick;
+        _action?.Click -= OnActionClick;
         _dialog = scope.Find<LayoutMorphDialog>("PART_Dialog");
         _close = scope.Find<AvaloniaButton>("PART_Close");
         _action = scope.Find<ToggleButton>("PART_Action");
         _actionSwap = scope.Find<ArcContentSwap>("PART_ActionSwap");
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _close?.Click += OnCloseClick;
+        _action?.Click += OnActionClick;
         if (_dialog is not null)
         {
             _dialogOpacity = new MotionValue<double>(_dialog, 0, MotionVectors.Double);
             _dialogOpacity.Changed += o =>
             {
-                if (_dialog is not null)
-                {
-                    _dialog.Opacity = o;
-                }
+                _dialog?.Opacity = o;
             };
             _dialog.Opacity = 0;
             _dialog.IsVisible = false;
@@ -405,10 +375,7 @@ public partial class LayoutMorph
         }
         // The item's IsActive change updates the button (OnItemPropertyChanged).
         item.SetCurrentValue(LayoutMorphItem.IsActiveProperty, !item.IsActive);
-        if (_action is not null)
-        {
-            _action.IsChecked = item.IsActive;
-        }
+        _action?.IsChecked = item.IsActive;
         var format = item.IsActive ? ActionOnFormat : ActionOffFormat;
         Announce(string.Format(format, item.Title, item.IsActive ? item.ActiveActionText : item.ActionText));
         RaiseEvent(new LayoutMorphItemEventArgs(ItemActionInvokedEvent, item));

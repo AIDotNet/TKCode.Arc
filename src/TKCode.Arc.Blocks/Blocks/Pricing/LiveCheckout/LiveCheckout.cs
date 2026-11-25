@@ -205,7 +205,6 @@ public partial class LiveCheckout : TemplatedControl
     private IList<string> _selectedAddonIds = new AvaloniaList<string> { LiveCheckoutSamples.DefaultAddonId };
     private bool _isProcessing;
     private bool _isPaid;
-    private LiveCheckoutTotals _totals;
     private string? _couponCode;
     private LiveCheckoutReceipt? _receipt;
 
@@ -324,8 +323,8 @@ public partial class LiveCheckout : TemplatedControl
     /// <inheritdoc cref="TotalsProperty"/>
     public LiveCheckoutTotals Totals
     {
-        get => _totals;
-        private set => SetAndRaise(TotalsProperty, ref _totals, value);
+        get;
+        private set => SetAndRaise(TotalsProperty, ref field, value);
     }
 
     /// <inheritdoc cref="CouponCodeProperty"/>

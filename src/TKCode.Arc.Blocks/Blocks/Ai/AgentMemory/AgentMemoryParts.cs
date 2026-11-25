@@ -441,10 +441,7 @@ internal sealed class AgentMemoryRowView : TemplatedControl
             _forget.GotFocus -= OnButtonGotFocus;
             _forget.LostFocus -= OnButtonLostFocus;
         }
-        if (_source is not null)
-        {
-            _source.Click -= OnSourceClick;
-        }
+        _source?.Click -= OnSourceClick;
         base.OnApplyTemplate(e);
         _edit = e.NameScope.Find<AgentMemoryButton>(EditPart);
         _forget = e.NameScope.Find<AgentMemoryButton>(ForgetPart);
@@ -462,10 +459,7 @@ internal sealed class AgentMemoryRowView : TemplatedControl
             _forget.GotFocus += OnButtonGotFocus;
             _forget.LostFocus += OnButtonLostFocus;
         }
-        if (_source is not null)
-        {
-            _source.Click += OnSourceClick;
-        }
+        _source?.Click += OnSourceClick;
         UpdateNames();
     }
 
@@ -682,14 +676,8 @@ internal sealed class AgentMemorySettingRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_title is not null)
-        {
-            _title.PointerPressed -= OnTitlePressed;
-        }
+        _switch?.IsCheckedChanged -= OnSwitchChanged;
+        _title?.PointerPressed -= OnTitlePressed;
         base.OnApplyTemplate(e);
         _switch = e.NameScope.Find<Switch>(SwitchPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
@@ -699,10 +687,7 @@ internal sealed class AgentMemorySettingRow : TemplatedControl
             PushChecked();
             _switch.IsCheckedChanged += OnSwitchChanged;
         }
-        if (_title is not null)
-        {
-            _title.PointerPressed += OnTitlePressed;
-        }
+        _title?.PointerPressed += OnTitlePressed;
         if (_explanation is not null)
         {
             // A new host starts with the current text (its first content never animates).
@@ -720,10 +705,7 @@ internal sealed class AgentMemorySettingRow : TemplatedControl
         }
         else if (change.Property == ExplanationProperty)
         {
-            if (_explanation is not null)
-            {
-                _explanation.Content = change.GetNewValue<string?>();
-            }
+            _explanation?.Content = change.GetNewValue<string?>();
             UpdateAutomation();
         }
         else if (change.Property == TitleProperty)

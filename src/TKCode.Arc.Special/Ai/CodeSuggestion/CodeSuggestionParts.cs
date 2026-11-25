@@ -107,24 +107,12 @@ internal sealed class CodeSuggestionReviewBar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_accept is not null)
-        {
-            _accept.Click -= OnAccept;
-        }
-        if (_reject is not null)
-        {
-            _reject.Click -= OnReject;
-        }
+        _accept?.Click -= OnAccept;
+        _reject?.Click -= OnReject;
         _accept = e.NameScope.Find<AvaloniaButton>(AcceptPart);
         _reject = e.NameScope.Find<AvaloniaButton>(RejectPart);
-        if (_accept is not null)
-        {
-            _accept.Click += OnAccept;
-        }
-        if (_reject is not null)
-        {
-            _reject.Click += OnReject;
-        }
+        _accept?.Click += OnAccept;
+        _reject?.Click += OnReject;
         ApplyNames();
         PseudoClasses.Set(CompactPseudoClass, IsCompact);
     }

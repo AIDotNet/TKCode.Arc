@@ -32,15 +32,9 @@ public partial class TreeSelect
     /// <summary>Reads the whole tree again (data or a selector changed) and re-applies the selection by value.</summary>
     private void Reload()
     {
-        if (_rootsNotifier is not null)
-        {
-            _rootsNotifier.CollectionChanged -= OnRootsChanged;
-        }
+        _rootsNotifier?.CollectionChanged -= OnRootsChanged;
         _rootsNotifier = ItemsSource as INotifyCollectionChanged;
-        if (_rootsNotifier is not null)
-        {
-            _rootsNotifier.CollectionChanged += OnRootsChanged;
-        }
+        _rootsNotifier?.CollectionChanged += OnRootsChanged;
         ReadTree();
     }
 

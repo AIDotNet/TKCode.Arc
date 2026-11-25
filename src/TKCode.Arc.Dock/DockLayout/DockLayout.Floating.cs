@@ -94,16 +94,10 @@ public partial class DockLayout
 
     private void ApplyFloatingTemplate(TemplateAppliedEventArgs e)
     {
-        if (_floats is not null)
-        {
-            _floats.SizeChanged -= OnFloatsSizeChanged;
-        }
+        _floats?.SizeChanged -= OnFloatsSizeChanged;
         DismissFloatHosts();
         _floats = e.NameScope.Find<Canvas>(FloatsPart);
-        if (_floats is not null)
-        {
-            _floats.SizeChanged += OnFloatsSizeChanged;
-        }
+        _floats?.SizeChanged += OnFloatsSizeChanged;
         SyncFloats();
     }
 

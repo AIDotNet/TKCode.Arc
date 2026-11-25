@@ -199,18 +199,12 @@ public class TeamShowcase : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_filter is not null)
-        {
-            _filter.SelectionChanged -= OnFilterChanged;
-        }
+        _filter?.SelectionChanged -= OnFilterChanged;
         _grid?.Children.Clear();
         _filter = e.NameScope.Find<SegmentedControl>(FilterPart);
         _grid = e.NameScope.Find<TeamShowcaseGrid>(GridPart);
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
-        if (_filter is not null)
-        {
-            _filter.SelectionChanged += OnFilterChanged;
-        }
+        _filter?.SelectionChanged += OnFilterChanged;
         RebuildCards();
     }
 

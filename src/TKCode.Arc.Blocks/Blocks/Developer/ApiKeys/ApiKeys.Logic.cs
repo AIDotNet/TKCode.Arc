@@ -222,10 +222,7 @@ public partial class ApiKeys
             _list.Items = null;
             _list.ItemTemplate = null;
         }
-        if (_emptyAction is not null)
-        {
-            _emptyAction.Click -= OnEmptyAction;
-        }
+        _emptyAction?.Click -= OnEmptyAction;
         DetachBodyHost();
 
         _title = e.NameScope.Find<TextBlock>(TitlePart);
@@ -265,10 +262,7 @@ public partial class ApiKeys
             _list.ItemTemplate = new FuncDataTemplate<ApiKeyItem>((item, _) => item is null ? null : CreateRow(item));
             AutomationProperties.SetAccessibilityView(_list, AccessibilityView.Content);
         }
-        if (_emptyAction is not null)
-        {
-            _emptyAction.Click += OnEmptyAction;
-        }
+        _emptyAction?.Click += OnEmptyAction;
         PanelState = ApiKeysPanelState.Closed;
         ApplyTexts();
         SyncKeys();
@@ -396,14 +390,8 @@ public partial class ApiKeys
         {
             AutomationProperties.SetName(_list, labels.ListName);
         }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = labels.EmptyTitle;
-        }
-        if (_emptyDescription is not null)
-        {
-            _emptyDescription.Text = labels.EmptyDescription;
-        }
+        _emptyTitle?.Text = labels.EmptyTitle;
+        _emptyDescription?.Text = labels.EmptyDescription;
         if (_emptyAction is not null)
         {
             _emptyAction.Content = EmptyActionText;
@@ -472,15 +460,9 @@ public partial class ApiKeys
         {
             return;
         }
-        if (_observedKeys is not null)
-        {
-            _observedKeys.CollectionChanged -= OnKeysSourceChanged;
-        }
+        _observedKeys?.CollectionChanged -= OnKeysSourceChanged;
         _observedKeys = next;
-        if (_observedKeys is not null)
-        {
-            _observedKeys.CollectionChanged += OnKeysSourceChanged;
-        }
+        _observedKeys?.CollectionChanged += OnKeysSourceChanged;
     }
 
     private void OnKeysSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => SyncKeys();
@@ -501,10 +483,7 @@ public partial class ApiKeys
         // A revoked key the app keeps in its own list stays hidden; one it removed is forgotten.
         _gone.RemoveWhere(i => !present.Contains(i));
         _shown = shown;
-        if (_list is not null)
-        {
-            _list.Items = shown.ToArray();
-        }
+        _list?.Items = shown.ToArray();
         if (ExpandedKey is { } expanded && !shown.Contains(expanded))
         {
             SetCurrentValue(ExpandedKeyProperty, null);
@@ -554,10 +533,7 @@ public partial class ApiKeys
         // The empty state appears once the last row has folded away, and leaves as soon as a key arrives.
         var empty = _shown.Count == 0 && (_list?.ExitingCount ?? 0) == 0;
         PseudoClasses.Set(EmptyPseudoClass, empty);
-        if (_empty is not null)
-        {
-            _empty.IsVisible = empty;
-        }
+        _empty?.IsVisible = empty;
     }
 
     private void UpdateCount(bool animate)
@@ -581,10 +557,7 @@ public partial class ApiKeys
             }
             _shownCount = count;
         }
-        if (_countWords is not null)
-        {
-            _countWords.Text = Labels.CountWords(count);
-        }
+        _countWords?.Text = Labels.CountWords(count);
         if (_countGroup is not null)
         {
             AutomationProperties.SetName(_countGroup, Labels.CountName(count));
@@ -739,10 +712,7 @@ public partial class ApiKeys
             _list?.EndFlash(fresh);
             _fresh = null;
         }
-        if (_create is not null)
-        {
-            _create.Title = Labels.CreateKey;
-        }
+        _create?.Title = Labels.CreateKey;
         SyncOpen(false);
         SetPanelState(ApiKeysPanelState.Closed, reason);
     }
@@ -755,10 +725,7 @@ public partial class ApiKeys
         }
         _bodyHost = _create.GetVisualDescendants().OfType<Control>()
             .FirstOrDefault(c => c.Name == DeveloperMorphPanel.BodyHostPart);
-        if (_bodyHost is not null)
-        {
-            _bodyHost.PropertyChanged += OnBodyHostChanged;
-        }
+        _bodyHost?.PropertyChanged += OnBodyHostChanged;
     }
 
     private void DetachBodyHost()

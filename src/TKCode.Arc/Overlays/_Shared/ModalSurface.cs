@@ -78,16 +78,10 @@ public abstract class ModalSurface : ContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_closeButton is not null)
-        {
-            _closeButton.Click -= OnCloseClick;
-        }
+        _closeButton?.Click -= OnCloseClick;
         base.OnApplyTemplate(e);
         _closeButton = e.NameScope.Find<AvaloniaButton>(CloseButtonPart);
-        if (_closeButton is not null)
-        {
-            _closeButton.Click += OnCloseClick;
-        }
+        _closeButton?.Click += OnCloseClick;
     }
 
     private void OnCloseClick(object? sender, RoutedEventArgs e)

@@ -31,12 +31,9 @@ internal enum ColorScheme
 /// <param name="Inherit">Whether the base theme's rules and colors apply under this theme's.</param>
 /// <param name="Rules">The token rules.</param>
 /// <param name="Colors">The workbench colors by id, such as <c>editor.background</c>, as <c>#RRGGBB</c> or <c>#RRGGBBAA</c>.</param>
-internal sealed record StandaloneThemeData(
-    string Base,
-    bool Inherit,
-    IReadOnlyList<TokenThemeRule> Rules,
-    IReadOnlyDictionary<string, string> Colors)
+internal sealed record StandaloneThemeData(string Base, bool Inherit, IReadOnlyList<TokenThemeRule> Rules, IReadOnlyDictionary<string, string> Colors)
 {
+
     /// <summary>Colors that take the first ids of the color map, in order (six hex digits each).</summary>
     public IReadOnlyList<string>? EncodedTokensColors { get; init; }
 }
@@ -64,7 +61,7 @@ internal sealed class StandaloneTheme : IStandaloneTheme
     public const string HcLightThemeName = "hc-light";
 
     private readonly StandaloneThemeData _themeData;
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private IReadOnlyDictionary<string, RgbaColor>? _colors;
     private TokenTheme? _tokenTheme;
 
@@ -213,7 +210,7 @@ internal sealed class StandaloneTheme : IStandaloneTheme
 /// </summary>
 internal sealed class StandaloneThemeService : IStandaloneThemeService
 {
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private readonly TokenizationRegistry<ITokenizationSupport>? _tokenizationRegistry;
     private readonly Dictionary<string, StandaloneTheme> _knownThemes = new(StringComparer.Ordinal);
     private StandaloneTheme _theme;

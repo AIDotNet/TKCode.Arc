@@ -86,7 +86,6 @@ public class PropertyGridItem : TemplatedControl
 
     private PropertyGrid? _grid;
     private PropertyGridRow? _row;
-    private string? _label;
     private Thickness _indent;
     private ContentPresenter? _editor;
     private Control? _expander;
@@ -141,8 +140,8 @@ public class PropertyGridItem : TemplatedControl
     /// <summary>The label text.</summary>
     public string? Label
     {
-        get => _label;
-        private set => SetAndRaise(LabelProperty, ref _label, value);
+        get;
+        private set => SetAndRaise(LabelProperty, ref field, value);
     }
 
     /// <summary>The label's left indent.</summary>
@@ -154,10 +153,7 @@ public class PropertyGridItem : TemplatedControl
 
     internal void Attach(PropertyGrid grid, PropertyGridRow row)
     {
-        if (_row is not null)
-        {
-            _row.PropertyChanged -= OnRowChanged;
-        }
+        _row?.PropertyChanged -= OnRowChanged;
         _grid = grid;
         Row = row;
         row.PropertyChanged += OnRowChanged;
@@ -174,10 +170,7 @@ public class PropertyGridItem : TemplatedControl
 
     internal void Detach()
     {
-        if (_row is not null)
-        {
-            _row.PropertyChanged -= OnRowChanged;
-        }
+        _row?.PropertyChanged -= OnRowChanged;
         _resizing = false;
     }
 
@@ -210,10 +203,7 @@ public class PropertyGridItem : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_expander is not null)
-        {
-            _expander.PointerPressed -= OnExpanderPressed;
-        }
+        _expander?.PointerPressed -= OnExpanderPressed;
         if (_splitter is not null)
         {
             _splitter.PointerPressed -= OnSplitterPressed;
@@ -240,10 +230,7 @@ public class PropertyGridItem : TemplatedControl
         _expander = e.NameScope.Find<Control>(ExpanderPart);
         _splitter = e.NameScope.Find<Control>(SplitterPart);
         _actions = e.NameScope.Find<Panel>(ActionsPart);
-        if (_expander is not null)
-        {
-            _expander.PointerPressed += OnExpanderPressed;
-        }
+        _expander?.PointerPressed += OnExpanderPressed;
         if (_splitter is not null)
         {
             _splitter.PointerPressed += OnSplitterPressed;
@@ -301,10 +288,7 @@ public class PropertyGridItem : TemplatedControl
     {
         if (_row is { IsExpandable: true } row && e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
         {
-            if (_grid is not null)
-            {
-                _grid.SelectedRow = row;
-            }
+            _grid?.SelectedRow = row;
             row.IsExpanded = !row.IsExpanded;
             Focus(NavigationMethod.Pointer);
             e.Handled = true;
@@ -540,10 +524,7 @@ public class PropertyGridCategoryItem : TemplatedControl
 
     internal void Attach(PropertyGridCategory category)
     {
-        if (_category is not null)
-        {
-            _category.PropertyChanged -= OnCategoryChanged;
-        }
+        _category?.PropertyChanged -= OnCategoryChanged;
         Category = category;
         Header = category.Name;
         category.PropertyChanged += OnCategoryChanged;
@@ -553,10 +534,7 @@ public class PropertyGridCategoryItem : TemplatedControl
 
     internal void Detach()
     {
-        if (_category is not null)
-        {
-            _category.PropertyChanged -= OnCategoryChanged;
-        }
+        _category?.PropertyChanged -= OnCategoryChanged;
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)

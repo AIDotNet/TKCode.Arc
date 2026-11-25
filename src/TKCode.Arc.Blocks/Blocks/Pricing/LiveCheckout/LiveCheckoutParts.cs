@@ -487,14 +487,8 @@ internal sealed class LiveCheckoutBillingSwitch : TemplatedControl
 
     private void Sync()
     {
-        if (_monthly is not null)
-        {
-            _monthly.IsChecked = Billing == LiveCheckoutBilling.Monthly;
-        }
-        if (_yearly is not null)
-        {
-            _yearly.IsChecked = Billing == LiveCheckoutBilling.Yearly;
-        }
+        _monthly?.IsChecked = Billing == LiveCheckoutBilling.Monthly;
+        _yearly?.IsChecked = Billing == LiveCheckoutBilling.Yearly;
     }
 
     private void OnOptionChecked(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -597,14 +591,8 @@ internal sealed class LiveCheckoutSeatStepper : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_minus is not null)
-        {
-            _minus.Click -= OnMinus;
-        }
-        if (_plus is not null)
-        {
-            _plus.Click -= OnPlus;
-        }
+        _minus?.Click -= OnMinus;
+        _plus?.Click -= OnPlus;
         if (_box is not null)
         {
             _box.TextChanged -= OnTextChanged;
@@ -613,14 +601,8 @@ internal sealed class LiveCheckoutSeatStepper : TemplatedControl
         _minus = e.NameScope.Find<LiveCheckoutButton>(MinusPart);
         _plus = e.NameScope.Find<LiveCheckoutButton>(PlusPart);
         _box = e.NameScope.Find<LiveCheckoutSeatBox>(BoxPart);
-        if (_minus is not null)
-        {
-            _minus.Click += OnMinus;
-        }
-        if (_plus is not null)
-        {
-            _plus.Click += OnPlus;
-        }
+        _minus?.Click += OnMinus;
+        _plus?.Click += OnPlus;
         if (_box is not null)
         {
             _box.TextChanged += OnTextChanged;

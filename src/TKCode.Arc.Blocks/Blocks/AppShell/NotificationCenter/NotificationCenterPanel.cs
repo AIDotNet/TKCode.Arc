@@ -224,10 +224,7 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         _footerReveal = e.NameScope.Find<NotificationCenterReveal>(FooterRevealPart);
         _readCount = e.NameScope.Find<ArcContentSwap>(ReadCountPart);
         _clearRead = e.NameScope.Find<NotificationCenterButton>(ClearReadPart);
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _close?.Click += OnCloseClick;
         if (_allView is not null)
         {
             _allView.Click += OnViewClick;
@@ -238,22 +235,10 @@ internal sealed class NotificationCenterPanel : TemplatedControl
             _unreadView.Click += OnViewClick;
             _unreadView.SizeChanged += OnViewButtonSizeChanged;
         }
-        if (_markAll is not null)
-        {
-            _markAll.Click += OnMarkAllClick;
-        }
-        if (_viewAll is not null)
-        {
-            _viewAll.Click += OnViewAllClick;
-        }
-        if (_clearRead is not null)
-        {
-            _clearRead.Click += OnClearReadClick;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _markAll?.Click += OnMarkAllClick;
+        _viewAll?.Click += OnViewAllClick;
+        _clearRead?.Click += OnClearReadClick;
+        _scroll?.ScrollChanged += OnScrollChanged;
         if (_list is not null)
         {
             AutomationProperties.SetControlTypeOverride(_list, AutomationControlType.List);
@@ -271,15 +256,9 @@ internal sealed class NotificationCenterPanel : TemplatedControl
 
     private void Detach()
     {
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
+        _scroll?.ScrollChanged -= OnScrollChanged;
         _list?.RemoveHandler(GotFocusEvent, OnListGotFocus);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _close?.Click -= OnCloseClick;
         if (_allView is not null)
         {
             _allView.Click -= OnViewClick;
@@ -290,18 +269,9 @@ internal sealed class NotificationCenterPanel : TemplatedControl
             _unreadView.Click -= OnViewClick;
             _unreadView.SizeChanged -= OnViewButtonSizeChanged;
         }
-        if (_markAll is not null)
-        {
-            _markAll.Click -= OnMarkAllClick;
-        }
-        if (_viewAll is not null)
-        {
-            _viewAll.Click -= OnViewAllClick;
-        }
-        if (_clearRead is not null)
-        {
-            _clearRead.Click -= OnClearReadClick;
-        }
+        _markAll?.Click -= OnMarkAllClick;
+        _viewAll?.Click -= OnViewAllClick;
+        _clearRead?.Click -= OnClearReadClick;
     }
 
     private void OnCloseClick(object? sender, RoutedEventArgs e)
@@ -381,14 +351,8 @@ internal sealed class NotificationCenterPanel : TemplatedControl
         {
             AutomationProperties.SetName(_viewSwitch, labels.ViewSwitch);
         }
-        if (_allView is not null)
-        {
-            _allView.IsOn = view == NotificationCenterView.All;
-        }
-        if (_unreadView is not null)
-        {
-            _unreadView.IsOn = view == NotificationCenterView.Unread;
-        }
+        _allView?.IsOn = view == NotificationCenterView.All;
+        _unreadView?.IsOn = view == NotificationCenterView.Unread;
         if (_markAll is not null)
         {
             AutomationProperties.SetName(_markAll, labels.MarkAllRead);

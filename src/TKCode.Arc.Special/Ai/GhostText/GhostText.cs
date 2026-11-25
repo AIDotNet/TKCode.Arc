@@ -160,7 +160,6 @@ public partial class GhostText : TemplatedControl
     public static readonly RoutedEvent<GhostTextStatusChangedEventArgs> StatusChangedEvent =
         RoutedEvent.Register<GhostText, GhostTextStatusChangedEventArgs>(nameof(StatusChanged), RoutingStrategies.Bubble);
 
-    private GhostTextStatus _status;
     private string _suggestion = string.Empty;
     private bool _streaming;
 
@@ -259,8 +258,8 @@ public partial class GhostText : TemplatedControl
     /// <inheritdoc cref="StatusProperty"/>
     public GhostTextStatus Status
     {
-        get => _status;
-        private set => SetAndRaise(StatusProperty, ref _status, value);
+        get;
+        private set => SetAndRaise(StatusProperty, ref field, value);
     }
 
     /// <inheritdoc cref="SuggestionProperty"/>
@@ -342,14 +341,8 @@ public partial class GhostText : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_editor is not null)
-        {
-            _editor.Owner = null;
-        }
-        if (_chip is not null)
-        {
-            _chip.Click -= OnChipClick;
-        }
+        _editor?.Owner = null;
+        _chip?.Click -= OnChipClick;
         _editor = e.NameScope.Find<GhostTextEditor>(EditorPart);
         _heightBox = e.NameScope.Find<GhostTextSizeBox>(HeightBoxPart);
         _label = e.NameScope.Find<ContentPresenter>(LabelPart);
@@ -361,10 +354,7 @@ public partial class GhostText : TemplatedControl
         _wordHint = e.NameScope.Find<TextBlock>(WordHintPart);
         _dismissHint = e.NameScope.Find<TextBlock>(DismissHintPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_chip is not null)
-        {
-            _chip.Click += OnChipClick;
-        }
+        _chip?.Click += OnChipClick;
         if (_editor is not null)
         {
             _editor.Owner = this;
@@ -565,10 +555,7 @@ public partial class GhostText : TemplatedControl
             _label.Content = label;
             _label.IsVisible = label is not null && IsMultiline;
         }
-        if (_footer is not null)
-        {
-            _footer.Content = Footer is string note ? Note(note) : Footer;
-        }
+        _footer?.Content = Footer is string note ? Note(note) : Footer;
         if (_editor is not null)
         {
             _editor.PlaceholderText = Placeholder;
@@ -580,10 +567,7 @@ public partial class GhostText : TemplatedControl
             AutomationProperties.SetName(_editor, name ?? string.Empty);
             AutomationProperties.SetHelpText(_editor, IsHintVisible ? Labels.KeysDescription : string.Empty);
         }
-        if (_chip is not null)
-        {
-            _chip.IsVisible = IsHintVisible;
-        }
+        _chip?.IsVisible = IsHintVisible;
     }
 
     /// <summary>The word and Escape hints show next to the chip on wide fields while a suggestion is ready.</summary>
@@ -599,18 +583,9 @@ public partial class GhostText : TemplatedControl
             var modifier = OperatingSystem.IsMacOS() ? Labels.MacWordModifier : Labels.WordModifier;
             _wordKey.Text = modifier + " →";
         }
-        if (_escapeKey is not null)
-        {
-            _escapeKey.Text = Labels.EscapeKey;
-        }
-        if (_wordHint is not null)
-        {
-            _wordHint.Text = Labels.WordHint;
-        }
-        if (_dismissHint is not null)
-        {
-            _dismissHint.Text = Labels.DismissHint;
-        }
+        _escapeKey?.Text = Labels.EscapeKey;
+        _wordHint?.Text = Labels.WordHint;
+        _dismissHint?.Text = Labels.DismissHint;
     }
 
     // ----- Editor callbacks ------------------------------------------------------------------------------------------

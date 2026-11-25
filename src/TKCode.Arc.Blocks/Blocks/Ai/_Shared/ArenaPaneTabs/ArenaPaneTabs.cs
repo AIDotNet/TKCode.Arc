@@ -127,14 +127,8 @@ internal sealed class ArenaPaneTabs : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_tabA is not null)
-        {
-            _tabA.Click -= OnTabClick;
-        }
-        if (_tabB is not null)
-        {
-            _tabB.Click -= OnTabClick;
-        }
+        _tabA?.Click -= OnTabClick;
+        _tabB?.Click -= OnTabClick;
         _tabA = e.NameScope.Find<ArenaPaneTab>(TabAPart);
         _tabB = e.NameScope.Find<ArenaPaneTab>(TabBPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);

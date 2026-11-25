@@ -125,18 +125,9 @@ internal sealed class ExtractionTabStrip : TemplatedControl
         _fields = e.NameScope.Find<ExtractionTabButton>(FieldsPart);
         _json = e.NameScope.Find<ExtractionTabButton>(JsonPart);
         _schema = e.NameScope.Find<ExtractionTabButton>(SchemaPart);
-        if (_fields is not null)
-        {
-            _fields.Tab = ExtractionTab.Fields;
-        }
-        if (_json is not null)
-        {
-            _json.Tab = ExtractionTab.Json;
-        }
-        if (_schema is not null)
-        {
-            _schema.Tab = ExtractionTab.Schema;
-        }
+        _fields?.Tab = ExtractionTab.Fields;
+        _json?.Tab = ExtractionTab.Json;
+        _schema?.Tab = ExtractionTab.Schema;
         foreach (var button in Buttons())
         {
             button.Click += OnTabClick;
@@ -188,18 +179,9 @@ internal sealed class ExtractionTabStrip : TemplatedControl
 
     private void UpdateTexts()
     {
-        if (_fields is not null)
-        {
-            _fields.Content = FieldsText;
-        }
-        if (_json is not null)
-        {
-            _json.Content = JsonText;
-        }
-        if (_schema is not null)
-        {
-            _schema.Content = SchemaText;
-        }
+        _fields?.Content = FieldsText;
+        _json?.Content = JsonText;
+        _schema?.Content = SchemaText;
     }
 
     private void UpdateSelection()

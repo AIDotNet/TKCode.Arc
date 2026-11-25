@@ -529,15 +529,9 @@ public partial class ProjectBoard
         {
             return;
         }
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= handler;
-        }
+        observed?.CollectionChanged -= handler;
         observed = next;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += handler;
-        }
+        observed?.CollectionChanged += handler;
     }
 
     private void Watch()
@@ -761,10 +755,7 @@ public partial class ProjectBoard
 
     private void UpdateHeader()
     {
-        if (_subtitle is not null)
-        {
-            _subtitle.Text = ProjectsText.Format(ProgressFormat, DoneCount, TaskCount);
-        }
+        _subtitle?.Text = ProjectsText.Format(ProgressFormat, DoneCount, TaskCount);
         if (_progress is not null)
         {
             // The first values after the template is applied land at once (Arc renders the final state on load).
@@ -826,14 +817,8 @@ public partial class ProjectBoard
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_filterBar is not null)
-        {
-            _filterBar.Chosen -= OnFilterChosen;
-        }
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
+        _filterBar?.Chosen -= OnFilterChosen;
+        _add?.Click -= OnAddClick;
         _snap?.Dispose();
         _snap = null;
         if (_panel is not null)
@@ -845,16 +830,10 @@ public partial class ProjectBoard
         _columns.Clear();
         _built = false;
 
-        if (_panel is not null)
-        {
-            _panel.CardRemoved -= OnCardRemoved;
-        }
+        _panel?.CardRemoved -= OnCardRemoved;
         _leavingCards.Clear();
         _panel = e.NameScope.Find<ProjectBoardPanel>(PanelPart);
-        if (_panel is not null)
-        {
-            _panel.CardRemoved += OnCardRemoved;
-        }
+        _panel?.CardRemoved += OnCardRemoved;
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _filterBar = e.NameScope.Find<ProjectBoardFilterBar>(FilterPart);
         _add = e.NameScope.Find<ProjectBoardButton>(AddPart);
@@ -862,20 +841,11 @@ public partial class ProjectBoard
         _progress = e.NameScope.Find<ProjectsProgressLine>(ProgressPart);
         _progressPlaced = false;
         _subtitle = e.NameScope.Find<TextBlock>(SubtitlePart);
-        if (_subtitle is not null)
-        {
-            _subtitle.FontFeatures = ProjectBoardLayout.TabularNumbers;
-        }
+        _subtitle?.FontFeatures = ProjectBoardLayout.TabularNumbers;
         _header = e.NameScope.Find<ProjectBoardHeaderPanel>(HeaderPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
-        if (_filterBar is not null)
-        {
-            _filterBar.Chosen += OnFilterChosen;
-        }
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
+        _filterBar?.Chosen += OnFilterChosen;
+        _add?.Click += OnAddClick;
         if (_scroll is not null)
         {
             _snap = new ProjectsSnapScroll(_scroll, () => ProjectBoardLayout.SnapPoints(_grid));
@@ -916,14 +886,8 @@ public partial class ProjectBoard
         _isCompact = compact;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_header is not null)
-        {
-            _header.IsCompact = compact;
-        }
-        if (_filterBar is not null)
-        {
-            _filterBar.IsNarrow = narrow;
-        }
+        _header?.IsCompact = compact;
+        _filterBar?.IsNarrow = narrow;
         if (changed)
         {
             foreach (var card in _cards.Values)

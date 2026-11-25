@@ -145,7 +145,6 @@ public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
     private int _next;
     private ToolCallItem? _waiting;
     private ToolCallSimulationStep? _waitingStep;
-    private ToolCallSimulationState _state;
     private bool _isWorking;
 
     /// <summary>Creates a simulation with no calls on the system clock; set <see cref="Script"/> (in XAML too).</summary>
@@ -186,8 +185,8 @@ public sealed class ToolCallSimulation : AvaloniaObject, IDisposable
     /// <inheritdoc cref="StateProperty"/>
     public ToolCallSimulationState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsWorkingProperty"/>

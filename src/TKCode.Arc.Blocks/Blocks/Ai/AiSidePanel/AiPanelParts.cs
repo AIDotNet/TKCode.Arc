@@ -120,15 +120,9 @@ internal sealed class AiPanelSelectionPill : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
+        _remove?.Click -= OnRemoveClick;
         _remove = e.NameScope.Find<AvaloniaButton>(RemovePart);
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
+        _remove?.Click += OnRemoveClick;
         Refresh();
     }
 
@@ -315,10 +309,7 @@ internal sealed class AiPanelErrorCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
+        _retry?.Click -= OnRetryClick;
         _retry = e.NameScope.Find<Button>(RetryPart);
         if (_retry is not null)
         {

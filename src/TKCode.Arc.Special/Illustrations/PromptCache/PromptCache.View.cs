@@ -71,29 +71,14 @@ public partial class PromptCache
             _playPart.Click -= OnPlayPreClick;
             _playPart.Click -= OnPlayPostClick;
         }
-        if (_restartPart is not null)
-        {
-            _restartPart.Click -= OnRestartPostClick;
-        }
+        _restartPart?.Click -= OnRestartPostClick;
         _playPart = ns.Find<AvaloniaButton>(PlayButtonPart);
         _restartPart = ns.Find<AvaloniaButton>(RestartButtonPart);
-        if (_playPart is not null)
-        {
-            _playPart.Click += OnPlayPreClick;
-        }
+        _playPart?.Click += OnPlayPreClick;
         base.OnApplyTemplate(e);
-        if (_playPart is not null)
-        {
-            _playPart.Click += OnPlayPostClick;
-        }
-        if (_restartPart is not null)
-        {
-            _restartPart.Click += OnRestartPostClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.IsCheckedChanged -= OnToggleChanged;
-        }
+        _playPart?.Click += OnPlayPostClick;
+        _restartPart?.Click += OnRestartPostClick;
+        _toggle?.IsCheckedChanged -= OnToggleChanged;
         _titleText = ns.Find<TextBlock>("PART_Title");
         _modelMark = ns.Find<ArcGlyph>("PART_ModelMark");
         _modelName = ns.Find<TextBlock>("PART_ModelName");
@@ -120,10 +105,7 @@ public partial class PromptCache
         _toggle = ns.Find<ToggleButton>(TogglePart);
         _toggleText = ns.Find<TextBlock>("PART_ToggleText");
         _flight = ns.Find<PromptCacheFlight>("PART_Flight");
-        if (_toggle is not null)
-        {
-            _toggle.IsCheckedChanged += OnToggleChanged;
-        }
+        _toggle?.IsCheckedChanged += OnToggleChanged;
         if (_prices is not null && _prices.Children.Count == 0)
         {
             for (var i = 0; i < 7; i++)
@@ -204,22 +186,10 @@ public partial class PromptCache
         PseudoClasses.Set(NarrowPseudoClass, mode != PromptCacheWidthMode.Wide);
         PseudoClasses.Set(CompactPseudoClass, mode == PromptCacheWidthMode.Compact);
         PseudoClasses.Set(TinyPseudoClass, content < TinyWidth);
-        if (_split is not null)
-        {
-            _split.IsStacked = mode != PromptCacheWidthMode.Wide;
-        }
-        if (_table is not null)
-        {
-            _table.Mode = mode;
-        }
-        if (_prices is not null)
-        {
-            _prices.Mode = mode;
-        }
-        if (_footer is not null)
-        {
-            _footer.Mode = mode;
-        }
+        _split?.IsStacked = mode != PromptCacheWidthMode.Wide;
+        _table?.Mode = mode;
+        _prices?.Mode = mode;
+        _footer?.Mode = mode;
     }
 
     // ---- palette ----------------------------------------------------------------------------------------------------
@@ -345,10 +315,7 @@ public partial class PromptCache
         var labels = Labels;
         var title = Title ?? string.Empty;
         AutomationProperties.SetName(this, labels.CardName(title));
-        if (_titleText is not null)
-        {
-            _titleText.Text = title;
-        }
+        _titleText?.Text = title;
         var model = Model;
         if (_modelName is not null)
         {
@@ -373,16 +340,10 @@ public partial class PromptCache
             // Opacity, not visibility: the compact layout hides the dot through the theme.
             _modelDot.Opacity = model is null ? 0 : 1;
         }
-        if (_ttlText is not null)
-        {
-            _ttlText.Text = labels.TtlNote(_ttl);
-        }
+        _ttlText?.Text = labels.TtlNote(_ttl);
         _table?.SetHeader(labels.ProcessedKey, labels.CachedKey, labels.ProcessedColumn, labels.CostColumn, labels.FirstTokenColumn);
         UpdateColumnSamples();
-        if (_cacheName is not null)
-        {
-            _cacheName.Text = labels.CacheName;
-        }
+        _cacheName?.Text = labels.CacheName;
         if (_cachePanel is not null)
         {
             AutomationProperties.SetName(_cachePanel, labels.CacheName);
@@ -401,19 +362,13 @@ public partial class PromptCache
             ((TextBlock)prices.Children[5]).Text = PromptCacheMath.FormatPrice(_pricing.CacheReadPrice);
             ((TextBlock)prices.Children[6]).Text = labels.PriceUnit;
         }
-        if (_speedLabel is not null)
-        {
-            _speedLabel.Text = labels.FasterFirstToken;
-        }
+        _speedLabel?.Text = labels.FasterFirstToken;
         if (_toggle is not null)
         {
             var visible = _changeIndex >= 0;
             _toggle.IsVisible = visible;
             var text = visible ? labels.ChangeToggle(SegmentLabel(_changeIndex)) : string.Empty;
-            if (_toggleText is not null)
-            {
-                _toggleText.Text = text;
-            }
+            _toggleText?.Text = text;
             AutomationProperties.SetName(_toggle, text);
             SyncToggle();
         }
@@ -665,10 +620,7 @@ public partial class PromptCache
             return;
         }
         EnsurePalette();
-        if (_ring is not null)
-        {
-            _ring.Value = 1 - _ringDisplay;
-        }
+        _ring?.Value = 1 - _ringDisplay;
         if (CacheState == PromptCacheState.Warm)
         {
             RefreshCacheStatus(force: false);

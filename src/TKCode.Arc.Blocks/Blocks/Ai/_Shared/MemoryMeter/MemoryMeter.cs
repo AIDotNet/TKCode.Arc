@@ -200,18 +200,12 @@ internal class MemoryMeter : TemplatedControl
 
     private void OnFillChanged(double ratio)
     {
-        if (_bar is not null)
-        {
-            _bar.Ratio = ratio;
-        }
+        _bar?.Ratio = ratio;
         var percent = ToPercent(ratio);
         if (percent != _displayedPercent)
         {
             // The text first, so whoever hears DisplayedPercent change already sees it on screen.
-            if (_value is not null)
-            {
-                _value.Text = PercentText(percent);
-            }
+            _value?.Text = PercentText(percent);
             DisplayedPercent = percent;
         }
     }
@@ -246,14 +240,8 @@ internal class MemoryMeter : TemplatedControl
         {
             reserve.Text = PercentText(100);
         }
-        if (_bar is not null)
-        {
-            _bar.Ratio = _fill.Value;
-        }
-        if (_value is not null)
-        {
-            _value.Text = PercentText(_displayedPercent);
-        }
+        _bar?.Ratio = _fill.Value;
+        _value?.Text = PercentText(_displayedPercent);
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

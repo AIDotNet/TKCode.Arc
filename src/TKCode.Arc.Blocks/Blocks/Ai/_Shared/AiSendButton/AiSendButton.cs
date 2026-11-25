@@ -209,10 +209,7 @@ internal class AiSendButton : AvaloniaButton
             var (old, now) = change.GetOldAndNewValue<AiSendState>();
             UpdateStateClasses();
             UpdateName();
-            if (_glyph is not null)
-            {
-                _glyph.IsStop = now == AiSendState.Generating;
-            }
+            _glyph?.IsStop = now == AiSendState.Generating;
             if (now == AiSendState.Generating)
             {
                 ShowRing();
@@ -372,10 +369,7 @@ internal class AiSendButton : AvaloniaButton
                 if (progress > _ringTarget)
                 {
                     _ringTarget = progress;
-                    if (_ring is not null)
-                    {
-                        _ring.Value = progress;
-                    }
+                    _ring?.Value = progress;
                 }
                 break;
             case RingPhase.Leaving:
@@ -402,18 +396,12 @@ internal class AiSendButton : AvaloniaButton
     // and the end of the arc's fade resets the progress, which a ControlTheme transition cannot report.
     private MotionValue<double> TrackOpacity => _trackOpacity ??= CreateOpacity(v =>
     {
-        if (_track is not null)
-        {
-            _track.Opacity = v;
-        }
+        _track?.Opacity = v;
     });
 
     private MotionValue<double> ArcOpacity => _arcOpacity ??= CreateOpacity(v =>
     {
-        if (_ring is not null)
-        {
-            _ring.Opacity = v;
-        }
+        _ring?.Opacity = v;
     });
 
     private MotionValue<double> CreateOpacity(Action<double> apply)
@@ -444,10 +432,7 @@ internal class AiSendButton : AvaloniaButton
         _glyph = e.NameScope.Find<AiSendGlyph>(GlyphPart);
         _track = e.NameScope.Find<ArcRing>(TrackPart);
         _ring = e.NameScope.Find<ArcRing>(RingPart);
-        if (_glyph is not null)
-        {
-            _glyph.IsStop = State == AiSendState.Generating;
-        }
+        _glyph?.IsStop = State == AiSendState.Generating;
         // A new template shows the current state at once.
         var shown = _phase != RingPhase.Hidden;
         if (_ring is not null)

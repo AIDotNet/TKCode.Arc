@@ -276,10 +276,7 @@ internal sealed class ContactOfficeCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_mail is not null)
-        {
-            _mail.Click -= OnMailClick;
-        }
+        _mail?.Click -= OnMailClick;
         _mail = e.NameScope.Find<AvaloniaButton>(MailPart);
         if (_mail is not null)
         {

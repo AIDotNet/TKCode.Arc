@@ -163,10 +163,7 @@ public abstract class ExpandableClamp : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _toggle?.Click -= OnToggleClick;
         if (_viewport is not null)
         {
             _viewport.OverflowChanged = null;
@@ -286,10 +283,7 @@ public abstract class ExpandableClamp : TemplatedControl
                 this.BringIntoView(new Rect(0, 0, Math.Max(1, Bounds.Width), 1));
             }
             _viewport?.SetExpanded(expanded, animate);
-            if (_toggle is not null)
-            {
-                _toggle.IsOpen = expanded;
-            }
+            _toggle?.IsOpen = expanded;
             UpdateLabels();
             _toggle?.RaiseExpandCollapseChanged(!expanded, expanded);
             RaiseEvent(new ExpandableTextExpandedChangedEventArgs(ExpandedChangedEvent, expanded));
@@ -782,10 +776,7 @@ internal sealed class ExpandableTextToggle : AvaloniaButton
 
     public void SetChevronAngle(double angle)
     {
-        if (_rotate is not null)
-        {
-            _rotate.Angle = angle;
-        }
+        _rotate?.Angle = angle;
     }
 
     internal void RaiseExpandCollapseChanged(bool oldValue, bool newValue)

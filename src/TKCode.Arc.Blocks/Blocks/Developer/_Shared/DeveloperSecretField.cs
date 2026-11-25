@@ -270,10 +270,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
     {
         _secret = null;
         PseudoClasses.Set(EmptyPseudoClass, true);
-        if (_secretText is not null)
-        {
-            _secretText.Text = null;
-        }
+        _secretText?.Text = null;
         if (Mode == DeveloperSecretMode.OneTime && _copy is not null)
         {
             _copy.Value = null;
@@ -291,14 +288,8 @@ internal sealed class DeveloperSecretField : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
-        if (_reveal is not null)
-        {
-            _reveal.IsCheckedChanged -= OnRevealToggled;
-        }
+        _copy?.Copied -= OnCopied;
+        _reveal?.IsCheckedChanged -= OnRevealToggled;
         _secretText = e.NameScope.Find<TextBlock>(SecretPart);
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _mask = e.NameScope.Find<TextBlock>(MaskPart);
@@ -316,14 +307,8 @@ internal sealed class DeveloperSecretField : TemplatedControl
             _copy.Copied += OnCopied;
             _copy.ResetAfter = DeveloperSprings.CopyReset;
         }
-        if (_reveal is not null)
-        {
-            _reveal.IsCheckedChanged += OnRevealToggled;
-        }
-        if (_mask is not null)
-        {
-            _mask.RenderTransform = _maskShift;
-        }
+        _reveal?.IsCheckedChanged += OnRevealToggled;
+        _mask?.RenderTransform = _maskShift;
         if (_secretText is not null && Mode == DeveloperSecretMode.Masked)
         {
             _secretText.RenderTransform = _valueShift;
@@ -433,10 +418,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
                 AutomationProperties.SetName(_copy, DeveloperText.Format(CopyNameFormat, subject));
             }
         }
-        if (_label is not null)
-        {
-            _label.Margin = new Thickness(0, 0, 0, LabelSpacing);
-        }
+        _label?.Margin = new Thickness(0, 0, 0, LabelSpacing);
         if (_box is not null)
         {
             AutomationProperties.SetName(_box, Label ?? string.Empty);
@@ -450,10 +432,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
             return;
         }
         var palette = DeveloperPalette.For(this);
-        if (_box is not null)
-        {
-            _box.BorderBrush = palette.SecretBorder;
-        }
+        _box?.BorderBrush = palette.SecretBorder;
         if (_reveal is not null)
         {
             _reveal.HoverBrush = palette.IconHover;
@@ -470,10 +449,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
         _syncingToggle = true;
         _reveal.IsChecked = IsRevealed;
         _syncingToggle = false;
-        if (_revealIcon is not null)
-        {
-            _revealIcon.Data = IsRevealed ? ArcIcons.EyeOff : ArcIcons.Eye;
-        }
+        _revealIcon?.Data = IsRevealed ? ArcIcons.EyeOff : ArcIcons.Eye;
     }
 
     private void OnRevealToggled(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
@@ -506,10 +482,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
             return;
         }
         _secretText.Text = _secret;
-        if (_copy is not null)
-        {
-            _copy.Value = _secret;
-        }
+        _copy?.Value = _secret;
         _develop ??= CreateDevelop(_secretText);
         var level = Level(animate && _secret is not null);
         if (level == ArcMotionLevel.Off)
@@ -575,10 +548,7 @@ internal sealed class DeveloperSecretField : TemplatedControl
                 if (!IsRevealed && p <= 0 && _copyPop?.Target <= 0)
                 {
                     slot.IsVisible = false;
-                    if (_copy is not null)
-                    {
-                        _copy.Value = null;
-                    }
+                    _copy?.Value = null;
                 }
             };
         }
@@ -597,18 +567,9 @@ internal sealed class DeveloperSecretField : TemplatedControl
         }
         _secret = value;
         EnsureMaskedValues();
-        if (_secretText is not null)
-        {
-            _secretText.Text = value;
-        }
-        if (_copySlot is not null)
-        {
-            _copySlot.IsVisible = value is not null;
-        }
-        if (_copy is not null)
-        {
-            _copy.Value = value;
-        }
+        _secretText?.Text = value;
+        _copySlot?.IsVisible = value is not null;
+        _copy?.Value = value;
         var level = Level(animate);
         _travel = level == ArcMotionLevel.Full;
         if (level == ArcMotionLevel.Off)
@@ -656,22 +617,13 @@ internal sealed class DeveloperSecretField : TemplatedControl
         _valueFade?.Jump(0);
         _copyPop?.Jump(0);
         DropShownValue();
-        if (_copySlot is not null)
-        {
-            _copySlot.IsVisible = false;
-        }
-        if (_copy is not null)
-        {
-            _copy.Value = null;
-        }
+        _copySlot?.IsVisible = false;
+        _copy?.Value = null;
     }
 
     private void DropShownValue()
     {
-        if (_secretText is not null)
-        {
-            _secretText.Text = null;
-        }
+        _secretText?.Text = null;
         // A value fetched for display is not kept once hidden.
         if (_fetched)
         {

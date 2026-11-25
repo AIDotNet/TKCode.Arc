@@ -141,7 +141,6 @@ public class ProductGallery : TemplatedControl
     private TextBlock? _counter;
     private TextBlock? _status;
     private LazyFocusRing? _focusRing;
-    private ProductGalleryImage? _selectedImage;
     private bool _isZoomed;
     private bool _syncing;
     private (double Offset, double Velocity)? _swipe;
@@ -248,8 +247,8 @@ public class ProductGallery : TemplatedControl
     /// <inheritdoc cref="SelectedImageProperty"/>
     public ProductGalleryImage? SelectedImage
     {
-        get => _selectedImage;
-        private set => SetAndRaise(SelectedImageProperty, ref _selectedImage, value);
+        get;
+        private set => SetAndRaise(SelectedImageProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsZoomedProperty"/>
@@ -421,24 +420,12 @@ public class ProductGallery : TemplatedControl
             AutomationProperties.SetName(thumb, NameOf(i));
             AutomationProperties.SetHelpText(thumb, selected ? "Selected" : null);
         }
-        if (_previous is not null)
-        {
-            _previous.IsEnabled = index > 0;
-        }
-        if (_next is not null)
-        {
-            _next.IsEnabled = index >= 0 && index < count - 1;
-        }
+        _previous?.IsEnabled = index > 0;
+        _next?.IsEnabled = index >= 0 && index < count - 1;
         var position = index >= 0 ? string.Format(CultureInfo.CurrentCulture, "{0} / {1}", index + 1, count) : string.Empty;
-        if (_counter is not null)
-        {
-            _counter.Text = position;
-        }
+        _counter?.Text = position;
         var spoken = index >= 0 ? NameOf(index) : string.Empty;
-        if (_status is not null)
-        {
-            _status.Text = spoken;
-        }
+        _status?.Text = spoken;
         AutomationProperties.SetName(this, Label);
         AutomationProperties.SetHelpText(this, spoken);
         if (index >= 0 && index < _thumbs.Count && IsAttached)
@@ -511,14 +498,8 @@ public class ProductGallery : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         if (_stage is not null)
         {
             _stage.Owner = null;

@@ -63,7 +63,6 @@ public class GlassMenu : ItemsControl
     private GlassMenuItem? _active;
     private ArcPopup? _popup;
     private Control? _anchor;
-    private bool _isOpen;
     private bool _pointerInside;
     private bool _openedByKeyboard;
     private bool _layoutHooked;
@@ -91,8 +90,8 @@ public class GlassMenu : ItemsControl
     /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
     {
-        get => _isOpen;
-        private set => SetAndRaise(IsOpenProperty, ref _isOpen, value);
+        get;
+        private set => SetAndRaise(IsOpenProperty, ref field, value);
     }
 
     /// <inheritdoc cref="PlacementProperty"/>

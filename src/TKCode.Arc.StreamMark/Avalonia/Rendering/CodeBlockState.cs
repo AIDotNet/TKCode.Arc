@@ -13,7 +13,7 @@ internal sealed class CodeBlockState
 {
     private static readonly TimeSpan HighlightThrottle = TimeSpan.FromMilliseconds(40);
 
-    private readonly object _highlightLock = new();
+    private readonly SyncLock _highlightLock = new();
     private readonly List<int> _lineStarts = [0];
     private readonly List<string?> _lineTexts = [];
     private IHighlightSession? _session;

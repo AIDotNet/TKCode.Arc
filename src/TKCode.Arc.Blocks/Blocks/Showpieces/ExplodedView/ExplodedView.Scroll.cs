@@ -181,10 +181,7 @@ public partial class ExplodedView
             return;
         }
         _pageScroll = this.FindAncestorOfType<ScrollViewer>();
-        if (_pageScroll is not null)
-        {
-            _pageScroll.PropertyChanged += OnPageScrollPropertyChanged;
-        }
+        _pageScroll?.PropertyChanged += OnPageScrollPropertyChanged;
     }
 
     private void DetachPageScroll()

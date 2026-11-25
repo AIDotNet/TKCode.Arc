@@ -269,15 +269,9 @@ internal sealed class UptimeServiceList : Panel
         {
             return;
         }
-        if (_selected is not null)
-        {
-            _selected.IsSelected = false;
-        }
+        _selected?.IsSelected = false;
         _selected = row;
-        if (row is not null)
-        {
-            row.IsSelected = true;
-        }
+        row?.IsSelected = true;
         InvalidateArrange();
         Place();
     }

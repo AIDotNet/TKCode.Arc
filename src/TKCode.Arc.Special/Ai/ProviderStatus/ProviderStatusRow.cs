@@ -186,18 +186,9 @@ internal sealed class ProviderStatusRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggle;
-        }
-        if (_link is not null)
-        {
-            _link.Click -= OnLink;
-        }
-        if (_bar is not null)
-        {
-            _bar.ActiveChanged -= OnBarActive;
-        }
+        _toggle?.Click -= OnToggle;
+        _link?.Click -= OnLink;
+        _bar?.ActiveChanged -= OnBarActive;
         _toggle = e.NameScope.Find<ProviderStatusRowButton>(TogglePart);
         _head = e.NameScope.Find<ProviderStatusRowPanel>(HeadPart);
         _mark = e.NameScope.Find<ArcGlyph>(MarkPart);
@@ -210,26 +201,14 @@ internal sealed class ProviderStatusRow : TemplatedControl
         _bar = e.NameScope.Find<ProviderStatusUptimeBar>(BarPart);
         _uptime = e.NameScope.Find<ArcContentSwap>(UptimePart);
         _panel = e.NameScope.Find<AiHeightBox>(PanelPart);
-        if (_panel is not null)
-        {
-            _panel.HeightSpring = AiHeightBox.PanelSpring;
-        }
+        _panel?.HeightSpring = AiHeightBox.PanelSpring;
         _incidentTitle = e.NameScope.Find<TextBlock>(IncidentTitlePart);
         _updates = e.NameScope.Find<StackPanel>(UpdatesPart);
         _link = e.NameScope.Find<AvaloniaButton>(LinkPart);
         _linkText = e.NameScope.Find<TextBlock>(LinkTextPart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggle;
-        }
-        if (_link is not null)
-        {
-            _link.Click += OnLink;
-        }
-        if (_bar is not null)
-        {
-            _bar.ActiveChanged += OnBarActive;
-        }
+        _toggle?.Click += OnToggle;
+        _link?.Click += OnLink;
+        _bar?.ActiveChanged += OnBarActive;
         _shownDetail = null;
         _shownHealth = null;
         _shownLatency = null;
@@ -271,10 +250,7 @@ internal sealed class ProviderStatusRow : TemplatedControl
         PseudoClasses.Set(OutagePseudoClass, item.Health == ProviderStatusHealth.Outage);
         var expanded = _context.IsExpanded && incident is not null;
         PseudoClasses.Set(ExpandedPseudoClass, expanded);
-        if (_head is not null)
-        {
-            _head.IsNarrow = narrow;
-        }
+        _head?.IsNarrow = narrow;
 
         // Mark: the provider's glyph, or its first letter in a tinted square.
         if (_mark is not null)
@@ -302,10 +278,7 @@ internal sealed class ProviderStatusRow : TemplatedControl
                 _monogram.ClearValue(Border.BackgroundProperty);
             }
         }
-        if (_monogramText is not null)
-        {
-            _monogramText.Text = ProviderStatusFormat.Monogram(item.Name);
-        }
+        _monogramText?.Text = ProviderStatusFormat.Monogram(item.Name);
         if (_name is not null && _name.Text != item.Name)
         {
             _name.Text = item.Name;
@@ -380,19 +353,13 @@ internal sealed class ProviderStatusRow : TemplatedControl
             // The panel keeps the last incident while it folds away.
             return;
         }
-        if (_incidentTitle is not null)
-        {
-            _incidentTitle.Text = incident.Title;
-        }
+        _incidentTitle?.Text = incident.Title;
         if (_link is not null)
         {
             _link.IsVisible = _context.ShowsLink;
             AutomationProperties.SetName(_link, labels.StatusPage);
         }
-        if (_linkText is not null)
-        {
-            _linkText.Text = labels.StatusPage;
-        }
+        _linkText?.Text = labels.StatusPage;
         AutomationProperties.SetName(_updates, labels.Updates);
         if (_incidentId != incident.Id)
         {

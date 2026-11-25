@@ -430,10 +430,7 @@ public class CommandPaletteDialog : TemplatedControl
         }
         else if (property == ItemsSourceProperty)
         {
-            if (_palette is not null)
-            {
-                _palette.ItemsSource = ItemsSource ?? Items;
-            }
+            _palette?.ItemsSource = ItemsSource ?? Items;
         }
         else if (property == LabelProperty)
         {

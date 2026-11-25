@@ -286,26 +286,14 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _trigger.PointerReleased -= OnTriggerReleased;
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
         }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
-        if (_options is not null)
-        {
-            _options.Host = null;
-        }
+        _clear?.Click -= OnClearClick;
+        _popup?.Closed -= OnPopupClosed;
+        _options?.Host = null;
         if (_search is not null)
         {
             _search.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
             _search.PropertyChanged -= OnSearchPropertyChanged;
-            if (_searchHost is not null)
-            {
-                _searchHost.Child = null;
-            }
+            _searchHost?.Child = null;
             _search = null;
         }
 
@@ -328,10 +316,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _trigger.PointerReleased += OnTriggerReleased;
             _trigger.PointerCaptureLost += OnTriggerCaptureLost;
         }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _clear?.Click += OnClearClick;
         if (_popup is not null)
         {
             _popup.PlacementTarget = _trigger;
@@ -339,15 +324,9 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _popup.OverlayInputPassThroughElement = _trigger?.Parent as Control ?? _trigger;
             _popup.Closed += OnPopupClosed;
         }
-        if (_options is not null)
-        {
-            _options.Host = this;
-        }
+        _options?.Host = this;
         _menuDock = null;
-        if (_scroll is not null)
-        {
-            _scroll.MaxHeight = MaxDropDownHeight;
-        }
+        _scroll?.MaxHeight = MaxDropDownHeight;
         PseudoClasses.Set(SearchablePseudoClass, IsSearchable);
         RebuildOrder();
         UpdateChips();
@@ -386,10 +365,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             {
                 EnsureSearch();
             }
-            if (_searchRow is not null)
-            {
-                _searchRow.IsVisible = IsSearchable;
-            }
+            _searchRow?.IsVisible = IsSearchable;
         }
         else if (change.Property == SearchPlaceholderProperty && _search is not null)
         {
@@ -498,10 +474,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
 
     private void UpdateClear()
     {
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = _order.Count > 0 && IsEffectivelyEnabled;
-        }
+        _clearHost?.IsPresent = _order.Count > 0 && IsEffectivelyEnabled;
     }
 
     // ---------------------------------------------------------------- popup
@@ -656,10 +629,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         }
         _entries.Filter(IsSearchable ? _query : null, FilterPredicate, _visible);
         _options.SetOptions(_visible);
-        if (_emptyHost is not null)
-        {
-            _emptyHost.IsPresent = _visible.Count == 0 && IsSearchable;
-        }
+        _emptyHost?.IsPresent = _visible.Count == 0 && IsSearchable;
     }
 
     private void OnSearchPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

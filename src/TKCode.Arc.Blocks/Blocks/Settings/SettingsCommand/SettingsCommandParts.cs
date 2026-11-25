@@ -329,26 +329,14 @@ internal sealed class SettingsCommandChoicePill : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         base.OnApplyTemplate(e);
         _previous = e.NameScope.Find<SettingsCommandStepButton>(PreviousPart);
         _next = e.NameScope.Find<SettingsCommandStepButton>(NextPart);
         _sizer = e.NameScope.Find<Panel>(SizerPart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
         RefreshOptions();
     }
 

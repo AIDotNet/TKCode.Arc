@@ -43,12 +43,14 @@ internal sealed record UnicodeHighlighterOptions
 }
 
 /// <summary>The highlighted ranges of a model and why (upstream's IUnicodeHighlightsResult).</summary>
-internal sealed record UnicodeHighlightsResult(
-    IReadOnlyList<TextRange> Ranges,
-    bool HasMore,
-    int NonBasicAsciiCharacterCount,
-    int InvisibleCharacterCount,
-    int AmbiguousCharacterCount);
+internal sealed class UnicodeHighlightsResult(IReadOnlyList<TextRange> ranges, bool hasMore, int nonBasicAsciiCharacterCount, int invisibleCharacterCount, int ambiguousCharacterCount)
+{
+    public IReadOnlyList<TextRange> Ranges { get; } = ranges;
+    public bool HasMore { get; } = hasMore;
+    public int NonBasicAsciiCharacterCount { get; } = nonBasicAsciiCharacterCount;
+    public int InvisibleCharacterCount { get; } = invisibleCharacterCount;
+    public int AmbiguousCharacterCount { get; } = ambiguousCharacterCount;
+}
 
 /// <summary>Why a character is highlighted (upstream's UnicodeHighlighterReasonKind).</summary>
 internal enum UnicodeHighlighterReasonKind

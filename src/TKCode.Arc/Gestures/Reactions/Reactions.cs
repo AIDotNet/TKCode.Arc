@@ -85,7 +85,6 @@ public class Reactions : TemplatedControl
     // shown, and re-read when it comes back.
     private readonly ObservedItems _observedOptions;
     private bool _watching;
-    private bool _isPickerOpen;
 
     [Content]
     public IList<ReactionOption> Options
@@ -111,8 +110,8 @@ public class Reactions : TemplatedControl
 
     public bool IsPickerOpen
     {
-        get => _isPickerOpen;
-        private set => SetAndRaise(IsPickerOpenProperty, ref _isPickerOpen, value);
+        get;
+        private set => SetAndRaise(IsPickerOpenProperty, ref field, value);
     }
 
     #endregion
@@ -162,10 +161,7 @@ public class Reactions : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_addButton is not null)
-        {
-            _addButton.Click -= OnAddClick;
-        }
+        _addButton?.Click -= OnAddClick;
         if (_bar is not null)
         {
             foreach (var pill in _pills.Values.Concat(_leaving.Values))
@@ -557,10 +553,7 @@ public class Reactions : TemplatedControl
     private void SetPickerOpen(bool open)
     {
         IsPickerOpen = open;
-        if (_addButton is not null)
-        {
-            _addButton.IsOpen = open;
-        }
+        _addButton?.IsOpen = open;
         UpdateAddButton();
     }
 

@@ -527,10 +527,7 @@ internal partial class AiReplyText : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_markdown is not null)
-        {
-            _markdown.TemplateApplied -= OnMarkdownTemplateApplied;
-        }
+        _markdown?.TemplateApplied -= OnMarkdownTemplateApplied;
         _markdown = e.NameScope.Find<Markdown>(MarkdownPart);
         // The stops move to the new template's layer.
         _targets?.Children.Clear();
@@ -632,15 +629,9 @@ internal partial class AiReplyText : TemplatedControl
         {
             return;
         }
-        if (_sourcesHook is not null)
-        {
-            _sourcesHook.CollectionChanged -= OnSourcesCollectionChanged;
-        }
+        _sourcesHook?.CollectionChanged -= OnSourcesCollectionChanged;
         _sourcesHook = next;
-        if (_sourcesHook is not null)
-        {
-            _sourcesHook.CollectionChanged += OnSourcesCollectionChanged;
-        }
+        _sourcesHook?.CollectionChanged += OnSourcesCollectionChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

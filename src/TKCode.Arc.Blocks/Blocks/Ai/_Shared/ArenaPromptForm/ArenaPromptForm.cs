@@ -220,19 +220,13 @@ internal sealed class ArenaPromptForm : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_run is not null)
-        {
-            _run.Click -= OnRunClick;
-        }
+        _run?.Click -= OnRunClick;
         _field = e.NameScope.Find<Border>(FieldPart);
         _box = e.NameScope.Find<ArenaPromptBox>(BoxPart);
         _run = e.NameScope.Find<ArenaRunButton>(RunPart);
         _chipsScroller = e.NameScope.Find<ScrollViewer>(ChipsScrollerPart);
         _chipsPanel = e.NameScope.Find<StackPanel>(ChipsPart);
-        if (_run is not null)
-        {
-            _run.Click += OnRunClick;
-        }
+        _run?.Click += OnRunClick;
         RefreshNames();
         RefreshRun();
         RebuildChips();
@@ -312,15 +306,9 @@ internal sealed class ArenaPromptForm : TemplatedControl
         {
             return;
         }
-        if (_observedPrompts is not null)
-        {
-            _observedPrompts.CollectionChanged -= OnPromptsChanged;
-        }
+        _observedPrompts?.CollectionChanged -= OnPromptsChanged;
         _observedPrompts = next;
-        if (_observedPrompts is not null)
-        {
-            _observedPrompts.CollectionChanged += OnPromptsChanged;
-        }
+        _observedPrompts?.CollectionChanged += OnPromptsChanged;
     }
 
     /// <summary>Each chip's label follows its prompt's, and a prompt's text decides which chip is pressed.</summary>
@@ -418,10 +406,7 @@ internal sealed class ArenaPromptForm : TemplatedControl
         {
             FollowChips();
         }
-        if (_chipsScroller is not null)
-        {
-            _chipsScroller.IsVisible = _chips.Count > 0;
-        }
+        _chipsScroller?.IsVisible = _chips.Count > 0;
         RefreshPressed();
         ApplyPadding();
     }
@@ -444,18 +429,9 @@ internal sealed class ArenaPromptForm : TemplatedControl
     {
         var padding = Padding;
         var chips = _chips.Count > 0;
-        if (_field is not null)
-        {
-            _field.Margin = new Thickness(padding.Left, padding.Top, padding.Right, chips ? 0 : padding.Bottom);
-        }
-        if (_chipsScroller is not null)
-        {
-            _chipsScroller.Margin = new Thickness(0, ChipsGap, 0, padding.Bottom);
-        }
-        if (_chipsPanel is not null)
-        {
-            _chipsPanel.Margin = new Thickness(padding.Left, 0, padding.Right, 0);
-        }
+        _field?.Margin = new Thickness(padding.Left, padding.Top, padding.Right, chips ? 0 : padding.Bottom);
+        _chipsScroller?.Margin = new Thickness(0, ChipsGap, 0, padding.Bottom);
+        _chipsPanel?.Margin = new Thickness(padding.Left, 0, padding.Right, 0);
     }
 
     private void OnRunClick(object? sender, RoutedEventArgs e)

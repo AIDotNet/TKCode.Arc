@@ -495,10 +495,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
                 _rail.Thumbs[i].LostFocus += OnThumbLostFocus;
             }
         }
-        if (_markLabels is not null)
-        {
-            _markLabels.Host = this;
-        }
+        _markLabels?.Host = this;
         foreach (var thumb in _thumbs)
         {
             thumb.Goal = double.NaN;
@@ -599,10 +596,7 @@ public class Slider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISliderMark
     private void UpdateMarks()
     {
         _markLabels?.Refresh();
-        if (_markLabels is not null)
-        {
-            _markLabels.IsVisible = _markLabels.HasLabels;
-        }
+        _markLabels?.IsVisible = _markLabels.HasLabels;
         PseudoClasses.Set(MarksPseudoClass, _markLabels?.HasLabels ?? false);
         _rail?.InvalidateVisual();
     }

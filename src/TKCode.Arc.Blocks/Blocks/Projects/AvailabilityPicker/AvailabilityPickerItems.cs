@@ -108,15 +108,9 @@ public sealed class AvailabilitySlot : AvaloniaObject
         base.OnPropertyChanged(change);
         if (change.Property == BusyAttendeesProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnBusyChanged;
-            }
+            _observed?.CollectionChanged -= OnBusyChanged;
             _observed = BusyAttendees;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnBusyChanged;
-            }
+            _observed?.CollectionChanged += OnBusyChanged;
             IsEveryoneFree = _observed is not { Count: > 0 };
         }
         if (change.Property != IsEveryoneFreeProperty)
@@ -204,15 +198,9 @@ public sealed class AvailabilityDay : AvaloniaObject
         base.OnPropertyChanged(change);
         if (change.Property == SlotsProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnSlotsChanged;
-            }
+            _observed?.CollectionChanged -= OnSlotsChanged;
             _observed = Slots;
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnSlotsChanged;
-            }
+            _observed?.CollectionChanged += OnSlotsChanged;
             Rewatch();
         }
         if (change.Property != OpenCountProperty)

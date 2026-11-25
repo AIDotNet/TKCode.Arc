@@ -183,10 +183,7 @@ public partial class TaskBreakdown
     {
         base.OnApplyTemplate(e);
         LoadSamplesOnce();
-        if (_body is not null)
-        {
-            _body.Child = null;
-        }
+        _body?.Child = null;
         _body = e.NameScope.Find<Decorator>(BodyPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
         if (_body is not null)
@@ -515,10 +512,7 @@ public partial class TaskBreakdown
         else if (change.Property == IsSuggestingProperty)
         {
             PseudoClasses.Set(SuggestingPseudoClass, IsSuggesting);
-            if (_suggestButton is not null)
-            {
-                _suggestButton.IsLoading = IsSuggesting;
-            }
+            _suggestButton?.IsLoading = IsSuggesting;
         }
         else if (change.Property == HoursPerDayProperty)
         {

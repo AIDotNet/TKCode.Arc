@@ -16,7 +16,7 @@ namespace TKCode.Arc.Editor.Languages;
 internal sealed class TokenizationRegistry<TSupport>
     where TSupport : class
 {
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private readonly Dictionary<string, TSupport> _tokenizationSupports = new(StringComparer.Ordinal);
     private readonly Dictionary<string, FactoryData> _factories = new(StringComparer.Ordinal);
     private readonly Emitter<TokenizationSupportChangedEvent> _onDidChange = new();
@@ -168,7 +168,7 @@ internal sealed class TokenizationRegistry<TSupport>
 
     private sealed class FactoryData(TokenizationRegistry<TSupport> registry, string languageId, ILazyTokenizationSupport<TSupport> factory) : IDisposable
     {
-        private readonly object _gate = new();
+        private readonly SyncLock _gate = new();
         private bool _isDisposed;
         private Task? _resolveTask;
         private IDisposable? _registration;

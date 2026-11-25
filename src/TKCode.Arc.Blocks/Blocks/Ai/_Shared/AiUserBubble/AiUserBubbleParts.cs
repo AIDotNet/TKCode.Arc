@@ -446,14 +446,8 @@ internal sealed class AiUserBubbleRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_copy is not null)
-        {
-            _copy.Click -= OnCopyClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click -= OnEditClick;
-        }
+        _copy?.Click -= OnCopyClick;
+        _edit?.Click -= OnEditClick;
         base.OnApplyTemplate(e);
         _copy = e.NameScope.Find<AiUserBubbleActionButton>(CopyPart);
         _edit = e.NameScope.Find<AiUserBubbleActionButton>(EditPart);

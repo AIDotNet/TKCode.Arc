@@ -46,7 +46,16 @@ internal sealed record NewFindState
 }
 
 /// <summary>What a find state change changed (upstream's FindReplaceStateChangedEvent, reduced).</summary>
-internal sealed record FindStateChangedEvent(bool MoveCursor, bool SearchString, bool IsRevealed, bool IsRegex, bool WholeWord, bool MatchCase, bool SearchScope);
+internal sealed class FindStateChangedEvent(bool moveCursor, bool searchString, bool isRevealed, bool isRegex, bool wholeWord, bool matchCase, bool searchScope)
+{
+    public bool MoveCursor { get; } = moveCursor;
+    public bool SearchString { get; } = searchString;
+    public bool IsRevealed { get; } = isRevealed;
+    public bool IsRegex { get; } = isRegex;
+    public bool WholeWord { get; } = wholeWord;
+    public bool MatchCase { get; } = matchCase;
+    public bool SearchScope { get; } = searchScope;
+}
 
 /// <summary>The find widget's state as far as the multi-cursor actions use it (upstream's FindReplaceState).</summary>
 internal sealed class MultiCursorFindState

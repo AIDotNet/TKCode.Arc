@@ -106,13 +106,12 @@ public class Countdown : TemplatedControl
         remove => RemoveHandler(CompletedEvent, value);
     }
 
-    private TimeSpan _remaining;
 
     /// <summary>Time left (zero once complete).</summary>
     public TimeSpan Remaining
     {
-        get => _remaining;
-        private set => SetAndRaise(RemainingProperty, ref _remaining, value);
+        get;
+        private set => SetAndRaise(RemainingProperty, ref field, value);
     }
 
     private bool _isCompleted;

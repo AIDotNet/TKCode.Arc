@@ -116,7 +116,6 @@ public class RadialMenuItem : TemplatedControl
     private static readonly RadialMenuItemTextTemplate s_textTemplate = new();
 
     private bool _isHighlighted;
-    private Geometry? _iconGeometry;
     private object? _iconContent;
     private bool _hasIcon;
     private bool _showsHeader;
@@ -141,8 +140,8 @@ public class RadialMenuItem : TemplatedControl
 
     internal Geometry? IconGeometry
     {
-        get => _iconGeometry;
-        private set => SetAndRaise(IconGeometryProperty, ref _iconGeometry, value);
+        get;
+        private set => SetAndRaise(IconGeometryProperty, ref field, value);
     }
 
     internal object? IconContent

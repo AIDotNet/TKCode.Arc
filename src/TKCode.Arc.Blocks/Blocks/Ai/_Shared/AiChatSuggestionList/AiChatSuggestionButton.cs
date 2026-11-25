@@ -69,15 +69,9 @@ internal sealed class AiChatSuggestionButton : AvaloniaButton
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnSuggestionChanged;
-        }
+        _observed?.PropertyChanged -= OnSuggestionChanged;
         _observed = next;
-        if (next is not null)
-        {
-            next.PropertyChanged += OnSuggestionChanged;
-        }
+        next?.PropertyChanged += OnSuggestionChanged;
     }
 
     private void OnSuggestionChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => Refresh();

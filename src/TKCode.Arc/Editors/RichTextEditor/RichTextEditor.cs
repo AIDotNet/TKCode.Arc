@@ -778,10 +778,7 @@ public partial class RichTextEditor : TemplatedControl
         else if (change.Property == ProfileProperty)
         {
             _engine.Docs = Profile == RichTextEditorProfile.Docs;
-            if (_surface is not null)
-            {
-                _surface.ShowCodeHeader = _engine.Docs;
-            }
+            _surface?.ShowCodeHeader = _engine.Docs;
             // Content assigned before the profile (XAML order) was read with the other profile's rules.
             if (!_writingValue && Html is not null)
             {

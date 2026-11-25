@@ -358,10 +358,7 @@ internal sealed class OrbitMenuGlyph : Control
         {
             _now[i] = _from[i] + (_to[i] - _from[i]) * t;
         }
-        if (_pen is not null)
-        {
-            _pen.Thickness = _now[12];
-        }
+        _pen?.Thickness = _now[12];
         InvalidateVisual();
     }
 

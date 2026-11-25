@@ -203,10 +203,28 @@ internal sealed record CompletionOptions
 internal sealed record CompletionDurationEntry(string ProviderName, double ElapsedProvider, double ElapsedOverall);
 
 /// <summary>How long a request took (upstream's CompletionDurations).</summary>
-internal sealed record CompletionDurations(IReadOnlyList<CompletionDurationEntry> Entries, double Elapsed);
+internal sealed class CompletionDurations(IReadOnlyList<CompletionDurationEntry> entries, double elapsed)
+{
+    public IReadOnlyList<CompletionDurationEntry> Entries { get; } = entries;
+    public double Elapsed { get; } = elapsed;
+}
 
 /// <summary>The items of one request (upstream's CompletionItemModel).</summary>
-internal sealed record CompletionItemModel(List<SuggestCompletionItem> Items, bool NeedsClipboard, CompletionDurations Durations, IDisposable Disposable);
+internal sealed class CompletionItemModel(List<SuggestCompletionItem> items, bool needsClipboard, CompletionDurations durations, IDisposable disposable)
+{
+    public List<SuggestCompletionItem> Items { get; } = items;
+    public bool NeedsClipboard { get; } = needsClipboard;
+    public CompletionDurations Durations { get; } = durations;
+    public IDisposable Disposable { get; } = disposable;
+
+    public void Deconstruct(out List<SuggestCompletionItem> items, out bool needsClipboard, out CompletionDurations durations, out IDisposable disposable)
+    {
+        items = Items;
+        needsClipboard = NeedsClipboard;
+        durations = Durations;
+        disposable = Disposable;
+    }
+}
 
 /// <summary>Picks the item to select when the list shows (upstream's ISuggestItemPreselector).</summary>
 internal interface ISuggestItemPreselector

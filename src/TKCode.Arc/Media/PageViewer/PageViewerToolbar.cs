@@ -147,18 +147,12 @@ internal sealed class PageViewerToolbar : TemplatedControl
 
     private static void Click(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unclick(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -210,10 +204,7 @@ internal sealed class PageViewerToolbar : TemplatedControl
 
     private static void SetEnabled(Button? button, bool enabled)
     {
-        if (button is not null)
-        {
-            button.IsEnabled = enabled;
-        }
+        button?.IsEnabled = enabled;
     }
 
     private static string PageText(PageViewer viewer) =>

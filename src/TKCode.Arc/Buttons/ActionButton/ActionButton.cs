@@ -101,13 +101,12 @@ public class ActionButton : AvaloniaButton
         remove => RemoveHandler(ActionFailedEvent, value);
     }
 
-    private ActionButtonState _state;
 
     /// <inheritdoc cref="StateProperty"/>
     public ActionButtonState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     private string _displayLabel = "Save";

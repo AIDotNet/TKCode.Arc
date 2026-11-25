@@ -154,14 +154,8 @@ public partial class SearchResults
             _listHost.KeyboardFocusChanged += OnListKeyboardFocusChanged;
             _listHost.SizeChanged += OnListSizeChanged;
         }
-        if (_resultsScroll is not null)
-        {
-            _resultsScroll.ScrollChanged += OnResultsScrolled;
-        }
-        if (_moreButton is not null)
-        {
-            _moreButton.Click += OnMoreClick;
-        }
+        _resultsScroll?.ScrollChanged += OnResultsScrolled;
+        _moreButton?.Click += OnMoreClick;
         if (_list is not null)
         {
             _list.Children.Clear();
@@ -179,14 +173,8 @@ public partial class SearchResults
             _listHost.KeyboardFocusChanged -= OnListKeyboardFocusChanged;
             _listHost.SizeChanged -= OnListSizeChanged;
         }
-        if (_resultsScroll is not null)
-        {
-            _resultsScroll.ScrollChanged -= OnResultsScrolled;
-        }
-        if (_moreButton is not null)
-        {
-            _moreButton.Click -= OnMoreClick;
-        }
+        _resultsScroll?.ScrollChanged -= OnResultsScrolled;
+        _moreButton?.Click -= OnMoreClick;
         if (_list is not null)
         {
             ResetReveal();
@@ -552,10 +540,7 @@ public partial class SearchResults
         {
             _status.Text = text;
         }
-        if (_hints is not null)
-        {
-            _hints.IsVisible = IsHintsVisible && digits;
-        }
+        _hints?.IsVisible = IsHintsVisible && digits;
     }
 
     #endregion
@@ -580,10 +565,7 @@ public partial class SearchResults
         }
         else
         {
-            if (_resultsArea is not null)
-            {
-                _resultsArea.MinHeight = 0;
-            }
+            _resultsArea?.MinHeight = 0;
             // Whatever arrived while loading is new: it all fades in.
             _shownItems.Clear();
             Update(reveal: true, resetCursor: true);
@@ -617,18 +599,9 @@ public partial class SearchResults
         }
         var empty = !loading && ResultCount == 0;
         PseudoClasses.Set(EmptyPseudoClass, empty);
-        if (_loadingPresence is not null)
-        {
-            _loadingPresence.IsPresent = loading;
-        }
-        if (_resultsPresence is not null)
-        {
-            _resultsPresence.IsPresent = !loading && !empty;
-        }
-        if (_emptyPresence is not null)
-        {
-            _emptyPresence.IsPresent = empty;
-        }
+        _loadingPresence?.IsPresent = loading;
+        _resultsPresence?.IsPresent = !loading && !empty;
+        _emptyPresence?.IsPresent = empty;
         if (empty)
         {
             UpdateEmpty();

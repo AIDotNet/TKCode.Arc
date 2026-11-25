@@ -236,14 +236,8 @@ public class AgentTasks : TemplatedControl
         {
             _columns[i]?.SetCards(labels.Column(Columns[i]), lists[i], labels.EmptyColumn);
         }
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
-        if (_summary is not null)
-        {
-            _summary.Text = labels.Summary(running, waiting);
-        }
+        _title?.Text = labels.Title;
+        _summary?.Text = labels.Summary(running, waiting);
         RebuildFilters(tasks);
     }
 

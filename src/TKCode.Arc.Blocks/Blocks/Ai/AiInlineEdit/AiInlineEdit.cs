@@ -510,19 +510,13 @@ public class AiInlineEdit : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_source is not null)
-        {
-            _source.PropertyChanged -= OnSourcePropertyChanged;
-        }
+        _source?.PropertyChanged -= OnSourcePropertyChanged;
         Unhook(_edit, OnEditClick);
         Unhook(_send, OnSendClick);
         Unhook(_cancel, OnCancelClick);
         Unhook(_acceptAll, OnAcceptAllClick);
         Unhook(_rejectAll, OnRejectAllClick);
-        if (_instruction is not null)
-        {
-            _instruction.KeyDown -= OnInstructionKeyDown;
-        }
+        _instruction?.KeyDown -= OnInstructionKeyDown;
         base.OnApplyTemplate(e);
         var scope = e.NameScope;
         _source = scope.Find<SelectableTextBlock>(SourcePart);
@@ -536,19 +530,13 @@ public class AiInlineEdit : TemplatedControl
         _rejectAll = scope.Find<Button>(RejectAllPart);
         _announcer = scope.Find<AiAnnouncer>(AnnouncerPart);
         _statusLine = scope.Find<TextBlock>("PART_Status");
-        if (_source is not null)
-        {
-            _source.PropertyChanged += OnSourcePropertyChanged;
-        }
+        _source?.PropertyChanged += OnSourcePropertyChanged;
         Hook(_edit, OnEditClick);
         Hook(_send, OnSendClick);
         Hook(_cancel, OnCancelClick);
         Hook(_acceptAll, OnAcceptAllClick);
         Hook(_rejectAll, OnRejectAllClick);
-        if (_instruction is not null)
-        {
-            _instruction.KeyDown += OnInstructionKeyDown;
-        }
+        _instruction?.KeyDown += OnInstructionKeyDown;
         BuildSuggestions();
         PushSelectionToSource();
         UpdateTexts();
@@ -557,18 +545,12 @@ public class AiInlineEdit : TemplatedControl
 
     private static void Hook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     private void OnEditClick(object? sender, RoutedEventArgs e) => BeginEdit();
@@ -782,14 +764,8 @@ public class AiInlineEdit : TemplatedControl
         SetButton(_cancel, labels.Cancel);
         SetButton(_acceptAll, labels.AcceptAll);
         SetButton(_rejectAll, labels.RejectAll);
-        if (_edit is not null)
-        {
-            _edit.IsEnabled = Phase == AiInlineEditPhase.Idle && SelectionLength > 0;
-        }
-        if (_send is not null)
-        {
-            _send.IsLoading = Phase == AiInlineEditPhase.Thinking;
-        }
+        _edit?.IsEnabled = Phase == AiInlineEditPhase.Idle && SelectionLength > 0;
+        _send?.IsLoading = Phase == AiInlineEditPhase.Thinking;
         if (_instruction is not null)
         {
             if (_instruction is FieldTextBox field)
@@ -803,10 +779,7 @@ public class AiInlineEdit : TemplatedControl
 
     private void UpdateStatus(string text)
     {
-        if (_statusLine is not null)
-        {
-            _statusLine.Text = text;
-        }
+        _statusLine?.Text = text;
     }
 
     private static void SetButton(Button? button, string text)

@@ -282,10 +282,7 @@ internal sealed class ToolCallText : Control
     private void OnShimmerChanged()
     {
         var shimmering = IsShimmering;
-        if (_current is not null)
-        {
-            _current.Shimmers = shimmering;
-        }
+        _current?.Shimmers = shimmering;
         _settle ??= CreateValue(shimmering ? 1 : 0);
         var level = Level;
         if (!IsLoaded || level == ArcMotionLevel.Off)
@@ -296,10 +293,7 @@ internal sealed class ToolCallText : Control
         {
             _settle.Jump(0);
             _pause = FirstDelay;
-            if (_current is not null)
-            {
-                _current.Sweep = 0;
-            }
+            _current?.Sweep = 0;
         }
         else
         {

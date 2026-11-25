@@ -300,18 +300,9 @@ public partial class ReleaseReadiness
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_notify is not null)
-        {
-            _notify.IsCheckedChanged -= OnNotifyChanged;
-        }
-        if (_release is not null)
-        {
-            _release.Click -= OnReleaseClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
+        _notify?.IsCheckedChanged -= OnNotifyChanged;
+        _release?.Click -= OnReleaseClick;
+        _reset?.Click -= OnResetClick;
         _rowsPanel?.Children.Clear();
 
         _title = e.NameScope.Find<TextBlock>(TitlePart);
@@ -346,10 +337,7 @@ public partial class ReleaseReadiness
             _labelText = null;
             _release.Click += OnReleaseClick;
         }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
+        _reset?.Click += OnResetClick;
 
         RebuildChecks();
         UpdateHeader();
@@ -455,15 +443,9 @@ public partial class ReleaseReadiness
         {
             return;
         }
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= handler;
-        }
+        observed?.CollectionChanged -= handler;
         observed = next;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += handler;
-        }
+        observed?.CollectionChanged += handler;
     }
 
     private void WatchChecks()
@@ -847,14 +829,8 @@ public partial class ReleaseReadiness
     {
         var state = State;
         var locked = IsLocked;
-        if (_remaining is not null)
-        {
-            _remaining.Text = RemainingTextNow();
-        }
-        if (_count is not null)
-        {
-            _count.Text = ProjectsText.Format(CountFormat, DoneCount, TotalCount);
-        }
+        _remaining?.Text = RemainingTextNow();
+        _count?.Text = ProjectsText.Format(CountFormat, DoneCount, TotalCount);
         if (_bar is not null)
         {
             AutomationProperties.SetName(_bar, ProgressLabel);
@@ -924,10 +900,7 @@ public partial class ReleaseReadiness
             // A closed (or closing) line is not read: its text no longer describes the gate.
             AutomationProperties.SetAccessibilityView(_status, status is null ? AccessibilityView.Raw : AccessibilityView.Content);
         }
-        if (_statusHost is not null)
-        {
-            _statusHost.IsExpanded = status is not null;
-        }
+        _statusHost?.IsExpanded = status is not null;
     }
 
     #endregion

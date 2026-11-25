@@ -156,10 +156,7 @@ public partial class TeamMembers
             _field.IsInvalid = _error != TeamMembersEmailError.None || _failureText is not null;
             _field.IsBusy = IsSending;
         }
-        if (_inviteRole is not null)
-        {
-            _inviteRole.IsEnabled = !IsSending;
-        }
+        _inviteRole?.IsEnabled = !IsSending;
         PseudoClasses.Set(SendingPseudoClass, IsSending);
 
         TeamMembersMessageKind kind;
@@ -652,10 +649,7 @@ public partial class TeamMembers
         {
             var change = new TeamMembersRoleChange(member, old, key);
             var row = RowOf(member);
-            if (row is not null)
-            {
-                row.IsBusy = true;
-            }
+            row?.IsBusy = true;
             var cancellation = Begin();
             try
             {
@@ -674,10 +668,7 @@ public partial class TeamMembers
             }
             finally
             {
-                if (row is not null)
-                {
-                    row.IsBusy = false;
-                }
+                row?.IsBusy = false;
                 End(cancellation);
             }
         }

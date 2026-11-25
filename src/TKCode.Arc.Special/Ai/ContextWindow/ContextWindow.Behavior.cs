@@ -278,52 +278,28 @@ public partial class ContextWindow
 
     private void Hook()
     {
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
-        if (_attach is not null)
-        {
-            _attach.Click += OnAttachClick;
-        }
-        if (_compact is not null)
-        {
-            _compact.Click += OnCompactClick;
-        }
+        _send?.Click += OnSendClick;
+        _attach?.Click += OnAttachClick;
+        _compact?.Click += OnCompactClick;
         if (_pill is not null)
         {
             _pill.Click += OnPillClick;
             _pill.AddHandler(KeyDownEvent, OnPillKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_grid is not null)
-        {
-            _grid.PaletteChanged += OnPaletteChanged;
-        }
+        _grid?.PaletteChanged += OnPaletteChanged;
     }
 
     private void Unhook()
     {
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
-        if (_attach is not null)
-        {
-            _attach.Click -= OnAttachClick;
-        }
-        if (_compact is not null)
-        {
-            _compact.Click -= OnCompactClick;
-        }
+        _send?.Click -= OnSendClick;
+        _attach?.Click -= OnAttachClick;
+        _compact?.Click -= OnCompactClick;
         if (_pill is not null)
         {
             _pill.Click -= OnPillClick;
             _pill.RemoveHandler(KeyDownEvent, OnPillKeyDown);
         }
-        if (_grid is not null)
-        {
-            _grid.PaletteChanged -= OnPaletteChanged;
-        }
+        _grid?.PaletteChanged -= OnPaletteChanged;
         foreach (var row in _rows)
         {
             if (row is not null)
@@ -358,10 +334,7 @@ public partial class ContextWindow
         var stacked = content <= StackWidth + 0.01;
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(CompactHeaderPseudoClass, content <= HeaderStackWidth + 0.01);
-        if (_body is not null)
-        {
-            _body.IsStacked = stacked;
-        }
+        _body?.IsStacked = stacked;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -564,15 +537,9 @@ public partial class ContextWindow
         {
             return;
         }
-        if (field is not null)
-        {
-            field.CollectionChanged -= OnDataCollectionChanged;
-        }
+        field?.CollectionChanged -= OnDataCollectionChanged;
         field = value;
-        if (field is not null)
-        {
-            field.CollectionChanged += OnDataCollectionChanged;
-        }
+        field?.CollectionChanged += OnDataCollectionChanged;
     }
 
     private void ObserveItemProperties()
@@ -810,10 +777,7 @@ public partial class ContextWindow
             _attach.IsVisible = _files.Count > 0;
             _attach.IsEnabled = idle;
         }
-        if (_compact is not null)
-        {
-            _compact.IsEnabled = CanCompact;
-        }
+        _compact?.IsEnabled = CanCompact;
         if (_pill is not null)
         {
             _pill.IsVisible = _model is not null;
@@ -846,10 +810,7 @@ public partial class ContextWindow
 
         static void SetText(TextBlock? text, Control? owner, string value)
         {
-            if (text is not null)
-            {
-                text.Text = value;
-            }
+            text?.Text = value;
             if (owner is not null)
             {
                 AutomationProperties.SetName(owner, value);
@@ -892,14 +853,8 @@ public partial class ContextWindow
             AutomationProperties.SetName(_readout,
                 $"{usedText} {ofText}, {ContextWindowFormat.HeaderPercentText(layout.Used, layout.Window)} {labels.Used}, {freeText}");
         }
-        if (_cellCaption is not null)
-        {
-            _cellCaption.Text = labels.CellSize(ContextWindowFormat.Tokens(layout.PerCell));
-        }
-        if (_thresholdCaption is not null)
-        {
-            _thresholdCaption.Text = labels.CompactsAt(percent);
-        }
+        _cellCaption?.Text = labels.CellSize(ContextWindowFormat.Tokens(layout.PerCell));
+        _thresholdCaption?.Text = labels.CompactsAt(percent);
         var parts = new string[_rows.Length];
         for (var p = 0; p < _rows.Length; p++)
         {
@@ -1302,10 +1257,7 @@ public partial class ContextWindow
     private void OnPillClick(object? sender, RoutedEventArgs e)
     {
         var keyboard = _pill?.IsKeyboardActivation ?? false;
-        if (_pill is not null)
-        {
-            _pill.IsKeyboardActivation = false;
-        }
+        _pill?.IsKeyboardActivation = false;
         ToggleMenu(keyboard);
     }
 
@@ -1315,10 +1267,7 @@ public partial class ContextWindow
         {
             case Key.Enter:
             case Key.Space:
-                if (_pill is not null)
-                {
-                    _pill.IsKeyboardActivation = true;
-                }
+                _pill?.IsKeyboardActivation = true;
                 break;
             case Key.Down:
             case Key.Up:
@@ -1349,10 +1298,7 @@ public partial class ContextWindow
 
     private void OnMenuOpened(object? sender, RoutedEventArgs e)
     {
-        if (_pill is not null)
-        {
-            _pill.IsOpen = true;
-        }
+        _pill?.IsOpen = true;
         if (_focusSelectedOnOpen)
         {
             _focusSelectedOnOpen = false;
@@ -1373,10 +1319,7 @@ public partial class ContextWindow
 
     private void OnMenuClosed(object? sender, RoutedEventArgs e)
     {
-        if (_pill is not null)
-        {
-            _pill.IsOpen = false;
-        }
+        _pill?.IsOpen = false;
     }
 
     #endregion
@@ -1455,10 +1398,7 @@ public partial class ContextWindow
         _grid?.SetHover(part);
         foreach (var row in _rows)
         {
-            if (row is not null)
-            {
-                row.IsDimmed = part is not null && row.Part != part;
-            }
+            row?.IsDimmed = part is not null && row.Part != part;
         }
     }
 

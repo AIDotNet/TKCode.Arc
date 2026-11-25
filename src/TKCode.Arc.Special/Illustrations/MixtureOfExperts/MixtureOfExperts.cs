@@ -331,14 +331,8 @@ public partial class MixtureOfExperts : Explainer
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_topK is not null)
-        {
-            _topK.SelectionChanged -= OnTopKSelectionChanged;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClick;
-        }
+        _topK?.SelectionChanged -= OnTopKSelectionChanged;
+        _playButton?.Click -= OnPlayClick;
         base.OnApplyTemplate(e);
         _stage = e.NameScope.Find<MixtureOfExpertsStage>(StagePart);
         _sequence = e.NameScope.Find<MixtureOfExpertsSequence>(SequencePart);
@@ -355,10 +349,7 @@ public partial class MixtureOfExperts : Explainer
         _loadEmpty = e.NameScope.Find<TextBlock>("PART_LoadEmpty");
         _loadBar = e.NameScope.Find<MixtureOfExpertsLoadBar>("PART_LoadBar");
         _playButton = e.NameScope.Find<AvaloniaButton>(PlayButtonPart);
-        if (_playButton is not null)
-        {
-            _playButton.Click += OnPlayClick;
-        }
+        _playButton?.Click += OnPlayClick;
         foreach (var child in new Control?[] { _parametersLabel, _parametersValue, _parametersTotal, _loadLabel, _loadValue, _loadEmpty })
         {
             if (child is not null)
@@ -366,10 +357,7 @@ public partial class MixtureOfExperts : Explainer
                 AutomationProperties.SetAccessibilityView(child, AccessibilityView.Raw);
             }
         }
-        if (_topK is not null)
-        {
-            _topK.SelectionChanged += OnTopKSelectionChanged;
-        }
+        _topK?.SelectionChanged += OnTopKSelectionChanged;
         CapturePalette();
         EnsureData();
         PushData();
@@ -502,24 +490,12 @@ public partial class MixtureOfExperts : Explainer
     /// <summary>The lists may be the host's: they are observed only while the card is attached.</summary>
     private void ObserveCollections()
     {
-        if (_observedTokens is not null)
-        {
-            _observedTokens.CollectionChanged -= OnCollectionChanged;
-        }
-        if (_observedExperts is not null)
-        {
-            _observedExperts.CollectionChanged -= OnCollectionChanged;
-        }
+        _observedTokens?.CollectionChanged -= OnCollectionChanged;
+        _observedExperts?.CollectionChanged -= OnCollectionChanged;
         _observedTokens = IsAttached ? Tokens : null;
         _observedExperts = IsAttached ? Experts : null;
-        if (_observedTokens is not null)
-        {
-            _observedTokens.CollectionChanged += OnCollectionChanged;
-        }
-        if (_observedExperts is not null)
-        {
-            _observedExperts.CollectionChanged += OnCollectionChanged;
-        }
+        _observedTokens?.CollectionChanged += OnCollectionChanged;
+        _observedExperts?.CollectionChanged += OnCollectionChanged;
     }
 
     private void OnCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => ScheduleDataChanged();
@@ -710,18 +686,9 @@ public partial class MixtureOfExperts : Explainer
             AutomationProperties.SetName(_topK, labels.TopKGroup);
             _syncingTopK = false;
         }
-        if (_parametersLabel is not null)
-        {
-            _parametersLabel.Text = labels.ActiveParameters;
-        }
-        if (_loadLabel is not null)
-        {
-            _loadLabel.Text = labels.LoadBalance;
-        }
-        if (_loadEmpty is not null)
-        {
-            _loadEmpty.Text = labels.NothingRouted;
-        }
+        _parametersLabel?.Text = labels.ActiveParameters;
+        _loadLabel?.Text = labels.LoadBalance;
+        _loadEmpty?.Text = labels.NothingRouted;
         if (_sequence is not null)
         {
             AutomationProperties.SetName(_sequence, labels.TokensGroup);
@@ -743,10 +710,7 @@ public partial class MixtureOfExperts : Explainer
             _parametersValue.Decimals = HasFraction(active) || HasFraction(p.Total) ? 1 : 0;
             _parametersValue.Value = active;
         }
-        if (_parametersTotal is not null)
-        {
-            _parametersTotal.Text = Labels.OfTotal(FormatBillions(p.Total));
-        }
+        _parametersTotal?.Text = Labels.OfTotal(FormatBillions(p.Total));
         if (_parameters is not null)
         {
             AutomationProperties.SetName(_parameters, Labels.ParametersSpoken(FormatBillions(active), FormatBillions(p.Total)));

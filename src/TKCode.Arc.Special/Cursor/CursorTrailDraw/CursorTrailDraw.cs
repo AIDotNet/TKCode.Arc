@@ -412,10 +412,7 @@ public class CursorTrailDraw : TemplatedControl
             button.Click -= handler;
         }
         _hooked.Clear();
-        if (_board is not null)
-        {
-            _board.Owner = null;
-        }
+        _board?.Owner = null;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -708,18 +705,9 @@ public class CursorTrailDraw : TemplatedControl
 
     private void UpdateToolState()
     {
-        if (_pen is not null)
-        {
-            _pen.IsChecked = Tool == CursorTrailDrawTool.Pen;
-        }
-        if (_laser is not null)
-        {
-            _laser.IsChecked = Tool == CursorTrailDrawTool.Laser;
-        }
-        if (_snap is not null)
-        {
-            _snap.IsChecked = IsSnapEnabled;
-        }
+        _pen?.IsChecked = Tool == CursorTrailDrawTool.Pen;
+        _laser?.IsChecked = Tool == CursorTrailDrawTool.Laser;
+        _snap?.IsChecked = IsSnapEnabled;
         PseudoClasses.Set(LaserPseudoClass, Tool == CursorTrailDrawTool.Laser);
         var current = CurrentInkId;
         foreach (var button in _swatchButtons)
@@ -748,20 +736,14 @@ public class CursorTrailDraw : TemplatedControl
         {
             AutomationProperties.SetName(_board, string.Format(CultureInfo.InvariantCulture, Texts.CanvasName, Label));
         }
-        if (_hint is not null)
-        {
-            _hint.Text = Hint;
-        }
+        _hint?.Text = Hint;
     }
 
     private void UpdateBoardState()
     {
         var board = _board;
         var live = board?.Items.Count(i => !i.Removing) ?? Items.Count;
-        if (_count is not null)
-        {
-            _count.Text = string.Format(CultureInfo.InvariantCulture, live == 1 ? Texts.CountOne : Texts.CountMany, live);
-        }
+        _count?.Text = string.Format(CultureInfo.InvariantCulture, live == 1 ? Texts.CountOne : Texts.CountMany, live);
         if (_hint is not null)
         {
             var empty = live == 0 && board is not { IsIntroPlaying: true } && board is not { IsDrawing: true };
@@ -785,10 +767,7 @@ public class CursorTrailDraw : TemplatedControl
             return;
         }
         _chipItem = item;
-        if (_chipText is not null)
-        {
-            _chipText.Text = string.Format(CultureInfo.InvariantCulture, Texts.ChipText, Texts.ShapeName(item.Shape));
-        }
+        _chipText?.Text = string.Format(CultureInfo.InvariantCulture, Texts.ChipText, Texts.ShapeName(item.Shape));
         _chipTimer ??= new DispatcherTimer { Interval = ChipLifetime() };
         _chipTimer.Tick -= OnChipTimer;
         _chipTimer.Tick += OnChipTimer;

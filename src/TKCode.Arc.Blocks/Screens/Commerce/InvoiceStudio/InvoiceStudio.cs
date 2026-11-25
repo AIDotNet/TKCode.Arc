@@ -361,10 +361,7 @@ public class InvoiceStudio : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged -= OnViewSwitchChanged;
-        }
+        _viewSwitch?.SelectionChanged -= OnViewSwitchChanged;
         base.OnApplyTemplate(e);
         _form = e.NameScope.Find<StackPanel>(FormPart);
         _paper = e.NameScope.Find<InvoiceStudioPaper>(PaperPart);
@@ -374,10 +371,7 @@ public class InvoiceStudio : TemplatedControl
         {
             AutomationProperties.SetName(_paper, Labels.PreviewName);
         }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged += OnViewSwitchChanged;
-        }
+        _viewSwitch?.SelectionChanged += OnViewSwitchChanged;
         BuildForm();
         Recompute();
         UpdateLayoutMode(force: true);
@@ -546,10 +540,7 @@ public class InvoiceStudio : TemplatedControl
             {
                 row.Arrange(narrow);
             }
-            if (_lineHeader is not null)
-            {
-                _lineHeader.IsVisible = !narrow;
-            }
+            _lineHeader?.IsVisible = !narrow;
         }
         if (_viewSwitch is not null)
         {
@@ -583,10 +574,7 @@ public class InvoiceStudio : TemplatedControl
         }
         var labels = Labels;
         _form.Children.Clear();
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.ItemsSource = new[] { new SegmentedOption("edit", labels.EditTab), new SegmentedOption("preview", labels.PreviewTab) };
-        }
+        _viewSwitch?.ItemsSource = new[] { new SegmentedOption("edit", labels.EditTab), new SegmentedOption("preview", labels.PreviewTab) };
 
         _client = new Select
         {

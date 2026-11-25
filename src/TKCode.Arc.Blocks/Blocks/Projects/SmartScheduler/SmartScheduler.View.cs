@@ -40,30 +40,12 @@ public partial class SmartScheduler
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_week is not null)
-        {
-            _week.SelectionRequested -= SelectSlot;
-        }
-        if (_find is not null)
-        {
-            _find.Click -= OnFindClick;
-        }
-        if (_book is not null)
-        {
-            _book.Click -= OnBookClick;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click -= OnStartOverClick;
-        }
-        if (_duration is not null)
-        {
-            _duration.SelectionChanged -= OnDurationChanged;
-        }
-        if (_constraintsBox is not null)
-        {
-            _constraintsBox.TextChanged -= OnConstraintsChanged;
-        }
+        _week?.SelectionRequested -= SelectSlot;
+        _find?.Click -= OnFindClick;
+        _book?.Click -= OnBookClick;
+        _startOver?.Click -= OnStartOverClick;
+        _duration?.SelectionChanged -= OnDurationChanged;
+        _constraintsBox?.TextChanged -= OnConstraintsChanged;
         _week = e.NameScope.Find<SmartSchedulerWeek>(WeekPart);
         _people = e.NameScope.Find<Panel>("PART_People");
         _duration = e.NameScope.Find<SegmentedControl>("PART_Duration");
@@ -83,26 +65,11 @@ public partial class SmartScheduler
                 _texts[name] = text;
             }
         }
-        if (_week is not null)
-        {
-            _week.SelectionRequested += SelectSlot;
-        }
-        if (_find is not null)
-        {
-            _find.Click += OnFindClick;
-        }
-        if (_book is not null)
-        {
-            _book.Click += OnBookClick;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click += OnStartOverClick;
-        }
-        if (_duration is not null)
-        {
-            _duration.SelectionChanged += OnDurationChanged;
-        }
+        _week?.SelectionRequested += SelectSlot;
+        _find?.Click += OnFindClick;
+        _book?.Click += OnBookClick;
+        _startOver?.Click += OnStartOverClick;
+        _duration?.SelectionChanged += OnDurationChanged;
         if (_constraintsBox is not null)
         {
             _constraintsBox.Text = ConstraintsText;
@@ -354,10 +321,7 @@ public partial class SmartScheduler
             _book.IsLoading = State == SmartSchedulerState.Booking;
             _book.Content = SelectedSlot is { } slot ? labels.Book(labels.SlotShort(Times(slot).Start)) : labels.Book("");
         }
-        if (_startOver is not null)
-        {
-            _startOver.Content = labels.StartOver;
-        }
+        _startOver?.Content = labels.StartOver;
         if (State != SmartSchedulerState.Booked && !_statusIsError)
         {
             SetStatus(State switch

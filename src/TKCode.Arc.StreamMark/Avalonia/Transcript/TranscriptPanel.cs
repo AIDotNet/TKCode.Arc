@@ -290,16 +290,10 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
 
     public void SetEntries(IReadOnlyList<TranscriptEntry> entries)
     {
-        if (_subscribedCollection is not null)
-        {
-            _subscribedCollection.CollectionChanged -= OnCollectionChanged;
-        }
+        _subscribedCollection?.CollectionChanged -= OnCollectionChanged;
         _source = entries;
         _subscribedCollection = entries as INotifyCollectionChanged;
-        if (_subscribedCollection is not null)
-        {
-            _subscribedCollection.CollectionChanged += OnCollectionChanged;
-        }
+        _subscribedCollection?.CollectionChanged += OnCollectionChanged;
         SyncEntries();
     }
 

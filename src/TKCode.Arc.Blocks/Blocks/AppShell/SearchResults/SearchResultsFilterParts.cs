@@ -53,10 +53,7 @@ internal sealed class SearchResultsChip : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
+        _remove?.Click -= OnRemoveClick;
         base.OnApplyTemplate(e);
         _remove = e.NameScope.Find<AvaloniaButton>(RemovePart);
         if (_remove is not null)
@@ -134,17 +131,11 @@ internal sealed class SearchResultsChipBar : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _clear?.Click -= OnClearClick;
         base.OnApplyTemplate(e);
         _chips = e.NameScope.Find<WrapPanel>(ChipsPart);
         _clear = e.NameScope.Find<AvaloniaButton>(ClearPart);
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _clear?.Click += OnClearClick;
         var specs = _specs.ToList();
         _specs.Clear();
         SetChips(specs);
@@ -263,16 +254,10 @@ internal sealed class SearchResultsFilterRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_check is not null)
-        {
-            _check.IsCheckedChanged -= OnCheckChanged;
-        }
+        _check?.IsCheckedChanged -= OnCheckChanged;
         base.OnApplyTemplate(e);
         _check = e.NameScope.Find<Checkbox>(CheckPart);
-        if (_check is not null)
-        {
-            _check.IsCheckedChanged += OnCheckChanged;
-        }
+        _check?.IsCheckedChanged += OnCheckChanged;
         Sync();
     }
 
@@ -300,10 +285,7 @@ internal sealed class SearchResultsFilterRow : TemplatedControl
 
     private void Unhook()
     {
-        if (_value is not null)
-        {
-            _value.PropertyChanged -= OnValueChanged;
-        }
+        _value?.PropertyChanged -= OnValueChanged;
     }
 
     private void OnValueChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -628,17 +610,11 @@ internal sealed class SearchResultsFilters : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _clear?.Click -= OnClearClick;
         base.OnApplyTemplate(e);
         _groups = e.NameScope.Find<Panel>(GroupsPart);
         _clear = e.NameScope.Find<AvaloniaButton>(ClearPart);
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _clear?.Click += OnClearClick;
         Rebuild();
     }
 

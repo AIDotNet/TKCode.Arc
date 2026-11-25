@@ -186,7 +186,6 @@ public class CheckoutSummary : TemplatedControl
     private Func<string, CancellationToken, Task<CheckoutSummaryCouponResult>>? _couponValidator;
     private CancellationTokenSource? _payment;
     private Exception? _payException;
-    private CheckoutSummaryCouponResult? _appliedCoupon;
     private decimal _subtotal;
     private decimal _couponDiscount;
     private decimal _taxAmount;
@@ -245,10 +244,7 @@ public class CheckoutSummary : TemplatedControl
         set
         {
             _couponValidator = value;
-            if (_coupon is not null)
-            {
-                _coupon.Validator = value;
-            }
+            _coupon?.Validator = value;
             UpdateCouponVisibility();
         }
     }
@@ -275,8 +271,8 @@ public class CheckoutSummary : TemplatedControl
     /// <inheritdoc cref="AppliedCouponProperty"/>
     public CheckoutSummaryCouponResult? AppliedCoupon
     {
-        get => _appliedCoupon;
-        private set => SetAndRaise(AppliedCouponProperty, ref _appliedCoupon, value);
+        get;
+        private set => SetAndRaise(AppliedCouponProperty, ref field, value);
     }
 
     /// <inheritdoc cref="SubtotalProperty"/>
@@ -416,10 +412,7 @@ public class CheckoutSummary : TemplatedControl
             _coupon.CouponRejected -= OnCouponRejected;
             _coupon.CouponRemoved -= OnCouponRemoved;
         }
-        if (_pay is not null)
-        {
-            _pay.Click -= OnPayClick;
-        }
+        _pay?.Click -= OnPayClick;
         _item = e.NameScope.Find<Control>(ItemPart);
         _itemName = e.NameScope.Find<TextBlock>("PART_ItemName");
         _itemDescription = e.NameScope.Find<TextBlock>("PART_ItemDescription");
@@ -481,10 +474,7 @@ public class CheckoutSummary : TemplatedControl
         }
         else if (property == LabelsProperty)
         {
-            if (_coupon is not null)
-            {
-                _coupon.Labels = Labels;
-            }
+            _coupon?.Labels = Labels;
             UpdateLabels();
             Recompute(animate: false);
         }
@@ -529,10 +519,7 @@ public class CheckoutSummary : TemplatedControl
             }
             _coupon.IsLocked = IsCouponLocked;
         }
-        if (_pay is not null)
-        {
-            _pay.State = newState;
-        }
+        _pay?.State = newState;
         if (newState != CheckoutSummaryPayState.Error)
         {
             _payException = null;
@@ -544,10 +531,7 @@ public class CheckoutSummary : TemplatedControl
 
     private void UpdatePayError()
     {
-        if (_payError is not null)
-        {
-            _payError.Text = PayErrorMessage ?? Labels.PayFailed;
-        }
+        _payError?.Text = PayErrorMessage ?? Labels.PayFailed;
     }
 
     private void OnPayClick(object? sender, RoutedEventArgs e) => _ = StartPaymentAsync();
@@ -588,15 +572,9 @@ public class CheckoutSummary : TemplatedControl
 
     private void Watch<T>(ref T? field, T? value) where T : AvaloniaObject
     {
-        if (field is not null)
-        {
-            field.PropertyChanged -= OnDataChanged;
-        }
+        field?.PropertyChanged -= OnDataChanged;
         field = value;
-        if (field is not null)
-        {
-            field.PropertyChanged += OnDataChanged;
-        }
+        field?.PropertyChanged += OnDataChanged;
     }
 
     private void OnDataChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -610,19 +588,13 @@ public class CheckoutSummary : TemplatedControl
 
     private void UpdateCouponVisibility()
     {
-        if (_coupon is not null)
-        {
-            _coupon.IsVisible = IsCouponVisible && _couponValidator is not null;
-        }
+        _coupon?.IsVisible = IsCouponVisible && _couponValidator is not null;
     }
 
     private void UpdateLabels()
     {
         var labels = Labels;
-        if (_lines is not null)
-        {
-            _lines.TotalLabel = labels.Total;
-        }
+        _lines?.TotalLabel = labels.Total;
         if (_pay is not null)
         {
             _pay.ProcessingLabel = labels.Processing;
@@ -705,19 +677,13 @@ public class CheckoutSummary : TemplatedControl
             _lines.SetTotal(totals.Total, shape.Prefix, shape.Suffix, decimals, culture.Name.Length == 0 ? "en-US" : culture.Name,
                 labels.TotalAnnouncement(_formattedTotal));
         }
-        if (_pay is not null)
-        {
-            _pay.IdleLabel = labels.Pay(_formattedTotal);
-        }
+        _pay?.IdleLabel = labels.Pay(_formattedTotal);
         UpdateItemTexts(item, Money);
     }
 
     private void UpdateItemTexts(CheckoutSummaryItem? item, Func<decimal, string> money)
     {
-        if (_item is not null)
-        {
-            _item.IsVisible = item is not null;
-        }
+        _item?.IsVisible = item is not null;
         if (item is null)
         {
             return;

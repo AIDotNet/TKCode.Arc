@@ -112,13 +112,12 @@ public class HoldToConfirm : AvaloniaButton
     /// <summary>The done state. Set it back to false to reset the button (the fill rewinds as the label morphs back).</summary>
     public bool IsConfirmed { get => GetValue(IsConfirmedProperty); set => SetValue(IsConfirmedProperty, value); }
 
-    private bool _isHolding;
 
     /// <summary>True while a hold is in progress (for surrounding hints such as "Keep holding").</summary>
     public bool IsHolding
     {
-        get => _isHolding;
-        private set => SetAndRaise(IsHoldingProperty, ref _isHolding, value);
+        get;
+        private set => SetAndRaise(IsHoldingProperty, ref field, value);
     }
 
     /// <summary>Raised once when a hold completes (after which <see cref="AvaloniaButton.Command"/> runs).</summary>
@@ -190,10 +189,7 @@ public class HoldToConfirm : AvaloniaButton
         _status = e.NameScope.Find<ButtonsLiveRegion>(StatusPart);
         _focusRing ??= LiteralFocusRing.Create(this, HoldToConfirmTokens.Key(HoldToConfirmTokenKind.FocusRingRadius));
         LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Surface")?.Parent as Panel, new Thickness(-4));
-        if (_fill is not null)
-        {
-            _fill.Clip = _fillClip;
-        }
+        _fill?.Clip = _fillClip;
         if (IsConfirmed)
         {
             Progress.Jump(1);

@@ -876,15 +876,9 @@ internal sealed class SignInUnderline : Control
         get => _target;
         set
         {
-            if (_target is not null)
-            {
-                _target.PropertyChanged -= OnTargetChanged;
-            }
+            _target?.PropertyChanged -= OnTargetChanged;
             _target = value;
-            if (_target is not null)
-            {
-                _target.PropertyChanged += OnTargetChanged;
-            }
+            _target?.PropertyChanged += OnTargetChanged;
             InvalidateVisual();
         }
     }

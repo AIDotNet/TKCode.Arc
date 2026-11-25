@@ -11,6 +11,24 @@ internal sealed class ContextKeyAndExpr : ContextKeyExpression
 
     public static ContextKeyExpression? Create(IReadOnlyList<ContextKeyExpression?> expr, ContextKeyExpression? negated, bool extraRedundantCheck)
     {
+        if (expr is ContextKeyExpression?[] array)
+        {
+            return NormalizeArr(array.AsSpan(), negated, extraRedundantCheck);
+        }
+        if (expr is List<ContextKeyExpression?> list)
+        {
+            return NormalizeArr(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list), negated, extraRedundantCheck);
+        }
+        var copy = new ContextKeyExpression?[expr.Count];
+        for (var i = 0; i < copy.Length; i++)
+        {
+            copy[i] = expr[i];
+        }
+        return NormalizeArr(copy.AsSpan(), negated, extraRedundantCheck);
+    }
+
+    public static ContextKeyExpression? Create(ReadOnlySpan<ContextKeyExpression?> expr, ContextKeyExpression? negated, bool extraRedundantCheck)
+    {
         return NormalizeArr(expr, negated, extraRedundantCheck);
     }
 
@@ -128,9 +146,9 @@ internal sealed class ContextKeyAndExpr : ContextKeyExpression
         return true;
     }
 
-    private static ContextKeyExpression? NormalizeArr(IReadOnlyList<ContextKeyExpression?> arr, ContextKeyExpression? negated, bool extraRedundantCheck)
+    private static ContextKeyExpression? NormalizeArr(ReadOnlySpan<ContextKeyExpression?> arr, ContextKeyExpression? negated, bool extraRedundantCheck)
     {
-        var expr = new List<ContextKeyExpression>();
+        var expr = new List<ContextKeyExpression>(arr.Length);
         var hasTrue = false;
 
         foreach (var e in arr)
@@ -330,6 +348,24 @@ internal sealed class ContextKeyOrExpr : ContextKeyExpression
 
     public static ContextKeyExpression? Create(IReadOnlyList<ContextKeyExpression?> expr, ContextKeyExpression? negated, bool extraRedundantCheck)
     {
+        if (expr is ContextKeyExpression?[] array)
+        {
+            return NormalizeArr(array.AsSpan(), negated, extraRedundantCheck);
+        }
+        if (expr is List<ContextKeyExpression?> list)
+        {
+            return NormalizeArr(System.Runtime.InteropServices.CollectionsMarshal.AsSpan(list), negated, extraRedundantCheck);
+        }
+        var copy = new ContextKeyExpression?[expr.Count];
+        for (var i = 0; i < copy.Length; i++)
+        {
+            copy[i] = expr[i];
+        }
+        return NormalizeArr(copy.AsSpan(), negated, extraRedundantCheck);
+    }
+
+    public static ContextKeyExpression? Create(ReadOnlySpan<ContextKeyExpression?> expr, ContextKeyExpression? negated, bool extraRedundantCheck)
+    {
         return NormalizeArr(expr, negated, extraRedundantCheck);
     }
 
@@ -414,12 +450,12 @@ internal sealed class ContextKeyOrExpr : ContextKeyExpression
         return false;
     }
 
-    private static ContextKeyExpression? NormalizeArr(IReadOnlyList<ContextKeyExpression?> arr, ContextKeyExpression? negated, bool extraRedundantCheck)
+    private static ContextKeyExpression? NormalizeArr(ReadOnlySpan<ContextKeyExpression?> arr, ContextKeyExpression? negated, bool extraRedundantCheck)
     {
-        var expr = new List<ContextKeyExpression>();
+        var expr = new List<ContextKeyExpression>(arr.Length);
         var hasFalse = false;
 
-        for (var i = 0; i < arr.Count; i++)
+        for (var i = 0; i < arr.Length; i++)
         {
             var e = arr[i];
             if (e is null)

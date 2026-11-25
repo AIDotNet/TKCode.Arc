@@ -154,10 +154,7 @@ public partial class ToolDock
 
     private void OnTabChanged(Rect tab)
     {
-        if (_surface is not null)
-        {
-            _surface.Tab = new Rect(tab.X, -tab.Height, tab.Width, tab.Height);
-        }
+        _surface?.Tab = new Rect(tab.X, -tab.Height, tab.Width, tab.Height);
         if (_tray is { } tray)
         {
             var full = Math.Max(1, tray.Placement.Height);

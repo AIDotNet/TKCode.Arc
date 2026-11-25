@@ -745,10 +745,7 @@ public partial class TimePicker : TemplatedControl, IPickerAutomation
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
-        if (_frame is not null)
-        {
-            _frame.IsFocusActive = false;
-        }
+        _frame?.IsFocusActive = false;
         if (IsDropDownOpen)
         {
             Dispatcher.UIThread.Post(() =>

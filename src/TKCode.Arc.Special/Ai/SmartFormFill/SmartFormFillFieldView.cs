@@ -123,10 +123,7 @@ internal sealed class SmartFormFillFieldView : TemplatedControl
             _input.GotFocus -= OnFocus;
             _input.LostFocus -= OnBlur;
         }
-        if (_check is not null)
-        {
-            _check.Click -= OnCheck;
-        }
+        _check?.Click -= OnCheck;
         _input = e.NameScope.Find<Input>(InputPart);
         _badge = e.NameScope.Find<ArcContentSwap>(BadgePart);
         _tint = e.NameScope.Find<Border>(TintPart);
@@ -164,10 +161,7 @@ internal sealed class SmartFormFillFieldView : TemplatedControl
                 _input.Prefix = _logo;
             }
         }
-        if (_tint is not null)
-        {
-            _tint.Opacity = 0;
-        }
+        _tint?.Opacity = 0;
         Refresh();
     }
 
@@ -382,10 +376,7 @@ internal sealed class SmartFormFillFieldView : TemplatedControl
                 _textValue = new MotionValue<double>(this, 1, MotionVectors.Double);
                 _textValue.Changed += v =>
                 {
-                    if (_presenter is not null)
-                    {
-                        _presenter.Opacity = v;
-                    }
+                    _presenter?.Opacity = v;
                 };
             }
             _textValue.Jump(0);
@@ -397,10 +388,7 @@ internal sealed class SmartFormFillFieldView : TemplatedControl
             _tintValue = new MotionValue<double>(this, 0, MotionVectors.Double);
             _tintValue.Changed += v =>
             {
-                if (_tint is not null)
-                {
-                    _tint.Opacity = v;
-                }
+                _tint?.Opacity = v;
             };
         }
         _ = Breathe(_tintValue);
@@ -417,14 +405,8 @@ internal sealed class SmartFormFillFieldView : TemplatedControl
     private void StopArrival()
     {
         _tintValue?.Jump(0);
-        if (_tint is not null)
-        {
-            _tint.Opacity = 0;
-        }
+        _tint?.Opacity = 0;
         _textValue?.Jump(1);
-        if (_presenter is not null)
-        {
-            _presenter.Opacity = 1;
-        }
+        _presenter?.Opacity = 1;
     }
 }

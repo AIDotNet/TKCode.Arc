@@ -474,9 +474,9 @@ internal sealed class ModelSemanticColoring : IDisposable
         if (_isDisposed)
         {
             // disposed!
-            if (provider is not null && tokens is not null)
+            if (provider is not null && tokens is { } disposedTokens)
             {
-                provider.ReleaseDocumentSemanticTokens(tokens.Tokens?.ResultId ?? tokens.Edits?.ResultId);
+                provider.ReleaseDocumentSemanticTokens(disposedTokens.Tokens?.ResultId ?? disposedTokens.Edits?.ResultId);
             }
 
             return;
@@ -488,15 +488,15 @@ internal sealed class ModelSemanticColoring : IDisposable
             return;
         }
 
-        if (tokens is null)
+        if (tokens is not { } tokensValue)
         {
             _model.Tokenization.SetSemanticTokens(null, true);
             RescheduleIfNeeded();
             return;
         }
 
-        Languages.SemanticTokens? full = tokens.Tokens;
-        if (full is null && tokens.Edits is { } edits)
+        Languages.SemanticTokens? full = tokensValue.Tokens;
+        if (full is null && tokensValue.Edits is { } edits)
         {
             var resultId = edits.ResultId;
             void RejectInvalidEdits(bool requestFullRefresh)

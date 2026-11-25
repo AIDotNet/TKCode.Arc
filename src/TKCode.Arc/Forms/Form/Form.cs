@@ -435,10 +435,7 @@ public class Form : ContentControl
             item.ClearValidation();
         }
         IsSubmitAttempted = false;
-        if (_announcer is not null)
-        {
-            _announcer.Text = null;
-        }
+        _announcer?.Text = null;
     }
 
     /// <summary>
@@ -667,15 +664,9 @@ public class Form : ContentControl
         {
             return;
         }
-        if (_subscribedSource is not null)
-        {
-            _subscribedSource.ErrorsChanged -= OnSourceErrorsChanged;
-        }
+        _subscribedSource?.ErrorsChanged -= OnSourceErrorsChanged;
         _subscribedSource = source;
-        if (source is not null)
-        {
-            source.ErrorsChanged += OnSourceErrorsChanged;
-        }
+        source?.ErrorsChanged += OnSourceErrorsChanged;
         UpdateFormErrors();
     }
 

@@ -257,21 +257,12 @@ internal sealed class AiPanelChangeCard : TemplatedControl
     private void Refresh()
     {
         var label = BlockLabel;
-        if (_label is not null)
-        {
-            _label.Text = label;
-        }
+        _label?.Text = label;
         Summary = _diffTable is { } table
             ? table.Summary
             : _labels.WordsWas(CountWords(TextOf(_change.After)), CountWords(TextOf(_change.Before) ?? TextOf(_change.After)));
-        if (_summary is not null)
-        {
-            _summary.Text = Summary;
-        }
-        if (_diffText is not null)
-        {
-            _diffText.SummaryName = Summary;
-        }
+        _summary?.Text = Summary;
+        _diffText?.SummaryName = Summary;
         AutomationProperties.SetName(this, _labels.ChangeCard(label));
         var state = _change.State;
         PseudoClasses.Set(ProposedPseudoClass, state == AiPanelChangeState.Proposed);

@@ -643,10 +643,7 @@ public partial class WindRoseChart : Control, IChartsBAccessible, Avalonia.Rende
         _binsWatcher.Attach();
         _labelsWatcher.Attach();
         _languages = ArcLanguageManager.Current;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
         Flush();
         _reveal.Attach();
     }

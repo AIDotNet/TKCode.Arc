@@ -237,10 +237,7 @@ public class EmojiPicker : TemplatedControl
             _tones.ToneChosen += OnToneChosen;
             _tones.ExpandedChanged += OnTonesExpanded;
         }
-        if (_tabs is not null)
-        {
-            _tabs.Invoked += OnTabInvoked;
-        }
+        _tabs?.Invoked += OnTabInvoked;
         if (_scroll is not null)
         {
             _scroll.ScrollChanged += OnScrollChanged;
@@ -266,10 +263,7 @@ public class EmojiPicker : TemplatedControl
             _tones.ToneChosen -= OnToneChosen;
             _tones.ExpandedChanged -= OnTonesExpanded;
         }
-        if (_tabs is not null)
-        {
-            _tabs.Invoked -= OnTabInvoked;
-        }
+        _tabs?.Invoked -= OnTabInvoked;
         if (_scroll is not null)
         {
             _scroll.ScrollChanged -= OnScrollChanged;
@@ -349,10 +343,7 @@ public class EmojiPicker : TemplatedControl
         {
             AutomationProperties.SetHelpText(_tabs, labels.Categories);
         }
-        if (_empty is not null)
-        {
-            _empty.Text = labels.NoResults;
-        }
+        _empty?.Text = labels.NoResults;
         if (_grid is not null)
         {
             AutomationProperties.SetHelpText(_grid, labels.Grid);
@@ -396,10 +387,7 @@ public class EmojiPicker : TemplatedControl
         }
         _tabs?.SetCategories(browse.Select(s => s.Category).ToArray(), labels.Category);
         _scrollMotion?.Stop();
-        if (_scroll is not null)
-        {
-            _scroll.Offset = default;
-        }
+        _scroll?.Offset = default;
         if (!IsSearching && browse.Count > 0)
         {
             _tabs?.SetActive(browse[0].Category);
@@ -533,14 +521,8 @@ public class EmojiPicker : TemplatedControl
     private void OnActiveChanged(EmojiPickerEmoji? emoji)
     {
         var labels = Labels ?? EmojiPickerLabels.Default;
-        if (_previewGlyph is not null)
-        {
-            _previewGlyph.Text = emoji is null ? string.Empty : emoji.Display(SkinTone, MaxEmojiVersion);
-        }
-        if (_previewName is not null)
-        {
-            _previewName.Text = emoji is null ? labels.PreviewHint : Capitalize(emoji.Name);
-        }
+        _previewGlyph?.Text = emoji is null ? string.Empty : emoji.Display(SkinTone, MaxEmojiVersion);
+        _previewName?.Text = emoji is null ? labels.PreviewHint : Capitalize(emoji.Name);
         if (_grid is not null && emoji is not null)
         {
             var (section, index) = _grid.Active;
@@ -635,10 +617,7 @@ public class EmojiPicker : TemplatedControl
             _scrollMotion = new MotionValue<double>(this, _scroll.Offset.Y, MotionVectors.Double);
             _scrollMotion.Changed += v =>
             {
-                if (_scroll is not null)
-                {
-                    _scroll.Offset = new Vector(0, v);
-                }
+                _scroll?.Offset = new Vector(0, v);
             };
         }
         if (!_scrollMotion.IsAnimating)

@@ -262,14 +262,8 @@ public partial class ConnectedScatter
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_seriesSwitch is not null)
-        {
-            _seriesSwitch.SelectionChanged -= OnSwitchChanged;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClick;
-        }
+        _seriesSwitch?.SelectionChanged -= OnSwitchChanged;
+        _playButton?.Click -= OnPlayClick;
         if (_plot is not null)
         {
             _plot.PointInvoked -= OnPointInvoked;
@@ -298,14 +292,8 @@ public partial class ConnectedScatter
         _table = e.NameScope.Find<ConnectedScatterDataTable>(TablePart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
 
-        if (_seriesSwitch is not null)
-        {
-            _seriesSwitch.SelectionChanged += OnSwitchChanged;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click += OnPlayClick;
-        }
+        _seriesSwitch?.SelectionChanged += OnSwitchChanged;
+        _playButton?.Click += OnPlayClick;
         if (_plot is not null)
         {
             _plot.PointInvoked += OnPointInvoked;
@@ -437,39 +425,21 @@ public partial class ConnectedScatter
 
     private void ObserveSource(IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnSeriesChanged();
 
     private void ObserveAxes()
     {
-        if (_observedX is not null)
-        {
-            _observedX.Changed -= OnAxisChanged;
-        }
-        if (_observedY is not null)
-        {
-            _observedY.Changed -= OnAxisChanged;
-        }
+        _observedX?.Changed -= OnAxisChanged;
+        _observedY?.Changed -= OnAxisChanged;
         _observedX = XAxis;
         _observedY = YAxis;
-        if (_observedX is not null)
-        {
-            _observedX.Changed += OnAxisChanged;
-        }
-        if (_observedY is not null)
-        {
-            _observedY.Changed += OnAxisChanged;
-        }
+        _observedX?.Changed += OnAxisChanged;
+        _observedY?.Changed += OnAxisChanged;
     }
 
     private void OnAxisChanged(object? sender, EventArgs e) => Refresh(animate: false, announce: false);
@@ -714,10 +684,7 @@ public partial class ConnectedScatter
                 HasTarget ? string.Format(CultureInfo.CurrentCulture, TargetLegendFormat, targetText, xName, yName) : string.Empty,
                 ZoneLegendText, HasTarget);
         }
-        if (_scrubber is not null)
-        {
-            _scrubber.SliderName = ScrubberLabel;
-        }
+        _scrubber?.SliderName = ScrubberLabel;
         UpdatePlayButton();
         AutomationProperties.SetName(this, Title ?? string.Empty);
     }
@@ -1189,14 +1156,8 @@ public partial class ConnectedScatter
             PlayState.Replay => (ArcIcons.RotateCcw, ReplayText, ReplayLabel),
             _ => (ArcIcons.Play, PlayText, PlayLabel)
         };
-        if (_playGlyph is not null)
-        {
-            _playGlyph.Data = glyph;
-        }
-        if (_playText is not null)
-        {
-            _playText.Text = text;
-        }
+        _playGlyph?.Data = glyph;
+        _playText?.Text = text;
         if (_playButton is not null)
         {
             AutomationProperties.SetName(_playButton, label);

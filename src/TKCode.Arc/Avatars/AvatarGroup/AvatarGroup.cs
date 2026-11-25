@@ -116,13 +116,12 @@ public class AvatarGroup : TemplatedControl
     [Content]
     public AvaloniaList<object> Items { get; } = new();
 
-    private int _overflowCount;
 
     /// <summary>How many people are folded into the "+N" chip.</summary>
     public int OverflowCount
     {
-        get => _overflowCount;
-        private set => SetAndRaise(OverflowCountProperty, ref _overflowCount, value);
+        get;
+        private set => SetAndRaise(OverflowCountProperty, ref field, value);
     }
 
     private readonly record struct SlotKey(object Item, int Occurrence);
@@ -230,15 +229,9 @@ public class AvatarGroup : TemplatedControl
     // User data is observed only while the group is in the tree, so long-lived members never keep it alive.
     private void ObserveSource()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourceChanged;
-        }
+        _observed?.CollectionChanged -= OnSourceChanged;
         _observed = TopLevel.GetTopLevel(this) is not null ? ItemsSource as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourceChanged;
-        }
+        _observed?.CollectionChanged += OnSourceChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

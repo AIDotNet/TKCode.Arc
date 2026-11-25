@@ -178,10 +178,7 @@ internal class PromptTestCases : TemplatedControl
         {
             var stretched = change.GetNewValue<HorizontalAlignment>() == HorizontalAlignment.Stretch;
             PseudoClasses.Set(StretchedPseudoClass, stretched);
-            if (_track is not null)
-            {
-                _track.IsUniform = stretched;
-            }
+            _track?.IsUniform = stretched;
         }
     }
 
@@ -196,15 +193,9 @@ internal class PromptTestCases : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCasesChanged;
-        }
+        _observed?.CollectionChanged -= OnCasesChanged;
         _observed = observed;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnCasesChanged;
-        }
+        _observed?.CollectionChanged += OnCasesChanged;
     }
 
     private void OnCasesChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildOptions();

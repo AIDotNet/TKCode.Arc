@@ -330,16 +330,10 @@ internal sealed class MarketOrderRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
+        _cancel?.Click -= OnCancelClick;
         base.OnApplyTemplate(e);
         _cancel = e.NameScope.Find<MarketIconButton>("PART_Cancel");
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
+        _cancel?.Click += OnCancelClick;
     }
 
     private void OnCancelClick(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => CancelRequested?.Invoke(this, EventArgs.Empty);

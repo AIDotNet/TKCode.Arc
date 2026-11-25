@@ -307,7 +307,7 @@ public sealed class DocumentSemanticTokensTests : IDisposable
         // wait for the semantic tokens to be fetched
         _timers.Advance(1000);
         tokenChanges.ShouldBe(1);
-        lastResult!.Tokens!.ResultId.ShouldBe("1");
+        lastResult!.Value.Tokens!.ResultId.ShouldBe("1");
 
         // edit the text
         textModel.ApplyEdits([new SingleEditOperation(new TextRange(1, 1, 1, 1), "foo")]);
@@ -440,17 +440,17 @@ public sealed class DocumentSemanticTokensTests : IDisposable
         var result = await GetSemanticTokens.GetDocumentSemanticTokens(_languageFeatures.DocumentSemanticTokensProvider, textModel, null, null, CancellationToken.None);
         result.ShouldNotBeNull();
         GetSemanticTokens.IsSemanticTokens(result.Tokens).ShouldBeTrue();
-        result.Tokens!.Tokens!.ResultId.ShouldNotBeNull();
-        result.Tokens.Tokens.Data.ShouldBe([0u, 1, 1, 1, 1, 0, 2, 1, 1, 1]);
+        result.Tokens!.Value.Tokens!.ResultId.ShouldNotBeNull();
+        result.Tokens.Value.Tokens.Data.ShouldBe([0u, 1, 1, 1, 1, 0, 2, 1, 1, 1]);
         callCount.ShouldBe(2);
         result.Provider.GetLegend().TokenTypes.ShouldBe(["class1"]);
 
         // Make a second request. Make sure we get the secondary value
-        result = await GetSemanticTokens.GetDocumentSemanticTokens(_languageFeatures.DocumentSemanticTokensProvider, textModel, result.Provider, result.Tokens.Tokens.ResultId, CancellationToken.None);
+        result = await GetSemanticTokens.GetDocumentSemanticTokens(_languageFeatures.DocumentSemanticTokensProvider, textModel, result.Provider, result.Tokens.Value.Tokens.ResultId, CancellationToken.None);
         result.ShouldNotBeNull();
         GetSemanticTokens.IsSemanticTokens(result.Tokens).ShouldBeTrue();
-        result.Tokens!.Tokens!.ResultId.ShouldBeNull();
-        result.Tokens.Tokens.Data.ShouldBe([2u, 1, 1, 1, 1, 0, 2, 1, 1, 1]);
+        result.Tokens!.Value.Tokens!.ResultId.ShouldBeNull();
+        result.Tokens.Value.Tokens.Data.ShouldBe([2u, 1, 1, 1, 1, 0, 2, 1, 1, 1]);
         callCount.ShouldBe(4);
         result.Provider.GetLegend().TokenTypes.ShouldBe(["class1"]);
     }

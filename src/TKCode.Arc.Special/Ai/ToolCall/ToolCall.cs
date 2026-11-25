@@ -287,15 +287,9 @@ public class ToolCall : TemplatedControl
         }
         foreach (var button in new[] { _retry, _deny, _allow })
         {
-            if (button is not null)
-            {
-                button.Click -= OnActionClick;
-            }
+            button?.Click -= OnActionClick;
         }
-        if (_body is not null)
-        {
-            _body.ContentUnmounted -= OnBodyUnmounted;
-        }
+        _body?.ContentUnmounted -= OnBodyUnmounted;
         var scope = e.NameScope;
         _toggle = scope.Find<ToolCallHeadButton>(TogglePart);
         _head = scope.Find<ToolCallHeadPanel>(HeadPart);
@@ -326,10 +320,7 @@ public class ToolCall : TemplatedControl
         }
         foreach (var block in new[] { _summary, _dot, _duration })
         {
-            if (block is not null)
-            {
-                block.FontFeatures = ToolCallBodyBuilder.TabularNumbers;
-            }
+            block?.FontFeatures = ToolCallBodyBuilder.TabularNumbers;
         }
         if (_toggle is not null)
         {
@@ -339,10 +330,7 @@ public class ToolCall : TemplatedControl
         }
         foreach (var button in new[] { _retry, _deny, _allow })
         {
-            if (button is not null)
-            {
-                button.Click += OnActionClick;
-            }
+            button?.Click += OnActionClick;
         }
         if (_body is not null)
         {
@@ -379,10 +367,7 @@ public class ToolCall : TemplatedControl
         {
             var open = change.GetNewValue<bool>();
             PseudoClasses.Set(ExpandedPseudoClass, open);
-            if (_toggle is not null)
-            {
-                _toggle.IsExpanded = open;
-            }
+            _toggle?.IsExpanded = open;
             if (_body is not null)
             {
                 if (open)
@@ -568,10 +553,7 @@ public class ToolCall : TemplatedControl
             {
                 SetText(_summary, summary);
                 SetText(_duration, duration);
-                if (_dot is not null)
-                {
-                    _dot.IsVisible = summary is not null && duration is not null;
-                }
+                _dot?.IsVisible = summary is not null && duration is not null;
             }
             _head.SetShown(ToolCallHeadSlot.Meta, hasMeta, animate);
             if (ToolCallFormat.ShowsActions(status))
@@ -580,10 +562,7 @@ public class ToolCall : TemplatedControl
                 SetAction(_retry, status == ToolCallStatus.Error, labels.Retry, title, labels);
                 SetAction(_deny, status == ToolCallStatus.Approval, labels.Deny, title, labels);
                 SetAction(_allow, status == ToolCallStatus.Approval, labels.Allow, title, labels);
-                if (_retryLabel is not null)
-                {
-                    _retryLabel.Text = labels.Retry;
-                }
+                _retryLabel?.Text = labels.Retry;
                 if (_deny is not null && !Equals(_deny.Content, labels.Deny))
                 {
                     _deny.Content = labels.Deny;

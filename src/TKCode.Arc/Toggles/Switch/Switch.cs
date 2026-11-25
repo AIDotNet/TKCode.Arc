@@ -67,10 +67,7 @@ public class Switch : ToggleButton
         // would never resolve and the thumb would stay at the off position.
         _thumbOffset = new TranslateTransform(ThumbOffset, 0);
         var thumbHost = e.NameScope.Find<Panel>("PART_ThumbHost");
-        if (thumbHost is not null)
-        {
-            thumbHost.RenderTransform = _thumbOffset;
-        }
+        thumbHost?.RenderTransform = _thumbOffset;
         _thumb = e.NameScope.Find<Border>("PART_Thumb");
         // The stretch (a scale transform and its motion value) is built on the first keyboard or code toggle: most
         // switches are only ever pressed, and a new template starts it over.

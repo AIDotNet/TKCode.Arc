@@ -91,14 +91,8 @@ public partial class SiteHeader
             _sheetExiting = false;
             _sheetGeneration++;
             _sheet.IsHitTestVisible = true;
-            if (_scrim is not null)
-            {
-                _scrim.IsHitTestVisible = true;
-            }
-            if (_sheetBox is not null)
-            {
-                _sheetBox.IsOpen = true;
-            }
+            _scrim?.IsHitTestVisible = true;
+            _sheetBox?.IsOpen = true;
             FadeScrim(1);
             return;
         }
@@ -186,10 +180,7 @@ public partial class SiteHeader
         _sheetExiting = true;
         _sheetGeneration++;
         _sheet.IsHitTestVisible = false;
-        if (_scrim is not null)
-        {
-            _scrim.IsHitTestVisible = false;
-        }
+        _scrim?.IsHitTestVisible = false;
         FadeScrim(0);
         if (_sheetBox.CurrentHeight <= 0.5 && !_sheetBox.IsMoving)
         {
@@ -221,10 +212,7 @@ public partial class SiteHeader
                 _sheetLayer.Children.Remove(_scrim);
             }
         }
-        if (_sheetBox is not null)
-        {
-            _sheetBox.Arrived -= OnSheetArrived;
-        }
+        _sheetBox?.Arrived -= OnSheetArrived;
         _sheet = null;
         _sheetBox = null;
         _scrim = null;
@@ -244,14 +232,8 @@ public partial class SiteHeader
             return;
         }
         var height = ViewportHeight();
-        if (_sheetLayer is not null)
-        {
-            _sheetLayer.ScrimHeight = height;
-        }
-        if (_sheetScroll is not null)
-        {
-            _sheetScroll.MaxHeight = Math.Max(0, height - 65);
-        }
+        _sheetLayer?.ScrimHeight = height;
+        _sheetScroll?.MaxHeight = Math.Max(0, height - 65);
     }
 
     private void RebuildSheet()

@@ -10,7 +10,6 @@ public abstract class Camera : Object3D
     private bool _projectionDirty = true;
     private float _near;
     private float _far;
-    private float _zoom = 1f;
 
     private protected Camera(float near, float far)
     {
@@ -43,13 +42,13 @@ public abstract class Camera : Object3D
     /// <summary>Magnification; 2 shows half as much.</summary>
     public float Zoom
     {
-        get => _zoom;
+        get;
         set
         {
-            _zoom = MathF.Max(value, 1e-6f);
+            field = MathF.Max(value, 1e-6f);
             _projectionDirty = true;
         }
-    }
+    } = 1f;
 
     /// <summary>True for orthographic cameras.</summary>
     public abstract bool IsOrthographic { get; }

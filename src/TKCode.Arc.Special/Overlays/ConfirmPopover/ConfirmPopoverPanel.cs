@@ -78,24 +78,12 @@ internal sealed class ConfirmPopoverPanel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.Click -= OnConfirmClick;
-        }
+        _cancel?.Click -= OnCancelClick;
+        _confirm?.Click -= OnConfirmClick;
         _cancel = e.NameScope.Find<Button>(CancelPart);
         _confirm = e.NameScope.Find<Button>(ConfirmPart);
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.Click += OnConfirmClick;
-        }
+        _cancel?.Click += OnCancelClick;
+        _confirm?.Click += OnConfirmClick;
         UpdateButtons();
     }
 
@@ -135,10 +123,7 @@ internal sealed class ConfirmPopoverPanel : TemplatedControl
             // "Delete: Delete this comment?" reads the action with its question.
             AutomationProperties.SetHelpText(_confirm, Title ?? string.Empty);
         }
-        if (_cancel is not null)
-        {
-            _cancel.IsEnabled = !_busy;
-        }
+        _cancel?.IsEnabled = !_busy;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

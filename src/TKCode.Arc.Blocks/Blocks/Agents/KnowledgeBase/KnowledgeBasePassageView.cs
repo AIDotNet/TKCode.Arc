@@ -82,26 +82,11 @@ internal sealed class KnowledgeBasePassageView : AvaloniaButton
             return;
         }
         var score = passage.Score.ToString("0.00", _culture);
-        if (_rank is not null)
-        {
-            _rank.Text = _rankValue.ToString(_culture);
-        }
-        if (_documentName is not null)
-        {
-            _documentName.Text = passage.Document.Name;
-        }
-        if (_chunk is not null)
-        {
-            _chunk.Text = _labels.ChunkNumber(passage.ChunkIndex + 1);
-        }
-        if (_score is not null)
-        {
-            _score.Text = score;
-        }
-        if (_scoreBar is not null)
-        {
-            _scoreBar.Value = passage.Score;
-        }
+        _rank?.Text = _rankValue.ToString(_culture);
+        _documentName?.Text = passage.Document.Name;
+        _chunk?.Text = _labels.ChunkNumber(passage.ChunkIndex + 1);
+        _score?.Text = score;
+        _scoreBar?.Value = passage.Score;
         _text?.SetMarks(_preview, _ranges);
         AutomationProperties.SetName(this, _labels.PassageName(_rankValue, passage.Document.Name, score, _preview));
     }

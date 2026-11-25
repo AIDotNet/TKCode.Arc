@@ -192,10 +192,7 @@ internal sealed class MacSurfacePresenter : ViewportPresenter
 
     public override void Arrange(Size finalSize)
     {
-        if (_visual is not null)
-        {
-            _visual.Size = new Vector(finalSize.Width, finalSize.Height);
-        }
+        _visual?.Size = new Vector(finalSize.Width, finalSize.Height);
     }
 
     private void OnFrame(TimeSpan time)

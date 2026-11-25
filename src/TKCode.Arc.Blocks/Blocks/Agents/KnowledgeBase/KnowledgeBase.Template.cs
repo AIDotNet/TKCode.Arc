@@ -149,10 +149,7 @@ public partial class KnowledgeBase
         _announcer = Find<AiAnnouncer>(AnnouncerPart);
         _passageViews.Clear();
 
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
+        _add?.Click += OnAddClick;
         if (_card is not null)
         {
             DragDrop.SetAllowDrop(_card, true);
@@ -185,10 +182,7 @@ public partial class KnowledgeBase
 
     private void Unhook()
     {
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
+        _add?.Click -= OnAddClick;
         if (_card is not null)
         {
             _card.RemoveHandler(DragDrop.DragEnterEvent, OnDragEnter);
@@ -196,10 +190,7 @@ public partial class KnowledgeBase
             _card.RemoveHandler(DragDrop.DragLeaveEvent, OnDragLeave);
             _card.RemoveHandler(DragDrop.DropEvent, OnDrop);
         }
-        if (_list is not null)
-        {
-            _list.ItemsSource = null;
-        }
+        _list?.ItemsSource = null;
         if (_search is not null)
         {
             _search.TextChanged -= OnSearchTextChanged;
@@ -400,10 +391,7 @@ public partial class KnowledgeBase
     private void OnItemsReplaced()
     {
         ObserveSource();
-        if (_list is not null)
-        {
-            _list.ItemsSource = Items;
-        }
+        _list?.ItemsSource = Items;
         Rewatch();
         EnqueueWaiting();
         Pump();

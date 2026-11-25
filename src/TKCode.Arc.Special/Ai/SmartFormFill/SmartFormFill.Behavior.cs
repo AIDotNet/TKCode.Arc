@@ -148,36 +148,18 @@ public partial class SmartFormFill
         _undo = e.NameScope.Find<AvaloniaButton>(UndoPart);
         _submit = e.NameScope.Find<AvaloniaButton>(SubmitPart);
 
-        if (_source is not null)
-        {
-            _source.Text = Text;
-        }
+        _source?.Text = Text;
         if (_editor is not null)
         {
             _editor.Text = Text;
             _editor.TextChanged += OnEditorTextChanged;
             _editor.PastingFromClipboard += OnEditorPasting;
         }
-        if (_sample is not null)
-        {
-            _sample.Click += OnSampleClick;
-        }
-        if (_fill is not null)
-        {
-            _fill.Click += OnFillClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click += OnEditClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click += OnUndoClick;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
+        _sample?.Click += OnSampleClick;
+        _fill?.Click += OnFillClick;
+        _edit?.Click += OnEditClick;
+        _undo?.Click += OnUndoClick;
+        _submit?.Click += OnSubmitClick;
         if (_sourceScroll is not null)
         {
             _sourceScroll.GotFocus += OnSourceFocus;
@@ -203,26 +185,11 @@ public partial class SmartFormFill
             _editor.TextChanged -= OnEditorTextChanged;
             _editor.PastingFromClipboard -= OnEditorPasting;
         }
-        if (_sample is not null)
-        {
-            _sample.Click -= OnSampleClick;
-        }
-        if (_fill is not null)
-        {
-            _fill.Click -= OnFillClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click -= OnEditClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndoClick;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
+        _sample?.Click -= OnSampleClick;
+        _fill?.Click -= OnFillClick;
+        _edit?.Click -= OnEditClick;
+        _undo?.Click -= OnUndoClick;
+        _submit?.Click -= OnSubmitClick;
         if (_sourceScroll is not null)
         {
             _sourceScroll.GotFocus -= OnSourceFocus;
@@ -233,18 +200,12 @@ public partial class SmartFormFill
     /// <summary>The pasted text view is a focusable region; keyboard focus draws the ring around it, pointer focus does not.</summary>
     private void OnSourceFocus(object? sender, FocusChangedEventArgs e)
     {
-        if (_sourceFocus is not null)
-        {
-            _sourceFocus.IsVisible = _showingSource && (e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional);
-        }
+        _sourceFocus?.IsVisible = _showingSource && (e.NavigationMethod is NavigationMethod.Tab or NavigationMethod.Directional);
     }
 
     private void OnSourceBlur(object? sender, RoutedEventArgs e)
     {
-        if (_sourceFocus is not null)
-        {
-            _sourceFocus.IsVisible = false;
-        }
+        _sourceFocus?.IsVisible = false;
     }
 
     /// <inheritdoc />
@@ -982,10 +943,7 @@ public partial class SmartFormFill
             _editor.Text = text;
             _syncingText = false;
         }
-        if (_source is not null)
-        {
-            _source.Text = text;
-        }
+        _source?.Text = text;
         if (_showingSource && text != _readText && Phase != SmartFormFillPhase.Reading)
         {
             ClearHighlights();
@@ -1053,10 +1011,7 @@ public partial class SmartFormFill
             _modelName.Text = labels.ReadBy(modelName);
             _modelName.IsVisible = modelName.Length > 0;
         }
-        if (_wellHeading is not null)
-        {
-            _wellHeading.Text = labels.PasteHeading;
-        }
+        _wellHeading?.Text = labels.PasteHeading;
         if (_editor is not null)
         {
             _editor.Label = labels.PastedText;

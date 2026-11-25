@@ -189,19 +189,10 @@ public partial class GenerationStats
 
         foreach (var details in new[] { _card.Details, _inline.Details })
         {
-            if (details is not null)
-            {
-                details.Click += OnDetailsClick;
-            }
+            details?.Click += OnDetailsClick;
         }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_copy is not null)
-        {
-            _copy.Click += OnCopyClick;
-        }
+        _retry?.Click += OnRetryClick;
+        _copy?.Click += OnCopyClick;
         if (_table is not null)
         {
             _table.Children.Clear();
@@ -228,19 +219,10 @@ public partial class GenerationStats
     {
         foreach (var details in new[] { _card.Details, _inline.Details })
         {
-            if (details is not null)
-            {
-                details.Click -= OnDetailsClick;
-            }
+            details?.Click -= OnDetailsClick;
         }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_copy is not null)
-        {
-            _copy.Click -= OnCopyClick;
-        }
+        _retry?.Click -= OnRetryClick;
+        _copy?.Click -= OnCopyClick;
     }
 
     /// <summary>
@@ -480,31 +462,16 @@ public partial class GenerationStats
             _outputLabel!.Text = labels.Output;
             _costLabel!.Text = labels.Cost;
         }
-        if (_inlineTtftUnit is not null)
-        {
-            _inlineTtftUnit.Text = labels.ToFirstToken;
-        }
-        if (_inlineOutputUnit is not null)
-        {
-            _inlineOutputUnit.Text = labels.TokensUnit;
-        }
+        _inlineTtftUnit?.Text = labels.ToFirstToken;
+        _inlineOutputUnit?.Text = labels.TokensUnit;
         UpdateCellNames(readout);
         _sparkline?.SetSamples(DisplayedSamples);
-        if (_cells is not null)
-        {
-            _cells.IsGrid = _narrow;
-        }
-        if (_cellLines is not null)
-        {
-            _cellLines.IsGrid = _narrow;
-        }
+        _cells?.IsGrid = _narrow;
+        _cellLines?.IsGrid = _narrow;
 
         // The error row.
         var failed = readout.Status == GenerationStatus.Error;
-        if (_errorText is not null)
-        {
-            _errorText.Text = string.IsNullOrWhiteSpace(readout.Error) ? labels.DefaultError : readout.Error;
-        }
+        _errorText?.Text = string.IsNullOrWhiteSpace(readout.Error) ? labels.DefaultError : readout.Error;
         if (_retry is not null)
         {
             _retry.Content = labels.Retry;
@@ -634,10 +601,7 @@ public partial class GenerationStats
         var total = readout.TotalMs;
         double? generation = ttft is { } f && total is { } t && !readout.TtftLive ? Math.Max(0, t - f) : null;
         string Text(double? ms) => ms is { } v ? GenerationStatsFormat.LatencyText(v) : labels.NoValue;
-        if (_latencyHeading is not null)
-        {
-            _latencyHeading.Text = labels.Latency;
-        }
+        _latencyHeading?.Text = labels.Latency;
         SetText(_latencyFirst, labels.LatencyFirstToken + " " + Text(ttft));
         SetText(_latencyGeneration, labels.Generation + " " + Text(generation));
         SetText(_latencyTotal, labels.Total + " " + Text(total));
@@ -657,10 +621,7 @@ public partial class GenerationStats
     {
         var labels = Labels;
         UpdateLatency(readout);
-        if (_tableCaption is not null)
-        {
-            _tableCaption.Text = labels.TokenUsage;
-        }
+        _tableCaption?.Text = labels.TokenUsage;
         var usage = readout.Usage;
         var pricing = readout.Pricing;
         var costs = GenerationStatsFormat.CostRows(usage, pricing, usage.CostUsd);

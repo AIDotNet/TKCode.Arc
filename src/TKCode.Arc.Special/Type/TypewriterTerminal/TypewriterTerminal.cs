@@ -105,7 +105,6 @@ public class TypewriterTerminal : TemplatedControl
     private TypewriterTerminalScreen? _screen;
     private AvaloniaButton? _replay;
     private bool _isPlaying;
-    private bool _isFinished;
     private bool _scriptDirty = true;
     private bool _caretShown = true;
     private double _blink;
@@ -229,8 +228,8 @@ public class TypewriterTerminal : TemplatedControl
     /// <inheritdoc cref="IsFinishedProperty"/>
     public bool IsFinished
     {
-        get => _isFinished;
-        private set => SetAndRaise(IsFinishedProperty, ref _isFinished, value);
+        get;
+        private set => SetAndRaise(IsFinishedProperty, ref field, value);
     }
 
     /// <summary>The number of lines that are complete.</summary>
@@ -328,14 +327,8 @@ public class TypewriterTerminal : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_screen is not null)
-        {
-            _screen.Owner = null;
-        }
-        if (_replay is not null)
-        {
-            _replay.Click -= OnReplayClick;
-        }
+        _screen?.Owner = null;
+        _replay?.Click -= OnReplayClick;
         _screen = e.NameScope.Find<TypewriterTerminalScreen>(ScreenPart);
         _replay = e.NameScope.Find<AvaloniaButton>(ReplayPart);
         if (_screen is not null)
@@ -343,10 +336,7 @@ public class TypewriterTerminal : TemplatedControl
             _screen.Owner = this;
             _screen.Reset();
         }
-        if (_replay is not null)
-        {
-            _replay.Click += OnReplayClick;
-        }
+        _replay?.Click += OnReplayClick;
         _focusRing ??= new LazyFocusRing(this, TypewriterTerminalTokens.Key(TypewriterTerminalTokenKind.FocusRingMargin),
             ArcDesignTokens.Key(ArcDesignTokenKind.RadiusSurface));
         _focusRing.Attach(e.NameScope.Find<Panel>(RootPart));
@@ -542,10 +532,7 @@ public class TypewriterTerminal : TemplatedControl
         IsFinished = finished;
         PseudoClasses.Set(FinishedPseudoClass, finished);
         PseudoClasses.Set(PlayingPseudoClass, IsPlaying);
-        if (_replay is not null)
-        {
-            _replay.IsVisible = finished && ShowsReplay && !IsLooping;
-        }
+        _replay?.IsVisible = finished && ShowsReplay && !IsLooping;
     }
 
     private bool _scriptLoaded;

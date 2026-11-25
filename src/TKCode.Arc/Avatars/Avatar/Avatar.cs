@@ -219,13 +219,12 @@ public class Avatar : TemplatedControl
     /// <inheritdoc cref="StatusProperty"/>
     public AvatarStatus Status { get => GetValue(StatusProperty); set => SetValue(StatusProperty, value); }
 
-    private string _initials = string.Empty;
     /// <inheritdoc cref="InitialsProperty"/>
     public string Initials
     {
-        get => _initials;
-        private set => SetAndRaise(InitialsProperty, ref _initials, value);
-    }
+        get;
+        private set => SetAndRaise(InitialsProperty, ref field, value);
+    } = string.Empty;
 
     private bool _hasStatus;
     internal bool HasStatus
@@ -293,15 +292,9 @@ public class Avatar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_image is not null)
-        {
-            _image.PropertyChanged -= OnImagePropertyChanged;
-        }
+        _image?.PropertyChanged -= OnImagePropertyChanged;
         _image = e.NameScope.Find<ArcImage>(ImagePart);
-        if (_image is not null)
-        {
-            _image.PropertyChanged += OnImagePropertyChanged;
-        }
+        _image?.PropertyChanged += OnImagePropertyChanged;
         UpdateImageState(initial: true);
         // The old template's status dot went with it.
         _root = VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null;

@@ -201,7 +201,6 @@ public partial class LoginImmersive : TemplatedControl
         RoutedEvent.Register<LoginImmersive, LoginImmersiveNavigateEventArgs>(nameof(Navigate), RoutingStrategies.Bubble);
 
     private readonly AvaloniaList<LoginImmersiveProvider> _providers = new();
-    private LoginImmersiveStep _step;
     private string? _account;
     private LoginImmersiveMethod _method;
     private LoginImmersiveProvider? _provider;
@@ -267,8 +266,8 @@ public partial class LoginImmersive : TemplatedControl
     /// <inheritdoc cref="StepProperty"/>
     public LoginImmersiveStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="AccountProperty"/>

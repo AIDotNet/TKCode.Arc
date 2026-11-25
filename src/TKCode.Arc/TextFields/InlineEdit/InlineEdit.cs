@@ -217,13 +217,12 @@ public class InlineEdit : TemplatedControl
     /// <inheritdoc cref="LabelsProperty"/>
     public InlineEditLabels Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
 
-    private bool _isEditing;
 
     /// <summary>True while the field is open.</summary>
     public bool IsEditing
     {
-        get => _isEditing;
-        private set => SetAndRaise(IsEditingProperty, ref _isEditing, value);
+        get;
+        private set => SetAndRaise(IsEditingProperty, ref field, value);
     }
 
     private InlineEditPhase _phase;
@@ -444,10 +443,7 @@ public class InlineEdit : TemplatedControl
         {
             text = PlaceholderText.Length > 0 ? PlaceholderText : "​";
         }
-        if (_box is not null)
-        {
-            _box.PendingCause = cause;
-        }
+        _box?.PendingCause = cause;
         if (roll is { } direction)
         {
             _text.Direction = direction;
@@ -744,10 +740,7 @@ public class InlineEdit : TemplatedControl
     {
         IsEditing = false;
         PseudoClasses.Set(EditingPseudoClass, false);
-        if (_editor is not null)
-        {
-            _editor.IsVisible = false;
-        }
+        _editor?.IsVisible = false;
         UpdateSlot();
         UpdateMessage();
         if (focusDisplay)
@@ -773,10 +766,7 @@ public class InlineEdit : TemplatedControl
 
     private void Announce(string text)
     {
-        if (_status is not null)
-        {
-            _status.Text = text;
-        }
+        _status?.Text = text;
     }
 
     private static readonly Cursor s_handCursor = new(StandardCursorType.Hand);

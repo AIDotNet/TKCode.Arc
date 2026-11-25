@@ -244,10 +244,7 @@ internal sealed class ChangelogEntryView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_row is not null)
-        {
-            _row.Click -= OnRowClick;
-        }
+        _row?.Click -= OnRowClick;
         _row = e.NameScope.Find<ChangelogRowButton>("PART_Row");
         _panel = e.NameScope.Find<BlockCollapse>("PART_Panel");
         var entry = Entry;
@@ -625,10 +622,7 @@ internal sealed class ChangelogSubscribe : TemplatedControl
     public void SetCompact(bool compact)
     {
         PseudoClasses.Set(":compact", compact);
-        if (_input is not null)
-        {
-            _input.Width = compact ? 172 : 188;
-        }
+        _input?.Width = compact ? 172 : 188;
         if (_noteHost?.Parent is ChangelogHangingNote note)
         {
             note.AlignsLeft = compact;

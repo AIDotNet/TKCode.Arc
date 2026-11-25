@@ -150,10 +150,7 @@ internal sealed class MoneyInputCurrencyButton : MoneyInputPressable
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_chevron is not null)
-        {
-            _chevron.RenderTransform = null;
-        }
+        _chevron?.RenderTransform = null;
         _chevron = e.NameScope.Find<Control>(ChevronPart);
         if (_chevron is not null)
         {

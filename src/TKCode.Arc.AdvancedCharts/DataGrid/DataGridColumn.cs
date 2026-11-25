@@ -302,15 +302,9 @@ public class DataGridColumn : AvaloniaObject
         {
             return;
         }
-        if (_followedRenderer is not null)
-        {
-            _followedRenderer.Changed -= OnDefinitionChanged;
-        }
+        _followedRenderer?.Changed -= OnDefinitionChanged;
         _followedRenderer = renderer;
-        if (renderer is not null)
-        {
-            renderer.Changed += OnDefinitionChanged;
-        }
+        renderer?.Changed += OnDefinitionChanged;
     }
 
     private void OnDefinitionChanged()

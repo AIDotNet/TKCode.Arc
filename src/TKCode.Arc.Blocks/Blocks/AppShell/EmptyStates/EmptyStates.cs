@@ -274,10 +274,7 @@ public class EmptyStates : TemplatedControl
         {
             _syncing = false;
         }
-        if (_tabs is not null)
-        {
-            _tabs.SelectedIndex = index;
-        }
+        _tabs?.SelectedIndex = index;
         if (changed)
         {
             _announcer?.Announce(null);
@@ -434,14 +431,8 @@ public class EmptyStates : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_tabs is not null)
-        {
-            _tabs.Invoked = null;
-        }
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _tabs?.Invoked = null;
+        _action?.Click -= OnActionClick;
         _tabs = e.NameScope.Find<EmptyStatesTabPanel>(TabsPart);
         _art = e.NameScope.Find<EmptyStatesArt>(ArtPart);
         _copyFrame = e.NameScope.Find<EmptyStatesCopyFrame>(CopyFramePart);
@@ -455,10 +446,7 @@ public class EmptyStates : TemplatedControl
             _tabs.SelectedIndex = _ready ? SelectedIndex : -1;
             ApplyDensity(Bounds.Width);
         }
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _action?.Click += OnActionClick;
         Update();
     }
 

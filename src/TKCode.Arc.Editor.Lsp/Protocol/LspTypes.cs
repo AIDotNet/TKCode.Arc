@@ -2,9 +2,11 @@
 // that this client sends or reads: base types, lifecycle, document sync, diagnostics, window and workspace messages.
 // Written for this package. Conventions:
 //  - names carry an Lsp prefix where the engine has a type of the same name (LspRange next to TextRange);
-//  - a union the source generator cannot express (string | MarkupContent, Location | Location[] | LocationLink[], ...)
-//    is a JsonElement that LspConvert reads; values the client sends back untouched (data, a diagnostic, an item to
-//    resolve) are kept as JsonElement too;
+//  - protocol unions (string | MarkupContent, Location | Location[] | LocationLink[], TextEdit | InsertReplaceEdit, ...)
+//    are C# 15 union types in LspUnions.cs; values the client sends back untouched (data, a diagnostic, an item to
+//    resolve) remain JsonElement;
+//  - DTOs are plain sealed classes unless value equality or `with` cloning is needed, avoiding unused record-synthesized
+//    methods in the compiled assembly;
 //  - properties are camelCase and omitted when null (LspJsonContext); the few the specification requires as null are
 //    marked JsonIgnoreCondition.Never.
 
@@ -17,49 +19,129 @@ internal sealed record LspPosition(int Line, int Character);
 
 internal sealed record LspRange(LspPosition Start, LspPosition End);
 
-internal sealed record LspLocation(string Uri, LspRange Range);
-
-internal sealed record LspLocationLink(string TargetUri, LspRange TargetRange, LspRange TargetSelectionRange)
+internal sealed class LspLocation(string uri, LspRange range)
 {
+    public string Uri { get; } = uri;
+
+    public LspRange Range { get; } = range;
+}
+
+internal sealed class LspLocationLink(string targetUri, LspRange targetRange, LspRange targetSelectionRange)
+{
+    public string TargetUri { get; } = targetUri;
+
+    public LspRange TargetRange { get; } = targetRange;
+
+    public LspRange TargetSelectionRange { get; } = targetSelectionRange;
+
     public LspRange? OriginSelectionRange { get; init; }
 }
 
-internal sealed record LspTextEdit(LspRange Range, string NewText);
-
-internal sealed record LspInsertReplaceEdit(string NewText, LspRange Insert, LspRange Replace);
-
-internal sealed record LspCommand(string Title, string Command)
+internal sealed class LspTextEdit(LspRange range, string newText)
 {
+    public LspRange Range { get; } = range;
+
+    public string NewText { get; } = newText;
+}
+
+internal sealed class LspInsertReplaceEdit(string newText, LspRange insert, LspRange replace)
+{
+    public string NewText { get; } = newText;
+
+    public LspRange Insert { get; } = insert;
+
+    public LspRange Replace { get; } = replace;
+}
+
+internal sealed class LspInsertReplaceRange(LspRange insert, LspRange replace)
+{
+    public LspRange Insert { get; } = insert;
+
+    public LspRange Replace { get; } = replace;
+}
+
+internal sealed class LspCommand(string title, string command)
+{
+    public string Title { get; } = title;
+
+    public string Command { get; } = command;
+
     public JsonElement[]? Arguments { get; init; }
 }
 
-internal sealed record LspMarkupContent(string Kind, string Value);
-
-internal sealed record TextDocumentIdentifier(string Uri);
-
-internal sealed record VersionedTextDocumentIdentifier(string Uri, int Version);
-
-internal sealed record OptionalVersionedTextDocumentIdentifier(string Uri)
+internal sealed class LspMarkupContent(string kind, string value)
 {
+    public string Kind { get; } = kind;
+
+    public string Value { get; } = value;
+}
+
+internal sealed class LspMarkedStringObject(string language, string value)
+{
+    public string Language { get; } = language;
+
+    public string Value { get; } = value;
+}
+
+internal sealed class TextDocumentIdentifier(string uri)
+{
+    public string Uri { get; } = uri;
+}
+
+internal sealed class VersionedTextDocumentIdentifier(string uri, int version)
+{
+    public string Uri { get; } = uri;
+
+    public int Version { get; } = version;
+}
+
+internal sealed class OptionalVersionedTextDocumentIdentifier(string uri)
+{
+    public string Uri { get; } = uri;
+
     public int? Version { get; init; }
 }
 
-internal sealed record TextDocumentItem(string Uri, string LanguageId, int Version, string Text);
+internal sealed class TextDocumentItem(string uri, string languageId, int version, string text)
+{
+    public string Uri { get; } = uri;
 
-internal sealed record TextDocumentPositionParams(TextDocumentIdentifier TextDocument, LspPosition Position);
+    public string LanguageId { get; } = languageId;
 
-internal sealed record TextDocumentParams(TextDocumentIdentifier TextDocument);
+    public int Version { get; } = version;
+
+    public string Text { get; } = text;
+}
+
+internal sealed class TextDocumentPositionParams(TextDocumentIdentifier textDocument, LspPosition position)
+{
+    public TextDocumentIdentifier TextDocument { get; } = textDocument;
+
+    public LspPosition Position { get; } = position;
+}
+
+internal sealed class TextDocumentParams(TextDocumentIdentifier textDocument)
+{
+    public TextDocumentIdentifier TextDocument { get; } = textDocument;
+}
 
 // ---- lifecycle ----
 
-internal sealed record ClientInfo(string Name)
+internal sealed class ClientInfo(string name)
 {
+    public string Name { get; } = name;
+
     public string? Version { get; init; }
 }
 
-internal sealed record WorkspaceFolder(string Uri, string Name);
+internal sealed class WorkspaceFolder(string uri, string name)
+{
+    public string Uri { get; } = uri;
 
-internal sealed record InitializeParams
+    public string Name { get; } = name;
+}
+
+internal sealed class InitializeParams
 {
     [JsonIgnore(Condition = JsonIgnoreCondition.Never)]
     public int? ProcessId { get; init; }
@@ -83,46 +165,73 @@ internal sealed record InitializeParams
     public WorkspaceFolder[]? WorkspaceFolders { get; init; }
 }
 
-internal sealed record ServerInfo(string Name)
+internal sealed class ServerInfo(string name)
 {
+    public string Name { get; } = name;
+
     public string? Version { get; init; }
 }
 
-internal sealed record InitializeResult
+internal sealed class InitializeResult
 {
     public JsonElement Capabilities { get; init; }
 
     public ServerInfo? ServerInfo { get; init; }
 }
 
-internal sealed record InitializedParams;
+internal sealed class InitializedParams;
 
 // ---- document sync ----
 
-internal sealed record DidOpenTextDocumentParams(TextDocumentItem TextDocument);
-
-internal sealed record TextDocumentContentChangeEvent(string Text)
+internal sealed class DidOpenTextDocumentParams(TextDocumentItem textDocument)
 {
+    public TextDocumentItem TextDocument { get; } = textDocument;
+}
+
+internal sealed class TextDocumentContentChangeEvent(string text)
+{
+    public string Text { get; } = text;
+
     public LspRange? Range { get; init; }
 
     public int? RangeLength { get; init; }
 }
 
-internal sealed record DidChangeTextDocumentParams(VersionedTextDocumentIdentifier TextDocument, TextDocumentContentChangeEvent[] ContentChanges);
+internal sealed class DidChangeTextDocumentParams(VersionedTextDocumentIdentifier textDocument, TextDocumentContentChangeEvent[] contentChanges)
+{
+    public VersionedTextDocumentIdentifier TextDocument { get; } = textDocument;
 
-internal sealed record DidCloseTextDocumentParams(TextDocumentIdentifier TextDocument);
+    public TextDocumentContentChangeEvent[] ContentChanges { get; } = contentChanges;
+}
+
+internal sealed class DidCloseTextDocumentParams(TextDocumentIdentifier textDocument)
+{
+    public TextDocumentIdentifier TextDocument { get; } = textDocument;
+}
 
 // ---- diagnostics ----
 
-internal sealed record LspCodeDescription(string Href);
-
-internal sealed record LspDiagnosticRelatedInformation(LspLocation Location, string Message);
-
-internal sealed record LspDiagnostic(LspRange Range, string Message)
+internal sealed class LspCodeDescription(string href)
 {
+    public string Href { get; } = href;
+}
+
+internal sealed class LspDiagnosticRelatedInformation(LspLocation location, string message)
+{
+    public LspLocation Location { get; } = location;
+
+    public string Message { get; } = message;
+}
+
+internal sealed class LspDiagnostic(LspRange range, string message)
+{
+    public LspRange Range { get; } = range;
+
+    public string Message { get; } = message;
+
     public int? Severity { get; init; }
 
-    public JsonElement? Code { get; init; }
+    public LspDiagnosticCode? Code { get; init; }
 
     public LspCodeDescription? CodeDescription { get; init; }
 
@@ -135,58 +244,98 @@ internal sealed record LspDiagnostic(LspRange Range, string Message)
     public JsonElement? Data { get; init; }
 }
 
-internal sealed record PublishDiagnosticsParams(string Uri, LspDiagnostic[] Diagnostics)
+internal sealed class PublishDiagnosticsParams(string uri, LspDiagnostic[] diagnostics)
 {
+    public string Uri { get; } = uri;
+
+    public LspDiagnostic[] Diagnostics { get; } = diagnostics;
+
     public int? Version { get; init; }
 }
 
 // ---- window ----
 
-internal sealed record ShowMessageParams(int Type, string Message);
-
-internal sealed record MessageActionItem(string Title);
-
-internal sealed record ShowMessageRequestParams(int Type, string Message)
+internal sealed class ShowMessageParams(int type, string message)
 {
+    public int Type { get; } = type;
+
+    public string Message { get; } = message;
+}
+
+internal sealed class MessageActionItem(string title)
+{
+    public string Title { get; } = title;
+}
+
+internal sealed class ShowMessageRequestParams(int type, string message)
+{
+    public int Type { get; } = type;
+
+    public string Message { get; } = message;
+
     public MessageActionItem[]? Actions { get; init; }
 }
 
 // ---- workspace ----
 
-internal sealed record LspWorkspaceEdit
+internal sealed class LspWorkspaceEdit
 {
     public Dictionary<string, LspTextEdit[]>? Changes { get; init; }
 
-    /// <summary>(TextDocumentEdit | CreateFile | RenameFile | DeleteFile)[], read by LspConvert.</summary>
-    public JsonElement? DocumentChanges { get; init; }
+    /// <summary>(TextDocumentEdit | CreateFile | RenameFile | DeleteFile)[].</summary>
+    public LspDocumentChange[]? DocumentChanges { get; init; }
 }
 
-internal sealed record LspTextDocumentEdit(OptionalVersionedTextDocumentIdentifier TextDocument, LspTextEdit[] Edits);
-
-internal sealed record ApplyWorkspaceEditParams(LspWorkspaceEdit Edit)
+internal sealed class LspTextDocumentEdit(OptionalVersionedTextDocumentIdentifier textDocument, LspTextEdit[] edits)
 {
+    public OptionalVersionedTextDocumentIdentifier TextDocument { get; } = textDocument;
+
+    public LspTextEdit[] Edits { get; } = edits;
+}
+
+internal sealed class LspResourceOperationOptions
+{
+    public bool Overwrite { get; init; }
+
+    public bool IgnoreIfExists { get; init; }
+
+    public bool IgnoreIfNotExists { get; init; }
+
+    public bool Recursive { get; init; }
+}
+
+internal sealed class LspResourceOperation(string kind)
+{
+    public string Kind { get; } = kind;
+
+    public string? Uri { get; init; }
+
+    public string? OldUri { get; init; }
+
+    public string? NewUri { get; init; }
+
+    public LspResourceOperationOptions? Options { get; init; }
+}
+
+internal sealed class ApplyWorkspaceEditParams(LspWorkspaceEdit edit)
+{
+    public LspWorkspaceEdit Edit { get; } = edit;
+
     public string? Label { get; init; }
 }
 
-internal sealed record ApplyWorkspaceEditResult(bool Applied)
+internal sealed class ApplyWorkspaceEditResult(bool applied)
 {
+    public bool Applied { get; } = applied;
+
     public string? FailureReason { get; init; }
 
     public int? FailedChange { get; init; }
 }
 
-internal sealed record ConfigurationItem
+internal sealed class ExecuteCommandParams(string command)
 {
-    public string? ScopeUri { get; init; }
+    public string Command { get; } = command;
 
-    public string? Section { get; init; }
-}
-
-internal sealed record ConfigurationParams(ConfigurationItem[] Items);
-
-internal sealed record ExecuteCommandParams(string Command)
-{
     public JsonElement[]? Arguments { get; init; }
 }
-
-internal sealed record CancelParams(int Id);

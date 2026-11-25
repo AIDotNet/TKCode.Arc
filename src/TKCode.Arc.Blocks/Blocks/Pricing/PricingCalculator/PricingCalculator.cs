@@ -553,30 +553,12 @@ public class PricingCalculator : TemplatedControl
         _trial = scope.Find<Button>(TrialPart);
         _announcer = scope.Find<AuthAnnouncer>(AnnouncerPart);
 
-        if (_minus is not null)
-        {
-            _minus.Click += OnMinusClick;
-        }
-        if (_plus is not null)
-        {
-            _plus.Click += OnPlusClick;
-        }
-        if (_slider is not null)
-        {
-            _slider.PropertyChanged += OnSliderPropertyChanged;
-        }
-        if (_billing is not null)
-        {
-            _billing.PropertyChanged += OnBillingPropertyChanged;
-        }
-        if (_switchYearly is not null)
-        {
-            _switchYearly.Click += OnSwitchYearlyClick;
-        }
-        if (_trial is not null)
-        {
-            _trial.Click += OnTrialClick;
-        }
+        _minus?.Click += OnMinusClick;
+        _plus?.Click += OnPlusClick;
+        _slider?.PropertyChanged += OnSliderPropertyChanged;
+        _billing?.PropertyChanged += OnBillingPropertyChanged;
+        _switchYearly?.Click += OnSwitchYearlyClick;
+        _trial?.Click += OnTrialClick;
         if (_plansPanel is not null)
         {
             ArcTokens.Bind(_plansPanel.Frame, GlidingIndicator.StrokeProperty, ArcDesignTokenKind.Accent);
@@ -588,30 +570,12 @@ public class PricingCalculator : TemplatedControl
 
     private void Unhook()
     {
-        if (_minus is not null)
-        {
-            _minus.Click -= OnMinusClick;
-        }
-        if (_plus is not null)
-        {
-            _plus.Click -= OnPlusClick;
-        }
-        if (_slider is not null)
-        {
-            _slider.PropertyChanged -= OnSliderPropertyChanged;
-        }
-        if (_billing is not null)
-        {
-            _billing.PropertyChanged -= OnBillingPropertyChanged;
-        }
-        if (_switchYearly is not null)
-        {
-            _switchYearly.Click -= OnSwitchYearlyClick;
-        }
-        if (_trial is not null)
-        {
-            _trial.Click -= OnTrialClick;
-        }
+        _minus?.Click -= OnMinusClick;
+        _plus?.Click -= OnPlusClick;
+        _slider?.PropertyChanged -= OnSliderPropertyChanged;
+        _billing?.PropertyChanged -= OnBillingPropertyChanged;
+        _switchYearly?.Click -= OnSwitchYearlyClick;
+        _trial?.Click -= OnTrialClick;
         foreach (var card in _cards)
         {
             card.ActionInvoked -= OnCardAction;
@@ -754,14 +718,8 @@ public class PricingCalculator : TemplatedControl
             _plansPanel.IsStacked = stacked;
             _plansPanel.InvalidateMeasure();
         }
-        if (_totalsPanel is not null)
-        {
-            _totalsPanel.Mode = compact ? PricingCalculatorTotalsMode.Column : stacked ? PricingCalculatorTotalsMode.TwoRows : PricingCalculatorTotalsMode.Row;
-        }
-        if (_billing is not null)
-        {
-            _billing.IsUniform = compact;
-        }
+        _totalsPanel?.Mode = compact ? PricingCalculatorTotalsMode.Column : stacked ? PricingCalculatorTotalsMode.TwoRows : PricingCalculatorTotalsMode.Row;
+        _billing?.IsUniform = compact;
         foreach (var card in _cards)
         {
             card.IsCompact = compact;
@@ -771,15 +729,9 @@ public class PricingCalculator : TemplatedControl
 
     private void WatchCollection(ref INotifyCollectionChanged? field, INotifyCollectionChanged? next)
     {
-        if (field is not null)
-        {
-            field.CollectionChanged -= OnPlansCollectionChanged;
-        }
+        field?.CollectionChanged -= OnPlansCollectionChanged;
         field = next;
-        if (field is not null)
-        {
-            field.CollectionChanged += OnPlansCollectionChanged;
-        }
+        field?.CollectionChanged += OnPlansCollectionChanged;
     }
 
     private void OnPlansCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildCards();
@@ -906,10 +858,7 @@ public class PricingCalculator : TemplatedControl
             _seatValue.Culture = culture;
             _seatValue.Value = seats;
         }
-        if (_seatUnit is not null)
-        {
-            _seatUnit.Text = labels.SeatUnit(seats);
-        }
+        _seatUnit?.Text = labels.SeatUnit(seats);
         if (_slider is not null)
         {
             _slider.Maximum = Math.Max(0, stops.Count - 1);
@@ -917,10 +866,7 @@ public class PricingCalculator : TemplatedControl
             AutomationProperties.SetName(_slider, labels.TeamSize);
             AutomationProperties.SetHelpText(_slider, seatCount);
         }
-        if (_teamSize is not null)
-        {
-            _teamSize.Text = labels.TeamSize;
-        }
+        _teamSize?.Text = labels.TeamSize;
         if (_minus is not null)
         {
             AutomationProperties.SetName(_minus, labels.RemoveSeat);
@@ -999,10 +945,7 @@ public class PricingCalculator : TemplatedControl
         {
             var seatPrice = PricingCalculatorMath.SeatPrice(selected, billing, seats, discount);
             var priceText = PricingCalculatorMath.Money(seatPrice, currency, culture);
-            if (_totalsPlan is not null)
-            {
-                _totalsPlan.Text = labels.TotalsPlan(selected.Name, seatCount);
-            }
+            _totalsPlan?.Text = labels.TotalsPlan(selected.Name, seatCount);
             if (_totalDigits is not null)
             {
                 var shape = PricingCalculatorMath.ShapeOf(Total, currency, culture);
@@ -1012,14 +955,8 @@ public class PricingCalculator : TemplatedControl
                 _totalDigits.Decimals = shape.Decimals;
                 _totalDigits.Value = Total;
             }
-            if (_totalUnit is not null)
-            {
-                _totalUnit.Text = billing == PricingCalculatorBilling.Yearly ? labels.PerYear : labels.PerMonthTotal;
-            }
-            if (_rate is not null)
-            {
-                _rate.Text = billing == PricingCalculatorBilling.Yearly ? labels.RateYearly(priceText) : labels.RateMonthly(priceText);
-            }
+            _totalUnit?.Text = billing == PricingCalculatorBilling.Yearly ? labels.PerYear : labels.PerMonthTotal;
+            _rate?.Text = billing == PricingCalculatorBilling.Yearly ? labels.RateYearly(priceText) : labels.RateMonthly(priceText);
             var savingsText = PricingCalculatorMath.Money(YearlySavings, currency, culture);
             if (_savingsAmount is not null)
             {
@@ -1032,14 +969,8 @@ public class PricingCalculator : TemplatedControl
             }
             var format = labels.SavingsFormat;
             var at = format.IndexOf("{0}", StringComparison.Ordinal);
-            if (_savingsBefore is not null)
-            {
-                _savingsBefore.Text = at < 0 ? format : format[..at];
-            }
-            if (_savingsAfter is not null)
-            {
-                _savingsAfter.Text = at < 0 ? string.Empty : format[(at + 3)..];
-            }
+            _savingsBefore?.Text = at < 0 ? format : format[..at];
+            _savingsAfter?.Text = at < 0 ? string.Empty : format[(at + 3)..];
             if (_savingsPanel is not null)
             {
                 _savingsPanel.SelectedIndex = YearlySavings <= 0 ? 2 : billing == PricingCalculatorBilling.Yearly ? 0 : 1;

@@ -105,10 +105,7 @@ internal sealed class TeamMembersEmailField : TemplatedControl
         {
             _isBusy = value;
             PseudoClasses.Set(BusyPseudoClass, value);
-            if (_input is not null)
-            {
-                _input.IsReadOnly = value;
-            }
+            _input?.IsReadOnly = value;
             foreach (var chip in _chips)
             {
                 chip.IsRemoveEnabled = !value;
@@ -227,10 +224,7 @@ internal sealed class TeamMembersEmailField : TemplatedControl
 
     private void UpdatePlaceholder()
     {
-        if (_input is not null)
-        {
-            _input.PlaceholderText = _chips.Count == 0 ? Placeholder : null;
-        }
+        _input?.PlaceholderText = _chips.Count == 0 ? Placeholder : null;
     }
 
     /// <summary>Adds a chip at the end; with <paramref name="animate"/> it pops in and the input slides.</summary>
@@ -538,15 +532,9 @@ internal sealed class TeamMembersChip : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
+        _remove?.Click -= OnRemoveClick;
         _remove = e.NameScope.Find<AvaloniaButton>(RemovePart);
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
+        _remove?.Click += OnRemoveClick;
     }
 
     private void OnRemoveClick(object? sender, RoutedEventArgs e)

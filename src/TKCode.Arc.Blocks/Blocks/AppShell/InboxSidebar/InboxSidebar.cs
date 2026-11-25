@@ -248,14 +248,8 @@ public class InboxSidebar : TemplatedControl
             _sidebar.ItemInvoked -= OnSidebarItemInvoked;
             _sidebar.PropertyChanged -= OnSidebarPropertyChanged;
         }
-        if (_compose is not null)
-        {
-            _compose.Click -= OnComposeClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _compose?.Click -= OnComposeClick;
+        _toggle?.Click -= OnToggleClick;
         base.OnApplyTemplate(e);
         _sidebar = e.NameScope.Find<Sidebar>(SidebarPart);
         _compose = e.NameScope.Find<AvaloniaButton>(ComposeButtonPart);
@@ -273,14 +267,8 @@ public class InboxSidebar : TemplatedControl
             _sidebar.ItemInvoked += OnSidebarItemInvoked;
             _sidebar.PropertyChanged += OnSidebarPropertyChanged;
         }
-        if (_compose is not null)
-        {
-            _compose.Click += OnComposeClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _compose?.Click += OnComposeClick;
+        _toggle?.Click += OnToggleClick;
         UpdateTexts();
         UpdateFooter();
         Rebuild();
@@ -449,10 +437,7 @@ public class InboxSidebar : TemplatedControl
     private void UpdateTexts()
     {
         var labels = Labels;
-        if (_composeText is not null)
-        {
-            _composeText.Text = labels.Compose;
-        }
+        _composeText?.Text = labels.Compose;
         if (_compose is not null)
         {
             AutomationProperties.SetName(_compose, labels.Compose);
@@ -464,10 +449,7 @@ public class InboxSidebar : TemplatedControl
             AutomationProperties.SetName(_toggle, text);
             Tooltip.SetTip(_toggle, text);
         }
-        if (_mailboxName is not null)
-        {
-            _mailboxName.Text = MailboxName;
-        }
+        _mailboxName?.Text = MailboxName;
         if (_sidebar is not null)
         {
             _sidebar.Label = labels.Navigation;
@@ -479,36 +461,21 @@ public class InboxSidebar : TemplatedControl
     {
         var labels = Labels;
         var hasStorage = StorageTotal > 0;
-        if (_storage is not null)
-        {
-            _storage.IsVisible = hasStorage;
-        }
+        _storage?.IsVisible = hasStorage;
         if (hasStorage)
         {
             var culture = labels.Culture;
             var used = Math.Clamp(StorageUsed, 0, StorageTotal);
-            if (_storageText is not null)
-            {
-                _storageText.Text = labels.Storage(used.ToString("0.#", culture), StorageTotal.ToString("0.#", culture));
-            }
+            _storageText?.Text = labels.Storage(used.ToString("0.#", culture), StorageTotal.ToString("0.#", culture));
             if (_storageMeter is not null)
             {
                 _storageMeter.Value = used / StorageTotal * 100;
                 _storageMeter.Label = labels.StorageName;
             }
         }
-        if (_avatar is not null)
-        {
-            _avatar.DisplayName = AccountName;
-        }
-        if (_accountName is not null)
-        {
-            _accountName.Text = AccountName;
-        }
-        if (_accountEmail is not null)
-        {
-            _accountEmail.Text = AccountEmail;
-        }
+        _avatar?.DisplayName = AccountName;
+        _accountName?.Text = AccountName;
+        _accountEmail?.Text = AccountEmail;
     }
 
     #endregion

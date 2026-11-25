@@ -252,10 +252,7 @@ public partial class AiComposer
     /// <summary>The plus button and the drop target follow <see cref="IsAttachmentEnabled"/>.</summary>
     private void UpdateAttachmentParts()
     {
-        if (_plus is not null)
-        {
-            _plus.IsVisible = IsAttachmentEnabled;
-        }
+        _plus?.IsVisible = IsAttachmentEnabled;
         if (!IsAttachmentEnabled)
         {
             _attachMenu?.Close(returnFocus: false);
@@ -432,10 +429,7 @@ public partial class AiComposer
         }
         _isDragging = dragging;
         PseudoClasses.Set(DraggingPseudoClass, dragging);
-        if (_dropHost is not null)
-        {
-            _dropHost.IsPresent = dragging;
-        }
+        _dropHost?.IsPresent = dragging;
     }
 
     /// <summary>Whether the drag cover shows (tests).</summary>
@@ -577,10 +571,7 @@ public partial class AiComposer
             return;
         }
         var open = e.GetNewValue<bool>();
-        if (_plus is not null)
-        {
-            _plus.IsOpen = open;
-        }
+        _plus?.IsOpen = open;
     }
 
     #endregion

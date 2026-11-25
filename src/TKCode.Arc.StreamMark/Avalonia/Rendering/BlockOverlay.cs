@@ -87,10 +87,7 @@ public sealed class BlockOverlay : Control
             _layer.PropertyChanged -= OnHostSizeChanged;
             _layer.Children.Remove(this);
         }
-        if (_topLevel is not null)
-        {
-            _topLevel.PropertyChanged -= OnHostSizeChanged;
-        }
+        _topLevel?.PropertyChanged -= OnHostSizeChanged;
     }
 
     protected override Size MeasureOverride(Size availableSize)

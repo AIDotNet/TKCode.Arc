@@ -110,10 +110,7 @@ public class GlassCard : ContentControl
     {
         base.OnApplyTemplate(e);
         _pane = e.NameScope.Find<GlassPane>(PanePart);
-        if (_pane is not null)
-        {
-            _pane.SheenIntensity = SheenIntensity;
-        }
+        _pane?.SheenIntensity = SheenIntensity;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

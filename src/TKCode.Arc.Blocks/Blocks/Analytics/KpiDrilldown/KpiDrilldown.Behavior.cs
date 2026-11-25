@@ -150,15 +150,9 @@ public partial class KpiDrilldown
 
         foreach (var swap in new[] { _legendCurrent, _legendPrior })
         {
-            if (swap is not null)
-            {
-                swap.Swap = AnalyticsSwapStyle.Sequential;
-            }
+            swap?.Swap = AnalyticsSwapStyle.Sequential;
         }
-        if (_compare is not null)
-        {
-            _compare.IsCheckedChanged += OnCompareToggled;
-        }
+        _compare?.IsCheckedChanged += OnCompareToggled;
         if (_ranges is not null)
         {
             _ranges.Look = AnalyticsSegmentLook.Compact;
@@ -169,14 +163,8 @@ public partial class KpiDrilldown
             _dimensions.Look = AnalyticsSegmentLook.Compact;
             _dimensions.SelectionChanged += OnDimensionSwitch;
         }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_chart is not null)
-        {
-            _chart.CursorMoved += OnCursorMoved;
-        }
+        _close?.Click += OnCloseClick;
+        _chart?.CursorMoved += OnCursorMoved;
         if (_stage is not null)
         {
             _stage.Closed += OnPanelClosed;
@@ -209,26 +197,11 @@ public partial class KpiDrilldown
 
     private void Unhook()
     {
-        if (_compare is not null)
-        {
-            _compare.IsCheckedChanged -= OnCompareToggled;
-        }
-        if (_ranges is not null)
-        {
-            _ranges.SelectionChanged -= OnRangeSwitch;
-        }
-        if (_dimensions is not null)
-        {
-            _dimensions.SelectionChanged -= OnDimensionSwitch;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_chart is not null)
-        {
-            _chart.CursorMoved -= OnCursorMoved;
-        }
+        _compare?.IsCheckedChanged -= OnCompareToggled;
+        _ranges?.SelectionChanged -= OnRangeSwitch;
+        _dimensions?.SelectionChanged -= OnDimensionSwitch;
+        _close?.Click -= OnCloseClick;
+        _chart?.CursorMoved -= OnCursorMoved;
         if (_stage is not null)
         {
             _stage.Closed -= OnPanelClosed;
@@ -489,10 +462,7 @@ public partial class KpiDrilldown
         var period = PeriodOf(metric);
         var labels = Labels;
         var days = Days;
-        if (_detailTitle is not null)
-        {
-            _detailTitle.Text = metric.Label;
-        }
+        _detailTitle?.Text = metric.Label;
         var plain = metric.ValueFormatter is not null;
         if (_detailValue is not null)
         {
@@ -526,10 +496,7 @@ public partial class KpiDrilldown
         }
         SetSwap(_legendCurrent, Format(labels.CurrentPeriodFormat, days), animate);
         SetSwap(_legendPrior, Format(labels.PriorPeriodFormat, days), animate);
-        if (_legendPriorItem is not null)
-        {
-            _legendPriorItem.IsVisible = period.HasPrevious;
-        }
+        _legendPriorItem?.IsVisible = period.HasPrevious;
         ApplyBreakdown(animate);
     }
 
@@ -545,28 +512,13 @@ public partial class KpiDrilldown
         var rolls = metric.ValueFormatter is null && at >= 0 && _versusValue is not null;
         if (!rolls)
         {
-            if (_versusBefore is not null)
-            {
-                _versusBefore.Text = Format(pattern, metric.FormatValue(period.PriorLast), days);
-            }
-            if (_versusValue is not null)
-            {
-                _versusValue.IsVisible = false;
-            }
-            if (_versusAfter is not null)
-            {
-                _versusAfter.Text = null;
-            }
+            _versusBefore?.Text = Format(pattern, metric.FormatValue(period.PriorLast), days);
+            _versusValue?.IsVisible = false;
+            _versusAfter?.Text = null;
             return;
         }
-        if (_versusBefore is not null)
-        {
-            _versusBefore.Text = Format(pattern[..at].Replace("{1}", "{0}"), days);
-        }
-        if (_versusAfter is not null)
-        {
-            _versusAfter.Text = Format(pattern[(at + 3)..].Replace("{1}", "{0}"), days);
-        }
+        _versusBefore?.Text = Format(pattern[..at].Replace("{1}", "{0}"), days);
+        _versusAfter?.Text = Format(pattern[(at + 3)..].Replace("{1}", "{0}"), days);
         var value = _versusValue!;
         value.IsVisible = true;
         value.IsInstant = !animate;
@@ -621,10 +573,7 @@ public partial class KpiDrilldown
             return;
         }
         var labels = Labels;
-        if (_breakdownTitle is not null)
-        {
-            _breakdownTitle.Text = labels.BreakdownText;
-        }
+        _breakdownTitle?.Text = labels.BreakdownText;
         AutomationProperties.SetName(_breakdown, Format(labels.SectionFormat, metric.Label, dimension.Label));
         _table.SetHeadings(dimension.Label, labels.ShareText, labels.ValueText, labels.ChangeText, animate);
         _table.SetRows(KpiDrilldownMath.Breakdown(metric.BreakdownFor(dimension.Key), Days, metric.Kind), metric, animate);
@@ -638,10 +587,7 @@ public partial class KpiDrilldown
         try
         {
             var labels = Labels;
-            if (_title is not null)
-            {
-                _title.Text = Title;
-            }
+            _title?.Text = Title;
             if (_compare is not null)
             {
                 _compare.IsChecked = IsCompareEnabled;
@@ -770,22 +716,13 @@ public partial class KpiDrilldown
         _compact = compact;
         PseudoClasses.Set(CompactPseudoClass, compact);
         PseudoClasses.Set(TwoColumnPseudoClass, columns == 2);
-        if (_grid is not null)
-        {
-            _grid.Columns = columns;
-        }
+        _grid?.Columns = columns;
         foreach (var card in _cards)
         {
             card.IsCompact = compact;
         }
-        if (_compare is not null)
-        {
-            _compare.IsIconOnly = compact;
-        }
-        if (_table is not null)
-        {
-            _table.IsCompact = compact;
-        }
+        _compare?.IsIconOnly = compact;
+        _table?.IsCompact = compact;
     }
 
     // Open / close ---------------------------------------------------------------------------------------------------------
@@ -837,10 +774,7 @@ public partial class KpiDrilldown
             card.IsTabStop = false;
             AutomationProperties.SetAccessibilityView(card, AccessibilityView.Raw);
         }
-        if (_grid is not null)
-        {
-            _grid.IsHitTestVisible = false;
-        }
+        _grid?.IsHitTestVisible = false;
         HookEscape();
         if (!instant)
         {
@@ -881,10 +815,7 @@ public partial class KpiDrilldown
             card.IsTabStop = true;
             card.ClearValue(AutomationProperties.AccessibilityViewProperty);
         }
-        if (_grid is not null)
-        {
-            _grid.IsHitTestVisible = true;
-        }
+        _grid?.IsHitTestVisible = true;
         UnhookEscape();
         PseudoClasses.Set(OpenPseudoClass, false);
         if (_stage is not null && _stage.Phase == KpiPanelPhase.Open)

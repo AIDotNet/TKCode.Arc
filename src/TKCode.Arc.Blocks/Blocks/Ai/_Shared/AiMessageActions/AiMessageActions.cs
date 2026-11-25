@@ -211,42 +211,18 @@ internal class AiMessageActions : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.Click -= OnCopyClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_good is not null)
-        {
-            _good.Click -= OnGoodClick;
-        }
-        if (_bad is not null)
-        {
-            _bad.Click -= OnBadClick;
-        }
+        _copy?.Click -= OnCopyClick;
+        _retry?.Click -= OnRetryClick;
+        _good?.Click -= OnGoodClick;
+        _bad?.Click -= OnBadClick;
         _copy = e.NameScope.Find<AiActionButton>(CopyPart);
         _retry = e.NameScope.Find<AiActionButton>(RetryPart);
         _good = e.NameScope.Find<AiRatingButton>(GoodPart);
         _bad = e.NameScope.Find<AiRatingButton>(BadPart);
-        if (_copy is not null)
-        {
-            _copy.Click += OnCopyClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_good is not null)
-        {
-            _good.Click += OnGoodClick;
-        }
-        if (_bad is not null)
-        {
-            _bad.Click += OnBadClick;
-        }
+        _copy?.Click += OnCopyClick;
+        _retry?.Click += OnRetryClick;
+        _good?.Click += OnGoodClick;
+        _bad?.Click += OnBadClick;
         UpdateCopy();
         UpdateTexts();
         UpdateRatings();
@@ -353,14 +329,8 @@ internal class AiMessageActions : TemplatedControl
 
     private void UpdateRatings()
     {
-        if (_good is not null)
-        {
-            _good.IsPressedOn = Feedback == AiChatFeedback.Up;
-        }
-        if (_bad is not null)
-        {
-            _bad.IsPressedOn = Feedback == AiChatFeedback.Down;
-        }
+        _good?.IsPressedOn = Feedback == AiChatFeedback.Up;
+        _bad?.IsPressedOn = Feedback == AiChatFeedback.Down;
     }
 
     private void OnCopyClick(object? sender, RoutedEventArgs e)
@@ -398,10 +368,7 @@ internal class AiMessageActions : TemplatedControl
         if (now < until)
         {
             // Early (a timer runs on its own clock): wait for the rest.
-            if (_copiedTimer is not null)
-            {
-                _copiedTimer.Interval = until - now;
-            }
+            _copiedTimer?.Interval = until - now;
             return;
         }
         _copiedTimer?.Stop();

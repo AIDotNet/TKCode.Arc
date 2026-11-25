@@ -73,10 +73,7 @@ public partial class NewsletterSignup
     {
         base.OnApplyTemplate(e);
         Unwire();
-        if (_form is not null)
-        {
-            _form.PartsReady -= OnFormReady;
-        }
+        _form?.PartsReady -= OnFormReady;
         _form = e.NameScope.Find<NewsletterForm>(FormPart);
         _stack = e.NameScope.Find<NewsletterIssueStack>(StackPart);
         _readers = e.NameScope.Find<NewsletterReaders>(ReadersPart);
@@ -119,10 +116,7 @@ public partial class NewsletterSignup
             TextInputOptions.SetReturnKeyType(_wiredInput, TextInputReturnKeyType.Send);
             TextInputOptions.SetAutoCapitalization(_wiredInput, false);
         }
-        if (_wiredSubmit is not null)
-        {
-            _wiredSubmit.Click += OnSubmitClick;
-        }
+        _wiredSubmit?.Click += OnSubmitClick;
         if (_wiredMessage is not null)
         {
             _wiredMessage.LinkInvoked += OnPrivacyLink;
@@ -139,10 +133,7 @@ public partial class NewsletterSignup
             _wiredInput.LostFocus -= OnInputLostFocus;
             _wiredInput.RemoveHandler(KeyDownEvent, OnInputKeyDown);
         }
-        if (_wiredSubmit is not null)
-        {
-            _wiredSubmit.Click -= OnSubmitClick;
-        }
+        _wiredSubmit?.Click -= OnSubmitClick;
         if (_wiredMessage is not null)
         {
             _wiredMessage.LinkInvoked -= OnPrivacyLink;
@@ -254,10 +245,7 @@ public partial class NewsletterSignup
             _stack.Recipient = _subscribedEmail;
             _stack.IsDelivered = _phase == NewsletterPhase.Done;
         }
-        if (_form is not null)
-        {
-            _form.IsNarrow = width <= 520;
-        }
+        _form?.IsNarrow = width <= 520;
         if (_readers is not null)
         {
             _readers.Count = ReaderCount;

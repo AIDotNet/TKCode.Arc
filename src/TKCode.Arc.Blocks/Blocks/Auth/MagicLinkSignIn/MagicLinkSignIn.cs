@@ -107,13 +107,12 @@ public class MagicLinkSignIn : TemplatedControl
     /// <inheritdoc cref="LinkSenderProperty"/>
     public Func<MagicLinkSignInRequest, Task<bool>>? LinkSender { get => GetValue(LinkSenderProperty); set => SetValue(LinkSenderProperty, value); }
 
-    private bool _isSending;
 
     /// <inheritdoc cref="IsSendingProperty"/>
     public bool IsSending
     {
-        get => _isSending;
-        private set => SetAndRaise(IsSendingProperty, ref _isSending, value);
+        get;
+        private set => SetAndRaise(IsSendingProperty, ref field, value);
     }
 
     private TimeSpan _resendRemaining;
@@ -279,30 +278,12 @@ public class MagicLinkSignIn : TemplatedControl
             _email.PropertyChanged += OnEmailPropertyChanged;
             _email.LostFocus += OnEmailLostFocus;
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
-        if (_resend is not null)
-        {
-            _resend.Click += OnResendClick;
-        }
-        if (_change is not null)
-        {
-            _change.Click += OnChangeClick;
-        }
-        if (_sendNew is not null)
-        {
-            _sendNew.Click += OnSendNewClick;
-        }
-        if (_expiredChange is not null)
-        {
-            _expiredChange.Click += OnChangeClick;
-        }
-        if (_sentGlyph is not null)
-        {
-            _sentGlyph.RenderTransform = _flightShift;
-        }
+        _send?.Click += OnSendClick;
+        _resend?.Click += OnResendClick;
+        _change?.Click += OnChangeClick;
+        _sendNew?.Click += OnSendNewClick;
+        _expiredChange?.Click += OnChangeClick;
+        _sentGlyph?.RenderTransform = _flightShift;
         UpdateTexts();
         ShowState(State, animate: false);
         UpdateResend();
@@ -315,26 +296,11 @@ public class MagicLinkSignIn : TemplatedControl
             _email.PropertyChanged -= OnEmailPropertyChanged;
             _email.LostFocus -= OnEmailLostFocus;
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
-        if (_resend is not null)
-        {
-            _resend.Click -= OnResendClick;
-        }
-        if (_change is not null)
-        {
-            _change.Click -= OnChangeClick;
-        }
-        if (_sendNew is not null)
-        {
-            _sendNew.Click -= OnSendNewClick;
-        }
-        if (_expiredChange is not null)
-        {
-            _expiredChange.Click -= OnChangeClick;
-        }
+        _send?.Click -= OnSendClick;
+        _resend?.Click -= OnResendClick;
+        _change?.Click -= OnChangeClick;
+        _sendNew?.Click -= OnSendNewClick;
+        _expiredChange?.Click -= OnChangeClick;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -434,31 +400,16 @@ public class MagicLinkSignIn : TemplatedControl
             _email.Label = labels.EmailLabel;
             _email.Placeholder = labels.EmailPlaceholder;
         }
-        if (_send is not null)
-        {
-            _send.Content = labels.Send;
-        }
-        if (_change is not null)
-        {
-            _change.Content = labels.ChangeEmail;
-        }
-        if (_expiredChange is not null)
-        {
-            _expiredChange.Content = labels.ChangeEmail;
-        }
-        if (_sendNew is not null)
-        {
-            _sendNew.Content = labels.SendNew;
-        }
+        _send?.Content = labels.Send;
+        _change?.Content = labels.ChangeEmail;
+        _expiredChange?.Content = labels.ChangeEmail;
+        _sendNew?.Content = labels.SendNew;
         UpdateEmailError();
     }
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void UpdateEmailError()
@@ -478,10 +429,7 @@ public class MagicLinkSignIn : TemplatedControl
         {
             _email.IsInvalid = message is not null;
             _email.ErrorMessage = message;
-            if (_error is not null)
-            {
-                _error.IsVisible = false;
-            }
+            _error?.IsVisible = false;
             return;
         }
         if (_error is not null)
@@ -589,10 +537,7 @@ public class MagicLinkSignIn : TemplatedControl
             {
                 _flightShift.X = (1 - p) * -12;
                 _flightShift.Y = (1 - p) * 10;
-                if (_sentGlyph is not null)
-                {
-                    _sentGlyph.Opacity = Math.Clamp(p * 1.6, 0, 1);
-                }
+                _sentGlyph?.Opacity = Math.Clamp(p * 1.6, 0, 1);
             };
         }
         _flight.Jump(0);
@@ -682,10 +627,7 @@ public class MagicLinkSignIn : TemplatedControl
         {
             arc.IsLoading = IsSending;
         }
-        if (_email is not null)
-        {
-            _email.IsReadOnly = IsSending;
-        }
+        _email?.IsReadOnly = IsSending;
     }
 
     /// <summary>Brings the countdown up to date: the remaining time, the ring and the resend button's text and state.</summary>
@@ -701,10 +643,7 @@ public class MagicLinkSignIn : TemplatedControl
         }
         ResendRemaining = remaining;
         var waiting = remaining > TimeSpan.Zero;
-        if (_resend is not null)
-        {
-            _resend.IsEnabled = !waiting && !IsSending;
-        }
+        _resend?.IsEnabled = !waiting && !IsSending;
         if (_ring is not null)
         {
             _ring.IsVisible = waiting;

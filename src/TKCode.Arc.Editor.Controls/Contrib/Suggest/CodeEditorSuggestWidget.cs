@@ -94,7 +94,6 @@ internal sealed class CodeEditorSuggestWidget : TemplatedControl, ICodeEditorCon
     private State _state = State.Hidden;
     private bool _isAuto;
     private bool _detailsVisible;
-    private string _message = string.Empty;
     private CompletionModel? _completionModel;
     private SuggestCompletionItem? _focusedItem;
     private CancellationTokenSource? _currentSuggestionDetails;
@@ -121,9 +120,9 @@ internal sealed class CodeEditorSuggestWidget : TemplatedControl, ICodeEditorCon
     /// <summary>The message shown instead of the list (loading, no suggestions).</summary>
     public string Message
     {
-        get => _message;
-        private set => SetAndRaise(MessageProperty, ref _message, value);
-    }
+        get;
+        private set => SetAndRaise(MessageProperty, ref field, value);
+    } = string.Empty;
 
     /// <summary>The font of the details pane's documentation (the code blocks use the editor's font).</summary>
     public FontFamily DetailsFontFamily { get => GetValue(DetailsFontFamilyProperty); set => SetValue(DetailsFontFamilyProperty, value); }

@@ -144,22 +144,10 @@ public partial class JourneyFlow : IJourneyFlowChartHost
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_segments is not null)
-        {
-            _segments.SelectionChanged -= OnSegmentSwitchChanged;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
-        if (_tableButton is not null)
-        {
-            _tableButton.Click -= OnTableButtonClick;
-        }
-        if (_chart is not null)
-        {
-            _chart.Host = null;
-        }
+        _segments?.SelectionChanged -= OnSegmentSwitchChanged;
+        _clear?.Click -= OnClearClick;
+        _tableButton?.Click -= OnTableButtonClick;
+        _chart?.Host = null;
         _header = e.NameScope.Find<JourneyFlowHeaderPanel>(HeaderPart);
         _segments = e.NameScope.Find<AnalyticsSegmentSwitch>(SegmentsPart);
         _total = e.NameScope.Find<JourneyFlowRollingText>(TotalPart);
@@ -185,19 +173,13 @@ public partial class JourneyFlow : IJourneyFlowChartHost
             _segments.Look = AnalyticsSegmentLook.Flow;
             _segments.SelectionChanged += OnSegmentSwitchChanged;
         }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _clear?.Click += OnClearClick;
         if (_tableButton is not null)
         {
             _tableButton.Click += OnTableButtonClick;
             _tableButton.IsExpanded = IsTableExpanded;
         }
-        if (_chart is not null)
-        {
-            _chart.Host = this;
-        }
+        _chart?.Host = this;
         _signature = string.Empty;
         _model = JourneyFlowModel.Empty;
         Refresh(animate: false);
@@ -231,10 +213,7 @@ public partial class JourneyFlow : IJourneyFlowChartHost
         }
         else if (property == IsTableExpandedProperty)
         {
-            if (_tableButton is not null)
-            {
-                _tableButton.IsExpanded = IsTableExpanded;
-            }
+            _tableButton?.IsExpanded = IsTableExpanded;
         }
         else if (property == ValueFormatterProperty || property == ShareFormatterProperty || property == LabelShareFormatterProperty ||
                  property == CountFormatProperty || property == ShareOfFormatProperty || property == VisitorsShareTextProperty ||
@@ -501,10 +480,7 @@ public partial class JourneyFlow : IJourneyFlowChartHost
     private void ApplySelection()
     {
         var index = SelectedNode is { } node ? Array.IndexOf(_nodeList, node) : -1;
-        if (_chart is not null)
-        {
-            _chart.SelectedNode = index;
-        }
+        _chart?.SelectedNode = index;
         PseudoClasses.Set(HasSelectionPseudoClass, index >= 0);
         UpdateTracingClass();
         UpdatePanel();
@@ -686,10 +662,7 @@ public partial class JourneyFlow : IJourneyFlowChartHost
     private void UpdateSubtitle()
     {
         var (before, after, hasNumber) = SubtitleParts();
-        if (_subtitleRow is not null)
-        {
-            _subtitleRow.IsVisible = SubtitleFormat is not null;
-        }
+        _subtitleRow?.IsVisible = SubtitleFormat is not null;
         if (_subtitleBefore is not null)
         {
             _subtitleBefore.Text = before;
@@ -847,26 +820,11 @@ public partial class JourneyFlow : IJourneyFlowChartHost
             _noteText = note;
             _panelNote.Content = new TextBlock { Text = note, TextWrapping = TextWrapping.Wrap, LineHeight = 18.2 };
         }
-        if (_bigNumber is not null)
-        {
-            _bigNumber.Text = FormatCount(big);
-        }
-        if (_captionShare is not null)
-        {
-            _captionShare.Text = FormatShare(share);
-        }
-        if (_captionText is not null)
-        {
-            _captionText.Text = caption;
-        }
-        if (_firstHeader is not null)
-        {
-            _firstHeader.Text = firstHeader;
-        }
-        if (_secondHeader is not null)
-        {
-            _secondHeader.Text = secondHeader;
-        }
+        _bigNumber?.Text = FormatCount(big);
+        _captionShare?.Text = FormatShare(share);
+        _captionText?.Text = caption;
+        _firstHeader?.Text = firstHeader;
+        _secondHeader?.Text = secondHeader;
         if (_clear is not null)
         {
             _clear.IsVisible = selected >= 0;

@@ -72,11 +72,13 @@ internal sealed class InlineCompletionItem
 }
 
 /// <summary>The ghost text state of the model (upstream's state of kind 'ghostText').</summary>
-internal sealed record InlineCompletionsState(
-    IReadOnlyList<TextReplacement> Edits,
-    GhostText PrimaryGhostText,
-    IReadOnlyList<GhostText> GhostTexts,
-    InlineCompletionItem InlineSuggestion);
+internal sealed class InlineCompletionsState(IReadOnlyList<TextReplacement> edits, GhostText primaryGhostText, IReadOnlyList<GhostText> ghostTexts, InlineCompletionItem inlineSuggestion)
+{
+    public IReadOnlyList<TextReplacement> Edits { get; } = edits;
+    public GhostText PrimaryGhostText { get; } = primaryGhostText;
+    public IReadOnlyList<GhostText> GhostTexts { get; } = ghostTexts;
+    public InlineCompletionItem InlineSuggestion { get; } = inlineSuggestion;
+}
 
 /// <summary>Asks the inline completion providers and keeps the ghost text of an editor (upstream's InlineCompletionsModel).</summary>
 internal sealed class InlineCompletionsModel : IDisposable

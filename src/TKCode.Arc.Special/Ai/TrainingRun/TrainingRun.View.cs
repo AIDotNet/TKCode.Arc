@@ -130,19 +130,13 @@ public sealed partial class TrainingRun
 
     private void HookParts()
     {
-        if (_chart is not null)
-        {
-            _chart.InspectedChanged += OnInspectedChanged;
-        }
+        _chart?.InspectedChanged += OnInspectedChanged;
         HookButtons();
     }
 
     private void UnhookParts()
     {
-        if (_chart is not null)
-        {
-            _chart.InspectedChanged -= OnInspectedChanged;
-        }
+        _chart?.InspectedChanged -= OnInspectedChanged;
         UnhookButtons();
         _statsGrid?.Children.Clear();
         _metricsGrid?.Children.Clear();
@@ -286,10 +280,7 @@ public sealed partial class TrainingRun
             _statusLabel.Content = statusText;
         }
         var spinning = status == TrainingRunStatus.Running;
-        if (_spinner is not null)
-        {
-            _spinner.IsVisible = spinning;
-        }
+        _spinner?.IsVisible = spinning;
         if (_statusGlyph is not null)
         {
             _statusGlyph.IsVisible = !spinning;

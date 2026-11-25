@@ -180,25 +180,13 @@ public class Alert : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_presence is not null)
-        {
-            _presence.Settled -= OnPresenceSettled;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
+        _presence?.Settled -= OnPresenceSettled;
+        _dismiss?.Click -= OnDismissClick;
         _presence = e.NameScope.Find<MessagesPresenceFrame>(PresencePart);
         _icon = e.NameScope.Find<MessagesGlyphSwap>(IconPart);
         _dismiss = e.NameScope.Find<AvaloniaButton>(DismissPart);
-        if (_presence is not null)
-        {
-            _presence.Settled += OnPresenceSettled;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
+        _presence?.Settled += OnPresenceSettled;
+        _dismiss?.Click += OnDismissClick;
         UpdateAutomation();
     }
 

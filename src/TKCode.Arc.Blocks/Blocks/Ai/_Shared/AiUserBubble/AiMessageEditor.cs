@@ -148,14 +148,8 @@ internal sealed class AiMessageEditor : TemplatedControl
             _area.SubmitRequested -= OnAreaSubmitRequested;
             _area.RemoveHandler(KeyDownEvent, OnAreaKeyDown);
         }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _cancel?.Click -= OnCancelClick;
+        _send?.Click -= OnSendClick;
         base.OnApplyTemplate(e);
         _area = e.NameScope.Find<TokenTextEditor>(TextAreaPart);
         _cancel = e.NameScope.Find<Button>(CancelPart);
@@ -169,14 +163,8 @@ internal sealed class AiMessageEditor : TemplatedControl
             // Tunnel: Escape is decided before the text box sees it.
             _area.AddHandler(KeyDownEvent, OnAreaKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _cancel?.Click += OnCancelClick;
+        _send?.Click += OnSendClick;
         UpdateCanSend();
         UpdateAutomation();
         TryFocus();
@@ -231,10 +219,7 @@ internal sealed class AiMessageEditor : TemplatedControl
     private void UpdateCanSend()
     {
         CanSend = !string.IsNullOrWhiteSpace(Text);
-        if (_send is not null)
-        {
-            _send.IsEnabled = CanSend;
-        }
+        _send?.IsEnabled = CanSend;
     }
 
     private void UpdateAutomation()

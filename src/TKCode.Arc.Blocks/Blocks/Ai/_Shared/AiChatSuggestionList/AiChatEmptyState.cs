@@ -73,17 +73,11 @@ internal class AiChatEmptyState : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_list is not null)
-        {
-            _list.Invoked -= OnListInvoked;
-        }
+        _list?.Invoked -= OnListInvoked;
         _presence?.Dispose();
         _presence = null;
         _list = e.NameScope.Find<AiChatSuggestionList>(ListPart);
-        if (_list is not null)
-        {
-            _list.Invoked += OnListInvoked;
-        }
+        _list?.Invoked += OnListInvoked;
         if (e.NameScope.Find<Control>(RootPart) is { } root)
         {
             _presence = new AiFadePresence(root, IsShown, EnterRise);

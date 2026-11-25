@@ -176,10 +176,7 @@ internal class AiActionButton : AvaloniaButton
     /// <summary>Fills or clears the glyph on screen in place (no crossfade: Arc fills at once, the color eases).</summary>
     protected void RefreshFill()
     {
-        if (_glyph is not null)
-        {
-            _glyph.IsFilled = IsGlyphFilled;
-        }
+        _glyph?.IsFilled = IsGlyphFilled;
     }
 
     protected override void OnPointerEntered(PointerEventArgs e)

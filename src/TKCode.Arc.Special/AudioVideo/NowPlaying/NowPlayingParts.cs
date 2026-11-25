@@ -357,10 +357,7 @@ internal sealed class NowPlayingPresence
             _target.IsVisible = false;
         }
         var moving = _value.IsAnimating && _travel;
-        if (_translate is not null)
-        {
-            _translate.Y = moving && _entering ? _offset * (1 - o) : 0;
-        }
+        _translate?.Y = moving && _entering ? _offset * (1 - o) : 0;
         _target.Effect = moving && o < 0.999 ? ArcBlur.Get(2 * (1 - o)) : null;
     }
 }

@@ -30,6 +30,7 @@ internal delegate List<FilterMatch>? FilterFn(string word, string wordToMatchAga
 /// </summary>
 internal sealed record FuzzyScore(int Score, int WordStart, int[] Matches)
 {
+
     /// <summary>No matches and value <c>-100</c>.</summary>
     public static readonly FuzzyScore Default = new(-100, 0, []);
 

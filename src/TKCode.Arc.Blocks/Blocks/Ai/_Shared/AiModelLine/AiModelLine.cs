@@ -162,15 +162,9 @@ internal sealed class AiModelLine : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnModelPropertyChanged;
-        }
+        _observed?.PropertyChanged -= OnModelPropertyChanged;
         _observed = model;
-        if (model is not null)
-        {
-            model.PropertyChanged += OnModelPropertyChanged;
-        }
+        model?.PropertyChanged += OnModelPropertyChanged;
     }
 
     private void OnModelPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

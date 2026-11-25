@@ -195,23 +195,14 @@ public partial class AiSidePanel
 
     private void HookParts()
     {
-        if (_dock is not null)
-        {
-            _dock.PropertyChanged += OnDockPropertyChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _dock?.PropertyChanged += OnDockPropertyChanged;
+        _close?.Click += OnCloseClick;
         if (_selectionPill is not null)
         {
             _selectionPill.RemoveRequested += OnSelectionRemoveRequested;
             _selectionFade = new AiFadePresence(_selectionPill, Selection is not null);
         }
-        if (_undoPill is not null)
-        {
-            _undoPill.UndoRequested += OnUndoRequested;
-        }
+        _undoPill?.UndoRequested += OnUndoRequested;
         if (_empty is not null)
         {
             _emptyFade = new AiFadePresence(_empty, Turns.Count == 0);
@@ -225,22 +216,10 @@ public partial class AiSidePanel
 
     private void UnhookParts()
     {
-        if (_dock is not null)
-        {
-            _dock.PropertyChanged -= OnDockPropertyChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_selectionPill is not null)
-        {
-            _selectionPill.RemoveRequested -= OnSelectionRemoveRequested;
-        }
-        if (_undoPill is not null)
-        {
-            _undoPill.UndoRequested -= OnUndoRequested;
-        }
+        _dock?.PropertyChanged -= OnDockPropertyChanged;
+        _close?.Click -= OnCloseClick;
+        _selectionPill?.RemoveRequested -= OnSelectionRemoveRequested;
+        _undoPill?.UndoRequested -= OnUndoRequested;
         _selectionFade?.Dispose();
         _selectionFade = null;
         _emptyFade?.Dispose();
@@ -271,10 +250,7 @@ public partial class AiSidePanel
             _dock.ReopenText = labels.Reopen(name);
             _dock.PanelName = labels.Panel(name);
         }
-        if (_pageView is not null)
-        {
-            _pageView.AskButtonText = labels.AskAboutSelection;
-        }
+        _pageView?.AskButtonText = labels.AskAboutSelection;
         if (_close is not null)
         {
             AutomationProperties.SetName(_close, labels.Close);
@@ -284,26 +260,14 @@ public partial class AiSidePanel
         {
             AutomationProperties.SetName(_chips, labels.Context);
         }
-        if (_pagePill is not null)
-        {
-            _pagePill.Text = labels.ThisPage;
-        }
+        _pagePill?.Text = labels.ThisPage;
         if (_turnsPanel is not null)
         {
             AutomationProperties.SetName(_turnsPanel, labels.Conversation);
         }
-        if (_scroller is not null)
-        {
-            _scroller.JumpButtonName = labels.ScrollToLatest;
-        }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = labels.EmptyTitle(Page?.Title ?? string.Empty);
-        }
-        if (_emptyText is not null)
-        {
-            _emptyText.Text = labels.EmptyDescription(name);
-        }
+        _scroller?.JumpButtonName = labels.ScrollToLatest;
+        _emptyTitle?.Text = labels.EmptyTitle(Page?.Title ?? string.Empty);
+        _emptyText?.Text = labels.EmptyDescription(name);
         if (_emptySuggestions is not null)
         {
             AutomationProperties.SetName(_emptySuggestions, labels.Suggestions);
@@ -312,10 +276,7 @@ public partial class AiSidePanel
         {
             AutomationProperties.SetName(_suggestionRow, labels.Suggestions);
         }
-        if (_undoPill is not null)
-        {
-            _undoPill.UndoText = labels.Undo;
-        }
+        _undoPill?.UndoText = labels.Undo;
         if (_box is not null)
         {
             _box.InputName = labels.Message;
@@ -349,14 +310,8 @@ public partial class AiSidePanel
     /// <summary>The header's identity: the mark (the spark when none is given), the name and the optional model line.</summary>
     private void ApplyIdentity()
     {
-        if (_mark is not null)
-        {
-            _mark.Mark = AiAssistantSpark.Resolve(AssistantMark);
-        }
-        if (_name is not null)
-        {
-            _name.Text = AssistantName;
-        }
+        _mark?.Mark = AiAssistantSpark.Resolve(AssistantMark);
+        _name?.Text = AssistantName;
         if (_model is not null)
         {
             _model.Text = ModelName;
@@ -450,10 +405,7 @@ public partial class AiSidePanel
         {
             SetSelection(null, animate: false);
         }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = Labels.EmptyTitle(newPage?.Title ?? string.Empty);
-        }
+        _emptyTitle?.Text = Labels.EmptyTitle(newPage?.Title ?? string.Empty);
         RefreshSuggestions();
     }
 
@@ -466,10 +418,7 @@ public partial class AiSidePanel
         }
         UnwatchPage();
         _watchedPage = page;
-        if (page is not null)
-        {
-            page.PropertyChanged += OnPagePropertyChanged;
-        }
+        page?.PropertyChanged += OnPagePropertyChanged;
     }
 
     private void UnwatchPage()
@@ -523,14 +472,8 @@ public partial class AiSidePanel
         var sheet = _dock?.IsSheetMode ?? false;
         IsSheetMode = sheet;
         PseudoClasses.Set(SheetPseudoClass, sheet);
-        if (_pageView is not null)
-        {
-            _pageView.IsCompact = sheet;
-        }
-        if (_close is not null)
-        {
-            _close.Glyph = sheet ? ArcIcons.X : ArcIcons.PanelRightClose;
-        }
+        _pageView?.IsCompact = sheet;
+        _close?.Glyph = sheet ? ArcIcons.X : ArcIcons.PanelRightClose;
     }
 
     private void OnCloseClick(object? sender, RoutedEventArgs e)
@@ -605,10 +548,7 @@ public partial class AiSidePanel
     {
         Selection = selection;
         PseudoClasses.Set(SelectionPseudoClass, selection is not null);
-        if (_pageView is not null)
-        {
-            _pageView.MarkedBlockId = selection?.BlockId;
-        }
+        _pageView?.MarkedBlockId = selection?.BlockId;
         ShowSelection(selection, animate);
         RefreshPlaceholder();
     }

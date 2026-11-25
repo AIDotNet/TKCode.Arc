@@ -102,10 +102,7 @@ public class GlassTabBar : SelectingItemsControl
         base.OnApplyTemplate(e);
         _pane = e.NameScope.Find<GlassPane>(PanePart);
         _lens = e.NameScope.Find<GlassLens>(LensPart);
-        if (_lens is not null)
-        {
-            _lens.Swell = LensSwell;
-        }
+        _lens?.Swell = LensSwell;
         _track.Attach(_lens);
     }
 

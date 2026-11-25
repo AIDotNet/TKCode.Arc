@@ -270,7 +270,6 @@ public partial class ReplyDraft : TemplatedControl
     private TextBlock? _insertText;
     private ExplainerAnnouncer? _announcer;
     private readonly List<ReplyDraftChip> _chips = [];
-    private string _draft = string.Empty;
     private ReplyDraftStatus _statusValue;
     private bool _coarse;
     private bool _quiet;
@@ -332,9 +331,9 @@ public partial class ReplyDraft : TemplatedControl
     /// <inheritdoc cref="DraftProperty"/>
     public string Draft
     {
-        get => _draft;
-        private set => SetAndRaise(DraftProperty, ref _draft, value);
-    }
+        get;
+        private set => SetAndRaise(DraftProperty, ref field, value);
+    } = string.Empty;
 
     /// <inheritdoc cref="StatusProperty"/>
     public ReplyDraftStatus Status
@@ -445,22 +444,10 @@ public partial class ReplyDraft : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_tone is not null)
-        {
-            _tone.Picked -= OnTonePicked;
-        }
-        if (_length is not null)
-        {
-            _length.Picked -= OnLengthPicked;
-        }
-        if (_regenerate is not null)
-        {
-            _regenerate.Click -= OnRegenerateClick;
-        }
-        if (_insert is not null)
-        {
-            _insert.Click -= OnInsertClick;
-        }
+        _tone?.Picked -= OnTonePicked;
+        _length?.Picked -= OnLengthPicked;
+        _regenerate?.Click -= OnRegenerateClick;
+        _insert?.Click -= OnInsertClick;
         _subject = e.NameScope.Find<TextBlock>(SubjectPart);
         _time = e.NameScope.Find<TextBlock>(TimePart);
         _mailMark = e.NameScope.Find<ArcGlyph>(MailMarkPart);
@@ -476,10 +463,7 @@ public partial class ReplyDraft : TemplatedControl
         _suggestions = e.NameScope.Find<WrapPanel>(SuggestionsPart);
         _draftBox = e.NameScope.Find<Border>(DraftBoxPart);
         _heightBox = e.NameScope.Find<AiHeightBox>(HeightBoxPart);
-        if (_heightBox is not null)
-        {
-            _heightBox.HeightSpring = AiGlyphMotion.Settle;
-        }
+        _heightBox?.HeightSpring = AiGlyphMotion.Settle;
         _draftSwap = e.NameScope.Find<ArcContentSwap>(DraftPart);
         _controls = e.NameScope.Find<ReplyDraftControlsPanel>(ControlsPart);
         _toneLabel = e.NameScope.Find<TextBlock>(ToneLabelPart);
@@ -492,22 +476,10 @@ public partial class ReplyDraft : TemplatedControl
         _insert = e.NameScope.Find<Button>(InsertPart);
         _insertText = e.NameScope.Find<TextBlock>(InsertTextPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_tone is not null)
-        {
-            _tone.Picked += OnTonePicked;
-        }
-        if (_length is not null)
-        {
-            _length.Picked += OnLengthPicked;
-        }
-        if (_regenerate is not null)
-        {
-            _regenerate.Click += OnRegenerateClick;
-        }
-        if (_insert is not null)
-        {
-            _insert.Click += OnInsertClick;
-        }
+        _tone?.Picked += OnTonePicked;
+        _length?.Picked += OnLengthPicked;
+        _regenerate?.Click += OnRegenerateClick;
+        _insert?.Click += OnInsertClick;
         ApplyLabels();
         BuildMessage();
         BuildChips();
@@ -662,10 +634,7 @@ public partial class ReplyDraft : TemplatedControl
     {
         var labels = Labels;
         var model = DisplayedModel;
-        if (_heading is not null)
-        {
-            _heading.Text = labels.ReplyWith(model.Name);
-        }
+        _heading?.Text = labels.ReplyWith(model.Name);
         if (_modelMark is not null)
         {
             _modelMark.Data = model.Mark ?? ArcIcons.Sparkles;
@@ -686,14 +655,8 @@ public partial class ReplyDraft : TemplatedControl
         {
             AutomationProperties.SetName(_suggestions, labels.QuickReplies);
         }
-        if (_toneLabel is not null)
-        {
-            _toneLabel.Text = labels.Tone;
-        }
-        if (_lengthLabel is not null)
-        {
-            _lengthLabel.Text = labels.Length;
-        }
+        _toneLabel?.Text = labels.Tone;
+        _lengthLabel?.Text = labels.Length;
         if (_tone is not null)
         {
             _tone.Labels = [labels.Friendly, labels.Concise, labels.Formal];
@@ -704,31 +667,19 @@ public partial class ReplyDraft : TemplatedControl
             _length.Labels = [labels.Short, labels.Medium, labels.Long];
             AutomationProperties.SetName(_length, labels.Length);
         }
-        if (_hint is not null)
-        {
-            _hint.Text = labels.EffectiveInsertShortcut;
-        }
-        if (_regenerateText is not null)
-        {
-            _regenerateText.Text = labels.Regenerate;
-        }
+        _hint?.Text = labels.EffectiveInsertShortcut;
+        _regenerateText?.Text = labels.Regenerate;
         if (_regenerate is not null)
         {
             AutomationProperties.SetName(_regenerate, labels.Regenerate);
         }
-        if (_insertText is not null)
-        {
-            _insertText.Text = labels.Insert;
-        }
+        _insertText?.Text = labels.Insert;
         if (_insert is not null)
         {
             AutomationProperties.SetName(_insert, labels.Insert);
             Tooltip.SetTip(_insert, labels.EffectiveInsertShortcut);
         }
-        if (_editor is not null)
-        {
-            _editor.Label = labels.DraftText;
-        }
+        _editor?.Label = labels.DraftText;
     }
 
     /// <summary>The email: subject and time, the sender's avatar, name and address, and the body's paragraphs.</summary>
@@ -737,38 +688,26 @@ public partial class ReplyDraft : TemplatedControl
         var message = DisplayedMessage;
         var labels = Labels;
         AutomationProperties.SetName(this, labels.Article(message.FromName));
-        if (_subject is not null)
-        {
-            _subject.Text = message.Subject;
-        }
+        _subject?.Text = message.Subject;
         if (_time is not null)
         {
             _time.Text = message.ReceivedAt is { } at ? labels.ReceivedAt(at) : null;
             _time.IsVisible = message.ReceivedAt is not null;
         }
-        if (_mailMark is not null)
-        {
-            _mailMark.Data = SourceMark ?? ArcIcons.Mail;
-        }
+        _mailMark?.Data = SourceMark ?? ArcIcons.Mail;
         if (_avatar is not null)
         {
             _avatar.DisplayName = message.FromName;
             _avatar.Source = message.FromAvatar;
             _avatar.IsVisible = !string.IsNullOrWhiteSpace(message.FromName) || message.FromAvatar is not null;
         }
-        if (_sender is not null)
-        {
-            _sender.Text = message.FromName;
-        }
+        _sender?.Text = message.FromName;
         if (_address is not null)
         {
             _address.Text = string.IsNullOrWhiteSpace(message.FromEmail) ? null : "<" + message.FromEmail + ">";
             _address.IsVisible = !string.IsNullOrWhiteSpace(message.FromEmail);
         }
-        if (_recipient is not null)
-        {
-            _recipient.Text = string.IsNullOrWhiteSpace(message.To) ? labels.ToMe : message.To;
-        }
+        _recipient?.Text = string.IsNullOrWhiteSpace(message.To) ? labels.ToMe : message.To;
         if (_body is not null)
         {
             _body.Children.Clear();
@@ -816,14 +755,8 @@ public partial class ReplyDraft : TemplatedControl
 
     private void SyncOptions()
     {
-        if (_tone is not null)
-        {
-            _tone.SelectedIndex = (int)Tone;
-        }
-        if (_length is not null)
-        {
-            _length.SelectedIndex = (int)Length;
-        }
+        _tone?.SelectedIndex = (int)Tone;
+        _length?.SelectedIndex = (int)Length;
     }
 
     private void OnChipClick(object? sender, RoutedEventArgs e)

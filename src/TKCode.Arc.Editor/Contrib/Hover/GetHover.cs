@@ -11,7 +11,12 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Contrib.Hover;
 
 /// <summary>A provider's hover and where the provider stands in the order (upstream's HoverProviderResult).</summary>
-internal sealed record HoverProviderResult(IHoverProvider Provider, Languages.Hover Hover, int Ordinal);
+internal sealed class HoverProviderResult(IHoverProvider provider, Languages.Hover hover, int ordinal)
+{
+    public IHoverProvider Provider { get; } = provider;
+    public Languages.Hover Hover { get; } = hover;
+    public int Ordinal { get; } = ordinal;
+}
 
 /// <summary>Asks the hover providers (upstream's getHover.ts functions).</summary>
 internal static class GetHover

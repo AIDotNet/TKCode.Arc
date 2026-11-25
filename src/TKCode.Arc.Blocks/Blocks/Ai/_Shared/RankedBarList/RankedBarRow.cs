@@ -65,10 +65,7 @@ internal sealed class RankedBarRow : TemplatedControl
         _fill = new MotionValue<double>(this, item.Ratio, MotionVectors.Double);
         _fill.Changed += ratio =>
         {
-            if (_bar is not null)
-            {
-                _bar.Ratio = ratio;
-            }
+            _bar?.Ratio = ratio;
         };
         _fade = new MotionValue<double>(this, 1, MotionVectors.Double);
         _fade.Changed += opacity => Opacity = opacity;
@@ -204,10 +201,7 @@ internal sealed class RankedBarRow : TemplatedControl
         base.OnApplyTemplate(e);
         _bar = e.NameScope.Find<RankedBarBar>(BarPart);
         _digits = e.NameScope.Find<RollingDigits>(ValuePart);
-        if (_bar is not null)
-        {
-            _bar.Ratio = _fill.Value;
-        }
+        _bar?.Ratio = _fill.Value;
         RollTo(_percent, instant: true);
     }
 

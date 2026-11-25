@@ -55,7 +55,11 @@ internal interface ICodeActionEditor
 }
 
 /// <summary>A selection and the trigger that asks for its code actions.</summary>
-internal sealed record TriggeredCodeAction(TextSelection Selection, CodeActionTrigger Trigger);
+internal sealed class TriggeredCodeAction(TextSelection selection, CodeActionTrigger trigger)
+{
+    public TextSelection Selection { get; } = selection;
+    public CodeActionTrigger Trigger { get; } = trigger;
+}
 
 /// <summary>Triggers code action requests when the cursor or the markers change (upstream's CodeActionOracle).</summary>
 internal sealed class CodeActionOracle : IDisposable

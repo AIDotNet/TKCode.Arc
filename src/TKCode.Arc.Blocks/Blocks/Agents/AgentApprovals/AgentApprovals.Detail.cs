@@ -62,10 +62,7 @@ public partial class AgentApprovals
             UpdateButtons();
             return;
         }
-        if (_detailGlyph is not null)
-        {
-            _detailGlyph.Data = GlyphOf(request.Kind);
-        }
+        _detailGlyph?.Data = GlyphOf(request.Kind);
         Set(_detailTitle, request.Title);
         var time = request.Requested is { } requested ? labels.Time(requested, Clock()) : null;
         Set(_asked, labels.Asked(request.Agent, time));
@@ -74,14 +71,8 @@ public partial class AgentApprovals
         Set(_whyHeading, labels.Why);
         Set(_context, request.Context);
         Set(_detailsHeading, labels.Details);
-        if (_context is not null)
-        {
-            _context.IsVisible = !string.IsNullOrWhiteSpace(request.Context);
-        }
-        if (_whyHeading is not null)
-        {
-            _whyHeading.IsVisible = !string.IsNullOrWhiteSpace(request.Context);
-        }
+        _context?.IsVisible = !string.IsNullOrWhiteSpace(request.Context);
+        _whyHeading?.IsVisible = !string.IsNullOrWhiteSpace(request.Context);
         if (_details is not null)
         {
             _details.Children.Clear();
@@ -105,10 +96,7 @@ public partial class AgentApprovals
                 _details.Children.Add(label);
                 _details.Children.Add(value);
             }
-            if (_detailsHeading is not null)
-            {
-                _detailsHeading.IsVisible = details.Count > 0;
-            }
+            _detailsHeading?.IsVisible = details.Count > 0;
         }
         if (_reason is FieldTextBox field)
         {
@@ -118,32 +106,17 @@ public partial class AgentApprovals
         {
             AutomationProperties.SetName(_reason, labels.ReasonPlaceholder);
         }
-        if (_confirm is not null)
-        {
-            _confirm.Content = labels.Confirm;
-        }
-        if (_approve is not null)
-        {
-            _approve.Content = labels.Approve;
-        }
-        if (_deny is not null)
-        {
-            _deny.Content = labels.Deny;
-        }
+        _confirm?.Content = labels.Confirm;
+        _approve?.Content = labels.Approve;
+        _deny?.Content = labels.Deny;
         UpdateButtons();
     }
 
     private void UpdateButtons()
     {
         var request = SelectedRequest;
-        if (_approve is not null)
-        {
-            _approve.IsEnabled = request is not null && (request.Risk != AgentApprovalRisk.High || _confirm?.IsChecked == true);
-        }
-        if (_deny is not null)
-        {
-            _deny.IsEnabled = request is not null && !_busy;
-        }
+        _approve?.IsEnabled = request is not null && (request.Risk != AgentApprovalRisk.High || _confirm?.IsChecked == true);
+        _deny?.IsEnabled = request is not null && !_busy;
     }
 
     private void SetStatus(string? text, bool error)
@@ -159,9 +132,6 @@ public partial class AgentApprovals
 
     private static void Set(TextBlock? block, string? text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 }

@@ -45,20 +45,19 @@ public sealed class RaTeXMathLayout : MathLayout
         {
             foreach (var op in ops)
             {
-                var brush = op.Brush ?? foreground;
                 switch (op)
                 {
                     case GlyphOp g:
-                        context.DrawGlyphRun(brush, g.Run);
+                        context.DrawGlyphRun(g.Brush ?? foreground, g.Run);
                         break;
                     case RectOp r:
-                        context.DrawRectangle(brush, null, r.Rect);
+                        context.DrawRectangle(r.Brush ?? foreground, null, r.Rect);
                         break;
                     case GeometryOp p when p.StrokeThickness > 0:
-                        context.DrawGeometry(null, new Pen(brush, p.StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round), p.Geometry);
+                        context.DrawGeometry(null, new Pen(p.Brush ?? foreground, p.StrokeThickness, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round), p.Geometry);
                         break;
                     case GeometryOp p:
-                        context.DrawGeometry(brush, null, p.Geometry);
+                        context.DrawGeometry(p.Brush ?? foreground, null, p.Geometry);
                         break;
                 }
             }
@@ -252,13 +251,30 @@ public sealed class RaTeXMathLayout : MathLayout
         return Math.Abs(c.R - s.R) < 1e-4 && Math.Abs(c.G - s.G) < 1e-4 && Math.Abs(c.B - s.B) < 1e-4;
     }
 
-    private abstract record DrawOp(IBrush? Brush);
+    private union DrawOp(GlyphOp, RectOp, GeometryOp);
 
-    private sealed record GlyphOp(IBrush? Brush, GlyphRun Run) : DrawOp(Brush);
+    private sealed class GlyphOp(IBrush? brush, GlyphRun run)
+    {
+        public IBrush? Brush { get; } = brush;
 
-    private sealed record RectOp(IBrush? Brush, Rect Rect) : DrawOp(Brush);
+        public GlyphRun Run { get; } = run;
+    }
 
-    private sealed record GeometryOp(IBrush? Brush, Geometry Geometry, double StrokeThickness) : DrawOp(Brush);
+    private sealed class RectOp(IBrush? brush, Rect rect)
+    {
+        public IBrush? Brush { get; } = brush;
+
+        public Rect Rect { get; } = rect;
+    }
+
+    private sealed class GeometryOp(IBrush? brush, Geometry geometry, double strokeThickness)
+    {
+        public IBrush? Brush { get; } = brush;
+
+        public Geometry Geometry { get; } = geometry;
+
+        public double StrokeThickness { get; } = strokeThickness;
+    }
 
     /// <summary>把同字体、同字号、同颜色、同基线且从左到右的连续字形合并成一个 GlyphRun。</summary>
     private sealed class GlyphBatch

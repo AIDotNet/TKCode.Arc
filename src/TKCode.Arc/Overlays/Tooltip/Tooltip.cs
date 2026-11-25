@@ -320,10 +320,7 @@ public class Tooltip : ContentControl
 
         public void UpdateContent()
         {
-            if (_bubble is not null)
-            {
-                _bubble.Content = GetTip(_target);
-            }
+            _bubble?.Content = GetTip(_target);
         }
 
         public void Close(bool immediate = false)

@@ -660,10 +660,7 @@ public partial class DataGrid : TemplatedControl
         RereadChangedColumns();
         _store.Attach();
         _languages = DataGridText.Languages;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
         // Whether a save dialog exists depends on the top level.
         _toolbar?.UpdateState();
     }

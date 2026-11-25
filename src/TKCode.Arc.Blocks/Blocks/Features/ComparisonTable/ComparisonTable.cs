@@ -302,22 +302,10 @@ public partial class ComparisonTable : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_picker is not null)
-        {
-            _picker.ItemPressed -= OnPickerPressed;
-        }
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_switchLabel is not null)
-        {
-            _switchLabel.Tapped -= OnSwitchLabelTapped;
-        }
-        if (_table is not null)
-        {
-            _table.EffectiveViewportChanged -= OnTableViewportChanged;
-        }
+        _picker?.ItemPressed -= OnPickerPressed;
+        _switch?.IsCheckedChanged -= OnSwitchChanged;
+        _switchLabel?.Tapped -= OnSwitchLabelTapped;
+        _table?.EffectiveViewportChanged -= OnTableViewportChanged;
         _table = e.NameScope.Find<StackPanel>(TablePart);
         _head = e.NameScope.Find<ComparisonRowPanel>(HeadPart);
         _body = e.NameScope.Find<StackPanel>(BodyPart);
@@ -326,28 +314,16 @@ public partial class ComparisonTable : TemplatedControl
         _switch = e.NameScope.Find<Switch>(SwitchPart);
         _switchLabel = e.NameScope.Find<TextBlock>("PART_SwitchLabel");
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
-        if (_picker is not null)
-        {
-            _picker.ItemPressed += OnPickerPressed;
-        }
+        _picker?.ItemPressed += OnPickerPressed;
         if (_switch is not null)
         {
             _switch.IsChecked = IsDifferencesOnly;
             _switch.IsCheckedChanged += OnSwitchChanged;
             AutomationProperties.SetName(_switch, DifferencesLabel);
         }
-        if (_switchLabel is not null)
-        {
-            _switchLabel.Tapped += OnSwitchLabelTapped;
-        }
-        if (_head is not null)
-        {
-            _head.RenderTransform = _headOffset;
-        }
-        if (_table is not null)
-        {
-            _table.EffectiveViewportChanged += OnTableViewportChanged;
-        }
+        _switchLabel?.Tapped += OnSwitchLabelTapped;
+        _head?.RenderTransform = _headOffset;
+        _table?.EffectiveViewportChanged += OnTableViewportChanged;
         Rebuild();
     }
 

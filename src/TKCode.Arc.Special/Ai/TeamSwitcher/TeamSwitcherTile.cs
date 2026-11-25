@@ -148,15 +148,9 @@ public class TeamSwitcherTile : Control
         }
         if (change.Property == WorkspaceProperty)
         {
-            if (_watched is not null)
-            {
-                _watched.PropertyChanged -= OnWorkspaceChanged;
-            }
+            _watched?.PropertyChanged -= OnWorkspaceChanged;
             _watched = Workspace;
-            if (_watched is not null)
-            {
-                _watched.PropertyChanged += OnWorkspaceChanged;
-            }
+            _watched?.PropertyChanged += OnWorkspaceChanged;
             UpdateTint();
             UpdateName();
         }

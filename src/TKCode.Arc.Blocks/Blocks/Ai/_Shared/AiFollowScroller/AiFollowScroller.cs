@@ -208,10 +208,7 @@ internal class AiFollowScroller : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == ContentProperty)
         {
-            if (_scroll is not null)
-            {
-                _scroll.Content = change.NewValue;
-            }
+            _scroll?.Content = change.NewValue;
         }
         else if (change.Property == JumpButtonNameProperty || change.Property == JumpButtonTipProperty)
         {
@@ -531,10 +528,7 @@ internal class AiFollowScroller : TemplatedControl
         }
         _restorePending = false;
         _pendingRestore = null;
-        if (_scroll is not null)
-        {
-            _scroll.LayoutUpdated -= OnRestoreLayout;
-        }
+        _scroll?.LayoutUpdated -= OnRestoreLayout;
     }
 
     #endregion

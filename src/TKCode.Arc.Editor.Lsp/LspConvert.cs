@@ -3,6 +3,7 @@
 // workspace edits. Written for this package; the mapping follows the specification and the shapes of the engine's
 // languages.ts port. The feature results are in LspConvert.Features.cs.
 
+using System.Globalization;
 using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
@@ -67,13 +68,13 @@ internal static partial class LspConvert
     public static string EscapeMarkdown(string text) => MarkdownSyntax().Replace(text, @"\$&");
 
     /// <summary>MarkupContent, MarkedString or a list of MarkedString (hover contents) as Markdown strings.</summary>
-    public static IReadOnlyList<MarkdownString> ToMarkdownStrings(JsonElement contents)
+    public static IReadOnlyList<MarkdownString> ToMarkdownStrings(LspHoverContents contents)
     {
         var list = new List<MarkdownString>();
-        switch (contents.ValueKind)
+        switch (contents)
         {
-            case JsonValueKind.Array:
-                foreach (var item in contents.EnumerateArray())
+            case LspHoverItem[] items:
+                foreach (var item in items)
                 {
                     if (ToMarkdownString(item) is { } markdown)
                     {
@@ -81,79 +82,66 @@ internal static partial class LspConvert
                     }
                 }
                 break;
-            default:
-                if (ToMarkdownString(contents) is { } single)
+            case string text:
+                if (text.Length > 0)
                 {
-                    list.Add(single);
+                    list.Add(new MarkdownString(text));
                 }
+                break;
+            case LspMarkupContent markup:
+                if (ToMarkdownString(markup) is { } content)
+                {
+                    list.Add(content);
+                }
+                break;
+            case LspMarkedStringObject marked:
+                list.Add(ToMarkdownString(marked));
                 break;
         }
         return list;
     }
 
-    /// <summary>One MarkupContent or MarkedString as Markdown; null for anything else or an empty value.</summary>
-    public static MarkdownString? ToMarkdownString(JsonElement value)
+    private static MarkdownString? ToMarkdownString(LspHoverItem item) => item switch
     {
-        switch (value.ValueKind)
+        string text => text.Length == 0 ? null : new MarkdownString(text),
+        LspMarkupContent markup => ToMarkdownString(markup),
+        LspMarkedStringObject marked => ToMarkdownString(marked),
+        _ => null,
+    };
+
+    private static MarkdownString? ToMarkdownString(LspMarkupContent markup)
+    {
+        if (string.IsNullOrEmpty(markup.Value))
         {
-            case JsonValueKind.String:
-                // A MarkedString string is Markdown.
-                var text = value.GetString()!;
-                return text.Length == 0 ? null : new MarkdownString(text);
-            case JsonValueKind.Object:
-                var stringValue = GetString(value, "value") ?? string.Empty;
-                if (GetString(value, "kind") is { } kind)
-                {
-                    // MarkupContent
-                    if (stringValue.Length == 0)
-                    {
-                        return null;
-                    }
-                    return kind == "markdown" ? new MarkdownString(stringValue) : new MarkdownString(EscapeMarkdown(stringValue));
-                }
-                if (GetString(value, "language") is { } language)
-                {
-                    // MarkedString { language, value }: a code block.
-                    return new MarkdownString("```" + language + "\n" + stringValue + "\n```");
-                }
-                return null;
-            default:
-                return null;
+            return null;
         }
+        return markup.Kind == "markdown"
+            ? new MarkdownString(markup.Value)
+            : new MarkdownString(EscapeMarkdown(markup.Value));
     }
+
+    private static MarkdownString ToMarkdownString(LspMarkedStringObject marked) =>
+        new("```" + marked.Language + "\n" + marked.Value + "\n```");
 
     /// <summary>string | MarkupContent (documentation): plain text stays a string, Markdown becomes a MarkdownString.</summary>
-    public static StringOrMarkdown? ToDocumentation(JsonElement? value)
+    public static StringOrMarkdown? ToDocumentation(LspStringOrMarkup? value) => value switch
     {
-        if (value is not { } element)
-        {
-            return null;
-        }
-        switch (element.ValueKind)
-        {
-            case JsonValueKind.String:
-                return element.GetString()!;
-            case JsonValueKind.Object:
-                var text = GetString(element, "value") ?? string.Empty;
-                return GetString(element, "kind") == "markdown" ? new MarkdownString(text) : text;
-            default:
-                return null;
-        }
-    }
+        string text => text,
+        LspMarkupContent markup => markup.Kind == "markdown" ? new MarkdownString(markup.Value) : markup.Value,
+        _ => null,
+    };
 
     /// <summary>The engine's documentation in the protocol (for an active signature help sent back).</summary>
-    public static JsonElement? FromDocumentation(StringOrMarkdown? value)
+    public static LspStringOrMarkup? FromDocumentation(StringOrMarkdown? value) => value switch
     {
-        if (value is not { } documentation)
+        { } doc => doc switch
         {
-            return null;
-        }
-        if (!documentation.IsMarkdown)
-        {
-            return JsonSerializer.SerializeToElement(documentation.Value, s_json.String);
-        }
-        return JsonSerializer.SerializeToElement(new LspMarkupContent("markdown", documentation.Value), s_json.LspMarkupContent);
-    }
+            string plain => plain,
+            MarkdownString markdown => new LspMarkupContent("markdown", markdown.Value),
+            _ => null,
+        },
+        null => null,
+    };
 
     // ---- commands, edits ----
 
@@ -207,16 +195,12 @@ internal static partial class LspConvert
     public static MarkerData ToMarkerData(LspDiagnostic diagnostic)
     {
         var range = ToRange(diagnostic.Range);
-        string? code = null;
-        if (diagnostic.Code is { } codeElement)
+        var code = diagnostic.Code switch
         {
-            code = codeElement.ValueKind switch
-            {
-                JsonValueKind.String => codeElement.GetString(),
-                JsonValueKind.Number => codeElement.GetRawText(),
-                _ => null,
-            };
-        }
+            string text => text,
+            long number => number.ToString(CultureInfo.InvariantCulture),
+            _ => null,
+        };
         List<MarkerTag>? tags = null;
         if (diagnostic.Tags is { Length: > 0 })
         {
@@ -262,35 +246,34 @@ internal static partial class LspConvert
         {
             return new WorkspaceEdit(entries);
         }
-        if (edit.DocumentChanges is { ValueKind: JsonValueKind.Array } documentChanges)
+        if (edit.DocumentChanges is { } documentChanges)
         {
-            foreach (var change in documentChanges.EnumerateArray())
+            foreach (var change in documentChanges)
             {
-                if (change.ValueKind != JsonValueKind.Object)
+                switch (change)
                 {
-                    continue;
-                }
-                switch (GetString(change, "kind"))
-                {
-                    case "create":
-                        entries.Add(new WorkspaceFileEdit(null, UriOf(change, "uri")) { Options = FileOptions(change) });
-                        break;
-                    case "rename":
-                        entries.Add(new WorkspaceFileEdit(UriOf(change, "oldUri"), UriOf(change, "newUri")) { Options = FileOptions(change) });
-                        break;
-                    case "delete":
-                        entries.Add(new WorkspaceFileEdit(UriOf(change, "uri"), null) { Options = FileOptions(change) });
-                        break;
-                    default:
-                        var documentEdit = change.Deserialize(s_json.LspTextDocumentEdit);
-                        if (documentEdit is null)
-                        {
-                            break;
-                        }
+                    case LspTextDocumentEdit documentEdit:
                         var resource = ToUri(documentEdit.TextDocument.Uri);
                         foreach (var textEdit in documentEdit.Edits)
                         {
                             entries.Add(new WorkspaceTextEdit(resource, ToTextEdit(textEdit)) { VersionId = documentEdit.TextDocument.Version });
+                        }
+                        break;
+                    case LspResourceOperation operation:
+                        var options = ToFileOptions(operation.Options);
+                        switch (operation.Kind)
+                        {
+                            case "create":
+                                entries.Add(new WorkspaceFileEdit(null, operation.Uri is { } createUri ? ToUri(createUri) : null) { Options = options });
+                                break;
+                            case "rename":
+                                entries.Add(new WorkspaceFileEdit(
+                                    operation.OldUri is { } oldUri ? ToUri(oldUri) : null,
+                                    operation.NewUri is { } newUri ? ToUri(newUri) : null) { Options = options });
+                                break;
+                            case "delete":
+                                entries.Add(new WorkspaceFileEdit(operation.Uri is { } deleteUri ? ToUri(deleteUri) : null, null) { Options = options });
+                                break;
                         }
                         break;
                 }
@@ -311,29 +294,18 @@ internal static partial class LspConvert
         return new WorkspaceEdit(entries);
     }
 
-    private static Uri? UriOf(JsonElement element, string name) => GetString(element, name) is { } uri ? ToUri(uri) : null;
-
-    private static WorkspaceFileEditOptions? FileOptions(JsonElement change)
-    {
-        if (!change.TryGetProperty("options", out var options) || options.ValueKind != JsonValueKind.Object)
-        {
-            return null;
-        }
-        return new WorkspaceFileEditOptions
-        {
-            Overwrite = GetBool(options, "overwrite"),
-            IgnoreIfExists = GetBool(options, "ignoreIfExists"),
-            IgnoreIfNotExists = GetBool(options, "ignoreIfNotExists"),
-            Recursive = GetBool(options, "recursive"),
-        };
-    }
+    private static WorkspaceFileEditOptions? ToFileOptions(LspResourceOperationOptions? options) =>
+        options is null
+            ? null
+            : new WorkspaceFileEditOptions
+            {
+                Overwrite = options.Overwrite,
+                IgnoreIfExists = options.IgnoreIfExists,
+                IgnoreIfNotExists = options.IgnoreIfNotExists,
+                Recursive = options.Recursive,
+            };
 
     // ---- JSON helpers ----
-
-    public static string? GetString(JsonElement element, string name) =>
-        element.ValueKind == JsonValueKind.Object && element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String
-            ? value.GetString()
-            : null;
 
     public static bool GetBool(JsonElement element, string name) =>
         element.ValueKind == JsonValueKind.Object && element.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.True;

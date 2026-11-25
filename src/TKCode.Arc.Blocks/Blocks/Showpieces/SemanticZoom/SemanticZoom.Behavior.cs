@@ -132,18 +132,9 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         {
             _stage.Host = null;
         }
-        if (_crumbs is not null)
-        {
-            _crumbs.Chosen -= OnCrumbChosen;
-        }
-        if (_tourButton is not null)
-        {
-            _tourButton.Click -= OnTourClick;
-        }
-        if (_minimap is not null)
-        {
-            _minimap.Host = null;
-        }
+        _crumbs?.Chosen -= OnCrumbChosen;
+        _tourButton?.Click -= OnTourClick;
+        _minimap?.Host = null;
         var scope = e.NameScope;
         _title = scope.Find<ContentPresenter>(TitlePart);
         _subtitle = scope.Find<TextBlock>(SubtitlePart);
@@ -165,26 +156,11 @@ public partial class SemanticZoom : ISemanticZoomStageHost
             _stage.Host = this;
             _stage.MaxZoom = MaxZoom;
         }
-        if (_crumbs is not null)
-        {
-            _crumbs.Chosen += OnCrumbChosen;
-        }
-        if (_tourButton is not null)
-        {
-            _tourButton.Click += OnTourClick;
-        }
-        if (_minimap is not null)
-        {
-            _minimap.Host = this;
-        }
-        if (_card is not null)
-        {
-            _card.Placement = ShowpieceCardPlacement.SemanticZoom;
-        }
-        if (_zoomBar is not null)
-        {
-            _zoomBar.Stage = _stage;
-        }
+        _crumbs?.Chosen += OnCrumbChosen;
+        _tourButton?.Click += OnTourClick;
+        _minimap?.Host = this;
+        _card?.Placement = ShowpieceCardPlacement.SemanticZoom;
+        _zoomBar?.Stage = _stage;
         ApplyTexts();
         _dirty = true;
         Rebuild(keepView: false);
@@ -231,22 +207,10 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         {
             _stage.IsCompact = compact;
         }
-        if (_zoomBar is not null)
-        {
-            _zoomBar.IsCompact = compact;
-        }
-        if (_tourButton is not null)
-        {
-            _tourButton.IsCompact = compact;
-        }
-        if (_minimap is not null)
-        {
-            _minimap.IsCompact = compact;
-        }
-        if (_panel is not null)
-        {
-            _panel.Layout = side || compact ? SemanticZoomPanelLayout.Stack : SemanticZoomPanelLayout.Grid;
-        }
+        _zoomBar?.IsCompact = compact;
+        _tourButton?.IsCompact = compact;
+        _minimap?.IsCompact = compact;
+        _panel?.Layout = side || compact ? SemanticZoomPanelLayout.Stack : SemanticZoomPanelLayout.Grid;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -304,10 +268,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         }
         else if (change.Property == HeaderProperty)
         {
-            if (_title is not null)
-            {
-                _title.IsVisible = change.NewValue is not null;
-            }
+            _title?.IsVisible = change.NewValue is not null;
         }
         else if (change.Property == ArcMotion.LevelProperty)
         {
@@ -470,10 +431,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
             _tourButton.StartText = texts.StartTour;
             _tourButton.StopText = texts.StopTour;
         }
-        if (_hint is not null)
-        {
-            _hint.Text = texts.PointerHint;
-        }
+        _hint?.Text = texts.PointerHint;
         if (_crumbs is not null)
         {
             AutomationProperties.SetName(_crumbs, texts.BreadcrumbLabel);
@@ -487,10 +445,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
             _stage.RoleDescription = texts.StageRole;
             AutomationProperties.SetHelpText(_stage, texts.StageHelp);
         }
-        if (_title is not null)
-        {
-            _title.IsVisible = Header is not null;
-        }
+        _title?.IsVisible = Header is not null;
     }
 
     private void UpdateSubtitle()
@@ -546,10 +501,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         }
         ScopePath = path;
         _crumbs?.SetPath(path);
-        if (_panel is not null)
-        {
-            _panel.Scope = node;
-        }
+        _panel?.Scope = node;
         _minimap?.InvalidateVisual();
         if (CursorNode is not null && _stage is not null && _stage.Scene.Cursor < 0)
         {
@@ -1042,10 +994,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
         try
         {
             SetCurrentValue(IsTourPlayingProperty, playing);
-            if (_tourButton is not null)
-            {
-                _tourButton.IsChecked = playing;
-            }
+            _tourButton?.IsChecked = playing;
         }
         finally
         {
@@ -1103,10 +1052,7 @@ public partial class SemanticZoom : ISemanticZoomStageHost
     private void HideCard()
     {
         _cardFromCursor = false;
-        if (_card is not null)
-        {
-            _card.IsOpen = false;
-        }
+        _card?.IsOpen = false;
     }
 
     private void RefreshCard()

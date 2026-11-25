@@ -134,10 +134,7 @@ internal sealed class AiPanelTurnView : TemplatedControl
     {
         _labels = labels;
         _assistantName = assistantName;
-        if (_card is not null)
-        {
-            _card.Labels = labels;
-        }
+        _card?.Labels = labels;
         Refresh();
     }
 
@@ -244,18 +241,9 @@ internal sealed class AiPanelTurnView : TemplatedControl
     private void Refresh()
     {
         var state = _turn.State;
-        if (_context is not null)
-        {
-            _context.IsVisible = !string.IsNullOrEmpty(_turn.ContextLabel);
-        }
-        if (_contextText is not null)
-        {
-            _contextText.Text = string.IsNullOrEmpty(_turn.ContextLabel) ? null : _labels.SelectionContext(_turn.ContextLabel);
-        }
-        if (_prompt is not null)
-        {
-            _prompt.Text = _turn.Prompt;
-        }
+        _context?.IsVisible = !string.IsNullOrEmpty(_turn.ContextLabel);
+        _contextText?.Text = string.IsNullOrEmpty(_turn.ContextLabel) ? null : _labels.SelectionContext(_turn.ContextLabel);
+        _prompt?.Text = _turn.Prompt;
         if (_reading is not null)
         {
             _reading.Text = _labels.ReadingThePage;
@@ -263,18 +251,9 @@ internal sealed class AiPanelTurnView : TemplatedControl
             _reading.IsActive = state == AiPanelTurnState.Reading;
             AutomationProperties.SetName(_reading, _labels.ReadingThePage);
         }
-        if (_answer is not null)
-        {
-            _answer.IsVisible = state != AiPanelTurnState.Reading && _answer.HasText;
-        }
-        if (_stopped is not null)
-        {
-            _stopped.IsVisible = state == AiPanelTurnState.Stopped;
-        }
-        if (_stoppedText is not null)
-        {
-            _stoppedText.Text = _labels.Stopped;
-        }
+        _answer?.IsVisible = state != AiPanelTurnState.Reading && _answer.HasText;
+        _stopped?.IsVisible = state == AiPanelTurnState.Stopped;
+        _stoppedText?.Text = _labels.Stopped;
         if (_error is not null)
         {
             _error.IsVisible = state == AiPanelTurnState.Failed;

@@ -362,10 +362,7 @@ public partial class CodeReview : ICodeReviewHost
         }
         _lastSubmission = submission;
         UpdateStatusText(comments.Count);
-        if (_statusBand is not null)
-        {
-            _statusBand.IsExpanded = true;
-        }
+        _statusBand?.IsExpanded = true;
         IsApproved = true;
         PseudoClasses.Set(ApprovedPseudoClass, true);
         _announcer?.Announce(Labels.ApprovedAnnouncement(comments.Count));
@@ -385,10 +382,7 @@ public partial class CodeReview : ICodeReviewHost
         _approve.ClearValue(BorderThicknessProperty);
         _approve.Content = Labels.Approve;
         _approve.Variant = ButtonVariant.Primary;
-        if (_statusBand is not null)
-        {
-            _statusBand.IsExpanded = false;
-        }
+        _statusBand?.IsExpanded = false;
         IsApproved = false;
         PseudoClasses.Set(ApprovedPseudoClass, false);
         _announcer?.Announce(Labels.WithdrawnAnnouncement);

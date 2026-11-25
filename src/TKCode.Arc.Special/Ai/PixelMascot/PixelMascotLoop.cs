@@ -37,7 +37,6 @@ public sealed class PixelMascotLoop : AvaloniaObject
 
     private readonly DispatcherTimer _timer;
     private int _index;
-    private PixelMascotStatus _status = Steps[0].Status;
 
     /// <summary>Creates the loop on its first step; it starts moving at once unless <see cref="IsEnabled"/> is false.</summary>
     public PixelMascotLoop()
@@ -50,9 +49,9 @@ public sealed class PixelMascotLoop : AvaloniaObject
     /// <inheritdoc cref="StatusProperty"/>
     public PixelMascotStatus Status
     {
-        get => _status;
-        private set => SetAndRaise(StatusProperty, ref _status, value);
-    }
+        get;
+        private set => SetAndRaise(StatusProperty, ref field, value);
+    } = Steps[0].Status;
 
     /// <inheritdoc cref="IsEnabledProperty"/>
     public bool IsEnabled { get => GetValue(IsEnabledProperty); set => SetValue(IsEnabledProperty, value); }

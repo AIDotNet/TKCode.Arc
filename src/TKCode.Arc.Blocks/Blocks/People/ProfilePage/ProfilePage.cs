@@ -484,14 +484,8 @@ public class ProfilePage : TemplatedControl
             _share.Click += OnShareClick;
             AutomationProperties.SetLiveSetting(_share, AutomationLiveSetting.Polite);
         }
-        if (_edit is not null)
-        {
-            _edit.Click += OnEditClick;
-        }
-        if (_website is not null)
-        {
-            _website.Click += OnWebsiteClick;
-        }
+        _edit?.Click += OnEditClick;
+        _website?.Click += OnWebsiteClick;
         if (_tabs is not null)
         {
             foreach (var tab in new[] { _activityTab, _projectsTab })
@@ -510,10 +504,7 @@ public class ProfilePage : TemplatedControl
         {
             _panelSwap.Show(Tab == ProfilePageTab.Activity ? _activityView : _projectsView, animate: false);
         }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed += OnScrimPressed;
-        }
+        _scrim?.PointerPressed += OnScrimPressed;
         if (_sheet is not null)
         {
             _sheet.SubmitRequested += OnSheetSubmit;
@@ -531,22 +522,10 @@ public class ProfilePage : TemplatedControl
 
     private void Unhook()
     {
-        if (_share is not null)
-        {
-            _share.Click -= OnShareClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click -= OnEditClick;
-        }
-        if (_website is not null)
-        {
-            _website.Click -= OnWebsiteClick;
-        }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed -= OnScrimPressed;
-        }
+        _share?.Click -= OnShareClick;
+        _edit?.Click -= OnEditClick;
+        _website?.Click -= OnWebsiteClick;
+        _scrim?.PointerPressed -= OnScrimPressed;
         if (_sheet is not null)
         {
             _sheet.SubmitRequested -= OnSheetSubmit;
@@ -605,10 +584,7 @@ public class ProfilePage : TemplatedControl
         PseudoClasses.Set(StackedPseudoClass, width < StackBreakpoint);
         PseudoClasses.Set(CompactPseudoClass, width < CompactBreakpoint);
         PseudoClasses.Set(SingleColumnPseudoClass, width < SingleColumnBreakpoint);
-        if (_body is not null)
-        {
-            _body.IsStacked = width < StackBreakpoint;
-        }
+        _body?.IsStacked = width < StackBreakpoint;
         _projectsView.Columns = width < SingleColumnBreakpoint ? 1 : 2;
         _sheet?.UpdateWidth(width, 420);
     }
@@ -743,15 +719,9 @@ public class ProfilePage : TemplatedControl
         {
             return;
         }
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= handler;
-        }
+        observed?.CollectionChanged -= handler;
         observed = next;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += handler;
-        }
+        observed?.CollectionChanged += handler;
     }
 
     private void OnStatsSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildStats();
@@ -776,15 +746,9 @@ public class ProfilePage : TemplatedControl
         {
             return;
         }
-        if (_watchedProfile is not null)
-        {
-            _watchedProfile.PropertyChanged -= OnProfileChanged;
-        }
+        _watchedProfile?.PropertyChanged -= OnProfileChanged;
         _watchedProfile = next;
-        if (_watchedProfile is not null)
-        {
-            _watchedProfile.PropertyChanged += OnProfileChanged;
-        }
+        _watchedProfile?.PropertyChanged += OnProfileChanged;
     }
 
     private void OnProfileChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => RefreshProfile();
@@ -829,18 +793,9 @@ public class ProfilePage : TemplatedControl
     private void ApplyLabels()
     {
         var labels = Labels;
-        if (_shareLabel is not null)
-        {
-            _shareLabel.Text = labels.Share;
-        }
-        if (_copiedLabel is not null)
-        {
-            _copiedLabel.Text = labels.Copied;
-        }
-        if (_failedLabel is not null)
-        {
-            _failedLabel.Text = labels.CopyFailed;
-        }
+        _shareLabel?.Text = labels.Share;
+        _copiedLabel?.Text = labels.Copied;
+        _failedLabel?.Text = labels.CopyFailed;
         if (_share is not null)
         {
             AutomationProperties.SetName(_share, (_shareStack?.Shown ?? 0) switch
@@ -876,10 +831,7 @@ public class ProfilePage : TemplatedControl
     private void RefreshProfile()
     {
         var p = Profile ?? s_empty;
-        if (_name is not null)
-        {
-            _name.Text = p.Name;
-        }
+        _name?.Text = p.Name;
         if (_avatar is not null)
         {
             _avatar.DisplayName = p.Name;
@@ -892,52 +844,25 @@ public class ProfilePage : TemplatedControl
             _handle.IsVisible = !string.IsNullOrEmpty(p.Handle);
         }
         var hasHeadline = !string.IsNullOrWhiteSpace(p.Headline);
-        if (_headline is not null)
-        {
-            _headline.Text = p.Headline;
-        }
-        if (_headlineGlow is not null)
-        {
-            _headlineGlow.IsVisible = hasHeadline;
-        }
-        if (_headlineDot is not null)
-        {
-            _headlineDot.IsVisible = hasHeadline && !string.IsNullOrEmpty(p.Handle);
-        }
+        _headline?.Text = p.Headline;
+        _headlineGlow?.IsVisible = hasHeadline;
+        _headlineDot?.IsVisible = hasHeadline && !string.IsNullOrEmpty(p.Handle);
         if (_bio is not null)
         {
             // The bio is one paragraph: line breaks read as spaces.
             _bio.Text = (p.Bio ?? string.Empty).Replace("\r\n", " ").Replace('\n', ' ');
         }
-        if (_bioGlow is not null)
-        {
-            _bioGlow.IsVisible = !string.IsNullOrWhiteSpace(p.Bio);
-        }
-        if (_location is not null)
-        {
-            _location.Text = p.Location;
-        }
-        if (_locationGlow is not null)
-        {
-            _locationGlow.IsVisible = !string.IsNullOrWhiteSpace(p.Location);
-        }
+        _bioGlow?.IsVisible = !string.IsNullOrWhiteSpace(p.Bio);
+        _location?.Text = p.Location;
+        _locationGlow?.IsVisible = !string.IsNullOrWhiteSpace(p.Location);
         if (_website is not null)
         {
             _website.Content = p.Website;
             AutomationProperties.SetName(_website, p.Website);
         }
-        if (_websiteGlow is not null)
-        {
-            _websiteGlow.IsVisible = !string.IsNullOrWhiteSpace(p.Website);
-        }
-        if (_joined is not null)
-        {
-            _joined.Text = string.IsNullOrWhiteSpace(p.JoinedText) ? string.Empty : Labels.Joined(p.JoinedText);
-        }
-        if (_joinedRow is not null)
-        {
-            _joinedRow.IsVisible = !string.IsNullOrWhiteSpace(p.JoinedText);
-        }
+        _websiteGlow?.IsVisible = !string.IsNullOrWhiteSpace(p.Website);
+        _joined?.Text = string.IsNullOrWhiteSpace(p.JoinedText) ? string.Empty : Labels.Joined(p.JoinedText);
+        _joinedRow?.IsVisible = !string.IsNullOrWhiteSpace(p.JoinedText);
         if (_cover is not null)
         {
             if (p.CoverBrush is { } brush)
@@ -1091,10 +1016,7 @@ public class ProfilePage : TemplatedControl
         {
             ok = false;
         }
-        if (_shareStack is not null)
-        {
-            _shareStack.Shown = ok ? 1 : 2;
-        }
+        _shareStack?.Shown = ok ? 1 : 2;
         ApplyLabels();
         _announcer?.Announce(ok ? Labels.CopiedAnnouncement(url) : Labels.CopyFailedAnnouncement);
         RestartShareTimer();
@@ -1115,10 +1037,7 @@ public class ProfilePage : TemplatedControl
     private void OnShareTimer(object? sender, EventArgs e)
     {
         _shareTimer?.Stop();
-        if (_shareStack is not null)
-        {
-            _shareStack.Shown = 0;
-        }
+        _shareStack?.Shown = 0;
         ApplyLabels();
     }
 
@@ -1286,10 +1205,7 @@ public class ProfilePage : TemplatedControl
             return;
         }
         _sheetShown = false;
-        if (_sheet is not null)
-        {
-            _sheet.IsVisible = false;
-        }
+        _sheet?.IsVisible = false;
     }
 
     private void EnsureSheetMotion()
@@ -1305,10 +1221,7 @@ public class ProfilePage : TemplatedControl
         _sheetFade = new MotionValue<double>(this, 1, MotionVectors.Double);
         _sheetFade.Changed += v =>
         {
-            if (_sheet is not null)
-            {
-                _sheet.Opacity = v;
-            }
+            _sheet?.Opacity = v;
         };
     }
 
@@ -1369,10 +1282,7 @@ public class ProfilePage : TemplatedControl
             return;
         }
         IsSaving = false;
-        if (_sheet is not null)
-        {
-            _sheet.IsSaving = false;
-        }
+        _sheet?.IsSaving = false;
         var changed = ProfilePageValidation.Changed(previous, draft);
         SetCurrentValue(ProfileProperty, draft);
         CloseEditor();

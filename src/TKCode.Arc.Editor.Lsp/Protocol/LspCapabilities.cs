@@ -184,7 +184,7 @@ internal static class LspClientCapabilities
 
     private static int[] Range(int first, int last) => Enumerable.Range(first, last - first + 1).ToArray();
 
-    private static void WriteStrings(Utf8JsonWriter w, string name, params string[] values)
+    private static void WriteStrings(Utf8JsonWriter w, string name, params ReadOnlySpan<string> values)
     {
         w.WriteStartArray(name);
         foreach (var value in values)
@@ -194,7 +194,7 @@ internal static class LspClientCapabilities
         w.WriteEndArray();
     }
 
-    private static void WriteValueSet(Utf8JsonWriter w, string name, params int[] values)
+    private static void WriteValueSet(Utf8JsonWriter w, string name, params ReadOnlySpan<int> values)
     {
         w.WriteStartObject(name);
         w.WriteStartArray("valueSet");

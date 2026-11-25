@@ -49,10 +49,7 @@ internal sealed class InstallSnippetKeyStatus : TemplatedControl
 
     private void Apply()
     {
-        if (_glyph is not null)
-        {
-            _glyph.Data = _shownGlyph;
-        }
+        _glyph?.Data = _shownGlyph;
         if (_text is not null && !Equals(_text.Content, _shownText))
         {
             _text.Content = _shownText;

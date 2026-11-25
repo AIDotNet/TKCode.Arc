@@ -62,14 +62,8 @@ internal sealed class CatchUpRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_open is not null)
-        {
-            _open.Click -= OnOpenClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _open?.Click -= OnOpenClick;
+        _toggle?.Click -= OnToggleClick;
         _open = e.NameScope.Find<CatchUpOpenButton>("PART_Open");
         _toggle = e.NameScope.Find<AvaloniaButton>("PART_Toggle");
         _toggleGlyph = e.NameScope.Find<ArcGlyph>("PART_ToggleGlyph");
@@ -82,10 +76,7 @@ internal sealed class CatchUpRow : TemplatedControl
             _open.Glyph = Glyph;
             _open.Click += OnOpenClick;
         }
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _toggle?.Click += OnToggleClick;
         PseudoClasses.Set(":unread", IsUnread);
         UpdateGlyph();
         UpdateNames(_labels ?? new CatchUpLabels());
@@ -103,14 +94,8 @@ internal sealed class CatchUpRow : TemplatedControl
 
     private void UpdateGlyph()
     {
-        if (_open is not null)
-        {
-            _open.IsUnread = IsUnread;
-        }
-        if (_toggleGlyph is not null)
-        {
-            _toggleGlyph.Data = IsUnread ? ArcIcons.Check : ArcIcons.CircleDot;
-        }
+        _open?.IsUnread = IsUnread;
+        _toggleGlyph?.Data = IsUnread ? ArcIcons.Check : ArcIcons.CircleDot;
     }
 
     internal void UpdateNames(CatchUpLabels labels)

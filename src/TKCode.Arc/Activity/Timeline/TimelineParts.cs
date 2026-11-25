@@ -461,15 +461,9 @@ internal sealed class TimelineDayHeader : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_grow is not null)
-        {
-            _grow.Closed -= OnGrowClosed;
-        }
+        _grow?.Closed -= OnGrowClosed;
         _grow = e.NameScope.Find<TimelineGrowHost>(GrowPart);
-        if (_grow is not null)
-        {
-            _grow.Closed += OnGrowClosed;
-        }
+        _grow?.Closed += OnGrowClosed;
         _label = e.NameScope.Find<TextBlock>(LabelPart);
         _count = e.NameScope.Find<Primitives.RollingDigits>(CountPart);
         _countWord = e.NameScope.Find<TextBlock>(CountWordPart);

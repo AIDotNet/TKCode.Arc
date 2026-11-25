@@ -241,20 +241,14 @@ public partial class AiAnswer
     private void OnCitationActivated(object? sender, AiAnswerLightEventArgs e)
     {
         e.Handled = true;
-        if (_sources is not null)
-        {
-            _sources.ActiveNumber = e.SourceNumber;
-        }
+        _sources?.ActiveNumber = e.SourceNumber;
     }
 
     /// <summary>A source card is pointed at or focused (or none is any more): every sentence citing it lights.</summary>
     private void OnCardActivated(object? sender, AiSourceCardEventArgs e)
     {
         e.Handled = true;
-        if (_document is not null)
-        {
-            _document.LitSourceNumber = e.SourceNumber;
-        }
+        _document?.LitSourceNumber = e.SourceNumber;
     }
 
     private void OnCitationInvoked(object? sender, AiAnswerSourceEventArgs e)

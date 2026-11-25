@@ -275,10 +275,7 @@ public class FeedbackActions : TemplatedControl
         {
             _phase = PanelPhase.Form;
         }
-        if (_panel is not null)
-        {
-            _panel.IsExpanded = false;
-        }
+        _panel?.IsExpanded = false;
         PseudoClasses.Set(OpenPseudoClass, false);
         UpdateThumbs();
         if (returnFocus)
@@ -292,54 +289,24 @@ public class FeedbackActions : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_up is not null)
-        {
-            _up.Click -= OnUp;
-        }
-        if (_down is not null)
-        {
-            _down.Click -= OnDown;
-        }
-        if (_rowRetry is not null)
-        {
-            _rowRetry.Click -= OnRowRetry;
-        }
-        if (_panel is not null)
-        {
-            _panel.Content = null;
-        }
-        if (_swap is not null)
-        {
-            _swap.Content = null;
-        }
+        _up?.Click -= OnUp;
+        _down?.Click -= OnDown;
+        _rowRetry?.Click -= OnRowRetry;
+        _panel?.Content = null;
+        _swap?.Content = null;
         _up = e.NameScope.Find<ToggleButton>(UpPart);
         _down = e.NameScope.Find<ToggleButton>(DownPart);
         _panel = e.NameScope.Find<AiHeightBox>(PanelPart);
-        if (_panel is not null)
-        {
-            _panel.HeightSpring = AiHeightBox.PanelSpring;
-        }
+        _panel?.HeightSpring = AiHeightBox.PanelSpring;
         _swap = e.NameScope.Find<ArcContentSwap>(SwapPart);
         _rowError = e.NameScope.Find<Control>(RowErrorPart);
         _rowErrorText = e.NameScope.Find<TextBlock>(RowErrorTextPart);
         _rowRetry = e.NameScope.Find<AvaloniaButton>(RowRetryPart);
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
-        if (_up is not null)
-        {
-            _up.Click += OnUp;
-        }
-        if (_down is not null)
-        {
-            _down.Click += OnDown;
-        }
-        if (_rowRetry is not null)
-        {
-            _rowRetry.Click += OnRowRetry;
-        }
-        if (_swap is not null)
-        {
-            _swap.Content = _phase == PanelPhase.Thanks ? _thanks : _form;
-        }
+        _up?.Click += OnUp;
+        _down?.Click += OnDown;
+        _rowRetry?.Click += OnRowRetry;
+        _swap?.Content = _phase == PanelPhase.Thanks ? _thanks : _form;
         if (_panel is not null && _panel.IsExpanded != IsPanelOpen)
         {
             _panel.IsExpanded = IsPanelOpen;
@@ -398,10 +365,7 @@ public class FeedbackActions : TemplatedControl
         {
             _panelFor = FeedbackRating.None;
             PseudoClasses.Set(OpenPseudoClass, false);
-            if (_panel is not null)
-            {
-                _panel.IsExpanded = false;
-            }
+            _panel?.IsExpanded = false;
         }
         else if (_phase == PanelPhase.Sending)
         {
@@ -472,18 +436,12 @@ public class FeedbackActions : TemplatedControl
         _panelFor = rating;
         _opener = opener;
         _phase = PanelPhase.Form;
-        if (_swap is not null)
-        {
-            _swap.Content = _form;
-        }
+        _swap?.Content = _form;
         SyncForm();
         _form.Reset();
         PseudoClasses.Set(OpenPseudoClass, true);
         UpdateThumbs();
-        if (_panel is not null)
-        {
-            _panel.IsExpanded = true;
-        }
+        _panel?.IsExpanded = true;
         if (focusFirst)
         {
             // A keyboard press moves focus to the first reason; a pointer press leaves it where it is.
@@ -535,18 +493,9 @@ public class FeedbackActions : TemplatedControl
 
     private void UpdateRowError()
     {
-        if (_rowError is not null)
-        {
-            _rowError.IsVisible = _ratingFailed;
-        }
-        if (_rowErrorText is not null)
-        {
-            _rowErrorText.Text = Labels.RatingFailed;
-        }
-        if (_rowRetry is not null)
-        {
-            _rowRetry.Content = Labels.TryAgain;
-        }
+        _rowError?.IsVisible = _ratingFailed;
+        _rowErrorText?.Text = Labels.RatingFailed;
+        _rowRetry?.Content = Labels.TryAgain;
     }
 
     private void Announce(string text)
@@ -675,10 +624,7 @@ public class FeedbackActions : TemplatedControl
         _thanks.Message = ThanksMessage ?? (simulated ? labels.SimulatedThanks : labels.ThanksMessage);
         // Keep focus inside the panel through the swap: a focused Submit that leaves the tree would drop it to the window.
         _focusThanks = keyboard || _form.IsKeyboardFocusWithin;
-        if (_swap is not null)
-        {
-            _swap.Content = _thanks;
-        }
+        _swap?.Content = _thanks;
         _thanks.PlayTick();
         Announce(labels.Thanks + ". " + _thanks.Message);
         if (_focusThanks)

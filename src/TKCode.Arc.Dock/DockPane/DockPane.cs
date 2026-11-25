@@ -80,7 +80,6 @@ public partial class DockPane : ContentControl
         AvaloniaProperty.RegisterDirect<DockPane, bool>(nameof(IsPinned), o => o.IsPinned);
 
     private DockGroup? _group;
-    private DockPaneState _state;
     private bool _isPinned = true;
 
     public DockPane()
@@ -138,8 +137,8 @@ public partial class DockPane : ContentControl
     /// <inheritdoc cref="StateProperty"/>
     public DockPaneState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsPinnedProperty"/>

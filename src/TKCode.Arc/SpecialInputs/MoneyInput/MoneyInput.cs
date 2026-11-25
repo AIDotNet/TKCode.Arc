@@ -162,7 +162,6 @@ public class MoneyInput : FieldTextBox
     private bool _syncingCurrency;
     private bool _inBaseKey;
     private int? _pendingCaret;
-    private long? _minorUnits;
     private string _rangeText = string.Empty;
     private string? _shownError;
     private bool _flashing;
@@ -250,8 +249,8 @@ public class MoneyInput : FieldTextBox
     /// <summary>The amount in minor units, or null when empty.</summary>
     public long? MinorUnits
     {
-        get => _minorUnits;
-        private set => SetAndRaise(MinorUnitsProperty, ref _minorUnits, value);
+        get;
+        private set => SetAndRaise(MinorUnitsProperty, ref field, value);
     }
 
     /// <summary>The allowed range as shown under the shell.</summary>
@@ -458,15 +457,9 @@ public class MoneyInput : FieldTextBox
 
     private static void Subscribe(ref INotifyCollectionChanged? field, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
     {
-        if (field is not null)
-        {
-            field.CollectionChanged -= handler;
-        }
+        field?.CollectionChanged -= handler;
         field = next;
-        if (field is not null)
-        {
-            field.CollectionChanged += handler;
-        }
+        field?.CollectionChanged += handler;
     }
 
     private void OnCurrenciesCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnCurrenciesChanged();
@@ -724,14 +717,8 @@ public class MoneyInput : FieldTextBox
                 : min is not null
                     ? string.Format(CultureInfo.InvariantCulture, MinimumOnlyFormat, _info.FormatMinor(min))
                     : string.Empty;
-        if (_range is not null)
-        {
-            _range.Text = RangeText;
-        }
-        if (_rangeFlash is not null)
-        {
-            _rangeFlash.Text = RangeText;
-        }
+        _range?.Text = RangeText;
+        _rangeFlash?.Text = RangeText;
         var atMax = max is not null && (CurrentMinor ?? 0) >= max;
         if (_chips is not null)
         {
@@ -750,18 +737,12 @@ public class MoneyInput : FieldTextBox
     private void UpdateToolbar()
     {
         var hasChips = _chips is { Children.Count: > 0 };
-        if (_chips is not null)
-        {
-            _chips.IsVisible = hasChips;
-        }
+        _chips?.IsVisible = hasChips;
         if (_range?.Parent is Control rangeHost)
         {
             rangeHost.IsVisible = RangeText.Length > 0;
         }
-        if (_toolbar is not null)
-        {
-            _toolbar.IsVisible = hasChips || RangeText.Length > 0;
-        }
+        _toolbar?.IsVisible = hasChips || RangeText.Length > 0;
     }
 
     private void UpdateMessages()
@@ -958,14 +939,8 @@ public class MoneyInput : FieldTextBox
 
     private void ApplyFlash(double value)
     {
-        if (_range is not null)
-        {
-            _range.Opacity = 1 - value;
-        }
-        if (_rangeFlash is not null)
-        {
-            _rangeFlash.Opacity = value;
-        }
+        _range?.Opacity = 1 - value;
+        _rangeFlash?.Opacity = value;
     }
 
     private void Announce(string message) => _live?.Announce(message);
@@ -1408,10 +1383,7 @@ public class MoneyInput : FieldTextBox
         _menuOpen = false;
         IsCurrencyMenuOpen = false;
         _highlightPending = false;
-        if (_button is not null)
-        {
-            _button.IsOpen = false;
-        }
+        _button?.IsOpen = false;
         _list?.Highlight.Hide();
         UpdateOptionStates();
         if (_popup is { } popup)
@@ -1432,10 +1404,7 @@ public class MoneyInput : FieldTextBox
             _menuOpen = false;
             IsCurrencyMenuOpen = false;
             _highlightPending = false;
-            if (_button is not null)
-            {
-                _button.IsOpen = false;
-            }
+            _button?.IsOpen = false;
             _list?.Highlight.Hide();
             UpdateOptionStates();
         }

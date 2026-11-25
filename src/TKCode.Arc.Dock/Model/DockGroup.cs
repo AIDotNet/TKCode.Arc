@@ -21,7 +21,6 @@ public sealed class DockGroup : DockNode
     public static readonly DirectProperty<DockGroup, bool> IsDocumentGroupProperty =
         AvaloniaProperty.RegisterDirect<DockGroup, bool>(nameof(IsDocumentGroup), o => o.IsDocumentGroup);
 
-    private bool _isDocumentGroup;
 
     public DockGroup()
     {
@@ -46,8 +45,8 @@ public sealed class DockGroup : DockNode
     /// <inheritdoc cref="IsDocumentGroupProperty"/>
     public bool IsDocumentGroup
     {
-        get => _isDocumentGroup;
-        private set => SetAndRaise(IsDocumentGroupProperty, ref _isDocumentGroup, value);
+        get;
+        private set => SetAndRaise(IsDocumentGroupProperty, ref field, value);
     }
 
     internal override IEnumerable<DockNode> ChildNodes => [];

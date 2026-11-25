@@ -175,14 +175,8 @@ public class SelectionToolbar : ContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_selectAll is not null)
-        {
-            _selectAll.Click -= OnSelectAllClick;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _selectAll?.Click -= OnSelectAllClick;
+        _clear?.Click -= OnClearClick;
         base.OnApplyTemplate(e);
         _barHost = e.NameScope.Find<PresenceHost>(BarHostPart);
         _bar = e.NameScope.Find<Border>(BarPart);
@@ -191,14 +185,8 @@ public class SelectionToolbar : ContentControl
         _selectAll = e.NameScope.Find<AvaloniaButton>(SelectAllButtonPart);
         _clear = e.NameScope.Find<AvaloniaButton>(ClearButtonPart);
         _announcer = e.NameScope.Find<AuthAnnouncer>(AnnouncerPart);
-        if (_selectAll is not null)
-        {
-            _selectAll.Click += OnSelectAllClick;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
+        _selectAll?.Click += OnSelectAllClick;
+        _clear?.Click += OnClearClick;
         if (_bar is not null)
         {
             AutomationProperties.SetControlTypeOverride(_bar, AutomationControlType.ToolBar);
@@ -318,10 +306,7 @@ public class SelectionToolbar : ContentControl
         var count = SelectedCount;
         var open = count > 0;
         PseudoClasses.Set(OpenPseudoClass, open);
-        if (_barHost is not null)
-        {
-            _barHost.IsPresent = open;
-        }
+        _barHost?.IsPresent = open;
         if (open && _count is not null && count != _shownCount)
         {
             // The digits roll up for a larger count and down for a smaller one; the bar keeps the last count while it leaves.

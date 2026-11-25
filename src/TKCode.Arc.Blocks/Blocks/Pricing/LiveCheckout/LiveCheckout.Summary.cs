@@ -124,10 +124,7 @@ public partial class LiveCheckout
         {
             _metaPresence = new LiveCheckoutPresence(_meta, visible: IsPaid);
         }
-        if (_bodyRow is not null)
-        {
-            _bodyRow.Motion = LiveCheckoutCollapseMotion.Unfold;
-        }
+        _bodyRow?.Motion = LiveCheckoutCollapseMotion.Unfold;
         _discountRow?.SetOpen(false, false);
         if (_coupon is not null)
         {
@@ -135,36 +132,21 @@ public partial class LiveCheckout
             _coupon.RemoveRequested += OnCouponRemove;
             _coupon.FocusMethod = () => FocusMethod;
         }
-        if (_pdfButton is not null)
-        {
-            _pdfButton.Click += OnReceiptPdf;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click += OnStartOver;
-        }
+        _pdfButton?.Click += OnReceiptPdf;
+        _startOver?.Click += OnStartOver;
         BuildPdfLabel();
     }
 
     private void DetachSummaryParts()
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggle;
-        }
+        _toggle?.Click -= OnToggle;
         if (_coupon is not null)
         {
             _coupon.ApplyRequested -= OnCouponApply;
             _coupon.RemoveRequested -= OnCouponRemove;
         }
-        if (_pdfButton is not null)
-        {
-            _pdfButton.Click -= OnReceiptPdf;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click -= OnStartOver;
-        }
+        _pdfButton?.Click -= OnReceiptPdf;
+        _startOver?.Click -= OnStartOver;
         _flip?.Dispose();
         _flip = null;
     }
@@ -220,10 +202,7 @@ public partial class LiveCheckout
         SetText("PART_TestCardText", l.UseTestCard);
         SetText("PART_AddCouponText", l.AddCoupon);
         SetText("PART_GrandLabel", IsPaid ? l.PaidToday : l.DueToday);
-        if (_secureNote is not null)
-        {
-            _secureNote.IsVisible = !string.IsNullOrEmpty(l.SecureNote);
-        }
+        _secureNote?.IsVisible = !string.IsNullOrEmpty(l.SecureNote);
         if (_testCardButton is not null)
         {
             _testCardButton.IsVisible = TestCard is not null;
@@ -295,10 +274,7 @@ public partial class LiveCheckout
     private void SyncToggle()
     {
         SetText("PART_ToggleLabel", IsSummaryOpen ? Labels.HideSummary : Labels.ShowSummary);
-        if (_toggleChevron is not null)
-        {
-            _toggleChevron.Data = IsSummaryOpen ? ArcIcons.ChevronUp : ArcIcons.ChevronDown;
-        }
+        _toggleChevron?.Data = IsSummaryOpen ? ArcIcons.ChevronUp : ArcIcons.ChevronDown;
         if (_toggle is not null)
         {
             AutomationProperties.SetName(_toggle, IsSummaryOpen ? Labels.HideSummary : Labels.ShowSummary);
@@ -326,10 +302,7 @@ public partial class LiveCheckout
                 amount.Culture = culture;
             }
         }
-        if (_subtotal is not null)
-        {
-            _subtotal.Value = totals.Subtotal;
-        }
+        _subtotal?.Value = totals.Subtotal;
         if (_discount is not null)
         {
             _discount.Sign = "−";
@@ -346,18 +319,9 @@ public partial class LiveCheckout
         {
             notCharged.IsVisible = !charged;
         }
-        if (_grand is not null)
-        {
-            _grand.Value = totals.Total;
-        }
-        if (_toggleTotal is not null)
-        {
-            _toggleTotal.Value = totals.Total;
-        }
-        if (_payAmount is not null)
-        {
-            _payAmount.Value = totals.Total;
-        }
+        _grand?.Value = totals.Total;
+        _toggleTotal?.Value = totals.Total;
+        _payAmount?.Value = totals.Total;
         SyncPayTexts();
         var changed = totals != Totals;
         Totals = totals;
@@ -838,10 +802,7 @@ public partial class LiveCheckout
             _shell.EndFormExit();
             _shell.IsPaid = false;
         }
-        if (_form is not null)
-        {
-            _form.IsHitTestVisible = true;
-        }
+        _form?.IsHitTestVisible = true;
         _formExit?.Jump(true);
         SetText("PART_GrandLabel", Labels.DueToday);
         _receiptPresence?.Jump(false);
@@ -927,10 +888,7 @@ public partial class LiveCheckout
         PseudoClasses.Set(NarrowPseudoClass, _narrow);
         PseudoClasses.Set(StackedPseudoClass, _stacked);
         PseudoClasses.Set(SummaryOpenPseudoClass, IsSummaryOpen && _narrow);
-        if (_shell is not null)
-        {
-            _shell.TwoColumnWidth = TwoColumnWidth;
-        }
+        _shell?.TwoColumnWidth = TwoColumnWidth;
         SyncStacked(_stacked);
         if (!IsPaid)
         {
@@ -1024,10 +982,7 @@ public partial class LiveCheckout
         }
         else if (p == TestCardProperty)
         {
-            if (_testCardButton is not null)
-            {
-                _testCardButton.IsVisible = TestCard is not null;
-            }
+            _testCardButton?.IsVisible = TestCard is not null;
         }
         else if (p == IsSummaryOpenProperty)
         {

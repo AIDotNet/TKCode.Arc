@@ -49,12 +49,7 @@ internal sealed record Command(string Id, ICommandHandler Handler, ICommandMetad
 /// <param name="Description">What the argument is.</param>
 /// <param name="Constraint">Returns true when the argument is acceptable; the registry checks it before the handler runs.</param>
 /// <param name="Schema">A JSON schema of the argument, opaque to the engine.</param>
-internal sealed record CommandArgumentMetadata(
-    string Name,
-    bool IsOptional = false,
-    string? Description = null,
-    Func<object?, bool>? Constraint = null,
-    object? Schema = null);
+internal sealed record CommandArgumentMetadata(string Name, bool IsOptional = false, string? Description = null, Func<object?, bool>? Constraint = null, object? Schema = null);
 
 internal interface ICommandMetadata
 {
@@ -76,7 +71,11 @@ internal sealed record CommandMetadata(
     string? Returns = null) : ICommandMetadata;
 
 /// <summary>A command about to run or that ran (upstream's ICommandEvent).</summary>
-internal sealed record CommandEvent(string CommandId, IReadOnlyList<object?> Args);
+internal sealed class CommandEvent(string commandId, IReadOnlyList<object?> args)
+{
+    public string CommandId { get; } = commandId;
+    public IReadOnlyList<object?> Args { get; } = args;
+}
 
 /// <summary>Runs commands by id (upstream's ICommandService).</summary>
 internal interface ICommandService

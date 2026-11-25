@@ -365,14 +365,8 @@ public class WalletCard : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_freeze is not null)
-        {
-            _freeze.Click -= OnFreezeClick;
-        }
-        if (_details is not null)
-        {
-            _details.Click -= OnDetailsClick;
-        }
+        _freeze?.Click -= OnFreezeClick;
+        _details?.Click -= OnDetailsClick;
         _rowsHost?.Children.Clear();
         base.OnApplyTemplate(e);
         _scope = e.NameScope;
@@ -388,14 +382,8 @@ public class WalletCard : TemplatedControl
         {
             glyph.Data = s_snowflake;
         }
-        if (_freeze is not null)
-        {
-            _freeze.Click += OnFreezeClick;
-        }
-        if (_details is not null)
-        {
-            _details.Click += OnDetailsClick;
-        }
+        _freeze?.Click += OnFreezeClick;
+        _details?.Click += OnDetailsClick;
         UpdateFace();
         UpdateTexts();
         UpdateBalance();
@@ -510,10 +498,7 @@ public class WalletCard : TemplatedControl
     {
         IsBusy = busy;
         PseudoClasses.Set(BusyPseudoClass, busy);
-        if (_freeze is not null)
-        {
-            _freeze.IsLoading = busy;
-        }
+        _freeze?.IsLoading = busy;
     }
 
     private void RestartDetailsTimer()
@@ -541,10 +526,7 @@ public class WalletCard : TemplatedControl
     private void UpdateFace()
     {
         var labels = Labels;
-        if (_art is not null)
-        {
-            _art.Finish = Finish;
-        }
+        _art?.Finish = Finish;
         SetText("PART_Issuer", IssuerName);
         SetText("PART_Network", NetworkName);
         SetText("PART_Masked", FormatNumber(full: false));
@@ -562,10 +544,7 @@ public class WalletCard : TemplatedControl
         {
             AutomationProperties.SetName(_face, labels.FaceName(NetworkName, HolderName ?? string.Empty, LastFour, IsFrozen));
         }
-        if (_copy is not null)
-        {
-            _copy.Value = Digits(CardNumber);
-        }
+        _copy?.Value = Digits(CardNumber);
     }
 
     private void UpdateTexts()
@@ -576,10 +555,7 @@ public class WalletCard : TemplatedControl
         SetText("PART_FrozenNoteText", labels.FrozenNote);
         SetText("PART_ActivityTitle", labels.RecentActivity);
         SetText("PART_Empty", labels.NoActivity);
-        if (_copy is not null)
-        {
-            _copy.Label = labels.CopyNumber;
-        }
+        _copy?.Label = labels.CopyNumber;
     }
 
     private void UpdateBalance()
@@ -615,10 +591,7 @@ public class WalletCard : TemplatedControl
             _details.Content = IsDetailsVisible ? labels.HideDetails : labels.ShowDetails;
             AutomationProperties.SetName(_details, IsDetailsVisible ? labels.HideDetails : labels.ShowDetails);
         }
-        if (_copy is not null)
-        {
-            _copy.IsVisible = IsDetailsVisible;
-        }
+        _copy?.IsVisible = IsDetailsVisible;
         if (Part<Border>("PART_FrozenNote") is { } note)
         {
             note.IsVisible = IsFrozen;

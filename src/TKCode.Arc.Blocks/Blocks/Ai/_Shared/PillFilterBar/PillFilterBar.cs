@@ -200,10 +200,7 @@ internal class PillFilterBar : TemplatedControl
         _scrollViewer = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _track = e.NameScope.Find<PillFilterTrack>(TrackPart);
         _indicator = e.NameScope.Find<GlidingIndicator>(SelectionPart);
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged += OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged += OnScrollChanged;
         if (_track is not null)
         {
             _track.Arranged += OnTrackArranged;
@@ -285,15 +282,9 @@ internal class PillFilterBar : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnOptionsCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnOptionsCollectionChanged;
         _observed = observed;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnOptionsCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnOptionsCollectionChanged;
     }
 
     private void OnOptionsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildPills();

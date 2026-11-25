@@ -58,13 +58,12 @@ public sealed class RadioCard : TogglesItem
     /// <inheritdoc cref="IconProperty"/>
     public object? Icon { get => GetValue(IconProperty); set => SetValue(IconProperty, value); }
 
-    private string? _shownDescription;
 
     /// <summary>The disabled reason while the card is disabled (when given), otherwise the description.</summary>
     internal string? ShownDescription
     {
-        get => _shownDescription;
-        private set => SetAndRaise(ShownDescriptionProperty, ref _shownDescription, value);
+        get;
+        private set => SetAndRaise(ShownDescriptionProperty, ref field, value);
     }
 
     internal bool IsListLayout
@@ -91,10 +90,7 @@ public sealed class RadioCard : TogglesItem
     {
         if (string.IsNullOrEmpty(ShownDescription))
         {
-            if (_description is not null)
-            {
-                _description.IsVisible = false;
-            }
+            _description?.IsVisible = false;
             return;
         }
         if (_description is null)

@@ -467,25 +467,13 @@ public partial class AiCommandPalette : TemplatedControl
             _input.Text = Query;
             _input.TextChanged += OnInputTextChanged;
         }
-        if (_searchMode is not null)
-        {
-            _searchMode.Click += OnSearchModeClick;
-        }
-        if (_askMode is not null)
-        {
-            _askMode.Click += OnAskModeClick;
-        }
+        _searchMode?.Click += OnSearchModeClick;
+        _askMode?.Click += OnAskModeClick;
         foreach (var list in new[] { _searchList, _questionList, _actionList })
         {
-            if (list is not null)
-            {
-                list.RowEvent += OnRowEvent;
-            }
+            list?.RowEvent += OnRowEvent;
         }
-        if (_answerView is not null)
-        {
-            _answerView.ScrollChanged += OnAnswerScrollChanged;
-        }
+        _answerView?.ScrollChanged += OnAnswerScrollChanged;
         _fades.Clear();
         foreach (var view in new Control?[] { _searchView, _questionsView, _answerView })
         {
@@ -507,29 +495,14 @@ public partial class AiCommandPalette : TemplatedControl
 
     private void Unhook()
     {
-        if (_input is not null)
-        {
-            _input.TextChanged -= OnInputTextChanged;
-        }
-        if (_searchMode is not null)
-        {
-            _searchMode.Click -= OnSearchModeClick;
-        }
-        if (_askMode is not null)
-        {
-            _askMode.Click -= OnAskModeClick;
-        }
+        _input?.TextChanged -= OnInputTextChanged;
+        _searchMode?.Click -= OnSearchModeClick;
+        _askMode?.Click -= OnAskModeClick;
         foreach (var list in new[] { _searchList, _questionList, _actionList })
         {
-            if (list is not null)
-            {
-                list.RowEvent -= OnRowEvent;
-            }
+            list?.RowEvent -= OnRowEvent;
         }
-        if (_answerView is not null)
-        {
-            _answerView.ScrollChanged -= OnAnswerScrollChanged;
-        }
+        _answerView?.ScrollChanged -= OnAnswerScrollChanged;
     }
 
     /// <inheritdoc />
@@ -632,10 +605,7 @@ public partial class AiCommandPalette : TemplatedControl
             _askMode.Content = labels.AskMode;
             _askMode.IsChecked = Mode == AiCommandPaletteMode.Ask;
         }
-        if (_errorTitle is not null)
-        {
-            _errorTitle.Text = labels.AnswerFailed;
-        }
+        _errorTitle?.Text = labels.AnswerFailed;
         _hintsKey = null;
         UpdateHints();
     }
@@ -645,15 +615,9 @@ public partial class AiCommandPalette : TemplatedControl
         var mark = ModelMark ?? ArcIcons.Sparkles;
         foreach (var glyph in new[] { _modelMark, _answerMark, _askGlyph })
         {
-            if (glyph is not null)
-            {
-                glyph.Data = mark;
-            }
+            glyph?.Data = mark;
         }
-        if (_modelName is not null)
-        {
-            _modelName.Text = ModelName;
-        }
+        _modelName?.Text = ModelName;
         if (_answerModel is not null)
         {
             _answerModel.Text = ModelName;
@@ -711,15 +675,9 @@ public partial class AiCommandPalette : TemplatedControl
 
     private void ObserveSource()
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _observedSource = ItemsSource as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnItemsChanged();
@@ -770,18 +728,9 @@ public partial class AiCommandPalette : TemplatedControl
             return;
         }
         PseudoClasses.Set(AskPseudoClass, mode == AiCommandPaletteMode.Ask);
-        if (_searchMode is not null)
-        {
-            _searchMode.IsChecked = mode == AiCommandPaletteMode.Search;
-        }
-        if (_askMode is not null)
-        {
-            _askMode.IsChecked = mode == AiCommandPaletteMode.Ask;
-        }
-        if (_input is not null)
-        {
-            _input.PlaceholderText = mode == AiCommandPaletteMode.Ask ? Labels.AskPlaceholder : Labels.SearchPlaceholder;
-        }
+        _searchMode?.IsChecked = mode == AiCommandPaletteMode.Search;
+        _askMode?.IsChecked = mode == AiCommandPaletteMode.Ask;
+        _input?.PlaceholderText = mode == AiCommandPaletteMode.Ask ? Labels.AskPlaceholder : Labels.SearchPlaceholder;
         if (mode == AiCommandPaletteMode.Ask)
         {
             // The search query is kept for the way back; the input starts empty for the question.

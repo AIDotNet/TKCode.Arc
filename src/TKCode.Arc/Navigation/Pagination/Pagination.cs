@@ -205,59 +205,26 @@ public class Pagination : TemplatedControl
             _panel.Arranged = OnPanelArranged;
             _panel.Slots = _slots;
         }
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_first is not null)
-        {
-            _first.Click += OnPageClick;
-        }
-        if (_last is not null)
-        {
-            _last.Click += OnPageClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
+        _first?.Click += OnPageClick;
+        _last?.Click += OnPageClick;
         foreach (var slot in _slots)
         {
-            if (slot is not null)
-            {
-                slot.Click += OnPageClick;
-            }
+            slot?.Click += OnPageClick;
         }
     }
 
     private void Unhook()
     {
-        if (_panel is not null)
-        {
-            _panel.Arranged = null;
-        }
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_first is not null)
-        {
-            _first.Click -= OnPageClick;
-        }
-        if (_last is not null)
-        {
-            _last.Click -= OnPageClick;
-        }
+        _panel?.Arranged = null;
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _first?.Click -= OnPageClick;
+        _last?.Click -= OnPageClick;
         foreach (var slot in _slots)
         {
-            if (slot is not null)
-            {
-                slot.Click -= OnPageClick;
-            }
+            slot?.Click -= OnPageClick;
         }
     }
 
@@ -338,14 +305,8 @@ public class Pagination : TemplatedControl
             last.IsVisible = boundaries && end < count;
             ConfigurePage(last, last.IsVisible ? count : 0, current);
         }
-        if (_ellipsisStart is not null)
-        {
-            _ellipsisStart.IsVisible = boundaries && start > 2;
-        }
-        if (_ellipsisEnd is not null)
-        {
-            _ellipsisEnd.IsVisible = boundaries && end < count - 1;
-        }
+        _ellipsisStart?.IsVisible = boundaries && start > 2;
+        _ellipsisEnd?.IsVisible = boundaries && end < count - 1;
         if (_previous is not null)
         {
             _previous.IsVisible = count > 0;

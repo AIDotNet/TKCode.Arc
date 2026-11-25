@@ -273,10 +273,7 @@ internal sealed class ConnectorSetupRow : TemplatedControl
         _action = e.NameScope.Find<ArcContentSwap>(ActionPart);
         _hairline = e.NameScope.Find<ConnectorSetupHairline>(HairlinePart);
         _details = e.NameScope.Find<AiHeightBox>(DetailsPart);
-        if (_details is not null)
-        {
-            _details.HeightSpring = AiHeightBox.PanelSpring;
-        }
+        _details?.HeightSpring = AiHeightBox.PanelSpring;
         _scopesHeading = e.NameScope.Find<TextBlock>(ScopesHeadingPart);
         _scopes = e.NameScope.Find<StackPanel>(ScopesPart);
         _confirm = e.NameScope.Find<ArcContentSwap>(ConfirmPart);
@@ -644,20 +641,14 @@ internal sealed class ConnectorSetupRow : TemplatedControl
             if (_confirmControl is Grid grid)
             {
                 var question = grid.Children.OfType<TextBlock>().FirstOrDefault();
-                if (question is not null)
-                {
-                    question.Text = labels.ConfirmDisconnect(App.Name, Owner.EffectiveAssistantName);
-                }
+                question?.Text = labels.ConfirmDisconnect(App.Name, Owner.EffectiveAssistantName);
                 foreach (var button in grid.Children.OfType<Button>())
                 {
                     button.IsLoading = Phase == ConnectorPhase.Disconnecting && button.Variant == ButtonVariant.Danger;
                 }
             }
         }
-        if (_details is not null)
-        {
-            _details.IsExpanded = IsExpanded;
-        }
+        _details?.IsExpanded = IsExpanded;
     }
 
     private Control BuildDisconnect()

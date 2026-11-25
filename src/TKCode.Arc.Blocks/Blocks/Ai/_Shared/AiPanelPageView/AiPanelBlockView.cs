@@ -312,18 +312,12 @@ internal sealed class AiPanelBlockBox : Control
         _bodyOpacity = new MotionValue<double>(this, 1, MotionVectors.Double);
         _bodyOpacity.Changed += v =>
         {
-            if (_body is not null)
-            {
-                _body.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _body?.Opacity = Math.Clamp(v, 0, 1);
         };
         _leavingOpacity = new MotionValue<double>(this, 1, MotionVectors.Double);
         _leavingOpacity.Changed += v =>
         {
-            if (_leaving is not null)
-            {
-                _leaving.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _leaving?.Opacity = Math.Clamp(v, 0, 1);
         };
     }
 

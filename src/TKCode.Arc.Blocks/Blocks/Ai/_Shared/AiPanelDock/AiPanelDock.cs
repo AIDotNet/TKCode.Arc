@@ -227,14 +227,8 @@ internal sealed class AiPanelDock : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_reopen is not null)
-        {
-            _reopen.Click -= OnReopenClick;
-        }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed -= OnScrimPressed;
-        }
+        _reopen?.Click -= OnReopenClick;
+        _scrim?.PointerPressed -= OnScrimPressed;
         _host?.RemoveHandler(KeyDownEvent, OnHostKeyDown);
         _reopenPresence?.Dispose();
         _layout = e.NameScope.Find<AiPanelDockLayout>(LayoutPart);
@@ -247,10 +241,7 @@ internal sealed class AiPanelDock : TemplatedControl
             _reopen.Click += OnReopenClick;
             _reopenPresence = new AiFadePresence(_reopen, !IsOpen);
         }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed += OnScrimPressed;
-        }
+        _scrim?.PointerPressed += OnScrimPressed;
         if (_host is not null)
         {
             _host.RenderTransform = _sheetShift;
@@ -343,28 +334,19 @@ internal sealed class AiPanelDock : TemplatedControl
         _dock = new MotionValue<double>(this, open && !IsSheetMode ? PanelWidth : 0, MotionVectors.Double);
         _dock.Changed += v =>
         {
-            if (_layout is not null)
-            {
-                _layout.DockWidth = v;
-            }
+            _layout?.DockWidth = v;
         };
         _sheet = new MotionValue<double>(this, open ? 0 : ClosedSheetOffset(), MotionVectors.Double);
         _sheet.Changed += v => _sheetShift.Y = v;
         _scrimProgress = new MotionValue<double>(this, open && IsSheetMode ? 1 : 0, MotionVectors.Double);
         _scrimProgress.Changed += v =>
         {
-            if (_scrim is not null)
-            {
-                _scrim.Opacity = ScrimAlpha * Math.Clamp(v, 0, 1);
-            }
+            _scrim?.Opacity = ScrimAlpha * Math.Clamp(v, 0, 1);
         };
         _sheetFade = new MotionValue<double>(this, 1, MotionVectors.Double);
         _sheetFade.Changed += v =>
         {
-            if (_host is not null)
-            {
-                _host.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _host?.Opacity = Math.Clamp(v, 0, 1);
         };
     }
 
@@ -401,10 +383,7 @@ internal sealed class AiPanelDock : TemplatedControl
             _reopen.Focusable = !open;
             _reopenPresence?.SetShown(!open);
         }
-        if (_scrim is not null)
-        {
-            _scrim.IsHitTestVisible = sheet && open;
-        }
+        _scrim?.IsHitTestVisible = sheet && open;
 
         Task<bool> travel;
         if (sheet)
@@ -427,20 +406,14 @@ internal sealed class AiPanelDock : TemplatedControl
                 _sheetFade!.Jump(1);
                 travel = Move(_sheet!, open ? 0 : ClosedSheetOffset(), level);
             }
-            if (_scrim is not null)
-            {
-                _scrim.IsVisible = true;
-            }
+            _scrim?.IsVisible = true;
         }
         else
         {
             _sheet!.Jump(0);
             _sheetFade!.Jump(1);
             _scrimProgress!.Jump(0);
-            if (_scrim is not null)
-            {
-                _scrim.IsVisible = false;
-            }
+            _scrim?.IsVisible = false;
             travel = Move(_dock!, open ? PanelWidth : 0, level);
         }
         if (!open)

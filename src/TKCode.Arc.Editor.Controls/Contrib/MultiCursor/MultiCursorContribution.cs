@@ -219,10 +219,7 @@ internal sealed class SelectionHighlighterContribution : ICodeEditorContribution
 
         // the options live on the multi-cursor controller; its changes reach the highlighter through this adapter
         _options = MultiCursorContribution.Get(editor);
-        if (_options is not null)
-        {
-            _options.OptionsChanged += _adapter.RaiseConfigurationChanged;
-        }
+        _options?.OptionsChanged += _adapter.RaiseConfigurationChanged;
 
         _style = editor.DecorationStyles.Register(
             HighlightDecorations.SelectionHighlightClassName,
@@ -240,10 +237,7 @@ internal sealed class SelectionHighlighterContribution : ICodeEditorContribution
 
     public void Dispose()
     {
-        if (_options is not null)
-        {
-            _options.OptionsChanged -= _adapter.RaiseConfigurationChanged;
-        }
+        _options?.OptionsChanged -= _adapter.RaiseConfigurationChanged;
 
         Highlighter.Dispose();
         _adapter.Dispose();

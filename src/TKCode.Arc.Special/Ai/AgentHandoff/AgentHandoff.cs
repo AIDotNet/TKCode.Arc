@@ -406,10 +406,7 @@ public partial class AgentHandoff : TemplatedControl
         {
             return;
         }
-        if (_input is not null)
-        {
-            _input.Text = string.Empty;
-        }
+        _input?.Text = string.Empty;
         _pinned = true;
         RaiseEvent(new AgentHandoffSendEventArgs(SendRequestedEvent, text));
         if (IsSimulated)
@@ -436,10 +433,7 @@ public partial class AgentHandoff : TemplatedControl
         _status = e.NameScope.Find<ArcContentSwap>(StatusPart);
         _scroller = e.NameScope.Find<ScrollViewer>(ScrollerPart);
         _spring = e.NameScope.Find<AiHeightBox>(SpringPart);
-        if (_spring is not null)
-        {
-            _spring.HeightSpring = AgentHandoffMotion.ThreadSpring;
-        }
+        _spring?.HeightSpring = AgentHandoffMotion.ThreadSpring;
         _rows = e.NameScope.Find<StackPanel>(RowsPart);
         _composer = e.NameScope.Find<Control>(ComposerPart);
         _input = e.NameScope.Find<TextBox>(InputPart);
@@ -456,10 +450,7 @@ public partial class AgentHandoff : TemplatedControl
         {
             _input.AddHandler(KeyDownEvent, OnInputKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSend;
-        }
+        _send?.Click += OnSend;
         _headerMarkKey = null;
         _shownStatus = null;
         ResetRows();
@@ -480,10 +471,7 @@ public partial class AgentHandoff : TemplatedControl
         {
             _input.RemoveHandler(KeyDownEvent, OnInputKeyDown);
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSend;
-        }
+        _send?.Click -= OnSend;
     }
 
     /// <inheritdoc />
@@ -660,10 +648,7 @@ public partial class AgentHandoff : TemplatedControl
         }
         var stage = DisplayedStage;
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = Title ?? labels.Title;
-        }
+        _title?.Text = Title ?? labels.Title;
         if (_subtitle is not null)
         {
             _subtitle.Text = Subtitle;
@@ -677,10 +662,7 @@ public partial class AgentHandoff : TemplatedControl
             _status.Content = new AgentHandoffStatusLabel(status.Kind, status.Text);
         }
         SyncRows(stage);
-        if (_composer is not null)
-        {
-            _composer.IsVisible = DisplayedComposer;
-        }
+        _composer?.IsVisible = DisplayedComposer;
         if (_input is not null)
         {
             if (_input is Input field)

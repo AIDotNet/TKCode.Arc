@@ -175,10 +175,7 @@ internal sealed class HeroRelayNode : TemplatedControl
 
     private void RefreshState()
     {
-        if (_state is not null)
-        {
-            _state.Content = BuildStateMark();
-        }
+        _state?.Content = BuildStateMark();
     }
 
     private Control BuildStateMark()

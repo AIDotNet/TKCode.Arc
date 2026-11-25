@@ -180,10 +180,7 @@ internal sealed class ImportWizardReviewFilterOption : AvaloniaButton
 
     private void UpdateRing()
     {
-        if (_ring is not null)
-        {
-            _ring.IsVisible = IsFocused && Classes.Contains(":focus-visible");
-        }
+        _ring?.IsVisible = IsFocused && Classes.Contains(":focus-visible");
     }
 
     internal void Choose() => Chosen?.Invoke(this);
@@ -565,10 +562,7 @@ internal sealed class ImportWizardReviewCleanUp : AvaloniaButton
 
     private void UpdateRing()
     {
-        if (_ring is not null)
-        {
-            _ring.IsVisible = IsFocused && Classes.Contains(":focus-visible");
-        }
+        _ring?.IsVisible = IsFocused && Classes.Contains(":focus-visible");
     }
 }
 

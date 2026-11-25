@@ -134,7 +134,6 @@ public partial class StretchRefresh : TemplatedControl
         AvaloniaProperty.Register<StretchRefresh, IBrush?>(nameof(DangerInk));
 
     private StretchRefreshLabels _labels = new();
-    private StretchRefreshState _state;
     private bool _isRefreshing;
 
     static StretchRefresh()
@@ -214,8 +213,8 @@ public partial class StretchRefresh : TemplatedControl
     /// <inheritdoc cref="StateProperty"/>
     public StretchRefreshState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsRefreshingProperty"/>
@@ -288,10 +287,7 @@ public partial class StretchRefresh : TemplatedControl
         else if (change.Property == SubtitleProperty)
         {
             _subtitle?.ShowText(Subtitle);
-            if (_subtitle is not null)
-            {
-                _subtitle.IsVisible = !string.IsNullOrEmpty(Subtitle) || _subtitle.EntryCount > 1;
-            }
+            _subtitle?.IsVisible = !string.IsNullOrEmpty(Subtitle) || _subtitle.EntryCount > 1;
         }
         else if (change.Property == CornerRadiusProperty || change.Property == BorderThicknessProperty)
         {
@@ -362,10 +358,7 @@ public partial class StretchRefresh : TemplatedControl
             scroller.GotFocus -= OnScrollerGotFocus;
             scroller.LostFocus -= OnScrollerLostFocus;
         }
-        if (button is not null)
-        {
-            button.Click -= OnButtonClick;
-        }
+        button?.Click -= OnButtonClick;
     }
 
     private void Hook()
@@ -382,10 +375,7 @@ public partial class StretchRefresh : TemplatedControl
             _scroller.GotFocus += OnScrollerGotFocus;
             _scroller.LostFocus += OnScrollerLostFocus;
         }
-        if (_button is not null)
-        {
-            _button.Click += OnButtonClick;
-        }
+        _button?.Click += OnButtonClick;
     }
 
     /// <summary>The feed's focus ring is drawn inside the sheet (Arc's outline is clipped by the well and never shows).</summary>

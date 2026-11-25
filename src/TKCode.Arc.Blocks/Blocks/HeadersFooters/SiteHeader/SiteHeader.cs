@@ -414,15 +414,9 @@ public partial class SiteHeader : TemplatedControl
 
     private void WatchSource()
     {
-        if (_sourceNotifier is not null)
-        {
-            _sourceNotifier.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _sourceNotifier?.CollectionChanged -= OnSourceCollectionChanged;
         _sourceNotifier = _watching ? ItemsSource as INotifyCollectionChanged : null;
-        if (_sourceNotifier is not null)
-        {
-            _sourceNotifier.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _sourceNotifier?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     /// <summary>In a visual tree: follows the items again and catches up with what changed while the header was away.</summary>
@@ -597,26 +591,11 @@ public partial class SiteHeader : TemplatedControl
             _inner.PointerEntered += OnRegionPointerEntered;
             _inner.PointerExited += OnRegionPointerExited;
         }
-        if (_navList is not null)
-        {
-            _navList.PointerExited += OnNavListPointerExited;
-        }
-        if (_brand is not null)
-        {
-            _brand.Click += OnBrandClick;
-        }
-        if (_secondary is not null)
-        {
-            _secondary.Click += OnSecondaryClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click += OnPrimaryClick;
-        }
-        if (_menuButton is not null)
-        {
-            _menuButton.Click += OnMenuButtonClick;
-        }
+        _navList?.PointerExited += OnNavListPointerExited;
+        _brand?.Click += OnBrandClick;
+        _secondary?.Click += OnSecondaryClick;
+        _primary?.Click += OnPrimaryClick;
+        _menuButton?.Click += OnMenuButtonClick;
         _resolved = ResolveItems().ToList();
         Rewatch();
         BuildNav();
@@ -636,26 +615,11 @@ public partial class SiteHeader : TemplatedControl
             _inner.PointerEntered -= OnRegionPointerEntered;
             _inner.PointerExited -= OnRegionPointerExited;
         }
-        if (_navList is not null)
-        {
-            _navList.PointerExited -= OnNavListPointerExited;
-        }
-        if (_brand is not null)
-        {
-            _brand.Click -= OnBrandClick;
-        }
-        if (_secondary is not null)
-        {
-            _secondary.Click -= OnSecondaryClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click -= OnPrimaryClick;
-        }
-        if (_menuButton is not null)
-        {
-            _menuButton.Click -= OnMenuButtonClick;
-        }
+        _navList?.PointerExited -= OnNavListPointerExited;
+        _brand?.Click -= OnBrandClick;
+        _secondary?.Click -= OnSecondaryClick;
+        _primary?.Click -= OnPrimaryClick;
+        _menuButton?.Click -= OnMenuButtonClick;
         _markBinding?.Dispose();
         _markBinding = null;
         _panelView = null;
@@ -710,18 +674,9 @@ public partial class SiteHeader : TemplatedControl
             _primary.IsVisible = IsPrimaryActionVisible;
             AutomationProperties.SetName(_primary, PrimaryActionLabel);
         }
-        if (_menuButton is not null)
-        {
-            _menuButton.IsVisible = IsCollapsed;
-        }
-        if (_navList is not null)
-        {
-            _navList.IsVisible = !IsCollapsed && _resolved.Count > 0;
-        }
-        if (_sheetLayer is not null)
-        {
-            _sheetLayer.IsVisible = IsCollapsed;
-        }
+        _menuButton?.IsVisible = IsCollapsed;
+        _navList?.IsVisible = !IsCollapsed && _resolved.Count > 0;
+        _sheetLayer?.IsVisible = IsCollapsed;
         if (IsMenuOpen)
         {
             RebuildSheetActions();
@@ -748,10 +703,7 @@ public partial class SiteHeader : TemplatedControl
 
     private void UpdateVariantParts()
     {
-        if (_bar is not null)
-        {
-            _bar.NavInset = Variant == SiteHeaderVariant.Centered ? 0 : 16;
-        }
+        _bar?.NavInset = Variant == SiteHeaderVariant.Centered ? 0 : 16;
         UpdatePseudoClasses();
     }
 

@@ -158,15 +158,9 @@ public partial class DockLayout
         _strips[(int)DockSide.Bottom] = scope.Find<DockAutoHideStrip>(BottomStripPart);
         _flyout = scope.Find<DockAutoHideFlyout>(FlyoutPart);
         _flyout?.Attach(this);
-        if (_switcher is not null)
-        {
-            _switcher.Layout = null;
-        }
+        _switcher?.Layout = null;
         _switcher = scope.Find<DockPaneSwitcher>(SwitcherPart);
-        if (_switcher is not null)
-        {
-            _switcher.Layout = this;
-        }
+        _switcher?.Layout = this;
         AttachStrips();
     }
 

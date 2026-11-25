@@ -58,10 +58,7 @@ internal sealed class WalletStackDetail : Control
         _bodyOpacity = new MotionValue<double>(this, 0, MotionVectors.Double);
         _bodyOpacity.Changed += value =>
         {
-            if (_body is not null)
-            {
-                _body.Opacity = value;
-            }
+            _body?.Opacity = value;
         };
         _balance = new MotionValue<double>(this, 0, MotionVectors.Double);
         _balance.Changed += ShowBalance;

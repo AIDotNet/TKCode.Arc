@@ -69,7 +69,7 @@ public sealed class ImageDiskCache
     public static readonly TimeSpan DefaultFreshness = TimeSpan.FromDays(7);
 
     private readonly TimeProvider _time;
-    private readonly object _trimGate = new();
+    private readonly SyncLock _trimGate = new();
     private Task _trimTask = Task.CompletedTask;
     private bool _trimRunning;
     private bool _trimAgain;

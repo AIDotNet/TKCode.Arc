@@ -207,15 +207,9 @@ public class MarkdownView : Control, ISelectionHost
         {
             return;
         }
-        if (_subscribed is not null)
-        {
-            _subscribed.SnapshotReady -= OnSnapshotReady;
-        }
+        _subscribed?.SnapshotReady -= OnSnapshotReady;
         _subscribed = document;
-        if (document is not null)
-        {
-            document.SnapshotReady += OnSnapshotReady;
-        }
+        document?.SnapshotReady += OnSnapshotReady;
     }
 
     private void OnSnapshotReady(DocumentSnapshot snapshot)

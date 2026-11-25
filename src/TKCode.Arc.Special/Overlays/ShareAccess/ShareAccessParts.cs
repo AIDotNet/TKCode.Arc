@@ -151,10 +151,7 @@ internal sealed class ShareAccessPersonRow : Grid
         _avatar.DisplayName = hasName ? person.Name : person.Email;
         _avatar.Source = person.Avatar;
         var roleName = labels.Role(person.Role);
-        if (_ownerText is not null)
-        {
-            _ownerText.Text = roleName;
-        }
+        _ownerText?.Text = roleName;
         if (_roleText is not null && _roleButton is not null)
         {
             if (_roleText.Content as string != roleName)
@@ -169,10 +166,7 @@ internal sealed class ShareAccessPersonRow : Grid
                 _roleEntries[i].Header = labels.Role((ShareAccessRole)i);
                 _roleEntries[i].IsChecked = (int)person.Role == i;
             }
-            if (_removeEntry is not null)
-            {
-                _removeEntry.Header = labels.Remove;
-            }
+            _removeEntry?.Header = labels.Remove;
         }
         AutomationProperties.SetName(this, primary);
     }

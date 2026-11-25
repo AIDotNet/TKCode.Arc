@@ -81,14 +81,8 @@ public partial class LineReplay
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClick;
-        }
-        if (_speedSwitch is not null)
-        {
-            _speedSwitch.SelectionChanged -= OnSpeedSwitchChanged;
-        }
+        _playButton?.Click -= OnPlayClick;
+        _speedSwitch?.SelectionChanged -= OnSpeedSwitchChanged;
         _stageHost?.Children.Remove(_stage);
         _scrubberHost?.Children.Remove(_scrubber);
         _momentsPanel?.Children.Clear();
@@ -110,15 +104,9 @@ public partial class LineReplay
 
         _stageHost?.Children.Add(_stage);
         _scrubberHost?.Children.Add(_scrubber);
-        if (_playButton is not null)
-        {
-            _playButton.Click += OnPlayClick;
-        }
+        _playButton?.Click += OnPlayClick;
         UpdateSpeedOptions();
-        if (_speedSwitch is not null)
-        {
-            _speedSwitch.SelectionChanged += OnSpeedSwitchChanged;
-        }
+        _speedSwitch?.SelectionChanged += OnSpeedSwitchChanged;
         _containerWidth = double.NaN;
         UpdateLabels();
         Rebuild();
@@ -145,14 +133,8 @@ public partial class LineReplay
         var narrow = width < NarrowWidth;
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(NarrowPseudoClass, narrow);
-        if (_momentsPanel is not null)
-        {
-            _momentsPanel.Columns = stacked && !narrow ? 2 : 1;
-        }
-        if (_readout is not null)
-        {
-            _readout.IsNarrow = narrow;
-        }
+        _momentsPanel?.Columns = stacked && !narrow ? 2 : 1;
+        _readout?.IsNarrow = narrow;
         _stage.Height = narrow ? 300 : 380;
         _stage.SetNarrow(narrow);
     }
@@ -201,10 +183,7 @@ public partial class LineReplay
 
     private void UpdateLabels()
     {
-        if (_versusLabel is not null)
-        {
-            _versusLabel.Text = string.Format(CultureInfo.CurrentCulture, VersusFormat, LowerFirst(BaselineLabel));
-        }
+        _versusLabel?.Text = string.Format(CultureInfo.CurrentCulture, VersusFormat, LowerFirst(BaselineLabel));
         if (_speedSwitch is not null)
         {
             AutomationProperties.SetName(_speedSwitch, SpeedLabel);
@@ -308,15 +287,9 @@ public partial class LineReplay
         {
             return;
         }
-        if (_observedMoments is not null)
-        {
-            _observedMoments.CollectionChanged -= OnMomentsSourceChanged;
-        }
+        _observedMoments?.CollectionChanged -= OnMomentsSourceChanged;
         _observedMoments = observed;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += OnMomentsSourceChanged;
-        }
+        observed?.CollectionChanged += OnMomentsSourceChanged;
     }
 
     private void OnMomentsSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnDataChanged();
@@ -438,22 +411,10 @@ public partial class LineReplay
         var timeSample = Enumerable.Range(0, 49).Select(i => FormatTimeText(_data.Start + span * i / 48))
             .OrderByDescending(t => t.Length).First();
         var max = _data.PeakValues.Length > 0 ? _data.PeakValues[^1] : 0;
-        if (_timeValue is not null)
-        {
-            _timeValue.Sample = timeSample;
-        }
-        if (_valueValue is not null)
-        {
-            _valueValue.Sample = FormatValueText(max);
-        }
-        if (_ratioValue is not null)
-        {
-            _ratioValue.Sample = "88.8×";
-        }
-        if (_peakValue is not null)
-        {
-            _peakValue.Sample = string.Format(CultureInfo.CurrentCulture, PeakFormat, FormatValueText(max), timeSample);
-        }
+        _timeValue?.Sample = timeSample;
+        _valueValue?.Sample = FormatValueText(max);
+        _ratioValue?.Sample = "88.8×";
+        _peakValue?.Sample = string.Format(CultureInfo.CurrentCulture, PeakFormat, FormatValueText(max), timeSample);
     }
 
     private void UpdateReadout(double position)
@@ -489,14 +450,8 @@ public partial class LineReplay
         var (glyph, text, label) = _isPlaying ? (ArcIcons.Pause, PauseText, PauseLabel)
             : atEnd ? (ArcIcons.RotateCcw, ReplayText, ReplayLabel)
             : (ArcIcons.Play, PlayText, PlayLabel);
-        if (_playGlyph is not null)
-        {
-            _playGlyph.Data = glyph;
-        }
-        if (_playText is not null)
-        {
-            _playText.Text = text;
-        }
+        _playGlyph?.Data = glyph;
+        _playText?.Text = text;
         if (_playButton is not null)
         {
             AutomationProperties.SetName(_playButton, label);

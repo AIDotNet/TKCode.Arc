@@ -318,82 +318,28 @@ public class CookieConsent : TemplatedControl
 
     private void Wire()
     {
-        if (_customize is not null)
-        {
-            _customize.Click += OnCustomizeClick;
-        }
-        if (_barReject is not null)
-        {
-            _barReject.Click += OnRejectClick;
-        }
-        if (_barAccept is not null)
-        {
-            _barAccept.Click += OnAcceptClick;
-        }
-        if (_panelReject is not null)
-        {
-            _panelReject.Click += OnRejectClick;
-        }
-        if (_panelAccept is not null)
-        {
-            _panelAccept.Click += OnAcceptClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_chip is not null)
-        {
-            _chip.Click += OnChipClick;
-        }
-        if (_panelFace is not null)
-        {
-            _panelFace.KeyDown += OnPanelKeyDown;
-        }
+        _customize?.Click += OnCustomizeClick;
+        _barReject?.Click += OnRejectClick;
+        _barAccept?.Click += OnAcceptClick;
+        _panelReject?.Click += OnRejectClick;
+        _panelAccept?.Click += OnAcceptClick;
+        _save?.Click += OnSaveClick;
+        _close?.Click += OnCloseClick;
+        _chip?.Click += OnChipClick;
+        _panelFace?.KeyDown += OnPanelKeyDown;
     }
 
     private void Unwire()
     {
-        if (_customize is not null)
-        {
-            _customize.Click -= OnCustomizeClick;
-        }
-        if (_barReject is not null)
-        {
-            _barReject.Click -= OnRejectClick;
-        }
-        if (_barAccept is not null)
-        {
-            _barAccept.Click -= OnAcceptClick;
-        }
-        if (_panelReject is not null)
-        {
-            _panelReject.Click -= OnRejectClick;
-        }
-        if (_panelAccept is not null)
-        {
-            _panelAccept.Click -= OnAcceptClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_chip is not null)
-        {
-            _chip.Click -= OnChipClick;
-        }
-        if (_panelFace is not null)
-        {
-            _panelFace.KeyDown -= OnPanelKeyDown;
-        }
+        _customize?.Click -= OnCustomizeClick;
+        _barReject?.Click -= OnRejectClick;
+        _barAccept?.Click -= OnAcceptClick;
+        _panelReject?.Click -= OnRejectClick;
+        _panelAccept?.Click -= OnAcceptClick;
+        _save?.Click -= OnSaveClick;
+        _close?.Click -= OnCloseClick;
+        _chip?.Click -= OnChipClick;
+        _panelFace?.KeyDown -= OnPanelKeyDown;
     }
 
     private void OnCustomizeClick(object? sender, RoutedEventArgs e) => OpenPanel(focus: true);
@@ -423,10 +369,7 @@ public class CookieConsent : TemplatedControl
         var labels = Labels;
         SetText(_message, labels.Message);
         SetText(_description, labels.PreferencesDescription);
-        if (_title is not null)
-        {
-            _title.Text = labels.PreferencesTitle;
-        }
+        _title?.Text = labels.PreferencesTitle;
         SetContent(_customize, labels.Customize);
         SetContent(_barReject, labels.RejectAll);
         SetContent(_barAccept, labels.AcceptAll);
@@ -456,10 +399,7 @@ public class CookieConsent : TemplatedControl
 
     private static void SetContent(AvaloniaButton? button, string text)
     {
-        if (button is not null)
-        {
-            button.Content = text;
-        }
+        button?.Content = text;
     }
 
     /// <summary>Message text followed by the inline policy link.</summary>

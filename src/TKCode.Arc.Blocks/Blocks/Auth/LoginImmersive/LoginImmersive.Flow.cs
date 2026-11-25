@@ -188,33 +188,15 @@ public partial class LoginImmersive
     {
         base.OnApplyTemplate(e);
         UnwireAll();
-        if (_steps is not null)
-        {
-            _steps.ViewHidden -= OnViewHidden;
-        }
+        _steps?.ViewHidden -= OnViewHidden;
         foreach (var view in new LoginImmersiveView?[] { _form, _sent, _done })
         {
-            if (view is not null)
-            {
-                view.PartsReady -= OnViewPartsReady;
-            }
+            view?.PartsReady -= OnViewPartsReady;
         }
-        if (_switch is not null)
-        {
-            _switch.Click -= OnSwitchClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click -= OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click -= OnPrivacyClick;
-        }
-        if (_card is not null)
-        {
-            _card.SizeChanged -= OnCardSizeChanged;
-        }
+        _switch?.Click -= OnSwitchClick;
+        _terms?.Click -= OnTermsClick;
+        _privacy?.Click -= OnPrivacyClick;
+        _card?.SizeChanged -= OnCardSizeChanged;
 
         _backdrop = e.NameScope.Find<LoginImmersiveBackdrop>(BackdropPart);
         _switch = e.NameScope.Find<LoginImmersiveSwitch>(SwitchPart);
@@ -229,30 +211,12 @@ public partial class LoginImmersive
         _privacy = e.NameScope.Find<LoginImmersiveTextButton>(PrivacyPart);
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
 
-        if (_glass is not null)
-        {
-            _glass.Backdrop = _backdrop;
-        }
-        if (_steps is not null)
-        {
-            _steps.ViewHidden += OnViewHidden;
-        }
-        if (_switch is not null)
-        {
-            _switch.Click += OnSwitchClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click += OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click += OnPrivacyClick;
-        }
-        if (_card is not null)
-        {
-            _card.SizeChanged += OnCardSizeChanged;
-        }
+        _glass?.Backdrop = _backdrop;
+        _steps?.ViewHidden += OnViewHidden;
+        _switch?.Click += OnSwitchClick;
+        _terms?.Click += OnTermsClick;
+        _privacy?.Click += OnPrivacyClick;
+        _card?.SizeChanged += OnCardSizeChanged;
         if (_note is not null)
         {
             ConfigureSwap(_note);
@@ -323,10 +287,7 @@ public partial class LoginImmersive
                 TextInputOptions.SetReturnKeyType(_wiredEmail, TextInputReturnKeyType.Send);
                 TextInputOptions.SetAutoCapitalization(_wiredEmail, false);
             }
-            if (_wiredSend is not null)
-            {
-                _wiredSend.Click += OnSendClick;
-            }
+            _wiredSend?.Click += OnSendClick;
             RebuildProviders();
         }
         if (_sent is not null)
@@ -334,18 +295,9 @@ public partial class LoginImmersive
             _wiredEdit = _sent.Edit;
             _wiredOpenMail = _sent.OpenMail;
             _wiredResend = _sent.Resend;
-            if (_wiredEdit is not null)
-            {
-                _wiredEdit.Click += OnEditClick;
-            }
-            if (_wiredOpenMail is not null)
-            {
-                _wiredOpenMail.Click += OnOpenMailClick;
-            }
-            if (_wiredResend is not null)
-            {
-                _wiredResend.Click += OnResendClick;
-            }
+            _wiredEdit?.Click += OnEditClick;
+            _wiredOpenMail?.Click += OnOpenMailClick;
+            _wiredResend?.Click += OnResendClick;
             if (_sent.ResendLabel is { } resendLabel)
             {
                 ConfigureSwap(resendLabel);
@@ -355,10 +307,7 @@ public partial class LoginImmersive
         if (_done is not null)
         {
             _wiredSignOut = _done.SignOut;
-            if (_wiredSignOut is not null)
-            {
-                _wiredSignOut.Click += OnSignOutClick;
-            }
+            _wiredSignOut?.Click += OnSignOutClick;
         }
     }
 
@@ -370,26 +319,11 @@ public partial class LoginImmersive
             _wiredEmail.LostFocus -= OnEmailLostFocus;
             _wiredEmail.RemoveHandler(KeyDownEvent, OnEmailKeyDown);
         }
-        if (_wiredSend is not null)
-        {
-            _wiredSend.Click -= OnSendClick;
-        }
-        if (_wiredEdit is not null)
-        {
-            _wiredEdit.Click -= OnEditClick;
-        }
-        if (_wiredOpenMail is not null)
-        {
-            _wiredOpenMail.Click -= OnOpenMailClick;
-        }
-        if (_wiredResend is not null)
-        {
-            _wiredResend.Click -= OnResendClick;
-        }
-        if (_wiredSignOut is not null)
-        {
-            _wiredSignOut.Click -= OnSignOutClick;
-        }
+        _wiredSend?.Click -= OnSendClick;
+        _wiredEdit?.Click -= OnEditClick;
+        _wiredOpenMail?.Click -= OnOpenMailClick;
+        _wiredResend?.Click -= OnResendClick;
+        _wiredSignOut?.Click -= OnSignOutClick;
         _wiredEmail = null;
         _wiredSend = null;
         _wiredEdit = null;
@@ -453,15 +387,9 @@ public partial class LoginImmersive
         }
         else if (property == ProvidersSourceProperty)
         {
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged -= OnProvidersChanged;
-            }
+            _observedSource?.CollectionChanged -= OnProvidersChanged;
             _observedSource = ProvidersSource as INotifyCollectionChanged;
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged += OnProvidersChanged;
-            }
+            _observedSource?.CollectionChanged += OnProvidersChanged;
             RebuildProviders();
         }
         else if (property == IsProvidersVisibleProperty)
@@ -499,17 +427,11 @@ public partial class LoginImmersive
     {
         foreach (var view in new LoginImmersiveView?[] { _form, _sent, _done })
         {
-            if (view is not null)
-            {
-                view.IsCompact = _cardCompact;
-            }
+            view?.IsCompact = _cardCompact;
         }
         foreach (var heading in new[] { _form?.SignInHeading, _form?.SignUpHeading, _sent?.Heading, _done?.Heading })
         {
-            if (heading is not null)
-            {
-                heading.IsCompact = _cardCompact;
-            }
+            heading?.IsCompact = _cardCompact;
         }
         SyncProviderFonts();
     }
@@ -796,14 +718,8 @@ public partial class LoginImmersive
     private void SyncFooter()
     {
         var labels = Labels;
-        if (_terms is not null)
-        {
-            _terms.Content = labels.Terms;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Content = labels.Privacy;
-        }
+        _terms?.Content = labels.Terms;
+        _privacy?.Content = labels.Privacy;
         if (_terms?.Parent is Control legal)
         {
             AutomationProperties.SetName(legal, labels.LegalGroupName);

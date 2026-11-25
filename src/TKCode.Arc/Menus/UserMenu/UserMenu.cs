@@ -314,13 +314,12 @@ public class UserMenu : TemplatedControl
         set => SetValue(ItemTemplateProperty, value);
     }
 
-    private bool _isSigningOut;
 
     /// <summary>True while an asynchronous <see cref="SignOutAction"/> runs.</summary>
     public bool IsSigningOut
     {
-        get => _isSigningOut;
-        private set => SetAndRaise(IsSigningOutProperty, ref _isSigningOut, value);
+        get;
+        private set => SetAndRaise(IsSigningOutProperty, ref field, value);
     }
 
     /// <summary>Account destinations declared inline (Profile, Settings, Billing).</summary>
@@ -524,10 +523,7 @@ public class UserMenu : TemplatedControl
         _viewportWatch = ArcViewport.Observe(this, _ => UpdateCompact());
         UpdateCompact();
         _languages = ArcLanguageManager.Current;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
         // The language may have changed while the menu was out of the tree.
         UpdateTexts();
     }

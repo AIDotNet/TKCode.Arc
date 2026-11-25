@@ -331,10 +331,7 @@ internal class ArenaAnswerView : TemplatedControl
         }
         PseudoClasses.Set(ErrorPseudoClass, true);
         _errorPresence?.SetShown(true);
-        if (_errorHost is not null)
-        {
-            _errorHost.IsOpen = true;
-        }
+        _errorHost?.IsOpen = true;
     }
 
     /// <summary>
@@ -398,22 +395,10 @@ internal class ArenaAnswerView : TemplatedControl
     /// <summary>The card's words, glyph and names (its parts are hosted by the scroll area, so no TemplateBinding reaches them).</summary>
     private void UpdateCardTexts()
     {
-        if (_errorTitlePart is not null)
-        {
-            _errorTitlePart.Text = ErrorTitle;
-        }
-        if (_errorTextPart is not null)
-        {
-            _errorTextPart.Text = ErrorText;
-        }
-        if (_errorActionTextPart is not null)
-        {
-            _errorActionTextPart.Text = ErrorActionText;
-        }
-        if (_errorActionIcon is not null)
-        {
-            _errorActionIcon.IsVisible = _isRetry;
-        }
+        _errorTitlePart?.Text = ErrorTitle;
+        _errorTextPart?.Text = ErrorText;
+        _errorActionTextPart?.Text = ErrorActionText;
+        _errorActionIcon?.IsVisible = _isRetry;
         if (_errorAction is not null)
         {
             AutomationProperties.SetName(_errorAction, ErrorActionText);
@@ -489,10 +474,7 @@ internal class ArenaAnswerView : TemplatedControl
             _maskHeight = double.NaN;
             UpdateMask();
         }
-        if (_body is not null)
-        {
-            _body.Margin = Padding;
-        }
+        _body?.Margin = Padding;
         if (_markdown is { } markdown)
         {
             markdown.TemplateApplied += OnMarkdownTemplateApplied;
@@ -716,10 +698,7 @@ internal class ArenaAnswerView : TemplatedControl
         }
         else if (change.Property == PaddingProperty)
         {
-            if (_body is not null)
-            {
-                _body.Margin = Padding;
-            }
+            _body?.Margin = Padding;
         }
         else if (change.Property == TopFadeProperty || change.Property == BottomFadeProperty)
         {

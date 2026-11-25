@@ -243,23 +243,14 @@ public class ArcWindow : AvaloniaWindow, IArcContentOverlayWindow
     /// <summary>Windows keeps the frame of a maximized window off screen; the root steps in by that much.</summary>
     private void SyncOffScreenMargin()
     {
-        if (_root is not null)
-        {
-            _root.Margin = WindowState == WindowState.Maximized ? OffScreenMargin : default;
-        }
+        _root?.Margin = WindowState == WindowState.Maximized ? OffScreenMargin : default;
     }
 
     private void ObserveBar(TitleBar? bar)
     {
-        if (_observedBar is not null)
-        {
-            _observedBar.PropertyChanged -= OnBarPropertyChanged;
-        }
+        _observedBar?.PropertyChanged -= OnBarPropertyChanged;
         _observedBar = bar;
-        if (bar is not null)
-        {
-            bar.PropertyChanged += OnBarPropertyChanged;
-        }
+        bar?.PropertyChanged += OnBarPropertyChanged;
         SyncTitleBarHeightHint();
     }
 

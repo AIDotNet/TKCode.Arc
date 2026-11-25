@@ -57,17 +57,11 @@ public class PasswordField : FieldTextBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_revealButton is not null)
-        {
-            _revealButton.Click -= OnRevealClick;
-        }
+        _revealButton?.Click -= OnRevealClick;
         base.OnApplyTemplate(e);
         _revealButton = e.NameScope.Find<FieldIconButton>(RevealButtonPart);
         _presenter = e.NameScope.Find<TextPresenter>("PART_TextPresenter");
-        if (_revealButton is not null)
-        {
-            _revealButton.Click += OnRevealClick;
-        }
+        _revealButton?.Click += OnRevealClick;
         UpdateToggleName();
     }
 

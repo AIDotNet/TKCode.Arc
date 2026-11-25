@@ -96,12 +96,11 @@ public class CopyButton : AvaloniaButton
     /// <inheritdoc cref="ResetAfterProperty"/>
     public TimeSpan ResetAfter { get => GetValue(ResetAfterProperty); set => SetValue(ResetAfterProperty, value); }
 
-    private CopyState _state;
     /// <inheritdoc cref="StateProperty"/>
     public CopyState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     private string _displayLabel = "Copy";

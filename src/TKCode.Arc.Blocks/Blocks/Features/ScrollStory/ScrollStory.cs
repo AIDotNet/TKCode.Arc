@@ -229,10 +229,7 @@ public class ScrollStory : TemplatedControl
         {
             view.IsStacked = stacked;
         }
-        if (_layout is not null)
-        {
-            _layout.IsStacked = stacked;
-        }
+        _layout?.IsStacked = stacked;
     }
 
     private void UpdateHeader()

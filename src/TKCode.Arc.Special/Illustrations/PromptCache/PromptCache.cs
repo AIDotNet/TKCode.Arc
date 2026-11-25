@@ -398,15 +398,9 @@ public partial class PromptCache : Explainer
         {
             return;
         }
-        if (field is not null)
-        {
-            field.CollectionChanged -= OnDataCollectionChanged;
-        }
+        field?.CollectionChanged -= OnDataCollectionChanged;
         field = value;
-        if (field is not null)
-        {
-            field.CollectionChanged += OnDataCollectionChanged;
-        }
+        field?.CollectionChanged += OnDataCollectionChanged;
     }
 
     private void SwapSource(ref INotifyCollectionChanged? field, INotifyCollectionChanged? value)
@@ -415,15 +409,9 @@ public partial class PromptCache : Explainer
         {
             return;
         }
-        if (field is not null)
-        {
-            field.CollectionChanged -= OnDataCollectionChanged;
-        }
+        field?.CollectionChanged -= OnDataCollectionChanged;
         field = value;
-        if (field is not null)
-        {
-            field.CollectionChanged += OnDataCollectionChanged;
-        }
+        field?.CollectionChanged += OnDataCollectionChanged;
     }
 
     /// <summary>The items the story is built from and the values that rebuild it, to tell whether they changed unobserved.</summary>

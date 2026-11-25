@@ -256,10 +256,7 @@ public partial class ModelArena
             _form.Prompts = Prompts;
             _form.ShortcutHint = PromptKbd.RunShortcutText;
         }
-        if (_standings is not null)
-        {
-            _standings.Limit = LeaderboardSize;
-        }
+        _standings?.Limit = LeaderboardSize;
         _shownRound = 0;
         ApplyLabels();
         ApplyWidthClasses(force: true);
@@ -275,47 +272,23 @@ public partial class ModelArena
 
     private void HookParts()
     {
-        if (_leaderboard is not null)
-        {
-            _leaderboard.Click += OnLeaderboardClick;
-        }
-        if (_blind is not null)
-        {
-            _blind.IsCheckedChanged += OnBlindSwitched;
-        }
-        if (_blindHost is not null)
-        {
-            _blindHost.Tapped += OnBlindHostTapped;
-        }
+        _leaderboard?.Click += OnLeaderboardClick;
+        _blind?.IsCheckedChanged += OnBlindSwitched;
+        _blindHost?.Tapped += OnBlindHostTapped;
         if (_popover is not null)
         {
             _popover.PropertyChanged += OnPopoverPropertyChanged;
             _popover.Opened += OnPopoverOpened;
         }
-        if (_standings is not null)
-        {
-            _standings.ResetRequested += OnResetRequested;
-        }
-        if (_tabs is not null)
-        {
-            _tabs.PropertyChanged += OnTabsPropertyChanged;
-        }
+        _standings?.ResetRequested += OnResetRequested;
+        _tabs?.PropertyChanged += OnTabsPropertyChanged;
     }
 
     private void UnhookParts()
     {
-        if (_leaderboard is not null)
-        {
-            _leaderboard.Click -= OnLeaderboardClick;
-        }
-        if (_blind is not null)
-        {
-            _blind.IsCheckedChanged -= OnBlindSwitched;
-        }
-        if (_blindHost is not null)
-        {
-            _blindHost.Tapped -= OnBlindHostTapped;
-        }
+        _leaderboard?.Click -= OnLeaderboardClick;
+        _blind?.IsCheckedChanged -= OnBlindSwitched;
+        _blindHost?.Tapped -= OnBlindHostTapped;
         if (_popover is not null)
         {
             _popover.PropertyChanged -= OnPopoverPropertyChanged;
@@ -325,14 +298,8 @@ public partial class ModelArena
                 popup.Closed -= OnPopupClosed;
             }
         }
-        if (_standings is not null)
-        {
-            _standings.ResetRequested -= OnResetRequested;
-        }
-        if (_tabs is not null)
-        {
-            _tabs.PropertyChanged -= OnTabsPropertyChanged;
-        }
+        _standings?.ResetRequested -= OnResetRequested;
+        _tabs?.PropertyChanged -= OnTabsPropertyChanged;
         _fadeA?.Dispose();
         _fadeA = null;
         _fadeB?.Dispose();
@@ -354,22 +321,10 @@ public partial class ModelArena
     private void ApplyLabels()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
-        if (_roundWord is not null)
-        {
-            _roundWord.Text = labels.RoundWord;
-        }
-        if (_leaderboardText is not null)
-        {
-            _leaderboardText.Text = labels.Leaderboard;
-        }
-        if (_blindText is not null)
-        {
-            _blindText.Text = labels.Blind;
-        }
+        _title?.Text = labels.Title;
+        _roundWord?.Text = labels.RoundWord;
+        _leaderboardText?.Text = labels.Leaderboard;
+        _blindText?.Text = labels.Blind;
         if (_blind is not null)
         {
             AutomationProperties.SetName(_blind, labels.Blind);
@@ -410,14 +365,8 @@ public partial class ModelArena
             _tabs.Labels = labels;
             _tabs.TabsName = labels.Answers;
         }
-        if (_paneViewA is not null)
-        {
-            _paneViewA.Labels = labels;
-        }
-        if (_paneViewB is not null)
-        {
-            _paneViewB.Labels = labels;
-        }
+        _paneViewA?.Labels = labels;
+        _paneViewB?.Labels = labels;
         SyncRoundName();
         SyncUnseen();
         SyncVoteTexts();
@@ -437,10 +386,7 @@ public partial class ModelArena
     /// </summary>
     private void SyncRound()
     {
-        if (_roundGroup is not null)
-        {
-            _roundGroup.IsVisible = Round > 0;
-        }
+        _roundGroup?.IsVisible = Round > 0;
         if (_roundDigits is not null && Round != _shownRound)
         {
             _roundDigits.IsInstant = _shownRound == 0 || !_roundDigits.IsAttachedToVisualTree();
@@ -531,10 +477,7 @@ public partial class ModelArena
         _isCompact = compact;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_form is not null)
-        {
-            _form.IsCompact = compact;
-        }
+        _form?.IsCompact = compact;
         if (_voteBar is not null)
         {
             _voteBar.IsNarrow = narrow;
@@ -546,10 +489,7 @@ public partial class ModelArena
             _leaderboard.Padding = compact ? default : s_leaderboardPadding;
             _leaderboard.Width = compact ? CompactLeaderboardWidth : double.NaN;
         }
-        if (_leaderboardText is not null)
-        {
-            _leaderboardText.IsVisible = !compact;
-        }
+        _leaderboardText?.IsVisible = !compact;
         if (force || narrowChanged)
         {
             ApplyStageLayout();
@@ -562,30 +502,15 @@ public partial class ModelArena
     /// </summary>
     private void ApplyStageLayout()
     {
-        if (_stage is not null)
-        {
-            _stage.IsNarrow = _isNarrow;
-        }
-        if (_tabs is not null)
-        {
-            _tabs.IsVisible = _isNarrow;
-        }
-        if (_divider is not null)
-        {
-            _divider.IsVisible = !_isNarrow;
-        }
+        _stage?.IsNarrow = _isNarrow;
+        _tabs?.IsVisible = _isNarrow;
+        _divider?.IsVisible = !_isNarrow;
         var selected = _tabs?.SelectedSlot ?? ArenaSlot.A;
         ShowPane(_paneViewA, _fadeA, !_isNarrow || selected == ArenaSlot.A, animate: false);
         ShowPane(_paneViewB, _fadeB, !_isNarrow || selected == ArenaSlot.B, animate: false);
         // Narrow, the tabs carry each answer's identity and status (spec 7: the stage is 12 + 60 + 311, no 48px pane head).
-        if (_paneViewA is not null)
-        {
-            _paneViewA.ShowsHeader = !_isNarrow;
-        }
-        if (_paneViewB is not null)
-        {
-            _paneViewB.ShowsHeader = !_isNarrow;
-        }
+        _paneViewA?.ShowsHeader = !_isNarrow;
+        _paneViewB?.ShowsHeader = !_isNarrow;
     }
 
     private void OnTabsPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -671,10 +596,7 @@ public partial class ModelArena
         }
         else if (property == LeaderboardSizeProperty)
         {
-            if (_standings is not null)
-            {
-                _standings.Limit = LeaderboardSize;
-            }
+            _standings?.Limit = LeaderboardSize;
             if (IsLeaderboardOpen)
             {
                 FillStandings(replay: false);

@@ -178,7 +178,6 @@ public class AiTranslate : TemplatedControl
     private readonly Dictionary<AiTranslateLanguage, string> _cache = [];
     private readonly List<MenuEntry> _entries = [];
     private readonly ArcGlyph _chipGlyph = new() { Data = ArcIcons.Languages, Size = 13 };
-    private AiTranslateState _state;
     private AiTranslateLanguage _source;
     private AiTranslateLanguage _shown;
     private string _shownText = string.Empty;
@@ -265,8 +264,8 @@ public class AiTranslate : TemplatedControl
     /// <inheritdoc cref="StateProperty"/>
     public AiTranslateState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="EffectiveSourceLanguageProperty"/>
@@ -434,18 +433,9 @@ public class AiTranslate : TemplatedControl
         _retryLabel = e.NameScope.Find<TextBlock>(RetryLabelPart);
         _status = e.NameScope.Find<Control>(StatusPart);
         _statusLabel = e.NameScope.Find<AiTranslateSlot>(StatusLabelPart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggle;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
-        if (_chip is not null)
-        {
-            _chip.Icon = _chipGlyph;
-        }
+        _toggle?.Click += OnToggle;
+        _retry?.Click += OnRetry;
+        _chip?.Icon = _chipGlyph;
         if (_status is not null)
         {
             AutomationProperties.SetLiveSetting(_status, AutomationLiveSetting.Polite);
@@ -467,14 +457,8 @@ public class AiTranslate : TemplatedControl
 
     private void Unhook()
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggle;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
+        _toggle?.Click -= OnToggle;
+        _retry?.Click -= OnRetry;
         if (_picker is not null)
         {
             DropdownMenu.SetMenu(_picker, null);
@@ -1004,10 +988,7 @@ public class AiTranslate : TemplatedControl
                 _avatar.DisplayName = author.Name;
                 _avatar.Source = author.Avatar;
             }
-            if (_name is not null)
-            {
-                _name.Text = author.Name;
-            }
+            _name?.Text = author.Name;
             if (_meta is not null)
             {
                 var timestamp = Timestamp ?? PlayingSimulation?.Timestamp;
@@ -1038,10 +1019,7 @@ public class AiTranslate : TemplatedControl
                 entry.SetCurrentValue(MenuEntry.IsCheckedProperty, isCurrent);
             }
         }
-        if (_pickerLabel is not null)
-        {
-            _pickerLabel.Text = onScreen == _source ? labels.Translate : labels.NativeName(onScreen);
-        }
+        _pickerLabel?.Text = onScreen == _source ? labels.Translate : labels.NativeName(onScreen);
         if (_picker is not null)
         {
             _picker.IsEnabled = hasText;
@@ -1049,10 +1027,7 @@ public class AiTranslate : TemplatedControl
         }
 
         var showsTranslation = _run is not null || _shown != _source;
-        if (_toggleLabel is not null)
-        {
-            _toggleLabel.Text = showsTranslation || _lastTranslated is null ? labels.ShowOriginal : labels.ShowTranslation;
-        }
+        _toggleLabel?.Text = showsTranslation || _lastTranslated is null ? labels.ShowOriginal : labels.ShowTranslation;
         if (_toggle is not null)
         {
             _toggle.IsEnabled = showsTranslation || _lastTranslated is not null;
@@ -1060,14 +1035,8 @@ public class AiTranslate : TemplatedControl
             AutomationProperties.SetName(_toggle, pressed ? labels.ShowTranslation : labels.ShowOriginal);
             AutomationProperties.SetItemStatus(_toggle, pressed ? "pressed" : null);
         }
-        if (_retry is not null)
-        {
-            _retry.IsVisible = state == AiTranslateState.Failed;
-        }
-        if (_retryLabel is not null)
-        {
-            _retryLabel.Text = labels.Retry;
-        }
+        _retry?.IsVisible = state == AiTranslateState.Failed;
+        _retryLabel?.Text = labels.Retry;
 
         if (_statusLabel is not null)
         {

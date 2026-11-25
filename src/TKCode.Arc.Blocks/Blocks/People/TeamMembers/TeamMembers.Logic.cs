@@ -373,14 +373,8 @@ public partial class TeamMembers
             }
             _chipsBeforeTemplate.Clear();
         }
-        if (_inviteRole is not null)
-        {
-            _inviteRole.Chosen += OnInviteRoleChosen;
-        }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _inviteRole?.Chosen += OnInviteRoleChosen;
+        _send?.Click += OnSendClick;
         if (_search is not null)
         {
             _search.TextChanged += OnSearchTextChanged;
@@ -401,22 +395,10 @@ public partial class TeamMembers
             _field.ChipRemoveRequested -= OnFieldChipRemove;
             _field.DraftChanged -= OnFieldDraftChanged;
         }
-        if (_inviteRole is not null)
-        {
-            _inviteRole.Chosen -= OnInviteRoleChosen;
-        }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
-        if (_search is not null)
-        {
-            _search.TextChanged -= OnSearchTextChanged;
-        }
-        if (_membersEmpty is not null)
-        {
-            _membersEmpty.ClearRequested -= OnClearSearchRequested;
-        }
+        _inviteRole?.Chosen -= OnInviteRoleChosen;
+        _send?.Click -= OnSendClick;
+        _search?.TextChanged -= OnSearchTextChanged;
+        _membersEmpty?.ClearRequested -= OnClearSearchRequested;
     }
 
     private void BuildEmptyRows()
@@ -452,10 +434,7 @@ public partial class TeamMembers
         }
         else if (change.Property == InviteRoleProperty)
         {
-            if (_inviteRole is not null)
-            {
-                _inviteRole.SelectedKey = InviteRole;
-            }
+            _inviteRole?.SelectedKey = InviteRole;
         }
         else if (change.Property == SearchTextProperty)
         {
@@ -539,18 +518,9 @@ public partial class TeamMembers
         PseudoClasses.Set(TwoTierPseudoClass, mode == TeamMembersRowMode.TwoTier);
         PseudoClasses.Set(StackedPseudoClass, _stacked);
         PseudoClasses.Set(ActionsBelowPseudoClass, _actionsBelow);
-        if (_header is not null)
-        {
-            _header.IsStacked = _stacked;
-        }
-        if (_inviteForm is not null)
-        {
-            _inviteForm.IsStacked = _stacked;
-        }
-        if (_membersHead is not null)
-        {
-            _membersHead.IsStacked = _stacked;
-        }
+        _header?.IsStacked = _stacked;
+        _inviteForm?.IsStacked = _stacked;
+        _membersHead?.IsStacked = _stacked;
         foreach (var row in MemberRows)
         {
             ApplyLayout(row);
@@ -559,14 +529,8 @@ public partial class TeamMembers
         {
             ApplyLayout(row);
         }
-        if (_membersEmpty is not null)
-        {
-            _membersEmpty.IsCompact = _stacked;
-        }
-        if (_invitesEmpty is not null)
-        {
-            _invitesEmpty.IsCompact = _stacked;
-        }
+        _membersEmpty?.IsCompact = _stacked;
+        _invitesEmpty?.IsCompact = _stacked;
     }
 
     private void ApplyLayout(TeamMembersMemberRow row)
@@ -594,18 +558,9 @@ public partial class TeamMembers
             _description.Text = Description;
             _description.IsVisible = !string.IsNullOrEmpty(Description);
         }
-        if (_seatMeter is not null)
-        {
-            _seatMeter.IsVisible = IsSeatMeterVisible;
-        }
-        if (_form is not null)
-        {
-            _form.IsVisible = IsInviteVisible && !IsReadOnly;
-        }
-        if (_inviteLabel is not null)
-        {
-            _inviteLabel.Text = labels.InviteHeading;
-        }
+        _seatMeter?.IsVisible = IsSeatMeterVisible;
+        _form?.IsVisible = IsInviteVisible && !IsReadOnly;
+        _inviteLabel?.Text = labels.InviteHeading;
         if (_field is not null)
         {
             _field.Placeholder = labels.Placeholder;
@@ -622,24 +577,15 @@ public partial class TeamMembers
             _inviteRole.SelectedKey = InviteRole;
             AutomationProperties.SetName(_inviteRole, labels.InviteAsName);
         }
-        if (_membersHeading is not null)
-        {
-            _membersHeading.Text = labels.MembersHeading;
-        }
-        if (_pendingHeading is not null)
-        {
-            _pendingHeading.Text = labels.PendingHeading;
-        }
+        _membersHeading?.Text = labels.MembersHeading;
+        _pendingHeading?.Text = labels.PendingHeading;
         if (_search is not null)
         {
             _search.Placeholder = labels.SearchPlaceholder;
             _search.IsVisible = IsSearchVisible;
             AutomationProperties.SetName(_search, labels.SearchName);
         }
-        if (_membersEmpty is not null)
-        {
-            _membersEmpty.ClearText = labels.ClearSearch;
-        }
+        _membersEmpty?.ClearText = labels.ClearSearch;
         if (_memberRows is not null)
         {
             AutomationProperties.SetName(_memberRows, labels.MembersHeading);
@@ -701,28 +647,16 @@ public partial class TeamMembers
         var members = observe ? MembersSource as INotifyCollectionChanged : null;
         if (!ReferenceEquals(members, _observedMembers))
         {
-            if (_observedMembers is not null)
-            {
-                _observedMembers.CollectionChanged -= OnMembersSourceChanged;
-            }
+            _observedMembers?.CollectionChanged -= OnMembersSourceChanged;
             _observedMembers = members;
-            if (members is not null)
-            {
-                members.CollectionChanged += OnMembersSourceChanged;
-            }
+            members?.CollectionChanged += OnMembersSourceChanged;
         }
         var invites = observe ? InvitesSource as INotifyCollectionChanged : null;
         if (!ReferenceEquals(invites, _observedInvites))
         {
-            if (_observedInvites is not null)
-            {
-                _observedInvites.CollectionChanged -= OnInvitesSourceChanged;
-            }
+            _observedInvites?.CollectionChanged -= OnInvitesSourceChanged;
             _observedInvites = invites;
-            if (invites is not null)
-            {
-                invites.CollectionChanged += OnInvitesSourceChanged;
-            }
+            invites?.CollectionChanged += OnInvitesSourceChanged;
         }
     }
 
@@ -889,10 +823,7 @@ public partial class TeamMembers
             _seatsUsedDigits.IsInstant = !animate;
             _seatsUsedDigits.Value = used;
         }
-        if (_seatsOf is not null)
-        {
-            _seatsOf.Text = " " + Labels.SeatsOf(limit);
-        }
+        _seatsOf?.Text = " " + Labels.SeatsOf(limit);
         SeatBarMaximum = Math.Max(1, limit);
         SeatBarValue = Math.Min(used, Math.Max(1, limit));
         if (_seatBar is not null)
@@ -921,10 +852,7 @@ public partial class TeamMembers
         {
             var showPending = _invites.Count > 0 || !string.IsNullOrWhiteSpace(query) || Labels.NoInvites is not null;
             _pendingHead.IsVisible = showPending;
-            if (_inviteRows is not null)
-            {
-                _inviteRows.IsVisible = showPending || _inviteRows.Children.OfType<TeamMembersRowSlot>().Any(s => s.IsLeaving);
-            }
+            _inviteRows?.IsVisible = showPending || _inviteRows.Children.OfType<TeamMembersRowSlot>().Any(s => s.IsLeaving);
         }
     }
 

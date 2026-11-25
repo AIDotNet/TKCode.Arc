@@ -228,14 +228,8 @@ internal sealed class ContextWindowLegendRow : TemplatedControl
     {
         _placeholder = placeholder;
         PseudoClasses.Set(EmptyPseudoClass, placeholder is not null);
-        if (_tokens is not null)
-        {
-            _tokens.Placeholder = placeholder;
-        }
-        if (_percent is not null)
-        {
-            _percent.Placeholder = placeholder is null ? null : string.Empty;
-        }
+        _tokens?.Placeholder = placeholder;
+        _percent?.Placeholder = placeholder is null ? null : string.Empty;
     }
 
     /// <summary>Shows <paramref name="tokens"/> of a <paramref name="window"/> (every frame of a roll).</summary>

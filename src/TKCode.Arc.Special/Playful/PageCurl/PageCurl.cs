@@ -280,18 +280,9 @@ public class PageCurl : TemplatedControl
         {
             UpdateCount(_count);
         }
-        if (_status is not null)
-        {
-            _status.Text = StatusText();
-        }
-        if (_previous is not null)
-        {
-            _previous.IsEnabled = shown > 0;
-        }
-        if (_next is not null)
-        {
-            _next.IsEnabled = shown < SpreadCount - 1;
-        }
+        _status?.Text = StatusText();
+        _previous?.IsEnabled = shown > 0;
+        _next?.IsEnabled = shown < SpreadCount - 1;
     }
 
     private static int CoerceSpread(AvaloniaObject owner, int value)
@@ -309,28 +300,16 @@ public class PageCurl : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         _surface?.Detach();
         _surface = e.NameScope.Find<PageCurlSurface>(SurfacePart);
         _previous = e.NameScope.Find<Button>(PreviousButtonPart);
         _next = e.NameScope.Find<Button>(NextButtonPart);
         _count = e.NameScope.Find<TextBlock>(CountPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
         _surface?.Attach(this);
         RefreshReadouts();
     }

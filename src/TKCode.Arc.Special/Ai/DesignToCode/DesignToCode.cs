@@ -447,26 +447,11 @@ public partial class DesignToCode : TemplatedControl
         _main = scope.Find<AvaloniaButton>(MainPart);
         _announcer = scope.Find<ExplainerAnnouncer>(AnnouncerPart);
 
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemove;
-        }
-        if (_chooseFile is not null)
-        {
-            _chooseFile.Click += OnChooseFile;
-        }
-        if (_useSample is not null)
-        {
-            _useSample.Click += OnUseSample;
-        }
-        if (_import is not null)
-        {
-            _import.Click += OnImport;
-        }
-        if (_main is not null)
-        {
-            _main.Click += OnMain;
-        }
+        _remove?.Click += OnRemove;
+        _chooseFile?.Click += OnChooseFile;
+        _useSample?.Click += OnUseSample;
+        _import?.Click += OnImport;
+        _main?.Click += OnMain;
         if (_canvas is not null)
         {
             _canvas.HoverChanged += OnCanvasHover;
@@ -478,10 +463,7 @@ public partial class DesignToCode : TemplatedControl
             _codeView.HoverRegionChanged += OnCodeHover;
             _codeView.Language = Language;
         }
-        if (_codeScroll is not null)
-        {
-            _codeScroll.ScrollChanged += OnCodeScrollChanged;
-        }
+        _codeScroll?.ScrollChanged += OnCodeScrollChanged;
         if (_viewToggle is not null)
         {
             _toggleReady = false;
@@ -505,26 +487,11 @@ public partial class DesignToCode : TemplatedControl
 
     private void Unhook()
     {
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemove;
-        }
-        if (_chooseFile is not null)
-        {
-            _chooseFile.Click -= OnChooseFile;
-        }
-        if (_useSample is not null)
-        {
-            _useSample.Click -= OnUseSample;
-        }
-        if (_import is not null)
-        {
-            _import.Click -= OnImport;
-        }
-        if (_main is not null)
-        {
-            _main.Click -= OnMain;
-        }
+        _remove?.Click -= OnRemove;
+        _chooseFile?.Click -= OnChooseFile;
+        _useSample?.Click -= OnUseSample;
+        _import?.Click -= OnImport;
+        _main?.Click -= OnMain;
         if (_canvas is not null)
         {
             _canvas.HoverChanged -= OnCanvasHover;
@@ -532,22 +499,10 @@ public partial class DesignToCode : TemplatedControl
             _canvas.TagInvoked -= OnTagInvoked;
             _canvas.ClearRegions();
         }
-        if (_codeView is not null)
-        {
-            _codeView.HoverRegionChanged -= OnCodeHover;
-        }
-        if (_codeScroll is not null)
-        {
-            _codeScroll.ScrollChanged -= OnCodeScrollChanged;
-        }
-        if (_viewToggle is not null)
-        {
-            _viewToggle.SelectionChanged -= OnViewToggleChanged;
-        }
-        if (_previewHost is not null)
-        {
-            _previewHost.Child = null;
-        }
+        _codeView?.HoverRegionChanged -= OnCodeHover;
+        _codeScroll?.ScrollChanged -= OnCodeScrollChanged;
+        _viewToggle?.SelectionChanged -= OnViewToggleChanged;
+        _previewHost?.Child = null;
     }
 
     /// <inheritdoc />
@@ -611,10 +566,7 @@ public partial class DesignToCode : TemplatedControl
         }
         else if (change.Property == LanguageProperty)
         {
-            if (_codeView is not null)
-            {
-                _codeView.Language = Language;
-            }
+            _codeView?.Language = Language;
         }
         else if (change.Property == FileNameProperty || change.Property == ModelProperty || change.Property == AcceptedFileTypesProperty
                  || change.Property == MaxFileSizeProperty || change.Property == AutoPlayProperty || change.Property == PreviewFactoryProperty)
@@ -658,10 +610,7 @@ public partial class DesignToCode : TemplatedControl
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(CompactPseudoClass, isCompact);
         PseudoClasses.Set(NarrowPseudoClass, isNarrow);
-        if (_split is not null)
-        {
-            _split.IsStacked = stacked;
-        }
+        _split?.IsStacked = stacked;
         _statusKey = null;
         RefreshAll();
     }
@@ -773,14 +722,8 @@ public partial class DesignToCode : TemplatedControl
     private void UpdateHighlight()
     {
         var region = HighlightedRegion;
-        if (_canvas is not null)
-        {
-            _canvas.Highlighted = region;
-        }
-        if (_codeView is not null)
-        {
-            _codeView.HighlightedRegion = region;
-        }
+        _canvas?.Highlighted = region;
+        _codeView?.HighlightedRegion = region;
     }
 
     /// <summary>Scrolls the lines of <paramref name="region"/> into view in the code.</summary>
@@ -829,10 +772,7 @@ public partial class DesignToCode : TemplatedControl
         {
             AutomationProperties.SetName(_outputPane, labels.Output);
         }
-        if (_designLabel is not null)
-        {
-            _designLabel.Text = labels.Design;
-        }
+        _designLabel?.Text = labels.Design;
 
         // Design side.
         if (_canvas is not null)
@@ -870,47 +810,26 @@ public partial class DesignToCode : TemplatedControl
             AutomationProperties.SetName(_remove, labels.Remove);
             Avalonia.Controls.ToolTip.SetTip(_remove, labels.Remove);
         }
-        if (_dropZone is not null)
-        {
-            _dropZone.IsVisible = source is null;
-        }
-        if (_dropTitle is not null)
-        {
-            _dropTitle.Text = labels.DropTitle;
-        }
-        if (_dropHint is not null)
-        {
-            _dropHint.Text = labels.DropHint(DesignToCodeFormat.TypesText(AcceptedFileTypes), DesignToCodeFormat.SizeText(MaxFileSize));
-        }
+        _dropZone?.IsVisible = source is null;
+        _dropTitle?.Text = labels.DropTitle;
+        _dropHint?.Text = labels.DropHint(DesignToCodeFormat.TypesText(AcceptedFileTypes), DesignToCodeFormat.SizeText(MaxFileSize));
         if (_dropError is not null)
         {
             _dropError.Text = ErrorMessage;
             _dropError.IsVisible = source is null && ErrorMessage is not null;
         }
-        if (_chooseFile is not null)
-        {
-            _chooseFile.Content = labels.ChooseFile;
-        }
+        _chooseFile?.Content = labels.ChooseFile;
         if (_useSample is not null)
         {
             _useSample.Content = labels.UseSample;
             _useSample.IsVisible = Simulation?.Source is not null;
         }
-        if (_dragCoverText is not null)
-        {
-            _dragCoverText.Text = labels.DropCover;
-        }
+        _dragCoverText?.Text = labels.DropCover;
 
         // Output header.
-        if (_fileName is not null)
-        {
-            _fileName.Text = EffectiveFileName;
-        }
+        _fileName?.Text = EffectiveFileName;
         var model = Model ?? (CanSimulate ? Simulation!.Model : null);
-        if (_modelName is not null)
-        {
-            _modelName.Text = model?.Name;
-        }
+        _modelName?.Text = model?.Name;
         if (_modelMark is not null)
         {
             _modelMark.Data = model?.Mark ?? ArcIcons.Sparkles;

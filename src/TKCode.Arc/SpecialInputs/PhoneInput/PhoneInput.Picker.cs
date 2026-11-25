@@ -737,10 +737,7 @@ public partial class PhoneInput
             _chevronAngle = new MotionValue<double>(this, 0, MotionVectors.Double);
             _chevronAngle.Changed += v =>
             {
-                if (_chevronTurn is not null)
-                {
-                    _chevronTurn.Angle = v;
-                }
+                _chevronTurn?.Angle = v;
             };
         }
         _ = _chevronAngle.AnimateTo(open ? 180 : 0, MotionSpec.Spring(PhoneInputFace.Glide));
@@ -805,10 +802,7 @@ public partial class PhoneInput
             _lidFaceFade = new MotionValue<double>(this, 1, MotionVectors.Double);
             _lidFaceFade.Changed += v =>
             {
-                if (_lidFace is not null)
-                {
-                    _lidFace.Opacity = Math.Clamp(v, 0, 1);
-                }
+                _lidFace?.Opacity = Math.Clamp(v, 0, 1);
             };
         }
         if (ArcMotion.IsFull(this))
@@ -828,10 +822,7 @@ public partial class PhoneInput
             _lidFillFade = new MotionValue<double>(this, 0, MotionVectors.Double);
             _lidFillFade.Changed += v =>
             {
-                if (_lidFill is not null)
-                {
-                    _lidFill.Opacity = Math.Clamp(v, 0, 1);
-                }
+                _lidFill?.Opacity = Math.Clamp(v, 0, 1);
             };
         }
         return _lidFillFade;
@@ -854,10 +845,7 @@ public partial class PhoneInput
             _search.CaretIndex = query.Length;
             _syncingQuery = false;
         }
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = query.Length > 0;
-        }
+        _clearHost?.IsPresent = query.Length > 0;
     }
 
     private void OnSearchPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

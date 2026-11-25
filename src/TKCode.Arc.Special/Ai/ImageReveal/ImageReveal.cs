@@ -188,7 +188,6 @@ public class ImageReveal : TemplatedControl
 
     private readonly ImageRevealEngine _engine = new();
     private readonly LiveLoop _loop;
-    private ImageRevealStatus _actualStatus = ImageRevealStatus.Queued;
     private ImageRevealCanvas? _canvas;
     private Control? _pillHost;
     private ImageRevealPill? _pill;
@@ -301,9 +300,9 @@ public class ImageReveal : TemplatedControl
     /// <inheritdoc cref="ActualStatusProperty"/>
     public ImageRevealStatus ActualStatus
     {
-        get => _actualStatus;
-        private set => SetAndRaise(ActualStatusProperty, ref _actualStatus, value);
-    }
+        get;
+        private set => SetAndRaise(ActualStatusProperty, ref field, value);
+    } = ImageRevealStatus.Queued;
 
     /// <inheritdoc cref="StatusChangedEvent"/>
     public event EventHandler<ImageRevealStatusChangedEventArgs>? StatusChanged
@@ -419,14 +418,8 @@ public class ImageReveal : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
-        if (_canvas is not null)
-        {
-            _canvas.SizeChanged -= OnCanvasSizeChanged;
-        }
+        _retry?.Click -= OnRetry;
+        _canvas?.SizeChanged -= OnCanvasSizeChanged;
         _canvas = e.NameScope.Find<ImageRevealCanvas>(CanvasPart);
         _pillHost = e.NameScope.Find<Control>(PillHostPart);
         _pill = e.NameScope.Find<ImageRevealPill>(PillPart);
@@ -440,10 +433,7 @@ public class ImageReveal : TemplatedControl
         _errorText = e.NameScope.Find<TextBlock>(ErrorTextPart);
         _retry = e.NameScope.Find<AvaloniaButton>(RetryPart);
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
+        _retry?.Click += OnRetry;
         if (_canvas is not null)
         {
             _canvas.Engine = _engine;
@@ -451,14 +441,8 @@ public class ImageReveal : TemplatedControl
             _canvas.Chain = _chain;
             _canvas.SizeChanged += OnCanvasSizeChanged;
         }
-        if (_count is not null)
-        {
-            _count.FontFeatures = s_tabular;
-        }
-        if (_countReserve is not null)
-        {
-            _countReserve.FontFeatures = s_tabular;
-        }
+        _count?.FontFeatures = s_tabular;
+        _countReserve?.FontFeatures = s_tabular;
         _shownStep = -1;
         PillText = null;
         UpdatePseudoClasses();
@@ -976,18 +960,9 @@ public class ImageReveal : TemplatedControl
         var status = _engine.Status;
         var small = Size == ControlSize.Small;
         AutomationProperties.SetName(this, CanvasName);
-        if (_spinner is not null)
-        {
-            _spinner.IsVisible = status == ImageRevealStatus.Queued;
-        }
-        if (_ring is not null)
-        {
-            _ring.IsVisible = status == ImageRevealStatus.Generating;
-        }
-        if (_check is not null)
-        {
-            _check.IsVisible = status == ImageRevealStatus.Done;
-        }
+        _spinner?.IsVisible = status == ImageRevealStatus.Queued;
+        _ring?.IsVisible = status == ImageRevealStatus.Generating;
+        _check?.IsVisible = status == ImageRevealStatus.Done;
         string? text = status switch
         {
             ImageRevealStatus.Queued => QueueLabel ?? Labels.Queued,
@@ -1005,19 +980,13 @@ public class ImageReveal : TemplatedControl
             _label.IsVisible = text is not null;
         }
         var counting = status == ImageRevealStatus.Generating && Steps > 0;
-        if (_count is not null)
-        {
-            _count.IsVisible = counting;
-        }
+        _count?.IsVisible = counting;
         if (_countReserve is not null)
         {
             _countReserve.IsVisible = counting;
             _countReserve.Text = Labels.Count(Math.Max(0, Steps), Math.Max(0, Steps));
         }
-        if (_pillHost is not null)
-        {
-            _pillHost.IsVisible = ShowsProgress && status != ImageRevealStatus.Error && CurrentMode != Mode.Empty;
-        }
+        _pillHost?.IsVisible = ShowsProgress && status != ImageRevealStatus.Error && CurrentMode != Mode.Empty;
         if (_pill is not null)
         {
             _pill.IsProgress = counting;
@@ -1027,10 +996,7 @@ public class ImageReveal : TemplatedControl
                 AutomationProperties.SetName(_pill, text ?? string.Empty);
             }
         }
-        if (_errorText is not null)
-        {
-            _errorText.Text = ErrorMessage ?? Labels.Failed;
-        }
+        _errorText?.Text = ErrorMessage ?? Labels.Failed;
         if (_retry is not null)
         {
             _retry.IsVisible = AllowsRetry;
@@ -1042,10 +1008,7 @@ public class ImageReveal : TemplatedControl
     private void Push()
     {
         _canvas?.InvalidateVisual();
-        if (_canvas is not null)
-        {
-            _canvas.SnapshotOpacity = _snapshotOpacity;
-        }
+        _canvas?.SnapshotOpacity = _snapshotOpacity;
         if (_ring is not null && _ring.IsVisible && Math.Abs(_ring.Value - _engine.PillValue) > 0.0005)
         {
             _ring.Value = _engine.PillValue;
@@ -1060,10 +1023,7 @@ public class ImageReveal : TemplatedControl
             if (step != _shownStep)
             {
                 _shownStep = step;
-                if (_count is not null)
-                {
-                    _count.Text = Labels.Count(step, Steps);
-                }
+                _count?.Text = Labels.Count(step, Steps);
                 if (_pill is not null)
                 {
                     _pill.Value = step;

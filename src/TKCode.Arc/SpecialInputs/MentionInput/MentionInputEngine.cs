@@ -4,13 +4,34 @@ namespace TKCode.Arc;
 internal readonly record struct MentionInputTrigger(MentionKind Kind, int Start, string Query);
 
 /// <summary>One suggestion row: a person or a channel.</summary>
-internal readonly record struct MentionInputSuggestion(MentionKind Kind, MentionPerson? Person, MentionChannel? Channel)
+internal union MentionInputSuggestion(MentionPerson, MentionChannel)
 {
-    public string Id => Person?.Id ?? Channel!.Id;
+    public MentionKind Kind => this is MentionPerson ? MentionKind.Person : MentionKind.Channel;
 
-    public string Name => Person?.Name ?? Channel!.Name;
+    public MentionPerson? Person => this is MentionPerson person ? person : null;
 
-    public string? Meta => Person is not null ? Person.Role : Channel!.Description;
+    public MentionChannel? Channel => this is MentionChannel channel ? channel : null;
+
+    public string Id => this switch
+    {
+        MentionPerson person => person.Id,
+        MentionChannel channel => channel.Id,
+        _ => string.Empty,
+    };
+
+    public string Name => this switch
+    {
+        MentionPerson person => person.Name,
+        MentionChannel channel => channel.Name,
+        _ => string.Empty,
+    };
+
+    public string? Meta => this switch
+    {
+        MentionPerson person => person.Role,
+        MentionChannel channel => channel.Description,
+        _ => null,
+    };
 }
 
 /// <summary>
@@ -133,14 +154,14 @@ internal static class MentionInputEngine
         {
             foreach (var person in people ?? [])
             {
-                scored.Add((new MentionInputSuggestion(MentionKind.Person, person, null), Rank(person.Name, person.Role, query)));
+                scored.Add((person, Rank(person.Name, person.Role, query)));
             }
         }
         else
         {
             foreach (var channel in channels ?? [])
             {
-                scored.Add((new MentionInputSuggestion(MentionKind.Channel, null, channel), Rank(channel.Name, channel.Description, query)));
+                scored.Add((channel, Rank(channel.Name, channel.Description, query)));
             }
         }
         var result = new List<MentionInputSuggestion>();

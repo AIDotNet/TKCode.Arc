@@ -10,8 +10,10 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Languages;
 
 /// <summary>Information about a symbol or word, shown in a tooltip-like widget (upstream's Hover).</summary>
-internal sealed record Hover(IReadOnlyList<MarkdownString> Contents)
+internal sealed class Hover(IReadOnlyList<MarkdownString> contents)
 {
+    public IReadOnlyList<MarkdownString> Contents { get; } = contents;
+
     /// <summary>The range the hover applies to; null uses the word at the position.</summary>
     public TextRange? Range { get; init; }
 
@@ -57,6 +59,7 @@ internal sealed record ParameterInformation
 /// <summary>The signature of something callable (upstream's SignatureInformation).</summary>
 internal sealed record SignatureInformation(string Label, IReadOnlyList<ParameterInformation> Parameters)
 {
+
     public StringOrMarkdown? Documentation { get; init; }
 
     /// <summary>The index of the active parameter; overrides <see cref="SignatureHelp.ActiveParameter"/>.</summary>
@@ -106,8 +109,10 @@ internal sealed record CodeLens(TextRange Range)
 }
 
 /// <summary>The code lenses of a document (upstream's CodeLensList).</summary>
-internal sealed record CodeLensList(IReadOnlyList<CodeLens> Lenses)
+internal sealed class CodeLensList(IReadOnlyList<CodeLens> lenses)
 {
+    public IReadOnlyList<CodeLens> Lenses { get; } = lenses;
+
     public Action? Dispose { get; init; }
 }
 
@@ -172,8 +177,10 @@ internal sealed record InlayHint(TextPosition Position)
 }
 
 /// <summary>The inlay hints of a range (upstream's InlayHintList).</summary>
-internal sealed record InlayHintList(IReadOnlyList<InlayHint> Hints)
+internal sealed class InlayHintList(IReadOnlyList<InlayHint> hints)
 {
+    public IReadOnlyList<InlayHint> Hints { get; } = hints;
+
     public Action? Dispose { get; init; }
 }
 
@@ -203,14 +210,20 @@ internal interface IInlayHintsProvider
 }
 
 /// <summary>The token types and modifiers semantic token data indexes (upstream's SemanticTokensLegend).</summary>
-internal sealed record SemanticTokensLegend(IReadOnlyList<string> TokenTypes, IReadOnlyList<string> TokenModifiers);
+internal sealed class SemanticTokensLegend(IReadOnlyList<string> tokenTypes, IReadOnlyList<string> tokenModifiers)
+{
+    public IReadOnlyList<string> TokenTypes { get; } = tokenTypes;
+    public IReadOnlyList<string> TokenModifiers { get; } = tokenModifiers;
+}
 
 /// <summary>
 /// Semantic tokens: five numbers per token (delta line, delta start character, length, token type, modifier bits),
 /// as upstream's SemanticTokens.
 /// </summary>
-internal sealed record SemanticTokens(uint[] Data)
+internal sealed class SemanticTokens(uint[] data)
 {
+    public uint[] Data { get; } = data;
+
     public string? ResultId { get; init; }
 }
 
@@ -221,21 +234,19 @@ internal sealed record SemanticTokensEdit(int Start, int DeleteCount)
 }
 
 /// <summary>Changes to the previous result (upstream's SemanticTokensEdits).</summary>
-internal sealed record SemanticTokensEdits(IReadOnlyList<SemanticTokensEdit> Edits)
+internal sealed class SemanticTokensEdits(IReadOnlyList<SemanticTokensEdit> edits)
 {
+    public IReadOnlyList<SemanticTokensEdit> Edits { get; } = edits;
+
     public string? ResultId { get; init; }
 }
 
 /// <summary>Semantic tokens or edits to the previous ones.</summary>
-internal sealed record SemanticTokensOrEdits
+internal union SemanticTokensOrEdits(SemanticTokens, SemanticTokensEdits)
 {
-    public SemanticTokens? Tokens { get; init; }
+    public SemanticTokens? Tokens => this is SemanticTokens tokens ? tokens : null;
 
-    public SemanticTokensEdits? Edits { get; init; }
-
-    public static implicit operator SemanticTokensOrEdits(SemanticTokens tokens) => new() { Tokens = tokens };
-
-    public static implicit operator SemanticTokensOrEdits(SemanticTokensEdits edits) => new() { Edits = edits };
+    public SemanticTokensEdits? Edits => this is SemanticTokensEdits edits ? edits : null;
 }
 
 /// <summary>Provides the semantic tokens of a whole document (upstream's DocumentSemanticTokensProvider).</summary>

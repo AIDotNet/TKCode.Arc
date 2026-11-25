@@ -440,14 +440,8 @@ public class EnrichColumn : TemplatedControl
             return;
         }
         _isEditing = true;
-        if (_nameInput is not null)
-        {
-            _nameInput.Text = EffectiveColumn.Name;
-        }
-        if (_promptInput is not null)
-        {
-            _promptInput.Text = EffectiveColumn.Prompt;
-        }
+        _nameInput?.Text = EffectiveColumn.Name;
+        _promptInput?.Text = EffectiveColumn.Prompt;
         UpdateEditor();
         _nameInput?.Focus(NavigationMethod.Tab);
     }
@@ -533,22 +527,10 @@ public class EnrichColumn : TemplatedControl
         _failed = scope.Find<TextBlock>(FailedPart);
         _announcer = scope.Find<ExplainerAnnouncer>(AnnouncerPart);
 
-        if (_run is not null)
-        {
-            _run.Click += OnRunClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click += OnEditClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
+        _run?.Click += OnRunClick;
+        _edit?.Click += OnEditClick;
+        _cancel?.Click += OnCancelClick;
+        _save?.Click += OnSaveClick;
         _editorBody?.AddHandler(KeyDownEvent, OnEditorKeyDown, RoutingStrategies.Tunnel);
         if (_list is not null)
         {
@@ -563,22 +545,10 @@ public class EnrichColumn : TemplatedControl
 
     private void Unhook()
     {
-        if (_run is not null)
-        {
-            _run.Click -= OnRunClick;
-        }
-        if (_edit is not null)
-        {
-            _edit.Click -= OnEditClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
+        _run?.Click -= OnRunClick;
+        _edit?.Click -= OnEditClick;
+        _cancel?.Click -= OnCancelClick;
+        _save?.Click -= OnSaveClick;
         _editorBody?.RemoveHandler(KeyDownEvent, OnEditorKeyDown);
     }
 
@@ -745,15 +715,9 @@ public class EnrichColumn : TemplatedControl
 
     private void Observe(IEnumerable<EnrichColumnRow>? rows)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnRowsCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnRowsCollectionChanged;
         _observed = rows as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnRowsCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnRowsCollectionChanged;
     }
 
     private void OnRowsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -910,10 +874,7 @@ public class EnrichColumn : TemplatedControl
             _editor.IsExpanded = _isEditing;
             KeyboardNavigation.SetTabNavigation(_editor, _isEditing ? KeyboardNavigationMode.Continue : KeyboardNavigationMode.None);
         }
-        if (_editorBody is not null)
-        {
-            _editorBody.IsHitTestVisible = _isEditing;
-        }
+        _editorBody?.IsHitTestVisible = _isEditing;
         if (_edit is not null)
         {
             Avalonia.Automation.AutomationProperties.SetName(_edit, Labels.EditColumn);
@@ -928,10 +889,7 @@ public class EnrichColumn : TemplatedControl
         var (done, failed, total) = Counts();
         var running = _runner.IsRunning;
         PseudoClasses.Set(RunningPseudoClass, running);
-        if (_title is not null)
-        {
-            _title.Text = DisplayedTitle;
-        }
+        _title?.Text = DisplayedTitle;
         if (_meta is not null)
         {
             var note = Note ?? (IsSimulated ? labels.SampleNote : null);
@@ -942,25 +900,13 @@ public class EnrichColumn : TemplatedControl
             _run.IsEnabled = running || CanRun;
             var hasValues = done > 0 || failed > 0;
             var text = running ? labels.Stop : hasValues ? labels.Rerun : labels.RunColumn;
-            if (_runText is not null)
-            {
-                _runText.Text = text;
-            }
-            if (_runGlyph is not null)
-            {
-                _runGlyph.Data = running ? ArcIcons.Square : hasValues ? ArcIcons.RotateCcw : ArcIcons.Play;
-            }
+            _runText?.Text = text;
+            _runGlyph?.Data = running ? ArcIcons.Square : hasValues ? ArcIcons.RotateCcw : ArcIcons.Play;
             AutomationProperties.SetName(_run, text);
         }
-        if (_rowHeader is not null)
-        {
-            _rowHeader.Text = labels.RowHeader;
-        }
+        _rowHeader?.Text = labels.RowHeader;
         var column = EffectiveColumn;
-        if (_columnName is not null)
-        {
-            _columnName.Text = column.Name;
-        }
+        _columnName?.Text = column.Name;
         if (_columnPrompt is not null)
         {
             _columnPrompt.Text = column.Prompt;
@@ -976,26 +922,11 @@ public class EnrichColumn : TemplatedControl
             AutomationProperties.SetName(_edit, labels.EditColumn);
             Tooltip.SetTip(_edit, labels.EditColumn);
         }
-        if (_nameInput is not null)
-        {
-            _nameInput.Label = labels.ColumnName;
-        }
-        if (_promptInput is not null)
-        {
-            _promptInput.Label = labels.Prompt;
-        }
-        if (_hint is not null)
-        {
-            _hint.Text = labels.SaveHint;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Content = labels.Cancel;
-        }
-        if (_save is not null)
-        {
-            _save.Content = labels.SaveAndRun;
-        }
+        _nameInput?.Label = labels.ColumnName;
+        _promptInput?.Label = labels.Prompt;
+        _hint?.Text = labels.SaveHint;
+        _cancel?.Content = labels.Cancel;
+        _save?.Content = labels.SaveAndRun;
         var model = EffectiveModel;
         if (_modelName is not null)
         {
@@ -1021,10 +952,7 @@ public class EnrichColumn : TemplatedControl
             _modelDetail.Text = string.IsNullOrEmpty(detail) ? null : "· " + detail;
             _modelDetail.IsVisible = !string.IsNullOrEmpty(detail) && density == EnrichColumnDensity.Regular;
         }
-        if (_progress is not null)
-        {
-            _progress.Text = labels.Progress(done, total);
-        }
+        _progress?.Text = labels.Progress(done, total);
         if (_failed is not null)
         {
             _failed.Text = labels.FailedCount(failed);

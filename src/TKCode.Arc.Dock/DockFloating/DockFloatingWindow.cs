@@ -166,10 +166,7 @@ internal sealed class DockFloatingWindow : ArcWindow, IDockFloatHost
             return;
         }
         _unhooked = true;
-        if (_owner is not null)
-        {
-            _owner.ActualThemeVariantChanged -= OnOwnerThemeVariantChanged;
-        }
+        _owner?.ActualThemeVariantChanged -= OnOwnerThemeVariantChanged;
         Float.PropertyChanged -= OnFloatPropertyChanged;
         _title.Dispose();
         _titleGesture?.Dispose();

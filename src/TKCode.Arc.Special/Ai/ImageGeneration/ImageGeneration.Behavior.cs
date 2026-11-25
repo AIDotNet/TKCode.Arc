@@ -198,26 +198,11 @@ public partial class ImageGeneration
             _prompt.TextChanged -= OnPromptTextChanged;
             _prompt.RemoveHandler(KeyDownEvent, OnPromptKeyDown);
         }
-        if (_generate is not null)
-        {
-            _generate.Click -= OnGenerateClick;
-        }
-        if (_upscale is not null)
-        {
-            _upscale.Click -= OnUpscaleClick;
-        }
-        if (_vary is not null)
-        {
-            _vary.Click -= OnVaryClick;
-        }
-        if (_download is not null)
-        {
-            _download.Click -= OnDownloadClick;
-        }
-        if (_grid is not null)
-        {
-            _grid.Collapsed -= OnGridCollapsed;
-        }
+        _generate?.Click -= OnGenerateClick;
+        _upscale?.Click -= OnUpscaleClick;
+        _vary?.Click -= OnVaryClick;
+        _download?.Click -= OnDownloadClick;
+        _grid?.Collapsed -= OnGridCollapsed;
     }
 
     private void BuildGrid(ImageGenerationGrid grid)
@@ -962,28 +947,13 @@ public partial class ImageGeneration
         var picked = _selected >= 0 && _selected < Tiles.Count ? Tiles[_selected] : null;
         var hasImage = picked?.Image is not null;
         _generateFaces?.Show(IsGenerating ? 1 : 0);
-        if (_generate is not null)
-        {
-            _generate.IsEnabled = IsGenerating || CanGenerate && !string.IsNullOrWhiteSpace(Prompt);
-        }
+        _generate?.IsEnabled = IsGenerating || CanGenerate && !string.IsNullOrWhiteSpace(Prompt);
         _upscaleFaces?.Show(_upscaling ? 1 : picked?.IsUpscaled == true ? 2 : 0);
-        if (_upscale is not null)
-        {
-            _upscale.IsEnabled = hasImage && !_upscaling && !(IsExpanded && picked?.IsUpscaled == true);
-        }
-        if (_vary is not null)
-        {
-            _vary.IsEnabled = hasImage && !IsGenerating && !_upscaling;
-        }
-        if (_download is not null)
-        {
-            _download.IsEnabled = hasImage && !_upscaling;
-        }
+        _upscale?.IsEnabled = hasImage && !_upscaling && !(IsExpanded && picked?.IsUpscaled == true);
+        _vary?.IsEnabled = hasImage && !IsGenerating && !_upscaling;
+        _download?.IsEnabled = hasImage && !_upscaling;
         UpdateActionNames();
-        if (_suggestions is not null)
-        {
-            _suggestions.IsVisible = !_hasBatch;
-        }
+        _suggestions?.IsVisible = !_hasBatch;
         // One tab stop in the grid: the picked tile, else the first one that has something to show.
         var stop = _selected;
         if (stop < 0)
@@ -1064,10 +1034,7 @@ public partial class ImageGeneration
             return;
         }
         _shownStatus = text;
-        if (_status is not null)
-        {
-            _status.Content = text;
-        }
+        _status?.Content = text;
     }
 
     /// <summary>Says something in the polite live region, noting simulated results.</summary>

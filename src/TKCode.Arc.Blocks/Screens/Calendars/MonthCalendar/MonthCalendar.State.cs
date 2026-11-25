@@ -375,25 +375,16 @@ public partial class MonthCalendar
         }
         else if (p == IsDayPanelOpenProperty)
         {
-            if (_shell is not null)
-            {
-                _shell.IsPanelOpen = IsDayPanelOpen;
-            }
+            _shell?.IsPanelOpen = IsDayPanelOpen;
             RefreshHeader();
         }
         else if (p == DayPanelWidthProperty)
         {
-            if (_shell is not null)
-            {
-                _shell.PanelWidth = DayPanelWidth;
-            }
+            _shell?.PanelWidth = DayPanelWidth;
         }
         else if (p == IsSidebarCollapsedProperty)
         {
-            if (_shell is not null)
-            {
-                _shell.IsSidebarCollapsed = IsSidebarCollapsed;
-            }
+            _shell?.IsSidebarCollapsed = IsSidebarCollapsed;
             RefreshSidebar();
         }
         else if (p == ViewProperty || p == TeammateIdProperty)
@@ -611,10 +602,7 @@ public partial class MonthCalendar
         if (CurrentUserId is { } me)
         {
             var mine = e.Attendees.FirstOrDefault(a => a.PersonId == me);
-            if (mine is not null)
-            {
-                mine.Status = reply;
-            }
+            mine?.Status = reply;
         }
         RaiseEvent(new MonthCalendarRsvpChangedEventArgs(RsvpChangedEvent, e, old, reply));
         RaiseEvent(new MonthCalendarEventChangedEventArgs(EventChangedEvent, e, previous));

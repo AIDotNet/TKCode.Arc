@@ -282,10 +282,7 @@ internal partial class PromptRunPanel : TemplatedControl
         if (_reply.HasText)
         {
             _reply = new PromptRunReply();
-            if (_replySwap is not null)
-            {
-                _replySwap.Content = _reply;
-            }
+            _replySwap?.Content = _reply;
         }
         WriteText(string.Empty);
         if (hadContent)
@@ -411,10 +408,7 @@ internal partial class PromptRunPanel : TemplatedControl
             _size.LayoutUpdated -= OnHeldLayout;
         }
         _holdHooked = false;
-        if (_size is not null)
-        {
-            _size.IsHeld = false;
-        }
+        _size?.IsHeld = false;
     }
 
     /// <summary>While held, the new content taking as much room as the held height ends the hold.</summary>

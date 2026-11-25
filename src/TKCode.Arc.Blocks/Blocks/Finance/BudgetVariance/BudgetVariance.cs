@@ -237,10 +237,7 @@ public partial class BudgetVariance : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_periods is not null)
-        {
-            _periods.SelectionChanged -= OnPeriodsSelectionChanged;
-        }
+        _periods?.SelectionChanged -= OnPeriodsSelectionChanged;
         _table?.Children.Clear();
         _legend?.Children.Clear();
         base.OnApplyTemplate(e);
@@ -251,10 +248,7 @@ public partial class BudgetVariance : TemplatedControl
         _legend = scope.Find<WrapPanel>(LegendPart);
         _description = scope.Find<TextBlock>(DescriptionPart);
         _announcer = scope.Find<FinanceAnnouncer>(AnnouncerPart);
-        if (_periods is not null)
-        {
-            _periods.SelectionChanged += OnPeriodsSelectionChanged;
-        }
+        _periods?.SelectionChanged += OnPeriodsSelectionChanged;
         Rebuild();
     }
 
@@ -394,10 +388,7 @@ public partial class BudgetVariance : TemplatedControl
         {
             figure.ApplyStacked(stacked);
         }
-        if (_headerLead is not null)
-        {
-            _headerLead.IsVisible = !stacked;
-        }
+        _headerLead?.IsVisible = !stacked;
         foreach (var header in _columnHeaders)
         {
             header.IsVisible = !stacked;

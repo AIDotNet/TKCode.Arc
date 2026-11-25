@@ -381,10 +381,7 @@ public class ColorPicker : TemplatedControl, IPickerAutomation
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
             _trigger.LayoutUpdated -= OnHeaderLayoutUpdated;
         }
-        if (_popup is not null)
-        {
-            _popup.Child = null;
-        }
+        _popup?.Child = null;
         _trigger = e.NameScope.Find<Control>(TriggerPart);
         _triggerChip = e.NameScope.Find<Control>(TriggerChipPart);
         _triggerHex = e.NameScope.Find<TextBlock>(TriggerHexPart);

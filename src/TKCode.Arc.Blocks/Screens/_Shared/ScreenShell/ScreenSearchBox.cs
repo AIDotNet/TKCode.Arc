@@ -66,10 +66,7 @@ internal sealed class ScreenSearchBox : Border
         {
             var empty = string.IsNullOrEmpty(_input.Text);
             _clear.IsVisible = !empty;
-            if (_key is not null)
-            {
-                _key.IsVisible = empty;
-            }
+            _key?.IsVisible = empty;
             TextChanged?.Invoke(_input.Text ?? string.Empty);
         };
         _input.GotFocus += (_, _) => ApplyPaint(_paint);

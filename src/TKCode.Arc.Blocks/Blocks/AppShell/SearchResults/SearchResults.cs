@@ -677,10 +677,7 @@ public partial class SearchResults : TemplatedControl
         DetachField();
         DetachFilters();
         DetachResults();
-        if (_sort is not null)
-        {
-            _sort.SelectionChanged -= OnSortSelectionChanged;
-        }
+        _sort?.SelectionChanged -= OnSortSelectionChanged;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -784,10 +781,7 @@ public partial class SearchResults : TemplatedControl
         }
         else if (property == IsHintsVisibleProperty)
         {
-            if (_hints is not null)
-            {
-                _hints.IsVisible = IsHintsVisible && !IsLoading && ResultCount > 0;
-            }
+            _hints?.IsVisible = IsHintsVisible && !IsLoading && ResultCount > 0;
         }
     }
 
@@ -810,19 +804,13 @@ public partial class SearchResults : TemplatedControl
             _chipBar.ClearAllText = ClearAllText;
             _chipBar.RemoveText = RemoveFilterText;
         }
-        if (_sheetFilters is not null)
-        {
-            _sheetFilters.ClearAllText = ClearAllText;
-        }
+        _sheetFilters?.ClearAllText = ClearAllText;
         if (_filtersSurface is not null)
         {
             _filtersSurface.Title = FiltersTitle;
             _filtersSurface.CloseText = CloseText;
         }
-        if (_detailSurface is not null)
-        {
-            _detailSurface.CloseText = CloseText;
-        }
+        _detailSurface?.CloseText = CloseText;
         if (_filtersButton is not null)
         {
             AutomationProperties.SetName(_filtersButton, FiltersButtonText);

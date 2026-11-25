@@ -211,16 +211,10 @@ public class Rating : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_stars is not null)
-        {
-            _stars.Owner = null;
-        }
+        _stars?.Owner = null;
         _stars = e.NameScope.Find<RatingStars>(StarsPart);
         _valueText = e.NameScope.Find<RatingRollingText>(ValuePart);
-        if (_stars is not null)
-        {
-            _stars.Owner = this;
-        }
+        _stars?.Owner = this;
         _shown = Display;
         _stars?.Reset(StarCount, Display, Current);
         _valueText?.Show(TextFor(Display), 1);

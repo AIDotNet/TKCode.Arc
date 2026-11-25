@@ -18,7 +18,7 @@ public sealed class RaTeXMathRenderer : IMathRenderer
     // 失败结果单独存放于小容量 LRU，防止流式半截残缺公式把历史已排版好的有效公式全部挤出主缓存
     private readonly Dictionary<(string Latex, bool Display), LinkedListNode<Entry>> _errorMap = new();
     private readonly LinkedList<Entry> _errorLru = new();
-    private readonly object _gate = new();
+    private readonly Lock _gate = new();
 
     public RaTeXMathRenderer(int capacity = 512)
     {

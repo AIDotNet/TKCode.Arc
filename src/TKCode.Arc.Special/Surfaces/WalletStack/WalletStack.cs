@@ -287,10 +287,7 @@ public partial class WalletStack : TemplatedControl
         _allCards = e.NameScope.Find<WalletStackHeaderButton>(AllCardsPart);
         _stage = e.NameScope.Find<WalletStackStage>(StagePart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_count is not null)
-        {
-            _count.RenderTransform = _countScale;
-        }
+        _count?.RenderTransform = _countScale;
         if (_allCards is not null)
         {
             _allCards.RenderTransform = _buttonScale;
@@ -310,10 +307,7 @@ public partial class WalletStack : TemplatedControl
 
     private void DetachParts()
     {
-        if (_allCards is not null)
-        {
-            _allCards.Click -= OnAllCardsClick;
-        }
+        _allCards?.Click -= OnAllCardsClick;
         if (_stage is not null)
         {
             DetachInput(_stage);
@@ -395,15 +389,9 @@ public partial class WalletStack : TemplatedControl
 
     private void ObserveCards(IList<WalletStackCard>? cards)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCardsCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnCardsCollectionChanged;
         _observed = cards as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnCardsCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnCardsCollectionChanged;
     }
 
     private void OnCardsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildCards();
@@ -494,10 +482,7 @@ public partial class WalletStack : TemplatedControl
 
     private void UpdateTexts()
     {
-        if (_title is not null)
-        {
-            _title.Text = Label;
-        }
+        _title?.Text = Label;
         if (_stage is not null)
         {
             AutomationProperties.SetName(_stage, Label);

@@ -53,16 +53,10 @@ internal sealed class DockAutoHideStrip : Control
     /// <summary>Follows <paramref name="panes"/> (an edge list of <paramref name="layout"/>'s workspace); null lets go.</summary>
     public void Attach(DockLayout? layout, AvaloniaList<DockPane>? panes)
     {
-        if (_panes is not null)
-        {
-            _panes.CollectionChanged -= OnPanesChanged;
-        }
+        _panes?.CollectionChanged -= OnPanesChanged;
         _layout = layout;
         _panes = panes;
-        if (_panes is not null)
-        {
-            _panes.CollectionChanged += OnPanesChanged;
-        }
+        _panes?.CollectionChanged += OnPanesChanged;
         Sync();
     }
 
@@ -295,10 +289,7 @@ internal sealed class DockAutoHideButton : TemplatedControl
         PseudoClasses.Set(RightPseudoClass, Side == DockSide.Right);
         PseudoClasses.Set(TopPseudoClass, Side == DockSide.Top);
         PseudoClasses.Set(BottomPseudoClass, Side == DockSide.Bottom);
-        if (_rotate is not null)
-        {
-            _rotate.IsTurned = vertical;
-        }
+        _rotate?.IsTurned = vertical;
     }
 
     private void AddRing(Control ring)

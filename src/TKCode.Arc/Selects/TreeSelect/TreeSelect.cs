@@ -568,23 +568,14 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
             _popup.Closed -= OnPopupClosed;
             _popup.Child = null;
         }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _clear?.Click -= OnClearClick;
         if (_search is not null)
         {
             _search.PropertyChanged -= OnSearchPropertyChanged;
-            if (_searchHost is not null)
-            {
-                _searchHost.Child = null;
-            }
+            _searchHost?.Child = null;
             _search = null;
         }
-        if (_panel is not null)
-        {
-            _panel.Owner = null;
-        }
+        _panel?.Owner = null;
         _panel = null;
         _surface = null;
         _scroll = null;
@@ -757,10 +748,7 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
     {
         var multiple = SelectionMode == TreeSelectMode.Multiple;
         PseudoClasses.Set(MultiplePseudoClass, multiple);
-        if (_chips is not null)
-        {
-            _chips.IsVisible = multiple;
-        }
+        _chips?.IsVisible = multiple;
     }
 
     private void UpdatePalette()

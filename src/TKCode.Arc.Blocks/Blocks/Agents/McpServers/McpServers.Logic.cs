@@ -354,18 +354,12 @@ public partial class McpServers
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
+        _add?.Click -= OnAddClick;
         if (_list is not null)
         {
             _list.Children.Clear();
         }
-        if (_formHost is not null)
-        {
-            _formHost.Child = null;
-        }
+        _formHost?.Child = null;
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _subtitle = e.NameScope.Find<TextBlock>(SubtitlePart);
         _summary = e.NameScope.Find<TextBlock>(SummaryPart);
@@ -376,10 +370,7 @@ public partial class McpServers
         _emptyTitle = e.NameScope.Find<TextBlock>(EmptyTitlePart);
         _emptyBody = e.NameScope.Find<TextBlock>(EmptyBodyPart);
         _announcer = e.NameScope.Find<AiAnnouncer>(AnnouncerPart);
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
+        _add?.Click += OnAddClick;
         if (_form is not null && _formHost is not null)
         {
             _formHost.Child = _form;
@@ -472,15 +463,9 @@ public partial class McpServers
 
     private void ObserveList(IList<McpServer>? list)
     {
-        if (_observedList is not null)
-        {
-            _observedList.CollectionChanged -= OnListChanged;
-        }
+        _observedList?.CollectionChanged -= OnListChanged;
         _observedList = list as INotifyCollectionChanged;
-        if (_observedList is not null)
-        {
-            _observedList.CollectionChanged += OnListChanged;
-        }
+        _observedList?.CollectionChanged += OnListChanged;
     }
 
     private void OnListChanged(object? sender, NotifyCollectionChangedEventArgs e) => SyncRows();
@@ -532,10 +517,7 @@ public partial class McpServers
     private void SyncText()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = Title ?? labels.Title;
-        }
+        _title?.Text = Title ?? labels.Title;
         if (_subtitle is not null)
         {
             var subtitle = Subtitle ?? labels.Subtitle;
@@ -548,14 +530,8 @@ public partial class McpServers
             AutomationProperties.SetName(_add, labels.AddServer);
             _add.IsVisible = CanAddServers && Servers is { IsReadOnly: false };
         }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = labels.EmptyTitle;
-        }
-        if (_emptyBody is not null)
-        {
-            _emptyBody.Text = labels.EmptyBody;
-        }
+        _emptyTitle?.Text = labels.EmptyTitle;
+        _emptyBody?.Text = labels.EmptyBody;
         UpdateTotals();
     }
 

@@ -156,7 +156,6 @@ public class ToolCallGroup : TemplatedControl
     private ToolCallText? _label;
     private ToolCallText? _meta;
     private ITimer? _collapseTimer;
-    private TimeSpan _totalDuration;
     private int _failedCount;
     private string _headerText = string.Empty;
     private bool _touched;
@@ -210,8 +209,8 @@ public class ToolCallGroup : TemplatedControl
     /// <inheritdoc cref="TotalDurationProperty"/>
     public TimeSpan TotalDuration
     {
-        get => _totalDuration;
-        private set => SetAndRaise(TotalDurationProperty, ref _totalDuration, value);
+        get;
+        private set => SetAndRaise(TotalDurationProperty, ref field, value);
     }
 
     /// <inheritdoc cref="FailedCountProperty"/>
@@ -338,10 +337,7 @@ public class ToolCallGroup : TemplatedControl
             _slot.FadeInEasing = AiHeightBox.EaseOut;
             _slot.AnimatesClose = false;
         }
-        if (_list is not null)
-        {
-            _list.CrossClipOverflow = 0;
-        }
+        _list?.CrossClipOverflow = 0;
         if (_rowsPanel is not null)
         {
             foreach (var item in _items)
@@ -425,10 +421,7 @@ public class ToolCallGroup : TemplatedControl
                 _appSetExpanded = true;
             }
             PseudoClasses.Set(ExpandedPseudoClass, open);
-            if (_header is not null)
-            {
-                _header.IsExpanded = open;
-            }
+            _header?.IsExpanded = open;
             if (!open)
             {
                 CancelCollapse();
@@ -470,15 +463,9 @@ public class ToolCallGroup : TemplatedControl
         {
             return;
         }
-        if (_observedSimulation is not null)
-        {
-            _observedSimulation.PropertyChanged -= OnSimulationPropertyChanged;
-        }
+        _observedSimulation?.PropertyChanged -= OnSimulationPropertyChanged;
         _observedSimulation = simulation;
-        if (simulation is not null)
-        {
-            simulation.PropertyChanged += OnSimulationPropertyChanged;
-        }
+        simulation?.PropertyChanged += OnSimulationPropertyChanged;
     }
 
     private void OnSimulationPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -505,15 +492,9 @@ public class ToolCallGroup : TemplatedControl
         {
             return;
         }
-        if (_observedList is not null)
-        {
-            _observedList.CollectionChanged -= OnSourceChanged;
-        }
+        _observedList?.CollectionChanged -= OnSourceChanged;
         _observedList = list;
-        if (list is not null)
-        {
-            list.CollectionChanged += OnSourceChanged;
-        }
+        list?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnItemsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)

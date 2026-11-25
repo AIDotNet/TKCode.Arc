@@ -204,10 +204,7 @@ public partial class EvalSuite
         _diffSummary = scope.Find<TextBlock>("PART_DiffSummary");
 
         _host?.Children.Add(_announcer);
-        if (_header is not null)
-        {
-            _header.List = _list;
-        }
+        _header?.List = _list;
         Hook();
         _compact = false;
         _detailShownId = null;
@@ -217,62 +214,32 @@ public partial class EvalSuite
 
     private void Hook()
     {
-        if (_run is not null)
-        {
-            _run.Click += OnRunClick;
-        }
-        if (_baselinePicker is not null)
-        {
-            _baselinePicker.SelectionChanged += OnPickerChanged;
-        }
-        if (_candidatePicker is not null)
-        {
-            _candidatePicker.SelectionChanged += OnPickerChanged;
-        }
+        _run?.Click += OnRunClick;
+        _baselinePicker?.SelectionChanged += OnPickerChanged;
+        _candidatePicker?.SelectionChanged += OnPickerChanged;
         _filters?.AddHandler(PillFilterBar.SelectionChangedEvent, OnFilterChosen);
         if (_list is not null)
         {
             _list.Invoked += OnRowInvoked;
             _list.CursorMoved += OnCursorMoved;
         }
-        if (_detailMode is not null)
-        {
-            _detailMode.SelectionChanged += OnDetailModeChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _detailMode?.SelectionChanged += OnDetailModeChanged;
+        _close?.Click += OnCloseClick;
     }
 
     private void Unhook()
     {
-        if (_run is not null)
-        {
-            _run.Click -= OnRunClick;
-        }
-        if (_baselinePicker is not null)
-        {
-            _baselinePicker.SelectionChanged -= OnPickerChanged;
-        }
-        if (_candidatePicker is not null)
-        {
-            _candidatePicker.SelectionChanged -= OnPickerChanged;
-        }
+        _run?.Click -= OnRunClick;
+        _baselinePicker?.SelectionChanged -= OnPickerChanged;
+        _candidatePicker?.SelectionChanged -= OnPickerChanged;
         _filters?.RemoveHandler(PillFilterBar.SelectionChangedEvent, OnFilterChosen);
         if (_list is not null)
         {
             _list.Invoked -= OnRowInvoked;
             _list.CursorMoved -= OnCursorMoved;
         }
-        if (_detailMode is not null)
-        {
-            _detailMode.SelectionChanged -= OnDetailModeChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _detailMode?.SelectionChanged -= OnDetailModeChanged;
+        _close?.Click -= OnCloseClick;
     }
 
     protected override void OnSizeChanged(SizeChangedEventArgs e)
@@ -290,10 +257,7 @@ public partial class EvalSuite
         }
         _compact = compact;
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_list is not null)
-        {
-            _list.IsCompact = compact;
-        }
+        _list?.IsCompact = compact;
         _header?.InvalidateVisual();
         if (_tiles is { } tiles)
         {
@@ -465,23 +429,14 @@ public partial class EvalSuite
         var labels = Labels;
         var culture = Culture;
         AutomationProperties.SetName(this, Title ?? labels.SuiteName);
-        if (_title is not null)
-        {
-            _title.Text = Title ?? labels.SuiteName;
-        }
-        if (_inputCaption is not null)
-        {
-            _inputCaption.Text = labels.InputTitle;
-        }
+        _title?.Text = Title ?? labels.SuiteName;
+        _inputCaption?.Text = labels.InputTitle;
         if (_close is not null)
         {
             AutomationProperties.SetName(_close, labels.CloseCase);
             Tooltip.SetTip(_close, labels.CloseCase);
         }
-        if (_filters is not null)
-        {
-            _filters.AccessibleName = labels.FilterName;
-        }
+        _filters?.AccessibleName = labels.FilterName;
         if (_detailMode is not null)
         {
             AutomationProperties.SetName(_detailMode, labels.DetailModeName);
@@ -568,14 +523,8 @@ public partial class EvalSuite
             _progress.Maximum = Math.Max(1, RunTotal);
             _progress.Value = FinishedCount;
         }
-        if (_baselinePicker is not null)
-        {
-            _baselinePicker.IsEnabled = !running;
-        }
-        if (_candidatePicker is not null)
-        {
-            _candidatePicker.IsEnabled = !running;
-        }
+        _baselinePicker?.IsEnabled = !running;
+        _candidatePicker?.IsEnabled = !running;
         if (_subtitle is not null)
         {
             _subtitle.Text = string.Format(culture, labels.SubtitleFormat,
@@ -617,18 +566,9 @@ public partial class EvalSuite
         var baseline = VersionById(BaselineVersionId)?.Name ?? labels.Baseline;
         var candidate = VersionById(CandidateVersionId)?.Name ?? labels.Candidate;
         var (b, c, d) = ShownRates();
-        if (_baselineCaption is not null)
-        {
-            _baselineCaption.Text = string.Format(culture, labels.RateCaptionFormat, baseline);
-        }
-        if (_candidateCaption is not null)
-        {
-            _candidateCaption.Text = string.Format(culture, labels.RateCaptionFormat, candidate);
-        }
-        if (_deltaCaption is not null)
-        {
-            _deltaCaption.Text = labels.DeltaCaption;
-        }
+        _baselineCaption?.Text = string.Format(culture, labels.RateCaptionFormat, baseline);
+        _candidateCaption?.Text = string.Format(culture, labels.RateCaptionFormat, candidate);
+        _deltaCaption?.Text = labels.DeltaCaption;
         if (_baselineRate is not null)
         {
             _baselineRate.CultureName = CultureName;
@@ -639,14 +579,8 @@ public partial class EvalSuite
             _candidateRate.CultureName = CultureName;
             _candidateRate.Value = c;
         }
-        if (_baselineCount is not null)
-        {
-            _baselineCount.Text = string.Format(culture, labels.PassedOfFormat, s.BaselinePassed, s.Compared);
-        }
-        if (_candidateCount is not null)
-        {
-            _candidateCount.Text = string.Format(culture, labels.PassedOfFormat, s.CandidatePassed, s.Compared);
-        }
+        _baselineCount?.Text = string.Format(culture, labels.PassedOfFormat, s.BaselinePassed, s.Compared);
+        _candidateCount?.Text = string.Format(culture, labels.PassedOfFormat, s.CandidatePassed, s.Compared);
         if (_delta is not null)
         {
             _delta.CultureName = CultureName;
@@ -654,16 +588,10 @@ public partial class EvalSuite
             _delta.Suffix = labels.DeltaUnit;
             _delta.Value = Math.Abs(d);
         }
-        if (_deltaGlyph is not null)
-        {
-            _deltaGlyph.Data = d > 0 ? ArcIcons.TrendingUp : d < 0 ? ArcIcons.TrendingDown : ArcIcons.Equal;
-        }
+        _deltaGlyph?.Data = d > 0 ? ArcIcons.TrendingUp : d < 0 ? ArcIcons.TrendingDown : ArcIcons.Equal;
         PseudoClasses.Set(":up", d > 0);
         PseudoClasses.Set(":down", d < 0);
-        if (_deltaNote is not null)
-        {
-            _deltaNote.Text = string.Format(culture, labels.DeltaNoteFormat, s.Regressions, s.Fixes);
-        }
+        _deltaNote?.Text = string.Format(culture, labels.DeltaNoteFormat, s.Regressions, s.Fixes);
         var signed = d > 0 ? "+" + d.ToString(culture) : d.ToString(culture);
         if (_baselineTile is not null)
         {
@@ -776,10 +704,7 @@ public partial class EvalSuite
         var open = row is not null;
         PseudoClasses.Set(OpenPseudoClass, open);
         _list?.SetSelected(open ? id : null);
-        if (_detailHost is not null)
-        {
-            _detailHost.IsExpanded = open;
-        }
+        _detailHost?.IsExpanded = open;
         if (row is null || ReferenceEquals(_detailShownId, id) && _detailShownId is not null)
         {
             return;
@@ -790,15 +715,9 @@ public partial class EvalSuite
         var baseline = VersionById(BaselineVersionId);
         var candidate = VersionById(CandidateVersionId);
         var c = row.Case;
-        if (_detailTitle is not null)
-        {
-            _detailTitle.Text = c.Title;
-        }
+        _detailTitle?.Text = c.Title;
         _detailStatus?.ShowStatus(row.Status, labels);
-        if (_detailInput is not null)
-        {
-            _detailInput.Text = c.Input;
-        }
+        _detailInput?.Text = c.Input;
         if (_detailCheck is not null)
         {
             var check = c.Check == EvalCheckKind.Rubric
@@ -814,10 +733,7 @@ public partial class EvalSuite
             _diff.After = row.Candidate?.Output ?? string.Empty;
             var summary = string.Format(culture, labels.DiffSummaryFormat, _diff.InsertedWords, _diff.DeletedWords);
             _diff.SummaryName = summary;
-            if (_diffSummary is not null)
-            {
-                _diffSummary.Text = row.Baseline is null || row.Candidate is null ? labels.NoOutput : summary;
-            }
+            _diffSummary?.Text = row.Baseline is null || row.Candidate is null ? labels.NoOutput : summary;
         }
     }
 
@@ -826,10 +742,7 @@ public partial class EvalSuite
     {
         var labels = Labels;
         var culture = Culture;
-        if (title is not null)
-        {
-            title.Text = string.Format(culture, labels.OutputTitleFormat, role, version?.Name ?? string.Empty);
-        }
+        title?.Text = string.Format(culture, labels.OutputTitleFormat, role, version?.Name ?? string.Empty);
         verdict?.ShowVerdict(result, labels, culture);
         if (output is not null)
         {

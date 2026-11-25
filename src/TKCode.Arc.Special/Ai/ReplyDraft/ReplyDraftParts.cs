@@ -160,10 +160,7 @@ internal sealed class ReplyDraftEmptyView : TemplatedControl
         set
         {
             _canDraft = value;
-            if (_button is not null)
-            {
-                _button.IsEnabled = value;
-            }
+            _button?.IsEnabled = value;
         }
     }
 
@@ -175,10 +172,7 @@ internal sealed class ReplyDraftEmptyView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_button is not null)
-        {
-            _button.Click -= OnClick;
-        }
+        _button?.Click -= OnClick;
         _button = e.NameScope.Find<Button>(ButtonPart);
         if (_button is not null)
         {
@@ -220,15 +214,9 @@ internal sealed class ReplyDraftAlert : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_retry is not null)
-        {
-            _retry.Click -= OnClick;
-        }
+        _retry?.Click -= OnClick;
         _retry = e.NameScope.Find<Button>(RetryPart);
-        if (_retry is not null)
-        {
-            _retry.Click += OnClick;
-        }
+        _retry?.Click += OnClick;
     }
 
     private void OnClick(object? sender, RoutedEventArgs e) => RetryRequested?.Invoke(this, EventArgs.Empty);

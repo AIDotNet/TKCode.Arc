@@ -290,10 +290,7 @@ internal sealed class LlmCostCalculatorRow : TemplatedControl
                 _mark.ClearValue(ArcGlyph.ForegroundProperty);
             }
         }
-        if (_monogram is not null)
-        {
-            _monogram.IsVisible = !hasMark;
-        }
+        _monogram?.IsVisible = !hasMark;
         if (_monogramText is not null)
         {
             var source = Model.Provider.Length > 0 ? Model.Provider : Model.Name;

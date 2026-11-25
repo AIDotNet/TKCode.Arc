@@ -5,13 +5,7 @@
 namespace TKCode.Arc.Editor.Cursor;
 
 /// <summary>The cursors of a column (box) selection and the corners it was made from, in view coordinates.</summary>
-internal sealed record ColumnSelectResult(
-    IReadOnlyList<SingleCursorState> ViewStates,
-    bool Reversed,
-    int FromLineNumber,
-    int FromVisualColumn,
-    int ToLineNumber,
-    int ToVisualColumn);
+internal sealed record ColumnSelectResult(IReadOnlyList<SingleCursorState> ViewStates, bool Reversed, int FromLineNumber, int FromVisualColumn, int ToLineNumber, int ToVisualColumn);
 
 /// <summary>Column (box) selection: one cursor per line between two visible columns.</summary>
 internal static class ColumnSelection

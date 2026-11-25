@@ -477,10 +477,7 @@ public class NotificationCenter : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
+        _trigger?.Click -= OnTriggerClick;
         base.OnApplyTemplate(e);
         _trigger = e.NameScope.Find<NotificationCenterButton>(TriggerPart);
         _badge = e.NameScope.Find<PresenceHost>(BadgePart);
@@ -527,10 +524,7 @@ public class NotificationCenter : TemplatedControl
     {
         var unread = _unreadCount;
         PseudoClasses.Set(HasUnreadPseudoClass, unread > 0);
-        if (_badge is not null)
-        {
-            _badge.IsPresent = unread > 0;
-        }
+        _badge?.IsPresent = unread > 0;
         if (_badgeCount is not null && unread > 0 && unread != _badgeValue)
         {
             _badgeCount.Direction = unread > _badgeValue ? 1 : -1;
@@ -669,10 +663,7 @@ public class NotificationCenter : TemplatedControl
         PseudoClasses.Set(OpenPseudoClass, false);
         _clientSizeSubscription?.Dispose();
         _clientSizeSubscription = null;
-        if (_trigger is not null)
-        {
-            _trigger.IsOn = false;
-        }
+        _trigger?.IsOn = false;
         var focusInside = _panel?.IsFocusWithin == true;
         _presence?.Hide();
         if (_trigger is not null && (focusInside || reason is CloseReason.Escape or CloseReason.CloseButton))

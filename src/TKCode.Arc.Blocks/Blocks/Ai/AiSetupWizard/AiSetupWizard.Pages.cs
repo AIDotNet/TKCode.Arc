@@ -125,14 +125,8 @@ public partial class AiSetupWizard
             {
                 row.State = AiSetupWizardCheckState.Pending;
             }
-            if (_testMessage is not null)
-            {
-                _testMessage.Text = null;
-            }
-            if (_testButton is not null)
-            {
-                _testButton.Content = Labels.RunTest;
-            }
+            _testMessage?.Text = null;
+            _testButton?.Content = Labels.RunTest;
             if (_furthest > AiSetupStep.Test)
             {
                 _furthest = AiSetupStep.Test;
@@ -182,10 +176,7 @@ public partial class AiSetupWizard
             }
             var provider = (Providers ?? []).FirstOrDefault(p => p.Id == id);
             Change(Configuration with { ProviderId = id, Model = provider?.Models.FirstOrDefault(), ApiKey = "" });
-            if (_providerError is not null)
-            {
-                _providerError.IsVisible = false;
-            }
+            _providerError?.IsVisible = false;
             UpdateProviderFields();
         };
         stack.Children.Add(_providerCards);
@@ -375,14 +366,8 @@ public partial class AiSetupWizard
         {
             _checkRows[0].State = AiSetupWizardCheckState.Running;
         }
-        if (_testMessage is not null)
-        {
-            _testMessage.Text = null;
-        }
-        if (_testButton is not null)
-        {
-            _testButton.IsLoading = true;
-        }
+        _testMessage?.Text = null;
+        _testButton?.IsLoading = true;
         UpdateChrome();
         var progress = new AiSetupWizardProgress(passed =>
         {

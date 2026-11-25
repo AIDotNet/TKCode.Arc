@@ -108,14 +108,8 @@ internal sealed class StickerPeelSticker : ContentControl
         _overlay = e.NameScope.Find<StickerPeelPaper>(OverlayPart);
         _face = e.NameScope.Find<Border>(FacePart);
         _inner = e.NameScope.Find<Border>(InnerPart);
-        if (_underlay is not null)
-        {
-            _underlay.Owner = this;
-        }
-        if (_overlay is not null)
-        {
-            _overlay.Owner = this;
-        }
+        _underlay?.Owner = this;
+        _overlay?.Owner = this;
         ApplyShape();
     }
 
@@ -135,10 +129,7 @@ internal sealed class StickerPeelSticker : ContentControl
         _motion.Configure(size.Width, size.Height, Item.Shape, RoundedRadius);
         var radius = OutlineRadius;
         CornerRadius = new CornerRadius(radius);
-        if (_inner is not null)
-        {
-            _inner.CornerRadius = new CornerRadius(Math.Max(0, radius - (_face?.Padding.Left ?? 0)));
-        }
+        _inner?.CornerRadius = new CornerRadius(Math.Max(0, radius - (_face?.Padding.Left ?? 0)));
         InvalidateVisuals();
     }
 

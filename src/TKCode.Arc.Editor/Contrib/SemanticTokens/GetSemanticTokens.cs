@@ -24,10 +24,19 @@ internal enum EditorSemanticHighlighting
 }
 
 /// <summary>The result of a document semantic tokens request: the provider that answered and what it answered.</summary>
-internal sealed record DocumentSemanticTokensResult(IDocumentSemanticTokensProvider Provider, SemanticTokensOrEdits? Tokens, Exception? Error);
+internal sealed class DocumentSemanticTokensResult(IDocumentSemanticTokensProvider provider, SemanticTokensOrEdits? tokens, Exception? error)
+{
+    public IDocumentSemanticTokensProvider Provider { get; } = provider;
+    public SemanticTokensOrEdits? Tokens { get; } = tokens;
+    public Exception? Error { get; } = error;
+}
 
 /// <summary>The result of a range semantic tokens request.</summary>
-internal sealed record DocumentRangeSemanticTokensResult(IDocumentRangeSemanticTokensProvider Provider, Languages.SemanticTokens? Tokens);
+internal sealed class DocumentRangeSemanticTokensResult(IDocumentRangeSemanticTokensProvider provider, Languages.SemanticTokens? tokens)
+{
+    public IDocumentRangeSemanticTokensProvider Provider { get; } = provider;
+    public Languages.SemanticTokens? Tokens { get; } = tokens;
+}
 
 /// <summary>Asks the semantic tokens providers (upstream's getSemanticTokens.ts).</summary>
 internal static class GetSemanticTokens

@@ -176,7 +176,6 @@ public class MentionInput : TemplatedControl, ITokenTextEditorHost
     private TokenTextEditor? _editor;
     private SpecialInputsLiveRegion? _live;
     private MentionValue _value = MentionValue.Empty;
-    private IReadOnlyList<Mention> _mentions = MentionValue.Empty.Mentions;
     private bool _committing;
     private bool _syncing;
     private bool _quiet;
@@ -217,9 +216,9 @@ public class MentionInput : TemplatedControl, ITokenTextEditorHost
     /// <summary>The mentions in <see cref="Value"/>, ordered by offset.</summary>
     public IReadOnlyList<Mention> Mentions
     {
-        get => _mentions;
-        private set => SetAndRaise(MentionsProperty, ref _mentions, value);
-    }
+        get;
+        private set => SetAndRaise(MentionsProperty, ref field, value);
+    } = MentionValue.Empty.Mentions;
 
     /// <summary>People offered after <c>@</c>. Null or empty turns person mentions off.</summary>
     public IEnumerable<MentionPerson>? People

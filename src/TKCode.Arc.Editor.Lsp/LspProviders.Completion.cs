@@ -33,6 +33,36 @@ internal sealed partial class LspProviders : ICompletionItemProvider, IHoverProv
         }
 
         var defaultRange = DefaultCompletionRange(model, position);
+        if (!_capabilities.CompletionResolve)
+        {
+            if (ReadStruct(result, s_json.LspCompletionResult) is not { } completionResult)
+            {
+                return null;
+            }
+            LspCompletionItem[] lspItems;
+            LspCompletionItemDefaults? listDefaults = null;
+            var isIncomplete = false;
+            switch (completionResult)
+            {
+                case LspCompletionItem[] array:
+                    lspItems = array;
+                    break;
+                case LspCompletionList list:
+                    lspItems = list.Items;
+                    listDefaults = list.ItemDefaults;
+                    isIncomplete = list.IsIncomplete;
+                    break;
+                default:
+                    return null;
+            }
+            var converted = new List<CompletionItem>(lspItems.Length);
+            foreach (var lspItem in lspItems)
+            {
+                converted.Add(LspConvert.ToCompletionItem(lspItem, listDefaults, defaultRange));
+            }
+            return new CompletionList(converted) { Incomplete = isIncomplete };
+        }
+
         JsonElement items;
         LspCompletionItemDefaults? defaults = null;
         var incomplete = false;
@@ -64,10 +94,7 @@ internal sealed partial class LspProviders : ICompletionItemProvider, IHoverProv
                 continue;
             }
             var item = LspConvert.ToCompletionItem(lspItem, defaults, defaultRange);
-            if (_capabilities.CompletionResolve)
-            {
-                _completionItems.AddOrUpdate(item, new CompletionResolveState(element, defaults));
-            }
+            _completionItems.AddOrUpdate(item, new CompletionResolveState(element, defaults));
             suggestions.Add(item);
         }
         return new CompletionList(suggestions) { Incomplete = incomplete };

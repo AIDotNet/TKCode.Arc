@@ -105,14 +105,8 @@ public partial class CustomerGalaxy
             _zoomBar.ZoomOutText = ZoomOutText;
             _zoomBar.FitText = FitText;
         }
-        if (_sortMrr is not null)
-        {
-            _sortMrr.Content = MrrText;
-        }
-        if (_sortAccounts is not null)
-        {
-            _sortAccounts.Content = AccountsText;
-        }
+        _sortMrr?.Content = MrrText;
+        _sortAccounts?.Content = AccountsText;
         if (_sortMrr?.Parent is Control group)
         {
             AutomationProperties.SetName(group, SortByText);
@@ -137,14 +131,8 @@ public partial class CustomerGalaxy
 
     private void RefreshSortButtons()
     {
-        if (_sortMrr is not null)
-        {
-            _sortMrr.IsChecked = GroupSort == GalaxyGroupSort.Mrr;
-        }
-        if (_sortAccounts is not null)
-        {
-            _sortAccounts.IsChecked = GroupSort == GalaxyGroupSort.Accounts;
-        }
+        _sortMrr?.IsChecked = GroupSort == GalaxyGroupSort.Mrr;
+        _sortAccounts?.IsChecked = GroupSort == GalaxyGroupSort.Accounts;
     }
 
     // Tabs and legend --------------------------------------------------------------------------------------------------
@@ -310,14 +298,8 @@ public partial class CustomerGalaxy
         SetNumber(_accountsNumber, empty ? double.NaN : focused?.AccountCount ?? _model.Count, money: false);
         SetNumber(_growthNumber, empty ? double.NaN : focused?.GrowthMrr ?? _model.GrowthMrr, money: true);
         SetNumber(_riskNumber, empty ? double.NaN : focused?.AtRiskMrr ?? _model.AtRiskMrr, money: true);
-        if (_growthLabel is not null)
-        {
-            _growthLabel.Text = growthState >= 0 ? _model.States[growthState].DisplayLabel : null;
-        }
-        if (_riskLabel is not null)
-        {
-            _riskLabel.Text = riskState >= 0 ? _model.States[riskState].DisplayLabel : null;
-        }
+        _growthLabel?.Text = growthState >= 0 ? _model.States[growthState].DisplayLabel : null;
+        _riskLabel?.Text = riskState >= 0 ? _model.States[riskState].DisplayLabel : null;
         if (_growthDot is not null && growthState >= 0)
         {
             _growthDot.Background = BrushFor(_model.States[growthState], 1);
@@ -392,10 +374,7 @@ public partial class CustomerGalaxy
             return;
         }
         var set = ListSet;
-        if (_listTitle is not null)
-        {
-            _listTitle.Text = ListTitle();
-        }
+        _listTitle?.Text = ListTitle();
         if (_rowControls.Count != set.Count)
         {
             return;
@@ -527,10 +506,7 @@ public partial class CustomerGalaxy
         PseudoClasses.Set(ClusterFocusedPseudoClass, _focusIndex >= 0);
         PseudoClasses.Set(RowHoverPseudoClass, _hoverRow >= 0 && _focusIndex < 0);
         PseudoClasses.Set(EmptyPseudoClass, _model.Count == 0);
-        if (_showAllHost is not null)
-        {
-            _showAllHost.IsPresent = _focusIndex >= 0;
-        }
+        _showAllHost?.IsPresent = _focusIndex >= 0;
         RefreshSubtitle();
     }
 

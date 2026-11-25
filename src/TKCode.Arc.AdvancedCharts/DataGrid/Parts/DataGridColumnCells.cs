@@ -155,10 +155,7 @@ internal sealed class DataGridHeaderCell : TemplatedControl
             _sort.RemoveHandler(PointerMovedEvent, OnSortPointerMoved);
             _sort.KeyDown -= OnSortKeyDown;
         }
-        if (_menu is not null)
-        {
-            _menu.Click -= OnMenuClick;
-        }
+        _menu?.Click -= OnMenuClick;
         if (_resizer is not null)
         {
             _resizer.PointerPressed -= OnResizerPressed;
@@ -177,10 +174,7 @@ internal sealed class DataGridHeaderCell : TemplatedControl
             _sort.AddHandler(PointerMovedEvent, OnSortPointerMoved, RoutingStrategies.Tunnel);
             _sort.KeyDown += OnSortKeyDown;
         }
-        if (_menu is not null)
-        {
-            _menu.Click += OnMenuClick;
-        }
+        _menu?.Click += OnMenuClick;
         if (_resizer is not null)
         {
             _resizer.PointerPressed += OnResizerPressed;
@@ -516,10 +510,7 @@ internal sealed class DataGridFilterCell : TemplatedControl
             _input.TextChanged -= OnInputChanged;
             _input.KeyDown -= OnInputKeyDown;
         }
-        if (_select is not null)
-        {
-            _select.Click -= OnSelectClick;
-        }
+        _select?.Click -= OnSelectClick;
         _input = e.NameScope.Find<TextBox>(InputPart);
         _select = e.NameScope.Find<AvaloniaButton>(SelectPart);
         if (_input is not null)
@@ -527,10 +518,7 @@ internal sealed class DataGridFilterCell : TemplatedControl
             _input.TextChanged += OnInputChanged;
             _input.KeyDown += OnInputKeyDown;
         }
-        if (_select is not null)
-        {
-            _select.Click += OnSelectClick;
-        }
+        _select?.Click += OnSelectClick;
         Update();
     }
 

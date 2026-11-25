@@ -274,14 +274,8 @@ public class ShortcutRecorder : TemplatedControl
             _recorder.Click -= OnRecorderClick;
             _recorder.Owner = null;
         }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _reset?.Click -= OnResetClick;
+        _clear?.Click -= OnClearClick;
         if (_message is not null)
         {
             _message.UseAnyway -= OnUseAnyway;
@@ -400,10 +394,7 @@ public class ShortcutRecorder : TemplatedControl
         {
             // A window that loses activation blurs the recorder in a browser; do the same.
             _window = TopLevel.GetTopLevel(this) as WindowBase;
-            if (_window is not null)
-            {
-                _window.Deactivated += OnWindowDeactivated;
-            }
+            _window?.Deactivated += OnWindowDeactivated;
         }
         else if (_window is not null)
         {

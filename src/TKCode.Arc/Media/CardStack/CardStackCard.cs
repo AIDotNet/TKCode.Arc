@@ -283,18 +283,9 @@ internal sealed class CardStackCard : ContentControl
                    Matrix.CreateTranslation(w / 2, h + depth * CardStackMath.Peek);
         _transform.Matrix = card * slot;
         Opacity = CardStackMath.Presence(depth) * Fade.Value;
-        if (_shade is not null)
-        {
-            _shade.Opacity = CardStackMath.Shade(depth);
-        }
-        if (_keepStamp is not null)
-        {
-            _keepStamp.Opacity = CardStackMath.KeepStamp(x);
-        }
-        if (_passStamp is not null)
-        {
-            _passStamp.Opacity = CardStackMath.PassStamp(x);
-        }
+        _shade?.Opacity = CardStackMath.Shade(depth);
+        _keepStamp?.Opacity = CardStackMath.KeepStamp(x);
+        _passStamp?.Opacity = CardStackMath.PassStamp(x);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new CardStackCardPeer(this);

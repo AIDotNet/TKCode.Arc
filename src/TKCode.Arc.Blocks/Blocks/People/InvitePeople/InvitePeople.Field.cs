@@ -124,10 +124,7 @@ public partial class InvitePeople
 
     private void UpdatePlaceholder()
     {
-        if (_input is not null)
-        {
-            _input.PlaceholderText = _entries.Count == 0 ? Labels.Placeholder : Labels.MorePlaceholder;
-        }
+        _input?.PlaceholderText = _entries.Count == 0 ? Labels.Placeholder : Labels.MorePlaceholder;
     }
 
     private void SetInputText(string text)

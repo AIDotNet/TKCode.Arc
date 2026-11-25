@@ -612,22 +612,10 @@ public class HoloCard : TemplatedControl
             face.Clip = new RectangleGeometry(new Rect(size), radius, radius);
             face.InvalidateVisual();
         }
-        if (_frontSheen is not null)
-        {
-            _frontSheen.CornerRadius = radius;
-        }
-        if (_backSheen is not null)
-        {
-            _backSheen.CornerRadius = radius;
-        }
-        if (_shadow is not null)
-        {
-            _shadow.CornerRadius = radius;
-        }
-        if (_focusRing is not null)
-        {
-            _focusRing.CornerRadius = radius;
-        }
+        _frontSheen?.CornerRadius = radius;
+        _backSheen?.CornerRadius = radius;
+        _shadow?.CornerRadius = radius;
+        _focusRing?.CornerRadius = radius;
     }
 
     /// <summary>

@@ -111,10 +111,7 @@ internal sealed class OnboardingDot : AvaloniaButton
         _mark = e.NameScope.Find<Control>(MarkPart);
         _width?.Stop();
         _width = null;
-        if (_mark is not null)
-        {
-            _mark.Width = TargetWidth;
-        }
+        _mark?.Width = TargetWidth;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -43,18 +43,12 @@ internal sealed class AgentBuilderToolRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged -= OnSwitchChanged;
-        }
+        _switch?.IsCheckedChanged -= OnSwitchChanged;
         _switch = e.NameScope.Find<Switch>(SwitchPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _description = e.NameScope.Find<TextBlock>(DescriptionPart);
         _glyph = e.NameScope.Find<ArcGlyph>(GlyphPart);
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged += OnSwitchChanged;
-        }
+        _switch?.IsCheckedChanged += OnSwitchChanged;
         Refresh();
     }
 
@@ -95,19 +89,13 @@ internal sealed class AgentBuilderToolRow : TemplatedControl
 
     private void Refresh()
     {
-        if (_name is not null)
-        {
-            _name.Text = Tool.Name;
-        }
+        _name?.Text = Tool.Name;
         if (_description is not null)
         {
             _description.Text = Tool.Description;
             _description.IsVisible = !string.IsNullOrEmpty(Tool.Description);
         }
-        if (_glyph is not null)
-        {
-            _glyph.Data = Tool.Glyph ?? ArcIcons.Wrench;
-        }
+        _glyph?.Data = Tool.Glyph ?? ArcIcons.Wrench;
         if (_switch is { } toggle)
         {
             _syncing = true;
@@ -187,28 +175,16 @@ internal sealed class AgentBuilderSourceRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
+        _remove?.Click -= OnRemoveClick;
+        _retry?.Click -= OnRetryClick;
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _detail = e.NameScope.Find<TextBlock>(DetailPart);
         _glyph = e.NameScope.Find<ArcGlyph>(GlyphPart);
         _ring = e.NameScope.Find<ArcRing>(RingPart);
         _remove = e.NameScope.Find<AiChatIconButton>(RemovePart);
         _retry = e.NameScope.Find<Button>(RetryPart);
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
+        _remove?.Click += OnRemoveClick;
+        _retry?.Click += OnRetryClick;
         Refresh();
     }
 
@@ -266,22 +242,10 @@ internal sealed class AgentBuilderSourceRow : TemplatedControl
     private void Refresh()
     {
         var source = Source;
-        if (_name is not null)
-        {
-            _name.Text = source.Name;
-        }
-        if (_detail is not null)
-        {
-            _detail.Text = Detail(source, _labels, _culture);
-        }
-        if (_glyph is not null)
-        {
-            _glyph.Data = source.Kind == AgentBuilderSourceKind.Website ? ArcIcons.Globe : ArcIcons.FileText;
-        }
-        if (_ring is not null)
-        {
-            _ring.Value = Math.Clamp(source.Progress, 0, 1);
-        }
+        _name?.Text = source.Name;
+        _detail?.Text = Detail(source, _labels, _culture);
+        _glyph?.Data = source.Kind == AgentBuilderSourceKind.Website ? ArcIcons.Globe : ArcIcons.FileText;
+        _ring?.Value = Math.Clamp(source.Progress, 0, 1);
         if (_remove is not null)
         {
             AutomationProperties.SetName(_remove, _labels.RemoveSource(source.Name));

@@ -199,15 +199,9 @@ internal sealed class IntegrationMark : Decorator
         base.OnPropertyChanged(change);
         if (change.Property == ItemProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged -= OnItemChanged;
-            }
+            _observed?.PropertyChanged -= OnItemChanged;
             _observed = Item;
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged += OnItemChanged;
-            }
+            _observed?.PropertyChanged += OnItemChanged;
             Rebuild();
         }
     }
@@ -446,15 +440,9 @@ internal sealed class IntegrationEmpty : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnAction;
-        }
+        _action?.Click -= OnAction;
         _action = e.NameScope.Find<Button>(ActionPart);
-        if (_action is not null)
-        {
-            _action.Click += OnAction;
-        }
+        _action?.Click += OnAction;
     }
 
     private void OnAction(object? sender, Avalonia.Interactivity.RoutedEventArgs e) => ActionInvoked?.Invoke(this, EventArgs.Empty);

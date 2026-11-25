@@ -385,18 +385,12 @@ public class MenuSurface : HeaderedItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged -= OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged -= OnScrollChanged;
         _frame = e.NameScope.Find<Border>(FramePart);
         _scrollViewer = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);
         _itemsHost = e.NameScope.Find<Panel>(ItemsHostPart);
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged += OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged += OnScrollChanged;
         _frame?.SetCurrentValue(MaxHeightProperty, _windowRoom);
     }
 

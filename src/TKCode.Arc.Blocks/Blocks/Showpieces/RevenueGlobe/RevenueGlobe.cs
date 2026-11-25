@@ -510,22 +510,10 @@ public partial class RevenueGlobe : TemplatedControl
             _tip.Placement = ShowpieceCardPlacement.Globe;
             _tip.PositionSpring = ArcMotionPresets.Snappy;
         }
-        if (_timeline is not null)
-        {
-            _timeline.Owner = this;
-        }
-        if (_replayButton is not null)
-        {
-            _replayButton.Click += OnReplayClick;
-        }
-        if (_pauseButton is not null)
-        {
-            _pauseButton.Click += OnPauseClick;
-        }
-        if (_liveButton is not null)
-        {
-            _liveButton.Click += OnLiveClick;
-        }
+        _timeline?.Owner = this;
+        _replayButton?.Click += OnReplayClick;
+        _pauseButton?.Click += OnPauseClick;
+        _liveButton?.Click += OnLiveClick;
         BuildHourMarks();
         BuildRows();
         _placedCenter = double.NaN;
@@ -554,26 +542,11 @@ public partial class RevenueGlobe : TemplatedControl
             _canvas.ArcLanded -= OnArcLanded;
             _canvas.MotionLevelChangedEvent -= OnMotionLevelChanged;
         }
-        if (_tip is not null)
-        {
-            _tip.Content = null;
-        }
-        if (_timeline is not null)
-        {
-            _timeline.Owner = null;
-        }
-        if (_replayButton is not null)
-        {
-            _replayButton.Click -= OnReplayClick;
-        }
-        if (_pauseButton is not null)
-        {
-            _pauseButton.Click -= OnPauseClick;
-        }
-        if (_liveButton is not null)
-        {
-            _liveButton.Click -= OnLiveClick;
-        }
+        _tip?.Content = null;
+        _timeline?.Owner = null;
+        _replayButton?.Click -= OnReplayClick;
+        _pauseButton?.Click -= OnPauseClick;
+        _liveButton?.Click -= OnLiveClick;
         _regionRows?.Children.Clear();
         _cityRows?.Children.Clear();
     }
@@ -628,10 +601,7 @@ public partial class RevenueGlobe : TemplatedControl
         }
         else if (property == LandProperty)
         {
-            if (_canvas is not null)
-            {
-                _canvas.Land = Land ?? RevenueGlobeLand.Default;
-            }
+            _canvas?.Land = Land ?? RevenueGlobeLand.Default;
         }
         else if (property == CurrencySymbolProperty || property == CultureProperty)
         {
@@ -689,28 +659,16 @@ public partial class RevenueGlobe : TemplatedControl
         {
             return;
         }
-        if (_watchedRegions is not null)
-        {
-            _watchedRegions.CollectionChanged -= OnRegionsChanged;
-        }
+        _watchedRegions?.CollectionChanged -= OnRegionsChanged;
         _watchedRegions = wanted;
-        if (_watchedRegions is not null)
-        {
-            _watchedRegions.CollectionChanged += OnRegionsChanged;
-        }
+        _watchedRegions?.CollectionChanged += OnRegionsChanged;
     }
 
     private void WatchPayments()
     {
-        if (_watchedPayments is not null)
-        {
-            _watchedPayments.CollectionChanged -= OnPaymentsCollectionChanged;
-        }
+        _watchedPayments?.CollectionChanged -= OnPaymentsCollectionChanged;
         _watchedPayments = _watching ? Payments as INotifyCollectionChanged : null;
-        if (_watchedPayments is not null)
-        {
-            _watchedPayments.CollectionChanged += OnPaymentsCollectionChanged;
-        }
+        _watchedPayments?.CollectionChanged += OnPaymentsCollectionChanged;
     }
 
     /// <summary>True when the scene was built from the regions <see cref="Regions"/> holds now.</summary>
@@ -750,18 +708,9 @@ public partial class RevenueGlobe : TemplatedControl
         PseudoClasses.Set(StackedPseudoClass, _layout == RevenueGlobeLayout.Stacked);
         PseudoClasses.Set(NarrowPseudoClass, _layout == RevenueGlobeLayout.Narrow);
         PseudoClasses.Set(CompactPseudoClass, content < 400);
-        if (_stage is not null)
-        {
-            _stage.Layout = _layout;
-        }
-        if (_panels is not null)
-        {
-            _panels.TwoColumns = _layout == RevenueGlobeLayout.Stacked;
-        }
-        if (_controls is not null)
-        {
-            _controls.ClockOnOwnRow = content < 400;
-        }
+        _stage?.Layout = _layout;
+        _panels?.TwoColumns = _layout == RevenueGlobeLayout.Stacked;
+        _controls?.ClockOnOwnRow = content < 400;
     }
 
     // Labels ---------------------------------------------------------------------------------------------------------------
@@ -785,10 +734,7 @@ public partial class RevenueGlobe : TemplatedControl
         {
             AutomationProperties.SetName(_replayButton, labels.Replay);
         }
-        if (_zoneText is not null)
-        {
-            _zoneText.Text = labels.TimeZone;
-        }
+        _zoneText?.Text = labels.TimeZone;
         BuildHourMarks();
         UpdatePlaybackVisuals();
         UpdateFigures();

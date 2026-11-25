@@ -269,26 +269,14 @@ public class OtpInput : TemplatedControl
             _row.Arranged -= OnRowArranged;
             _row.Children.Clear();
         }
-        if (_inputs is not null)
-        {
-            _inputs.RenderTransform = null;
-        }
+        _inputs?.RenderTransform = null;
         _field = e.NameScope.Find<Field>(FieldPart);
         _inputs = e.NameScope.Find<Panel>(InputsPart);
         _row = e.NameScope.Find<OtpInputRow>(RowPart);
         _overlay = e.NameScope.Find<OtpInputOverlay>(OverlayPart);
-        if (_inputs is not null)
-        {
-            _inputs.RenderTransform = _shakeTransform;
-        }
-        if (_overlay is not null)
-        {
-            _overlay.Row = _row;
-        }
-        if (_row is not null)
-        {
-            _row.Arranged += OnRowArranged;
-        }
+        _inputs?.RenderTransform = _shakeTransform;
+        _overlay?.Row = _row;
+        _row?.Arranged += OnRowArranged;
         _slots.Clear();
         RebuildSlots();
         UpdateStates();

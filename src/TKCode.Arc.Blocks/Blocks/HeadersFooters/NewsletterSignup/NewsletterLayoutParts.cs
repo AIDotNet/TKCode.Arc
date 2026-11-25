@@ -90,14 +90,8 @@ internal sealed class NewsletterForm : TemplatedControl
 
     private void ApplyStacked()
     {
-        if (Pill is not null)
-        {
-            Pill.IsStacked = IsStacked;
-        }
-        if (Input is not null)
-        {
-            Input.IsStacked = IsStacked;
-        }
+        Pill?.IsStacked = IsStacked;
+        Input?.IsStacked = IsStacked;
     }
 }
 

@@ -156,10 +156,10 @@ internal sealed record FoldingRules
 }
 
 /// <summary>Describes a rule to be evaluated when pressing Enter.</summary>
-internal sealed record OnEnterRule(Regex BeforeText, EnterAction Action)
+internal sealed class OnEnterRule(Regex beforeText, EnterAction action)
 {
     /// <summary>This rule will only execute if the text before the cursor matches this regular expression.</summary>
-    public Regex BeforeText { get; init; } = BeforeText;
+    public Regex BeforeText { get; init; } = beforeText;
 
     /// <summary>This rule will only execute if the text after the cursor matches this regular expression.</summary>
     public Regex? AfterText { get; init; }
@@ -168,7 +168,7 @@ internal sealed record OnEnterRule(Regex BeforeText, EnterAction Action)
     public Regex? PreviousLineText { get; init; }
 
     /// <summary>The action to execute.</summary>
-    public EnterAction Action { get; init; } = Action;
+    public EnterAction Action { get; init; } = action;
 }
 
 /// <summary>Definition of documentation comments (e.g. Javadoc/JSdoc).</summary>
@@ -240,10 +240,10 @@ internal enum IndentAction
 }
 
 /// <summary>Describes what to do when pressing Enter.</summary>
-internal sealed record EnterAction(IndentAction IndentAction)
+internal sealed class EnterAction(IndentAction indentAction)
 {
     /// <summary>Describe what to do with the indentation.</summary>
-    public IndentAction IndentAction { get; init; } = IndentAction;
+    public IndentAction IndentAction { get; init; } = indentAction;
 
     /// <summary>Describes text to be appended after the new line and after the indentation.</summary>
     public string? AppendText { get; init; }

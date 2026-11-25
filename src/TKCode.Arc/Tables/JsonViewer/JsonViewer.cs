@@ -519,10 +519,7 @@ public class JsonViewer : TemplatedControl
         PublishExpanded();
         Rebuild(animate: false);
         _scrollMotion?.Jump(0);
-        if (_scroll is not null)
-        {
-            _scroll.Offset = default;
-        }
+        _scroll?.Offset = default;
     }
 
     private void RunSearch()
@@ -540,14 +537,8 @@ public class JsonViewer : TemplatedControl
         MatchSummary = MatchCount > 0
             ? $"{Math.Min(_matchIndex, MatchCount - 1) + 1}/{MatchCount}"
             : "0/0";
-        if (_previous is not null)
-        {
-            _previous.IsEnabled = MatchCount > 0;
-        }
-        if (_next is not null)
-        {
-            _next.IsEnabled = MatchCount > 0;
-        }
+        _previous?.IsEnabled = MatchCount > 0;
+        _next?.IsEnabled = MatchCount > 0;
     }
 
     private void PublishExpanded()
@@ -787,10 +778,7 @@ public class JsonViewer : TemplatedControl
             _scrollMotion = new MotionValue<double>(this, now, MotionVectors.Double);
             _scrollMotion.Changed += v =>
             {
-                if (_scroll is not null)
-                {
-                    _scroll.Offset = new Vector(_scroll.Offset.X, v);
-                }
+                _scroll?.Offset = new Vector(_scroll.Offset.X, v);
             };
         }
         if (!_scrollMotion.IsAnimating)
@@ -1121,34 +1109,16 @@ public class JsonViewer : TemplatedControl
         {
             _searchBox.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
         }
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_expandAll is not null)
-        {
-            _expandAll.Click -= OnExpandAllClick;
-        }
-        if (_collapseAll is not null)
-        {
-            _collapseAll.Click -= OnCollapseAllClick;
-        }
-        if (_pathCopy is not null)
-        {
-            _pathCopy.Click -= OnPathCopyClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _expandAll?.Click -= OnExpandAllClick;
+        _collapseAll?.Click -= OnCollapseAllClick;
+        _pathCopy?.Click -= OnPathCopyClick;
         if (_scroll is not null)
         {
             _scroll.RemoveHandler(PointerWheelChangedEvent, OnScrollWheel);
         }
-        if (_panel is not null)
-        {
-            _panel.Owner = null;
-        }
+        _panel?.Owner = null;
         _panel = e.NameScope.Find<JsonViewerRowsPanel>(RowsPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _searchBox = e.NameScope.Find<TextBox>(SearchPart);
@@ -1158,26 +1128,11 @@ public class JsonViewer : TemplatedControl
         _collapseAll = e.NameScope.Find<AvaloniaButton>(CollapseAllPart);
         _pathCopy = e.NameScope.Find<AvaloniaButton>(PathCopyPart);
         _searchBox?.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_expandAll is not null)
-        {
-            _expandAll.Click += OnExpandAllClick;
-        }
-        if (_collapseAll is not null)
-        {
-            _collapseAll.Click += OnCollapseAllClick;
-        }
-        if (_pathCopy is not null)
-        {
-            _pathCopy.Click += OnPathCopyClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
+        _expandAll?.Click += OnExpandAllClick;
+        _collapseAll?.Click += OnCollapseAllClick;
+        _pathCopy?.Click += OnPathCopyClick;
         _scroll?.AddHandler(PointerWheelChangedEvent, OnScrollWheel, RoutingStrategies.Tunnel, handledEventsToo: true);
         UpdatePalette();
         UpdateMatchSummary();

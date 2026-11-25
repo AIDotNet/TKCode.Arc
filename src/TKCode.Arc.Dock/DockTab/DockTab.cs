@@ -154,10 +154,7 @@ internal sealed class DockTab : TemplatedControl
             _icon.Bind(ArcGlyph.DataProperty, this.GetObservable(IconProperty));
             _items.Children.Insert(0, _icon);
         }
-        if (_icon is not null)
-        {
-            _icon.IsVisible = Icon is not null;
-        }
+        _icon?.IsVisible = Icon is not null;
         if (ShowsClose && _closeSlot is null)
         {
             BuildCloseSlot(_items);
@@ -214,10 +211,7 @@ internal sealed class DockTab : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _close?.Click -= OnCloseClick;
         _icon = null;
         _closeSlot = null;
         _dot = null;

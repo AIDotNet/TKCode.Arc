@@ -210,15 +210,9 @@ public class PageHeaderAction : AvaloniaObject
         {
             return;
         }
-        if (_subscribedCommand is not null)
-        {
-            _subscribedCommand.CanExecuteChanged -= OnCanExecuteChanged;
-        }
+        _subscribedCommand?.CanExecuteChanged -= OnCanExecuteChanged;
         _subscribedCommand = wanted;
-        if (_subscribedCommand is not null)
-        {
-            _subscribedCommand.CanExecuteChanged += OnCanExecuteChanged;
-        }
+        _subscribedCommand?.CanExecuteChanged += OnCanExecuteChanged;
     }
 
     private void OnCanExecuteChanged(object? sender, EventArgs e) => _stateChanged?.Invoke(this, EventArgs.Empty);

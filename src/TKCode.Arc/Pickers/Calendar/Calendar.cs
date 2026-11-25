@@ -210,35 +210,17 @@ public class Calendar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_todayButton is not null)
-        {
-            _todayButton.Click -= OnTodayClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _todayButton?.Click -= OnTodayClick;
         _strip = e.NameScope.Find<CalendarMonthStrip>(StripPart);
         _previous = e.NameScope.Find<AvaloniaButton>(PreviousPart);
         _next = e.NameScope.Find<AvaloniaButton>(NextPart);
         _todayButton = e.NameScope.Find<AvaloniaButton>(TodayPart);
         _weekdays = e.NameScope.Find<CalendarWeekdayRow>(WeekdaysPart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_todayButton is not null)
-        {
-            _todayButton.Click += OnTodayClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
+        _todayButton?.Click += OnTodayClick;
         UpdatePalette();
         if (_strip is not null)
         {

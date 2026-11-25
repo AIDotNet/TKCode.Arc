@@ -256,15 +256,9 @@ internal class MemoryCapturedPill : AvaloniaButton
         {
             return;
         }
-        if (_observedTexts is not null)
-        {
-            _observedTexts.CollectionChanged -= OnTextsChanged;
-        }
+        _observedTexts?.CollectionChanged -= OnTextsChanged;
         _observedTexts = next;
-        if (next is not null)
-        {
-            next.CollectionChanged += OnTextsChanged;
-        }
+        next?.CollectionChanged += OnTextsChanged;
     }
 
     private void OnTextsChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildSizer();

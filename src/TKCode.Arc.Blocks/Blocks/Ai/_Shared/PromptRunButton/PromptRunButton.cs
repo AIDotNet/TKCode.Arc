@@ -81,7 +81,6 @@ internal class PromptRunButton : AvaloniaButton
 
     private ArcContentSwap? _icon;
     private ArcContentSwap? _label;
-    private string _effectiveShortcutText = string.Empty;
 
     static PromptRunButton()
     {
@@ -118,9 +117,9 @@ internal class PromptRunButton : AvaloniaButton
     /// <inheritdoc cref="EffectiveShortcutTextProperty"/>
     public string EffectiveShortcutText
     {
-        get => _effectiveShortcutText;
-        private set => SetAndRaise(EffectiveShortcutTextProperty, ref _effectiveShortcutText, value);
-    }
+        get;
+        private set => SetAndRaise(EffectiveShortcutTextProperty, ref field, value);
+    } = string.Empty;
 
     /// <summary>Raised when the button is clicked while idle.</summary>
     public event EventHandler<RoutedEventArgs>? RunRequested { add => AddHandler(RunRequestedEvent, value); remove => RemoveHandler(RunRequestedEvent, value); }
@@ -145,10 +144,7 @@ internal class PromptRunButton : AvaloniaButton
             _icon.Content = Glyph;
             _icon.ContentTemplate = s_glyphTemplate;
         }
-        if (_label is not null)
-        {
-            _label.Content = LabelText;
-        }
+        _label?.Content = LabelText;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -157,22 +153,13 @@ internal class PromptRunButton : AvaloniaButton
         if (change.Property == IsRunningProperty)
         {
             PseudoClasses.Set(RunningPseudoClass, change.GetNewValue<bool>());
-            if (_icon is not null)
-            {
-                _icon.Content = Glyph;
-            }
-            if (_label is not null)
-            {
-                _label.Content = LabelText;
-            }
+            _icon?.Content = Glyph;
+            _label?.Content = LabelText;
             UpdateAccessibleName();
         }
         else if (change.Property == RunTextProperty || change.Property == StopTextProperty)
         {
-            if (_label is not null)
-            {
-                _label.Content = LabelText;
-            }
+            _label?.Content = LabelText;
             UpdateAccessibleName();
         }
         else if (change.Property == RunAccessibleNameProperty || change.Property == StopAccessibleNameProperty)

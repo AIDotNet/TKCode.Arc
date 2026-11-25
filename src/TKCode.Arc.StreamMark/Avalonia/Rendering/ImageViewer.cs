@@ -67,10 +67,7 @@ public sealed class ImageViewer : Control
         _layer = layer;
         _topLevel = topLevel;
         layer.PropertyChanged += OnLayerPropertyChanged;
-        if (topLevel is not null)
-        {
-            topLevel.PropertyChanged += OnLayerPropertyChanged;
-        }
+        topLevel?.PropertyChanged += OnLayerPropertyChanged;
         layer.Children.Add(this);
         UpdateSize();
     }
@@ -104,14 +101,8 @@ public sealed class ImageViewer : Control
             return;
         }
         _closed = true;
-        if (_layer is not null)
-        {
-            _layer.PropertyChanged -= OnLayerPropertyChanged;
-        }
-        if (_topLevel is not null)
-        {
-            _topLevel.PropertyChanged -= OnLayerPropertyChanged;
-        }
+        _layer?.PropertyChanged -= OnLayerPropertyChanged;
+        _topLevel?.PropertyChanged -= OnLayerPropertyChanged;
         if (Parent is OverlayLayer layer)
         {
             layer.Children.Remove(this);

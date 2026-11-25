@@ -287,18 +287,12 @@ public partial class RolesPermissions
             _slotHeight = new MotionValue<double>(this, 0, MotionVectors.Double);
             _slotHeight.Changed += v =>
             {
-                if (_barSlot is not null)
-                {
-                    _barSlot.Height = Math.Max(0, v);
-                }
+                _barSlot?.Height = Math.Max(0, v);
             };
             _barOpacity = new MotionValue<double>(this, 0, MotionVectors.Double);
             _barOpacity.Changed += v =>
             {
-                if (_bar is not null)
-                {
-                    _bar.Opacity = Math.Clamp(v, 0, 1);
-                }
+                _bar?.Opacity = Math.Clamp(v, 0, 1);
             };
             _barShift = new MotionValue<double>(this, 0, MotionVectors.Double);
             _barShift.Changed += v => _barTranslate.Y = v;

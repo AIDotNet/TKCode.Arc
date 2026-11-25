@@ -891,18 +891,9 @@ public class LoginCentered : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_modeSwitch is not null)
-        {
-            _modeSwitch.Click -= OnModeSwitchClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click -= OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click -= OnPrivacyClick;
-        }
+        _modeSwitch?.Click -= OnModeSwitchClick;
+        _terms?.Click -= OnTermsClick;
+        _privacy?.Click -= OnPrivacyClick;
         _viewport?.Clear();
         _statusLine?.Clear();
         _backdrop = e.NameScope.Find<LoginCenteredBackdrop>(BackdropPart);
@@ -918,18 +909,9 @@ public class LoginCentered : TemplatedControl
         _haveAccountPrompt = e.NameScope.Find<TextBlock>(HaveAccountPromptPart);
         _signUpAction = e.NameScope.Find<TextBlock>(SignUpActionPart);
         _signInAction = e.NameScope.Find<TextBlock>(SignInActionPart);
-        if (_modeSwitch is not null)
-        {
-            _modeSwitch.Click += OnModeSwitchClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click += OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click += OnPrivacyClick;
-        }
+        _modeSwitch?.Click += OnModeSwitchClick;
+        _terms?.Click += OnTermsClick;
+        _privacy?.Click += OnPrivacyClick;
         if (_legal is not null)
         {
             AutomationProperties.SetLandmarkType(_legal, AutomationLandmarkType.Navigation);
@@ -1102,10 +1084,7 @@ public class LoginCentered : TemplatedControl
         var labels = Labels;
         var signingUp = Mode == LoginCenteredMode.SignUp;
         AutomationProperties.SetName(this, signingUp ? labels.SignUpScreenName : labels.SignInScreenName);
-        if (_brandName is not null)
-        {
-            _brandName.Text = labels.BrandName;
-        }
+        _brandName?.Text = labels.BrandName;
         if (_noAccountPrompt is not null)
         {
             _noAccountPrompt.Text = labels.NoAccountPrompt;
@@ -1116,14 +1095,8 @@ public class LoginCentered : TemplatedControl
             _haveAccountPrompt.Text = labels.HaveAccountPrompt;
             _haveAccountPrompt.SetValue(AutomationProperties.AccessibilityViewProperty, signingUp ? AccessibilityView.Default : AccessibilityView.Raw);
         }
-        if (_signUpAction is not null)
-        {
-            _signUpAction.Text = labels.SignUpAction;
-        }
-        if (_signInAction is not null)
-        {
-            _signInAction.Text = labels.SignInAction;
-        }
+        _signUpAction?.Text = labels.SignUpAction;
+        _signInAction?.Text = labels.SignInAction;
         if (_modeSwitch is not null)
         {
             AutomationProperties.SetName(_modeSwitch, signingUp ? labels.SignInAction : labels.SignUpAction);

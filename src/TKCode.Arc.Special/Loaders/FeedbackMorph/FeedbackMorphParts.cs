@@ -321,14 +321,8 @@ internal sealed class FeedbackMorphSentFace : TemplatedControl, IFeedbackMorphFa
         }
         if (!animate)
         {
-            if (_ring is not null)
-            {
-                _ring.Progress = 1;
-            }
-            if (_check is not null)
-            {
-                _check.Progress = 1;
-            }
+            _ring?.Progress = 1;
+            _check?.Progress = 1;
             foreach (var motion in _wordMotions)
             {
                 motion.Rest();

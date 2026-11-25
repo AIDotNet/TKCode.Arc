@@ -154,15 +154,9 @@ internal sealed class AiSourceStack : Control
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourcesChanged;
-        }
+        _observed?.CollectionChanged -= OnSourcesChanged;
         _observed = next;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourcesChanged;
-        }
+        _observed?.CollectionChanged += OnSourcesChanged;
     }
 
     private void OnSourcesChanged(object? sender, NotifyCollectionChangedEventArgs e) => Sync();

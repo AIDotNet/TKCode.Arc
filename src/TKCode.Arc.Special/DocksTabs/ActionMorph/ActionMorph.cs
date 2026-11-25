@@ -342,17 +342,11 @@ public class ActionMorph : TemplatedControl
         {
             var start = Corner == ActionMorphCorner.Start;
             PseudoClasses.Set(StartPseudoClass, start);
-            if (_surface is not null)
-            {
-                _surface.IsStart = start;
-            }
+            _surface?.IsStart = start;
         }
         else if (change.Property == CloseLabelProperty || change.Property == BackLabelProperty || change.Property == BusyLabelProperty)
         {
-            if (_menu is not null)
-            {
-                _menu.CloseLabel = CloseLabel;
-            }
+            _menu?.CloseLabel = CloseLabel;
             foreach (var composer in _composers.Values)
             {
                 ApplyWords(composer);

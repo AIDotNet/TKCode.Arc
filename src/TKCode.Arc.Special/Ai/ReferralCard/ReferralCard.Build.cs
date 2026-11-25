@@ -87,14 +87,8 @@ public partial class ReferralCard
     {
         _root?.Children.Clear();
         _root = null;
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
-        if (_editor is not null)
-        {
-            _editor.Owner = null;
-        }
+        _copy?.Copied -= OnCopied;
+        _editor?.Owner = null;
         _chips.Clear();
         _rows.Clear();
         _shownTitle = null;

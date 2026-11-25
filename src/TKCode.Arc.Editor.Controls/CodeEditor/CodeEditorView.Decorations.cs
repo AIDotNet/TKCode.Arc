@@ -232,10 +232,7 @@ internal sealed partial class CodeEditorView
     {
         DetachDecorationStyles();
         _decorationStyles = _editor?.DecorationStyles;
-        if (_decorationStyles is not null)
-        {
-            _decorationStyles.Changed += OnDecorationStylesChanged;
-        }
+        _decorationStyles?.Changed += OnDecorationStylesChanged;
     }
 
     private void DetachDecorationStyles()

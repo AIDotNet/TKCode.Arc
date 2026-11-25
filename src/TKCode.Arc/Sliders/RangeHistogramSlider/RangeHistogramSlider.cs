@@ -426,14 +426,8 @@ public class RangeHistogramSlider : TemplatedControl, ISliderRailOwner, ISliderT
     {
         var low = FormatValue(_values[0]);
         var high = FormatValue(_values[1]);
-        if (_readoutLow is not null)
-        {
-            _readoutLow.Text = low;
-        }
-        if (_readoutHigh is not null)
-        {
-            _readoutHigh.Text = high;
-        }
+        _readoutLow?.Text = low;
+        _readoutHigh?.Text = high;
         if (_rail is { } rail)
         {
             // Spoken value text (aria-valuetext).

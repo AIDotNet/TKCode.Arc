@@ -479,10 +479,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         if (_surface is not null && SearchPlaceholder is null)
         {
             _lidPlaceholder = SelectedText ?? "Search";
-            if (_search is not null)
-            {
-                _search.PlaceholderText = _lidPlaceholder;
-            }
+            _search?.PlaceholderText = _lidPlaceholder;
         }
     }
 
@@ -862,10 +859,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             // Placement settles in the layout passes before the first frame; later passes leave the drop alone.
             Dispatcher.UIThread.Post(() => _awaitingPlacement = false, DispatcherPriority.Background);
         }
-        if (_face is not null)
-        {
-            _face.Width = listWidth;
-        }
+        _face?.Width = listWidth;
         if (_scroll is not null)
         {
             // The 6px top inset is scroll padding outside the list's max height (content-box).
@@ -890,10 +884,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             if (canSearch)
             {
                 _search?.Focus(NavigationMethod.Tab);
-                if (_search is not null)
-                {
-                    _search.CaretIndex = _search.Text?.Length ?? 0;
-                }
+                _search?.CaretIndex = _search.Text?.Length ?? 0;
             }
         }, DispatcherPriority.Loaded);
         Announce(string.Empty);
@@ -1002,10 +993,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         var value = new MotionValue<double>(this, 0, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_chevronTurn is not null)
-            {
-                _chevronTurn.Angle = v;
-            }
+            _chevronTurn?.Angle = v;
         };
         return value;
     }
@@ -1084,10 +1072,7 @@ public class MorphSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _search.CaretIndex = query.Length;
             _syncingQuery = false;
         }
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = query.Length > 0;
-        }
+        _clearHost?.IsPresent = query.Length > 0;
     }
 
     private void OnSearchPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

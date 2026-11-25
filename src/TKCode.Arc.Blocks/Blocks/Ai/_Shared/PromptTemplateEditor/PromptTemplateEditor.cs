@@ -493,15 +493,9 @@ internal class PromptTemplateEditor : TemplatedControl
 
     private static void Watch(ref INotifyCollectionChanged? watched, INotifyCollectionChanged? next, NotifyCollectionChangedEventHandler handler)
     {
-        if (watched is not null)
-        {
-            watched.CollectionChanged -= handler;
-        }
+        watched?.CollectionChanged -= handler;
         watched = next;
-        if (watched is not null)
-        {
-            watched.CollectionChanged += handler;
-        }
+        watched?.CollectionChanged += handler;
     }
 
     private void OnVariablesChanged(object? sender, NotifyCollectionChangedEventArgs? e)

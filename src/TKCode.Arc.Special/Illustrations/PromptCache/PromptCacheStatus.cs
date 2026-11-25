@@ -77,10 +77,7 @@ internal sealed class PromptCacheStatus : Control
         AutomationProperties.SetName(this, text ?? string.Empty);
         if (key == _key)
         {
-            if (_plain is not null)
-            {
-                _plain.Text = text;
-            }
+            _plain?.Text = text;
             return;
         }
         _key = key;

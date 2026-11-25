@@ -21,18 +21,9 @@ internal partial class PromptRunPanel
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_replySwap is not null)
-        {
-            _replySwap.Content = null;
-        }
+        _copy?.Copied -= OnCopied;
+        _retry?.Click -= OnRetryClick;
+        _replySwap?.Content = null;
         if (_holdHooked && _size is not null)
         {
             _size.LayoutUpdated -= OnHeldLayout;
@@ -52,14 +43,8 @@ internal partial class PromptRunPanel
         _error = e.NameScope.Find<Control>(ErrorPart);
         _retry = e.NameScope.Find<Button>(RetryPart);
         _footer = e.NameScope.Find<ArcContentSwap>(FooterPart);
-        if (_copy is not null)
-        {
-            _copy.Copied += OnCopied;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
+        _copy?.Copied += OnCopied;
+        _retry?.Click += OnRetryClick;
         if (_idleText is not null)
         {
             _idleText.Inlines ??= new InlineCollection();
@@ -67,10 +52,7 @@ internal partial class PromptRunPanel
             _idleText.Inlines.Add(_idleCase);
             _idleText.Inlines.Add(_idleAfter);
         }
-        if (_replySwap is not null)
-        {
-            _replySwap.Content = _reply;
-        }
+        _replySwap?.Content = _reply;
         if (_holding)
         {
             Hold();
@@ -362,10 +344,7 @@ internal partial class PromptRunPanel
     {
         var canCopy = State is PromptRunState.Done or PromptRunState.Stopped && _reply.HasText;
         PseudoClasses.Set(CanCopyPseudoClass, canCopy);
-        if (_copy is not null)
-        {
-            _copy.Value = canCopy ? _reply.Text : null;
-        }
+        _copy?.Value = canCopy ? _reply.Text : null;
     }
 
     /// <summary>Sets a swap's content; without <paramref name="animate"/> the change is put in place without motion.</summary>

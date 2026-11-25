@@ -135,14 +135,8 @@ internal sealed class ActionMorphTrigger : AvaloniaButton
         base.OnApplyTemplate(e);
         _plus = e.NameScope.Find<Control>(PlusPart);
         _check = e.NameScope.Find<StrokeDrawGlyph>(CheckPart);
-        if (_plus is not null)
-        {
-            _plus.RenderTransform = new TransformGroup { Children = { _plusScale, _plusRotate } };
-        }
-        if (_check is not null)
-        {
-            _check.RenderTransform = _checkScale;
-        }
+        _plus?.RenderTransform = new TransformGroup { Children = { _plusScale, _plusRotate } };
+        _check?.RenderTransform = _checkScale;
         ApplyPlus(_success ? 0 : 1);
         ApplyCheck(_success ? 1 : 0);
     }
@@ -161,10 +155,7 @@ internal sealed class ActionMorphTrigger : AvaloniaButton
         {
             _plusProgress.Jump(success ? 0 : 1);
             _checkProgress.Jump(success ? 1 : 0);
-            if (_check is not null)
-            {
-                _check.Progress = 1;
-            }
+            _check?.Progress = 1;
             return;
         }
         var full = level == ArcMotionLevel.Full;
@@ -184,10 +175,7 @@ internal sealed class ActionMorphTrigger : AvaloniaButton
             else
             {
                 _ = _checkProgress.AnimateTo(1, MotionSpec.Tween(CheckExit, ActionMorphSurface.EaseOut));
-                if (_check is not null)
-                {
-                    _check.Progress = 1;
-                }
+                _check?.Progress = 1;
             }
             return;
         }

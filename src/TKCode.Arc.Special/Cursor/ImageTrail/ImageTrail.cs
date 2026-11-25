@@ -174,17 +174,11 @@ public class ImageTrail : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_layer is not null)
-        {
-            _layer.Owner = null;
-        }
+        _layer?.Owner = null;
         _loaderHost?.Children.Clear();
         _layer = e.NameScope.Find<ImageTrailLayer>(LayerPart);
         _loaderHost = e.NameScope.Find<Panel>(LoadersPart);
-        if (_layer is not null)
-        {
-            _layer.Owner = this;
-        }
+        _layer?.Owner = this;
         RebuildLoaders();
         _focusRing ??= new LazyFocusRing(this, ImageTrailTokens.Key(ImageTrailTokenKind.FocusRingMargin),
             ArcDesignTokens.Key(ArcDesignTokenKind.RadiusSurface));

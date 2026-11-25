@@ -227,37 +227,16 @@ public partial class SignupForm
             _passwordInput.AddHandler(KeyDownEvent, OnFieldKeyDown, RoutingStrategies.Tunnel);
             TextInputOptions.SetContentType(_passwordInput, TextInputContentType.Password);
         }
-        if (_updates is not null)
-        {
-            _updates.IsCheckedChanged += OnUpdatesChanged;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click += OnStartOverClick;
-        }
+        _updates?.IsCheckedChanged += OnUpdatesChanged;
+        _submit?.Click += OnSubmitClick;
+        _startOver?.Click += OnStartOverClick;
         foreach (var button in _providerButtons)
         {
-            if (button is not null)
-            {
-                button.Click += OnProviderClick;
-            }
+            button?.Click += OnProviderClick;
         }
-        if (_terms is not null)
-        {
-            _terms.Click += OnLinkClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click += OnLinkClick;
-        }
-        if (_signIn is not null)
-        {
-            _signIn.Click += OnLinkClick;
-        }
+        _terms?.Click += OnLinkClick;
+        _privacy?.Click += OnLinkClick;
+        _signIn?.Click += OnLinkClick;
     }
 
     private void Unwire()
@@ -271,31 +250,16 @@ public partial class SignupForm
                 input.RemoveHandler(KeyDownEvent, OnFieldKeyDown);
             }
         }
-        if (_updates is not null)
-        {
-            _updates.IsCheckedChanged -= OnUpdatesChanged;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Click -= OnStartOverClick;
-        }
+        _updates?.IsCheckedChanged -= OnUpdatesChanged;
+        _submit?.Click -= OnSubmitClick;
+        _startOver?.Click -= OnStartOverClick;
         foreach (var button in _providerButtons)
         {
-            if (button is not null)
-            {
-                button.Click -= OnProviderClick;
-            }
+            button?.Click -= OnProviderClick;
         }
         foreach (var link in new[] { _terms, _privacy, _signIn })
         {
-            if (link is not null)
-            {
-                link.Click -= OnLinkClick;
-            }
+            link?.Click -= OnLinkClick;
         }
     }
 
@@ -335,22 +299,10 @@ public partial class SignupForm
             _emailInput.Label = labels.EmailLabel;
             _emailInput.Placeholder = labels.EmailPlaceholder;
         }
-        if (_passwordInput is not null)
-        {
-            _passwordInput.Label = labels.PasswordLabel;
-        }
-        if (_updates is not null)
-        {
-            _updates.Content = labels.ProductUpdatesLabel;
-        }
-        if (_submit is not null)
-        {
-            _submit.Content = labels.Submit;
-        }
-        if (_startOver is not null)
-        {
-            _startOver.Content = labels.StartOver;
-        }
+        _passwordInput?.Label = labels.PasswordLabel;
+        _updates?.Content = labels.ProductUpdatesLabel;
+        _submit?.Content = labels.Submit;
+        _startOver?.Content = labels.StartOver;
         if (_terms is not null)
         {
             _terms.Content = labels.Terms;
@@ -378,10 +330,7 @@ public partial class SignupForm
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void BuildLegal(SignupFormLabels labels)
@@ -465,10 +414,7 @@ public partial class SignupForm
         }
         else if (change.Property == AreProvidersVisibleProperty)
         {
-            if (_providersBlock is not null)
-            {
-                _providersBlock.IsVisible = AreProvidersVisible;
-            }
+            _providersBlock?.IsVisible = AreProvidersVisible;
         }
         else if (change.Property == BoundsProperty)
         {
@@ -511,10 +457,7 @@ public partial class SignupForm
             {
                 _updates.IsChecked = ProductUpdates;
             }
-            if (_providersBlock is not null)
-            {
-                _providersBlock.IsVisible = AreProvidersVisible;
-            }
+            _providersBlock?.IsVisible = AreProvidersVisible;
         }
         finally
         {
@@ -609,19 +552,10 @@ public partial class SignupForm
     private void Revalidate(bool announce)
     {
         var errors = Validate();
-        if (_nameInput is not null)
-        {
-            _nameInput.ErrorMessage = NullIfEmpty(VisibleError(errors, Field.Name));
-        }
-        if (_emailInput is not null)
-        {
-            _emailInput.ErrorMessage = NullIfEmpty(VisibleError(errors, Field.Email));
-        }
+        _nameInput?.ErrorMessage = NullIfEmpty(VisibleError(errors, Field.Name));
+        _emailInput?.ErrorMessage = NullIfEmpty(VisibleError(errors, Field.Email));
         PasswordScore = ScorePassword(Password);
-        if (_meter is not null)
-        {
-            _meter.Level = PasswordScore;
-        }
+        _meter?.Level = PasswordScore;
         UpdateFeedback(announce);
     }
 
@@ -673,10 +607,7 @@ public partial class SignupForm
         var shown = _submitError.Length > 0 ? _submitError : string.IsNullOrEmpty(ServerError) ? null : ServerError;
         var changed = shown != ShownError;
         ShownError = shown;
-        if (_errorRow is not null)
-        {
-            _errorRow.Text = shown;
-        }
+        _errorRow?.Text = shown;
         if (changed && shown is not null && IsLoaded)
         {
             _alert?.Announce(shown);
@@ -906,10 +837,7 @@ public partial class SignupForm
         _submitted = false;
         _submitError = string.Empty;
         _lastPasswordAlert = null;
-        if (_passwordInput is not null)
-        {
-            _passwordInput.IsRevealed = false;
-        }
+        _passwordInput?.IsRevealed = false;
         SetCurrentValue(FullNameProperty, string.Empty);
         SetCurrentValue(EmailProperty, string.Empty);
         SetCurrentValue(PasswordProperty, string.Empty);
@@ -963,19 +891,10 @@ public partial class SignupForm
         var busy = BusyMethod;
         foreach (var input in new FieldTextBox?[] { _nameInput, _emailInput, _passwordInput })
         {
-            if (input is not null)
-            {
-                input.IsReadOnly = busy is not null;
-            }
+            input?.IsReadOnly = busy is not null;
         }
-        if (_updates is not null)
-        {
-            _updates.IsEnabled = busy is null;
-        }
-        if (_submit is not null)
-        {
-            _submit.IsLoading = busy == SignupFormMethod.Email;
-        }
+        _updates?.IsEnabled = busy is null;
+        _submit?.IsLoading = busy == SignupFormMethod.Email;
         for (var i = 0; i < _providerButtons.Length; i++)
         {
             if (_providerButtons[i] is { } button)

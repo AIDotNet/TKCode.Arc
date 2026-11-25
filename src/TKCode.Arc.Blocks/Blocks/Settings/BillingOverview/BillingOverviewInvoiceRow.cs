@@ -84,16 +84,10 @@ internal sealed class BillingOverviewInvoiceRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_download is not null)
-        {
-            _download.Click -= OnDownloadClick;
-        }
+        _download?.Click -= OnDownloadClick;
         base.OnApplyTemplate(e);
         _download = e.NameScope.Find<Button>(DownloadPart);
-        if (_download is not null)
-        {
-            _download.Click += OnDownloadClick;
-        }
+        _download?.Click += OnDownloadClick;
         if (e.NameScope.Find<TextBlock>(AmountPart) is { } amount)
         {
             // Tabular figures keep the right-aligned amounts lined up digit for digit.

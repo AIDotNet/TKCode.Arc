@@ -286,20 +286,14 @@ public class LiveVisitors : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pause is not null)
-        {
-            _pause.IsCheckedChanged -= OnPauseChanged;
-        }
+        _pause?.IsCheckedChanged -= OnPauseChanged;
         _statusDot = e.NameScope.Find<LiveVisitorsStatusDot>(StatusDotPart);
         _statusBox = e.NameScope.Find<Panel>(StatusBoxPart);
         _status = e.NameScope.Find<ArcContentSwap>(StatusPart);
         _pause = e.NameScope.Find<LiveVisitorsPauseButton>(PausePart);
         _countBox = e.NameScope.Find<Panel>(CountBoxPart);
         _digits = e.NameScope.Find<RollingDigits>(DigitsPart);
-        if (_digits is not null)
-        {
-            _digits.WheelMotion = CountRoll;
-        }
+        _digits?.WheelMotion = CountRoll;
         _countPlaceholder = e.NameScope.Find<LiveVisitorsPlaceholder>(CountPlaceholderPart);
         _countLabel = e.NameScope.Find<TextBlock>(CountLabelPart);
         _map = e.NameScope.Find<LiveVisitorsMap>(MapPart);
@@ -420,10 +414,7 @@ public class LiveVisitors : TemplatedControl
         PseudoClasses.Set(ReconnectingPseudoClass, Connection == LiveVisitorsConnection.Reconnecting);
         PseudoClasses.Set(SimulatedPseudoClass, IsSimulated);
         PseudoClasses.Set(EmptyPseudoClass, IsEmpty);
-        if (_statusDot is not null)
-        {
-            _statusDot.IsPulsing = Connection == LiveVisitorsConnection.Live && !IsPaused && !IsEmpty;
-        }
+        _statusDot?.IsPulsing = Connection == LiveVisitorsConnection.Live && !IsPaused && !IsEmpty;
     }
 
     private void OnPauseChanged(object? sender, RoutedEventArgs e)
@@ -499,22 +490,10 @@ public class LiveVisitors : TemplatedControl
     {
         var labels = Labels;
         AutomationProperties.SetName(this, labels.Title);
-        if (_pagesHeading is not null)
-        {
-            _pagesHeading.Text = labels.PagesHeading;
-        }
-        if (_eventsHeading is not null)
-        {
-            _eventsHeading.Text = labels.EventsHeading;
-        }
-        if (_pages is not null)
-        {
-            _pages.EmptyText = labels.NoPages;
-        }
-        if (_events is not null)
-        {
-            _events.EmptyText = labels.NoEvents;
-        }
+        _pagesHeading?.Text = labels.PagesHeading;
+        _eventsHeading?.Text = labels.EventsHeading;
+        _pages?.EmptyText = labels.NoPages;
+        _events?.EmptyText = labels.NoEvents;
         if (_pause is not null)
         {
             var name = IsPaused ? labels.Resume : labels.Pause;
@@ -657,10 +636,7 @@ public class LiveVisitors : TemplatedControl
                 _digits.Value = count;
             }
         }
-        if (_countPlaceholder is not null)
-        {
-            _countPlaceholder.IsVisible = connecting;
-        }
+        _countPlaceholder?.IsVisible = connecting;
         var words = labels.People(count);
         if (_countLabel is not null && _countLabel.Text != words)
         {

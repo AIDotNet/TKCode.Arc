@@ -227,24 +227,15 @@ public class ResponseFeedback : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_regenerate is not null)
-        {
-            _regenerate.Click -= OnRegenerate;
-        }
-        if (_body is not null)
-        {
-            _body.Content = null;
-        }
+        _regenerate?.Click -= OnRegenerate;
+        _body?.Content = null;
         _prompt = e.NameScope.Find<Control>(PromptPart);
         _mark = e.NameScope.Find<ArcGlyph>(MarkPart);
         _body = e.NameScope.Find<ContentPresenter>(BodyPart);
         _actions = e.NameScope.Find<FeedbackActions>(ActionsPart);
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _regenerate = e.NameScope.Find<Avalonia.Controls.Button>(RegeneratePart);
-        if (_regenerate is not null)
-        {
-            _regenerate.Click += OnRegenerate;
-        }
+        _regenerate?.Click += OnRegenerate;
         Refresh();
     }
 
@@ -272,14 +263,8 @@ public class ResponseFeedback : TemplatedControl
     private void Refresh()
     {
         var labels = Labels;
-        if (_prompt is not null)
-        {
-            _prompt.IsVisible = Prompt is not null;
-        }
-        if (_mark is not null)
-        {
-            _mark.Data = ModelMark ?? ArcIcons.Sparkles;
-        }
+        _prompt?.IsVisible = Prompt is not null;
+        _mark?.Data = ModelMark ?? ArcIcons.Sparkles;
         if (_body is not null)
         {
             var body = Reply;

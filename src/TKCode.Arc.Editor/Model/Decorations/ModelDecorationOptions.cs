@@ -182,21 +182,6 @@ internal sealed record ModelDecorationOptions
 {
     private const int LineHeightCeiling = 300;
 
-    private readonly string? _blockClassName;
-    private readonly string? _className;
-    private readonly string? _glyphMarginClassName;
-    private readonly string? _linesDecorationsClassName;
-    private readonly string? _lineNumberClassName;
-    private readonly string? _firstLineDecorationClassName;
-    private readonly string? _marginClassName;
-    private readonly string? _inlineClassName;
-    private readonly string? _beforeContentClassName;
-    private readonly string? _afterContentClassName;
-    private readonly string? _linesDecorationsTooltip;
-    private readonly string? _fontSize;
-    private readonly double? _lineHeight;
-    private readonly ModelDecorationGlyphMarginOptions? _glyphMargin;
-
     public ModelDecorationOptions(string description)
     {
         Description = description;
@@ -220,11 +205,11 @@ internal sealed record ModelDecorationOptions
     public TrackedRangeStickiness Stickiness { get; init; } = TrackedRangeStickiness.AlwaysGrowsWhenTypingAtEdges;
 
     /// <summary>The style key of the decoration's range.</summary>
-    public string? ClassName { get => _className; init => _className = CleanClassName(value); }
+    public string? ClassName { get; init => field = CleanClassName(value); }
 
     public bool? ShouldFillLineOnLineBreak { get; init; }
 
-    public string? BlockClassName { get => _blockClassName; init => _blockClassName = CleanClassName(value); }
+    public string? BlockClassName { get; init => field = CleanClassName(value); }
 
     public bool? BlockIsAfterEnd { get; init; }
 
@@ -257,13 +242,13 @@ internal sealed record ModelDecorationOptions
     public ModelDecorationMinimapOptions? Minimap { get; init; }
 
     /// <summary>The style key of the glyph in the glyph margin.</summary>
-    public string? GlyphMarginClassName { get => _glyphMarginClassName; init => _glyphMarginClassName = CleanClassName(value); }
+    public string? GlyphMarginClassName { get; init => field = CleanClassName(value); }
 
     /// <summary>Where the glyph goes; null without a <see cref="GlyphMarginClassName"/>.</summary>
     public ModelDecorationGlyphMarginOptions? GlyphMargin
     {
-        get => _glyphMarginClassName is null ? null : _glyphMargin ?? ModelDecorationGlyphMarginOptions.Default;
-        init => _glyphMargin = value;
+        get => GlyphMarginClassName is null ? null : field ?? ModelDecorationGlyphMarginOptions.Default;
+        init => field = value;
     }
 
     /// <summary>
@@ -272,44 +257,44 @@ internal sealed record ModelDecorationOptions
     /// </summary>
     public double? LineHeight
     {
-        get => _lineHeight;
-        init => _lineHeight = value is { } height && height != 0 && !double.IsNaN(height) ? Math.Min(height, LineHeightCeiling) : null;
+        get;
+        init => field = value is { } height && height != 0 && !double.IsNaN(height) ? Math.Min(height, LineHeightCeiling) : null;
     }
 
     public string? FontFamily { get; init; }
 
-    public string? FontSize { get => _fontSize; init => _fontSize = string.IsNullOrEmpty(value) ? null : value; }
+    public string? FontSize { get; init => field = string.IsNullOrEmpty(value) ? null : value; }
 
     public string? FontWeight { get; init; }
 
     public string? FontStyle { get; init; }
 
-    public string? LinesDecorationsClassName { get => _linesDecorationsClassName; init => _linesDecorationsClassName = CleanClassName(value); }
+    public string? LinesDecorationsClassName { get; init => field = CleanClassName(value); }
 
     public string? LinesDecorationsTooltip
     {
-        get => _linesDecorationsTooltip;
-        init => _linesDecorationsTooltip = string.IsNullOrEmpty(value) ? null : value;
+        get;
+        init => field = string.IsNullOrEmpty(value) ? null : value;
     }
 
-    public string? LineNumberClassName { get => _lineNumberClassName; init => _lineNumberClassName = CleanClassName(value); }
+    public string? LineNumberClassName { get; init => field = CleanClassName(value); }
 
     public string? FirstLineDecorationClassName
     {
-        get => _firstLineDecorationClassName;
-        init => _firstLineDecorationClassName = CleanClassName(value);
+        get;
+        init => field = CleanClassName(value);
     }
 
-    public string? MarginClassName { get => _marginClassName; init => _marginClassName = CleanClassName(value); }
+    public string? MarginClassName { get; init => field = CleanClassName(value); }
 
     /// <summary>The style key of the text in the range.</summary>
-    public string? InlineClassName { get => _inlineClassName; init => _inlineClassName = CleanClassName(value); }
+    public string? InlineClassName { get; init => field = CleanClassName(value); }
 
     public bool InlineClassNameAffectsLetterSpacing { get; init; }
 
-    public string? BeforeContentClassName { get => _beforeContentClassName; init => _beforeContentClassName = CleanClassName(value); }
+    public string? BeforeContentClassName { get; init => field = CleanClassName(value); }
 
-    public string? AfterContentClassName { get => _afterContentClassName; init => _afterContentClassName = CleanClassName(value); }
+    public string? AfterContentClassName { get; init => field = CleanClassName(value); }
 
     /// <summary>Text shown after the range.</summary>
     public ModelDecorationInjectedTextOptions? After { get; init; }
@@ -330,11 +315,11 @@ internal sealed record ModelDecorationOptions
 
     /// <summary>Whether the decoration is an error, warning or info squiggle.</summary>
     internal bool IsForValidation =>
-        _className is DecorationClassNames.EditorErrorDecoration or DecorationClassNames.EditorWarningDecoration
+        ClassName is DecorationClassNames.EditorErrorDecoration or DecorationClassNames.EditorWarningDecoration
             or DecorationClassNames.EditorInfoDecoration;
 
     /// <summary>Whether the decoration shows in the glyph margin.</summary>
-    internal bool IsInGlyphMargin => _glyphMarginClassName is not null;
+    internal bool IsInGlyphMargin => GlyphMarginClassName is not null;
 
     /// <summary>Replaces every character that is not a letter, digit, <c>-</c> or <c>_</c> (ASCII) with a space.</summary>
     private static string? CleanClassName(string? className)

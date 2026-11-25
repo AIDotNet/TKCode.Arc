@@ -68,10 +68,7 @@ internal sealed class AiWorkflowPathSwap : Control
             {
                 Remove(old);
             }
-            if (content is not null)
-            {
-                content.Opacity = 1;
-            }
+            content?.Opacity = 1;
             _follow = true;
             InvalidateMeasure();
             return;

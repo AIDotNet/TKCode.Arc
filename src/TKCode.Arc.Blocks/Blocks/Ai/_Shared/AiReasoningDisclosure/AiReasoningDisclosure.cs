@@ -106,16 +106,10 @@ internal class AiReasoningDisclosure : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_button is not null)
-        {
-            _button.Click -= OnButtonClick;
-        }
+        _button?.Click -= OnButtonClick;
         _button = e.NameScope.Find<AiReasoningButton>(ButtonPart);
         _body = e.NameScope.Find<AiCollapsible>(BodyPart);
-        if (_button is not null)
-        {
-            _button.Click += OnButtonClick;
-        }
+        _button?.Click += OnButtonClick;
         Sync();
     }
 
@@ -147,10 +141,7 @@ internal class AiReasoningDisclosure : TemplatedControl
             _button.CanToggle = CanToggle;
             _button.IsExpanded = IsExpanded && CanToggle;
         }
-        if (_body is not null)
-        {
-            _body.IsExpanded = IsExpanded && HasReasoning;
-        }
+        _body?.IsExpanded = IsExpanded && HasReasoning;
     }
 
     private void OnButtonClick(object? sender, RoutedEventArgs e)

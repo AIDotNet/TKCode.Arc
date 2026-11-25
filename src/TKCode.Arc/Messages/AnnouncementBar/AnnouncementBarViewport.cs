@@ -282,10 +282,7 @@ internal sealed class AnnouncementBarFace : Decorator
         _text.LineHeight = viewport.LineHeight;
         MinHeight = viewport.FaceMinHeight;
         _muted = viewport.MutedForeground;
-        if (_countdown is not null)
-        {
-            _countdown.MutedForeground = _muted;
-        }
+        _countdown?.MutedForeground = _muted;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -131,27 +131,15 @@ public partial class MarketTerminal
         _ordersTitle = scope.Find<TextBlock>("PART_OrdersTitle");
         _orderRows = scope.Find<StackPanel>("PART_OrderRows");
 
-        if (_side is not null)
-        {
-            _side.SelectionChanged += OnSideSelectionChanged;
-        }
-        if (_type is not null)
-        {
-            _type.SelectionChanged += OnTypeSelectionChanged;
-        }
-        if (_shares is not null)
-        {
-            _shares.ValueChanged += OnSharesChanged;
-        }
+        _side?.SelectionChanged += OnSideSelectionChanged;
+        _type?.SelectionChanged += OnTypeSelectionChanged;
+        _shares?.ValueChanged += OnSharesChanged;
         if (_limit is not null)
         {
             _limit.ValueChanged += OnLimitChanged;
             _limit.PrefixFormatter = _ => "$";
         }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
+        _submit?.Click += OnSubmitClick;
         if (_status is not null)
         {
             AutomationProperties.SetLiveSetting(_status, AutomationLiveSetting.Polite);
@@ -161,26 +149,11 @@ public partial class MarketTerminal
 
     private void UnhookTicket()
     {
-        if (_side is not null)
-        {
-            _side.SelectionChanged -= OnSideSelectionChanged;
-        }
-        if (_type is not null)
-        {
-            _type.SelectionChanged -= OnTypeSelectionChanged;
-        }
-        if (_shares is not null)
-        {
-            _shares.ValueChanged -= OnSharesChanged;
-        }
-        if (_limit is not null)
-        {
-            _limit.ValueChanged -= OnLimitChanged;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
+        _side?.SelectionChanged -= OnSideSelectionChanged;
+        _type?.SelectionChanged -= OnTypeSelectionChanged;
+        _shares?.ValueChanged -= OnSharesChanged;
+        _limit?.ValueChanged -= OnLimitChanged;
+        _submit?.Click -= OnSubmitClick;
         ClearOrderRows();
     }
 
@@ -207,14 +180,8 @@ public partial class MarketTerminal
         {
             _syncing = false;
         }
-        if (_shares is not null)
-        {
-            _shares.Label = labels.Shares;
-        }
-        if (_limit is not null)
-        {
-            _limit.Label = labels.LimitPrice;
-        }
+        _shares?.Label = labels.Shares;
+        _limit?.Label = labels.LimitPrice;
         SetText(_disclaimer, labels.Disclaimer);
         SetText(_ordersTitle, labels.Orders);
     }
@@ -232,18 +199,9 @@ public partial class MarketTerminal
             {
                 _limit.Value = (decimal)Math.Max(0, Math.Round(LimitPrice, 2));
             }
-            if (_side is not null)
-            {
-                _side.SelectedValue = OrderSide;
-            }
-            if (_type is not null)
-            {
-                _type.SelectedValue = OrderType;
-            }
-            if (_limitPanel is not null)
-            {
-                _limitPanel.IsExpanded = OrderType == MarketOrderType.Limit;
-            }
+            _side?.SelectedValue = OrderSide;
+            _type?.SelectedValue = OrderType;
+            _limitPanel?.IsExpanded = OrderType == MarketOrderType.Limit;
             _limitHost?.Classes.Set("open", OrderType == MarketOrderType.Limit);
         }
         finally
@@ -350,10 +308,7 @@ public partial class MarketTerminal
         SetText(_ticketHeld, labels.SharesHeld(SharesHeld(ticker)));
         if (request is null)
         {
-            if (_submit is not null)
-            {
-                _submit.IsEnabled = false;
-            }
+            _submit?.IsEnabled = false;
             return;
         }
         var isBuy = request.Side == MarketOrderSide.Buy;
@@ -491,10 +446,7 @@ public partial class MarketTerminal
 
     private void UpdateOrdersSection()
     {
-        if (_ordersSection is not null)
-        {
-            _ordersSection.IsVisible = Orders.Count > 0;
-        }
+        _ordersSection?.IsVisible = Orders.Count > 0;
     }
 
     private void ClearOrderRows()

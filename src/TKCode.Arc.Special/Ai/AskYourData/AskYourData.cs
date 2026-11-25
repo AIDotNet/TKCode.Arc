@@ -411,10 +411,7 @@ public partial class AskYourData : TemplatedControl
         _sqlMeta = scope.Find<ArcContentSwap>(SqlMetaPart);
         _copySql = scope.Find<CopyButton>(CopySqlPart);
         _sqlFold = scope.Find<AiHeightBox>(SqlFoldPart);
-        if (_sqlFold is not null)
-        {
-            _sqlFold.HeightSpring = SqlFoldSpring;
-        }
+        _sqlFold?.HeightSpring = SqlFoldSpring;
         _sqlScroll = scope.Find<ScrollViewer>(SqlScrollPart);
         _sqlText = scope.Find<AskYourDataRevealText>(SqlPart);
         _stageStatus = scope.Find<ToolCallStatusGlyph>(StageStatusPart);
@@ -449,18 +446,9 @@ public partial class AskYourData : TemplatedControl
             _field.PropertyChanged += OnFieldPropertyChanged;
             _field.AddHandler(KeyDownEvent, OnFieldKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_ask is not null)
-        {
-            _ask.Click += OnAskClick;
-        }
-        if (_sqlToggle is not null)
-        {
-            _sqlToggle.Click += OnSqlToggle;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
+        _ask?.Click += OnAskClick;
+        _sqlToggle?.Click += OnSqlToggle;
+        _retry?.Click += OnRetry;
         foreach (var chart in Charts())
         {
             chart.ActiveIndexChanged += OnReadout;
@@ -470,10 +458,7 @@ public partial class AskYourData : TemplatedControl
             segmented.ItemsSource = SwitchOptions();
             segmented.SelectionChanged += OnSwitchChanged;
         }
-        if (_sqlFold is not null)
-        {
-            _sqlFold.IsExpanded = _sqlOpen;
-        }
+        _sqlFold?.IsExpanded = _sqlOpen;
         _shownTitle = _shownSubtitle = _shownMeta = null;
         _shownBody = null;
         _fades.Clear();
@@ -491,18 +476,9 @@ public partial class AskYourData : TemplatedControl
             _field.PropertyChanged -= OnFieldPropertyChanged;
             _field.RemoveHandler(KeyDownEvent, OnFieldKeyDown);
         }
-        if (_ask is not null)
-        {
-            _ask.Click -= OnAskClick;
-        }
-        if (_sqlToggle is not null)
-        {
-            _sqlToggle.Click -= OnSqlToggle;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
+        _ask?.Click -= OnAskClick;
+        _sqlToggle?.Click -= OnSqlToggle;
+        _retry?.Click -= OnRetry;
         foreach (var chart in Charts())
         {
             chart.ActiveIndexChanged -= OnReadout;
@@ -771,10 +747,7 @@ public partial class AskYourData : TemplatedControl
     private void SetSqlOpen(bool open)
     {
         _sqlOpen = open;
-        if (_sqlFold is not null)
-        {
-            _sqlFold.IsExpanded = open;
-        }
+        _sqlFold?.IsExpanded = open;
         PseudoClasses.Set(SqlOpenPseudoClass, open);
         Refresh();
     }
@@ -1033,10 +1006,7 @@ public partial class AskYourData : TemplatedControl
 
         _field.Placeholder = Placeholder;
         AutomationProperties.SetName(_field, labels.Question);
-        if (_sourceMark is not null)
-        {
-            _sourceMark.Data = source.Mark ?? ArcIcons.Database;
-        }
+        _sourceMark?.Data = source.Mark ?? ArcIcons.Database;
         if (_sourceName is not null)
         {
             _sourceName.Text = source.Name;
@@ -1047,24 +1017,12 @@ public partial class AskYourData : TemplatedControl
             _ask.IsEnabled = working || CanAsk && !string.IsNullOrWhiteSpace(EffectiveQuestion);
             AutomationProperties.SetName(_ask, working ? labels.Stop : labels.Ask);
         }
-        if (_askGlyph is not null)
-        {
-            _askGlyph.Data = working ? ArcIcons.Square : ArcIcons.ArrowUp;
-        }
+        _askGlyph?.Data = working ? ArcIcons.Square : ArcIcons.ArrowUp;
 
         // The Generated SQL panel.
-        if (_sqlBlock is not null)
-        {
-            _sqlBlock.IsVisible = stage != AskYourDataStage.Idle;
-        }
-        if (_sqlStatus is not null)
-        {
-            _sqlStatus.Status = SqlStatus();
-        }
-        if (_sqlTitle is not null)
-        {
-            _sqlTitle.Text = labels.GeneratedSql;
-        }
+        _sqlBlock?.IsVisible = stage != AskYourDataStage.Idle;
+        _sqlStatus?.Status = SqlStatus();
+        _sqlTitle?.Text = labels.GeneratedSql;
         var meta = AskYourDataFormat.Meta(source.Dialect,
             stage == AskYourDataStage.Writing ? labels.WritingMeta : stage == AskYourDataStage.Running ? labels.RunningMeta : null,
             stage is AskYourDataStage.Done or AskYourDataStage.Empty ? Result : null, labels);
@@ -1130,26 +1088,17 @@ public partial class AskYourData : TemplatedControl
             _suggestionsTitle.Text = labels.Suggestions;
             _suggestionsTitle.IsVisible = stage == AskYourDataStage.Idle;
         }
-        if (_rowsLabel is not null)
-        {
-            _rowsLabel.Text = labels.RowsScanned;
-        }
+        _rowsLabel?.Text = labels.RowsScanned;
         if (_rows?.Parent is Control { Parent: Control countRow })
         {
             countRow.IsVisible = stage == AskYourDataStage.Running;
         }
-        if (_errorWell is not null)
-        {
-            _errorWell.IsVisible = stage == AskYourDataStage.Error && !string.IsNullOrEmpty(_errorMessage);
-        }
+        _errorWell?.IsVisible = stage == AskYourDataStage.Error && !string.IsNullOrEmpty(_errorMessage);
         if (_errorText is not null && _errorText.Text != _errorMessage)
         {
             _errorText.Text = _errorMessage;
         }
-        if (_retry is not null)
-        {
-            _retry.Content = labels.TryAgain;
-        }
+        _retry?.Content = labels.TryAgain;
     }
 
     private ToolCallStatus SqlStatus()

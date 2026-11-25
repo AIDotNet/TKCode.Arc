@@ -150,27 +150,15 @@ internal sealed class SplitBarReadoutLine : TemplatedControl
         _name = e.NameScope.Find<TextBlock>("PART_Name");
         _share = e.NameScope.Find<RollingDigits>("PART_Share");
         _value = e.NameScope.Find<RollingDigits>("PART_Value");
-        if (_share is not null)
-        {
-            _share.WheelMotion = SplitBar.DigitMotion;
-        }
-        if (_value is not null)
-        {
-            _value.WheelMotion = SplitBar.DigitMotion;
-        }
+        _share?.WheelMotion = SplitBar.DigitMotion;
+        _value?.WheelMotion = SplitBar.DigitMotion;
     }
 
     public void Show(SplitBar owner, SplitBarSlot slot, bool instant)
     {
         ApplyTemplate();
-        if (_swatch is not null)
-        {
-            _swatch.Brush = owner.Track?.CapBrush(slot);
-        }
-        if (_name is not null)
-        {
-            _name.Text = slot.Segment.Label;
-        }
+        _swatch?.Brush = owner.Track?.CapBrush(slot);
+        _name?.Text = slot.Segment.Label;
         if (_share is not null)
         {
             _share.IsInstant = instant;

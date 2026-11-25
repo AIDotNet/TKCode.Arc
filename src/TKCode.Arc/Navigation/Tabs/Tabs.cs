@@ -275,13 +275,12 @@ public partial class Tabs : SelectingItemsControl
         remove => RemoveHandler(TabAddRequestedEvent, value);
     }
 
-    private object? _selectedContent;
 
     /// <inheritdoc cref="SelectedContentProperty"/>
     public object? SelectedContent
     {
-        get => _selectedContent;
-        private set => SetAndRaise(SelectedContentProperty, ref _selectedContent, value);
+        get;
+        private set => SetAndRaise(SelectedContentProperty, ref field, value);
     }
 
     private IDataTemplate? _selectedContentTemplate;
@@ -386,18 +385,9 @@ public partial class Tabs : SelectingItemsControl
             _viewport.SizeChanged -= OnViewportSizeChanged;
             _viewport.RemoveHandler(PointerWheelChangedEvent, OnViewportWheel);
         }
-        if (_scrollLeft is not null)
-        {
-            _scrollLeft.Click -= OnScrollLeftClick;
-        }
-        if (_scrollRight is not null)
-        {
-            _scrollRight.Click -= OnScrollRightClick;
-        }
-        if (_listPanel is not null)
-        {
-            _listPanel.Arranged = null;
-        }
+        _scrollLeft?.Click -= OnScrollLeftClick;
+        _scrollRight?.Click -= OnScrollRightClick;
+        _listPanel?.Arranged = null;
         DetachAddButton();
 
         base.OnApplyTemplate(e);
@@ -419,10 +409,7 @@ public partial class Tabs : SelectingItemsControl
             _viewport.SizeChanged += OnViewportSizeChanged;
             _viewport.AddHandler(PointerWheelChangedEvent, OnViewportWheel, RoutingStrategies.Tunnel);
         }
-        if (_listPanel is not null)
-        {
-            _listPanel.Arranged = OnListArranged;
-        }
+        _listPanel?.Arranged = OnListArranged;
         _revealPending = true;
         _revealPendingInstant = true;
         UpdateContent(0, animate: false);
@@ -921,10 +908,7 @@ public partial class Tabs : SelectingItemsControl
             _scroll = new MotionValue<double>(this, _viewport.Offset.X, MotionVectors.Double);
             _scroll.Changed += value =>
             {
-                if (_viewport is not null)
-                {
-                    _viewport.Offset = new Vector(value, _viewport.Offset.Y);
-                }
+                _viewport?.Offset = new Vector(value, _viewport.Offset.Y);
             };
         }
         if (!_scroll.IsAnimating)

@@ -277,10 +277,7 @@ public class EnumSelector : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_host is not null)
-        {
-            _host.Child = null;
-        }
+        _host?.Child = null;
         _host = e.NameScope.Find<Decorator>(HostPart);
         BuildVisual();
     }
@@ -405,10 +402,7 @@ public class EnumSelector : TemplatedControl
     {
         ClearChecks();
         _grid = null;
-        if (_radio is not null)
-        {
-            _radio.ItemsSource = null;
-        }
+        _radio?.ItemsSource = null;
         if (_host is null)
         {
             return;

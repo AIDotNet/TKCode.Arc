@@ -237,10 +237,7 @@ public partial class GenerationStats : TemplatedControl
         else if (change.Property == SimulationProperty)
         {
             var old = change.GetOldValue<GenerationStatsSimulation?>();
-            if (old is not null)
-            {
-                old.Changed -= OnDataChanged;
-            }
+            old?.Changed -= OnDataChanged;
             var simulation = change.GetNewValue<GenerationStatsSimulation?>();
             if (simulation is not null)
             {

@@ -90,10 +90,7 @@ internal sealed class AgentRunStepView : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_header is not null)
-        {
-            _header.Click -= OnHeaderClick;
-        }
+        _header?.Click -= OnHeaderClick;
         base.OnApplyTemplate(e);
         _header = e.NameScope.Find<AgentRunStepHeader>(HeaderPart);
         _detail = e.NameScope.Find<AiCollapsible>(DetailPart);
@@ -101,20 +98,14 @@ internal sealed class AgentRunStepView : TemplatedControl
         _presence = e.NameScope.Find<PresenceHost>(PresencePart);
         _spinner = null;
         _detailKey = null;
-        if (_header is not null)
-        {
-            _header.Click += OnHeaderClick;
-        }
+        _header?.Click += OnHeaderClick;
         if (_presence is not null && _isNew)
         {
             // Applied without motion first, then shown: the step rises in once it is in the window.
             _presence.IsPresent = false;
             Dispatcher.UIThread.Post(() =>
             {
-                if (_presence is not null)
-                {
-                    _presence.IsPresent = true;
-                }
+                _presence?.IsPresent = true;
             }, DispatcherPriority.Render);
         }
         _isNew = false;
@@ -208,10 +199,7 @@ internal sealed class AgentRunStepView : TemplatedControl
             ArcTokens.Bind(_spinner, ArcSpinner.ForegroundProperty, ArcDesignTokenKind.Accent);
             _markerHost.Children.Add(_spinner);
         }
-        if (_spinner is not null)
-        {
-            _spinner.IsVisible = running;
-        }
+        _spinner?.IsVisible = running;
     }
 
     #region Detail

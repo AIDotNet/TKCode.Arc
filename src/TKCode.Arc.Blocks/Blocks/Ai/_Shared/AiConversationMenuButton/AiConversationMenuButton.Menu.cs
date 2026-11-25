@@ -92,10 +92,7 @@ internal partial class AiConversationMenuButton
         {
             Focus(method);
         }
-        if (_popup is not null)
-        {
-            _popup.IsOpen = false;
-        }
+        _popup?.IsOpen = false;
     }
 
     private void EnsureMenu()
@@ -474,10 +471,7 @@ internal partial class AiConversationMenuButton
         var next = observe ? Conversations as INotifyCollectionChanged : null;
         if (!ReferenceEquals(next, _observedConversations))
         {
-            if (_observedConversations is not null)
-            {
-                _observedConversations.CollectionChanged -= OnConversationCollectionChanged;
-            }
+            _observedConversations?.CollectionChanged -= OnConversationCollectionChanged;
             _observedConversations = next;
             if (next is not null)
             {

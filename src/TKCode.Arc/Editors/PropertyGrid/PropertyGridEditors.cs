@@ -65,10 +65,7 @@ internal static class PropertyGridEditors
             {
                 return;
             }
-            if (_row is not null)
-            {
-                _row.PropertyChanged -= OnRowChanged;
-            }
+            _row?.PropertyChanged -= OnRowChanged;
             _row = row;
             if (row is null)
             {

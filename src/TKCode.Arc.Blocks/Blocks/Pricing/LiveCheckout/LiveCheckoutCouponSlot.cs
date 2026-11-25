@@ -138,14 +138,8 @@ internal sealed class LiveCheckoutCouponSlot : TemplatedControl
         {
             _chipPresence = new LiveCheckoutPresence(_chip, scale: 0.92, blur: 4, visible: State == LiveCheckoutCouponState.Applied);
         }
-        if (_apply is not null)
-        {
-            _apply.Click += OnApply;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemove;
-        }
+        _apply?.Click += OnApply;
+        _remove?.Click += OnRemove;
         if (_code is not null)
         {
             _code.KeyDown += OnCodeKeyDown;
@@ -157,18 +151,9 @@ internal sealed class LiveCheckoutCouponSlot : TemplatedControl
 
     private void Detach()
     {
-        if (_add is not null)
-        {
-            _add.Click -= OnAdd;
-        }
-        if (_apply is not null)
-        {
-            _apply.Click -= OnApply;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemove;
-        }
+        _add?.Click -= OnAdd;
+        _apply?.Click -= OnApply;
+        _remove?.Click -= OnRemove;
         if (_code is not null)
         {
             _code.KeyDown -= OnCodeKeyDown;
@@ -196,10 +181,7 @@ internal sealed class LiveCheckoutCouponSlot : TemplatedControl
             _apply.IsBusy = IsChecking;
             _apply.IsEnabled = IsChecking || !string.IsNullOrWhiteSpace(_code?.Text);
         }
-        if (_code is not null)
-        {
-            _code.IsReadOnly = IsChecking;
-        }
+        _code?.IsReadOnly = IsChecking;
     }
 
     private void OnAdd(object? sender, RoutedEventArgs e) => Open(true);
@@ -317,10 +299,7 @@ internal sealed class LiveCheckoutCouponSlot : TemplatedControl
         {
             ErrorText = message;
         }
-        if (_code is not null)
-        {
-            _code.IsInvalid = !string.IsNullOrEmpty(message);
-        }
+        _code?.IsInvalid = !string.IsNullOrEmpty(message);
         _errorRow?.SetOpen(!string.IsNullOrEmpty(message), animate);
     }
 

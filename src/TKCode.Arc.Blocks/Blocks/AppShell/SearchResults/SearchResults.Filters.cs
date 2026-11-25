@@ -82,10 +82,7 @@ public partial class SearchResults
             _chipBar.ChipRemoved += OnChipRemoved;
             _chipBar.ClearAllRequested += OnClearAllRequested;
         }
-        if (_filtersButton is not null)
-        {
-            _filtersButton.Click += OnFiltersButtonClick;
-        }
+        _filtersButton?.Click += OnFiltersButtonClick;
     }
 
     private void DetachFilters()
@@ -100,10 +97,7 @@ public partial class SearchResults
             _chipBar.ChipRemoved -= OnChipRemoved;
             _chipBar.ClearAllRequested -= OnClearAllRequested;
         }
-        if (_filtersButton is not null)
-        {
-            _filtersButton.Click -= OnFiltersButtonClick;
-        }
+        _filtersButton?.Click -= OnFiltersButtonClick;
         _filtersPresence?.Dispose();
         _filtersPresence = null;
         _filtersSurface = null;

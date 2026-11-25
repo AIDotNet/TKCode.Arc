@@ -378,10 +378,7 @@ public partial class PiiRedaction
     {
         foreach (var n in new[] { _flowYou, _flowGuard, _flowModel })
         {
-            if (n is not null)
-            {
-                n.IsActive = ReferenceEquals(n, node);
-            }
+            n?.IsActive = ReferenceEquals(n, node);
         }
     }
 
@@ -391,10 +388,7 @@ public partial class PiiRedaction
         _hopIn?.Stop();
         foreach (var c in new[] { _flowOut, _flowIn })
         {
-            if (c is not null)
-            {
-                c.IsDotVisible = false;
-            }
+            c?.IsDotVisible = false;
         }
     }
 

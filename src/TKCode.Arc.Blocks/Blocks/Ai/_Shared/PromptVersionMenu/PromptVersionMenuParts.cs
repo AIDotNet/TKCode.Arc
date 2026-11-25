@@ -196,10 +196,7 @@ internal sealed class PromptVersionRow : TemplatedControl
 
     private void ApplyMarkerRoom()
     {
-        if (_meta is not null)
-        {
-            _meta.Margin = new Thickness(0, 0, MarkerRoom, 0);
-        }
+        _meta?.Margin = new Thickness(0, 0, MarkerRoom, 0);
     }
 
     protected override void OnPointerPressed(PointerPressedEventArgs e)
@@ -372,15 +369,9 @@ internal sealed class PromptVersionStatus : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndoClick;
-        }
+        _undo?.Click -= OnUndoClick;
         _undo = e.NameScope.Find<Button>(UndoPart);
-        if (_undo is not null)
-        {
-            _undo.Click += OnUndoClick;
-        }
+        _undo?.Click += OnUndoClick;
     }
 
     private void OnUndoClick(object? sender, RoutedEventArgs e)

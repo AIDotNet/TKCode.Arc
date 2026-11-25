@@ -149,14 +149,13 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
         }
     }
 
-    private string _valueText = string.Empty;
 
     /// <summary>The formatted value (readout, tag and spoken value).</summary>
     internal string ValueText
     {
-        get => _valueText;
-        private set => SetAndRaise(ValueTextProperty, ref _valueText, value);
-    }
+        get;
+        private set => SetAndRaise(ValueTextProperty, ref field, value);
+    } = string.Empty;
 
     /// <summary>Runs once a drag is released, a key changes the value or a mark label is clicked.</summary>
     public event EventHandler<SliderValueCommittedEventArgs>? ValueCommitted
@@ -333,10 +332,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
                 UpdateBubble();
             };
         }
-        if (_markLabels is not null)
-        {
-            _markLabels.Host = this;
-        }
+        _markLabels?.Host = this;
         _goal = double.NaN;
         SyncThumb(animate: false);
         UpdateThumb();
@@ -454,10 +450,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     private void UpdateText()
     {
         ValueText = FormatValue(ClampToRange(Value));
-        if (_tagText is not null)
-        {
-            _tagText.Text = ValueText;
-        }
+        _tagText?.Text = ValueText;
         if (_rail is not null)
         {
             AutomationProperties.SetItemStatus(_rail.Thumbs[0], ValueText);
@@ -491,10 +484,7 @@ public class ElasticSlider : RangeBase, ISliderRailOwner, ISliderThumbHost, ISli
     {
         _pulses = new MotionValue<double>?[_marks?.Count ?? 0];
         _markLabels?.Refresh();
-        if (_markLabels is not null)
-        {
-            _markLabels.IsVisible = _markLabels.HasLabels;
-        }
+        _markLabels?.IsVisible = _markLabels.HasLabels;
         PseudoClasses.Set(MarksPseudoClass, _markLabels?.HasLabels ?? false);
         _rail?.InvalidateVisual();
     }

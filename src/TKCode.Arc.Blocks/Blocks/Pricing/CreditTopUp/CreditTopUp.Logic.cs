@@ -114,34 +114,13 @@ public partial class CreditTopUp
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_packs is not null)
-        {
-            _packs.Picked -= OnPackPicked;
-        }
-        if (_thresholds is not null)
-        {
-            _thresholds.Picked -= OnThresholdPicked;
-        }
-        if (_slider is not null)
-        {
-            _slider.ValueChanged -= OnSliderChanged;
-        }
-        if (_autoSwitch is not null)
-        {
-            _autoSwitch.IsCheckedChanged -= OnAutoSwitched;
-        }
-        if (_change is not null)
-        {
-            _change.Click -= OnChangeClick;
-        }
-        if (_buy is not null)
-        {
-            _buy.Click -= OnBuyClick;
-        }
-        if (_chart is not null)
-        {
-            _chart.PropertyChanged -= OnChartPropertyChanged;
-        }
+        _packs?.Picked -= OnPackPicked;
+        _thresholds?.Picked -= OnThresholdPicked;
+        _slider?.ValueChanged -= OnSliderChanged;
+        _autoSwitch?.IsCheckedChanged -= OnAutoSwitched;
+        _change?.Click -= OnChangeClick;
+        _buy?.Click -= OnBuyClick;
+        _chart?.PropertyChanged -= OnChartPropertyChanged;
 
         var scope = e.NameScope;
         _card = scope.Find<Border>("PART_Card");
@@ -170,34 +149,13 @@ public partial class CreditTopUp
         _buy = scope.Find<Button>(BuyPart);
         _status = scope.Find<ArcContentSwap>(StatusPart);
 
-        if (_packs is not null)
-        {
-            _packs.Picked += OnPackPicked;
-        }
-        if (_thresholds is not null)
-        {
-            _thresholds.Picked += OnThresholdPicked;
-        }
-        if (_slider is not null)
-        {
-            _slider.ValueChanged += OnSliderChanged;
-        }
-        if (_autoSwitch is not null)
-        {
-            _autoSwitch.IsCheckedChanged += OnAutoSwitched;
-        }
-        if (_change is not null)
-        {
-            _change.Click += OnChangeClick;
-        }
-        if (_buy is not null)
-        {
-            _buy.Click += OnBuyClick;
-        }
-        if (_chart is not null)
-        {
-            _chart.PropertyChanged += OnChartPropertyChanged;
-        }
+        _packs?.Picked += OnPackPicked;
+        _thresholds?.Picked += OnThresholdPicked;
+        _slider?.ValueChanged += OnSliderChanged;
+        _autoSwitch?.IsCheckedChanged += OnAutoSwitched;
+        _change?.Click += OnChangeClick;
+        _buy?.Click += OnBuyClick;
+        _chart?.PropertyChanged += OnChartPropertyChanged;
 
         _healthKey = _daysKey = _chartKey = _cardKey = _statusKey = _buyKey = _bonusKey = null;
         _bonusFigure = null;
@@ -212,10 +170,7 @@ public partial class CreditTopUp
         if (p == BalanceProperty)
         {
             RecomputeHealth();
-            if (_balance is not null)
-            {
-                _balance.Value = Math.Max(0, Balance);
-            }
+            _balance?.Value = Math.Max(0, Balance);
             UpdateHealthAndDays();
         }
         else if (p == UsageProperty)
@@ -314,28 +269,16 @@ public partial class CreditTopUp
         PseudoClasses.Set(AutoOffPseudoClass, !IsAutoTopUpEnabled);
         var labels = Labels;
         AutomationProperties.SetName(this, labels.CardName);
-        if (_balanceTitle is not null)
-        {
-            _balanceTitle.Text = labels.BalanceTitle;
-        }
+        _balanceTitle?.Text = labels.BalanceTitle;
         if (_balance is not null)
         {
             _balance.Culture = Culture;
             _balance.Unit = labels.Unit;
             _balance.Value = Math.Max(0, Balance);
         }
-        if (_addTitle is not null)
-        {
-            _addTitle.Text = labels.AddTitle;
-        }
-        if (_autoTitle is not null)
-        {
-            _autoTitle.Text = labels.AutoTitle;
-        }
-        if (_autoSubtitle is not null)
-        {
-            _autoSubtitle.Text = labels.AutoSubtitle;
-        }
+        _addTitle?.Text = labels.AddTitle;
+        _autoTitle?.Text = labels.AutoTitle;
+        _autoSubtitle?.Text = labels.AutoSubtitle;
         if (_autoSwitch is not null)
         {
             AutomationProperties.SetName(_autoSwitch, labels.AutoTitle);
@@ -343,14 +286,8 @@ public partial class CreditTopUp
             _autoSwitch.IsChecked = IsAutoTopUpEnabled;
             _syncing = false;
         }
-        if (_thresholdTitle is not null)
-        {
-            _thresholdTitle.Text = labels.ThresholdTitle;
-        }
-        if (_change is not null)
-        {
-            _change.Content = labels.Change;
-        }
+        _thresholdTitle?.Text = labels.ThresholdTitle;
+        _change?.Content = labels.Change;
         UpdateHealthAndDays();
         UpdateChart();
         UpdateRate();
@@ -507,10 +444,7 @@ public partial class CreditTopUp
     {
         var usage = Usage;
         var has = usage is { Count: > 0 };
-        if (_chartBox is not null)
-        {
-            _chartBox.IsVisible = has;
-        }
+        _chartBox?.IsVisible = has;
         if (_chart is null)
         {
             return;
@@ -768,10 +702,7 @@ public partial class CreditTopUp
             _slider.Value = SelectedCredits;
             _syncing = false;
         }
-        if (_packs is not null)
-        {
-            _packs.SelectedIndex = CreditTopUpMath.PackIndex(Packs, SelectedCredits);
-        }
+        _packs?.SelectedIndex = CreditTopUpMath.PackIndex(Packs, SelectedCredits);
         if (_total is not null)
         {
             var (prefix, suffix) = Split(labels.TotalFormat);

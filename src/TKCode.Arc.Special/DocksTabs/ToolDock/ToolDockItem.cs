@@ -543,10 +543,7 @@ public class ToolDockItem : TemplatedControl
                 return;
             }
             _pressTransform = new ScaleTransform();
-            if (_face is not null)
-            {
-                _face.RenderTransform = _pressTransform;
-            }
+            _face?.RenderTransform = _pressTransform;
             _press = new MotionValue<double>(this, 1, MotionVectors.Double);
             _press.Changed += value =>
             {
@@ -634,10 +631,7 @@ public class ToolDockItem : TemplatedControl
                 return;
             }
             _tintTransform = new TranslateTransform();
-            if (_tint is not null)
-            {
-                _tint.RenderTransform = _tintTransform;
-            }
+            _tint?.RenderTransform = _tintTransform;
             _tintOffset = new MotionValue<double>(this, 0, MotionVectors.Double);
             _tintOffset.Changed += value => _tintTransform!.X = value;
         }

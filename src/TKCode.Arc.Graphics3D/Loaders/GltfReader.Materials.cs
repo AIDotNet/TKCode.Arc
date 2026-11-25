@@ -322,7 +322,7 @@ internal sealed partial class GltfReader
         return material;
     }
 
-    private static bool HasAnyExtension(JsonElement element, params string[] names)
+    private static bool HasAnyExtension(JsonElement element, params ReadOnlySpan<string> names)
     {
         foreach (var name in names)
         {
@@ -420,7 +420,7 @@ internal sealed partial class GltfReader
         }
     }
 
-    private void WarnTextures(JsonElement extension, string what, params string[] properties)
+    private void WarnTextures(JsonElement extension, string what, params ReadOnlySpan<string> properties)
     {
         foreach (var property in properties)
         {

@@ -425,18 +425,9 @@ public partial class Sidebar : TemplatedControl
             _list.Arranged = null;
             _list.PropertyChanged -= OnListPropertyChanged;
         }
-        if (_collapseButton is not null)
-        {
-            _collapseButton.Click -= OnCollapseButtonClick;
-        }
-        if (_filterCollapseButton is not null)
-        {
-            _filterCollapseButton.Click -= OnCollapseButtonClick;
-        }
-        if (_filterButton is not null)
-        {
-            _filterButton.Click -= OnFilterButtonClick;
-        }
+        _collapseButton?.Click -= OnCollapseButtonClick;
+        _filterCollapseButton?.Click -= OnCollapseButtonClick;
+        _filterButton?.Click -= OnFilterButtonClick;
         if (_filter is not null)
         {
             _filter.SearchSubmitted -= OnFilterSubmitted;
@@ -460,18 +451,9 @@ public partial class Sidebar : TemplatedControl
             _list.Arranged = OnListArranged;
             _list.PropertyChanged += OnListPropertyChanged;
         }
-        if (_collapseButton is not null)
-        {
-            _collapseButton.Click += OnCollapseButtonClick;
-        }
-        if (_filterCollapseButton is not null)
-        {
-            _filterCollapseButton.Click += OnCollapseButtonClick;
-        }
-        if (_filterButton is not null)
-        {
-            _filterButton.Click += OnFilterButtonClick;
-        }
+        _collapseButton?.Click += OnCollapseButtonClick;
+        _filterCollapseButton?.Click += OnCollapseButtonClick;
+        _filterButton?.Click += OnFilterButtonClick;
         if (_filter is not null)
         {
             _filter.SearchSubmitted += OnFilterSubmitted;
@@ -547,10 +529,7 @@ public partial class Sidebar : TemplatedControl
         // The filter row keeps the button's room while the sidebar is open, so the box does not resize when it fades on the rail.
         ConfigureVisibility(_collapseButton, headerButton);
         ConfigureVisibility(_filterCollapseButton, beside);
-        if (_headerRow is not null)
-        {
-            _headerRow.IsVisible = Header is not null || headerButton;
-        }
+        _headerRow?.IsVisible = Header is not null || headerButton;
         if (_filter is not null)
         {
             // On the rail the filter gives way to a search button in the same place (nothing below it moves).
@@ -580,10 +559,7 @@ public partial class Sidebar : TemplatedControl
 
     private static void ConfigureVisibility(SidebarIconButton? button, bool visible)
     {
-        if (button is not null)
-        {
-            button.IsVisible = visible;
-        }
+        button?.IsVisible = visible;
     }
 
     #endregion
@@ -1515,10 +1491,7 @@ public partial class Sidebar : TemplatedControl
                 }
             }
         }
-        if (_noMatches is not null)
-        {
-            _noMatches.IsVisible = filtering && !anyShown;
-        }
+        _noMatches?.IsVisible = filtering && !anyShown;
         UpdateSelectionVisuals();
         UpdateMarker(animate);
         UpdateTabStops();

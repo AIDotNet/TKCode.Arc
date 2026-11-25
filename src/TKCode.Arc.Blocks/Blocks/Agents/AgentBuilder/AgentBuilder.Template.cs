@@ -127,22 +127,10 @@ public partial class AgentBuilder
 
     private void Wire()
     {
-        if (_nameInput is not null)
-        {
-            _nameInput.TextChanged += OnFieldTextChanged;
-        }
-        if (_descriptionInput is not null)
-        {
-            _descriptionInput.TextChanged += OnFieldTextChanged;
-        }
-        if (_instructions is not null)
-        {
-            _instructions.TextChanged += OnFieldTextChanged;
-        }
-        if (_model is not null)
-        {
-            _model.PropertyChanged += OnModelPickerPropertyChanged;
-        }
+        _nameInput?.TextChanged += OnFieldTextChanged;
+        _descriptionInput?.TextChanged += OnFieldTextChanged;
+        _instructions?.TextChanged += OnFieldTextChanged;
+        _model?.PropertyChanged += OnModelPickerPropertyChanged;
         if (_linkInput is not null)
         {
             _linkInput.AddHandler(KeyDownEvent, OnLinkKeyDown, RoutingStrategies.Tunnel);
@@ -165,22 +153,10 @@ public partial class AgentBuilder
 
     private void Unwire()
     {
-        if (_nameInput is not null)
-        {
-            _nameInput.TextChanged -= OnFieldTextChanged;
-        }
-        if (_descriptionInput is not null)
-        {
-            _descriptionInput.TextChanged -= OnFieldTextChanged;
-        }
-        if (_instructions is not null)
-        {
-            _instructions.TextChanged -= OnFieldTextChanged;
-        }
-        if (_model is not null)
-        {
-            _model.PropertyChanged -= OnModelPickerPropertyChanged;
-        }
+        _nameInput?.TextChanged -= OnFieldTextChanged;
+        _descriptionInput?.TextChanged -= OnFieldTextChanged;
+        _instructions?.TextChanged -= OnFieldTextChanged;
+        _model?.PropertyChanged -= OnModelPickerPropertyChanged;
         if (_linkInput is not null)
         {
             _linkInput.RemoveHandler(KeyDownEvent, OnLinkKeyDown);
@@ -409,14 +385,8 @@ public partial class AgentBuilder
         SetText(ToolsHintPart, labels.ToolsHint);
         SetText(KnowledgeTitlePart, labels.KnowledgeTitle);
         SetText(KnowledgeHintPart, labels.KnowledgeHint);
-        if (_noSources is not null)
-        {
-            _noSources.Text = labels.NoSources;
-        }
-        if (_staleText is not null)
-        {
-            _staleText.Text = labels.StaleNotice;
-        }
+        _noSources?.Text = labels.NoSources;
+        _staleText?.Text = labels.StaleNotice;
         if (_nameInput is not null)
         {
             _nameInput.Label = labels.NameLabel;
@@ -443,22 +413,10 @@ public partial class AgentBuilder
             _linkInput.Placeholder = labels.LinkPlaceholder;
             AutomationProperties.SetName(_linkInput, labels.LinkName);
         }
-        if (_addLink is not null)
-        {
-            _addLink.Content = labels.AddLink;
-        }
-        if (_upload is not null)
-        {
-            _upload.Content = labels.Upload;
-        }
-        if (_save is not null)
-        {
-            _save.Content = labels.Save;
-        }
-        if (_discard is not null)
-        {
-            _discard.Content = labels.Discard;
-        }
+        _addLink?.Content = labels.AddLink;
+        _upload?.Content = labels.Upload;
+        _save?.Content = labels.Save;
+        _discard?.Content = labels.Discard;
         if (_restart is not null)
         {
             _restart.Content = labels.Restart;
@@ -473,10 +431,7 @@ public partial class AgentBuilder
             AutomationProperties.SetName(_chatCard, labels.TestTitle);
             AutomationProperties.SetHelpText(_chatCard, labels.TestHint);
         }
-        if (_chat is not null)
-        {
-            _chat.Labels = labels.Chat;
-        }
+        _chat?.Labels = labels.Chat;
         foreach (var row in _sourceRows.Values)
         {
             row.SetLabels(labels, Culture);
@@ -497,14 +452,8 @@ public partial class AgentBuilder
         var labels = Labels;
         var culture = Culture;
         var name = string.IsNullOrWhiteSpace(AgentName) ? labels.UntitledAgent : AgentName.Trim();
-        if (_title is not null)
-        {
-            _title.Text = name;
-        }
-        if (_initial is not null)
-        {
-            _initial.Text = string.IsNullOrWhiteSpace(AgentName) ? "?" : AgentName.Trim()[..1].ToUpper(culture);
-        }
+        _title?.Text = name;
+        _initial?.Text = string.IsNullOrWhiteSpace(AgentName) ? "?" : AgentName.Trim()[..1].ToUpper(culture);
         if (_subtitle is not null)
         {
             _subtitle.Text = AgentDescription;
@@ -540,32 +489,14 @@ public partial class AgentBuilder
         }
 
         var nameMissing = string.IsNullOrWhiteSpace(AgentName);
-        if (_nameInput is not null)
-        {
-            _nameInput.ErrorMessage = nameMissing ? labels.NameRequired : null;
-        }
+        _nameInput?.ErrorMessage = nameMissing ? labels.NameRequired : null;
         var characters = Instructions.Length;
-        if (_instructionsCount is not null)
-        {
-            _instructionsCount.Text = labels.InstructionsCount(characters, EstimateTokens(Instructions), culture);
-        }
-        if (_instructions is not null)
-        {
-            _instructions.ErrorMessage = characters > InstructionsMaxLength ? labels.InstructionsTooLong(InstructionsMaxLength, culture) : null;
-        }
+        _instructionsCount?.Text = labels.InstructionsCount(characters, EstimateTokens(Instructions), culture);
+        _instructions?.ErrorMessage = characters > InstructionsMaxLength ? labels.InstructionsTooLong(InstructionsMaxLength, culture) : null;
 
-        if (_toolsCount is not null)
-        {
-            _toolsCount.Text = labels.ToolsCount(Tools.Count(t => t.IsOn), Tools.Count);
-        }
-        if (_knowledgeCount is not null)
-        {
-            _knowledgeCount.Text = labels.KnowledgeCount(Sources.Count);
-        }
-        if (_noSources is not null)
-        {
-            _noSources.IsVisible = Sources.Count == 0;
-        }
+        _toolsCount?.Text = labels.ToolsCount(Tools.Count(t => t.IsOn), Tools.Count);
+        _knowledgeCount?.Text = labels.KnowledgeCount(Sources.Count);
+        _noSources?.IsVisible = Sources.Count == 0;
 
         string status;
         if (IsSaving)
@@ -590,15 +521,9 @@ public partial class AgentBuilder
             _save.IsEnabled = IsDirty && CanSave(allowClean: false);
             _save.IsLoading = IsSaving && !_publishing;
         }
-        if (_discard is not null)
-        {
-            _discard.IsEnabled = IsDirty && !IsSaving;
-        }
+        _discard?.IsEnabled = IsDirty && !IsSaving;
 
-        if (_staleHost is not null)
-        {
-            _staleHost.IsPresent = IsTestStale;
-        }
+        _staleHost?.IsPresent = IsTestStale;
         if (_chat is { } chat)
         {
             chat.GreetingText = labels.TestGreeting(name);
@@ -625,10 +550,7 @@ public partial class AgentBuilder
 
     private void UpdateUploadVisibility()
     {
-        if (_upload is not null)
-        {
-            _upload.IsVisible = PickFilesHandler is not null || TopLevel.GetTopLevel(this)?.StorageProvider.CanOpen == true;
-        }
+        _upload?.IsVisible = PickFilesHandler is not null || TopLevel.GetTopLevel(this)?.StorageProvider.CanOpen == true;
     }
 
     #endregion

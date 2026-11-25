@@ -178,15 +178,9 @@ internal sealed class ShowpieceZoomControls : TemplatedControl
 
     private void Hook(ref ShowpieceZoomButton? field, ShowpieceZoomButton? button)
     {
-        if (field is not null)
-        {
-            field.Click -= OnButtonClick;
-        }
+        field?.Click -= OnButtonClick;
         field = button;
-        if (button is not null)
-        {
-            button.Click += OnButtonClick;
-        }
+        button?.Click += OnButtonClick;
     }
 
     private void OnButtonClick(object? sender, RoutedEventArgs e)

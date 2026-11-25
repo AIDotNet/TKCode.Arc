@@ -165,14 +165,8 @@ public abstract class FilterBox : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_toggle is not null)
-        {
-            _toggle.IsCheckedChanged -= OnToggleChanged;
-        }
-        if (_operator is not null)
-        {
-            _operator.SelectionChanged -= OnOperatorPicked;
-        }
+        _toggle?.IsCheckedChanged -= OnToggleChanged;
+        _operator?.SelectionChanged -= OnOperatorPicked;
 
         _layout = e.NameScope.Find<Grid>(LayoutPart);
         _toggle = e.NameScope.Find<Checkbox>(TogglePart);

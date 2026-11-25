@@ -556,23 +556,14 @@ public class ImageCompare : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_beforeImage is not null)
-        {
-            _beforeImage.PropertyChanged -= OnImagePropertyChanged;
-        }
-        if (_afterImage is not null)
-        {
-            _afterImage.PropertyChanged -= OnImagePropertyChanged;
-        }
+        _beforeImage?.PropertyChanged -= OnImagePropertyChanged;
+        _afterImage?.PropertyChanged -= OnImagePropertyChanged;
         if (_handle is not null)
         {
             _handle.Owner = null;
             _handle.RenderTransform = null;
         }
-        if (_beforeLayer is not null)
-        {
-            _beforeLayer.Clip = null;
-        }
+        _beforeLayer?.Clip = null;
         _frame = e.NameScope.Find<Border>(FramePart);
         _beforeLayer = e.NameScope.Find<Panel>(BeforeLayerPart);
         _beforeChip = e.NameScope.Find<Control>(BeforeChipPart);
@@ -582,10 +573,7 @@ public class ImageCompare : TemplatedControl
         _handle = e.NameScope.Find<ImageCompareHandle>(HandlePart);
         _beforeImage = e.NameScope.Find<ArcImage>(BeforeImagePart);
         _afterImage = e.NameScope.Find<ArcImage>(AfterImagePart);
-        if (_beforeLayer is not null)
-        {
-            _beforeLayer.Clip = _clip;
-        }
+        _beforeLayer?.Clip = _clip;
         if (_handle is not null)
         {
             _handle.Owner = this;
@@ -593,14 +581,8 @@ public class ImageCompare : TemplatedControl
             _handle.RenderTransformOrigin = RelativePoint.TopLeft;
             AutomationProperties.SetName(_handle, Label);
         }
-        if (_beforeImage is not null)
-        {
-            _beforeImage.PropertyChanged += OnImagePropertyChanged;
-        }
-        if (_afterImage is not null)
-        {
-            _afterImage.PropertyChanged += OnImagePropertyChanged;
-        }
+        _beforeImage?.PropertyChanged += OnImagePropertyChanged;
+        _afterImage?.PropertyChanged += OnImagePropertyChanged;
         _theta.Jump(Orientation == Orientation.Vertical ? 90 : 0);
         UpdateImageStates(initial: true);
     }
@@ -718,14 +700,8 @@ public class ImageCompare : TemplatedControl
             _beforeChip.Opacity = across * ImageCompareMath.Fade(p / 100 * m.Width - (inset + _beforeChipRect.Width + 8)) +
                                   down * ImageCompareMath.Fade(p / 100 * m.Height - (inset + _beforeChipRect.Height + 8));
         }
-        if (_afterChip is not null)
-        {
-            _afterChip.Opacity = across * ImageCompareMath.Fade(m.Width - inset - _afterChipRect.Width - 8 - p / 100 * m.Width);
-        }
-        if (_afterBottomChip is not null)
-        {
-            _afterBottomChip.Opacity = down * ImageCompareMath.Fade(m.Height - inset - _afterChipRect.Height - 8 - p / 100 * m.Height);
-        }
+        _afterChip?.Opacity = across * ImageCompareMath.Fade(m.Width - inset - _afterChipRect.Width - 8 - p / 100 * m.Width);
+        _afterBottomChip?.Opacity = down * ImageCompareMath.Fade(m.Height - inset - _afterChipRect.Height - 8 - p / 100 * m.Height);
     }
 
     #endregion

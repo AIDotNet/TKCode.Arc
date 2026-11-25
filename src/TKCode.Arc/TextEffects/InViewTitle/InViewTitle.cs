@@ -120,13 +120,12 @@ public class InViewTitle : Control
     public static readonly DirectProperty<InViewTitle, bool> IsRevealedProperty =
         AvaloniaProperty.RegisterDirect<InViewTitle, bool>(nameof(IsRevealed), o => o.IsRevealed);
 
-    private bool _isRevealed;
 
     /// <summary>True once the title is (being) shown; false while it waits to scroll into view.</summary>
     public bool IsRevealed
     {
-        get => _isRevealed;
-        private set => SetAndRaise(IsRevealedProperty, ref _isRevealed, value);
+        get;
+        private set => SetAndRaise(IsRevealedProperty, ref field, value);
     }
 
     /// <summary>The trigger: 45% of the title visible (Arc <c>amount: .45</c>).</summary>

@@ -102,10 +102,7 @@ public partial class DocumentExtraction
         {
             table.LinkedPath = linked is not null && (linked == key || linked.StartsWith(key + ".", StringComparison.Ordinal)) ? linked : null;
         }
-        if (_json is not null)
-        {
-            _json.LinkedPath = SelectedTab == ExtractionTab.Json ? linked : null;
-        }
+        _json?.LinkedPath = SelectedTab == ExtractionTab.Json ? linked : null;
         if (previous is not null && _pathSpan.TryGetValue(previous, out var oldSpan))
         {
             PaintSpan(oldSpan);
@@ -614,10 +611,7 @@ public partial class DocumentExtraction
         {
             var y = _fieldsScroll.Offset.Y;
             _statusShift.Y = y;
-            if (_status is not null)
-            {
-                _status.ShowsEdge = y > 0.5;
-            }
+            _status?.ShowsEdge = y > 0.5;
         }
     }
 

@@ -553,10 +553,7 @@ internal sealed class FileDropzoneRow : TemplatedControl
         PseudoClasses.Set(FailedPseudoClass, status == FileDropzoneStatus.Failed);
         CanRetry = status == FileDropzoneStatus.Failed && CanRetryUploads && Item.IsRetryable;
         var target = Target();
-        if (_bar is not null)
-        {
-            _bar.Value = Math.Round(target);
-        }
+        _bar?.Value = Math.Round(target);
         if (status is FileDropzoneStatus.Uploading or FileDropzoneStatus.Uploaded)
         {
             // Every upload starts from an empty bar, even a retry that failed halfway.
@@ -589,10 +586,7 @@ internal sealed class FileDropzoneRow : TemplatedControl
 
     private void OnProgress(double value)
     {
-        if (_bar is not null)
-        {
-            _bar.Fill = value;
-        }
+        _bar?.Fill = value;
         if (_percent is not null)
         {
             var text = $"{Math.Round(Math.Clamp(value, 0, 100)).ToString(System.Globalization.CultureInfo.InvariantCulture)}%";

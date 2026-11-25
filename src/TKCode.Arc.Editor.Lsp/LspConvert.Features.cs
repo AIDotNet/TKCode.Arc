@@ -51,15 +51,24 @@ internal static partial class LspConvert
 
         CompletionItemRanges range;
         string insertText;
-        if (item.TextEdit is { ValueKind: JsonValueKind.Object } textEdit)
+        if (item.TextEdit is { } textEdit)
         {
-            insertText = GetString(textEdit, "newText") ?? item.Label;
-            range = ToEditRange(textEdit) ?? defaultRange;
+            (insertText, range) = textEdit switch
+            {
+                LspTextEdit edit => (edit.NewText, (CompletionItemRanges)ToRange(edit.Range)),
+                LspInsertReplaceEdit edit => (edit.NewText, new CompletionItemRanges(ToRange(edit.Insert), ToRange(edit.Replace))),
+                _ => (item.Label, defaultRange),
+            };
         }
-        else if (defaults?.EditRange is { ValueKind: JsonValueKind.Object } editRange)
+        else if (defaults?.EditRange is { } editRange)
         {
             insertText = item.TextEditText ?? item.InsertText ?? item.Label;
-            range = ToEditRange(editRange) ?? defaultRange;
+            range = editRange switch
+            {
+                LspRange single => ToRange(single),
+                LspInsertReplaceRange pair => new CompletionItemRanges(ToRange(pair.Insert), ToRange(pair.Replace)),
+                _ => defaultRange,
+            };
         }
         else
         {
@@ -86,30 +95,6 @@ internal static partial class LspConvert
         };
     }
 
-    // TextEdit { range } | InsertReplaceEdit { insert, replace } | Range | { insert, replace }.
-    private static CompletionItemRanges? ToEditRange(JsonElement element)
-    {
-        if (element.TryGetProperty("insert", out var insert) && element.TryGetProperty("replace", out var replace))
-        {
-            var insertRange = insert.Deserialize(s_json.LspRange);
-            var replaceRange = replace.Deserialize(s_json.LspRange);
-            if (insertRange is not null && replaceRange is not null)
-            {
-                return new CompletionItemRanges(ToRange(insertRange), ToRange(replaceRange));
-            }
-            return null;
-        }
-        if (element.TryGetProperty("range", out var rangeElement))
-        {
-            return rangeElement.Deserialize(s_json.LspRange) is { } range ? ToRange(range) : null;
-        }
-        if (element.TryGetProperty("start", out _))
-        {
-            return element.Deserialize(s_json.LspRange) is { } range ? ToRange(range) : null;
-        }
-        return null;
-    }
-
     // ---- hover, signature help ----
 
     public static Hover? ToHover(LspHover? hover)
@@ -133,16 +118,12 @@ internal static partial class LspConvert
             signature.Parameters?.Select(static parameter =>
             {
                 var info = new ParameterInformation { Documentation = ToDocumentation(parameter.Documentation) };
-                if (parameter.Label.ValueKind == JsonValueKind.String)
+                return parameter.Label switch
                 {
-                    return info with { Label = parameter.Label.GetString() };
-                }
-                if (parameter.Label.ValueKind == JsonValueKind.Array && parameter.Label.GetArrayLength() == 2
-                    && parameter.Label[0].TryGetInt32(out var start) && parameter.Label[1].TryGetInt32(out var end))
-                {
-                    return info with { LabelOffsets = (start, end) };
-                }
-                return info with { Label = string.Empty };
+                    string text => info with { Label = text },
+                    int[] { Length: 2 } offsets => info with { LabelOffsets = (offsets[0], offsets[1]) },
+                    _ => info with { Label = string.Empty },
+                };
             }).ToList() ?? [])
         {
             Documentation = ToDocumentation(signature.Documentation),
@@ -158,8 +139,8 @@ internal static partial class LspConvert
             ActiveParameter = signature.ActiveParameter,
             Parameters = signature.Parameters.Select(static parameter => new LspParameterInformation(
                 parameter.LabelOffsets is { } offsets
-                    ? JsonSerializer.SerializeToElement(new[] { offsets.Start, offsets.End }, s_json.Int32Array)
-                    : JsonSerializer.SerializeToElement(parameter.Label ?? string.Empty, s_json.String))
+                    ? new LspParameterLabel([offsets.Start, offsets.End])
+                    : new LspParameterLabel(parameter.Label ?? string.Empty))
             {
                 Documentation = FromDocumentation(parameter.Documentation),
             }).ToArray(),
@@ -172,55 +153,46 @@ internal static partial class LspConvert
     // ---- navigation ----
 
     /// <summary>Location | Location[] | LocationLink[] | null as links.</summary>
-    public static IReadOnlyList<LocationLink>? ToLocationLinks(JsonElement result)
+    public static IReadOnlyList<LocationLink>? ToLocationLinks(LspLocationResult? result)
     {
-        if (IsNull(result))
+        if (result is not { } value)
         {
             return null;
         }
-        var links = new List<LocationLink>();
-        if (result.ValueKind == JsonValueKind.Array)
+        switch (value)
         {
-            foreach (var item in result.EnumerateArray())
-            {
-                if (ToLocationLink(item) is { } link)
+            case LspLocation single:
+                return [ToLocation(single)];
+            case LspLocationLink singleLink:
+                return [ToLocationLink(singleLink)];
+            case LspLocationOrLink[] items:
+                var links = new List<LocationLink>(items.Length);
+                foreach (var item in items)
                 {
-                    links.Add(link);
+                    if (ToLocationLink(item) is { } link)
+                    {
+                        links.Add(link);
+                    }
                 }
-            }
+                return links;
+            default:
+                return null;
         }
-        else if (ToLocationLink(result) is { } single)
-        {
-            links.Add(single);
-        }
-        return links;
     }
 
-    private static LocationLink? ToLocationLink(JsonElement element)
+    private static LocationLink? ToLocationLink(LspLocationOrLink item) => item switch
     {
-        if (element.ValueKind != JsonValueKind.Object)
+        LspLocation location => ToLocation(location),
+        LspLocationLink link => ToLocationLink(link),
+        _ => null,
+    };
+
+    private static LocationLink ToLocationLink(LspLocationLink link) =>
+        new(ToUri(link.TargetUri), ToRange(link.TargetRange))
         {
-            return null;
-        }
-        if (element.TryGetProperty("targetUri", out _))
-        {
-            var link = element.Deserialize(s_json.LspLocationLink);
-            if (link is null)
-            {
-                return null;
-            }
-            return new LocationLink(ToUri(link.TargetUri), ToRange(link.TargetRange))
-            {
-                TargetSelectionRange = ToRange(link.TargetSelectionRange),
-                OriginSelectionRange = link.OriginSelectionRange is { } origin ? ToRange(origin) : null,
-            };
-        }
-        if (element.Deserialize(s_json.LspLocation) is not { } location)
-        {
-            return null;
-        }
-        return ToLocation(location);
-    }
+            TargetSelectionRange = ToRange(link.TargetSelectionRange),
+            OriginSelectionRange = link.OriginSelectionRange is { } origin ? ToRange(origin) : null,
+        };
 
     public static Location ToLocation(LspLocation location) => new(ToUri(location.Uri), ToRange(location.Range));
 
@@ -236,34 +208,28 @@ internal static partial class LspConvert
         }).ToList();
 
     /// <summary>DocumentSymbol[] (a tree) or SymbolInformation[] (flat, with container names).</summary>
-    public static IReadOnlyList<DocumentSymbol>? ToDocumentSymbols(JsonElement result)
+    public static IReadOnlyList<DocumentSymbol>? ToDocumentSymbols(LspDocumentSymbolItem[]? result)
     {
-        if (result.ValueKind != JsonValueKind.Array)
+        if (result is null)
         {
             return null;
         }
-        var symbols = new List<DocumentSymbol>();
-        foreach (var item in result.EnumerateArray())
+        var symbols = new List<DocumentSymbol>(result.Length);
+        foreach (var item in result)
         {
-            if (item.ValueKind != JsonValueKind.Object)
+            switch (item)
             {
-                continue;
-            }
-            if (item.TryGetProperty("location", out _))
-            {
-                if (item.Deserialize(s_json.LspSymbolInformation) is { } information)
-                {
+                case LspSymbolInformation information:
                     var range = ToRange(information.Location.Range);
                     symbols.Add(new DocumentSymbol(information.Name, string.Empty, ToSymbolKind(information.Kind), range, range)
                     {
                         Tags = ToSymbolTags(information.Tags, information.Deprecated),
                         ContainerName = information.ContainerName,
                     });
-                }
-            }
-            else if (item.Deserialize(s_json.LspDocumentSymbol) is { } symbol)
-            {
-                symbols.Add(ToDocumentSymbol(symbol));
+                    break;
+                case LspDocumentSymbol symbol:
+                    symbols.Add(ToDocumentSymbol(symbol));
+                    break;
             }
         }
         return symbols;
@@ -327,23 +293,10 @@ internal static partial class LspConvert
     // ---- editing ----
 
     /// <summary>A code action, or a bare command (which the engine shows as an action that runs it).</summary>
-    public static CodeAction? ToCodeAction(JsonElement element)
+    public static CodeAction? ToCodeAction(LspCodeActionOrCommand entry) => entry switch
     {
-        if (element.ValueKind != JsonValueKind.Object)
-        {
-            return null;
-        }
-        if (element.TryGetProperty("command", out var command) && command.ValueKind == JsonValueKind.String)
-        {
-            var bare = element.Deserialize(s_json.LspCommand);
-            return bare is null ? null : new CodeAction(bare.Title) { Command = ToCommand(bare) };
-        }
-        var action = element.Deserialize(s_json.LspCodeAction);
-        if (action is null)
-        {
-            return null;
-        }
-        return new CodeAction(action.Title)
+        LspCommand bare => new CodeAction(bare.Title) { Command = ToCommand(bare) },
+        LspCodeAction action => new CodeAction(action.Title)
         {
             Kind = action.Kind,
             IsPreferred = action.IsPreferred == true,
@@ -351,8 +304,9 @@ internal static partial class LspConvert
             Diagnostics = action.Diagnostics?.Select(ToMarkerData).ToList(),
             Edit = action.Edit is null ? null : ToWorkspaceEdit(action.Edit),
             Command = ToCommand(action.Command),
-        };
-    }
+        },
+        _ => null,
+    };
 
     public static CodeLens ToCodeLens(LspCodeLens lens) => new(ToRange(lens.Range)) { Command = ToCommand(lens.Command) };
 
@@ -381,18 +335,19 @@ internal static partial class LspConvert
     {
         string? label = null;
         IReadOnlyList<InlayHintLabelPart>? parts = null;
-        if (hint.Label.ValueKind == JsonValueKind.String)
+        switch (hint.Label)
         {
-            label = hint.Label.GetString();
-        }
-        else if (hint.Label.ValueKind == JsonValueKind.Array)
-        {
-            parts = hint.Label.Deserialize(s_json.LspInlayHintLabelPartArray)?.Select(static part => new InlayHintLabelPart(part.Value)
-            {
-                Tooltip = ToDocumentation(part.Tooltip),
-                Command = ToCommand(part.Command),
-                Location = part.Location is { } location ? ToLocation(location) : null,
-            }).ToList();
+            case string text:
+                label = text;
+                break;
+            case LspInlayHintLabelPart[] rawParts:
+                parts = rawParts.Select(static part => new InlayHintLabelPart(part.Value)
+                {
+                    Tooltip = ToDocumentation(part.Tooltip),
+                    Command = ToCommand(part.Command),
+                    Location = part.Location is { } location ? ToLocation(location) : null,
+                }).ToList();
+                break;
         }
         return new InlayHint(ToPosition(hint.Position))
         {

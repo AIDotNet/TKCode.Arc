@@ -496,15 +496,9 @@ internal sealed class ExtractionTableGrid : TemplatedControl
     {
         if (!ReferenceEquals(_observedRows, rows))
         {
-            if (_observedRows is not null)
-            {
-                _observedRows.CollectionChanged -= OnRowsChanged;
-            }
+            _observedRows?.CollectionChanged -= OnRowsChanged;
             _observedRows = rows;
-            if (_observedRows is not null)
-            {
-                _observedRows.CollectionChanged += OnRowsChanged;
-            }
+            _observedRows?.CollectionChanged += OnRowsChanged;
         }
         ObserveCells(rows);
     }
@@ -776,10 +770,7 @@ internal sealed class ExtractionTableGrid : TemplatedControl
         {
             return;
         }
-        if (_dot is not null)
-        {
-            _dot.Fill = palette.Dot(Tone);
-        }
+        _dot?.Fill = palette.Dot(Tone);
         var path = LinkedPath;
         var key = Key;
         var inTable = path is not null && key is not null &&

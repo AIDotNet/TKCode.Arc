@@ -459,10 +459,7 @@ internal sealed class PromptModelMenu : PromptPopoverMenu
         }
         else if (change.Property == EffortProperty)
         {
-            if (_strip is not null)
-            {
-                _strip.Level = Effort;
-            }
+            _strip?.Level = Effort;
         }
         else if (change.Property == ProvidersProperty)
         {
@@ -503,10 +500,7 @@ internal sealed class PromptModelMenu : PromptPopoverMenu
         var next = observe ? Models as INotifyCollectionChanged : null;
         if (!ReferenceEquals(next, _observedCollection))
         {
-            if (_observedCollection is not null)
-            {
-                _observedCollection.CollectionChanged -= OnCollectionChanged;
-            }
+            _observedCollection?.CollectionChanged -= OnCollectionChanged;
             _observedCollection = next;
             if (next is not null)
             {
@@ -516,15 +510,9 @@ internal sealed class PromptModelMenu : PromptPopoverMenu
         var providers = observe ? Providers as INotifyCollectionChanged : null;
         if (!ReferenceEquals(providers, _observedProviders))
         {
-            if (_observedProviders is not null)
-            {
-                _observedProviders.CollectionChanged -= OnProvidersChanged;
-            }
+            _observedProviders?.CollectionChanged -= OnProvidersChanged;
             _observedProviders = providers;
-            if (providers is not null)
-            {
-                providers.CollectionChanged += OnProvidersChanged;
-            }
+            providers?.CollectionChanged += OnProvidersChanged;
         }
         foreach (var model in _observedModels)
         {

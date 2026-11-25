@@ -309,10 +309,7 @@ public class OrbitMenu : ItemsControl
             {
                 _track.SetProgress(IsOpen ? 1 : 0);
             }
-            if (_field is not null)
-            {
-                _field.IsHitTestVisible = IsOpen;
-            }
+            _field?.IsHitTestVisible = IsOpen;
             UpdatePill();
         }
     }
@@ -516,10 +513,7 @@ public class OrbitMenu : ItemsControl
             _ = _trackProgress.AnimateTo(open ? 1 : 0,
                 MotionSpec.Spring(open ? OrbitMenuGeometry.MorphSpring : OrbitMenuGeometry.CloseSpring));
         }
-        if (_field is not null)
-        {
-            _field.IsHitTestVisible = open;
-        }
+        _field?.IsHitTestVisible = open;
         UpdateGlyph();
         UpdatePill();
         WatchOutsidePresses(open);

@@ -329,22 +329,10 @@ public class ProductListing : TemplatedControl
             _sort.ItemsSource = Enum.GetValues<ListingSort>().Cast<object>().ToList();
             _sort.SelectionChanged += OnSortChanged;
         }
-        if (_categories is not null)
-        {
-            _categories.SelectionChanged += OnCategoriesChanged;
-        }
-        if (_price is not null)
-        {
-            _price.PropertyChanged += OnPriceChanged;
-        }
-        if (_inStock is not null)
-        {
-            _inStock.IsCheckedChanged += OnInStockChanged;
-        }
-        if (_cart is not null)
-        {
-            _cart.Click += OnCartClick;
-        }
+        _categories?.SelectionChanged += OnCategoriesChanged;
+        _price?.PropertyChanged += OnPriceChanged;
+        _inStock?.IsCheckedChanged += OnInStockChanged;
+        _cart?.Click += OnCartClick;
         if (_scope.Find<Button>("PART_FiltersToggle") is { } toggle)
         {
             toggle.Click += (_, _) => SetFiltersOpen(!_filtersOpen);
@@ -356,10 +344,7 @@ public class ProductListing : TemplatedControl
                 clear.Click += (_, _) => ClearFilters();
             }
         }
-        if (_grid is not null)
-        {
-            _grid.MaxColumns = MaxColumns;
-        }
+        _grid?.MaxColumns = MaxColumns;
         _cards.Clear();
         UpdateTexts();
         OnProductsChanged();
@@ -368,26 +353,11 @@ public class ProductListing : TemplatedControl
 
     private void Unhook()
     {
-        if (_sort is not null)
-        {
-            _sort.SelectionChanged -= OnSortChanged;
-        }
-        if (_categories is not null)
-        {
-            _categories.SelectionChanged -= OnCategoriesChanged;
-        }
-        if (_price is not null)
-        {
-            _price.PropertyChanged -= OnPriceChanged;
-        }
-        if (_inStock is not null)
-        {
-            _inStock.IsCheckedChanged -= OnInStockChanged;
-        }
-        if (_cart is not null)
-        {
-            _cart.Click -= OnCartClick;
-        }
+        _sort?.SelectionChanged -= OnSortChanged;
+        _categories?.SelectionChanged -= OnCategoriesChanged;
+        _price?.PropertyChanged -= OnPriceChanged;
+        _inStock?.IsCheckedChanged -= OnInStockChanged;
+        _cart?.Click -= OnCartClick;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -583,10 +553,7 @@ public class ProductListing : TemplatedControl
                 _price.LowerValue = (double)Math.Clamp(MinPrice ?? min, min, max);
                 _price.UpperValue = (double)Math.Clamp(MaxPrice ?? max, min, max);
             }
-            if (_inStock is not null)
-            {
-                _inStock.IsChecked = InStockOnly;
-            }
+            _inStock?.IsChecked = InStockOnly;
         }
         finally
         {
@@ -658,14 +625,8 @@ public class ProductListing : TemplatedControl
         SetText("PART_Count", labels.ResultCount(_visible.Count));
         SetText("PART_InStockLabel", labels.InStockOnly);
         SetText("PART_EmptyText", labels.NoResults);
-        if (_categories is not null)
-        {
-            _categories.Label = labels.Category;
-        }
-        if (_price is not null)
-        {
-            _price.Label = labels.Price;
-        }
+        _categories?.Label = labels.Category;
+        _price?.Label = labels.Price;
         if (_sort is not null)
         {
             AutomationProperties.SetName(_sort, labels.SortBy);

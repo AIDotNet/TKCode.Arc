@@ -291,10 +291,7 @@ internal sealed class ExtractionJsonView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_linesPart is not null)
-        {
-            _linesPart.Owner = null;
-        }
+        _linesPart?.Owner = null;
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _linesPart = e.NameScope.Find<ExtractionJsonLines>(LinesPart);
         if (_linesPart is not null)

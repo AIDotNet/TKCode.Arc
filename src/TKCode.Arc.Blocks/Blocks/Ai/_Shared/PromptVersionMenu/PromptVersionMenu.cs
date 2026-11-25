@@ -712,10 +712,7 @@ internal sealed class PromptVersionMenu : PromptPopoverMenu
         var next = observe ? Versions as INotifyCollectionChanged : null;
         if (!ReferenceEquals(next, _observedCollection))
         {
-            if (_observedCollection is not null)
-            {
-                _observedCollection.CollectionChanged -= OnCollectionChanged;
-            }
+            _observedCollection?.CollectionChanged -= OnCollectionChanged;
             _observedCollection = next;
             if (next is not null)
             {

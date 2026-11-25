@@ -253,14 +253,8 @@ public partial class AgentApprovals : TemplatedControl
     {
         _busy = busy;
         PseudoClasses.Set(BusyPseudoClass, busy);
-        if (_approve is not null)
-        {
-            _approve.IsLoading = busy;
-        }
-        if (_deny is not null)
-        {
-            _deny.IsEnabled = !busy;
-        }
+        _approve?.IsLoading = busy;
+        _deny?.IsEnabled = !busy;
     }
 
     #endregion
@@ -269,18 +263,9 @@ public partial class AgentApprovals : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_approve is not null)
-        {
-            _approve.Click -= OnApproveClick;
-        }
-        if (_deny is not null)
-        {
-            _deny.Click -= OnDenyClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.IsCheckedChanged -= OnConfirmChanged;
-        }
+        _approve?.Click -= OnApproveClick;
+        _deny?.Click -= OnDenyClick;
+        _confirm?.IsCheckedChanged -= OnConfirmChanged;
         _list?.Children.Clear();
         base.OnApplyTemplate(e);
         var scope = e.NameScope;
@@ -291,18 +276,9 @@ public partial class AgentApprovals : TemplatedControl
         _confirm = scope.Find<CheckBox>(ConfirmPart);
         _announcer = scope.Find<AiAnnouncer>(AnnouncerPart);
         FindDetailParts(scope);
-        if (_approve is not null)
-        {
-            _approve.Click += OnApproveClick;
-        }
-        if (_deny is not null)
-        {
-            _deny.Click += OnDenyClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.IsCheckedChanged += OnConfirmChanged;
-        }
+        _approve?.Click += OnApproveClick;
+        _deny?.Click += OnDenyClick;
+        _confirm?.IsCheckedChanged += OnConfirmChanged;
         Rebuild();
         if (SelectedRequest is null)
         {
@@ -397,14 +373,8 @@ public partial class AgentApprovals : TemplatedControl
             {
                 row.IsSelected = ReferenceEquals(request, change.NewValue);
             }
-            if (_reason is not null)
-            {
-                _reason.Text = string.Empty;
-            }
-            if (_confirm is not null)
-            {
-                _confirm.IsChecked = false;
-            }
+            _reason?.Text = string.Empty;
+            _confirm?.IsChecked = false;
             SetStatus(null, false);
             ShowDetail();
         }
@@ -421,15 +391,9 @@ public partial class AgentApprovals : TemplatedControl
 
     private void Observe(IReadOnlyList<AgentApprovalRequest>? requests)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnRequestsChanged;
-        }
+        _observed?.CollectionChanged -= OnRequestsChanged;
         _observed = requests as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnRequestsChanged;
-        }
+        _observed?.CollectionChanged += OnRequestsChanged;
     }
 
     private void OnRequestsChanged(object? sender, NotifyCollectionChangedEventArgs e)

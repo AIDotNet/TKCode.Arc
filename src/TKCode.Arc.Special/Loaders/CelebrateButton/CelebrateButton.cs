@@ -443,14 +443,8 @@ public class CelebrateButton : AvaloniaButton
         _root = e.NameScope.Find<Panel>(RootPart);
         _pop = e.NameScope.Find<Panel>(PopPart);
         _body = e.NameScope.Find<Border>(BodyPart);
-        if (_body is not null)
-        {
-            _body.Child = _labels;
-        }
-        if (_pop is not null)
-        {
-            _pop.RenderTransform = _kick;
-        }
+        _body?.Child = _labels;
+        _pop?.RenderTransform = _kick;
         if (_root is not null)
         {
             _root.Children.Add(_confetti);

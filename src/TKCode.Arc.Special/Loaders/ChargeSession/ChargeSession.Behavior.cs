@@ -274,10 +274,7 @@ public sealed partial class ChargeSession
         PseudoClasses.Set(ChargingPseudoClass, _state == ChargeSessionState.Charging);
         PseudoClasses.Set(StoppedPseudoClass, _state == ChargeSessionState.Stopped);
         PseudoClasses.Set(CompletePseudoClass, _state == ChargeSessionState.Complete);
-        if (_action is not null)
-        {
-            _action.State = _state;
-        }
+        _action?.State = _state;
         UpdateStatusInk();
     }
 
@@ -287,10 +284,7 @@ public sealed partial class ChargeSession
 
     private void OnLimitChanged(double limit)
     {
-        if (_hero is not null)
-        {
-            _hero.Limit = limit;
-        }
+        _hero?.Limit = limit;
         if (!_initialized || _applyingLimit)
         {
             return;
@@ -372,10 +366,7 @@ public sealed partial class ChargeSession
 
     private void SetHeld(bool held)
     {
-        if (_handle is not null)
-        {
-            _handle.IsHeld = held;
-        }
+        _handle?.IsHeld = held;
         _scene?.SetHeld(held);
     }
 
@@ -485,14 +476,8 @@ public sealed partial class ChargeSession
         _axis100 = e.NameScope.Find<TextBlock>("PART_Axis100");
         _scene?.Attach(_model, _flow);
         _plot?.Attach(_model);
-        if (_hero is not null)
-        {
-            _hero.Limit = Limit;
-        }
-        if (_action is not null)
-        {
-            _action.State = _state;
-        }
+        _hero?.Limit = Limit;
+        _action?.State = _state;
         Hook();
         UpdateStaticTexts();
         InvalidateTexts();
@@ -518,14 +503,8 @@ public sealed partial class ChargeSession
         {
             _plotTouch = CreateTouch(_plot);
         }
-        if (_handle is not null)
-        {
-            _handle.PropertyChanged += OnHandleValueChanged;
-        }
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _handle?.PropertyChanged += OnHandleValueChanged;
+        _action?.Click += OnActionClick;
     }
 
     private void Unhook()
@@ -541,14 +520,8 @@ public sealed partial class ChargeSession
         _plotTouch?.Dispose();
         _heroTouch = null;
         _plotTouch = null;
-        if (_handle is not null)
-        {
-            _handle.PropertyChanged -= OnHandleValueChanged;
-        }
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _handle?.PropertyChanged -= OnHandleValueChanged;
+        _action?.Click -= OnActionClick;
         EndDrag();
     }
 

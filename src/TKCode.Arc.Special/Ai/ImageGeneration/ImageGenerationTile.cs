@@ -247,10 +247,7 @@ internal sealed class ImageGenerationTile : ToggleButton
         _sweepTarget = 0;
         _sweep = 0;
         _target = _shown = 0;
-        if (_canvas is not null)
-        {
-            _canvas.SweepImage = null;
-        }
+        _canvas?.SweepImage = null;
         PseudoClasses.Set(WorkingPseudoClass, true);
         Sync();
         _loop.Start();
@@ -294,10 +291,7 @@ internal sealed class ImageGenerationTile : ToggleButton
     {
         _sweepTarget = _sweep = -1;
         _target = _shown = 1;
-        if (_canvas is not null)
-        {
-            _canvas.SweepImage = null;
-        }
+        _canvas?.SweepImage = null;
         PseudoClasses.Set(WorkingPseudoClass, false);
         Sync();
     }
@@ -359,18 +353,9 @@ internal sealed class ImageGenerationTile : ToggleButton
             _ => _labels.Image(number, null),
         };
         AutomationProperties.SetName(this, name);
-        if (_statusText is not null)
-        {
-            _statusText.Text = _state == ImageGenerationTileState.Failed ? _labels.Failed : _labels.Stopped;
-        }
-        if (_retryText is not null)
-        {
-            _retryText.Text = _labels.Retry;
-        }
-        if (_statusGlyph is not null)
-        {
-            _statusGlyph.Data = _state == ImageGenerationTileState.Failed ? ArcIcons.CircleAlert : ArcIcons.Square;
-        }
+        _statusText?.Text = _state == ImageGenerationTileState.Failed ? _labels.Failed : _labels.Stopped;
+        _retryText?.Text = _labels.Retry;
+        _statusGlyph?.Data = _state == ImageGenerationTileState.Failed ? ArcIcons.CircleAlert : ArcIcons.Square;
     }
 
     /// <summary>
@@ -453,10 +438,7 @@ internal sealed class ImageGenerationTile : ToggleButton
             _canvas.Sweep = ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full ? _sweep : -1;
             _canvas.InvalidateVisual();
         }
-        if (_ring is not null)
-        {
-            _ring.Value = _shown;
-        }
+        _ring?.Value = _shown;
         var percent = (int)Math.Floor(_shown * 100);
         if (_percent is not null && percent != _shownPercent)
         {

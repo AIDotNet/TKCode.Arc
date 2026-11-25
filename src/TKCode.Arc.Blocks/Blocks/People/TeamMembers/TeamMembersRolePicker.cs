@@ -213,10 +213,7 @@ internal sealed class TeamMembersRolePicker : TemplatedControl
         {
             Focus(method);
         }
-        if (_popup is not null)
-        {
-            _popup.IsOpen = false;
-        }
+        _popup?.IsOpen = false;
     }
 
     private void EnsureMenu()

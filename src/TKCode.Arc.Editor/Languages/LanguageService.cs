@@ -34,7 +34,7 @@ internal sealed record LanguageExtensionPoint(string Id)
 /// <summary>The registered languages: ids, names, mime types and file associations (upstream's LanguagesRegistry).</summary>
 internal sealed class LanguageService : IMonarchLanguageService
 {
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private readonly Dictionary<string, ResolvedLanguage> _languages = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _lowercaseNameMap = new(StringComparer.Ordinal);
     private readonly Dictionary<string, string> _mimeTypesMap = new(StringComparer.Ordinal);

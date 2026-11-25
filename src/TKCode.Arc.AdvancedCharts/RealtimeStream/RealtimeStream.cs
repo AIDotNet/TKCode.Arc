@@ -499,10 +499,7 @@ public class RealtimeStream : TemplatedControl
         }
         Trim();
         PseudoClasses.Set(EmptyPseudoClass, IsEmpty);
-        if (_plot is not null)
-        {
-            _plot.Focusable = !IsEmpty;
-        }
+        _plot?.Focusable = !IsEmpty;
         UpdateHeader();
         // A view holding still does not change for a reading that arrives meanwhile.
         if (!_isHeld || !live)
@@ -1159,18 +1156,9 @@ public class RealtimeStream : TemplatedControl
     private void UpdateStatus()
     {
         var held = _isHeld;
-        if (_statusText is not null)
-        {
-            _statusText.Text = held ? PausedLabel : LiveLabel;
-        }
-        if (_liveDot is not null)
-        {
-            _liveDot.IsVisible = !held;
-        }
-        if (_pausedGlyph is not null)
-        {
-            _pausedGlyph.IsVisible = held;
-        }
+        _statusText?.Text = held ? PausedLabel : LiveLabel;
+        _liveDot?.IsVisible = !held;
+        _pausedGlyph?.IsVisible = held;
         if (_status is not null)
         {
             AutomationProperties.SetName(_status, held ? $"{PausedLabel}. Resume updates" : $"{LiveLabel}. Pause updates");
@@ -1182,14 +1170,8 @@ public class RealtimeStream : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_status is not null)
-        {
-            _status.Click -= OnStatusClick;
-        }
-        if (_plot is not null)
-        {
-            _plot.Owner = null;
-        }
+        _status?.Click -= OnStatusClick;
+        _plot?.Owner = null;
         var scope = e.NameScope;
         _plot = scope.Find<RealtimeStreamPlot>(PlotPart);
         _status = scope.Find<Button>(StatusPart);
@@ -1201,14 +1183,8 @@ public class RealtimeStream : TemplatedControl
         _liveDot = scope.Find<Control>("PART_LiveDot");
         _pausedGlyph = scope.Find<Control>("PART_PausedGlyph");
         _labelText = scope.Find<TextBlock>("PART_Label");
-        if (_labelText is not null)
-        {
-            _labelText.IsVisible = !string.IsNullOrEmpty(Label);
-        }
-        if (_status is not null)
-        {
-            _status.Click += OnStatusClick;
-        }
+        _labelText?.IsVisible = !string.IsNullOrEmpty(Label);
+        _status?.Click += OnStatusClick;
         if (_plot is not null)
         {
             _plot.Owner = this;
@@ -1297,10 +1273,7 @@ public class RealtimeStream : TemplatedControl
         else if (property == LabelProperty)
         {
             UpdateHeader();
-            if (_labelText is not null)
-            {
-                _labelText.IsVisible = !string.IsNullOrEmpty(Label);
-            }
+            _labelText?.IsVisible = !string.IsNullOrEmpty(Label);
         }
         else if (property == LiveLabelProperty || property == PausedLabelProperty)
         {

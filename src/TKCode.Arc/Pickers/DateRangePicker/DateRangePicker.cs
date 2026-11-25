@@ -357,10 +357,7 @@ public class DateRangePicker : TemplatedControl, IPickerAutomation
             _trigger.PointerReleased -= OnTriggerReleased;
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
         }
-        if (_popup is not null)
-        {
-            _popup.Child = null;
-        }
+        _popup?.Child = null;
         _trigger = e.NameScope.Find<Control>(TriggerPart);
         _value = e.NameScope.Find<PickerRollText>(ValuePart);
         _icon = e.NameScope.Find<Control>(IconPart);

@@ -68,14 +68,8 @@ public partial class SeatManager
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_minus is not null)
-        {
-            _minus.Stepped -= Decrement;
-        }
-        if (_plus is not null)
-        {
-            _plus.Stepped -= Increment;
-        }
+        _minus?.Stepped -= Decrement;
+        _plus?.Stepped -= Increment;
         if (_spin is not null)
         {
             _spin.Requested -= OnSpinRequested;
@@ -241,18 +235,9 @@ public partial class SeatManager
         PseudoClasses.Set(FullPseudoClass, delta == 0 && open == 0);
 
         // Header.
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
-        if (_planName is not null)
-        {
-            _planName.Text = plan.Name;
-        }
-        if (_badge is not null)
-        {
-            _badge.IsVisible = !string.IsNullOrWhiteSpace(plan.Name);
-        }
+        _title?.Text = labels.Title;
+        _planName?.Text = plan.Name;
+        _badge?.IsVisible = !string.IsNullOrWhiteSpace(plan.Name);
         if (_subtitle is not null)
         {
             _subtitle.Text = labels.Subtitle(Workspace ?? string.Empty,
@@ -276,10 +261,7 @@ public partial class SeatManager
         UpdateNotice(delta, open);
 
         // Quote.
-        if (_stepperTitle is not null)
-        {
-            _stepperTitle.Text = labels.StepperTitle;
-        }
+        _stepperTitle?.Text = labels.StepperTitle;
         _purchasedText?.Show(labels.PurchasedTemplate, Count(purchased));
         var locked = IsLocked;
         if (_minus is not null)
@@ -302,41 +284,17 @@ public partial class SeatManager
             AutomationProperties.SetName(_spin, labels.SpinName);
             AutomationProperties.SetHelpText(_spin, labels.SpinValueText(Target));
         }
-        if (_dueLabel is not null)
-        {
-            _dueLabel.Text = labels.DueToday;
-        }
-        if (_fromLabel is not null)
-        {
-            _fromLabel.Text = labels.From(FormatDate(quote.RenewsOn));
-        }
-        if (_due is not null)
-        {
-            _due.Text = FormatMoney(quote.DueToday);
-        }
-        if (_next is not null)
-        {
-            _next.Text = FormatMoney(quote.NextTotal) + labels.PerInterval(plan.Interval);
-        }
+        _dueLabel?.Text = labels.DueToday;
+        _fromLabel?.Text = labels.From(FormatDate(quote.RenewsOn));
+        _due?.Text = FormatMoney(quote.DueToday);
+        _next?.Text = FormatMoney(quote.NextTotal) + labels.PerInterval(plan.Interval);
         UpdateNotes(quote);
 
         // Invites.
-        if (_invitesTitle is not null)
-        {
-            _invitesTitle.Text = labels.InvitesTitle;
-        }
-        if (_inviteCount is not null)
-        {
-            _inviteCount.Text = Count(invites);
-        }
-        if (_invitesEmptyText is not null)
-        {
-            _invitesEmptyText.Text = labels.InvitesEmpty;
-        }
-        if (_invitesEmpty is not null)
-        {
-            _invitesEmpty.IsVisible = _rows.Count == 0;
-        }
+        _invitesTitle?.Text = labels.InvitesTitle;
+        _inviteCount?.Text = Count(invites);
+        _invitesEmptyText?.Text = labels.InvitesEmpty;
+        _invitesEmpty?.IsVisible = _rows.Count == 0;
 
         // Footer.
         UpdateFooter(quote);

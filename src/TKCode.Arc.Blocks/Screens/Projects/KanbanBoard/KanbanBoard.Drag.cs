@@ -530,10 +530,7 @@ public partial class KanbanBoard
         motion.Layout = rect;
         motion.Offset.Jump(session.LandingFrom - rect.TopLeft);
         var slot = _panel.Flip.Get(_panel.Slot).Offset;
-        if (_chasedSlot is not null)
-        {
-            _chasedSlot.Changed -= OnChasedSlotMoved;
-        }
+        _chasedSlot?.Changed -= OnChasedSlotMoved;
         _chasedSlot = slot;
         slot.Changed += OnChasedSlotMoved;
         _ = motion.Offset.AnimateTo(slot.Value, KanbanMotion.Catch, session.LandingVelocity);

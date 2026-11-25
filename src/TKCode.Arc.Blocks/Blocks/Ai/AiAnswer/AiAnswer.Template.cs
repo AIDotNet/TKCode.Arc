@@ -356,32 +356,17 @@ public partial class AiAnswer
         UpdateShare();
         UpdateModels();
         UpdateFeedbackReasons();
-        if (_suggestions is not null)
-        {
-            _suggestions.Questions = Suggestions;
-        }
+        _suggestions?.Questions = Suggestions;
         RefreshStatic();
         ShowPage(PageChange.None);
     }
 
     private void HookParts()
     {
-        if (_newThread is not null)
-        {
-            _newThread.Click += OnNewThreadClick;
-        }
-        if (_share is not null)
-        {
-            _share.Click += OnShareClick;
-        }
-        if (_reasoning is not null)
-        {
-            _reasoning.PropertyChanged += OnReasoningPropertyChanged;
-        }
-        if (_sources is not null)
-        {
-            _sources.PropertyChanged += OnSourcesRowPropertyChanged;
-        }
+        _newThread?.Click += OnNewThreadClick;
+        _share?.Click += OnShareClick;
+        _reasoning?.PropertyChanged += OnReasoningPropertyChanged;
+        _sources?.PropertyChanged += OnSourcesRowPropertyChanged;
         if (_composer is not null)
         {
             _composer.Sent += OnComposerSent;
@@ -396,18 +381,9 @@ public partial class AiAnswer
 
     private void UnhookParts()
     {
-        if (_newThread is not null)
-        {
-            _newThread.Click -= OnNewThreadClick;
-        }
-        if (_share is not null)
-        {
-            _share.Click -= OnShareClick;
-        }
-        if (_reasoning is not null)
-        {
-            _reasoning.PropertyChanged -= OnReasoningPropertyChanged;
-        }
+        _newThread?.Click -= OnNewThreadClick;
+        _share?.Click -= OnShareClick;
+        _reasoning?.PropertyChanged -= OnReasoningPropertyChanged;
         if (_sources is not null)
         {
             _sources.PropertyChanged -= OnSourcesRowPropertyChanged;
@@ -465,23 +441,11 @@ public partial class AiAnswer
             AutomationProperties.SetName(_share, labels.ShareThread);
             Tooltip.SetTip(_share, labels.ShareThread);
         }
-        if (_shareWidthIdle is not null)
-        {
-            _shareWidthIdle.Text = labels.Share;
-        }
-        if (_shareWidthCopied is not null)
-        {
-            _shareWidthCopied.Text = labels.Copied;
-        }
-        if (_shareWidthFailed is not null)
-        {
-            _shareWidthFailed.Text = labels.CopyFailed;
-        }
+        _shareWidthIdle?.Text = labels.Share;
+        _shareWidthCopied?.Text = labels.Copied;
+        _shareWidthFailed?.Text = labels.CopyFailed;
         UpdateShareLabel(instant: true);
-        if (_reasoning is not null)
-        {
-            _reasoning.ThinkingText = labels.Thinking;
-        }
+        _reasoning?.ThinkingText = labels.Thinking;
         if (_sources is not null)
         {
             _sources.CardName = labels.SourceCard;
@@ -521,23 +485,14 @@ public partial class AiAnswer
             _actions.VersionName = labels.Version;
             _actions.VersionCountText = labels.VersionCount;
         }
-        if (_related is not null)
-        {
-            _related.Heading = labels.Related;
-        }
+        _related?.Heading = labels.Related;
         if (_suggestions is not null)
         {
             _suggestions.Heading = null;
             _suggestions.ListName = labels.Suggestions;
         }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = labels.EmptyTitle;
-        }
-        if (_emptyDescription is not null)
-        {
-            _emptyDescription.Text = labels.EmptyDescription;
-        }
+        _emptyTitle?.Text = labels.EmptyTitle;
+        _emptyDescription?.Text = labels.EmptyDescription;
         if (_composer is not null)
         {
             _composer.AccessibleName = labels.Message;
@@ -570,10 +525,7 @@ public partial class AiAnswer
     /// <summary>The box says "Ask anything" on the empty page and "Ask a follow-up" under an answer.</summary>
     private void UpdatePlaceholder()
     {
-        if (_composer is not null)
-        {
-            _composer.Placeholder = Status == AiAnswerStatus.Empty ? Labels.AskPlaceholder : Labels.FollowUpPlaceholder;
-        }
+        _composer?.Placeholder = Status == AiAnswerStatus.Empty ? Labels.AskPlaceholder : Labels.FollowUpPlaceholder;
     }
 
     private void ApplyComposerSettings()
@@ -635,14 +587,8 @@ public partial class AiAnswer
             _dock.Padding = new Thickness(side, DockTopPadding, side, DockBottomPadding);
             _dock.MaxWidth = ColumnMaxWidth;
         }
-        if (_empty is not null)
-        {
-            _empty.Margin = new Thickness(0, known ? width * EmptyTopRatio : 0, 0, 0);
-        }
-        if (_sources is not null)
-        {
-            _sources.Bleed = side;
-        }
+        _empty?.Margin = new Thickness(0, known ? width * EmptyTopRatio : 0, 0, 0);
+        _sources?.Bleed = side;
         if (Math.Abs(font - _questionFontSize) > 0.01 || _emptyTitle?.FontSize != font)
         {
             _questionFontSize = font;

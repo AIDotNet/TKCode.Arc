@@ -146,10 +146,7 @@ internal sealed class DockPaneSwitcher : TemplatedControl
         _panel = e.NameScope.Find<StackPanel>(ItemsPart);
         _card = e.NameScope.Find<Border>(CardPart);
         _caption = e.NameScope.Find<TextBlock>(CaptionPart);
-        if (_caption is not null)
-        {
-            _caption.Text = DockText.Get(DockLangResourceKind.PaneSwitcher);
-        }
+        _caption?.Text = DockText.Get(DockLangResourceKind.PaneSwitcher);
         foreach (var item in _items)
         {
             _panel?.Children.Add(item);

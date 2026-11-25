@@ -180,26 +180,14 @@ public class SheetStackSheet : ContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_backButton is not null)
-        {
-            _backButton.Click -= OnBackClick;
-        }
-        if (_closeButton is not null)
-        {
-            _closeButton.Click -= OnCloseClick;
-        }
+        _backButton?.Click -= OnBackClick;
+        _closeButton?.Click -= OnCloseClick;
         base.OnApplyTemplate(e);
         _backButton = e.NameScope.Find<AvaloniaButton>(BackButtonPart);
         _closeButton = e.NameScope.Find<AvaloniaButton>(CloseButtonPart);
         Body = e.NameScope.Find<ScrollViewer>(BodyPart);
-        if (_backButton is not null)
-        {
-            _backButton.Click += OnBackClick;
-        }
-        if (_closeButton is not null)
-        {
-            _closeButton.Click += OnCloseClick;
-        }
+        _backButton?.Click += OnBackClick;
+        _closeButton?.Click += OnCloseClick;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

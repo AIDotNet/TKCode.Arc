@@ -260,10 +260,7 @@ public partial class RadialMenu
     {
         if (!ReferenceEquals(_openTarget, target))
         {
-            if (_openTarget is not null)
-            {
-                _openTarget.DetachedFromVisualTree -= OnTargetDetached;
-            }
+            _openTarget?.DetachedFromVisualTree -= OnTargetDetached;
             _openTarget = target;
             target.DetachedFromVisualTree += OnTargetDetached;
         }
@@ -341,10 +338,7 @@ public partial class RadialMenu
         _state = PopupState.Closing;
         PseudoClasses.Set(OpenPseudoClass, false);
         // A leaving ring lets clicks through, so the target can reopen it mid-exit.
-        if (_host is not null)
-        {
-            _host.IsHitTestVisible = false;
-        }
+        _host?.IsHitTestVisible = false;
         IsHitTestVisible = false;
         if (returnFocus && IsKeyboardFocusWithin)
         {
@@ -399,10 +393,7 @@ public partial class RadialMenu
                 layer.Children.Remove(host);
             }
         }
-        if (_openTarget is not null)
-        {
-            _openTarget.DetachedFromVisualTree -= OnTargetDetached;
-        }
+        _openTarget?.DetachedFromVisualTree -= OnTargetDetached;
         _openTarget = null;
         _layer = null;
         _focusOrigin = null;

@@ -456,18 +456,9 @@ public class PlanComparison : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_billing is not null)
-        {
-            _billing.SelectionChanged -= OnBillingSelectionChanged;
-        }
-        if (_differencesSwitch is not null)
-        {
-            _differencesSwitch.IsCheckedChanged -= OnDifferencesChanged;
-        }
-        if (_matrixPart is not null)
-        {
-            _matrixPart.Child = null;
-        }
+        _billing?.SelectionChanged -= OnBillingSelectionChanged;
+        _differencesSwitch?.IsCheckedChanged -= OnDifferencesChanged;
+        _matrixPart?.Child = null;
         base.OnApplyTemplate(e);
 
         var scope = e.NameScope;
@@ -482,19 +473,10 @@ public class PlanComparison : TemplatedControl
         _footnote = scope.Find<TextBlock>(FootnotePart);
         _announcer = scope.Find<SiteAnnouncer>(AnnouncerPart);
 
-        if (_billing is not null)
-        {
-            _billing.SelectionChanged += OnBillingSelectionChanged;
-        }
-        if (_differencesSwitch is not null)
-        {
-            _differencesSwitch.IsCheckedChanged += OnDifferencesChanged;
-        }
+        _billing?.SelectionChanged += OnBillingSelectionChanged;
+        _differencesSwitch?.IsCheckedChanged += OnDifferencesChanged;
         EnsureMatrix();
-        if (_matrixPart is not null)
-        {
-            _matrixPart.Child = _matrix;
-        }
+        _matrixPart?.Child = _matrix;
         UpdateTexts();
         SyncParts();
         Rebuild();
@@ -637,14 +619,8 @@ public class PlanComparison : TemplatedControl
         _syncingParts = true;
         try
         {
-            if (_billing is not null)
-            {
-                _billing.SelectedIndex = Billing == PlanComparisonBilling.Yearly ? 1 : 0;
-            }
-            if (_differencesSwitch is not null)
-            {
-                _differencesSwitch.IsChecked = IsDifferencesOnly;
-            }
+            _billing?.SelectedIndex = Billing == PlanComparisonBilling.Yearly ? 1 : 0;
+            _differencesSwitch?.IsChecked = IsDifferencesOnly;
         }
         finally
         {
@@ -661,14 +637,8 @@ public class PlanComparison : TemplatedControl
         }
         _plansSourceWatched = PlansSource as INotifyCollectionChanged;
         _featuresSourceWatched = FeaturesSource as INotifyCollectionChanged;
-        if (_plansSourceWatched is not null)
-        {
-            _plansSourceWatched.CollectionChanged += OnSourceChanged;
-        }
-        if (_featuresSourceWatched is not null)
-        {
-            _featuresSourceWatched.CollectionChanged += OnSourceChanged;
-        }
+        _plansSourceWatched?.CollectionChanged += OnSourceChanged;
+        _featuresSourceWatched?.CollectionChanged += OnSourceChanged;
     }
 
     private void UnwatchSources()
@@ -748,14 +718,8 @@ public class PlanComparison : TemplatedControl
     private void UpdateTexts()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
-        if (_description is not null)
-        {
-            _description.Text = labels.Description;
-        }
+        _title?.Text = labels.Title;
+        _description?.Text = labels.Description;
         if (_billing is not null)
         {
             _syncingParts = true;
@@ -774,19 +738,13 @@ public class PlanComparison : TemplatedControl
             }
             AutomationProperties.SetName(_billing, labels.BillingPeriod);
         }
-        if (_compareTitle is not null)
-        {
-            _compareTitle.Text = labels.CompareTitle;
-        }
+        _compareTitle?.Text = labels.CompareTitle;
         if (_differencesSwitch is not null)
         {
             _differencesSwitch.Content = labels.DifferencesOnly;
             AutomationProperties.SetName(_differencesSwitch, labels.DifferencesOnly);
         }
-        if (_footnote is not null)
-        {
-            _footnote.Text = labels.Footnote;
-        }
+        _footnote?.Text = labels.Footnote;
         UpdateBillingNote();
     }
 

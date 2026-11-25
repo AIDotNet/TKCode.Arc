@@ -210,51 +210,21 @@ internal sealed class ProviderKeysRow : TemplatedControl
         _undoRing = e.NameScope.Find<ArcRing>(UndoRingPart);
         _undoText = e.NameScope.Find<TextBlock>(UndoTextPart);
         _formBox = e.NameScope.Find<AiHeightBox>(FormBoxPart);
-        if (_formBox is not null)
-        {
-            _formBox.HeightSpring = AiHeightBox.PanelSpring;
-        }
+        _formBox?.HeightSpring = AiHeightBox.PanelSpring;
         _input = e.NameScope.Find<Input>(InputPart);
         _cancel = e.NameScope.Find<AvaloniaButton>(CancelPart);
         _save = e.NameScope.Find<Button>(SavePart);
         _helper = e.NameScope.Find<ArcContentSwap>(HelperPart);
 
-        if (_status is not null)
-        {
-            _status.Click += OnStatusClick;
-        }
-        if (_reveal is not null)
-        {
-            _reveal.IsCheckedChanged += OnRevealChanged;
-        }
-        if (_copy is not null)
-        {
-            _copy.Copied += OnCopied;
-        }
-        if (_rotate is not null)
-        {
-            _rotate.Click += OnRotateClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click += OnUndoClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
+        _status?.Click += OnStatusClick;
+        _reveal?.IsCheckedChanged += OnRevealChanged;
+        _copy?.Copied += OnCopied;
+        _rotate?.Click += OnRotateClick;
+        _remove?.Click += OnRemoveClick;
+        _add?.Click += OnAddClick;
+        _undo?.Click += OnUndoClick;
+        _cancel?.Click += OnCancelClick;
+        _save?.Click += OnSaveClick;
         if (_input is not null)
         {
             _input.PropertyChanged += OnInputChanged;
@@ -270,42 +240,15 @@ internal sealed class ProviderKeysRow : TemplatedControl
 
     private void Unhook()
     {
-        if (_status is not null)
-        {
-            _status.Click -= OnStatusClick;
-        }
-        if (_reveal is not null)
-        {
-            _reveal.IsCheckedChanged -= OnRevealChanged;
-        }
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
-        if (_rotate is not null)
-        {
-            _rotate.Click -= OnRotateClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndoClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
+        _status?.Click -= OnStatusClick;
+        _reveal?.IsCheckedChanged -= OnRevealChanged;
+        _copy?.Copied -= OnCopied;
+        _rotate?.Click -= OnRotateClick;
+        _remove?.Click -= OnRemoveClick;
+        _add?.Click -= OnAddClick;
+        _undo?.Click -= OnUndoClick;
+        _cancel?.Click -= OnCancelClick;
+        _save?.Click -= OnSaveClick;
         if (_input is not null)
         {
             _input.PropertyChanged -= OnInputChanged;
@@ -425,29 +368,20 @@ internal sealed class ProviderKeysRow : TemplatedControl
 
         // Actions.
         var hasKey = key is not null && !IsPlaceholder;
-        if (_keyActions is not null)
-        {
-            _keyActions.IsVisible = hasKey;
-        }
+        _keyActions?.IsVisible = hasKey;
         if (_add is not null)
         {
             _add.IsVisible = !hasKey && PendingRemoval is null && !IsPlaceholder;
             _add.IsExpanded = FormPhase != ProviderKeysFormPhase.Closed && _formMode == ProviderKeySaveMode.Add;
             AutomationProperties.SetName(_add, labels.AddName(ProviderName));
         }
-        if (_addText is not null)
-        {
-            _addText.Text = labels.AddKey;
-        }
+        _addText?.Text = labels.AddKey;
         if (_undo is not null)
         {
             _undo.IsVisible = PendingRemoval is not null && !IsPlaceholder;
             AutomationProperties.SetName(_undo, labels.UndoName(ProviderName));
         }
-        if (_undoText is not null)
-        {
-            _undoText.Text = labels.Undo;
-        }
+        _undoText?.Text = labels.Undo;
         var hasValue = key?.Value is not null;
         if (_reveal is not null)
         {
@@ -459,10 +393,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
             AutomationProperties.SetName(_reveal, labels.RevealName(ProviderName));
             Tooltip.SetTip(_reveal, hasValue ? null : labels.ValueHidden);
         }
-        if (_revealGlyph is not null)
-        {
-            _revealGlyph.Data = IsRevealed ? ArcIcons.EyeOff : ArcIcons.Eye;
-        }
+        _revealGlyph?.Data = IsRevealed ? ArcIcons.EyeOff : ArcIcons.Eye;
         if (_copy is not null)
         {
             _copy.IsEnabled = hasValue;
@@ -662,10 +593,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
             _revealTimeline = new MotionTimeline(this);
             _revealTimeline.Changed += value =>
             {
-                if (_revealRing is not null)
-                {
-                    _revealRing.Value = 1 - value;
-                }
+                _revealRing?.Value = 1 - value;
             };
             _revealTimeline.Completed += () => Hide(announce: true);
         }
@@ -785,10 +713,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
             _undoTimeline = new MotionTimeline(this);
             _undoTimeline.Changed += value =>
             {
-                if (_undoRing is not null)
-                {
-                    _undoRing.Value = 1 - value;
-                }
+                _undoRing?.Value = 1 - value;
             };
             _undoTimeline.Completed += CommitPendingRemoval;
         }
@@ -870,14 +795,8 @@ internal sealed class ProviderKeysRow : TemplatedControl
         _formError = null;
         _formDetail = null;
         _formErrorIsRejection = false;
-        if (_input is not null)
-        {
-            _input.Text = string.Empty;
-        }
-        if (_formBox is not null)
-        {
-            _formBox.IsExpanded = true;
-        }
+        _input?.Text = string.Empty;
+        _formBox?.IsExpanded = true;
         Refresh();
         FocusLater(() => _input);
     }
@@ -893,10 +812,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
         _formCts = null;
         var mode = _formMode;
         FormPhase = ProviderKeysFormPhase.Closed;
-        if (_formBox is not null)
-        {
-            _formBox.IsExpanded = false;
-        }
+        _formBox?.IsExpanded = false;
         Refresh();
         if (returnFocus)
         {
@@ -1024,10 +940,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
         };
         _formCts = null;
         FormPhase = ProviderKeysFormPhase.Closed;
-        if (_formBox is not null)
-        {
-            _formBox.IsExpanded = false;
-        }
+        _formBox?.IsExpanded = false;
         _owner.Replace(this, saved, mode == ProviderKeySaveMode.Add ? ProviderKeysChange.Added : ProviderKeysChange.Rotated);
         _owner.OnSaved(this, text, mode);
         _owner.Announce(Labels.SavedAnnouncement(ProviderName, mode), simulated: true);
@@ -1046,10 +959,7 @@ internal sealed class ProviderKeysRow : TemplatedControl
         _input.Placeholder = Provider.KeyPrefix.Length > 0 ? Provider.KeyPrefix + "…" : null;
         var phase = FormPhase;
         _input.IsReadOnly = phase is ProviderKeysFormPhase.Testing or ProviderKeysFormPhase.Connected;
-        if (_cancel is not null)
-        {
-            _cancel.Content = labels.Cancel;
-        }
+        _cancel?.Content = labels.Cancel;
         if (_save is not null)
         {
             _save.Content = labels.Save;

@@ -196,10 +196,7 @@ internal sealed class TldrTogglePointRow : TemplatedControl
         {
             _isLinked = value;
             PseudoClasses.Set(LinkedPseudoClass, value);
-            if (_link is not null)
-            {
-                _link.IsEnabled = value;
-            }
+            _link?.IsEnabled = value;
         }
     }
 
@@ -232,10 +229,7 @@ internal sealed class TldrTogglePointRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_link is not null)
-        {
-            _link.Click -= OnLinkClick;
-        }
+        _link?.Click -= OnLinkClick;
         _textView = e.NameScope.Find<TldrToggleStreamText>(TextPart);
         _link = e.NameScope.Find<AvaloniaButton>(LinkPart);
         _textView?.SetText(_text.ToString());
@@ -311,15 +305,9 @@ internal sealed class TldrToggleAlert : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
+        _retry?.Click -= OnRetry;
         _retry = e.NameScope.Find<AvaloniaButton>(RetryPart);
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
+        _retry?.Click += OnRetry;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -477,24 +465,12 @@ internal sealed class TldrToggleActions : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_stop is not null)
-        {
-            _stop.Click -= OnStop;
-        }
-        if (_regenerate is not null)
-        {
-            _regenerate.Click -= OnRegenerate;
-        }
+        _stop?.Click -= OnStop;
+        _regenerate?.Click -= OnRegenerate;
         _stop = e.NameScope.Find<AvaloniaButton>(StopPart);
         _regenerate = e.NameScope.Find<AvaloniaButton>(RegeneratePart);
-        if (_stop is not null)
-        {
-            _stop.Click += OnStop;
-        }
-        if (_regenerate is not null)
-        {
-            _regenerate.Click += OnRegenerate;
-        }
+        _stop?.Click += OnStop;
+        _regenerate?.Click += OnRegenerate;
     }
 
     private void OnStop(object? sender, RoutedEventArgs e)

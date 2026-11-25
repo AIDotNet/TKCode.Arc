@@ -96,10 +96,7 @@ internal sealed class SemanticZoomBodyPanel : Panel
     {
         var width = double.IsFinite(availableSize.Width) ? availableSize.Width : 663;
         var panel = PanelHost;
-        if (panel is not null)
-        {
-            panel.IsVisible = _showsPanel;
-        }
+        panel?.IsVisible = _showsPanel;
         if (_side && _showsPanel && panel is not null)
         {
             var stageWidth = Math.Max(0, width - PanelWidth);
@@ -242,16 +239,10 @@ internal sealed class SemanticZoomCrumbs : TemplatedControl
         fade.Changed += v =>
         {
             crumb.Opacity = v;
-            if (separator is not null)
-            {
-                separator.Opacity = v;
-            }
+            separator?.Opacity = v;
         };
         crumb.Opacity = 0;
-        if (separator is not null)
-        {
-            separator.Opacity = 0;
-        }
+        separator?.Opacity = 0;
         _ = fade.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Standard, SemanticZoomMotion.EaseOut));
     }
 
@@ -268,10 +259,7 @@ internal sealed class SemanticZoomCrumbs : TemplatedControl
         value.Changed += v =>
         {
             crumb.Opacity = v;
-            if (separator is not null)
-            {
-                separator.Opacity = v;
-            }
+            separator?.Opacity = v;
         };
         _ = FadeOut(value, crumb, separator);
     }

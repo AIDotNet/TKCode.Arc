@@ -248,14 +248,8 @@ public class AgentRoutines : TemplatedControl
             item.Refresh();
             _list?.Children.Add(item);
         }
-        if (_title is not null)
-        {
-            _title.Text = Labels.Title;
-        }
-        if (_summary is not null)
-        {
-            _summary.Text = Labels.Summary(active, routines.Count);
-        }
+        _title?.Text = Labels.Title;
+        _summary?.Text = Labels.Summary(active, routines.Count);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

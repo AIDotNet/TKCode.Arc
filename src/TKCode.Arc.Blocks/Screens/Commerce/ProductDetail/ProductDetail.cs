@@ -276,10 +276,7 @@ public class ProductDetail : TemplatedControl
         var pictures = Pictures;
         var clamped = pictures.Count == 0 ? 0 : Math.Clamp(index, 0, pictures.Count - 1);
         SetAndRaise(PictureIndexProperty, ref _pictureIndex, clamped);
-        if (_main is not null)
-        {
-            _main.Source = pictures.Count > 0 ? pictures[clamped] : null;
-        }
+        _main?.Source = pictures.Count > 0 ? pictures[clamped] : null;
         for (var i = 0; i < _thumbs.Count; i++)
         {
             _thumbs[i].Classes.Set("selected", i == clamped);
@@ -590,10 +587,7 @@ public class ProductDetail : TemplatedControl
         {
             _sizes[i].Classes.Set("selected", i == SelectedSizeIndex);
         }
-        if (_colorLine is not null)
-        {
-            _colorLine.Text = labels.ColorLine(SelectedColor?.Name ?? string.Empty);
-        }
+        _colorLine?.Text = labels.ColorLine(SelectedColor?.Name ?? string.Empty);
         if (_stockNote is not null)
         {
             var stock = SelectedSize?.Stock ?? 0;

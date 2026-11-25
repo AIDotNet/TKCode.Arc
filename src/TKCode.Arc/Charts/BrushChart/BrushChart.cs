@@ -210,10 +210,7 @@ public class BrushChart : ChartBase
     private protected override void OnTemplateApplied(INameScope scope)
     {
         _overview = scope.Find<BrushChartOverview>(OverviewPart);
-        if (_overview is not null)
-        {
-            _overview.Owner = this;
-        }
+        _overview?.Owner = this;
     }
 
     #region Data

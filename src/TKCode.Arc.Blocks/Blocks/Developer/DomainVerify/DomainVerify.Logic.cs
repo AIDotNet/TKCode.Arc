@@ -379,18 +379,9 @@ public partial class DomainVerify
             _input.RemoveHandler(KeyDownEvent, OnInputKeyDown);
             _input.TextChanged -= OnInputTextChanged;
         }
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
-        if (_footerAction is not null)
-        {
-            _footerAction.Click -= OnFooterActionClick;
-        }
+        _add?.Click -= OnAddClick;
+        _remove?.Click -= OnRemoveClick;
+        _footerAction?.Click -= OnFooterActionClick;
 
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _description = e.NameScope.Find<TextBlock>(DescriptionPart);
@@ -429,23 +420,14 @@ public partial class DomainVerify
                 _input.Text = _lastDefault;
             }
         }
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
+        _add?.Click += OnAddClick;
         if (_remove is not null)
         {
             _remove.Click += OnRemoveClick;
             _remove.Content = DomainVerifyUi.Glyph(ArcIcons.X, 16, ArcDesignTokenKind.TextSecondary);
         }
-        if (_footerAction is not null)
-        {
-            _footerAction.Click += OnFooterActionClick;
-        }
-        if (_domainIcon is not null)
-        {
-            _domainIcon.Child = DomainVerifyUi.Glyph(ArcIcons.Globe, 16, ArcDesignTokenKind.TextSecondary);
-        }
+        _footerAction?.Click += OnFooterActionClick;
+        _domainIcon?.Child = DomainVerifyUi.Glyph(ArcIcons.Globe, 16, ArcDesignTokenKind.TextSecondary);
         if (_recordsHost is not null)
         {
             AutomationProperties.SetControlTypeOverride(_recordsHost, AutomationControlType.List);
@@ -926,49 +908,25 @@ public partial class DomainVerify
         PseudoClasses.Set(VerifiedPseudoClass, phase == DomainVerifyPhase.Verified);
 
         var entering = phase is DomainVerifyPhase.Enter or DomainVerifyPhase.Adding;
-        if (_addArea is not null)
-        {
-            _addArea.IsVisible = entering;
-        }
-        if (_domainArea is not null)
-        {
-            _domainArea.IsVisible = !entering;
-        }
+        _addArea?.IsVisible = entering;
+        _domainArea?.IsVisible = !entering;
         if (_add is not null)
         {
             _add.IsLoading = phase == DomainVerifyPhase.Adding;
             _add.Content = phase == DomainVerifyPhase.Adding ? Labels.Adding : Labels.AddDomain;
             AutomationProperties.SetName(_add, (string)_add.Content);
         }
-        if (_input is not null)
-        {
-            _input.IsReadOnly = phase == DomainVerifyPhase.Adding;
-        }
-        if (_placeholders is not null)
-        {
-            _placeholders.IsVisible = entering;
-        }
-        if (_empty is not null)
-        {
-            _empty.IsVisible = phase == DomainVerifyPhase.Enter;
-        }
-        if (_recordsHost is not null)
-        {
-            _recordsHost.IsVisible = !entering;
-        }
+        _input?.IsReadOnly = phase == DomainVerifyPhase.Adding;
+        _placeholders?.IsVisible = entering;
+        _empty?.IsVisible = phase == DomainVerifyPhase.Enter;
+        _recordsHost?.IsVisible = !entering;
         if (_remove is not null)
         {
             _remove.IsVisible = !entering;
             AutomationProperties.SetName(_remove, Labels.RemoveName(_domain ?? string.Empty));
         }
-        if (_footer is not null)
-        {
-            _footer.IsVisible = !entering;
-        }
-        if (_domainText is not null)
-        {
-            _domainText.Text = _domain;
-        }
+        _footer?.IsVisible = !entering;
+        _domainText?.Text = _domain;
         UpdateDomainStatus();
         UpdateDomainDetail();
         UpdateFooter();

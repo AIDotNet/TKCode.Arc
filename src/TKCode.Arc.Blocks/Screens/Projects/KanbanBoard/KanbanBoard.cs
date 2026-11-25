@@ -517,19 +517,13 @@ public partial class KanbanBoard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged -= OnViewSwitchChanged;
-        }
+        _viewSwitch?.SelectionChanged -= OnViewSwitchChanged;
         if (_scroller is not null)
         {
             _scroller.ScrollChanged -= OnScrollChanged;
             _scroller.PropertyChanged -= OnScrollerPropertyChanged;
         }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed -= OnScrimPressed;
-        }
+        _scrim?.PointerPressed -= OnScrimPressed;
         DetachPanel();
         DetachDrawer();
         _toolbar = e.NameScope.Find<Border>(ToolbarPart);
@@ -546,19 +540,13 @@ public partial class KanbanBoard : TemplatedControl
         _drawer = e.NameScope.Find<KanbanDrawer>(DrawerPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
         _dragAnnouncer = e.NameScope.Find<ProjectsAnnouncer>(DragAnnouncerPart);
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged += OnViewSwitchChanged;
-        }
+        _viewSwitch?.SelectionChanged += OnViewSwitchChanged;
         if (_scroller is not null)
         {
             _scroller.ScrollChanged += OnScrollChanged;
             _scroller.PropertyChanged += OnScrollerPropertyChanged;
         }
-        if (_scrim is not null)
-        {
-            _scrim.PointerPressed += OnScrimPressed;
-        }
+        _scrim?.PointerPressed += OnScrimPressed;
         AttachPanel();
         AttachDrawer();
         UpdateTitle();
@@ -614,14 +602,8 @@ public partial class KanbanBoard : TemplatedControl
     private void UpdateTotal()
     {
         var count = _grid?.Placed.Count ?? 0;
-        if (_totalDigits is not null)
-        {
-            _totalDigits.Value = count;
-        }
-        if (_totalWord is not null)
-        {
-            _totalWord.Text = Strings.CardsWord(count);
-        }
+        _totalDigits?.Value = count;
+        _totalWord?.Text = Strings.CardsWord(count);
         if (_total is not null)
         {
             AutomationProperties.SetName(_total, Strings.CardCount(count));
@@ -743,10 +725,7 @@ public partial class KanbanBoard : TemplatedControl
         CancelDrag();
         CloseComposer(returnFocus: false, animate: false);
         PseudoClasses.Set(LanesPseudoClass, value == KanbanGroupBy.Assignee);
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectedIndex = value == KanbanGroupBy.Assignee ? 1 : 0;
-        }
+        _viewSwitch?.SelectedIndex = value == KanbanGroupBy.Assignee ? 1 : 0;
         // Every card flies from where it is drawn to its new cell on the layout spring (Arc: one shared layout flight).
         RebuildNow(animate: true);
         RaiseEvent(new KanbanGroupByChangedEventArgs(GroupByChangedEvent, old, value));

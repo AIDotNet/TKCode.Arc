@@ -69,6 +69,7 @@ public sealed class DataGridLayoutState
     }
 }
 
-[JsonSourceGenerationOptions(UseStringEnumConverter = true, PropertyNameCaseInsensitive = true, WriteIndented = false)]
+[JsonSourceGenerationOptions(GenerationMode = JsonSourceGenerationMode.Metadata,
+    UseStringEnumConverter = true, PropertyNameCaseInsensitive = true, WriteIndented = false)]
 [JsonSerializable(typeof(DataGridLayoutState))]
 internal sealed partial class DataGridJsonContext : JsonSerializerContext;

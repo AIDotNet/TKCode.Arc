@@ -47,13 +47,12 @@ public class Skeleton : ContentControl
     public bool IsLoading { get => GetValue(IsLoadingProperty); set => SetValue(IsLoadingProperty, value); }
     public string Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
 
-    private bool _isPlaceholderShown = true;
 
     internal bool IsPlaceholderShown
     {
-        get => _isPlaceholderShown;
-        private set => SetAndRaise(IsPlaceholderShownProperty, ref _isPlaceholderShown, value);
-    }
+        get;
+        private set => SetAndRaise(IsPlaceholderShownProperty, ref field, value);
+    } = true;
 
     private bool _isContentShown;
 

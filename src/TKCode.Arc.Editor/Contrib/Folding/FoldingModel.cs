@@ -25,7 +25,11 @@ internal interface IFoldingDecorationProvider
 }
 
 /// <summary>What changed in a folding model (upstream's FoldingModelChangeEvent).</summary>
-internal sealed record FoldingModelChangeEvent(FoldingModel Model, IReadOnlyList<FoldingRegion>? CollapseStateChanged = null);
+internal sealed class FoldingModelChangeEvent(FoldingModel model, IReadOnlyList<FoldingRegion>? collapseStateChanged = null)
+{
+    public FoldingModel Model { get; } = model;
+    public IReadOnlyList<FoldingRegion>? CollapseStateChanged { get; } = collapseStateChanged;
+}
 
 /// <summary>A folded or manual range to keep across sessions (upstream's ILineMemento).</summary>
 internal sealed record FoldingLineMemento(int StartLineNumber, int EndLineNumber) : ILineRange

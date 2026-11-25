@@ -299,14 +299,8 @@ public partial class WeekCalendar
         RangeStart = _range.Start;
         RangeEnd = _range.End;
         RangeTitle = WeekCalendarTime.RangeTitle(_range.Start, _range.End, EffectiveCulture);
-        if (_titleText is not null)
-        {
-            _titleText.Text = RangeTitle;
-        }
-        if (_todayButton is not null)
-        {
-            _todayButton.IsEnabled = !WeekCalendarRange.IsTodayShown(EffectiveView, _range, Today, FirstDayOfWeek);
-        }
+        _titleText?.Text = RangeTitle;
+        _todayButton?.IsEnabled = !WeekCalendarRange.IsTodayShown(EffectiveView, _range, Today, FirstDayOfWeek);
         _miniMonth?.Refresh();
         UpdateStepNames();
     }
@@ -342,10 +336,7 @@ public partial class WeekCalendar
     {
         _gridView?.OnNowChanged();
         _agendaView?.OnNowChanged();
-        if (_todayButton is not null)
-        {
-            _todayButton.IsEnabled = !WeekCalendarRange.IsTodayShown(EffectiveView, _range, Today, FirstDayOfWeek);
-        }
+        _todayButton?.IsEnabled = !WeekCalendarRange.IsTodayShown(EffectiveView, _range, Today, FirstDayOfWeek);
     }
 
     private void UpdateMinuteTimer()

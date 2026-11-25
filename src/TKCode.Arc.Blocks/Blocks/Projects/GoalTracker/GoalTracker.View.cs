@@ -150,10 +150,7 @@ public partial class GoalTracker
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_body is not null)
-        {
-            _body.Child = null;
-        }
+        _body?.Child = null;
         _body = e.NameScope.Find<Decorator>(BodyPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
         if (_body is not null)

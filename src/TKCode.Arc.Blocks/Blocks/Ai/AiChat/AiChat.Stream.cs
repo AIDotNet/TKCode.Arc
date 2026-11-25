@@ -544,10 +544,7 @@ public partial class AiChat
         }
         IsBusy = busy;
         PseudoClasses.Set(BusyPseudoClass, busy);
-        if (_composer is not null)
-        {
-            _composer.IsGenerating = busy;
-        }
+        _composer?.IsGenerating = busy;
     }
 
     #endregion

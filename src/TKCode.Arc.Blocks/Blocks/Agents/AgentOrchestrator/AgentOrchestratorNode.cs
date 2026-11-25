@@ -103,15 +103,9 @@ internal sealed class AgentOrchestratorNode : TemplatedControl
             {
                 return;
             }
-            if (_agent is not null)
-            {
-                _agent.PropertyChanged -= OnAgentChanged;
-            }
+            _agent?.PropertyChanged -= OnAgentChanged;
             _agent = value;
-            if (_agent is not null)
-            {
-                _agent.PropertyChanged += OnAgentChanged;
-            }
+            _agent?.PropertyChanged += OnAgentChanged;
             Refresh();
         }
     }

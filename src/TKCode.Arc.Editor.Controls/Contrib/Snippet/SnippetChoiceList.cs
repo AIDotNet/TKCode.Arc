@@ -197,10 +197,7 @@ internal sealed class SnippetChoiceList : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _rows = e.NameScope.Find<SnippetChoiceRows>(PartRows);
-        if (_rows is not null)
-        {
-            _rows.Owner = this;
-        }
+        _rows?.Owner = this;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

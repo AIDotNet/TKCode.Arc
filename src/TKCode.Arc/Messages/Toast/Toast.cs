@@ -199,14 +199,8 @@ public class Toast : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_root is not null)
-        {
-            _root.RenderTransform = null;
-        }
+        _close?.Click -= OnCloseClick;
+        _root?.RenderTransform = null;
         _root = e.NameScope.Find<Panel>(RootPart);
         _check = e.NameScope.Find<StrokeDrawGlyph>(CheckPart);
         _close = e.NameScope.Find<AvaloniaButton>(ClosePart);
@@ -294,10 +288,7 @@ public class Toast : TemplatedControl
         _scale.Changed += _ => ApplyTransform();
         _opacity.Changed += v =>
         {
-            if (_root is not null)
-            {
-                _root.Opacity = Math.Clamp(v, 0, 1);
-            }
+            _root?.Opacity = Math.Clamp(v, 0, 1);
         };
     }
 
@@ -313,10 +304,7 @@ public class Toast : TemplatedControl
         ++_generation;
         var wasVisible = _visible;
         _visible = true;
-        if (_root is not null)
-        {
-            _root.IsVisible = true;
-        }
+        _root?.IsVisible = true;
         InvalidateMeasure();
         var level = ArcMotion.GetEffectiveLevel(this);
         if (!animate || level == ArcMotionLevel.Off)
@@ -325,10 +313,7 @@ public class Toast : TemplatedControl
             _y!.Jump(0);
             _scale!.Jump(1);
             _opacity!.Jump(1);
-            if (_check is not null)
-            {
-                _check.Progress = 1;
-            }
+            _check?.Progress = 1;
         }
         else if (level == ArcMotionLevel.Reduced)
         {
@@ -340,10 +325,7 @@ public class Toast : TemplatedControl
                 _opacity!.Jump(0);
             }
             _ = _opacity!.AnimateTo(1, MotionSpec.Tween(ArcMotionPresets.Instant, ArcEasings.Standard));
-            if (_check is not null)
-            {
-                _check.Progress = 1;
-            }
+            _check?.Progress = 1;
         }
         else
         {
@@ -454,10 +436,7 @@ public class Toast : TemplatedControl
             return;
         }
         _x?.Stop();
-        if (_root is not null)
-        {
-            _root.IsVisible = false;
-        }
+        _root?.IsVisible = false;
         InvalidateMeasure();
     }
 

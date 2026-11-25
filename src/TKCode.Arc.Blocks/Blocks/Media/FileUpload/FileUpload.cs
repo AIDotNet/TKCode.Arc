@@ -399,10 +399,7 @@ public class FileUpload : TemplatedControl
                 _status.Content = new TextBlock { Text = text, LineHeight = 16.8, TextWrapping = Avalonia.Media.TextWrapping.Wrap };
             }
         }
-        if (_statusFrame is not null)
-        {
-            _statusFrame.IsOpen = !string.IsNullOrEmpty(Status);
-        }
+        _statusFrame?.IsOpen = !string.IsNullOrEmpty(Status);
     }
 
     private void SyncRows()
@@ -502,10 +499,7 @@ public class FileUpload : TemplatedControl
         var value = new MotionValue<double>(this, _list?.Padding.Top ?? 0, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_list is not null)
-            {
-                _list.Padding = new Thickness(0, Math.Max(0, v), 0, 0);
-            }
+            _list?.Padding = new Thickness(0, Math.Max(0, v), 0, 0);
         };
         return value;
     }
@@ -556,10 +550,7 @@ public class FileUpload : TemplatedControl
             _dropzone.RemoveHandler(DragDrop.DropEvent, OnDrop);
             _dropzone.Invoked = null;
         }
-        if (_list is not null)
-        {
-            _list.Child = null;
-        }
+        _list?.Child = null;
         _dropzone = e.NameScope.Find<FileUploadDropzone>(DropzonePart);
         _label = e.NameScope.Find<FileUploadSwap>(LabelPart);
         _statusFrame = e.NameScope.Find<FileUploadCollapse>(StatusFramePart);
@@ -593,10 +584,7 @@ public class FileUpload : TemplatedControl
         {
             _status.Content = new TextBlock { Text = Status, LineHeight = 16.8, TextWrapping = Avalonia.Media.TextWrapping.Wrap };
         }
-        if (_statusFrame is not null)
-        {
-            _statusFrame.IsOpen = !string.IsNullOrEmpty(Status);
-        }
+        _statusFrame?.IsOpen = !string.IsNullOrEmpty(Status);
         _listInset = null;
         SyncRows();
     }

@@ -297,15 +297,9 @@ public class OnboardingChecklist : TemplatedControl
 
     private void ObserveItems()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnItemsChanged;
-        }
+        _observed?.CollectionChanged -= OnItemsChanged;
         _observed = this.IsAttachedToVisualTree() ? ItemsSource as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnItemsChanged;
-        }
+        _observed?.CollectionChanged += OnItemsChanged;
     }
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnStepsChanged();
@@ -347,19 +341,10 @@ public class OnboardingChecklist : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_hide is not null)
-        {
-            _hide.Click -= OnHideClick;
-        }
-        if (_groupToggle is not null)
-        {
-            _groupToggle.Click -= OnGroupClick;
-        }
+        _hide?.Click -= OnHideClick;
+        _groupToggle?.Click -= OnGroupClick;
         _openList?.RemoveHandler(KeyDownEvent, OnListKeyDown);
-        if (_groupPanel is not null)
-        {
-            _groupPanel.Closed -= OnGroupPanelClosed;
-        }
+        _groupPanel?.Closed -= OnGroupPanelClosed;
 
         var scope = e.NameScope;
         _title = scope.Find<OnboardingChecklistSwapText>("PART_Title");
@@ -380,14 +365,8 @@ public class OnboardingChecklist : TemplatedControl
         _groupPanel = scope.Find<OnboardingChecklistFold>("PART_GroupPanel");
         _completedList = scope.Find<StackPanel>(CompletedListPart);
 
-        if (_hide is not null)
-        {
-            _hide.Click += OnHideClick;
-        }
-        if (_groupToggle is not null)
-        {
-            _groupToggle.Click += OnGroupClick;
-        }
+        _hide?.Click += OnHideClick;
+        _groupToggle?.Click += OnGroupClick;
         _openList?.AddHandler(KeyDownEvent, OnListKeyDown);
         if (_groupPanel is not null)
         {
@@ -557,10 +536,7 @@ public class OnboardingChecklist : TemplatedControl
 
         _countNumber?.Set(doneCount, animate);
         var countSuffix = string.Format(CultureInfo.CurrentCulture, strings.CountFormat, total);
-        if (_countText is not null)
-        {
-            _countText.Text = " " + countSuffix;
-        }
+        _countText?.Text = " " + countSuffix;
         if (_countRow is not null)
         {
             AutomationProperties.SetName(_countRow, $"{doneCount} {countSuffix}");
@@ -578,10 +554,7 @@ public class OnboardingChecklist : TemplatedControl
     {
         var ratio = total > 0 ? (double)doneCount / total : 0;
         PseudoClasses.Set(StartedPseudoClass, ratio > 0);
-        if (_ringFill is not null)
-        {
-            _ringFill.Value = ratio;
-        }
+        _ringFill?.Value = ratio;
         if (_ring is not null)
         {
             AutomationProperties.SetName(_ring, strings.Progress);
@@ -676,10 +649,7 @@ public class OnboardingChecklist : TemplatedControl
             // The group's number keeps its last value while the group folds away.
             _groupNumber?.Set(completed.Count, animate && groupWasOpen);
         }
-        if (_groupText is not null)
-        {
-            _groupText.Text = " " + strings.Completed;
-        }
+        _groupText?.Text = " " + strings.Completed;
         if (_groupToggle is not null)
         {
             _groupToggle.SetIsOpen(groupOpen);

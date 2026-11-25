@@ -789,33 +789,21 @@ public abstract class Illustration : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_play is not null)
-        {
-            _play.Click -= OnPlayClick;
-        }
+        _play?.Click -= OnPlayClick;
         _canvas = e.NameScope.Find<IllustrationCanvas>(CanvasPart);
         _captionSwap = e.NameScope.Find<ArcContentSwap>(CaptionPart);
         _play = e.NameScope.Find<Avalonia.Controls.Button>(PlayPart);
         _focusRing ??= LiteralFocusRing.Create(this, TKCode.Arc.DesignTokens.ArcDesignTokens.Key(TKCode.Arc.DesignTokens.ArcDesignTokenKind.RadiusSurface));
         LiteralFocusRing.Attach(_focusRing, e.NameScope.Find<Control>("PART_Frame")?.Parent as Panel, new Thickness(-3));
-        if (_canvas is not null)
-        {
-            _canvas.Owner = this;
-        }
+        _canvas?.Owner = this;
         UpdateCaption();
-        if (_play is not null)
-        {
-            _play.Click += OnPlayClick;
-        }
+        _play?.Click += OnPlayClick;
         UpdatePlayGlyph();
     }
 
     private void UpdateCaption()
     {
-        if (_captionSwap is not null)
-        {
-            _captionSwap.Content = new TextBlock { Text = _caption, TextWrapping = TextWrapping.Wrap };
-        }
+        _captionSwap?.Content = new TextBlock { Text = _caption, TextWrapping = TextWrapping.Wrap };
     }
 
     private void OnPlayClick(object? sender, RoutedEventArgs e) => SetCurrentValue(IsPlayingProperty, !IsPlaying);

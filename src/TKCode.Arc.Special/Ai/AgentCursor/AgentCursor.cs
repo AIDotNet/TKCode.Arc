@@ -308,22 +308,10 @@ public partial class AgentCursor : TemplatedControl
         _undo = e.NameScope.Find<AvaloniaButton>(UndoPart);
         _accept = e.NameScope.Find<AvaloniaButton>(AcceptPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click += OnUndoClick;
-        }
-        if (_accept is not null)
-        {
-            _accept.Click += OnAcceptClick;
-        }
-        if (_stage is not null)
-        {
-            _stage.SizeChanged += OnStageSizeChanged;
-        }
+        _action?.Click += OnActionClick;
+        _undo?.Click += OnUndoClick;
+        _accept?.Click += OnAcceptClick;
+        _stage?.SizeChanged += OnStageSizeChanged;
         if (_document is not null)
         {
             AutomationProperties.SetName(_document, Labels.Document);
@@ -362,22 +350,10 @@ public partial class AgentCursor : TemplatedControl
 
     private void Unhook()
     {
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndoClick;
-        }
-        if (_accept is not null)
-        {
-            _accept.Click -= OnAcceptClick;
-        }
-        if (_stage is not null)
-        {
-            _stage.SizeChanged -= OnStageSizeChanged;
-        }
+        _action?.Click -= OnActionClick;
+        _undo?.Click -= OnUndoClick;
+        _accept?.Click -= OnAcceptClick;
+        _stage?.SizeChanged -= OnStageSizeChanged;
     }
 
     /// <inheritdoc />
@@ -465,14 +441,8 @@ public partial class AgentCursor : TemplatedControl
     private void ApplyColors()
     {
         var agent = AgentColor;
-        if (_agentAvatar is not null)
-        {
-            _agentAvatar.Background = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(agent, 0.14);
-        }
-        if (_agentMark is not null)
-        {
-            _agentMark.Foreground = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(agent);
-        }
+        _agentAvatar?.Background = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(agent, 0.14);
+        _agentMark?.Foreground = new Avalonia.Media.Immutable.ImmutableSolidColorBrush(agent);
         if (_agentFlight is not null)
         {
             _agentFlight.Pointer.Color = agent;
@@ -494,10 +464,7 @@ public partial class AgentCursor : TemplatedControl
     private void ApplyIdentity()
     {
         var agent = EffectiveAgent;
-        if (_agentMark is not null)
-        {
-            _agentMark.Data = agent.Mark ?? ArcIcons.Sparkles;
-        }
+        _agentMark?.Data = agent.Mark ?? ArcIcons.Sparkles;
         if (_agentAvatar is not null)
         {
             AutomationProperties.SetName(_agentAvatar, AgentName);
@@ -508,10 +475,7 @@ public partial class AgentCursor : TemplatedControl
             _teammateAvatar.DisplayName = teammate.Name;
             _teammateAvatar.Source = teammate.Source;
         }
-        if (_teammateRing is not null)
-        {
-            _teammateRing.IsVisible = IsCollaboratorVisible && !string.IsNullOrWhiteSpace(teammate.Name);
-        }
+        _teammateRing?.IsVisible = IsCollaboratorVisible && !string.IsNullOrWhiteSpace(teammate.Name);
         if (_agentFlight is not null)
         {
             _agentFlight.Pointer.Label = AgentName;
@@ -564,14 +528,8 @@ public partial class AgentCursor : TemplatedControl
         {
             arcButton.Variant = phase == AgentCursorPhase.Idle ? ButtonVariant.Primary : ButtonVariant.Secondary;
         }
-        if (_undo is not null)
-        {
-            _undo.Content = Labels.Undo;
-        }
-        if (_accept is not null)
-        {
-            _accept.Content = Labels.Accept;
-        }
+        _undo?.Content = Labels.Undo;
+        _accept?.Content = Labels.Accept;
         if (_reviewBar is not null)
         {
             AutomationProperties.SetName(_reviewBar, Labels.Review);

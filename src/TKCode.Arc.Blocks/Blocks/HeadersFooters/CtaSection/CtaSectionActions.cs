@@ -144,10 +144,7 @@ internal sealed class CtaActionButton : Button
 
     private void UpdateLean()
     {
-        if (_content is not null)
-        {
-            _content.IsLeaning = _mouseHover && IsPointerOver;
-        }
+        _content?.IsLeaning = _mouseHover && IsPointerOver;
     }
 }
 

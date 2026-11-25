@@ -140,18 +140,9 @@ public partial class PiiRedaction
             _editor.Edited += OnEditorEdited;
             _editorFade = new PiiRedactionFader(_editor, 1);
         }
-        if (_showOriginalSwitch is not null)
-        {
-            _showOriginalSwitch.Click += OnShowOriginalClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click += OnPrimaryClick;
-        }
+        _showOriginalSwitch?.Click += OnShowOriginalClick;
+        _reset?.Click += OnResetClick;
+        _primary?.Click += OnPrimaryClick;
         _originalFade = _original is null ? null : new PiiRedactionFader(_original, 0);
         _redactedFade = _redacted is null ? null : new PiiRedactionFader(_redacted, 0);
         _placeholderFade = _replyPlaceholder is null ? null : new PiiRedactionFader(_replyPlaceholder, 1);
@@ -170,18 +161,9 @@ public partial class PiiRedaction
             _editor.ScanRequested -= OnEditorScanRequested;
             _editor.Edited -= OnEditorEdited;
         }
-        if (_showOriginalSwitch is not null)
-        {
-            _showOriginalSwitch.Click -= OnShowOriginalClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click -= OnPrimaryClick;
-        }
+        _showOriginalSwitch?.Click -= OnShowOriginalClick;
+        _reset?.Click -= OnResetClick;
+        _primary?.Click -= OnPrimaryClick;
     }
 
     /// <inheritdoc />
@@ -483,14 +465,8 @@ public partial class PiiRedaction
         RefreshCells();
 
         // The flow: the model's node carries its name and mark.
-        if (_flowYou is not null)
-        {
-            _flowYou.Label = labels.You;
-        }
-        if (_flowGuard is not null)
-        {
-            _flowGuard.Label = labels.Title;
-        }
+        _flowYou?.Label = labels.You;
+        _flowGuard?.Label = labels.Title;
         if (_flowModel is not null)
         {
             _flowModel.Label = EffectiveModelName.Length > 0 ? EffectiveModelName : labels.Model;
@@ -517,10 +493,7 @@ public partial class PiiRedaction
         _placeholderFade?.To(placeholder ? 1 : 0, placeholder ? LayerIn : LayerOut, instantSwap);
         _streamFade?.To(raw ? 1 : 0, raw ? LayerIn : LayerOut, instantSwap || raw);
         _restoredFade?.To(restored ? 1 : 0, restored ? LayerIn : LayerOut, instantSwap);
-        if (_replyPlaceholder is not null)
-        {
-            _replyPlaceholder.Text = labels.ReplyPlaceholder;
-        }
+        _replyPlaceholder?.Text = labels.ReplyPlaceholder;
         SetLayerAccess(_replyPlaceholder, placeholder);
         SetLayerAccess(_stream, raw);
         SetLayerAccess(_restored, restored);
@@ -531,14 +504,8 @@ public partial class PiiRedaction
         {
             _status.Text = status;
         }
-        if (_status is not null)
-        {
-            _status.IsShimmering = IsWorking(phase);
-        }
-        if (_statusGlyph is not null)
-        {
-            _statusGlyph.Data = GlyphFor(phase);
-        }
+        _status?.IsShimmering = IsWorking(phase);
+        _statusGlyph?.Data = GlyphFor(phase);
         if (_reset is not null)
         {
             _reset.Content = labels.Reset;
@@ -677,10 +644,7 @@ public partial class PiiRedaction
     /// </summary>
     private void UpdateReplyReserve()
     {
-        if (_replyReserve is not null)
-        {
-            _replyReserve.Text = Simulation?.RestoredReply() ?? string.Empty;
-        }
+        _replyReserve?.Text = Simulation?.RestoredReply() ?? string.Empty;
     }
 
     private void OnShowOriginalClick(object? sender, RoutedEventArgs e)

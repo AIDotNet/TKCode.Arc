@@ -12,124 +12,130 @@ namespace TKCode.Arc.Editor.Diff;
 /// <summary>The <see cref="LineRange"/> members of upstream's lineRange.ts that the diff uses.</summary>
 internal static class LineRangeDiffExtensions
 {
-    public static LineRange OfLength(int startLineNumber, int length) => new(startLineNumber, startLineNumber + length);
-
-    /// <summary>The lines a range touches, its end line included.</summary>
-    public static LineRange FromRangeInclusive(TextRange range) => new(range.StartLineNumber, range.EndLineNumber + 1);
-
-    /// <summary>The smallest line range that contains all of <paramref name="lineRanges"/> (at least one).</summary>
-    public static LineRange Join(IReadOnlyList<LineRange> lineRanges)
+    extension(LineRange range)
     {
-        if (lineRanges.Count == 0)
+        public static LineRange OfLength(int startLineNumber, int length) => new(startLineNumber, startLineNumber + length);
+
+        /// <summary>The lines a range touches, its end line included.</summary>
+        public static LineRange FromRangeInclusive(TextRange textRange) => new(textRange.StartLineNumber, textRange.EndLineNumber + 1);
+
+        /// <summary>The smallest line range that contains all of <paramref name="lineRanges"/> (at least one).</summary>
+        public static LineRange Join(IReadOnlyList<LineRange> lineRanges)
         {
-            throw new InvalidOperationException("lineRanges cannot be empty");
+            if (lineRanges.Count == 0)
+            {
+                throw new InvalidOperationException("lineRanges cannot be empty");
+            }
+
+            var startLineNumber = lineRanges[0].StartLineNumber;
+            var endLineNumberExclusive = lineRanges[0].EndLineNumberExclusive;
+            for (var i = 1; i < lineRanges.Count; i++)
+            {
+                startLineNumber = Math.Min(startLineNumber, lineRanges[i].StartLineNumber);
+                endLineNumberExclusive = Math.Max(endLineNumberExclusive, lineRanges[i].EndLineNumberExclusive);
+            }
+
+            return new LineRange(startLineNumber, endLineNumberExclusive);
         }
 
-        var startLineNumber = lineRanges[0].StartLineNumber;
-        var endLineNumberExclusive = lineRanges[0].EndLineNumberExclusive;
-        for (var i = 1; i < lineRanges.Count; i++)
+        public LineRange Join(LineRange other) =>
+            new(Math.Min(range.StartLineNumber, other.StartLineNumber), Math.Max(range.EndLineNumberExclusive, other.EndLineNumberExclusive));
+
+        public LineRange Delta(int offset) =>
+            new(range.StartLineNumber + offset, range.EndLineNumberExclusive + offset);
+
+        public LineRange DeltaLength(int offset) =>
+            new(range.StartLineNumber, range.EndLineNumberExclusive + offset);
+
+        /// <summary>The intersection, or null when the ranges are apart (touching ranges give an empty range).</summary>
+        public LineRange? Intersect(LineRange other)
         {
-            startLineNumber = Math.Min(startLineNumber, lineRanges[i].StartLineNumber);
-            endLineNumberExclusive = Math.Max(endLineNumberExclusive, lineRanges[i].EndLineNumberExclusive);
+            var startLineNumber = Math.Max(range.StartLineNumber, other.StartLineNumber);
+            var endLineNumberExclusive = Math.Min(range.EndLineNumberExclusive, other.EndLineNumberExclusive);
+            return startLineNumber <= endLineNumberExclusive ? new LineRange(startLineNumber, endLineNumberExclusive) : null;
         }
 
-        return new LineRange(startLineNumber, endLineNumberExclusive);
-    }
+        public bool IntersectsStrict(LineRange other) =>
+            range.StartLineNumber < other.EndLineNumberExclusive && other.StartLineNumber < range.EndLineNumberExclusive;
 
-    public static LineRange Join(this LineRange range, LineRange other) =>
-        new(Math.Min(range.StartLineNumber, other.StartLineNumber), Math.Max(range.EndLineNumberExclusive, other.EndLineNumberExclusive));
+        public bool IntersectsOrTouches(LineRange other) =>
+            range.StartLineNumber <= other.EndLineNumberExclusive && other.StartLineNumber <= range.EndLineNumberExclusive;
 
-    public static LineRange Delta(this LineRange range, int offset) =>
-        new(range.StartLineNumber + offset, range.EndLineNumberExclusive + offset);
+        public bool ContainsRange(LineRange other) =>
+            range.StartLineNumber <= other.StartLineNumber && other.EndLineNumberExclusive <= range.EndLineNumberExclusive;
 
-    public static LineRange DeltaLength(this LineRange range, int offset) =>
-        new(range.StartLineNumber, range.EndLineNumberExclusive + offset);
+        /// <summary>The range from the first column of the first line to the end of the last line, or null when empty.</summary>
+        public TextRange? ToInclusiveRange() =>
+            range.IsEmpty ? null : new TextRange(range.StartLineNumber, 1, range.EndLineNumberExclusive - 1, int.MaxValue);
 
-    /// <summary>The intersection, or null when the ranges are apart (touching ranges give an empty range).</summary>
-    public static LineRange? Intersect(this LineRange range, LineRange other)
-    {
-        var startLineNumber = Math.Max(range.StartLineNumber, other.StartLineNumber);
-        var endLineNumberExclusive = Math.Min(range.EndLineNumberExclusive, other.EndLineNumberExclusive);
-        return startLineNumber <= endLineNumberExclusive ? new LineRange(startLineNumber, endLineNumberExclusive) : null;
-    }
+        /// <summary>The range from the start of the first line to the start of the end line (which need not exist).</summary>
+        public TextRange ToExclusiveRange() =>
+            new(range.StartLineNumber, 1, range.EndLineNumberExclusive, 1);
 
-    public static bool IntersectsStrict(this LineRange range, LineRange other) =>
-        range.StartLineNumber < other.EndLineNumberExclusive && other.StartLineNumber < range.EndLineNumberExclusive;
+        /// <summary>The 0-based offset range of the lines (subtracts 1).</summary>
+        public OffsetRange ToOffsetRange() => new(range.StartLineNumber - 1, range.EndLineNumberExclusive - 1);
 
-    public static bool IntersectsOrTouches(this LineRange range, LineRange other) =>
-        range.StartLineNumber <= other.EndLineNumberExclusive && other.StartLineNumber <= range.EndLineNumberExclusive;
-
-    public static bool ContainsRange(this LineRange range, LineRange other) =>
-        range.StartLineNumber <= other.StartLineNumber && other.EndLineNumberExclusive <= range.EndLineNumberExclusive;
-
-    /// <summary>The range from the first column of the first line to the end of the last line, or null when empty.</summary>
-    public static TextRange? ToInclusiveRange(this LineRange range) =>
-        range.IsEmpty ? null : new TextRange(range.StartLineNumber, 1, range.EndLineNumberExclusive - 1, int.MaxValue);
-
-    /// <summary>The range from the start of the first line to the start of the end line (which need not exist).</summary>
-    public static TextRange ToExclusiveRange(this LineRange range) =>
-        new(range.StartLineNumber, 1, range.EndLineNumberExclusive, 1);
-
-    /// <summary>The 0-based offset range of the lines (subtracts 1).</summary>
-    public static OffsetRange ToOffsetRange(this LineRange range) => new(range.StartLineNumber - 1, range.EndLineNumberExclusive - 1);
-
-    public static int DistanceToRange(this LineRange range, LineRange other)
-    {
-        if (range.EndLineNumberExclusive <= other.StartLineNumber)
+        public int DistanceToRange(LineRange other)
         {
-            return other.StartLineNumber - range.EndLineNumberExclusive;
-        }
+            if (range.EndLineNumberExclusive <= other.StartLineNumber)
+            {
+                return other.StartLineNumber - range.EndLineNumberExclusive;
+            }
 
-        if (other.EndLineNumberExclusive <= range.StartLineNumber)
-        {
-            return range.StartLineNumber - other.EndLineNumberExclusive;
-        }
+            if (other.EndLineNumberExclusive <= range.StartLineNumber)
+            {
+                return range.StartLineNumber - other.EndLineNumberExclusive;
+            }
 
-        return 0;
+            return 0;
+        }
     }
 }
 
 /// <summary>The <see cref="OffsetRange"/> members of upstream's offsetRange.ts that the diff uses.</summary>
 internal static class OffsetRangeDiffExtensions
 {
-    public static OffsetRange OfLength(int length) => new(0, length);
-
-    public static OffsetRange OfStartAndLength(int start, int length) => new(start, start + length);
-
-    public static OffsetRange DeltaStart(this OffsetRange range, int offset) => new(range.Start + offset, range.EndExclusive);
-
-    public static OffsetRange DeltaEnd(this OffsetRange range, int offset) => new(range.Start, range.EndExclusive + offset);
-
-    public static OffsetRange Join(this OffsetRange range, OffsetRange other) =>
-        new(Math.Min(range.Start, other.Start), Math.Max(range.EndExclusive, other.EndExclusive));
-
-    /// <summary>The intersection, or null when the ranges are apart (touching ranges give an empty range).</summary>
-    public static OffsetRange? Intersect(this OffsetRange range, OffsetRange other)
+    extension(OffsetRange range)
     {
-        var start = Math.Max(range.Start, other.Start);
-        var end = Math.Min(range.EndExclusive, other.EndExclusive);
-        return start <= end ? new OffsetRange(start, end) : null;
-    }
+        public static OffsetRange OfLength(int length) => new(0, length);
 
-    public static bool Intersects(this OffsetRange range, OffsetRange other) =>
-        Math.Max(range.Start, other.Start) < Math.Min(range.EndExclusive, other.EndExclusive);
+        public static OffsetRange OfStartAndLength(int start, int length) => new(start, start + length);
 
-    public static bool IntersectsOrTouches(this OffsetRange range, OffsetRange other) =>
-        Math.Max(range.Start, other.Start) <= Math.Min(range.EndExclusive, other.EndExclusive);
+        public OffsetRange DeltaStart(int offset) => new(range.Start + offset, range.EndExclusive);
 
-    public static bool ContainsRange(this OffsetRange range, OffsetRange other) =>
-        range.Start <= other.Start && other.EndExclusive <= range.EndExclusive;
+        public OffsetRange DeltaEnd(int offset) => new(range.Start, range.EndExclusive + offset);
 
-    /// <summary>The items of <paramref name="array"/> in the range.</summary>
-    public static T[] Slice<T>(this OffsetRange range, IReadOnlyList<T> array)
-    {
-        var result = new T[range.Length];
-        for (var i = 0; i < result.Length; i++)
+        public OffsetRange Join(OffsetRange other) =>
+            new(Math.Min(range.Start, other.Start), Math.Max(range.EndExclusive, other.EndExclusive));
+
+        /// <summary>The intersection, or null when the ranges are apart (touching ranges give an empty range).</summary>
+        public OffsetRange? Intersect(OffsetRange other)
         {
-            result[i] = array[range.Start + i];
+            var start = Math.Max(range.Start, other.Start);
+            var end = Math.Min(range.EndExclusive, other.EndExclusive);
+            return start <= end ? new OffsetRange(start, end) : null;
         }
 
-        return result;
+        public bool Intersects(OffsetRange other) =>
+            Math.Max(range.Start, other.Start) < Math.Min(range.EndExclusive, other.EndExclusive);
+
+        public bool IntersectsOrTouches(OffsetRange other) =>
+            Math.Max(range.Start, other.Start) <= Math.Min(range.EndExclusive, other.EndExclusive);
+
+        public bool ContainsRange(OffsetRange other) =>
+            range.Start <= other.Start && other.EndExclusive <= range.EndExclusive;
+
+        /// <summary>The items of <paramref name="array"/> in the range.</summary>
+        public T[] Slice<T>(IReadOnlyList<T> array)
+        {
+            var result = new T[range.Length];
+            for (var i = 0; i < result.Length; i++)
+            {
+                result[i] = array[range.Start + i];
+            }
+
+            return result;
+        }
     }
 }
 

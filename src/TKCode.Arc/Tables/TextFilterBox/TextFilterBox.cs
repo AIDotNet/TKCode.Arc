@@ -182,10 +182,7 @@ public class TextFilterBox : FilterBox
     protected override void UpdateAutomation()
     {
         base.UpdateAutomation();
-        if (_input is not null)
-        {
-            _input.Label = LabelText ?? "Filter text";
-        }
+        _input?.Label = LabelText ?? "Filter text";
     }
 
     private void UpdateCondition()

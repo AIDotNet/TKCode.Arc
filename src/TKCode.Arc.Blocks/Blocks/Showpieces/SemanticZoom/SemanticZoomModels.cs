@@ -291,7 +291,6 @@ public abstract class SemanticZoomNode : AvaloniaObject
 
     private static readonly IReadOnlyList<SemanticZoomPerson> s_nobody = Array.Empty<SemanticZoomPerson>();
 
-    private SemanticZoomNode? _parent;
     private int _taskCount;
     private int _openTasks;
     private int _doneTasks;
@@ -320,8 +319,8 @@ public abstract class SemanticZoomNode : AvaloniaObject
     /// <inheritdoc cref="ParentProperty"/>
     public SemanticZoomNode? Parent
     {
-        get => _parent;
-        internal set => SetAndRaise(ParentProperty, ref _parent, value);
+        get;
+        internal set => SetAndRaise(ParentProperty, ref field, value);
     }
 
     /// <inheritdoc cref="TaskCountProperty"/>

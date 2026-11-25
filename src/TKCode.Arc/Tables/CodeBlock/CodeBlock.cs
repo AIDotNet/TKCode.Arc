@@ -248,14 +248,8 @@ public class CodeBlock : TemplatedControl
             _text.Classes.CollectionChanged -= OnTextClassesChanged;
             _text.PropertyChanged -= OnTextPropertyChanged;
         }
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
-        if (_expand is not null)
-        {
-            _expand.Click -= OnExpandClick;
-        }
+        _copy?.Copied -= OnCopied;
+        _expand?.Click -= OnExpandClick;
         _text = e.NameScope.Find<CodeBlockText>(TextPart);
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _expand = e.NameScope.Find<CodeBlockExpandButton>(ExpandPart);
@@ -268,14 +262,8 @@ public class CodeBlock : TemplatedControl
             _text.PropertyChanged += OnTextPropertyChanged;
             _text.SetSource(DisplayCode, DisplayLanguage);
         }
-        if (_copy is not null)
-        {
-            _copy.Copied += OnCopied;
-        }
-        if (_expand is not null)
-        {
-            _expand.Click += OnExpandClick;
-        }
+        _copy?.Copied += OnCopied;
+        _expand?.Click += OnExpandClick;
         UpdatePalette();
         UpdateCollapse();
     }

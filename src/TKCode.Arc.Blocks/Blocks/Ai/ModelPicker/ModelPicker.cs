@@ -244,10 +244,7 @@ public class ModelPicker : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pill is not null)
-        {
-            _pill.OpenRequested -= OnOpenRequested;
-        }
+        _pill?.OpenRequested -= OnOpenRequested;
         if (_host is not null)
         {
             _host.Children.Remove(_announcer);
@@ -266,10 +263,7 @@ public class ModelPicker : TemplatedControl
             _menu.AddHandler(ModelMenu.EffortChosenEvent, OnMenuEffortChosen);
             _menu.PropertyChanged += OnMenuPropertyChanged;
         }
-        if (_pill is not null)
-        {
-            _pill.OpenRequested += OnOpenRequested;
-        }
+        _pill?.OpenRequested += OnOpenRequested;
         _menu.PlacementTarget = _pill;
         // Hand the menu the catalog, the declared selection and the declared effort before it joins the tree: joining
         // applies its default selection, which must not overwrite what was declared.

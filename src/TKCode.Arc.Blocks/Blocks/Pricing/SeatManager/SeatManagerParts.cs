@@ -32,15 +32,9 @@ internal sealed class SeatManagerLegendDot : Control
         get => _meter;
         set
         {
-            if (_meter is not null)
-            {
-                _meter.PaletteChanged -= InvalidateVisual;
-            }
+            _meter?.PaletteChanged -= InvalidateVisual;
             _meter = value;
-            if (_meter is not null)
-            {
-                _meter.PaletteChanged += InvalidateVisual;
-            }
+            _meter?.PaletteChanged += InvalidateVisual;
             InvalidateVisual();
         }
     }

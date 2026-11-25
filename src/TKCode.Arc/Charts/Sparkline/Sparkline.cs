@@ -294,10 +294,7 @@ public class Sparkline : ChartBase
         var at = index ?? Last;
         var point = FormatPoint(at);
         var when = PointLabel(at);
-        if (_label is not null)
-        {
-            _label.Content = Label;
-        }
+        _label?.Content = Label;
         if (_headline is not null)
         {
             _headline.IsVisible = Value is not null;

@@ -141,20 +141,14 @@ internal sealed class InstallSnippetStepView : TemplatedControl
         }
         _fileName = fileName;
         _fileIsCommand = isCommand;
-        if (_file is not null)
-        {
-            _file.Content = FileLabel(fileName, isCommand);
-        }
+        _file?.Content = FileLabel(fileName, isCommand);
     }
 
     /// <summary>Shows a snippet; the old one crossfades out in the same cell.</summary>
     public void SetCode(InstallSnippetCodeView view)
     {
         _codeView = view;
-        if (_code is not null)
-        {
-            _code.Content = view;
-        }
+        _code?.Content = view;
     }
 
     /// <summary>The text the copy button copies and its name.</summary>
@@ -182,10 +176,7 @@ internal sealed class InstallSnippetStepView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
+        _copy?.Copied -= OnCopied;
         _number = e.NameScope.Find<TextBlock>(NumberPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _description = e.NameScope.Find<ArcContentSwap>(DescriptionPart);
@@ -202,27 +193,18 @@ internal sealed class InstallSnippetStepView : TemplatedControl
                 AutomationProperties.SetName(_copy, _copyName);
             }
         }
-        if (_number is not null)
-        {
-            _number.Text = Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
-        }
+        _number?.Text = Number.ToString(System.Globalization.CultureInfo.InvariantCulture);
         if (_title is not null && _spokenTitle is not null)
         {
             AutomationProperties.SetName(_title, _spokenTitle);
         }
         BuildReserve();
-        if (_description is not null)
-        {
-            _description.Content = _descriptionText;
-        }
+        _description?.Content = _descriptionText;
         if (_file is not null && _fileName is not null)
         {
             _file.Content = FileLabel(_fileName, _fileIsCommand);
         }
-        if (_code is not null)
-        {
-            _code.Content = _codeView;
-        }
+        _code?.Content = _codeView;
         PseudoClasses.Set(DonePseudoClass, IsDone);
         PseudoClasses.Set(LastPseudoClass, IsLast);
     }

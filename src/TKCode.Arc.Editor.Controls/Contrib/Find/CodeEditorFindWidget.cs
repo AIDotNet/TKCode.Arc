@@ -109,7 +109,6 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
     private FieldIconButton? _replaceAll;
     private TextBlock? _matchesCount;
 
-    private string _matchesCountText = string.Empty;
     private bool _isVisible;
     private bool _isReplaceVisible;
     private bool _ignoreChangeEvent;
@@ -155,9 +154,9 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
     /// <summary>The match count ("3 of 12", "No results").</summary>
     public string MatchesCountText
     {
-        get => _matchesCountText;
-        private set => SetAndRaise(MatchesCountTextProperty, ref _matchesCountText, value);
-    }
+        get;
+        private set => SetAndRaise(MatchesCountTextProperty, ref field, value);
+    } = string.Empty;
 
     /// <summary>The editor width below which the match count is hidden (Monaco's narrow find widget).</summary>
     public double NarrowEditorWidth
@@ -285,15 +284,9 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
         _ignoreChangeEvent = true;
         try
         {
-            if (_findInput is not null)
-            {
-                _findInput.Text = _state.SearchString;
-            }
+            _findInput?.Text = _state.SearchString;
 
-            if (_replaceInput is not null)
-            {
-                _replaceInput.Text = _state.ReplaceString;
-            }
+            _replaceInput?.Text = _state.ReplaceString;
         }
         finally
         {
@@ -351,10 +344,7 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
 
     private static void Unwire(FieldIconButton? button, EventHandler<RoutedEventArgs> click)
     {
-        if (button is not null)
-        {
-            button.Click -= click;
-        }
+        button?.Click -= click;
     }
 
     // ----- the find state
@@ -443,10 +433,7 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
         {
             var showRedOutline = _state.SearchString.Length > 0 && _state.MatchesCount == 0;
             PseudoClasses.Set(NoResultsPseudoClass, showRedOutline);
-            if (_findInput is not null)
-            {
-                _findInput.IsInvalid = showRedOutline;
-            }
+            _findInput?.IsInvalid = showRedOutline;
 
             UpdateMatchesCount();
             UpdateButtons();
@@ -469,10 +456,7 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
 
     private static void SetOn(FieldIconButton? button, bool on)
     {
-        if (button is not null)
-        {
-            button.IsOn = on;
-        }
+        button?.IsOn = on;
     }
 
     private void UpdateMatchesCount()
@@ -521,15 +505,9 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
 
     private void UpdateButtons()
     {
-        if (_findInput is not null)
-        {
-            _findInput.IsEnabled = _isVisible;
-        }
+        _findInput?.IsEnabled = _isVisible;
 
-        if (_replaceInput is not null)
-        {
-            _replaceInput.IsEnabled = _isVisible && _isReplaceVisible;
-        }
+        _replaceInput?.IsEnabled = _isVisible && _isReplaceVisible;
 
         UpdateToggleSelectionFindButton();
         SetEnabled(_close, _isVisible);
@@ -550,10 +528,7 @@ internal sealed class CodeEditorFindWidget : TemplatedControl, ICodeEditorOverla
 
     private static void SetEnabled(Control? control, bool enabled)
     {
-        if (control is not null)
-        {
-            control.IsEnabled = enabled;
-        }
+        control?.IsEnabled = enabled;
     }
 
     // ----- showing and hiding

@@ -21,30 +21,18 @@ internal sealed partial class CodeEditorView
         DetachScrollBars();
         _verticalScrollBar = vertical;
         _horizontalScrollBar = horizontal;
-        if (_verticalScrollBar is not null)
-        {
-            _verticalScrollBar.ValueChanged += OnVerticalScroll;
-        }
+        _verticalScrollBar?.ValueChanged += OnVerticalScroll;
 
-        if (_horizontalScrollBar is not null)
-        {
-            _horizontalScrollBar.ValueChanged += OnHorizontalScroll;
-        }
+        _horizontalScrollBar?.ValueChanged += OnHorizontalScroll;
 
         UpdateScrollBars();
     }
 
     internal void DetachScrollBars()
     {
-        if (_verticalScrollBar is not null)
-        {
-            _verticalScrollBar.ValueChanged -= OnVerticalScroll;
-        }
+        _verticalScrollBar?.ValueChanged -= OnVerticalScroll;
 
-        if (_horizontalScrollBar is not null)
-        {
-            _horizontalScrollBar.ValueChanged -= OnHorizontalScroll;
-        }
+        _horizontalScrollBar?.ValueChanged -= OnHorizontalScroll;
 
         _verticalScrollBar = null;
         _horizontalScrollBar = null;

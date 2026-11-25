@@ -390,18 +390,9 @@ public partial class TicketRouter : TemplatedControl
         _lanes = e.NameScope.Find<TicketRouterLanePanel>(LanesPart);
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
 
-        if (_pause is not null)
-        {
-            _pause.Click += OnPauseClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_sendToReview is not null)
-        {
-            _sendToReview.Click += OnSendToReviewClick;
-        }
+        _pause?.Click += OnPauseClick;
+        _retry?.Click += OnRetryClick;
+        _sendToReview?.Click += OnSendToReviewClick;
         _ticketFade = _ticketHost is null ? null : new TicketRouterFade(_ticketHost, true);
         Control?[] labels = [_intent, _sentiment, _confidence, _route];
         _labelFades = labels.Where(c => c is not null).Select(c => new TicketRouterFade(c!, false)).ToArray();
@@ -413,18 +404,9 @@ public partial class TicketRouter : TemplatedControl
 
     private void Unhook()
     {
-        if (_pause is not null)
-        {
-            _pause.Click -= OnPauseClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_sendToReview is not null)
-        {
-            _sendToReview.Click -= OnSendToReviewClick;
-        }
+        _pause?.Click -= OnPauseClick;
+        _retry?.Click -= OnRetryClick;
+        _sendToReview?.Click -= OnSendToReviewClick;
         foreach (var view in _laneViews)
         {
             view.ReviewPressed -= OnReviewPressed;
@@ -523,31 +505,16 @@ public partial class TicketRouter : TemplatedControl
         _compact = compact;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_lanes is not null)
-        {
-            _lanes.Columns = narrow ? 2 : 4;
-        }
-        if (_connector is not null)
-        {
-            _connector.IsVisible = !narrow;
-        }
+        _lanes?.Columns = narrow ? 2 : 4;
+        _connector?.IsVisible = !narrow;
         if (_route is not null)
         {
             Grid.SetRow(_route, narrow ? 1 : 0);
             Grid.SetColumn(_route, narrow ? 0 : 1);
         }
-        if (_confidence is not null)
-        {
-            _confidence.ShowsBar = !compact;
-        }
-        if (_model is not null)
-        {
-            _model.IsVisible = !compact && !string.IsNullOrEmpty(EffectiveModel);
-        }
-        if (_classifying is not null)
-        {
-            _classifying.Text = ClassifyingLabel();
-        }
+        _confidence?.ShowsBar = !compact;
+        _model?.IsVisible = !compact && !string.IsNullOrEmpty(EffectiveModel);
+        _classifying?.Text = ClassifyingLabel();
         if (foldsRows || force)
         {
             SyncLanes(animate: false);
@@ -559,36 +526,18 @@ public partial class TicketRouter : TemplatedControl
     private void RefreshTexts()
     {
         var labels = Labels;
-        if (_mark is not null)
-        {
-            _mark.Data = ModelMark ?? ArcIcons.Sparkles;
-        }
-        if (_title is not null)
-        {
-            _title.Text = Title;
-        }
+        _mark?.Data = ModelMark ?? ArcIcons.Sparkles;
+        _title?.Text = Title;
         if (_model is not null)
         {
             _model.Text = EffectiveModel;
             _model.IsVisible = !_compact && !string.IsNullOrEmpty(EffectiveModel);
         }
         AutomationProperties.SetName(this, Title);
-        if (_classifying is not null)
-        {
-            _classifying.Text = ClassifyingLabel();
-        }
-        if (_retry is not null)
-        {
-            _retry.Content = labels.Retry;
-        }
-        if (_sendToReview is not null)
-        {
-            _sendToReview.Content = labels.SendToReview;
-        }
-        if (_errorText is not null)
-        {
-            _errorText.Text = labels.Failed;
-        }
+        _classifying?.Text = ClassifyingLabel();
+        _retry?.Content = labels.Retry;
+        _sendToReview?.Content = labels.SendToReview;
+        _errorText?.Text = labels.Failed;
         UpdateStatus();
         UpdateStageLabels();
     }
@@ -606,14 +555,8 @@ public partial class TicketRouter : TemplatedControl
                 : _phase == TicketRouterPhase.CaughtUp ? labels.CaughtUp
                 : labels.Routing;
         }
-        if (_pauseGlyph is not null)
-        {
-            _pauseGlyph.Data = IsPaused ? ArcIcons.Play : ArcIcons.Pause;
-        }
-        if (_pauseText is not null)
-        {
-            _pauseText.Text = IsPaused ? labels.Resume : labels.Pause;
-        }
+        _pauseGlyph?.Data = IsPaused ? ArcIcons.Play : ArcIcons.Pause;
+        _pauseText?.Text = IsPaused ? labels.Resume : labels.Pause;
         if (_pause is not null)
         {
             AutomationProperties.SetName(_pause, IsPaused ? labels.Resume : labels.Pause);
@@ -630,15 +573,9 @@ public partial class TicketRouter : TemplatedControl
 
     private void Observe(INotifyCollectionChanged? collection)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnTicketsChanged;
-        }
+        _observed?.CollectionChanged -= OnTicketsChanged;
         _observed = collection;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnTicketsChanged;
-        }
+        _observed?.CollectionChanged += OnTicketsChanged;
     }
 
     private void OnTicketsChanged(object? sender, NotifyCollectionChangedEventArgs e)

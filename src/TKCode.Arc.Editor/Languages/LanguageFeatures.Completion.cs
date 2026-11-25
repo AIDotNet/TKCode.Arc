@@ -127,8 +127,10 @@ internal sealed record CompletionItem
 }
 
 /// <summary>The completions of one request (upstream's CompletionList).</summary>
-internal sealed record CompletionList(IReadOnlyList<CompletionItem> Suggestions)
+internal sealed class CompletionList(IReadOnlyList<CompletionItem> suggestions)
 {
+    public IReadOnlyList<CompletionItem> Suggestions { get; } = suggestions;
+
     /// <summary>Typing more asks the provider again.</summary>
     public bool Incomplete { get; init; }
 
@@ -240,8 +242,10 @@ internal sealed record InlineCompletion
 }
 
 /// <summary>The proposals of one inline completion request (upstream's InlineCompletions).</summary>
-internal sealed record InlineCompletions(IReadOnlyList<InlineCompletion> Items)
+internal sealed class InlineCompletions(IReadOnlyList<InlineCompletion> items)
 {
+    public IReadOnlyList<InlineCompletion> Items { get; } = items;
+
     public IReadOnlyList<LanguageCommand>? Commands { get; init; }
 
     public bool SuppressSuggestions { get; init; }

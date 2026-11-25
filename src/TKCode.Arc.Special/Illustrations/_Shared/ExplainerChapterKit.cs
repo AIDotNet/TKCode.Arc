@@ -71,10 +71,7 @@ internal sealed class ExplainerChapterKit
 
     public void Apply(INameScope scope)
     {
-        if (_speed is not null)
-        {
-            _speed.SelectionChanged -= OnSpeedSelectionChanged;
-        }
+        _speed?.SelectionChanged -= OnSpeedSelectionChanged;
         _status = scope.Find<ExplainerStatus>(StatusPart);
         _caption = scope.Find<ArcContentSwap>(CaptionPart);
         _speed = scope.Find<SegmentedControl>(SpeedPart);
@@ -92,10 +89,7 @@ internal sealed class ExplainerChapterKit
     /// <summary>Names the speed control and its words.</summary>
     public void SetSpeedLabel(string text)
     {
-        if (_speedLabel is not null)
-        {
-            _speedLabel.Text = text;
-        }
+        _speedLabel?.Text = text;
         if (_speed is not null)
         {
             AutomationProperties.SetName(_speed, text);
@@ -105,10 +99,7 @@ internal sealed class ExplainerChapterKit
     /// <summary>Hides the "Speed" words on narrow cards (the control keeps its name).</summary>
     public void SetSpeedLabelVisible(bool visible)
     {
-        if (_speedLabel is not null)
-        {
-            _speedLabel.IsVisible = visible;
-        }
+        _speedLabel?.IsVisible = visible;
     }
 
     /// <summary>Selects the option matching <see cref="Explainer.Speed"/> (none for other speeds).</summary>

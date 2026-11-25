@@ -98,13 +98,12 @@ public class SwipeActionsRow : ContentControl
 
     public double SeparatorInset { get => GetValue(SeparatorInsetProperty); set => SetValue(SeparatorInsetProperty, value); }
 
-    private SwipeActionSide _openSide;
 
     /// <summary>The side resting open (or heading there), or <see cref="SwipeActionSide.None"/>.</summary>
     public SwipeActionSide OpenSide
     {
-        get => _openSide;
-        private set => SetAndRaise(OpenSideProperty, ref _openSide, value);
+        get;
+        private set => SetAndRaise(OpenSideProperty, ref field, value);
     }
 
     internal double ActionExtent { get => GetValue(ActionExtentProperty); set => SetValue(ActionExtentProperty, value); }
@@ -338,18 +337,12 @@ public class SwipeActionsRow : ContentControl
             _more.RemoveHandler(KeyDownEvent, OnMoreKeyDown);
             _more.Row = null;
         }
-        if (_layers is not null)
-        {
-            _layers.Row = null;
-        }
+        _layers?.Row = null;
         _layers = e.NameScope.Find<SwipeActionsRowLayers>(ActionsPart);
         _host = e.NameScope.Find<Panel>(ContentHostPart);
         _more = e.NameScope.Find<SwipeActionsMoreButton>(MoreButtonPart);
         _separator = e.NameScope.Find<Border>(SeparatorPart);
-        if (_layers is not null)
-        {
-            _layers.Row = this;
-        }
+        _layers?.Row = this;
         if (_host is not null)
         {
             _translate.X = Offset;
@@ -410,10 +403,7 @@ public class SwipeActionsRow : ContentControl
 
     private void UpdateSeparator()
     {
-        if (_separator is not null)
-        {
-            _separator.Margin = new Thickness(SeparatorInset, 0, 0, 0);
-        }
+        _separator?.Margin = new Thickness(SeparatorInset, 0, 0, 0);
     }
 
     private void UpdateHasActions() => PseudoClasses.Set(HasActionsPseudoClass, HasActions);

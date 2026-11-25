@@ -78,13 +78,18 @@ internal interface ISmoothScrollPosition : IScrollPosition
 internal readonly record struct NewScrollPosition(double? ScrollLeft = null, double? ScrollTop = null);
 
 /// <summary>The options of a <see cref="Scrollable"/> (upstream's IScrollableOptions).</summary>
-/// <param name="ForceIntegerValues">Define if the scroll values should always be integers.</param>
-/// <param name="SmoothScrollDuration">Set the duration (ms) used for smooth scroll animations.</param>
-/// <param name="ScheduleAtNextAnimationFrame">
+/// <param name="forceIntegerValues">Define if the scroll values should always be integers.</param>
+/// <param name="smoothScrollDuration">Set the duration (ms) used for smooth scroll animations.</param>
+/// <param name="scheduleAtNextAnimationFrame">
 /// A function to schedule an update at the next frame (used for smooth scroll animations); disposing what it returns
 /// cancels the update.
 /// </param>
-internal sealed record ScrollableOptions(bool ForceIntegerValues, double SmoothScrollDuration, Func<Action, IDisposable> ScheduleAtNextAnimationFrame);
+internal sealed class ScrollableOptions(bool forceIntegerValues, double smoothScrollDuration, Func<Action, IDisposable> scheduleAtNextAnimationFrame)
+{
+    public bool ForceIntegerValues { get; } = forceIntegerValues;
+    public double SmoothScrollDuration { get; } = smoothScrollDuration;
+    public Func<Action, IDisposable> ScheduleAtNextAnimationFrame { get; } = scheduleAtNextAnimationFrame;
+}
 
 /// <summary>The scroll dimensions and positions, with the positions clamped to the dimensions.</summary>
 internal sealed class ScrollState : IScrollDimensions, IScrollPosition, ISmoothScrollPosition

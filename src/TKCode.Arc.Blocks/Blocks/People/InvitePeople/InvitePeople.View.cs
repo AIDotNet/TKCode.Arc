@@ -171,26 +171,11 @@ public partial class InvitePeople
 
     private void Wire()
     {
-        if (_pasteSample is not null)
-        {
-            _pasteSample.Click += OnPasteSampleClick;
-        }
-        if (_removeInvalid is not null)
-        {
-            _removeInvalid.Click += OnRemoveInvalidClick;
-        }
-        if (_upgrade is not null)
-        {
-            _upgrade.Click += OnUpgradeClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _pasteSample?.Click += OnPasteSampleClick;
+        _removeInvalid?.Click += OnRemoveInvalidClick;
+        _upgrade?.Click += OnUpgradeClick;
+        _reset?.Click += OnResetClick;
+        _send?.Click += OnSendClick;
         if (_fieldHost is not null)
         {
             _fieldHost.PointerPressed += OnFieldHostPressed;
@@ -201,26 +186,11 @@ public partial class InvitePeople
 
     private void Unwire()
     {
-        if (_pasteSample is not null)
-        {
-            _pasteSample.Click -= OnPasteSampleClick;
-        }
-        if (_removeInvalid is not null)
-        {
-            _removeInvalid.Click -= OnRemoveInvalidClick;
-        }
-        if (_upgrade is not null)
-        {
-            _upgrade.Click -= OnUpgradeClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _pasteSample?.Click -= OnPasteSampleClick;
+        _removeInvalid?.Click -= OnRemoveInvalidClick;
+        _upgrade?.Click -= OnUpgradeClick;
+        _reset?.Click -= OnResetClick;
+        _send?.Click -= OnSendClick;
         if (_fieldHost is not null)
         {
             _fieldHost.PointerPressed -= OnFieldHostPressed;
@@ -369,35 +339,17 @@ public partial class InvitePeople
             _removeInvalid.Content = labels.RemoveInvalid;
             AutomationProperties.SetName(_removeInvalid, labels.RemoveInvalid);
         }
-        if (_errorsHelp is not null)
-        {
-            _errorsHelp.Text = labels.ErrorsHelp;
-        }
-        if (_seatOf is not null)
-        {
-            _seatOf.Text = labels.SeatsOf;
-        }
-        if (_seatWord is not null)
-        {
-            _seatWord.Text = labels.Seats;
-        }
-        if (_removeToSend is not null)
-        {
-            _removeToSend.Text = labels.RemoveToSend;
-        }
+        _errorsHelp?.Text = labels.ErrorsHelp;
+        _seatOf?.Text = labels.SeatsOf;
+        _seatWord?.Text = labels.Seats;
+        _removeToSend?.Text = labels.RemoveToSend;
         if (_reset is not null)
         {
             _reset.IsVisible = IsResetVisible;
             AutomationProperties.SetName(_reset, labels.ResetName);
         }
-        if (_pendingHeading is not null)
-        {
-            _pendingHeading.Text = labels.Pending;
-        }
-        if (_pendingEmpty is not null)
-        {
-            _pendingEmpty.Text = labels.NoPending;
-        }
+        _pendingHeading?.Text = labels.Pending;
+        _pendingEmpty?.Text = labels.NoPending;
         if (_chips is not null)
         {
             AutomationProperties.SetName(_chips, labels.ChipsName);
@@ -431,10 +383,7 @@ public partial class InvitePeople
     {
         _summaryTimer?.Stop();
         _summaryTimer = null;
-        if (_hint is not null)
-        {
-            _hint.Content = HintBlock(Labels.Hint);
-        }
+        _hint?.Content = HintBlock(Labels.Hint);
     }
 
     /// <summary>The hint's text: 12 on a 16.8 line, wrapping to a second line when the row is narrow.</summary>
@@ -465,54 +414,24 @@ public partial class InvitePeople
         SeatsUsed = seats.Total;
         IsOverLimit = over;
         PseudoClasses.Set(OverPseudoClass, over);
-        if (_seatTotal is not null)
-        {
-            _seatTotal.Value = seats.Total;
-        }
-        if (_seatLimit is not null)
-        {
-            _seatLimit.Value = seats.Limit;
-        }
-        if (_plan is not null)
-        {
-            _plan.Content = plan?.Name is { Length: > 0 } name ? labels.PlanName(name) : null;
-        }
+        _seatTotal?.Value = seats.Total;
+        _seatLimit?.Value = seats.Limit;
+        _plan?.Content = plan?.Name is { Length: > 0 } name ? labels.PlanName(name) : null;
         if (_meter is not null)
         {
             _meter.SetSeats(seats);
             AutomationProperties.SetName(_meter, labels.MeterName);
             AutomationProperties.SetHelpText(_meter, labels.MeterValueText(seats.Total, seats.Limit, over ? seats.Over : 0));
         }
-        if (_legendMembers is not null)
-        {
-            _legendMembers.Text = labels.LegendMembers(seats.Members);
-        }
-        if (_legendPending is not null)
-        {
-            _legendPending.Text = labels.LegendPending(seats.Pending);
-        }
-        if (_legendNew is not null)
-        {
-            _legendNew.Text = labels.LegendNew(seats.New);
-        }
-        if (_overHost is not null)
-        {
-            _overHost.IsExpanded = over;
-        }
-        if (_over is not null)
-        {
-            _over.Opacity = over ? 1 : 0;
-        }
+        _legendMembers?.Text = labels.LegendMembers(seats.Members);
+        _legendPending?.Text = labels.LegendPending(seats.Pending);
+        _legendNew?.Text = labels.LegendNew(seats.New);
+        _overHost?.IsExpanded = over;
+        _over?.Opacity = over ? 1 : 0;
         if (over)
         {
-            if (_overCount is not null)
-            {
-                _overCount.Value = seats.Over;
-            }
-            if (_overText is not null)
-            {
-                _overText.Text = labels.OverLimit(seats.Over, plan?.Name ?? string.Empty);
-            }
+            _overCount?.Value = seats.Over;
+            _overText?.Text = labels.OverLimit(seats.Over, plan?.Name ?? string.Empty);
             var next = NextPlan;
             if (_upgrade is not null)
             {
@@ -524,10 +443,7 @@ public partial class InvitePeople
                     AutomationProperties.SetName(_upgrade, text);
                 }
             }
-            if (_removeToSend is not null)
-            {
-                _removeToSend.IsVisible = next is null;
-            }
+            _removeToSend?.IsVisible = next is null;
         }
         UpdateSend();
     }
@@ -544,19 +460,13 @@ public partial class InvitePeople
         var over = IsOverLimit;
         _send.IsEnabled = _entries.Count > 0;
         _send.SetState(InvitePeopleButton.ReadyPseudoClass, valid > 0 && invalid == 0 && !over);
-        if (_sendVerb is not null)
-        {
-            _sendVerb.Text = labels.SendVerb;
-        }
+        _sendVerb?.Text = labels.SendVerb;
         if (_sendCount is not null)
         {
             _sendCount.IsVisible = valid > 0;
             _sendCount.Value = valid;
         }
-        if (_sendNoun is not null)
-        {
-            _sendNoun.Content = valid == 1 ? labels.InviteOne : labels.InviteOther;
-        }
+        _sendNoun?.Content = valid == 1 ? labels.InviteOne : labels.InviteOther;
         AutomationProperties.SetName(_send, labels.SendName(valid));
         var plan = EffectivePlan?.Name ?? string.Empty;
         AutomationProperties.SetHelpText(_send, invalid > 0
@@ -569,22 +479,13 @@ public partial class InvitePeople
     {
         var invalid = _entries.Where(e => !e.IsValid).ToList();
         var labels = Labels;
-        if (_errorsHost is not null)
-        {
-            _errorsHost.IsExpanded = invalid.Count > 0;
-        }
-        if (_errors is not null)
-        {
-            _errors.Opacity = invalid.Count > 0 ? 1 : 0;
-        }
+        _errorsHost?.IsExpanded = invalid.Count > 0;
+        _errors?.Opacity = invalid.Count > 0 ? 1 : 0;
         if (invalid.Count == 0)
         {
             return;
         }
-        if (_errorsTitle is not null)
-        {
-            _errorsTitle.Text = labels.ErrorsTitle(invalid.Count);
-        }
+        _errorsTitle?.Text = labels.ErrorsTitle(invalid.Count);
         if (_errorLines is not null)
         {
             _errorLines.Children.Clear();

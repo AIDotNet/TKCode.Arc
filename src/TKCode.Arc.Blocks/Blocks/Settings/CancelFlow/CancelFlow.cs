@@ -190,22 +190,18 @@ public class CancelFlow : TemplatedControl
                     Unsubscribe(old, OnLossesChanged);
                     Subscribe(_lossList, OnLossesChanged);
                 }
-                if (_losses is not null)
-                {
-                    _losses.ItemsSource = _lossList;
-                }
+                _losses?.ItemsSource = _lossList;
                 UpdateTexts();
             }
         }
     }
 
-    private CancelFlowStep _step;
 
     /// <inheritdoc cref="StepProperty"/>
     public CancelFlowStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="SelectedReasonProperty"/>
@@ -465,10 +461,7 @@ public class CancelFlow : TemplatedControl
         scope.Find<Panel>(StepStorePart)?.Children.Clear();
         _segmentColumns = 0;
         AttachParts();
-        if (_losses is not null)
-        {
-            _losses.ItemsSource = Losses;
-        }
+        _losses?.ItemsSource = Losses;
         RebuildReasonOptions();
         SyncFeedback();
         UpdateTexts();
@@ -478,106 +471,34 @@ public class CancelFlow : TemplatedControl
 
     private void AttachParts()
     {
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_reasons is not null)
-        {
-            _reasons.SelectionChanged += OnReasonSelectionChanged;
-        }
-        if (_feedback is not null)
-        {
-            _feedback.PropertyChanged += OnFeedbackPropertyChanged;
-        }
-        if (_continue is not null)
-        {
-            _continue.Click += OnContinueClick;
-        }
-        if (_keep is not null)
-        {
-            _keep.Click += OnKeepPlanClick;
-        }
-        if (_accept is not null)
-        {
-            _accept.Click += OnAcceptClick;
-        }
-        if (_decline is not null)
-        {
-            _decline.Click += OnDeclineClick;
-        }
-        if (_hold is not null)
-        {
-            _hold.Confirmed += OnHoldConfirmed;
-        }
-        if (_confirmKeep is not null)
-        {
-            _confirmKeep.Click += OnKeepPlanClick;
-        }
-        if (_reactivate is not null)
-        {
-            _reactivate.Click += OnReactivateClick;
-        }
-        if (_done is not null)
-        {
-            _done.Click += OnKeepPlanClick;
-        }
-        if (_resultGlyph is not null)
-        {
-            _resultGlyph.AttachedToVisualTree += OnResultGlyphAttached;
-        }
+        _back?.Click += OnBackClick;
+        _reasons?.SelectionChanged += OnReasonSelectionChanged;
+        _feedback?.PropertyChanged += OnFeedbackPropertyChanged;
+        _continue?.Click += OnContinueClick;
+        _keep?.Click += OnKeepPlanClick;
+        _accept?.Click += OnAcceptClick;
+        _decline?.Click += OnDeclineClick;
+        _hold?.Confirmed += OnHoldConfirmed;
+        _confirmKeep?.Click += OnKeepPlanClick;
+        _reactivate?.Click += OnReactivateClick;
+        _done?.Click += OnKeepPlanClick;
+        _resultGlyph?.AttachedToVisualTree += OnResultGlyphAttached;
     }
 
     private void DetachParts()
     {
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_reasons is not null)
-        {
-            _reasons.SelectionChanged -= OnReasonSelectionChanged;
-        }
-        if (_feedback is not null)
-        {
-            _feedback.PropertyChanged -= OnFeedbackPropertyChanged;
-        }
-        if (_continue is not null)
-        {
-            _continue.Click -= OnContinueClick;
-        }
-        if (_keep is not null)
-        {
-            _keep.Click -= OnKeepPlanClick;
-        }
-        if (_accept is not null)
-        {
-            _accept.Click -= OnAcceptClick;
-        }
-        if (_decline is not null)
-        {
-            _decline.Click -= OnDeclineClick;
-        }
-        if (_hold is not null)
-        {
-            _hold.Confirmed -= OnHoldConfirmed;
-        }
-        if (_confirmKeep is not null)
-        {
-            _confirmKeep.Click -= OnKeepPlanClick;
-        }
-        if (_reactivate is not null)
-        {
-            _reactivate.Click -= OnReactivateClick;
-        }
-        if (_done is not null)
-        {
-            _done.Click -= OnKeepPlanClick;
-        }
-        if (_resultGlyph is not null)
-        {
-            _resultGlyph.AttachedToVisualTree -= OnResultGlyphAttached;
-        }
+        _back?.Click -= OnBackClick;
+        _reasons?.SelectionChanged -= OnReasonSelectionChanged;
+        _feedback?.PropertyChanged -= OnFeedbackPropertyChanged;
+        _continue?.Click -= OnContinueClick;
+        _keep?.Click -= OnKeepPlanClick;
+        _accept?.Click -= OnAcceptClick;
+        _decline?.Click -= OnDeclineClick;
+        _hold?.Confirmed -= OnHoldConfirmed;
+        _confirmKeep?.Click -= OnKeepPlanClick;
+        _reactivate?.Click -= OnReactivateClick;
+        _done?.Click -= OnKeepPlanClick;
+        _resultGlyph?.AttachedToVisualTree -= OnResultGlyphAttached;
     }
 
     #endregion
@@ -1033,14 +954,8 @@ public class CancelFlow : TemplatedControl
     {
         var inProgress = Step is CancelFlowStep.Reason or CancelFlowStep.Offer or CancelFlowStep.Confirm;
         var canGoBack = Step is CancelFlowStep.Offer or CancelFlowStep.Confirm;
-        if (_headerHost is not null)
-        {
-            _headerHost.IsPresent = inProgress;
-        }
-        if (_backHost is not null)
-        {
-            _backHost.IsPresent = canGoBack;
-        }
+        _headerHost?.IsPresent = inProgress;
+        _backHost?.IsPresent = canGoBack;
         if (_back is not null)
         {
             _back.IsEnabled = canGoBack;
@@ -1072,10 +987,7 @@ public class CancelFlow : TemplatedControl
         SetSegment(_reasonSegment, 1, current);
         SetSegment(_offerSegment, 2, current);
         SetSegment(_confirmSegment, total, current);
-        if (_counter is not null)
-        {
-            _counter.Text = Labels.StepCounter(current, total);
-        }
+        _counter?.Text = Labels.StepCounter(current, total);
     }
 
     private static void SetSegment(Border segment, int position, int current)
@@ -1097,23 +1009,14 @@ public class CancelFlow : TemplatedControl
         }
 
         // Reason
-        if (_reasonTitle is not null)
-        {
-            _reasonTitle.Text = labels.ReasonTitle;
-        }
-        if (_reasonDescription is not null)
-        {
-            _reasonDescription.Text = labels.ReasonDescription(plan);
-        }
+        _reasonTitle?.Text = labels.ReasonTitle;
+        _reasonDescription?.Text = labels.ReasonDescription(plan);
         if (_reasons is not null)
         {
             AutomationProperties.SetName(_reasons, labels.ReasonTitle);
         }
         var reason = SelectedReason;
-        if (_feedbackHost is not null)
-        {
-            _feedbackHost.IsExpanded = reason is not null;
-        }
+        _feedbackHost?.IsExpanded = reason is not null;
         if (_feedback is not null)
         {
             _feedback.Label = reason is { AsksForDetails: true } ? reason.DetailsPrompt ?? labels.DetailsPrompt : labels.FeedbackLabel;
@@ -1126,50 +1029,29 @@ public class CancelFlow : TemplatedControl
             _continue.Content = labels.Continue;
             _continue.IsEnabled = reason is not null;
         }
-        if (_keep is not null)
-        {
-            _keep.Content = labels.KeepPlan;
-        }
+        _keep?.Content = labels.KeepPlan;
 
         // Offer: the chosen reason's, or the one accepted on the way to Retained.
         var offer = Step == CancelFlowStep.Retained ? _acceptedOffer ?? OfferFor(reason) : OfferFor(reason);
-        if (_offerIcon is not null)
-        {
-            _offerIcon.Data = offer?.Icon ?? GiftIcon;
-        }
-        if (_offerTitle is not null)
-        {
-            _offerTitle.Text = offer?.Title;
-        }
+        _offerIcon?.Data = offer?.Icon ?? GiftIcon;
+        _offerTitle?.Text = offer?.Title;
         if (_offerDescription is not null)
         {
             _offerDescription.Text = offer?.Description;
             _offerDescription.IsVisible = !string.IsNullOrEmpty(offer?.Description);
         }
-        if (_accept is not null)
-        {
-            _accept.Content = string.IsNullOrWhiteSpace(offer?.AcceptLabel) ? labels.AcceptOffer : offer.AcceptLabel;
-        }
-        if (_decline is not null)
-        {
-            _decline.Content = labels.ContinueCanceling;
-        }
+        _accept?.Content = string.IsNullOrWhiteSpace(offer?.AcceptLabel) ? labels.AcceptOffer : offer.AcceptLabel;
+        _decline?.Content = labels.ContinueCanceling;
 
         // Confirm
         var hasLosses = _lossList.Count > 0;
-        if (_confirmTitle is not null)
-        {
-            _confirmTitle.Text = labels.ConfirmTitle(plan);
-        }
+        _confirmTitle?.Text = labels.ConfirmTitle(plan);
         if (_confirmDescription is not null)
         {
             var access = labels.AccessUntil(date);
             _confirmDescription.Text = hasLosses ? $"{access} {labels.AfterThat}" : access;
         }
-        if (_lossesBox is not null)
-        {
-            _lossesBox.IsVisible = hasLosses;
-        }
+        _lossesBox?.IsVisible = hasLosses;
         if (_losses is not null)
         {
             AutomationProperties.SetName(_losses, labels.LossesName);
@@ -1179,17 +1061,11 @@ public class CancelFlow : TemplatedControl
             _hold.Label = labels.HoldToCancel;
             _hold.ConfirmedLabel = labels.HoldConfirmed;
         }
-        if (_confirmKeep is not null)
-        {
-            _confirmKeep.Content = labels.KeepPlan;
-        }
+        _confirmKeep?.Content = labels.KeepPlan;
 
         // Canceled or Retained
         var retained = Step == CancelFlowStep.Retained && offer is not null;
-        if (_resultTitle is not null)
-        {
-            _resultTitle.Text = retained ? offer!.AcceptedTitle ?? labels.RetainedTitle(offer.Title) : labels.CanceledTitle;
-        }
+        _resultTitle?.Text = retained ? offer!.AcceptedTitle ?? labels.RetainedTitle(offer.Title) : labels.CanceledTitle;
         if (_resultDescription is not null)
         {
             _resultDescription.Text = retained

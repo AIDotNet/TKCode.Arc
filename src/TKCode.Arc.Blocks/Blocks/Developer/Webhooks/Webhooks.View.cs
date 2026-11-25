@@ -263,10 +263,7 @@ public partial class Webhooks
             _add.Content = null;
         }
         _endpointsHost?.Children.Clear();
-        if (_detailHost is not null)
-        {
-            _detailHost.Child = null;
-        }
+        _detailHost?.Child = null;
         _titleText = e.NameScope.Find<TextBlock>(TitlePart);
         _descriptionText = e.NameScope.Find<TextBlock>(DescriptionPart);
         _top = e.NameScope.Find<Border>(TopPart);
@@ -280,10 +277,7 @@ public partial class Webhooks
             _endpointsHost.Children.Add(_endpointHighlight);
             _endpointsHost.Children.Add(_endpointList);
         }
-        if (_detailHost is not null)
-        {
-            _detailHost.Child = _detail;
-        }
+        _detailHost?.Child = _detail;
         if (_add is not null)
         {
             _add.Leading = _leading;
@@ -397,10 +391,7 @@ public partial class Webhooks
 
     private void UpdateHeader()
     {
-        if (_titleText is not null)
-        {
-            _titleText.Text = Title ?? Labels.Title;
-        }
+        _titleText?.Text = Title ?? Labels.Title;
         if (_descriptionText is not null)
         {
             _descriptionText.Text = Description;
@@ -757,10 +748,7 @@ public partial class Webhooks
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(CompactPseudoClass, compact);
         var gutter = Gutter;
-        if (_top is not null)
-        {
-            _top.Padding = new Thickness(gutter, 16);
-        }
+        _top?.Padding = new Thickness(gutter, 16);
         foreach (var item in _endpointList.LiveItems)
         {
             if (_endpointList.ContainerFor(item) is WebhookEndpointRow row)

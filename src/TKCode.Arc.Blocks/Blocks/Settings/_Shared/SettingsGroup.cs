@@ -98,7 +98,6 @@ public class SettingsGroup : HeaderedItemsControl
     public static readonly StyledProperty<double> ContentSpacingProperty =
         SettingsRow.ContentSpacingProperty.AddOwner<SettingsGroup>();
 
-    private int _actualColumns = 1;
 
     /// <inheritdoc cref="ColumnsProperty"/>
     public int Columns
@@ -131,9 +130,9 @@ public class SettingsGroup : HeaderedItemsControl
     /// <inheritdoc cref="ActualColumnsProperty"/>
     public int ActualColumns
     {
-        get => _actualColumns;
-        private set => SetAndRaise(ActualColumnsProperty, ref _actualColumns, value);
-    }
+        get;
+        private set => SetAndRaise(ActualColumnsProperty, ref field, value);
+    } = 1;
 
     /// <inheritdoc cref="LabelWidthProperty"/>
     public double LabelWidth

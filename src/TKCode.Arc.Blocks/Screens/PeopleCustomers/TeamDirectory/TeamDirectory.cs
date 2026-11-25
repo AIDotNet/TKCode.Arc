@@ -134,7 +134,6 @@ public partial class TeamDirectory : TemplatedControl
 
     #endregion
 
-    private TeamDirectoryPerson? _displayedPerson;
     private int _matchCount;
 
     /// <summary>The people, in order, when no <see cref="PeopleSource"/> is set.</summary>
@@ -191,8 +190,8 @@ public partial class TeamDirectory : TemplatedControl
     /// <inheritdoc cref="DisplayedPersonProperty"/>
     public TeamDirectoryPerson? DisplayedPerson
     {
-        get => _displayedPerson;
-        private set => SetAndRaise(DisplayedPersonProperty, ref _displayedPerson, value);
+        get;
+        private set => SetAndRaise(DisplayedPersonProperty, ref field, value);
     }
 
     /// <inheritdoc cref="MatchCountProperty"/>

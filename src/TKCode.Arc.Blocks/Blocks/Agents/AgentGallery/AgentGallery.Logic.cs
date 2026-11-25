@@ -342,26 +342,11 @@ public partial class AgentGallery
             _sort.SelectedIndex = (int)Sort;
             _sort.SelectionChanged += OnSortSelectionChanged;
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click += OnClearSearchClick;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.Click += OnShowAllClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_detailInstall is not null)
-        {
-            _detailInstall.Click += OnDetailInstallClick;
-        }
-        if (_uninstall is not null)
-        {
-            _uninstall.Click += OnUninstallClick;
-        }
+        _clearSearch?.Click += OnClearSearchClick;
+        _showAll?.Click += OnShowAllClick;
+        _back?.Click += OnBackClick;
+        _detailInstall?.Click += OnDetailInstallClick;
+        _uninstall?.Click += OnUninstallClick;
     }
 
     private void Unwire()
@@ -372,34 +357,13 @@ public partial class AgentGallery
             _search.PropertyChanged -= OnSearchPropertyChanged;
             _search.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
         }
-        if (_categories is not null)
-        {
-            _categories.PropertyChanged -= OnCategoriesPropertyChanged;
-        }
-        if (_sort is not null)
-        {
-            _sort.SelectionChanged -= OnSortSelectionChanged;
-        }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click -= OnClearSearchClick;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.Click -= OnShowAllClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_detailInstall is not null)
-        {
-            _detailInstall.Click -= OnDetailInstallClick;
-        }
-        if (_uninstall is not null)
-        {
-            _uninstall.Click -= OnUninstallClick;
-        }
+        _categories?.PropertyChanged -= OnCategoriesPropertyChanged;
+        _sort?.SelectionChanged -= OnSortSelectionChanged;
+        _clearSearch?.Click -= OnClearSearchClick;
+        _showAll?.Click -= OnShowAllClick;
+        _back?.Click -= OnBackClick;
+        _detailInstall?.Click -= OnDetailInstallClick;
+        _uninstall?.Click -= OnUninstallClick;
         foreach (var card in _cards)
         {
             card.RemoveHandler(AgentGalleryCard.ActivatedEvent, OnCardActivated);
@@ -453,10 +417,7 @@ public partial class AgentGallery
     private void ApplyTexts()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = Title ?? labels.Title;
-        }
+        _title?.Text = Title ?? labels.Title;
         if (_subtitle is not null)
         {
             var subtitle = Subtitle ?? labels.Subtitle;
@@ -468,10 +429,7 @@ public partial class AgentGallery
             _search.Placeholder = labels.SearchPlaceholder;
             AutomationProperties.SetName(_search, labels.SearchPlaceholder);
         }
-        if (_categories is not null)
-        {
-            _categories.AccessibleName = labels.CategoriesName;
-        }
+        _categories?.AccessibleName = labels.CategoriesName;
         if (_sort is not null)
         {
             AutomationProperties.SetName(_sort, labels.SortName);
@@ -480,39 +438,21 @@ public partial class AgentGallery
         {
             AutomationProperties.SetName(_grid, labels.GridName);
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Content = labels.ClearSearch;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.Content = labels.ShowAll;
-        }
+        _clearSearch?.Content = labels.ClearSearch;
+        _showAll?.Content = labels.ShowAll;
         if (_back is not null)
         {
             _back.Content = labels.Back;
             AutomationProperties.SetName(_back, labels.Back);
         }
-        if (_uninstall is not null)
-        {
-            _uninstall.Content = labels.Uninstall;
-        }
+        _uninstall?.Content = labels.Uninstall;
         if (_detailInstalled is ContentControl installed)
         {
             installed.Content = labels.Installed;
         }
-        if (_abilitiesHeading is not null)
-        {
-            _abilitiesHeading.Text = labels.AbilitiesHeading;
-        }
-        if (_permissionsHeading is not null)
-        {
-            _permissionsHeading.Text = labels.PermissionsHeading;
-        }
-        if (_promptsHeading is not null)
-        {
-            _promptsHeading.Text = labels.PromptsHeading;
-        }
+        _abilitiesHeading?.Text = labels.AbilitiesHeading;
+        _permissionsHeading?.Text = labels.PermissionsHeading;
+        _promptsHeading?.Text = labels.PromptsHeading;
     }
 
     #endregion
@@ -531,10 +471,7 @@ public partial class AgentGallery
         }
         else if (property == CategoriesProperty)
         {
-            if (_categories is not null)
-            {
-                _categories.Options = CategoryOptions();
-            }
+            _categories?.Options = CategoryOptions();
             Refresh(announce: false);
             ApplyDetail(raiseOpened: false);
         }
@@ -589,10 +526,7 @@ public partial class AgentGallery
         else if (property == LabelsProperty || property == CultureNameProperty)
         {
             ApplyTexts();
-            if (_categories is not null)
-            {
-                _categories.Options = CategoryOptions();
-            }
+            _categories?.Options = CategoryOptions();
             if (_sort is not null)
             {
                 _syncing = true;
@@ -727,31 +661,16 @@ public partial class AgentGallery
             _grid.IsVisible = _shown.Count > 0;
         }
         SetCurrent(Math.Clamp(_current, 0, Math.Max(0, _shown.Count - 1)));
-        if (_count is not null)
-        {
-            _count.Text = labels.ResultCount(_shown.Count);
-        }
-        if (_empty is not null)
-        {
-            _empty.IsVisible = _shown.Count == 0;
-        }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = query is not null ? labels.NoMatches(query) : labels.EmptyCategory;
-        }
+        _count?.Text = labels.ResultCount(_shown.Count);
+        _empty?.IsVisible = _shown.Count == 0;
+        _emptyTitle?.Text = query is not null ? labels.NoMatches(query) : labels.EmptyCategory;
         if (_emptyHint is not null)
         {
             _emptyHint.Text = labels.EmptyHint;
             _emptyHint.IsVisible = query is not null && SelectedCategoryKey is not null;
         }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.IsVisible = query is not null;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.IsVisible = SelectedCategoryKey is not null;
-        }
+        _clearSearch?.IsVisible = query is not null;
+        _showAll?.IsVisible = SelectedCategoryKey is not null;
         if (announce)
         {
             _announcer.Announce(labels.ResultsAnnouncement(_shown.Count, query));
@@ -966,10 +885,7 @@ public partial class AgentGallery
         var labels = Labels;
         var culture = Culture;
         _detailMark?.SetAgent(agent);
-        if (_detailName is not null)
-        {
-            _detailName.Text = agent.Name;
-        }
+        _detailName?.Text = agent.Name;
         if (_detailMaker is not null)
         {
             _detailMaker.Text = agent.Maker is { Length: > 0 } maker ? labels.ByMaker(maker) : null;
@@ -1000,10 +916,7 @@ public partial class AgentGallery
             }
             AutomationProperties.SetName(_detailStats, string.Join(", ", parts));
         }
-        if (_description is not null)
-        {
-            _description.Text = string.IsNullOrWhiteSpace(agent.Description) ? agent.Pitch : agent.Description;
-        }
+        _description?.Text = string.IsNullOrWhiteSpace(agent.Description) ? agent.Pitch : agent.Description;
         FillAbilities(agent);
         FillPermissions(agent, labels);
         FillPrompts(agent);
@@ -1021,10 +934,7 @@ public partial class AgentGallery
             _abilities.Children.Add(Row(ArcIcons.Check, ArcDesignTokenKind.Success, new TextBlock { Text = ability, TextWrapping = TextWrapping.Wrap }));
         }
         _abilities.IsVisible = agent.Abilities.Count > 0;
-        if (_abilitiesHeading is not null)
-        {
-            _abilitiesHeading.IsVisible = agent.Abilities.Count > 0;
-        }
+        _abilitiesHeading?.IsVisible = agent.Abilities.Count > 0;
     }
 
     private void FillPermissions(AgentGalleryItem agent, AgentGalleryLabels labels)
@@ -1091,10 +1001,7 @@ public partial class AgentGallery
             _prompts.Children.Add(button);
         }
         _prompts.IsVisible = agent.SamplePrompts.Count > 0;
-        if (_promptsHeading is not null)
-        {
-            _promptsHeading.IsVisible = agent.SamplePrompts.Count > 0;
-        }
+        _promptsHeading?.IsVisible = agent.SamplePrompts.Count > 0;
     }
 
     /// <summary>A list row: a 16px glyph in <paramref name="tone"/> before <paramref name="content"/>.</summary>
@@ -1137,10 +1044,7 @@ public partial class AgentGallery
             };
             AutomationProperties.SetName(_detailInstall, labels.InstallName(agent.Name));
         }
-        if (_detailInstalled is not null)
-        {
-            _detailInstalled.IsVisible = state == AgentGalleryInstallState.Installed;
-        }
+        _detailInstalled?.IsVisible = state == AgentGalleryInstallState.Installed;
         if (_uninstall is not null)
         {
             _uninstall.IsVisible = state == AgentGalleryInstallState.Installed;
@@ -1150,14 +1054,8 @@ public partial class AgentGallery
         var message = state == AgentGalleryInstallState.Failed && _failures.TryGetValue(agent.Id, out var failure)
             ? failure
             : _uninstallError is { } error && error.Id == agent.Id ? error.Message : null;
-        if (_detailError is not null)
-        {
-            _detailError.IsVisible = message is not null;
-        }
-        if (_detailErrorText is not null)
-        {
-            _detailErrorText.Text = message;
-        }
+        _detailError?.IsVisible = message is not null;
+        _detailErrorText?.Text = message;
     }
 
     #endregion

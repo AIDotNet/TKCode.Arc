@@ -130,27 +130,15 @@ internal sealed class TeamDirectoryProfile : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_copy is not null)
-        {
-            _copy.Click -= OnCopyClick;
-        }
-        if (_email is not null)
-        {
-            _email.Click -= OnEmailClick;
-        }
+        _copy?.Click -= OnCopyClick;
+        _email?.Click -= OnEmailClick;
         base.OnApplyTemplate(e);
         _avatar = e.NameScope.Find<Avatar>(AvatarPart);
         _copy = e.NameScope.Find<TeamDirectoryCopyButton>(CopyPart);
         _email = e.NameScope.Find<TeamDirectoryLinkButton>(EmailPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
-        if (_copy is not null)
-        {
-            _copy.Click += OnCopyClick;
-        }
-        if (_email is not null)
-        {
-            _email.Click += OnEmailClick;
-        }
+        _copy?.Click += OnCopyClick;
+        _email?.Click += OnEmailClick;
         Refresh(_labels);
         ApplyCopyState();
     }

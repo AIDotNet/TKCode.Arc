@@ -349,10 +349,7 @@ public partial class PromptStudio
         {
             _compareFade = new AiFadePresence(_compareCorner, shown: false);
         }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
+        _back?.Click += OnBackClick;
         if (_fields is not null)
         {
             _fields.Variables = _effective;
@@ -377,18 +374,12 @@ public partial class PromptStudio
             _modelMenu.Providers = Providers;
             _modelMenu.PropertyChanged += OnModelMenuPropertyChanged;
         }
-        if (_modelPill is not null)
-        {
-            _modelPill.Providers = Providers;
-        }
+        _modelPill?.Providers = Providers;
     }
 
     private void UnhookParts()
     {
-        if (_tabs is not null)
-        {
-            _tabs.PropertyChanged -= OnTabsPropertyChanged;
-        }
+        _tabs?.PropertyChanged -= OnTabsPropertyChanged;
         foreach (var editor in Editors())
         {
             editor.PropertyChanged -= OnEditorPropertyChanged;
@@ -403,30 +394,12 @@ public partial class PromptStudio
         _diffFade = null;
         _tokensFade = null;
         _compareFade = null;
-        if (_diff is not null)
-        {
-            _diff.PropertyChanged -= OnDiffPropertyChanged;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_fields is not null)
-        {
-            _fields.PropertyChanged -= OnFieldsPropertyChanged;
-        }
-        if (_cases is not null)
-        {
-            _cases.PropertyChanged -= OnCasesPropertyChanged;
-        }
-        if (_versionMenu is not null)
-        {
-            _versionMenu.PropertyChanged -= OnVersionMenuPropertyChanged;
-        }
-        if (_modelMenu is not null)
-        {
-            _modelMenu.PropertyChanged -= OnModelMenuPropertyChanged;
-        }
+        _diff?.PropertyChanged -= OnDiffPropertyChanged;
+        _back?.Click -= OnBackClick;
+        _fields?.PropertyChanged -= OnFieldsPropertyChanged;
+        _cases?.PropertyChanged -= OnCasesPropertyChanged;
+        _versionMenu?.PropertyChanged -= OnVersionMenuPropertyChanged;
+        _modelMenu?.PropertyChanged -= OnModelMenuPropertyChanged;
     }
 
     private IEnumerable<PromptTemplateEditor> Editors()
@@ -468,14 +441,8 @@ public partial class PromptStudio
             _tabs.ChangedName = labels.ChangedPart;
             _tabs.AccessibleName = labels.PartsName;
         }
-        if (_tokens is not null)
-        {
-            _tokens.Format = labels.Tokens;
-        }
-        if (_back is not null)
-        {
-            _back.Content = labels.BackToEditing;
-        }
+        _tokens?.Format = labels.Tokens;
+        _back?.Content = labels.BackToEditing;
         var help = labels.TypeToAddBefore + " {{ " + labels.TypeToAddAfter;
         ApplyEditorLabels(_systemEditor, labels, labels.SystemEditorName, labels.SystemPlaceholder, help);
         ApplyEditorLabels(_userEditor, labels, labels.UserEditorName, labels.UserPlaceholder, help);
@@ -484,10 +451,7 @@ public partial class PromptStudio
             _fields.EmptyText = labels.EmptyValue;
             _fields.AccessibleName = labels.VariablesName;
         }
-        if (_cases is not null)
-        {
-            _cases.AccessibleName = labels.TestCasesName;
-        }
+        _cases?.AccessibleName = labels.TestCasesName;
         if (_runButton is not null)
         {
             _runButton.RunText = labels.Run;
@@ -574,14 +538,8 @@ public partial class PromptStudio
         _removedBrush = new ImmutableSolidColorBrush(PromptTone.Mix(foreground, danger, 0.72));
         _addedTint = new ImmutableSolidColorBrush(PromptTone.WithOpacity(success, 0.14));
         _removedTint = new ImmutableSolidColorBrush(PromptTone.WithOpacity(danger, 0.12));
-        if (_added is not null)
-        {
-            _added.Foreground = _addedBrush;
-        }
-        if (_removed is not null)
-        {
-            _removed.Foreground = _removedBrush;
-        }
+        _added?.Foreground = _addedBrush;
+        _removed?.Foreground = _removedBrush;
         _hintKey = null;
         UpdateHint();
     }

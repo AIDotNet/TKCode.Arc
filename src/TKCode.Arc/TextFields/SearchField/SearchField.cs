@@ -62,10 +62,7 @@ public class SearchField : FieldTextBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_clearButton is not null)
-        {
-            _clearButton.Click -= OnClearClick;
-        }
+        _clearButton?.Click -= OnClearClick;
         base.OnApplyTemplate(e);
         _clearButton = e.NameScope.Find<FieldIconButton>(ClearButtonPart);
         _clearPresence = e.NameScope.Find<PresenceHost>(ClearPresencePart);
@@ -128,9 +125,6 @@ public class SearchField : FieldTextBox
     {
         var filled = !string.IsNullOrEmpty(Text);
         PseudoClasses.Set(FilledPseudoClass, filled);
-        if (_clearPresence is not null)
-        {
-            _clearPresence.IsPresent = filled && !IsReadOnly;
-        }
+        _clearPresence?.IsPresent = filled && !IsReadOnly;
     }
 }

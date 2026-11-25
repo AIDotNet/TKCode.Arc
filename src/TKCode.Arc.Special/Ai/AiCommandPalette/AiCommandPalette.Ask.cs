@@ -391,28 +391,16 @@ public partial class AiCommandPalette
     {
         _citations.Clear();
         _answerText?.Children.Clear();
-        if (_answerText is not null)
-        {
-            _answerText.IsVisible = false;
-        }
+        _answerText?.IsVisible = false;
         var session = _session;
-        if (_question is not null)
-        {
-            _question.Text = session?.Question;
-        }
+        _question?.Text = session?.Question;
         if (session is null)
         {
             _sourcesPanel?.Children.Clear();
             _chips.Clear();
-            if (_sourcesPanel is not null)
-            {
-                _sourcesPanel.IsVisible = false;
-            }
+            _sourcesPanel?.IsVisible = false;
             _actionList?.SetEntries([], -1);
-            if (_error is not null)
-            {
-                _error.IsVisible = false;
-            }
+            _error?.IsVisible = false;
             return;
         }
         BuildChips(session);
@@ -434,15 +422,9 @@ public partial class AiCommandPalette
             _thinking.IsShimmering = thinking;
             _thinking.IsVisible = thinking;
         }
-        if (_thinkingDot is not null)
-        {
-            _thinkingDot.IsVisible = thinking;
-        }
+        _thinkingDot?.IsVisible = thinking;
         var failed = session.State == AiCommandPaletteAnswerState.Failed;
-        if (_error is not null)
-        {
-            _error.IsVisible = failed;
-        }
+        _error?.IsVisible = failed;
         if (_errorText is not null)
         {
             _errorText.Text = session.Error;

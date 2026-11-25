@@ -160,10 +160,7 @@ public class LogoMarquee : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_button is not null)
-        {
-            _button.Click -= OnMotionClick;
-        }
+        _button?.Click -= OnMotionClick;
         if (_marquee is not null)
         {
             _marquee.PointerEntered -= OnMarqueeEntered;
@@ -175,10 +172,7 @@ public class LogoMarquee : TemplatedControl
         _glyph = e.NameScope.Find<ArcGlyph>("PART_MotionGlyph");
         _label = e.NameScope.Find<TextBlock>("PART_MotionLabel");
         _announcer = e.NameScope.Find<SiteAnnouncer>(AnnouncerPart);
-        if (_button is not null)
-        {
-            _button.Click += OnMotionClick;
-        }
+        _button?.Click += OnMotionClick;
         if (_marquee is not null)
         {
             _marquee.PointerEntered += OnMarqueeEntered;
@@ -269,10 +263,7 @@ public class LogoMarquee : TemplatedControl
 
     private void ApplyHeld()
     {
-        if (_track is not null)
-        {
-            _track.IsHeld = IsPaused || _hovering;
-        }
+        _track?.IsHeld = IsPaused || _hovering;
     }
 
     private void ApplyMotionControl()
@@ -282,13 +273,7 @@ public class LogoMarquee : TemplatedControl
             return;
         }
         AutomationProperties.SetName(_button, IsPaused ? PlayActionName : PauseActionName);
-        if (_glyph is not null)
-        {
-            _glyph.Data = IsPaused ? ArcIcons.Play : ArcIcons.Pause;
-        }
-        if (_label is not null)
-        {
-            _label.Text = IsPaused ? PlayLabel : PauseLabel;
-        }
+        _glyph?.Data = IsPaused ? ArcIcons.Play : ArcIcons.Pause;
+        _label?.Text = IsPaused ? PlayLabel : PauseLabel;
     }
 }

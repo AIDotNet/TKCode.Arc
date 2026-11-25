@@ -84,10 +84,7 @@ public partial class LiveCheckout
                      _selectedAddonIds as INotifyCollectionChanged
                  })
         {
-            if (list is not null)
-            {
-                list.CollectionChanged += OnListChanged;
-            }
+            list?.CollectionChanged += OnListChanged;
         }
         foreach (var field in Enum.GetValues<LiveCheckoutField>())
         {
@@ -158,27 +155,15 @@ public partial class LiveCheckout
             };
             _form.AddHandler(KeyDownEvent, OnFormKeyDown, RoutingStrategies.Bubble);
         }
-        if (_billingSwitch is not null)
-        {
-            _billingSwitch.Picked += OnBillingPicked;
-        }
-        if (_seatStepper is not null)
-        {
-            _seatStepper.PropertyChanged += OnSeatStepperChanged;
-        }
+        _billingSwitch?.Picked += OnBillingPicked;
+        _seatStepper?.PropertyChanged += OnSeatStepperChanged;
         if (_countrySelect is not null)
         {
             _countrySelect.SelectionChanged += OnCountryPicked;
             _countrySelect.TextSelector = item => (item as LiveCheckoutCountry)?.Name;
         }
-        if (_testCardButton is not null)
-        {
-            _testCardButton.Click += OnTestCard;
-        }
-        if (_payButton is not null)
-        {
-            _payButton.Click += OnPay;
-        }
+        _testCardButton?.Click += OnTestCard;
+        _payButton?.Click += OnPay;
         BuildPayLabel();
         BuildBrandTexts();
         OnApplySummaryTemplate(e);
@@ -223,26 +208,11 @@ public partial class LiveCheckout
         {
             _form.RemoveHandler(KeyDownEvent, OnFormKeyDown);
         }
-        if (_billingSwitch is not null)
-        {
-            _billingSwitch.Picked -= OnBillingPicked;
-        }
-        if (_seatStepper is not null)
-        {
-            _seatStepper.PropertyChanged -= OnSeatStepperChanged;
-        }
-        if (_countrySelect is not null)
-        {
-            _countrySelect.SelectionChanged -= OnCountryPicked;
-        }
-        if (_testCardButton is not null)
-        {
-            _testCardButton.Click -= OnTestCard;
-        }
-        if (_payButton is not null)
-        {
-            _payButton.Click -= OnPay;
-        }
+        _billingSwitch?.Picked -= OnBillingPicked;
+        _seatStepper?.PropertyChanged -= OnSeatStepperChanged;
+        _countrySelect?.SelectionChanged -= OnCountryPicked;
+        _testCardButton?.Click -= OnTestCard;
+        _payButton?.Click -= OnPay;
         foreach (var state in _fields.Values)
         {
             if (state.Input is { } input)
@@ -302,10 +272,7 @@ public partial class LiveCheckout
             _walletButtons.Add(button);
         }
         _walletGrid.SetTiles(_walletButtons);
-        if (_expressSection is not null)
-        {
-            _expressSection.IsVisible = _walletButtons.Count > 0;
-        }
+        _expressSection?.IsVisible = _walletButtons.Count > 0;
         ApplyWalletColors();
     }
 
@@ -517,10 +484,7 @@ public partial class LiveCheckout
             _addonRows.Add(row);
             _addonList.Children.Add(row);
         }
-        if (_addonCard is not null)
-        {
-            _addonCard.IsVisible = _addons.Count > 0;
-        }
+        _addonCard?.IsVisible = _addons.Count > 0;
         SyncAddonRows();
         SyncAddonChecks();
     }
@@ -949,10 +913,7 @@ public partial class LiveCheckout
 
     private void ShowAlert(string message)
     {
-        if (_alertText is not null)
-        {
-            _alertText.Text = message;
-        }
+        _alertText?.Text = message;
         _alertRow?.SetOpen(true, true);
         _announcer?.Announce(message, assertive: true);
     }
@@ -966,10 +927,7 @@ public partial class LiveCheckout
                 input.IsEnabled = enabled;
             }
         }
-        if (_countrySelect is not null)
-        {
-            _countrySelect.IsEnabled = enabled;
-        }
+        _countrySelect?.IsEnabled = enabled;
         foreach (var button in _walletButtons)
         {
             button.IsEnabled = enabled || ReferenceEquals(button, _busyWallet);
@@ -983,22 +941,10 @@ public partial class LiveCheckout
         {
             row.IsEnabled = enabled;
         }
-        if (_seatStepper is not null)
-        {
-            _seatStepper.IsEnabled = enabled;
-        }
-        if (_billingSwitch is not null)
-        {
-            _billingSwitch.IsEnabled = enabled;
-        }
-        if (_testCardButton is not null)
-        {
-            _testCardButton.IsEnabled = enabled;
-        }
-        if (_payButton is not null)
-        {
-            _payButton.IsBusy = !enabled && _busyWallet is null;
-        }
+        _seatStepper?.IsEnabled = enabled;
+        _billingSwitch?.IsEnabled = enabled;
+        _testCardButton?.IsEnabled = enabled;
+        _payButton?.IsBusy = !enabled && _busyWallet is null;
     }
 
     private void BuildPayLabel()
@@ -1034,21 +980,12 @@ public partial class LiveCheckout
 
     private void SyncStacked(bool stacked)
     {
-        if (_walletGrid is not null)
-        {
-            _walletGrid.Columns = stacked ? 1 : 3;
-        }
-        if (_planGrid is not null)
-        {
-            _planGrid.Columns = stacked ? 1 : 3;
-        }
+        _walletGrid?.Columns = stacked ? 1 : 3;
+        _planGrid?.Columns = stacked ? 1 : 3;
         foreach (var card in _planCards)
         {
             card.IsStacked = stacked;
         }
-        if (_cityRow is not null)
-        {
-            _cityRow.Columns = stacked ? 1 : 2;
-        }
+        _cityRow?.Columns = stacked ? 1 : 2;
     }
 }

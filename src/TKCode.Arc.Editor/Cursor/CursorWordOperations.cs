@@ -35,16 +35,7 @@ internal enum WordNavigationType
 }
 
 /// <summary>What a word delete works on.</summary>
-internal sealed record DeleteWordContext(
-    WordCharacterClassifier WordSeparators,
-    TextModel Model,
-    TextSelection Selection,
-    bool WhitespaceHeuristics,
-    EditorAutoClosingEditStrategy AutoClosingDelete,
-    EditorAutoClosingStrategy AutoClosingBrackets,
-    EditorAutoClosingStrategy AutoClosingQuotes,
-    AutoClosingPairs AutoClosingPairs,
-    IReadOnlyList<TextRange> AutoClosedCharacters);
+internal sealed record DeleteWordContext(WordCharacterClassifier WordSeparators, TextModel Model, TextSelection Selection, bool WhitespaceHeuristics, EditorAutoClosingEditStrategy AutoClosingDelete, EditorAutoClosingStrategy AutoClosingBrackets, EditorAutoClosingStrategy AutoClosingQuotes, AutoClosingPairs AutoClosingPairs, IReadOnlyList<TextRange> AutoClosedCharacters);
 
 /// <summary>Word moves, word deletes and word selection.</summary>
 internal static partial class WordOperations

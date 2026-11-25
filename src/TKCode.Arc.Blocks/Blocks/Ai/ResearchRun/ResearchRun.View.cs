@@ -72,14 +72,8 @@ public partial class ResearchRun
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _action?.Click -= OnActionClick;
+        _toggle?.Click -= OnToggleClick;
         _sources?.Children.Clear();
         _rows.Clear();
         base.OnApplyTemplate(e);
@@ -103,14 +97,8 @@ public partial class ResearchRun
         _processGrid = scope.Find<Grid>("PART_ProcessGrid");
         _sourcesColumn = scope.Find<Control>("PART_SourcesColumn");
         LayoutProcess();
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _action?.Click += OnActionClick;
+        _toggle?.Click += OnToggleClick;
         RebuildAll();
     }
 
@@ -202,27 +190,15 @@ public partial class ResearchRun
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void UpdateProcess()
     {
         var done = Phase == ResearchRunPhase.Done;
-        if (_process is not null)
-        {
-            _process.IsExpanded = !done || IsProcessExpanded;
-        }
-        if (_summaryLine is not null)
-        {
-            _summaryLine.IsVisible = done;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Content = IsProcessExpanded ? Labels.HideProcess : Labels.ShowProcess;
-        }
+        _process?.IsExpanded = !done || IsProcessExpanded;
+        _summaryLine?.IsVisible = done;
+        _toggle?.Content = IsProcessExpanded ? Labels.HideProcess : Labels.ShowProcess;
     }
 
     #region Stages
@@ -372,10 +348,7 @@ public partial class ResearchRun
             return;
         }
         _notes.Children.Clear();
-        if (_notesSection is not null)
-        {
-            _notesSection.IsVisible = ShownNotes.Count > 0;
-        }
+        _notesSection?.IsVisible = ShownNotes.Count > 0;
         foreach (var note in ShownNotes)
         {
             var row = new DockPanel();

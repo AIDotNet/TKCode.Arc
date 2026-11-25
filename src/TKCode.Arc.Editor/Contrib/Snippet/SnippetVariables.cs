@@ -52,9 +52,13 @@ internal sealed class SnippetLabelService : ISnippetLabelService
 }
 
 /// <summary>The open workspace: its folders and, for a multi-root workspace, its configuration file.</summary>
-/// <param name="Folders">The workspace folders.</param>
-/// <param name="ConfigPath">The <c>.code-workspace</c> file of a workspace with a configuration, else null.</param>
-internal sealed record SnippetWorkspace(IReadOnlyList<Uri> Folders, Uri? ConfigPath = null);
+/// <param name="folders">The workspace folders.</param>
+/// <param name="configPath">The <c>.code-workspace</c> file of a workspace with a configuration, else null.</param>
+internal sealed class SnippetWorkspace(IReadOnlyList<Uri> folders, Uri? configPath = null)
+{
+    public IReadOnlyList<Uri> Folders { get; } = folders;
+    public Uri? ConfigPath { get; } = configPath;
+}
 
 /// <summary>Gives the open workspace (upstream's IWorkspaceContextService.getWorkspace).</summary>
 internal interface ISnippetWorkspaceService

@@ -220,10 +220,7 @@ public class SplitButton : TemplatedControl
             _primary.Click -= OnPrimaryClick;
             _primary.PropertyChanged -= OnPrimaryPropertyChanged;
         }
-        if (_menuButton is not null)
-        {
-            _menuButton.Menu = null;
-        }
+        _menuButton?.Menu = null;
         _primary = e.NameScope.Find<Button>(PrimaryButtonPart);
         _menuButton = e.NameScope.Find<ButtonsChevronTrigger>(MenuButtonPart);
         _icon = e.NameScope.Find<ButtonsGlyphSwap>(IconPart);
@@ -233,10 +230,7 @@ public class SplitButton : TemplatedControl
             _primary.Click += OnPrimaryClick;
             _primary.PropertyChanged += OnPrimaryPropertyChanged;
         }
-        if (_menuButton is not null)
-        {
-            _menuButton.Menu = Menu;
-        }
+        _menuButton?.Menu = Menu;
         UpdateNames();
         UpdateVariant();
         ShowIcon();

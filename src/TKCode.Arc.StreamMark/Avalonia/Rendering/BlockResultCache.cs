@@ -11,7 +11,7 @@ public sealed class BlockResultCache<TKey, TValue> where TKey : notnull
     private readonly int _capacity;
     private readonly Dictionary<TKey, LinkedListNode<KeyValuePair<TKey, TValue>>> _items;
     private readonly LinkedList<KeyValuePair<TKey, TValue>> _order = new();
-    private readonly object _lock = new();
+    private readonly SyncLock _lock = new();
 
     public BlockResultCache(int capacity = 32, IEqualityComparer<TKey>? comparer = null)
     {

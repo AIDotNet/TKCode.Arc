@@ -104,22 +104,10 @@ public partial class CustomerGalaxy : IGalaxyStageHost
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_tabs is not null)
-        {
-            _tabs.Chosen -= OnTabChosen;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.Click -= OnShowAllClick;
-        }
-        if (_sortMrr is not null)
-        {
-            _sortMrr.Click -= OnSortClick;
-        }
-        if (_sortAccounts is not null)
-        {
-            _sortAccounts.Click -= OnSortClick;
-        }
+        _tabs?.Chosen -= OnTabChosen;
+        _showAll?.Click -= OnShowAllClick;
+        _sortMrr?.Click -= OnSortClick;
+        _sortAccounts?.Click -= OnSortClick;
         if (_stage is not null)
         {
             _stage.Host = null;
@@ -153,31 +141,16 @@ public partial class CustomerGalaxy : IGalaxyStageHost
         _sortMrr = scope.Find<GalaxySortButton>(SortMrrPart);
         _sortAccounts = scope.Find<GalaxySortButton>(SortAccountsPart);
         _rows = scope.Find<GalaxyRowsPanel>(RowsPart);
-        if (_tabs is not null)
-        {
-            _tabs.Chosen += OnTabChosen;
-        }
-        if (_showAll is not null)
-        {
-            _showAll.Click += OnShowAllClick;
-        }
-        if (_sortMrr is not null)
-        {
-            _sortMrr.Click += OnSortClick;
-        }
-        if (_sortAccounts is not null)
-        {
-            _sortAccounts.Click += OnSortClick;
-        }
+        _tabs?.Chosen += OnTabChosen;
+        _showAll?.Click += OnShowAllClick;
+        _sortMrr?.Click += OnSortClick;
+        _sortAccounts?.Click += OnSortClick;
         if (_stage is not null)
         {
             _stage.Host = this;
             _stage.ColorResolver = ResolveColor;
         }
-        if (_zoomBar is not null)
-        {
-            _zoomBar.Stage = _stage;
-        }
+        _zoomBar?.Stage = _stage;
         _rowControls.Clear();
         _clusterLabels.Clear();
         ApplyStageOptions();
@@ -235,15 +208,9 @@ public partial class CustomerGalaxy : IGalaxyStageHost
 
     private void WatchSource()
     {
-        if (_sourceNotifier is not null)
-        {
-            _sourceNotifier.CollectionChanged -= OnSourceChanged;
-        }
+        _sourceNotifier?.CollectionChanged -= OnSourceChanged;
         _sourceNotifier = _watching ? ItemsSource as INotifyCollectionChanged : null;
-        if (_sourceNotifier is not null)
-        {
-            _sourceNotifier.CollectionChanged += OnSourceChanged;
-        }
+        _sourceNotifier?.CollectionChanged += OnSourceChanged;
     }
 
     /// <summary>True when an observable <see cref="ItemsSource"/> no longer holds the accounts the model was built from.</summary>
@@ -451,10 +418,7 @@ public partial class CustomerGalaxy : IGalaxyStageHost
             _stage.View.MaxZoom = Math.Max(1, MaxZoom);
             _stage.RequestFrames();
         }
-        if (_zoomBar is not null)
-        {
-            _zoomBar.ZoomStep = ZoomStep > 1 ? ZoomStep : 1.6;
-        }
+        _zoomBar?.ZoomStep = ZoomStep > 1 ? ZoomStep : 1.6;
     }
 
     /// <summary>The grouping a key shows: a listed grouping's key, the health key (built in), or null (overview).</summary>

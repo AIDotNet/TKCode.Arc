@@ -156,7 +156,7 @@ public sealed class InlayHintsTests
         await item.Resolve(CancellationToken.None);
 
         provider.Resolves.ShouldBe(1);
-        item.Hint.Tooltip!.Value.Value.ShouldBe("resolved");
+        item.Hint.Tooltip!.Value.Content.ShouldBe("resolved");
         item.GetLabelParts().Single().Label.ShouldBe("better");
         item.With(new InlayHintAnchor(new TextRange(2, 1, 2, 1), InlayHintDirection.After)).Hint.ShouldBe(item.Hint);
     }

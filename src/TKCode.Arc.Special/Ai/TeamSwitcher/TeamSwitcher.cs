@@ -312,10 +312,7 @@ public partial class TeamSwitcher : TemplatedControl
             _trigger.RemoveHandler(KeyDownEvent, OnTriggerKeyDown);
             _trigger.SizeChanged -= OnTriggerSizeChanged;
         }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
+        _popup?.Closed -= OnPopupClosed;
         if (_menu is not null)
         {
             _menu.RemoveHandler(PointerPressedEvent, OnInputPointerPressed);
@@ -373,10 +370,7 @@ public partial class TeamSwitcher : TemplatedControl
         {
             var open = change.GetNewValue<bool>();
             PseudoClasses.Set(OpenPseudoClass, open);
-            if (_trigger is not null)
-            {
-                _trigger.IsExpanded = open;
-            }
+            _trigger?.IsExpanded = open;
             if (open)
             {
                 OpenPopup();
@@ -537,10 +531,7 @@ public partial class TeamSwitcher : TemplatedControl
             // the keyboard ring, and focusing the already focused trigger then changes nothing.
             _trigger?.Focus(ReturnFocusMethod);
         }
-        if (_popup is not null)
-        {
-            _popup.IsOpen = false;
-        }
+        _popup?.IsOpen = false;
         _menu?.OnClosed();
     }
 

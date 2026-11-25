@@ -188,10 +188,7 @@ public class Checkbox : AvaloniaCheckBox
     {
         if (string.IsNullOrEmpty(Description))
         {
-            if (_description is not null)
-            {
-                _description.IsVisible = false;
-            }
+            _description?.IsVisible = false;
             return;
         }
         if (_description is null)

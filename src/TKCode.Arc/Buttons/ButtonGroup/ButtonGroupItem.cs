@@ -94,12 +94,11 @@ public class ButtonGroupItem : AvaloniaButton
 
     internal double LabelGap { get => GetValue(LabelGapProperty); set => SetValue(LabelGapProperty, value); }
 
-    private Control? _phase;
 
     internal Control? Phase
     {
-        get => _phase;
-        private set => SetAndRaise(PhaseProperty, ref _phase, value);
+        get;
+        private set => SetAndRaise(PhaseProperty, ref field, value);
     }
 
     private IReadOnlyList<string> _sizerLabels = [];
@@ -239,10 +238,7 @@ public class ButtonGroupItem : AvaloniaButton
             }
             Phase = phase;
         }
-        if (_phaseValue is not null)
-        {
-            _phaseValue.Text = Value?.ToString();
-        }
+        _phaseValue?.Text = Value?.ToString();
         if (_phaseLabel is not null)
         {
             // Collapsing drops the label without a crossfade; the label moves to the name and the tooltip.

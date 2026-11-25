@@ -73,10 +73,7 @@ internal class PaginationButton : AvaloniaButton
         var value = new MotionValue<double>(this, 0, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_belt is not null)
-            {
-                _belt.X = v;
-            }
+            _belt?.X = v;
         };
         return value;
     }

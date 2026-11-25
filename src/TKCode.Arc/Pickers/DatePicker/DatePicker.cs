@@ -215,10 +215,7 @@ public class DatePicker : FieldTextBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_dropDownButton is not null)
-        {
-            _dropDownButton.Click -= OnDropDownButtonClick;
-        }
+        _dropDownButton?.Click -= OnDropDownButtonClick;
         if (_popup is not null)
         {
             _popup.Closed -= OnPopupClosed;
@@ -229,10 +226,7 @@ public class DatePicker : FieldTextBox
         {
             Frame.RemoveHandler(PointerPressedEvent, OnFramePressed);
         }
-        if (_value is not null)
-        {
-            _value.Settled -= OnValueSettled;
-        }
+        _value?.Settled -= OnValueSettled;
         base.OnApplyTemplate(e);
         _popup = e.NameScope.Find<ArcPopup>(PopupPart);
         _dropDownButton = e.NameScope.Find<AvaloniaButton>(DropDownButtonPart);
@@ -241,19 +235,13 @@ public class DatePicker : FieldTextBox
         _textPresenter = e.NameScope.Find<Control>(TextPresenterPart);
         _field = e.NameScope.Find<Field>("PART_Field");
         _hintFade = null;
-        if (_dropDownButton is not null)
-        {
-            _dropDownButton.Click += OnDropDownButtonClick;
-        }
+        _dropDownButton?.Click += OnDropDownButtonClick;
         if (Frame is not null)
         {
             Frame.AddHandler(PointerPressedEvent, OnFramePressed, RoutingStrategies.Tunnel, handledEventsToo: true);
             _shake = new PickerShake(Frame);
         }
-        if (_value is not null)
-        {
-            _value.Settled += OnValueSettled;
-        }
+        _value?.Settled += OnValueSettled;
         if (_popup is not null)
         {
             _popup.PlacementTarget = Frame;
@@ -411,14 +399,8 @@ public class DatePicker : FieldTextBox
         var rolling = _value.IsRolling;
         var overlay = !_dirty && (!IsFocused || rolling || SelectedDate is null);
         _value.IsVisible = overlay;
-        if (_textPresenter is not null)
-        {
-            _textPresenter.Opacity = overlay && SelectedDate is not null ? 0 : 1;
-        }
-        if (_placeholder is not null)
-        {
-            _placeholder.IsVisible = !overlay && string.IsNullOrEmpty(Text);
-        }
+        _textPresenter?.Opacity = overlay && SelectedDate is not null ? 0 : 1;
+        _placeholder?.IsVisible = !overlay && string.IsNullOrEmpty(Text);
     }
 
     /// <summary>A typed date that parses moves the open calendar to its month (it is picked on Enter or blur).</summary>
@@ -734,10 +716,7 @@ public class DatePicker : FieldTextBox
 
     private void UpdateFrame()
     {
-        if (Frame is not null)
-        {
-            Frame.IsFocusActive = IsFocused;
-        }
+        Frame?.IsFocusActive = IsFocused;
     }
 
     #endregion

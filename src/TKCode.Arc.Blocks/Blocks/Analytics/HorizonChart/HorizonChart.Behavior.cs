@@ -67,18 +67,9 @@ public partial class HorizonChart
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_sortSwitch is not null)
-        {
-            _sortSwitch.SelectionChanged -= OnSortSwitchChanged;
-        }
-        if (_bandsSwitch is not null)
-        {
-            _bandsSwitch.SelectionChanged -= OnBandsSwitchChanged;
-        }
-        if (_plot is not null)
-        {
-            _plot.DayRequested -= OnDayRequested;
-        }
+        _sortSwitch?.SelectionChanged -= OnSortSwitchChanged;
+        _bandsSwitch?.SelectionChanged -= OnBandsSwitchChanged;
+        _plot?.DayRequested -= OnDayRequested;
 
         _header = e.NameScope.Find<HorizonSplitPanel>(HeaderPart);
         _controls = e.NameScope.Find<HorizonSplitPanel>(ControlsPart);
@@ -95,18 +86,9 @@ public partial class HorizonChart
         _table = e.NameScope.Find<HorizonDataTable>(TablePart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
 
-        if (_sortSwitch is not null)
-        {
-            _sortSwitch.SelectionChanged += OnSortSwitchChanged;
-        }
-        if (_bandsSwitch is not null)
-        {
-            _bandsSwitch.SelectionChanged += OnBandsSwitchChanged;
-        }
-        if (_plot is not null)
-        {
-            _plot.DayRequested += OnDayRequested;
-        }
+        _sortSwitch?.SelectionChanged += OnSortSwitchChanged;
+        _bandsSwitch?.SelectionChanged += OnBandsSwitchChanged;
+        _plot?.DayRequested += OnDayRequested;
         _ready = true;
         HookSource();
         UpdateChrome();
@@ -398,14 +380,8 @@ public partial class HorizonChart
     private void UpdateReadout()
     {
         var index = SelectedDayIndex is { } s && s >= 0 && s < _dayItems.Length ? s : _dayItems.Length - 1;
-        if (_date is not null)
-        {
-            _date.Text = index >= 0 ? _dayItems[index].LongText : string.Empty;
-        }
-        if (_status is not null)
-        {
-            _status.Text = SelectedDayIndex is not null && index >= 0 ? Labels.SelectedDayText : Labels.LatestDayText;
-        }
+        _date?.Text = index >= 0 ? _dayItems[index].LongText : string.Empty;
+        _status?.Text = SelectedDayIndex is not null && index >= 0 ? Labels.SelectedDayText : Labels.LatestDayText;
     }
 
     private void UpdateLegend()
@@ -429,30 +405,12 @@ public partial class HorizonChart
     private void UpdateChrome()
     {
         var labels = Labels;
-        if (_sortGroup is not null)
-        {
-            _sortGroup.IsVisible = IsSortSwitchVisible;
-        }
-        if (_bandsGroup is not null)
-        {
-            _bandsGroup.IsVisible = IsBandSwitchVisible;
-        }
-        if (_controls is not null)
-        {
-            _controls.IsVisible = IsSortSwitchVisible || IsBandSwitchVisible;
-        }
-        if (_legend is not null)
-        {
-            _legend.IsVisible = IsLegendVisible;
-        }
-        if (_sortLabel is not null)
-        {
-            _sortLabel.Text = labels.SortText;
-        }
-        if (_bandsLabel is not null)
-        {
-            _bandsLabel.Text = labels.BandsText;
-        }
+        _sortGroup?.IsVisible = IsSortSwitchVisible;
+        _bandsGroup?.IsVisible = IsBandSwitchVisible;
+        _controls?.IsVisible = IsSortSwitchVisible || IsBandSwitchVisible;
+        _legend?.IsVisible = IsLegendVisible;
+        _sortLabel?.Text = labels.SortText;
+        _bandsLabel?.Text = labels.BandsText;
         if (_sortSwitch is not null)
         {
             _syncing = true;

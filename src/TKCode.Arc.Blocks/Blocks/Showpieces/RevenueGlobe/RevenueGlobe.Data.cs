@@ -84,10 +84,7 @@ public partial class RevenueGlobe
         _regionRevenue = new double[_regions.Length];
         _hoverCity = -1;
         _listHoverCity = -1;
-        if (_canvas is not null)
-        {
-            _canvas.Scene = _scene;
-        }
+        _canvas?.Scene = _scene;
         ConfigureCamera();
         RebuildLedger();
         BuildRows();

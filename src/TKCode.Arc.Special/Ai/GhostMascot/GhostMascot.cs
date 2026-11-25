@@ -152,7 +152,6 @@ public partial class GhostMascot : Control
     internal static readonly StyledProperty<double> EyeDarkMixProperty =
         AvaloniaProperty.Register<GhostMascot, double>("EyeDarkMix", 0.72);
 
-    private GhostMascotStatus _effectiveStatus;
 
     internal IBrush? AccentInk { get => GetValue(AccentInkProperty); set => SetValue(AccentInkProperty, value); }
     internal IBrush? AccentForegroundInk { get => GetValue(AccentForegroundInkProperty); set => SetValue(AccentForegroundInkProperty, value); }
@@ -236,8 +235,8 @@ public partial class GhostMascot : Control
     /// <inheritdoc cref="EffectiveStatusProperty"/>
     public GhostMascotStatus EffectiveStatus
     {
-        get => _effectiveStatus;
-        private set => SetAndRaise(EffectiveStatusProperty, ref _effectiveStatus, value);
+        get;
+        private set => SetAndRaise(EffectiveStatusProperty, ref field, value);
     }
 
     /// <summary>True while no status is set and the ghost plays through its states.</summary>

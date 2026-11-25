@@ -15,7 +15,7 @@ internal sealed class WordCharacterClassifier
 {
     private const int CacheLimit = 10;
     private static readonly Dictionary<string, WordCharacterClassifier> s_cache = new();
-    private static readonly object s_cacheLock = new();
+    private static readonly SyncLock s_cacheLock = new();
 
     private readonly CharacterClassifier _classifier = new((byte)WordCharacterClass.Regular);
 

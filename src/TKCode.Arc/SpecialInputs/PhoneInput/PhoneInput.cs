@@ -324,10 +324,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_trigger is not null)
-        {
-            _trigger.Field = null;
-        }
+        _trigger?.Field = null;
         if (_popup is not null)
         {
             _popup.Closed -= OnPopupClosed;
@@ -346,10 +343,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
         _valid = e.NameScope.Find<PhoneInputPresence>(ValidPart);
         _popup = e.NameScope.Find<PhoneInputPopup>(PopupPart);
         _live = e.NameScope.Find<SpecialInputsLiveRegion>(LivePart);
-        if (_trigger is not null)
-        {
-            _trigger.Field = this;
-        }
+        _trigger?.Field = this;
         if (_anchor is not null)
         {
             _anchor.TargetChanged += OnAnchorTargetChanged;
@@ -516,10 +510,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
             _guide.Typed = formatted;
             _guide.Guide = PhoneNumbers.Guide(_country, _digits, formatted);
         }
-        if (_valid is not null)
-        {
-            _valid.IsPresent = Status == PhoneNumberStatus.Valid;
-        }
+        _valid?.IsPresent = Status == PhoneNumberStatus.Valid;
         var surfaceVisible = _popup?.IsOpen == true;
         // Under the open surface the frame's trigger changes at once; the lid on top carries the roll.
         _face?.Show(_country, _roll, animate: !surfaceVisible);
@@ -535,10 +526,7 @@ public partial class PhoneInput : FieldTextBox, ICustomKeyboardNavigation
         {
             AutomationProperties.SetName(_trigger, $"Country, {_country.Name} +{_country.Dial}");
         }
-        if (_list is not null)
-        {
-            _list.SelectedCountry = _country;
-        }
+        _list?.SelectedCountry = _country;
         UpdateValidation();
         UpdateLive(announce);
     }

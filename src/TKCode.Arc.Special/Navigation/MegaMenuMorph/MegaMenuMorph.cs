@@ -192,10 +192,7 @@ public class MegaMenuMorph : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
+        _popup?.Closed -= OnPopupClosed;
         if (_stage is not null)
         {
             _stage.Hidden -= OnStageHidden;
@@ -216,10 +213,7 @@ public class MegaMenuMorph : TemplatedControl
         _popup = e.NameScope.Find<ArcPopup>(PopupPart);
         _stage = e.NameScope.Find<MegaMenuMorphStage>(StagePart);
 
-        if (_bar is not null)
-        {
-            _bar.PointerExited += OnBarPointerExited;
-        }
+        _bar?.PointerExited += OnBarPointerExited;
         if (_popup is not null)
         {
             _popup.PlacementTarget = this;
@@ -305,10 +299,7 @@ public class MegaMenuMorph : TemplatedControl
             SetCurrentValue(OpenIndexProperty, -1);
         }
         _stage?.Reset();
-        if (_popup is not null)
-        {
-            _popup.IsOpen = false;
-        }
+        _popup?.IsOpen = false;
     }
 
     private bool IsValidIndex(int index) => index == -1 || (index >= 0 && index < Items.Count && Items[index].HasPanel);

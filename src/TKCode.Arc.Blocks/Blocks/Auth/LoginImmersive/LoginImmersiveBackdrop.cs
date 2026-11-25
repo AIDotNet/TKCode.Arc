@@ -279,10 +279,7 @@ internal sealed class LoginImmersiveGlass : Control
             {
                 return;
             }
-            if (_backdrop is not null)
-            {
-                _backdrop.FrostChanged -= OnFrostChanged;
-            }
+            _backdrop?.FrostChanged -= OnFrostChanged;
             _backdrop = value;
             if (_backdrop is not null && _attached)
             {
@@ -311,10 +308,7 @@ internal sealed class LoginImmersiveGlass : Control
     {
         base.OnDetachedFromVisualTree(e);
         _attached = false;
-        if (_backdrop is not null)
-        {
-            _backdrop.FrostChanged -= OnFrostChanged;
-        }
+        _backdrop?.FrostChanged -= OnFrostChanged;
         LayoutUpdated -= OnLayoutUpdated;
     }
 

@@ -89,10 +89,7 @@ internal sealed class DocumentPageBuilder
             previousBottom = bottom;
             last = control;
         }
-        if (last is not null)
-        {
-            last.Margin = new Thickness(0, last.Margin.Top, 0, previousBottom);
-        }
+        last?.Margin = new Thickness(0, last.Margin.Top, 0, previousBottom);
         return panel;
     }
 

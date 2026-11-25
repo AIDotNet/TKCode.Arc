@@ -60,7 +60,6 @@ public class StretchRefreshActivityRow : TemplatedControl
     private StretchRefreshAvatar? _avatar;
     private StretchRefreshPhoto? _photo;
     private StretchRefreshActivity? _observed;
-    private Geometry? _glyph;
     private IBrush? _glyphInk;
 
     /// <inheritdoc cref="ActivityProperty"/>
@@ -105,8 +104,8 @@ public class StretchRefreshActivityRow : TemplatedControl
     /// <summary>The status glyph for the entry's tone (null for a person).</summary>
     internal Geometry? Glyph
     {
-        get => _glyph;
-        private set => SetAndRaise(GlyphProperty, ref _glyph, value);
+        get;
+        private set => SetAndRaise(GlyphProperty, ref field, value);
     }
 
     internal IBrush? GlyphInk
@@ -131,15 +130,9 @@ public class StretchRefreshActivityRow : TemplatedControl
         base.OnPropertyChanged(change);
         if (change.Property == ActivityProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged -= OnActivityChanged;
-            }
+            _observed?.PropertyChanged -= OnActivityChanged;
             _observed = Activity;
-            if (_observed is not null)
-            {
-                _observed.PropertyChanged += OnActivityChanged;
-            }
+            _observed?.PropertyChanged += OnActivityChanged;
             BuildSentence();
             UpdateTone();
             UpdateUnread();
@@ -241,10 +234,7 @@ public class StretchRefreshActivityRow : TemplatedControl
             _meta.Text = a?.Meta;
             _meta.IsVisible = !string.IsNullOrEmpty(a?.Meta);
         }
-        if (_avatar is not null)
-        {
-            _avatar.Seed = a?.AvatarSeed ?? 0;
-        }
+        _avatar?.Seed = a?.AvatarSeed ?? 0;
         if (_photo is not null)
         {
             _photo.Seed = a?.PhotoSeed ?? 0;

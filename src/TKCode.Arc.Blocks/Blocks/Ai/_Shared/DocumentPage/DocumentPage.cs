@@ -107,10 +107,7 @@ internal sealed partial class DocumentPage : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_content is not null)
-        {
-            _content.Child = null;
-        }
+        _content?.Child = null;
         _content = e.NameScope.Find<Decorator>(ContentPart);
         Rebuild();
     }

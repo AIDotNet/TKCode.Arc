@@ -185,10 +185,7 @@ internal sealed partial class DocumentViewer
 
     private void OnFitWidthChanged(bool fit)
     {
-        if (_fit is not null)
-        {
-            _fit.IsOn = fit;
-        }
+        _fit?.IsOn = fit;
         if (fit && double.IsFinite(_canvasWidth))
         {
             // A person turned Fit on: the page springs to the width.
@@ -314,10 +311,7 @@ internal sealed partial class DocumentViewer
 
     private void OnLayoutUpdatedOnce(object? sender, EventArgs e)
     {
-        if (_canvas is not null)
-        {
-            _canvas.LayoutUpdated -= OnLayoutUpdatedOnce;
-        }
+        _canvas?.LayoutUpdated -= OnLayoutUpdatedOnce;
         _offsetAfterLayout = false;
         _applyingScale = true;
         try

@@ -136,10 +136,7 @@ public partial class RevenueGlobe
             if (_labeledCities.Length > 0)
             {
                 _labeledCities = [];
-                if (_canvas is not null)
-                {
-                    _canvas.LabeledCities = _labeledCities;
-                }
+                _canvas?.LabeledCities = _labeledCities;
             }
             return;
         }
@@ -175,10 +172,7 @@ public partial class RevenueGlobe
         if (!same)
         {
             _labeledCities = top[..count].ToArray();
-            if (_canvas is not null)
-            {
-                _canvas.LabeledCities = _labeledCities;
-            }
+            _canvas?.LabeledCities = _labeledCities;
         }
     }
 
@@ -331,10 +325,7 @@ public partial class RevenueGlobe
     private void SetListHover(int index)
     {
         _listHoverCity = index;
-        if (_canvas is not null)
-        {
-            _canvas.ListHoverCity = index;
-        }
+        _canvas?.ListHoverCity = index;
         UpdateTip();
     }
 
@@ -362,10 +353,7 @@ public partial class RevenueGlobe
     private void CloseTip()
     {
         _tipCity = -1;
-        if (_tip is not null)
-        {
-            _tip.IsOpen = false;
-        }
+        _tip?.IsOpen = false;
     }
 
     private void PlaceTip()

@@ -302,10 +302,7 @@ internal sealed class BookingPillPickers
         }
         _monthTitle.Text = _month.Month.ToString("MMMM yyyy", _owner.Culture);
         _stay.Text = _owner.StayLine();
-        if (_clear is not null)
-        {
-            _clear.IsEnabled = _owner.CheckIn is not null;
-        }
+        _clear?.IsEnabled = _owner.CheckIn is not null;
         _month.InvalidateVisual();
     }
 

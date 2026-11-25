@@ -130,7 +130,6 @@ public partial class CodeMagicMove : TemplatedControl
     private TextBlock? _source;
     private TextBlock? _added;
     private TextBlock? _removed;
-    private CodeMagicMoveStep? _currentStep;
     private string? _currentFileName;
     private int _addedLines;
     private int _removedLines;
@@ -241,8 +240,8 @@ public partial class CodeMagicMove : TemplatedControl
     /// <inheritdoc cref="CurrentStepProperty"/>
     public CodeMagicMoveStep? CurrentStep
     {
-        get => _currentStep;
-        private set => SetAndRaise(CurrentStepProperty, ref _currentStep, value);
+        get;
+        private set => SetAndRaise(CurrentStepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="CurrentFileNameProperty"/>
@@ -416,10 +415,7 @@ public partial class CodeMagicMove : TemplatedControl
         AddedLines = counts.Item1;
         RemovedLines = counts.Item2;
         PseudoClasses.Set(FirstStepPseudoClass, index <= 0);
-        if (_added is not null)
-        {
-            _added.Text = "+" + AddedLines.ToString(CultureInfo.InvariantCulture);
-        }
+        _added?.Text = "+" + AddedLines.ToString(CultureInfo.InvariantCulture);
         if (_removed is not null)
         {
             // U+2212 minus, as a diff header writes it.
@@ -430,14 +426,8 @@ public partial class CodeMagicMove : TemplatedControl
             // The real code of the step for screen readers; the drawn layer is not read.
             _source.Text = index >= 0 && index < _sources.Length ? _sources[index].Text : string.Empty;
         }
-        if (_previous is not null)
-        {
-            _previous.IsEnabled = index > 0;
-        }
-        if (_next is not null)
-        {
-            _next.IsEnabled = index < Steps.Count - 1;
-        }
+        _previous?.IsEnabled = index > 0;
+        _next?.IsEnabled = index < Steps.Count - 1;
         if (_dots is not null)
         {
             for (var i = 0; i < _dots.Children.Count; i++)
@@ -529,18 +519,9 @@ public partial class CodeMagicMove : TemplatedControl
         {
             AutomationProperties.SetLiveSetting(_status, AutomationLiveSetting.Polite);
         }
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_play is not null)
-        {
-            _play.Click += OnPlayClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
+        _play?.Click += OnPlayClick;
         RebuildDots();
         UpdateCurrent(announce: false);
         UpdatePlayButton();
@@ -554,18 +535,9 @@ public partial class CodeMagicMove : TemplatedControl
             _surface.Owner = null;
             DetachDrag();
         }
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_play is not null)
-        {
-            _play.Click -= OnPlayClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _play?.Click -= OnPlayClick;
         if (_dots is not null)
         {
             foreach (var child in _dots.Children)

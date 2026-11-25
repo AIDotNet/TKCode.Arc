@@ -87,10 +87,7 @@ public class StickerPeel : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_layer is not null)
-        {
-            _layer.Owner = null;
-        }
+        _layer?.Owner = null;
         _layer = e.NameScope.Find<StickerPeelLayer>(LayerPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
         if (_layer is not null)

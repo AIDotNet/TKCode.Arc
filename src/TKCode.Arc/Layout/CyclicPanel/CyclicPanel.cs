@@ -86,7 +86,6 @@ public class CyclicPanel : Panel
     private double _position;
     private MotionValue<double>? _motion;
     private DispatcherTimer? _snapTimer;
-    private double _offset;
     private IReadOnlyList<int> _visibleIndices = Array.Empty<int>();
     private readonly List<int> _cycle = [];
     private readonly List<(double Position, int Index)> _scratch = [];
@@ -158,8 +157,8 @@ public class CyclicPanel : Panel
     /// <inheritdoc cref="OffsetProperty"/>
     public double Offset
     {
-        get => _offset;
-        private set => SetAndRaise(OffsetProperty, ref _offset, value);
+        get;
+        private set => SetAndRaise(OffsetProperty, ref field, value);
     }
 
     /// <inheritdoc cref="VisibleItemIndicesProperty"/>

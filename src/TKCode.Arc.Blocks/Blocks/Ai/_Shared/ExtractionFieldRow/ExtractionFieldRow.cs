@@ -259,35 +259,17 @@ internal sealed class ExtractionFieldRow : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_label is not null)
-        {
-            _label.PointerPressed -= OnLabelPressed;
-        }
-        if (_looksRight is not null)
-        {
-            _looksRight.Click -= OnLooksRightClick;
-        }
-        if (_reason is not null)
-        {
-            _reason.ContentUnmounted -= OnReasonUnmounted;
-        }
+        _label?.PointerPressed -= OnLabelPressed;
+        _looksRight?.Click -= OnLooksRightClick;
+        _reason?.ContentUnmounted -= OnReasonUnmounted;
         base.OnApplyTemplate(e);
         _label = e.NameScope.Find<TextBlock>(LabelPart);
         _input = e.NameScope.Find<ExtractionInput>(InputPart);
         _reason = e.NameScope.Find<ExtractionReveal>(ReasonPart);
         _looksRight = e.NameScope.Find<ExtractionPillButton>(LooksRightPart);
-        if (_label is not null)
-        {
-            _label.PointerPressed += OnLabelPressed;
-        }
-        if (_looksRight is not null)
-        {
-            _looksRight.Click += OnLooksRightClick;
-        }
-        if (_reason is not null)
-        {
-            _reason.ContentUnmounted += OnReasonUnmounted;
-        }
+        _label?.PointerPressed += OnLabelPressed;
+        _looksRight?.Click += OnLooksRightClick;
+        _reason?.ContentUnmounted += OnReasonUnmounted;
         if (_input is not null)
         {
             _input.Palette = _palette;
@@ -328,10 +310,7 @@ internal sealed class ExtractionFieldRow : TemplatedControl
         {
             var linked = change.GetNewValue<bool>();
             PseudoClasses.Set(LinkedPseudoClass, linked);
-            if (_input is not null)
-            {
-                _input.IsLinked = linked;
-            }
+            _input?.IsLinked = linked;
             UpdateTint();
         }
         else if (change.Property == ToneProperty)
@@ -365,15 +344,9 @@ internal sealed class ExtractionFieldRow : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnValuePropertyChanged;
-        }
+        _observed?.PropertyChanged -= OnValuePropertyChanged;
         _observed = value;
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged += OnValuePropertyChanged;
-        }
+        _observed?.PropertyChanged += OnValuePropertyChanged;
     }
 
     private void OnValuePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -432,10 +405,7 @@ internal sealed class ExtractionFieldRow : TemplatedControl
             return;
         }
         _palette = palette;
-        if (_input is not null)
-        {
-            _input.Palette = palette;
-        }
+        _input?.Palette = palette;
         UpdateTint();
     }
 

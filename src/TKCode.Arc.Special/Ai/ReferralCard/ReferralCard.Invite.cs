@@ -324,14 +324,8 @@ public partial class ReferralCard
     {
         _sending = sending;
         PseudoClasses.Set(SendingPseudoClass, sending);
-        if (_editor is not null)
-        {
-            _editor.IsReadOnly = sending;
-        }
-        if (_send is not null)
-        {
-            _send.IsLoading = sending;
-        }
+        _editor?.IsReadOnly = sending;
+        _send?.IsLoading = sending;
         foreach (var chip in _chips)
         {
             chip.Remove.IsEnabled = !sending;

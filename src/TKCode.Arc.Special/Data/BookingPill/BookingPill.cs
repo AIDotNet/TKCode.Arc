@@ -626,19 +626,10 @@ public class BookingPill : TemplatedControl
         base.OnApplyTemplate(e);
         foreach (var segment in _segments)
         {
-            if (segment is not null)
-            {
-                segment.Click -= OnSegmentClick;
-            }
+            segment?.Click -= OnSegmentClick;
         }
-        if (_search is not null)
-        {
-            _search.Click -= OnSearchClick;
-        }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
+        _search?.Click -= OnSearchClick;
+        _popup?.Closed -= OnPopupClosed;
         _shell = e.NameScope.Find<Border>(ShellPart);
         _row = e.NameScope.Find<BookingPillRow>(RowPart);
         _segments[0] = e.NameScope.Find<BookingPillSegmentButton>(PlacePart);
@@ -650,15 +641,9 @@ public class BookingPill : TemplatedControl
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
         foreach (var segment in _segments)
         {
-            if (segment is not null)
-            {
-                segment.Click += OnSegmentClick;
-            }
+            segment?.Click += OnSegmentClick;
         }
-        if (_search is not null)
-        {
-            _search.Click += OnSearchClick;
-        }
+        _search?.Click += OnSearchClick;
         if (_popup is not null)
         {
             _popup.Closed += OnPopupClosed;
@@ -752,10 +737,7 @@ public class BookingPill : TemplatedControl
                 segment.IsOpen = (int)part == i + 1;
             }
         }
-        if (_search is not null)
-        {
-            _search.IsExpanded = open;
-        }
+        _search?.IsExpanded = open;
         _row?.Open(open ? (int)part - 1 : -1, animate && IsLoaded);
         if (_popup is null || _swap is null)
         {
@@ -1014,10 +996,7 @@ public class BookingPill : TemplatedControl
             guests.Value = GuestsSummary();
             guests.IsEmpty = Adults + Children + Infants == 0;
         }
-        if (_search is not null)
-        {
-            _search.Text = SearchText;
-        }
+        _search?.Text = SearchText;
         _pickers.UpdateTexts();
     }
 }

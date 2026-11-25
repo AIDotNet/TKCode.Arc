@@ -155,19 +155,13 @@ internal sealed class AgentMemoryAddField : TemplatedControl
             AgentMemoryAddStatus.Alert => new AgentMemoryStatusLine { Text = text, IsAlert = true, IsCount = isCount },
             _ => null
         };
-        if (_status is not null)
-        {
-            _status.Content = _statusContent;
-        }
+        _status?.Content = _statusContent;
         UpdateAutomation();
     }
 
     private Button CreateAddButton()
     {
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
+        _add?.Click -= OnAddClick;
         // A new button each time: the last one may still be fading out in the slot.
         _add = new Button
         {

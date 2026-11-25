@@ -581,28 +581,16 @@ public class SiteFooter : TemplatedControl
 
     private void WatchSource(IEnumerable<SiteFooterColumn>? source)
     {
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged -= OnDataChanged;
-        }
+        _watchedSource?.CollectionChanged -= OnDataChanged;
         _watchedSource = _watching ? source as INotifyCollectionChanged : null;
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged += OnDataChanged;
-        }
+        _watchedSource?.CollectionChanged += OnDataChanged;
     }
 
     private void WatchLinks(AvaloniaList<SiteFooterLink>? links)
     {
-        if (_watchedLinks is not null)
-        {
-            _watchedLinks.CollectionChanged -= OnDataChanged;
-        }
+        _watchedLinks?.CollectionChanged -= OnDataChanged;
         _watchedLinks = _watching ? links : null;
-        if (_watchedLinks is not null)
-        {
-            _watchedLinks.CollectionChanged += OnDataChanged;
-        }
+        _watchedLinks?.CollectionChanged += OnDataChanged;
     }
 
     private void UnwatchColumns()

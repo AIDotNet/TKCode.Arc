@@ -281,10 +281,7 @@ public partial class ModelArena
             state.Text = string.Empty;
             view?.Reset();
         }
-        if (view is not null)
-        {
-            view.Elapsed = TimeSpan.Zero;
-        }
+        view?.Elapsed = TimeSpan.Zero;
         SyncTiming();
         return run;
     }
@@ -804,18 +801,9 @@ public partial class ModelArena
     private void SyncReveal()
     {
         var revealed = IsRevealed;
-        if (_paneViewA is not null)
-        {
-            _paneViewA.IsRevealed = revealed;
-        }
-        if (_paneViewB is not null)
-        {
-            _paneViewB.IsRevealed = revealed;
-        }
-        if (_tabs is not null)
-        {
-            _tabs.IsRevealed = revealed;
-        }
+        _paneViewA?.IsRevealed = revealed;
+        _paneViewB?.IsRevealed = revealed;
+        _tabs?.IsRevealed = revealed;
     }
 
     /// <summary>The first-token timer runs while a model thinks.</summary>

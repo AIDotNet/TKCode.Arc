@@ -158,14 +158,8 @@ public partial class AiComposer
     /// <summary>"/" and "@" open their lists while there is something to list, and never in the chat's single row.</summary>
     private void UpdateTriggers()
     {
-        if (_commandTrigger is not null)
-        {
-            _commandTrigger.IsEnabled = !IsInline && Commands.Count > 0;
-        }
-        if (_mentionTrigger is not null)
-        {
-            _mentionTrigger.IsEnabled = !IsInline && ContextItems.Count > 0;
-        }
+        _commandTrigger?.IsEnabled = !IsInline && Commands.Count > 0;
+        _mentionTrigger?.IsEnabled = !IsInline && ContextItems.Count > 0;
     }
 
     /// <summary>The line limits; the chat's single row stops at 7 lines (180) unless <see cref="MaxLines"/> was set.</summary>

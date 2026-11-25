@@ -72,10 +72,7 @@ internal sealed class TokenTextBox : TextBox
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (Scroller is not null)
-        {
-            Scroller.ScrollChanged -= OnScrollChanged;
-        }
+        Scroller?.ScrollChanged -= OnScrollChanged;
         Presenter = e.NameScope.Find<TokenTextPresenter>("PART_TextPresenter");
         Scroller = e.NameScope.Find<ScrollViewer>("PART_ScrollViewer");
         PlaceholderBlock = e.NameScope.Find<TextBlock>("PART_Placeholder");
@@ -95,10 +92,7 @@ internal sealed class TokenTextBox : TextBox
             Presenter.Mirror = _mirror;
             Presenter.LayoutChanged = () => Owner?.OnBoxLayoutChanged();
         }
-        if (Scroller is not null)
-        {
-            Scroller.ScrollChanged += OnScrollChanged;
-        }
+        Scroller?.ScrollChanged += OnScrollChanged;
         Owner?.OnBoxTemplateApplied();
     }
 
@@ -442,10 +436,7 @@ internal sealed class TokenTextPresenter : TextPresenter
         }
         if (inlines is not null && defaults is not null)
         {
-            if (colors is not null)
-            {
-                colors.RenderContext = context;
-            }
+            colors?.RenderContext = context;
             var paragraph = new GenericTextParagraphProperties(FlowDirection, TextAlignment, true, false, defaults, TextWrapping,
                 LineHeight, 0, LetterSpacing);
             return new TextLayout(new TokenInlineTextSource(text, defaults, spans, inlines), paragraph, null, maxWidth, maxHeight, 0);

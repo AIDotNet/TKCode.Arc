@@ -396,32 +396,17 @@ public partial class AgentRun : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
-        if (_stepsHost is not null)
-        {
-            _stepsHost.ItemsSource = null;
-        }
+        _action?.Click -= OnActionClick;
+        _scroll?.ScrollChanged -= OnScrollChanged;
+        _stepsHost?.ItemsSource = null;
         base.OnApplyTemplate(e);
         _stepsHost = e.NameScope.Find<ItemsControl>(StepsPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _action = e.NameScope.Find<Button>(ActionPart);
         _progress = e.NameScope.Find<AgentRunProgressBar>(ProgressPart);
         _announcer = e.NameScope.Find<AiAnnouncer>(AnnouncerPart);
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _action?.Click += OnActionClick;
+        _scroll?.ScrollChanged += OnScrollChanged;
         if (_stepsHost is not null)
         {
             _stepsHost.ItemTemplate = new FuncDataTemplate<AgentRunStep>((step, _) => step is null ? null : CreateView(step));
@@ -544,10 +529,7 @@ public partial class AgentRun : TemplatedControl
                 }
             }
             ObserveCollection();
-            if (_stepsHost is not null)
-            {
-                _stepsHost.ItemsSource = _shown;
-            }
+            _stepsHost?.ItemsSource = _shown;
             UpdateAll();
         }
         else if (change.Property == StateProperty)

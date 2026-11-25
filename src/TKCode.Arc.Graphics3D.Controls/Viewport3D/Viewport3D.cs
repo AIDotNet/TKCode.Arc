@@ -162,7 +162,6 @@ public class Viewport3D : Control
     private Renderer? _renderer;
     private Viewport3DFrameEventArgs? _frameArgs;
     private Scene? _subscribedScene;
-    private RenderStatistics _statistics;
     private bool _isRendererReady;
     private string? _rendererError;
     private long _lastFrame;
@@ -290,8 +289,8 @@ public class Viewport3D : Control
     /// <inheritdoc cref="StatisticsProperty"/>
     public RenderStatistics Statistics
     {
-        get => _statistics;
-        private set => SetAndRaise(StatisticsProperty, ref _statistics, value);
+        get;
+        private set => SetAndRaise(StatisticsProperty, ref field, value);
     }
 
     /// <inheritdoc cref="PresentationProperty"/>
@@ -725,16 +724,10 @@ public class Viewport3D : Control
             return;
         }
 
-        if (_subscribedScene is not null)
-        {
-            _subscribedScene.Changed -= _onSceneChanged;
-        }
+        _subscribedScene?.Changed -= _onSceneChanged;
 
         _subscribedScene = scene;
-        if (scene is not null)
-        {
-            scene.Changed += _onSceneChanged;
-        }
+        scene?.Changed += _onSceneChanged;
     }
 
     /// <summary>Creates the renderer over the graphics context that is current. Called by the presenter.</summary>

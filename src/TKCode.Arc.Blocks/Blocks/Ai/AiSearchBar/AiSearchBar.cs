@@ -295,10 +295,7 @@ public class AiSearchBar : TemplatedControl
         PseudoClasses.Set(SearchingPseudoClass, state == AiSearchBarState.Searching);
         PseudoClasses.Set(AnsweredPseudoClass, state == AiSearchBarState.Answered);
         PseudoClasses.Set(FailedPseudoClass, state == AiSearchBarState.Failed);
-        if (_searchingText is not null)
-        {
-            _searchingText.IsActive = state == AiSearchBarState.Searching;
-        }
+        _searchingText?.IsActive = state == AiSearchBarState.Searching;
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
@@ -308,18 +305,9 @@ public class AiSearchBar : TemplatedControl
         {
             _input.RemoveHandler(KeyDownEvent, OnInputKeyDown);
         }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
+        _submit?.Click -= OnSubmitClick;
+        _clear?.Click -= OnClearClick;
+        _retry?.Click -= OnRetryClick;
 
         _input = e.NameScope.Find<Input>(InputPart);
         _submit = e.NameScope.Find<Button>(SubmitPart);
@@ -345,18 +333,9 @@ public class AiSearchBar : TemplatedControl
         {
             _input.AddHandler(KeyDownEvent, OnInputKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
+        _submit?.Click += OnSubmitClick;
+        _clear?.Click += OnClearClick;
+        _retry?.Click += OnRetryClick;
         UpdateLabels();
         BuildSuggestions();
         RebuildAnswer();
@@ -471,22 +450,13 @@ public class AiSearchBar : TemplatedControl
             _input.Placeholder = labels.Placeholder;
             AutomationProperties.SetName(_input, labels.Field);
         }
-        if (_submit is not null)
-        {
-            _submit.Content = labels.Submit;
-        }
+        _submit?.Content = labels.Submit;
         if (_clear is not null)
         {
             AutomationProperties.SetName(_clear, labels.Clear);
         }
-        if (_retry is not null)
-        {
-            _retry.Content = labels.Retry;
-        }
-        if (_searchingText is not null)
-        {
-            _searchingText.Text = labels.Searching;
-        }
+        _retry?.Content = labels.Retry;
+        _searchingText?.Text = labels.Searching;
         SetHeading("SuggestionsHeading", labels.Suggestions);
         SetHeading("AnswerHeading", labels.AnswerHeading);
         SetHeading("SourcesHeading", labels.Sources);

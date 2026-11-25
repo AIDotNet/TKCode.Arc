@@ -140,7 +140,6 @@ public class LightboxGallery : TemplatedControl
     private MotionValue<double>? _chrome;
     private MotionValue<double>? _viewFade;
     private double _pull;
-    private bool _isOpen;
     private bool _isZoomed;
     private bool _syncing;
     private bool _flies;
@@ -272,8 +271,8 @@ public class LightboxGallery : TemplatedControl
     /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
     {
-        get => _isOpen;
-        private set => SetAndRaise(IsOpenProperty, ref _isOpen, value);
+        get;
+        private set => SetAndRaise(IsOpenProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsZoomedProperty"/>
@@ -638,10 +637,7 @@ public class LightboxGallery : TemplatedControl
     private void ApplyFades()
     {
         var pull = Math.Clamp(_pull, 0, 1);
-        if (_presence is not null)
-        {
-            _presence.ScrimOpacity = (_scrim?.Value ?? 0) * (1 - 0.75 * pull);
-        }
+        _presence?.ScrimOpacity = (_scrim?.Value ?? 0) * (1 - 0.75 * pull);
         if (_view is not null)
         {
             _view.Opacity = Math.Clamp(_viewFade?.Value ?? 1, 0, 1);

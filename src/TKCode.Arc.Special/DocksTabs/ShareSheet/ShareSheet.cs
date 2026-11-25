@@ -344,10 +344,7 @@ public class ShareSheet : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
+        _trigger?.Click -= OnTriggerClick;
         _trigger = e.NameScope.Find<ShareSheetTrigger>(TriggerPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
         if (_trigger is not null)
@@ -590,10 +587,7 @@ public class ShareSheet : TemplatedControl
             }
         }
         _mode = OpenMode.Floating;
-        if (_trigger is not null)
-        {
-            _trigger.IsTabStop = false;
-        }
+        _trigger?.IsTabStop = false;
         _buttonFace!.IsHitTestVisible = false;
         stage.Show(panel, ShareSheetFace.Panel, Token(ShareSheetTokenKind.PanelRadius, 28), ShareSheetFaceSwap.Scale, 1, animate: true);
         surface.AnimateLook(panel: true);
@@ -651,10 +645,7 @@ public class ShareSheet : TemplatedControl
         {
             layer.Children.Remove(_overlayRoot);
         }
-        if (_layer is not null)
-        {
-            _layer.SizeChanged -= OnLayerSizeChanged;
-        }
+        _layer?.SizeChanged -= OnLayerSizeChanged;
         LayoutUpdated -= OnLayoutUpdated;
         _layer = null;
         _floatStage?.Reset();
@@ -1020,10 +1011,7 @@ public class ShareSheet : TemplatedControl
         _sheetY?.Jump(0);
         _sheetScrim?.Jump(0);
         _sheetStage?.Reset();
-        if (_sheetFrame is not null)
-        {
-            _sheetFrame.Offset = 0;
-        }
+        _sheetFrame?.Offset = 0;
         if (_detaching || TopLevel.GetTopLevel(this) is null)
         {
             // Removed because this control left the tree: IsOpen stays, and the sheet opens again when it is back.

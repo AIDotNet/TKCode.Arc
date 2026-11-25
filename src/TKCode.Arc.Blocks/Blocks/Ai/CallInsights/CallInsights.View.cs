@@ -182,10 +182,7 @@ public partial class CallInsights
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_body is not null)
-        {
-            _body.Child = null;
-        }
+        _body?.Child = null;
         _body = e.NameScope.Find<Decorator>(BodyPart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
         if (_body is not null)
@@ -638,10 +635,7 @@ public partial class CallInsights
     {
         var position = Position;
         _timeline?.SetPosition(position);
-        if (_clock is not null)
-        {
-            _clock.Text = CallInsightsModel.FormatTime(position) + " / " + CallInsightsModel.FormatTime(_model.Duration);
-        }
+        _clock?.Text = CallInsightsModel.FormatTime(position) + " / " + CallInsightsModel.FormatTime(_model.Duration);
         var index = _model.UtteranceAt(position);
         if (index < 0)
         {
@@ -701,10 +695,7 @@ public partial class CallInsights
 
     private void UpdateRate()
     {
-        if (_speed is not null)
-        {
-            _speed.Content = PlaybackRate.ToString("0.##", CultureInfo.CurrentCulture) + "×";
-        }
+        _speed?.Content = PlaybackRate.ToString("0.##", CultureInfo.CurrentCulture) + "×";
     }
 
     private void CycleRate()

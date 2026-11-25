@@ -280,10 +280,7 @@ public partial class RevenueGlobe
             SetCurrentValue(IsPausedProperty, state == RevenueGlobePlaybackState.Paused);
             _settingPaused = false;
         }
-        if (_canvas is not null)
-        {
-            _canvas.IsReplaying = state == RevenueGlobePlaybackState.Replaying;
-        }
+        _canvas?.IsReplaying = state == RevenueGlobePlaybackState.Replaying;
         UpdatePlaybackVisuals();
         RefreshClockLoop();
     }
@@ -291,10 +288,7 @@ public partial class RevenueGlobe
     private void UpdatePlaybackVisuals()
     {
         var labels = Labels;
-        if (_liveText is not null)
-        {
-            _liveText.Text = _playback.IsLive ? IsFullMotion ? labels.Live : labels.Now : labels.GoLive;
-        }
+        _liveText?.Text = _playback.IsLive ? IsFullMotion ? labels.Live : labels.Now : labels.GoLive;
         if (_liveButton is not null)
         {
             Avalonia.Automation.AutomationProperties.SetName(_liveButton, _liveText?.Text ?? labels.Live);

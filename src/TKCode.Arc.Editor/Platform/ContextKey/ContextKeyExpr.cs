@@ -138,12 +138,12 @@ internal static class ContextKeyExpr
         return ContextKeyNotExpr.Create(key);
     }
 
-    public static ContextKeyExpression? And(params ContextKeyExpression?[] expr)
+    public static ContextKeyExpression? And(params ReadOnlySpan<ContextKeyExpression?> expr)
     {
         return ContextKeyAndExpr.Create(expr, null, true);
     }
 
-    public static ContextKeyExpression? Or(params ContextKeyExpression?[] expr)
+    public static ContextKeyExpression? Or(params ReadOnlySpan<ContextKeyExpression?> expr)
     {
         return ContextKeyOrExpr.Create(expr, null, true);
     }

@@ -162,15 +162,9 @@ internal sealed class AiRelatedQuestions : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnQuestionsChanged;
-        }
+        _observed?.CollectionChanged -= OnQuestionsChanged;
         _observed = next;
-        if (next is not null)
-        {
-            next.CollectionChanged += OnQuestionsChanged;
-        }
+        next?.CollectionChanged += OnQuestionsChanged;
     }
 
     private void OnQuestionsChanged(object? sender, NotifyCollectionChangedEventArgs e) => Rebuild();

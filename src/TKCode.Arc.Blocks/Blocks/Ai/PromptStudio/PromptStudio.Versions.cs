@@ -244,14 +244,8 @@ public partial class PromptStudio
         var labels = Labels;
         var added = _diff.InsertedWords;
         var removed = _diff.DeletedWords;
-        if (_added is not null)
-        {
-            _added.Text = labels.DiffAdded(added);
-        }
-        if (_removed is not null)
-        {
-            _removed.Text = labels.DiffRemoved(removed);
-        }
+        _added?.Text = labels.DiffAdded(added);
+        _removed?.Text = labels.DiffRemoved(removed);
         var summary = labels.DiffSummaryName(added, removed);
         _diff.SummaryName = summary;
         if (_diffStats is not null)

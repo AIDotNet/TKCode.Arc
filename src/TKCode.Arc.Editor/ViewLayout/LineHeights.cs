@@ -519,9 +519,9 @@ internal sealed class LineHeightsManager
         });
     }
 
-    private abstract class PendingChange;
+    private union PendingChange(InsertOrChangeChange, RemoveChange, LinesDeletedChange, LinesInsertedChange);
 
-    private sealed class InsertOrChangeChange(string decorationId, int startLineNumber, int endLineNumber, double lineHeight) : PendingChange
+    private sealed class InsertOrChangeChange(string decorationId, int startLineNumber, int endLineNumber, double lineHeight)
     {
         public string DecorationId { get; } = decorationId;
         public int StartLineNumber { get; } = startLineNumber;
@@ -529,18 +529,18 @@ internal sealed class LineHeightsManager
         public double LineHeight { get; } = lineHeight;
     }
 
-    private sealed class RemoveChange(string decorationId) : PendingChange
+    private sealed class RemoveChange(string decorationId)
     {
         public string DecorationId { get; } = decorationId;
     }
 
-    private sealed class LinesDeletedChange(int fromLineNumber, int toLineNumber) : PendingChange
+    private sealed class LinesDeletedChange(int fromLineNumber, int toLineNumber)
     {
         public int FromLineNumber { get; } = fromLineNumber;
         public int ToLineNumber { get; } = toLineNumber;
     }
 
-    private sealed class LinesInsertedChange(int fromLineNumber, int toLineNumber) : PendingChange
+    private sealed class LinesInsertedChange(int fromLineNumber, int toLineNumber)
     {
         public int FromLineNumber { get; } = fromLineNumber;
         public int ToLineNumber { get; } = toLineNumber;

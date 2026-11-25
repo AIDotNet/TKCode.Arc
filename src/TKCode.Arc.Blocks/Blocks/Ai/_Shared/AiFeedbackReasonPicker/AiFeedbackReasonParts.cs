@@ -54,10 +54,7 @@ internal sealed class AiFeedbackReasonPanel : TemplatedControl
         set
         {
             _content = value;
-            if (_swap is not null)
-            {
-                _swap.Content = value;
-            }
+            _swap?.Content = value;
         }
     }
 

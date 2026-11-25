@@ -237,14 +237,8 @@ internal sealed class ProjectBoardCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         foreach (var name in s_tabularParts)
         {
             if (e.NameScope.Find<TextBlock>(name) is { } text)
@@ -254,14 +248,8 @@ internal sealed class ProjectBoardCard : TemplatedControl
         }
         _previous = e.NameScope.Find<ProjectBoardButton>(PreviousPart);
         _next = e.NameScope.Find<ProjectBoardButton>(NextPart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
         UpdateButtonsFocusable();
     }
 

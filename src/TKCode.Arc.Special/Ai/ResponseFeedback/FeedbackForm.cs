@@ -166,10 +166,7 @@ internal sealed class FeedbackForm : TemplatedControl
             chip.IsChecked = false;
         }
         _noteText = string.Empty;
-        if (_note is not null)
-        {
-            _note.Text = string.Empty;
-        }
+        _note?.Text = string.Empty;
         _resetting = false;
         SetCurrentValue(ErrorTextProperty, null);
         SetCurrentValue(IsSendingProperty, false);
@@ -192,18 +189,9 @@ internal sealed class FeedbackForm : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnClose;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click -= OnPrimary;
-        }
-        if (_secondary is not null)
-        {
-            _secondary.Click -= OnSecondary;
-        }
+        _close?.Click -= OnClose;
+        _primary?.Click -= OnPrimary;
+        _secondary?.Click -= OnSecondary;
         if (_note is not null)
         {
             _note.RemoveHandler(KeyDownEvent, OnNoteKeyDown);
@@ -217,18 +205,9 @@ internal sealed class FeedbackForm : TemplatedControl
         _errorText = e.NameScope.Find<TextBlock>(ErrorTextPart);
         _secondary = e.NameScope.Find<Button>(SecondaryPart);
         _primary = e.NameScope.Find<Button>(PrimaryPart);
-        if (_close is not null)
-        {
-            _close.Click += OnClose;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click += OnPrimary;
-        }
-        if (_secondary is not null)
-        {
-            _secondary.Click += OnSecondary;
-        }
+        _close?.Click += OnClose;
+        _primary?.Click += OnPrimary;
+        _secondary?.Click += OnSecondary;
         if (_note is not null)
         {
             // Tunnel: the note accepts Return, so a plain bubbling handler would never see Cmd / Ctrl + Enter.
@@ -362,14 +341,8 @@ internal sealed class FeedbackForm : TemplatedControl
             AutomationProperties.SetName(_note, labels.Note);
         }
         var error = ErrorText;
-        if (_error is not null)
-        {
-            _error.IsVisible = error is not null;
-        }
-        if (_errorText is not null)
-        {
-            _errorText.Text = error;
-        }
+        _error?.IsVisible = error is not null;
+        _errorText?.Text = error;
         if (_footnote is not null)
         {
             _footnote.Text = Footnote;
@@ -442,10 +415,7 @@ internal sealed class FeedbackThanks : TemplatedControl
         if (_playPending)
         {
             _playPending = false;
-            if (_tick is not null)
-            {
-                _tick.Progress = 0;
-            }
+            _tick?.Progress = 0;
             Avalonia.Threading.Dispatcher.UIThread.Post(PlayTick, Avalonia.Threading.DispatcherPriority.Loaded);
         }
     }

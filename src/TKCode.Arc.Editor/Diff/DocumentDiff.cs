@@ -29,6 +29,7 @@ internal sealed record DocumentDiffProviderOptions
 /// <summary>The diff of two documents (upstream's IDocumentDiff).</summary>
 internal sealed record DocumentDiff(bool Identical, bool QuitEarly, IReadOnlyList<DetailedLineRangeMapping> Changes, IReadOnlyList<MovedText> Moves)
 {
+
     /// <summary>The diff of two identical documents (upstream's nullDocumentDiff).</summary>
     public static readonly DocumentDiff Null = new(true, false, [], []);
 }

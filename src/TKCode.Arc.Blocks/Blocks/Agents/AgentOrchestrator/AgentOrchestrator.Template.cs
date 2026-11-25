@@ -69,18 +69,9 @@ public partial class AgentOrchestrator
             _graph.NodeInvoked -= OnNodeInvoked;
             _graph.SetAgents([], Labels);
         }
-        if (_run is not null)
-        {
-            _run.Click -= OnRunClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
-        if (_logScroll is not null)
-        {
-            _logScroll.ScrollChanged -= OnLogScrollChanged;
-        }
+        _run?.Click -= OnRunClick;
+        _reset?.Click -= OnResetClick;
+        _logScroll?.ScrollChanged -= OnLogScrollChanged;
         _host?.Children.Remove(_announcer);
 
         var scope = e.NameScope;
@@ -116,18 +107,9 @@ public partial class AgentOrchestrator
             _graph.NodeInvoked += OnNodeInvoked;
             _graph.SetAgents(_ordered, Labels);
         }
-        if (_run is not null)
-        {
-            _run.Click += OnRunClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
-        if (_logScroll is not null)
-        {
-            _logScroll.ScrollChanged += OnLogScrollChanged;
-        }
+        _run?.Click += OnRunClick;
+        _reset?.Click += OnResetClick;
+        _logScroll?.ScrollChanged += OnLogScrollChanged;
         if (_log is not null)
         {
             _log.ItemTemplate = new FuncDataTemplate<OrchestratorMessage>((_, _) => new AgentOrchestratorLogRow(this), supportsRecycling: true);
@@ -235,10 +217,7 @@ public partial class AgentOrchestrator
     private void UpdateTexts()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = Title ?? labels.Title;
-        }
+        _title?.Text = Title ?? labels.Title;
         if (_goal is not null)
         {
             var goal = EffectiveGoal;
@@ -257,14 +236,8 @@ public partial class AgentOrchestrator
             }
             _progress.Text = labels.Progress(done, _ordered.Length, _messages.Count);
         }
-        if (_logHeading is not null)
-        {
-            _logHeading.Text = labels.MessagesHeading;
-        }
-        if (_logEmpty is not null)
-        {
-            _logEmpty.Text = labels.NoMessages;
-        }
+        _logHeading?.Text = labels.MessagesHeading;
+        _logEmpty?.Text = labels.NoMessages;
         if (_log is not null)
         {
             AutomationProperties.SetName(_log, labels.LogName);
@@ -273,18 +246,9 @@ public partial class AgentOrchestrator
         {
             AutomationProperties.SetName(_graph, labels.GraphName);
         }
-        if (_taskHeading is not null)
-        {
-            _taskHeading.Text = labels.TaskHeading;
-        }
-        if (_activityHeading is not null)
-        {
-            _activityHeading.Text = labels.ActivityHeading;
-        }
-        if (_resultHeading is not null)
-        {
-            _resultHeading.Text = labels.ResultHeading;
-        }
+        _taskHeading?.Text = labels.TaskHeading;
+        _activityHeading?.Text = labels.ActivityHeading;
+        _resultHeading?.Text = labels.ResultHeading;
         PseudoClasses.Set(EmptyLogPseudoClass, _messages.Count == 0);
         UpdateDetail();
     }
@@ -294,10 +258,7 @@ public partial class AgentOrchestrator
     {
         var agent = SelectedAgent;
         var labels = Labels;
-        if (_detailName is not null)
-        {
-            _detailName.Text = agent?.Name;
-        }
+        _detailName?.Text = agent?.Name;
         if (_detailRole is not null)
         {
             var role = agent is null ? null : ReferenceEquals(agent, Lead) ? Join(labels.Lead, agent.Role) : agent.Role;
@@ -376,10 +337,7 @@ public partial class AgentOrchestrator
             OrchestratorRunState.Completed or OrchestratorRunState.Failed => labels.Replay,
             _ => labels.Start,
         };
-        if (_runText is not null)
-        {
-            _runText.Text = word;
-        }
+        _runText?.Text = word;
         if (_runGlyph is not null)
         {
             _runGlyph.Data = state switch
@@ -421,10 +379,7 @@ public partial class AgentOrchestrator
     private void OnMessageAdded(OrchestratorMessage message)
     {
         UpdateTexts();
-        if (_reset is not null)
-        {
-            _reset.IsEnabled = true;
-        }
+        _reset?.IsEnabled = true;
         if (_followLog && !_scrollQueued && _logScroll is not null)
         {
             _scrollQueued = true;

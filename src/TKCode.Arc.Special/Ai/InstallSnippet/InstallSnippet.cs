@@ -313,18 +313,9 @@ public partial class InstallSnippet : TemplatedControl
         _generate = e.NameScope.Find<AvaloniaButton>(GeneratePart);
         _keyStatus = e.NameScope.Find<InstallSnippetKeyStatus>(KeyStatusPart);
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
-        if (_frameworkTabs is not null)
-        {
-            _frameworkTabs.Picked += OnFrameworkPicked;
-        }
-        if (_packageManagers is not null)
-        {
-            _packageManagers.Picked += OnPackageManagerPicked;
-        }
-        if (_generate is not null)
-        {
-            _generate.Click += OnGenerateClick;
-        }
+        _frameworkTabs?.Picked += OnFrameworkPicked;
+        _packageManagers?.Picked += OnPackageManagerPicked;
+        _generate?.Click += OnGenerateClick;
         for (var i = 0; i < _stepViews.Length; i++)
         {
             if (_stepViews[i] is { } view)
@@ -339,24 +330,12 @@ public partial class InstallSnippet : TemplatedControl
 
     private void Unhook()
     {
-        if (_frameworkTabs is not null)
-        {
-            _frameworkTabs.Picked -= OnFrameworkPicked;
-        }
-        if (_packageManagers is not null)
-        {
-            _packageManagers.Picked -= OnPackageManagerPicked;
-        }
-        if (_generate is not null)
-        {
-            _generate.Click -= OnGenerateClick;
-        }
+        _frameworkTabs?.Picked -= OnFrameworkPicked;
+        _packageManagers?.Picked -= OnPackageManagerPicked;
+        _generate?.Click -= OnGenerateClick;
         foreach (var view in _stepViews)
         {
-            if (view is not null)
-            {
-                view.Copied -= OnStepCopied;
-            }
+            view?.Copied -= OnStepCopied;
         }
     }
 
@@ -479,18 +458,9 @@ public partial class InstallSnippet : TemplatedControl
 
     private void ApplyBreakpoints()
     {
-        if (_frameworkTabs is not null)
-        {
-            _frameworkTabs.ShowsMarks = !_compact;
-        }
-        if (_packageManagers is not null)
-        {
-            _packageManagers.ShowsLabels = !_narrow;
-        }
-        if (_version is not null)
-        {
-            _version.IsVisible = !_compact && !string.IsNullOrEmpty(Version);
-        }
+        _frameworkTabs?.ShowsMarks = !_compact;
+        _packageManagers?.ShowsLabels = !_narrow;
+        _version?.IsVisible = !_compact && !string.IsNullOrEmpty(Version);
     }
 
     /// <summary>A step's snippet for a framework: file name, code, language, line and whether it is a terminal command.</summary>

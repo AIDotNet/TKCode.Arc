@@ -190,15 +190,9 @@ public partial class AvailabilityPicker
         {
             return;
         }
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= handler;
-        }
+        observed?.CollectionChanged -= handler;
         observed = next;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += handler;
-        }
+        observed?.CollectionChanged += handler;
     }
 
     private void WatchItems()
@@ -531,10 +525,7 @@ public partial class AvailabilityPicker
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_confirm is not null)
-        {
-            _confirm.Click -= OnConfirmClick;
-        }
+        _confirm?.Click -= OnConfirmClick;
         if (_strip is not null)
         {
             foreach (var button in _strip.Buttons)
@@ -554,10 +545,7 @@ public partial class AvailabilityPicker
         _selectionValue = e.NameScope.Find<AvailabilityTextSwap>(SelectionValuePart);
         _confirm = e.NameScope.Find<Button>(ConfirmPart);
         _announcer = e.NameScope.Find<ProjectsAnnouncer>(AnnouncerPart);
-        if (_confirm is not null)
-        {
-            _confirm.Click += OnConfirmClick;
-        }
+        _confirm?.Click += OnConfirmClick;
         _templated = true;
         _shownDay = null;
         _shownSlots = new List<AvailabilitySlot>();
@@ -912,14 +900,8 @@ public partial class AvailabilityPicker
             _avatars.Label = ProjectsText.Format(AttendeesAutomationFormat, ProjectsText.JoinNames(_attendees.Select(p => p.Name), AndWord));
             _avatars.IsVisible = _attendees.Count > 0;
         }
-        if (_freeLegend is not null)
-        {
-            _freeLegend.Text = FreeLegendText;
-        }
-        if (_busyLegend is not null)
-        {
-            _busyLegend.Text = BusyLegendText;
-        }
+        _freeLegend?.Text = FreeLegendText;
+        _busyLegend?.Text = BusyLegendText;
     }
 
     private void UpdateDayButton(AvailabilityDayButton button)
@@ -935,10 +917,7 @@ public partial class AvailabilityPicker
     {
         var day = SelectedDay is { } selected && _days.Contains(selected) ? selected : null;
         var slot = Has(day, SelectedSlot) ? SelectedSlot : null;
-        if (_dayTitle is not null)
-        {
-            _dayTitle.Text = day is null ? null : DayLabel(day);
-        }
+        _dayTitle?.Text = day is null ? null : DayLabel(day);
         if (_selectionLabel is not null)
         {
             _selectionLabel.Text = IsConfirmed && slot is not null ? ConfirmedLabelText

@@ -217,15 +217,9 @@ public partial class UptimeStatus
         var swap = AnalyticsSwapStyle.RiseLate with { ReducedDuration = TimeSpan.Zero };
         foreach (var text in new[] { _title, _summary, _subtitle })
         {
-            if (text is not null)
-            {
-                text.Swap = swap;
-            }
+            text?.Swap = swap;
         }
-        if (_chart is not null)
-        {
-            _chart.CursorMoved += OnCursorMoved;
-        }
+        _chart?.CursorMoved += OnCursorMoved;
         _templated = true;
         _stacked = null;
         _compact = null;
@@ -242,10 +236,7 @@ public partial class UptimeStatus
 
     private void Unhook()
     {
-        if (_chart is not null)
-        {
-            _chart.CursorMoved -= OnCursorMoved;
-        }
+        _chart?.CursorMoved -= OnCursorMoved;
         foreach (var row in _rows)
         {
             UnhookRow(row);
@@ -298,10 +289,7 @@ public partial class UptimeStatus
         }
         else if (change.Property == ActionContentProperty)
         {
-            if (_action is not null)
-            {
-                _action.Content = ActionContent;
-            }
+            _action?.Content = ActionContent;
         }
         else if (change.Property == PageNameProperty || change.Property == UpdatedAtProperty || change.Property == StatusSummaryProperty
                  || change.Property == OperationalTitleProperty || change.Property == DegradedTitleProperty || change.Property == OutageTitleProperty)
@@ -341,15 +329,9 @@ public partial class UptimeStatus
 
     private void ObserveSource(ref INotifyCollectionChanged? observed, IEnumerable? source)
     {
-        if (observed is not null)
-        {
-            observed.CollectionChanged -= OnDataChanged;
-        }
+        observed?.CollectionChanged -= OnDataChanged;
         observed = source as INotifyCollectionChanged;
-        if (observed is not null)
-        {
-            observed.CollectionChanged += OnDataChanged;
-        }
+        observed?.CollectionChanged += OnDataChanged;
     }
 
     private void Unwatch()
@@ -664,10 +646,7 @@ public partial class UptimeStatus
 
     private static void SetText(TextBlock? block, string? text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     // Header ------------------------------------------------------------------------------------------------------------------
@@ -685,10 +664,7 @@ public partial class UptimeStatus
             ServiceStatus.Degraded => DegradedTitle,
             _ => OutageTitle
         };
-        if (_icon is not null)
-        {
-            _icon.Status = status;
-        }
+        _icon?.Status = status;
         _title.Text = title;
         _pageName!.Text = PageName;
         var summary = StatusSummary;
@@ -911,10 +887,7 @@ public partial class UptimeStatus
         SetText(_countBefore, before);
         SetText(_countAfter, after);
         SetNumber(_countValue, count, animate);
-        if (_countValue is not null)
-        {
-            _countValue.IsVisible = at >= 0;
-        }
+        _countValue?.IsVisible = at >= 0;
         if (_noIncidents is not null)
         {
             _noIncidents.Text = string.Format(s_culture, labels.NoIncidentsFormat, DayCount);

@@ -71,12 +71,11 @@ public class FloatingButtonGroupItem : AvaloniaButton
     /// <summary>Other labels this item can switch to (such as "Copied"); the button keeps the widest width.</summary>
     public IReadOnlyList<string>? ReserveLabels { get => GetValue(ReserveLabelsProperty); set => SetValue(ReserveLabelsProperty, value); }
 
-    private Control? _phase;
 
     internal Control? Phase
     {
-        get => _phase;
-        private set => SetAndRaise(PhaseProperty, ref _phase, value);
+        get;
+        private set => SetAndRaise(PhaseProperty, ref field, value);
     }
 
     private IReadOnlyList<string> _sizerLabels = [];

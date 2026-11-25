@@ -301,18 +301,9 @@ public partial class ShareAccess
         _syncingPickers = true;
         try
         {
-            if (_inviteRole is not null)
-            {
-                _inviteRole.SelectedIndex = (int)InviteRole;
-            }
-            if (_linkRoleSelect is not null)
-            {
-                _linkRoleSelect.SelectedIndex = (int)LinkRole;
-            }
-            if (_scopeSelect is not null)
-            {
-                _scopeSelect.SelectedIndex = Array.IndexOf(s_scopes, LinkScope);
-            }
+            _inviteRole?.SelectedIndex = (int)InviteRole;
+            _linkRoleSelect?.SelectedIndex = (int)LinkRole;
+            _scopeSelect?.SelectedIndex = Array.IndexOf(s_scopes, LinkScope);
         }
         finally
         {

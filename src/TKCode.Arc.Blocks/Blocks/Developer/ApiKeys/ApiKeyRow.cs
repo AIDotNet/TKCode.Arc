@@ -151,14 +151,8 @@ internal sealed class ApiKeyRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
-        if (_revoke is not null)
-        {
-            _revoke.Confirmed -= OnRevokeConfirmed;
-        }
+        _trigger?.Click -= OnTriggerClick;
+        _revoke?.Confirmed -= OnRevokeConfirmed;
         T? Find<T>(string name) where T : class => e.NameScope.Find<T>(name);
         _trigger = Find<ApiKeyRowTrigger>(TriggerPart);
         _columns = Find<Grid>(ColumnsPart);
@@ -197,14 +191,8 @@ internal sealed class ApiKeyRow : TemplatedControl
         _noteIcon = Find<Control>(NoteIconPart);
         _noteText = Find<TextBlock>(NoteTextPart);
         _revoke = Find<HoldToConfirm>(RevokePart);
-        if (_trigger is not null)
-        {
-            _trigger.Click += OnTriggerClick;
-        }
-        if (_revoke is not null)
-        {
-            _revoke.Confirmed += OnRevokeConfirmed;
-        }
+        _trigger?.Click += OnTriggerClick;
+        _revoke?.Confirmed += OnRevokeConfirmed;
         _detailFade = null;
         Refresh();
         ApplyLayout();
@@ -295,19 +283,13 @@ internal sealed class ApiKeyRow : TemplatedControl
         PseudoClasses.Set(StalePseudoClass, stale);
         PseudoClasses.Set(FreshPseudoClass, item.IsFresh);
 
-        if (_name is not null)
-        {
-            _name.Text = item.Name;
-        }
+        _name?.Text = item.Name;
         if (_badge is not null)
         {
             _badge.Content = item.Environment == ApiKeyEnvironment.Live ? labels.Live : labels.Test;
             _badge.Tone = item.Environment == ApiKeyEnvironment.Live ? BadgeTone.Success : BadgeTone.Neutral;
         }
-        if (_mask is not null)
-        {
-            _mask.Text = item.MaskedText;
-        }
+        _mask?.Text = item.MaskedText;
         if (_scopes is not null)
         {
             ApiKeyChips.Fill(_scopes, item.Scopes);
@@ -318,66 +300,30 @@ internal sealed class ApiKeyRow : TemplatedControl
         }
         var used = item.LastUsedText
                    ?? (item.LastUsedAt is { } at ? labels.Used(labels.Ago(Clamp(now - at))) : labels.NeverUsed);
-        if (_used is not null)
-        {
-            _used.Text = used;
-        }
-        if (_staleIcon is not null)
-        {
-            _staleIcon.IsVisible = stale;
-        }
+        _used?.Text = used;
+        _staleIcon?.IsVisible = stale;
         var date = labels.Date(item.CreatedAt);
-        if (_created is not null)
-        {
-            _created.Text = labels.Created(date);
-        }
-        if (_createdDate is not null)
-        {
-            _createdDate.Text = date;
-        }
-        if (_createdByLabel is not null)
-        {
-            _createdByLabel.Text = labels.CreatedByLabel;
-        }
+        _created?.Text = labels.Created(date);
+        _createdDate?.Text = date;
+        _createdByLabel?.Text = labels.CreatedByLabel;
         var creator = string.IsNullOrWhiteSpace(item.CreatedBy) ? labels.UnknownPerson : item.CreatedBy!;
-        if (_createdBy is not null)
-        {
-            _createdBy.Text = creator;
-        }
+        _createdBy?.Text = creator;
         if (_avatar is not null)
         {
             _avatar.DisplayName = creator;
             _avatar.IsVisible = !string.IsNullOrWhiteSpace(item.CreatedBy);
         }
-        if (_lastRequestLabel is not null)
-        {
-            _lastRequestLabel.Text = labels.LastRequestLabel;
-        }
+        _lastRequestLabel?.Text = labels.LastRequestLabel;
         if (_lastRequest is not null)
         {
             _lastRequest.Text = item.LastRequestText
                                 ?? (item.LastUsedAt is { } last ? labels.Ago(Clamp(now - last)) : labels.NoRequests);
         }
-        if (_requestsLabel is not null)
-        {
-            _requestsLabel.Text = labels.RequestsLabel;
-        }
-        if (_requests is not null)
-        {
-            _requests.Text = DeveloperText.Thousands(item.RequestsLast30Days);
-        }
-        if (_createdLabel is not null)
-        {
-            _createdLabel.Text = labels.CreatedLabel;
-        }
-        if (_scopesLabel is not null)
-        {
-            _scopesLabel.Text = labels.ScopesLabel;
-        }
-        if (_noteIcon is not null)
-        {
-            _noteIcon.IsVisible = stale;
-        }
+        _requestsLabel?.Text = labels.RequestsLabel;
+        _requests?.Text = DeveloperText.Thousands(item.RequestsLast30Days);
+        _createdLabel?.Text = labels.CreatedLabel;
+        _scopesLabel?.Text = labels.ScopesLabel;
+        _noteIcon?.IsVisible = stale;
         if (_noteText is not null)
         {
             _noteText.Text = stale && item.LastUsedAt is { } idle
@@ -439,14 +385,8 @@ internal sealed class ApiKeyRow : TemplatedControl
                 Grid.SetColumn(_chevron, 3);
             }
         }
-        if (_created is not null)
-        {
-            _created.IsVisible = !_narrow;
-        }
-        if (_dates is not null)
-        {
-            _dates.HorizontalAlignment = _narrow ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
-        }
+        _created?.IsVisible = !_narrow;
+        _dates?.HorizontalAlignment = _narrow ? HorizontalAlignment.Right : HorizontalAlignment.Stretch;
         if (_used?.Parent is StackPanel usedLine)
         {
             usedLine.HorizontalAlignment = _narrow ? HorizontalAlignment.Right : HorizontalAlignment.Left;
@@ -500,10 +440,7 @@ internal sealed class ApiKeyRow : TemplatedControl
     private void ApplyExpanded(bool animate)
     {
         PseudoClasses.Set(ExpandedPseudoClass, _expanded);
-        if (_trigger is not null)
-        {
-            _trigger.IsExpanded = _expanded;
-        }
+        _trigger?.IsExpanded = _expanded;
         if (_detailHost is null || _detail is null)
         {
             return;

@@ -46,10 +46,7 @@ public partial class KanbanBoard
 
     private void DetachDrawer()
     {
-        if (_drawer is not null)
-        {
-            _drawer.Board = null;
-        }
+        _drawer?.Board = null;
     }
 
     // Opening and closing ----------------------------------------------------------------------------------------------

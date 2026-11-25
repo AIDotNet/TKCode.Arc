@@ -32,8 +32,12 @@ internal sealed class LinePreflightData
 }
 
 /// <summary>The result of the analysis of the lines (upstream's IPreflightData).</summary>
-internal sealed record PreflightData(bool Supported, bool ShouldRemoveComments, IReadOnlyList<LinePreflightData> Lines)
+internal sealed class PreflightData(bool supported, bool shouldRemoveComments, IReadOnlyList<LinePreflightData> lines)
 {
+    public bool Supported { get; } = supported;
+    public bool ShouldRemoveComments { get; } = shouldRemoveComments;
+    public IReadOnlyList<LinePreflightData> Lines { get; } = lines;
+
     public static PreflightData Unsupported { get; } = new(false, false, []);
 }
 

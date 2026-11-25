@@ -358,10 +358,7 @@ public partial class ShareAccess : TemplatedControl
     {
         _isInviting = inviting;
         PseudoClasses.Set(InvitingPseudoClass, inviting);
-        if (_inviteButton is not null)
-        {
-            _inviteButton.IsLoading = inviting;
-        }
+        _inviteButton?.IsLoading = inviting;
         UpdateInviteEnabled();
     }
 

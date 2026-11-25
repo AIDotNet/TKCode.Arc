@@ -6,7 +6,7 @@ namespace StreamMark.Avalonia.Rendering;
 /// </summary>
 public sealed class StreamingState
 {
-    private readonly object _lock = new();
+    private readonly SyncLock _lock = new();
     private readonly Queue<(long End, TimeSpan Time)> _reveals = new();
     private long _revealed;
     // 已移出队列的批次的终点：队列第一批的起点

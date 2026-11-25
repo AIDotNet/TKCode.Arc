@@ -232,14 +232,8 @@ internal sealed class ProjectBoardFilterBar : TemplatedControl
 
     private void Sync(bool animate)
     {
-        if (_all is not null)
-        {
-            _all.IsChecked = Filter == ProjectBoardFilter.All;
-        }
-        if (_mine is not null)
-        {
-            _mine.IsChecked = Filter == ProjectBoardFilter.Mine;
-        }
+        _all?.IsChecked = Filter == ProjectBoardFilter.All;
+        _mine?.IsChecked = Filter == ProjectBoardFilter.Mine;
         MoveHighlight(animate);
     }
 

@@ -264,10 +264,7 @@ public class OrbitLogos : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_categoriesPanel is not null)
-        {
-            _categoriesPanel.SizeChanged -= OnCategoriesResized;
-        }
+        _categoriesPanel?.SizeChanged -= OnCategoriesResized;
         _layout = e.NameScope.Find<OrbitLogosLayout>(LayoutPart);
         _stage = e.NameScope.Find<OrbitLogosStage>(StagePart);
         _disc = e.NameScope.Find<Control>(DiscPart);
@@ -292,18 +289,12 @@ public class OrbitLogos : TemplatedControl
             _stage.SetBrushes(RingBrush, ConnectorBrush);
             AutomationProperties.SetName(_stage, Label);
         }
-        if (_categoriesPanel is not null)
-        {
-            _categoriesPanel.SizeChanged += OnCategoriesResized;
-        }
+        _categoriesPanel?.SizeChanged += OnCategoriesResized;
         if (_card is not null)
         {
             _card.IsVisible = false;
             _card.Clip = null;
-            if (_idle is not null)
-            {
-                _idle.Opacity = 1;
-            }
+            _idle?.Opacity = 1;
         }
         _layoutKnown = false;
         UpdateCenter();
@@ -554,10 +545,7 @@ public class OrbitLogos : TemplatedControl
                 AddCategoryChip(category);
             }
         }
-        if (_categoryScroller is not null)
-        {
-            _categoryScroller.IsVisible = _categories.Count > 0;
-        }
+        _categoryScroller?.IsVisible = _categories.Count > 0;
     }
 
     private void AddCategoryChip(string text)
@@ -915,10 +903,7 @@ public class OrbitLogos : TemplatedControl
             _reveal = new MotionValue<double>(this, 0, MotionVectors.Double);
             _reveal.Changed += value =>
             {
-                if (_swap is not null)
-                {
-                    _swap.Opacity = Math.Clamp(value, 0, 1);
-                }
+                _swap?.Opacity = Math.Clamp(value, 0, 1);
             };
         }
     }

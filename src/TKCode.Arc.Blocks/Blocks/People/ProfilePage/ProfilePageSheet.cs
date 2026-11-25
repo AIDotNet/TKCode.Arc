@@ -151,10 +151,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
         set
         {
             _isSaving = value;
-            if (_saveStack is not null)
-            {
-                _saveStack.Shown = value ? 1 : 0;
-            }
+            _saveStack?.Shown = value ? 1 : 0;
             UpdateSaveEnabled();
         }
     }
@@ -202,26 +199,11 @@ internal sealed class ProfilePageSheet : TemplatedControl
             box.AddHandler(KeyDownEvent, OnOneLineKeyDown, RoutingStrategies.Tunnel);
             box.TextChanged += OnTextChanged;
         }
-        if (_bio is not null)
-        {
-            _bio.TextChanged += OnTextChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnDismissClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnDismissClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
-        if (_pair is not null)
-        {
-            _pair.Columns = _pairColumns;
-        }
+        _bio?.TextChanged += OnTextChanged;
+        _close?.Click += OnDismissClick;
+        _cancel?.Click += OnDismissClick;
+        _save?.Click += OnSaveClick;
+        _pair?.Columns = _pairColumns;
         ApplyLabels();
         Fill();
     }
@@ -244,22 +226,10 @@ internal sealed class ProfilePageSheet : TemplatedControl
             box.RemoveHandler(KeyDownEvent, OnOneLineKeyDown);
             box.TextChanged -= OnTextChanged;
         }
-        if (_bio is not null)
-        {
-            _bio.TextChanged -= OnTextChanged;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnDismissClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnDismissClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
+        _bio?.TextChanged -= OnTextChanged;
+        _close?.Click -= OnDismissClick;
+        _cancel?.Click -= OnDismissClick;
+        _save?.Click -= OnSaveClick;
     }
 
     /// <summary>Starts a new draft from <paramref name="profile"/>: errors and the error strip hidden, nothing submitted.</summary>
@@ -270,10 +240,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
         _bioMax = Math.Max(1, bioMax);
         _submitted = false;
         _isSaving = false;
-        if (_saveStack is not null)
-        {
-            _saveStack.Shown = 0;
-        }
+        _saveStack?.Shown = 0;
         ShowAlert(null);
         ApplyLabels();
         Fill();
@@ -295,10 +262,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
         }
         Width = Math.Min(sheetWidth, pageWidth);
         _pairColumns = pageWidth < 420 ? 1 : 2;
-        if (_pair is not null)
-        {
-            _pair.Columns = _pairColumns;
-        }
+        _pair?.Columns = _pairColumns;
     }
 
     private void Fill()
@@ -306,22 +270,10 @@ internal sealed class ProfilePageSheet : TemplatedControl
         _loading = true;
         try
         {
-            if (_name is not null)
-            {
-                _name.Text = _source.Name;
-            }
-            if (_headline is not null)
-            {
-                _headline.Text = _source.Headline;
-            }
-            if (_location is not null)
-            {
-                _location.Text = _source.Location;
-            }
-            if (_website is not null)
-            {
-                _website.Text = _source.Website;
-            }
+            _name?.Text = _source.Name;
+            _headline?.Text = _source.Headline;
+            _location?.Text = _source.Location;
+            _website?.Text = _source.Website;
             if (_bio is not null)
             {
                 _bio.MaxLength = _bioMax;
@@ -347,10 +299,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
         Set(_websiteError, _labels.WebsiteInvalid);
         Set(_saveLabel, _labels.Save);
         Set(_savingLabel, _labels.Saving);
-        if (_cancel is not null)
-        {
-            _cancel.Content = _labels.Cancel;
-        }
+        _cancel?.Content = _labels.Cancel;
         if (_close is not null)
         {
             AutomationProperties.SetName(_close, _labels.Close);
@@ -369,10 +318,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
 
         static void Set(TextBlock? block, string text)
         {
-            if (block is not null)
-            {
-                block.Text = text;
-            }
+            block?.Text = text;
         }
 
         static void NameBox(TextBox? box, string text)
@@ -416,10 +362,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
 
     private static void SetError(TextBox? box, TextBlock? error, bool show)
     {
-        if (error is not null)
-        {
-            error.IsVisible = show;
-        }
+        error?.IsVisible = show;
         if (box is not null)
         {
             box.Classes.Set("invalid", show);
@@ -429,10 +372,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
 
     private void UpdateCounter()
     {
-        if (_bioCounter is not null)
-        {
-            _bioCounter.Text = _labels.Remaining(Math.Max(0, _bioMax - Raw(_bio).Length));
-        }
+        _bioCounter?.Text = _labels.Remaining(Math.Max(0, _bioMax - Raw(_bio).Length));
     }
 
     private void UpdateSaveEnabled()
@@ -455,10 +395,7 @@ internal sealed class ProfilePageSheet : TemplatedControl
                 AutomationProperties.SetName(strip, message);
             }
         }
-        if (_alertHost is not null)
-        {
-            _alertHost.IsPresent = message is not null;
-        }
+        _alertHost?.IsPresent = message is not null;
     }
 
     /// <summary>Focuses the name field (the first field).</summary>

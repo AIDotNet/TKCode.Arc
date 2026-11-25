@@ -757,10 +757,7 @@ public partial class CartDrawer : TemplatedControl
         }
         else if (change.Property == TitleProperty)
         {
-            if (_title is not null)
-            {
-                _title.Text = Title;
-            }
+            _title?.Text = Title;
         }
         else if (change.Property == LabelsProperty || change.Property == CurrencyProperty || change.Property == AmountDecimalsProperty)
         {

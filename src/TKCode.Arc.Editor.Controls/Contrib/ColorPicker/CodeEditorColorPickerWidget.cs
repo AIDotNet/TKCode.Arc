@@ -120,33 +120,18 @@ internal sealed class CodeEditorColorPickerWidget : TemplatedControl, ICodeEdito
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_presentation is not null)
-        {
-            _presentation.Click -= OnPresentationClick;
-        }
+        _presentation?.Click -= OnPresentationClick;
 
-        if (_original is not null)
-        {
-            _original.PointerPressed -= OnOriginalPressed;
-        }
+        _original?.PointerPressed -= OnOriginalPressed;
 
-        if (_picker is not null)
-        {
-            _picker.ColorChanged -= OnPickerColorChanged;
-        }
+        _picker?.ColorChanged -= OnPickerColorChanged;
 
         _presentation = e.NameScope.Find<Button>(PartPresentation);
         _original = e.NameScope.Find<Border>(PartOriginal);
         _picker = e.NameScope.Find<ColorPicker>(PartPicker);
-        if (_presentation is not null)
-        {
-            _presentation.Click += OnPresentationClick;
-        }
+        _presentation?.Click += OnPresentationClick;
 
-        if (_original is not null)
-        {
-            _original.PointerPressed += OnOriginalPressed;
-        }
+        _original?.PointerPressed += OnOriginalPressed;
 
         if (_picker is not null)
         {
@@ -192,9 +177,6 @@ internal sealed class CodeEditorColorPickerWidget : TemplatedControl, ICodeEdito
     /// <summary>Opens the picker's panel.</summary>
     internal void OpenPanel()
     {
-        if (_picker is not null)
-        {
-            _picker.IsDropDownOpen = true;
-        }
+        _picker?.IsDropDownOpen = true;
     }
 }

@@ -228,10 +228,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
             return;
         }
         _applied = null;
-        if (_input is not null)
-        {
-            _input.Text = string.Empty;
-        }
+        _input?.Text = string.Empty;
         PseudoClasses.Set(AppliedPseudoClass, false);
         SwapToForm(animate: true);
         if (focusInput)
@@ -253,10 +250,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
         else if (_applied is not null)
         {
             _applied = null;
-            if (_input is not null)
-            {
-                _input.Text = string.Empty;
-            }
+            _input?.Text = string.Empty;
             PseudoClasses.Set(AppliedPseudoClass, false);
             SwapToForm(animate: false);
         }
@@ -281,14 +275,8 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
             _input.TextChanged -= OnInputTextChanged;
             _input.KeyDown -= OnInputKeyDown;
         }
-        if (_apply is not null)
-        {
-            _apply.Click -= OnApplyClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
+        _apply?.Click -= OnApplyClick;
+        _remove?.Click -= OnRemoveClick;
         _shake = e.NameScope.Find<Control>(ShakePart);
         _form = e.NameScope.Find<Border>(FormPart);
         _input = e.NameScope.Find<CheckoutSummaryCouponInput>(InputPart);
@@ -301,10 +289,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
         _remove = e.NameScope.Find<CheckoutSummaryButton>(RemovePart);
         _errorHost = e.NameScope.Find<CheckoutSummaryCollapse>(ErrorHostPart);
         _error = e.NameScope.Find<TextBlock>(ErrorPart);
-        if (_shake is not null)
-        {
-            _shake.RenderTransform = _shakeMove;
-        }
+        _shake?.RenderTransform = _shakeMove;
         if (_form is not null)
         {
             _form.RenderTransform = _formScale;
@@ -320,14 +305,8 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
             _input.TextChanged += OnInputTextChanged;
             _input.KeyDown += OnInputKeyDown;
         }
-        if (_apply is not null)
-        {
-            _apply.Click += OnApplyClick;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
+        _apply?.Click += OnApplyClick;
+        _remove?.Click += OnRemoveClick;
         if (_errorHost is not null)
         {
             _errorHost.FadeWithSpring = true;
@@ -426,10 +405,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
                 _spinnerHost.Children.Clear();
             }
         }
-        if (_applyText is not null)
-        {
-            _applyText.Opacity = busy ? 0 : 1;
-        }
+        _applyText?.Opacity = busy ? 0 : 1;
         if (_apply is not null)
         {
             AutomationProperties.SetName(_apply, busy ? Labels.CheckingCode : Labels.Apply);
@@ -441,10 +417,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
     {
         _errorMessage = message;
         PseudoClasses.Set(InvalidPseudoClass, true);
-        if (_error is not null)
-        {
-            _error.Text = message;
-        }
+        _error?.Text = message;
         if (_input is not null)
         {
             AutomationProperties.SetHelpText(_input, message);
@@ -603,10 +576,7 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
 
     private static void SetOpacity(Control? control, double value)
     {
-        if (control is not null)
-        {
-            control.Opacity = Math.Clamp(value, 0, 1);
-        }
+        control?.Opacity = Math.Clamp(value, 0, 1);
     }
 
     private MotionValue<double> CreateValue(double initial, Action<double> changed)
@@ -624,23 +594,14 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
             _input.PlaceholderText = labels.CouponPlaceholder;
             AutomationProperties.SetName(_input, labels.CouponFieldName);
         }
-        if (_applyText is not null)
-        {
-            _applyText.Text = labels.Apply;
-        }
+        _applyText?.Text = labels.Apply;
         if (_apply is not null)
         {
             AutomationProperties.SetName(_apply, _busy ? labels.CheckingCode : labels.Apply);
         }
-        if (_chipApplied is not null)
-        {
-            _chipApplied.Text = labels.Applied;
-        }
+        _chipApplied?.Text = labels.Applied;
         var code = _applied?.Code ?? string.Empty;
-        if (_chipCode is not null)
-        {
-            _chipCode.Text = code;
-        }
+        _chipCode?.Text = code;
         if (_remove is not null)
         {
             AutomationProperties.SetName(_remove, labels.RemoveCode(code));
@@ -650,17 +611,8 @@ internal sealed class CheckoutSummaryCouponField : TemplatedControl
     private void UpdateLocked()
     {
         var locked = IsLocked;
-        if (_input is not null)
-        {
-            _input.IsEnabled = !locked && _applied is null;
-        }
-        if (_apply is not null)
-        {
-            _apply.IsEnabled = !locked && !_busy && _applied is null;
-        }
-        if (_remove is not null)
-        {
-            _remove.IsEnabled = !locked && _applied is not null;
-        }
+        _input?.IsEnabled = !locked && _applied is null;
+        _apply?.IsEnabled = !locked && !_busy && _applied is null;
+        _remove?.IsEnabled = !locked && _applied is not null;
     }
 }

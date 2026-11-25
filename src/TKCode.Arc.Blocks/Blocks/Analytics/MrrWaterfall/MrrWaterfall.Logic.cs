@@ -144,14 +144,8 @@ public partial class MrrWaterfall
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_periodSwitch is not null)
-        {
-            _periodSwitch.SelectionChanged -= OnPeriodSwitchChanged;
-        }
-        if (_valueSwitch is not null)
-        {
-            _valueSwitch.SelectionChanged -= OnValueSwitchChanged;
-        }
+        _periodSwitch?.SelectionChanged -= OnPeriodSwitchChanged;
+        _valueSwitch?.SelectionChanged -= OnValueSwitchChanged;
         if (_plot is not null)
         {
             _plot.SelectionRequested -= OnSelectionRequested;
@@ -173,14 +167,8 @@ public partial class MrrWaterfall
         _table = e.NameScope.Find<MrrWaterfallDataTable>(TablePart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
 
-        if (_periodSwitch is not null)
-        {
-            _periodSwitch.SelectionChanged += OnPeriodSwitchChanged;
-        }
-        if (_valueSwitch is not null)
-        {
-            _valueSwitch.SelectionChanged += OnValueSwitchChanged;
-        }
+        _periodSwitch?.SelectionChanged += OnPeriodSwitchChanged;
+        _valueSwitch?.SelectionChanged += OnValueSwitchChanged;
         if (_plot is not null)
         {
             _plot.SelectionRequested += OnSelectionRequested;
@@ -212,27 +200,15 @@ public partial class MrrWaterfall
         var compact = content < CompactSummaryWidth;
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(CompactSummaryPseudoClass, compact);
-        if (_body is not null)
-        {
-            _body.IsStacked = stacked;
-        }
-        if (_panel is not null)
-        {
-            _panel.IsStacked = stacked;
-        }
-        if (_summary is not null)
-        {
-            _summary.StretchTrail = compact;
-        }
+        _body?.IsStacked = stacked;
+        _panel?.IsStacked = stacked;
+        _summary?.StretchTrail = compact;
         if (_stats is not null)
         {
             _stats.IsStretched = compact;
             _stats.SetValueSize(compact ? CompactStatValueSize : StatValueSize);
         }
-        if (_headline is not null)
-        {
-            _headline.ValueSize = compact ? CompactHeadlineValueSize : HeadlineValueSize;
-        }
+        _headline?.ValueSize = compact ? CompactHeadlineValueSize : HeadlineValueSize;
     }
 
     private void OnCompactChanged(bool compact)
@@ -316,15 +292,9 @@ public partial class MrrWaterfall
 
     private void ObserveLabels(MrrWaterfallLabels? labels)
     {
-        if (_observedLabels is not null)
-        {
-            _observedLabels.Changed -= OnLabelsChanged;
-        }
+        _observedLabels?.Changed -= OnLabelsChanged;
         _observedLabels = labels;
-        if (labels is not null)
-        {
-            labels.Changed += OnLabelsChanged;
-        }
+        labels?.Changed += OnLabelsChanged;
     }
 
     private void OnLabelsChanged(object? sender, EventArgs e)
@@ -336,15 +306,9 @@ public partial class MrrWaterfall
 
     private void ObserveSource(IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnPeriodsChanged();
@@ -708,14 +672,8 @@ public partial class MrrWaterfall
 
     private void UpdateSwitchVisibility()
     {
-        if (_periodSwitch is not null)
-        {
-            _periodSwitch.IsVisible = IsPeriodSwitchVisible && _periods.Count > 1;
-        }
-        if (_valueSwitch is not null)
-        {
-            _valueSwitch.IsVisible = IsValueModeSwitchVisible;
-        }
+        _periodSwitch?.IsVisible = IsPeriodSwitchVisible && _periods.Count > 1;
+        _valueSwitch?.IsVisible = IsValueModeSwitchVisible;
     }
 
     private void OnPeriodSwitchChanged(object? sender, SelectionChangedEventArgs e)

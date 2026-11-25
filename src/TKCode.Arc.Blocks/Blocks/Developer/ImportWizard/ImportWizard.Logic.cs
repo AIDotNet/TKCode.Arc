@@ -144,18 +144,12 @@ public partial class ImportWizard
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_stepper is not null)
-        {
-            _stepper.StepInvoked -= OnStepInvoked;
-        }
+        _stepper?.StepInvoked -= OnStepInvoked;
         _stepper = e.NameScope.Find<ImportWizardStepper>(StepperPart);
         _deck = e.NameScope.Find<ImportWizardDeck>(DeckPart);
         _announcer = e.NameScope.Find<DeveloperAnnouncer>(AnnouncerPart);
         _alertAnnouncer = e.NameScope.Find<DeveloperAnnouncer>(AlertAnnouncerPart);
-        if (_stepper is not null)
-        {
-            _stepper.StepInvoked += OnStepInvoked;
-        }
+        _stepper?.StepInvoked += OnStepInvoked;
         UpdateStepper(animate: false);
         ShowStep(Step, forward: true, animate: false);
     }

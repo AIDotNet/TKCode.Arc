@@ -750,10 +750,7 @@ public class ConfirmMorph : TemplatedControl
             }
             ResetParts(incoming);
             _flight++;
-            if (_pill is not null)
-            {
-                _pill.Width = double.NaN;
-            }
+            _pill?.Width = double.NaN;
             AfterFace();
             return;
         }

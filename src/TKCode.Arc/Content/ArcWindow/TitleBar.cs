@@ -227,18 +227,12 @@ public class TitleBar : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_topmost is not null)
-        {
-            _topmost.IsCheckedChanged -= OnTopmostToggled;
-        }
+        _topmost?.IsCheckedChanged -= OnTopmostToggled;
         _captionButtons?.Drive(null);
 
         _captionButtons = e.NameScope.Find<WindowCaptionButtons>(WindowCaptionButtonsPart);
         _topmost = e.NameScope.Find<AvaloniaToggleButton>(TopmostButtonPart);
-        if (_topmost is not null)
-        {
-            _topmost.IsCheckedChanged += OnTopmostToggled;
-        }
+        _topmost?.IsCheckedChanged += OnTopmostToggled;
 
         // Controls placed in the three areas take their own input where the system would see a title bar; the areas'
         // empty parts are not hit, so they stay the bar.
@@ -320,10 +314,7 @@ public class TitleBar : TemplatedControl
         {
             return;
         }
-        if (_window is not null)
-        {
-            _window.PropertyChanged -= OnWindowPropertyChanged;
-        }
+        _window?.PropertyChanged -= OnWindowPropertyChanged;
         _titleBinding?.Dispose();
         _titleBinding = null;
         _window = window;

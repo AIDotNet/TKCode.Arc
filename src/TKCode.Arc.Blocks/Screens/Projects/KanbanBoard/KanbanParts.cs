@@ -710,18 +710,12 @@ internal sealed class KanbanColumnHead : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
+        _add?.Click -= OnAddClick;
         _digits = e.NameScope.Find<RollingDigits>(DigitsPart);
         _limitText = e.NameScope.Find<TextBlock>(LimitPart);
         _count = e.NameScope.Find<Control>(CountPart);
         _add = e.NameScope.Find<AvaloniaButton>(AddPart);
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
+        _add?.Click += OnAddClick;
         Apply();
     }
 
@@ -742,10 +736,7 @@ internal sealed class KanbanColumnHead : TemplatedControl
 
     private void Apply()
     {
-        if (_digits is not null)
-        {
-            _digits.Value = _countValue;
-        }
+        _digits?.Value = _countValue;
         if (_limitText is not null)
         {
             _limitText.Text = _limit is { } l ? "/" + l.ToString(CultureInfo.InvariantCulture) : null;
@@ -791,10 +782,7 @@ internal sealed class KanbanLaneHead : TemplatedControl
         PersonName = lane.IsUnassigned ? strings.Unassigned : lane.Person?.Name;
         PseudoClasses.Set(UnassignedPseudoClass, lane.IsUnassigned);
         _count = count;
-        if (_digits is not null)
-        {
-            _digits.Value = count;
-        }
+        _digits?.Value = count;
         AutomationProperties.SetName(this, strings.LaneName(PersonName ?? string.Empty) + ", " + strings.CardCount(count));
     }
 
@@ -802,10 +790,7 @@ internal sealed class KanbanLaneHead : TemplatedControl
     {
         base.OnApplyTemplate(e);
         _digits = e.NameScope.Find<RollingDigits>(DigitsPart);
-        if (_digits is not null)
-        {
-            _digits.Value = _count;
-        }
+        _digits?.Value = _count;
     }
 }
 
@@ -958,27 +943,15 @@ internal sealed class KanbanComposer : TemplatedControl
         {
             _box.RemoveHandler(KeyDownEvent, OnBoxKeyDown);
         }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
+        _submit?.Click -= OnSubmitClick;
+        _cancel?.Click -= OnCancelClick;
         _box = e.NameScope.Find<TextBox>(BoxPart);
         _submit = e.NameScope.Find<AvaloniaButton>(SubmitPart);
         _cancel = e.NameScope.Find<AvaloniaButton>(CancelPart);
         // Tunnel: Enter must submit before the text box turns it into a line break.
         _box?.AddHandler(KeyDownEvent, OnBoxKeyDown, RoutingStrategies.Tunnel);
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
+        _submit?.Click += OnSubmitClick;
+        _cancel?.Click += OnCancelClick;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -1303,10 +1276,7 @@ internal sealed class KanbanSegmented : TemplatedControl
 
     private void OnPanelLayoutUpdated(object? sender, EventArgs e)
     {
-        if (_panel is not null)
-        {
-            _panel.LayoutUpdated -= OnPanelLayoutUpdated;
-        }
+        _panel?.LayoutUpdated -= OnPanelLayoutUpdated;
         _placeArmed = false;
         PlacePill();
     }

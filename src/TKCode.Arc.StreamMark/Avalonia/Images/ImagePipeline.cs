@@ -75,7 +75,7 @@ public interface ISvgRasterizer
 /// </summary>
 public sealed class ImagePipeline : IDisposable
 {
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private readonly Dictionary<(string Url, int Bucket), InFlight> _inflight = new();
     private readonly Dictionary<string, Task<BytesResult>> _bytesInflight = new(StringComparer.Ordinal);
     private readonly ConcurrentDictionary<string, byte> _approved = new(StringComparer.OrdinalIgnoreCase);

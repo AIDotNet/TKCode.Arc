@@ -290,10 +290,7 @@ internal abstract class ImportWizardStepView : Border
     /// <summary>Places the footer (8 below the body's gap, like Arc's padding-top).</summary>
     protected void SetFooter(Control? footer)
     {
-        if (footer is not null)
-        {
-            footer.Margin = new Thickness(0, 8, 0, 0);
-        }
+        footer?.Margin = new Thickness(0, 8, 0, 0);
         SetRow(footer, 2);
     }
 

@@ -304,15 +304,9 @@ internal sealed class TogglesIndicatorTracker
         {
             return;
         }
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged -= _onBoundsChanged;
-        }
+        _watched?.PropertyChanged -= _onBoundsChanged;
         _watched = container;
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged += _onBoundsChanged;
-        }
+        _watched?.PropertyChanged += _onBoundsChanged;
     }
 
     public void Place()

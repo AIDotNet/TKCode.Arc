@@ -40,10 +40,7 @@ public partial class HeroSignup
         set
         {
             _pendingEmail = value;
-            if (_email is not null)
-            {
-                _email.Text = value;
-            }
+            _email?.Text = value;
         }
     }
 
@@ -151,14 +148,8 @@ public partial class HeroSignup
             _email.RemoveHandler(KeyDownEvent, OnEmailKeyDown);
             _email.TextChanged -= OnEmailTextChanged;
         }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
+        _submit?.Click -= OnSubmitClick;
+        _reset?.Click -= OnResetClick;
         _email = e.NameScope.Find<Input>(EmailPart);
         _submit = e.NameScope.Find<Button>(SubmitPart);
         _reset = e.NameScope.Find<Button>(ResetPart);
@@ -172,14 +163,8 @@ public partial class HeroSignup
             _email.AddHandler(KeyDownEvent, OnEmailKeyDown, RoutingStrategies.Tunnel);
             _email.TextChanged += OnEmailTextChanged;
         }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
+        _submit?.Click += OnSubmitClick;
+        _reset?.Click += OnResetClick;
         UpdateFaces();
         ApplyPhase();
     }
@@ -280,10 +265,7 @@ public partial class HeroSignup
     {
         PseudoClasses.Set(SendingPseudoClass, Phase == HeroSignupPhase.Sending);
         PseudoClasses.Set(DonePseudoClass, Phase == HeroSignupPhase.Done);
-        if (_email is not null)
-        {
-            _email.IsReadOnly = Phase != HeroSignupPhase.Idle;
-        }
+        _email?.IsReadOnly = Phase != HeroSignupPhase.Idle;
         if (_submit is not null)
         {
             _submit.IsLoading = Phase == HeroSignupPhase.Sending;
@@ -299,18 +281,9 @@ public partial class HeroSignup
             _done.IsPresent = Phase == HeroSignupPhase.Done;
             _done.IsHitTestVisible = Phase == HeroSignupPhase.Done;
         }
-        if (_reset is not null)
-        {
-            _reset.IsTabStop = Phase == HeroSignupPhase.Done;
-        }
-        if (_email is not null)
-        {
-            _email.IsTabStop = Phase != HeroSignupPhase.Done;
-        }
-        if (_submit is not null)
-        {
-            _submit.IsTabStop = Phase != HeroSignupPhase.Done;
-        }
+        _reset?.IsTabStop = Phase == HeroSignupPhase.Done;
+        _email?.IsTabStop = Phase != HeroSignupPhase.Done;
+        _submit?.IsTabStop = Phase != HeroSignupPhase.Done;
     }
 
     private void UpdateFaces()

@@ -267,10 +267,7 @@ public class DropdownMenu : TemplatedControl
         {
             SetMenu(_trigger, null);
         }
-        if (_triggerPresenter is not null)
-        {
-            _triggerPresenter.PropertyChanged -= OnTriggerPresenterPropertyChanged;
-        }
+        _triggerPresenter?.PropertyChanged -= OnTriggerPresenterPropertyChanged;
         _trigger = e.NameScope.Find<AvaloniaButton>(TriggerPart);
         _triggerPresenter = e.NameScope.Find<ContentPresenter>(TriggerPresenterPart);
         if (_trigger is not null)
@@ -278,10 +275,7 @@ public class DropdownMenu : TemplatedControl
             SetMenu(_trigger, Menu);
             AutomationProperties.SetName(_trigger, Label);
         }
-        if (_triggerPresenter is not null)
-        {
-            _triggerPresenter.PropertyChanged += OnTriggerPresenterPropertyChanged;
-        }
+        _triggerPresenter?.PropertyChanged += OnTriggerPresenterPropertyChanged;
         AttachCustomTrigger(_triggerPresenter?.Child);
     }
 

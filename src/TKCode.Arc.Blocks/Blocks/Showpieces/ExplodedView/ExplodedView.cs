@@ -208,7 +208,6 @@ public partial class ExplodedView : TemplatedControl
 
     #endregion
 
-    private double _smoothedProgress;
     private int _currentStop;
     private int _stopCount = ExplodedViewProgress.StopCount(0);
 
@@ -296,8 +295,8 @@ public partial class ExplodedView : TemplatedControl
     /// <inheritdoc cref="SmoothedProgressProperty"/>
     public double SmoothedProgress
     {
-        get => _smoothedProgress;
-        private set => SetAndRaise(SmoothedProgressProperty, ref _smoothedProgress, value);
+        get;
+        private set => SetAndRaise(SmoothedProgressProperty, ref field, value);
     }
 
     /// <inheritdoc cref="CurrentStopProperty"/>

@@ -278,10 +278,7 @@ public class BranchGraph : Explainer
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_strategy is not null)
-        {
-            _strategy.SelectionChanged -= OnStrategyPicked;
-        }
+        _strategy?.SelectionChanged -= OnStrategyPicked;
         _stage = e.NameScope.Find<BranchGraphStage>(StagePart);
         _strategy = e.NameScope.Find<SegmentedControl>(StrategyPart);
         _summary = e.NameScope.Find<TextBlock>(SummaryPart);
@@ -289,10 +286,7 @@ public class BranchGraph : Explainer
         _heading = e.NameScope.Find<Control>(HeadingPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _number = e.NameScope.Find<TextBlock>(NumberPart);
-        if (_strategy is not null)
-        {
-            _strategy.SelectionChanged += OnStrategyPicked;
-        }
+        _strategy?.SelectionChanged += OnStrategyPicked;
         UpdateOptions();
         _stage?.Attach(this);
         UpdateChrome();
@@ -506,15 +500,9 @@ public class BranchGraph : Explainer
 
     private void ObserveSource(IEnumerable<BranchGraphCommit>? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => ScheduleRebuild();
@@ -698,28 +686,16 @@ public class BranchGraph : Explainer
     private void UpdateChrome()
     {
         var heading = HeadingText;
-        if (_title is not null)
-        {
-            _title.Text = heading;
-        }
+        _title?.Text = heading;
         var number = EffectiveNumber;
         if (_number is not null)
         {
             _number.Text = number > 0 ? "#" + number : string.Empty;
             _number.IsVisible = number > 0;
         }
-        if (_heading is not null)
-        {
-            _heading.IsVisible = heading.Length > 0;
-        }
-        if (_strategy is not null)
-        {
-            _strategy.IsVisible = AreControlsVisible && _model is { MergeItem: >= 0 };
-        }
-        if (_summary is not null)
-        {
-            _summary.Text = SummaryText;
-        }
+        _heading?.IsVisible = heading.Length > 0;
+        _strategy?.IsVisible = AreControlsVisible && _model is { MergeItem: >= 0 };
+        _summary?.Text = SummaryText;
         _stage?.UpdateSummary();
         UpdateAccessibleName();
     }

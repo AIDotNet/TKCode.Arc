@@ -128,14 +128,8 @@ public partial class CohortRetention
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_segmentSwitch is not null)
-        {
-            _segmentSwitch.SelectionChanged -= OnSegmentSwitchChanged;
-        }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged -= OnViewSwitchChanged;
-        }
+        _segmentSwitch?.SelectionChanged -= OnSegmentSwitchChanged;
+        _viewSwitch?.SelectionChanged -= OnViewSwitchChanged;
         if (_plot is not null)
         {
             _plot.CursorRequested -= OnCursorRequested;
@@ -153,14 +147,8 @@ public partial class CohortRetention
         _table = e.NameScope.Find<CohortRetentionDataTable>(TablePart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
 
-        if (_segmentSwitch is not null)
-        {
-            _segmentSwitch.SelectionChanged += OnSegmentSwitchChanged;
-        }
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.SelectionChanged += OnViewSwitchChanged;
-        }
+        _segmentSwitch?.SelectionChanged += OnSegmentSwitchChanged;
+        _viewSwitch?.SelectionChanged += OnViewSwitchChanged;
         if (_plot is not null)
         {
             _plot.CursorRequested += OnCursorRequested;
@@ -192,10 +180,7 @@ public partial class CohortRetention
         var stacked = width < StackedWidth;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(StackedPseudoClass, stacked);
-        if (_header is not null)
-        {
-            _header.IsWrapForced = narrow;
-        }
+        _header?.IsWrapForced = narrow;
         if (_toolbar is not null)
         {
             _toolbar.IsWrapForced = stacked;
@@ -286,15 +271,9 @@ public partial class CohortRetention
 
     private void ObserveSource(IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnSegmentsChanged();
@@ -374,14 +353,8 @@ public partial class CohortRetention
         _plot?.SetData(_model, animate);
         UpdateMetrics();
         UpdateSwitchSelection();
-        if (_viewSwitch is not null)
-        {
-            _viewSwitch.IsEnabled = !_model.IsEmpty;
-        }
-        if (_segmentSwitch is not null)
-        {
-            _segmentSwitch.IsEnabled = _segments.Count > 1;
-        }
+        _viewSwitch?.IsEnabled = !_model.IsEmpty;
+        _segmentSwitch?.IsEnabled = _segments.Count > 1;
 
         if (CursorCell is { } cursor && !_model.Contains(cursor) || CursorCell is { IsAverage: true } && !HasAverage)
         {

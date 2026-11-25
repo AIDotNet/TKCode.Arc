@@ -403,13 +403,13 @@ internal sealed class InlayHintsController : ICodeEditorContribution
         // resolve the item
         await part.Item.Resolve(CancellationToken.None).ConfigureAwait(true);
         var tooltip = part.Part.Tooltip ?? part.Item.Hint.Tooltip;
-        if (tooltip is not { } text || text.Value.Length == 0)
+        if (tooltip is not { } text || text.Content.Length == 0)
         {
             _tooltip.Hide(_editor);
             return;
         }
 
-        _tooltip.Show(_editor, text.Value, _editor.Model.ValidatePosition(part.Item.Hint.Position));
+        _tooltip.Show(_editor, text.Content, _editor.Model.ValidatePosition(part.Item.Hint.Position));
     }
 
     private void OnMouseDown(CodeEditorMouseEvent e)

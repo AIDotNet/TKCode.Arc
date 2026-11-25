@@ -260,10 +260,7 @@ public class SketchToImage : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_replay is not null)
-        {
-            _replay.Click -= OnReplayClick;
-        }
+        _replay?.Click -= OnReplayClick;
         _canvas = e.NameScope.Find<SketchToImageCanvas>(CanvasPart);
         _progress = e.NameScope.Find<SketchToImageProgress>(ProgressPart);
         _stageSwap = e.NameScope.Find<ArcContentSwap>(StagePart);
@@ -272,10 +269,7 @@ public class SketchToImage : TemplatedControl
         _replay = e.NameScope.Find<AvaloniaButton>(ReplayPart);
         _replayText = e.NameScope.Find<TextBlock>(ReplayTextPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_replay is not null)
-        {
-            _replay.Click += OnReplayClick;
-        }
+        _replay?.Click += OnReplayClick;
         if (_announcer is not null && _pendingAnnouncement is not null)
         {
             _announcer.Announce(_pendingAnnouncement);
@@ -409,10 +403,7 @@ public class SketchToImage : TemplatedControl
             _replay.IsVisible = ShowsReplay;
             AutomationProperties.SetName(_replay, labels.ReplayName);
         }
-        if (_replayText is not null)
-        {
-            _replayText.Text = labels.Replay;
-        }
+        _replayText?.Text = labels.Replay;
         if (_progress is not null)
         {
             AutomationProperties.SetName(_progress, labels.Progress);
@@ -473,22 +464,13 @@ public class SketchToImage : TemplatedControl
     {
         _canvas?.Show(_player.T, _player.Fade);
         var progress = _player.Progress;
-        if (_progress is not null)
-        {
-            _progress.Fraction = progress;
-        }
+        _progress?.Fraction = progress;
         var percent = (int)Math.Round(progress * 100);
         if (percent != _shownPercent || force)
         {
             _shownPercent = percent;
-            if (_percent is not null)
-            {
-                _percent.Text = Labels.Percent(percent);
-            }
-            if (_progress is not null)
-            {
-                _progress.Percent = percent;
-            }
+            _percent?.Text = Labels.Percent(percent);
+            _progress?.Percent = percent;
         }
         var heading = _player.Target > 0 && _player.Phase == SketchToImagePhase.Play;
         var stage = SketchToImageTimeline.StageAt(_player.T, heading);

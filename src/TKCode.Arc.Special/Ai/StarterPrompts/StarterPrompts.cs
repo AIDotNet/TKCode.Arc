@@ -393,10 +393,7 @@ public class StarterPrompts : TemplatedControl
             _tabs.SelectionChanged += OnTabSelectionChanged;
             _tabs.TemplateApplied += OnTabsTemplateApplied;
         }
-        if (_shuffle is not null)
-        {
-            _shuffle.Click += OnShuffleClick;
-        }
+        _shuffle?.Click += OnShuffleClick;
         if (e.NameScope.Find<ArcGlyph>("PART_ShuffleGlyph") is { } shuffleGlyph)
         {
             shuffleGlyph.Data = StarterPromptsIcons.Shuffle;
@@ -407,10 +404,7 @@ public class StarterPrompts : TemplatedControl
             _input.TextChanged += OnInputTextChanged;
             _input.SendRequested += OnInputSend;
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         _cards.Clear();
         _grid?.Children.Clear();
         PseudoClasses.Set(LoadingPseudoClass, IsLoading);
@@ -428,19 +422,13 @@ public class StarterPrompts : TemplatedControl
             _tabs.SelectionChanged -= OnTabSelectionChanged;
             _tabs.TemplateApplied -= OnTabsTemplateApplied;
         }
-        if (_shuffle is not null)
-        {
-            _shuffle.Click -= OnShuffleClick;
-        }
+        _shuffle?.Click -= OnShuffleClick;
         if (_input is not null)
         {
             _input.TextChanged -= OnInputTextChanged;
             _input.SendRequested -= OnInputSend;
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
         foreach (var card in _cards)
         {
             card.Click -= OnCardClick;
@@ -786,10 +774,7 @@ public class StarterPrompts : TemplatedControl
         SendStatus = status;
         SendError = status == StarterPromptsSendStatus.Failed ? error : null;
         PseudoClasses.Set(SendingPseudoClass, status == StarterPromptsSendStatus.Sending);
-        if (_input is not null)
-        {
-            _input.IsReadOnly = status == StarterPromptsSendStatus.Sending;
-        }
+        _input?.IsReadOnly = status == StarterPromptsSendStatus.Sending;
         UpdateComposer();
         UpdateStatusView();
     }

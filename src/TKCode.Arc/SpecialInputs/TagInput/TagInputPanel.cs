@@ -248,15 +248,9 @@ internal sealed class TagInputPanel : Panel
         {
             return;
         }
-        if (_picked is not null)
-        {
-            _picked.IsPicked = false;
-        }
+        _picked?.IsPicked = false;
         _picked = chip;
-        if (chip is not null)
-        {
-            chip.IsPicked = true;
-        }
+        chip?.IsPicked = true;
         UpdateRing();
     }
 

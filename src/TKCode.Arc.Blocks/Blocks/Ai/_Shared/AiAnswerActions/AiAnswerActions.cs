@@ -441,10 +441,7 @@ internal class AiAnswerActions : TemplatedControl
         get => _reasons?.Time ?? TimeProvider.System;
         set
         {
-            if (_reasons is not null)
-            {
-                _reasons.Time = value;
-            }
+            _reasons?.Time = value;
         }
     }
 
@@ -487,31 +484,16 @@ internal class AiAnswerActions : TemplatedControl
 
     private void Wire()
     {
-        if (_copy is not null)
-        {
-            _copy.Click += OnCopyClick;
-        }
+        _copy?.Click += OnCopyClick;
         if (_regenerate is not null)
         {
             _regenerate.Click += OnRegenerateClick;
             _regenerate.KeyDown += OnRegenerateKeyDown;
         }
-        if (_good is not null)
-        {
-            _good.Click += OnGoodClick;
-        }
-        if (_bad is not null)
-        {
-            _bad.Click += OnBadClick;
-        }
-        if (_link is not null)
-        {
-            _link.Click += OnLinkClick;
-        }
-        if (_pager is not null)
-        {
-            _pager.IndexChanged += OnPagerIndexChanged;
-        }
+        _good?.Click += OnGoodClick;
+        _bad?.Click += OnBadClick;
+        _link?.Click += OnLinkClick;
+        _pager?.IndexChanged += OnPagerIndexChanged;
         if (_menu is not null)
         {
             _menu.Chosen += OnMenuChosen;
@@ -526,31 +508,16 @@ internal class AiAnswerActions : TemplatedControl
 
     private void Unwire()
     {
-        if (_copy is not null)
-        {
-            _copy.Click -= OnCopyClick;
-        }
+        _copy?.Click -= OnCopyClick;
         if (_regenerate is not null)
         {
             _regenerate.Click -= OnRegenerateClick;
             _regenerate.KeyDown -= OnRegenerateKeyDown;
         }
-        if (_good is not null)
-        {
-            _good.Click -= OnGoodClick;
-        }
-        if (_bad is not null)
-        {
-            _bad.Click -= OnBadClick;
-        }
-        if (_link is not null)
-        {
-            _link.Click -= OnLinkClick;
-        }
-        if (_pager is not null)
-        {
-            _pager.IndexChanged -= OnPagerIndexChanged;
-        }
+        _good?.Click -= OnGoodClick;
+        _bad?.Click -= OnBadClick;
+        _link?.Click -= OnLinkClick;
+        _pager?.IndexChanged -= OnPagerIndexChanged;
         if (_menu is not null)
         {
             _menu.Chosen -= OnMenuChosen;

@@ -733,10 +733,7 @@ public class FaqSection : TemplatedControl
         {
             _emptyLine.Text = string.Format(NoResultsFormat, query);
         }
-        if (_emptyHost is not null)
-        {
-            _emptyHost.IsExpanded = empty;
-        }
+        _emptyHost?.IsExpanded = empty;
     }
 
     private void OnKeyDownTunnel(object? sender, KeyEventArgs e)

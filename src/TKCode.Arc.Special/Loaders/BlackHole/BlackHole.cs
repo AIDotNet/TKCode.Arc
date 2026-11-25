@@ -87,7 +87,6 @@ public class BlackHole : ContentControl
     private readonly ConditionalWeakTable<Control, StrongBox<double>> _hidden = new();
     private ContentPresenter? _presenter;
     private BlackHoleStage? _stage;
-    private bool _isRunning;
     private Action? _abort;
 
     /// <summary>Length of a swallow (default 1.3 s, as measured); a release runs <see cref="ReleaseSpeed"/> times as long.</summary>
@@ -121,8 +120,8 @@ public class BlackHole : ContentControl
     /// <summary>True while a transition runs (or a reduced-motion fade) or another one is queued. Ignore your delete and undo triggers while it is set.</summary>
     public bool IsRunning
     {
-        get => _isRunning;
-        private set => SetAndRaise(IsRunningProperty, ref _isRunning, value);
+        get;
+        private set => SetAndRaise(IsRunningProperty, ref field, value);
     }
 
     internal double CoreGrowth { get => GetValue(CoreGrowthProperty); set => SetValue(CoreGrowthProperty, value); }

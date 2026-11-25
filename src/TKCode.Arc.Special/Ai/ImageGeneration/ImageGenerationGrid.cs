@@ -150,10 +150,7 @@ internal sealed class ImageGenerationGrid : Panel
             _tiles[i].IsHitTestVisible = i == index;
             _tiles[i].Focusable = i == index;
         }
-        if (_close is not null)
-        {
-            _close.IsVisible = true;
-        }
+        _close?.IsVisible = true;
         Animate(1);
     }
 
@@ -246,10 +243,7 @@ internal sealed class ImageGenerationGrid : Panel
         {
             _tiles[i].Opacity = i == _expanded || _expanded < 0 ? 1 : 1 - _expandValue;
         }
-        if (_close is not null)
-        {
-            _close.Opacity = Math.Clamp(_expandValue, 0, 1);
-        }
+        _close?.Opacity = Math.Clamp(_expandValue, 0, 1);
         InvalidateArrange();
     }
 

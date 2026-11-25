@@ -11,12 +11,6 @@ namespace TKCode.Arc.Editor.Lsp.Tests;
 
 public sealed class LspConvertTests
 {
-    private static JsonElement Json(string json)
-    {
-        using var document = JsonDocument.Parse(json);
-        return document.RootElement.Clone();
-    }
-
     private static T Read<T>(string json, System.Text.Json.Serialization.Metadata.JsonTypeInfo<T> typeInfo) => JsonSerializer.Deserialize(json, typeInfo)!;
 
     [Fact]
@@ -39,25 +33,25 @@ public sealed class LspConvertTests
     [Fact]
     public void Hover_Contents_Become_Markdown()
     {
-        var plain = LspConvert.ToMarkdownStrings(Json("""{"kind":"plaintext","value":"a*b"}"""));
+        var plain = LspConvert.ToMarkdownStrings(Read("""{"kind":"plaintext","value":"a*b"}""", LspJsonContext.Default.LspHoverContents));
         plain.Single().Value.ShouldBe(@"a\*b");
 
-        var markdown = LspConvert.ToMarkdownStrings(Json("""{"kind":"markdown","value":"**x**"}"""));
+        var markdown = LspConvert.ToMarkdownStrings(Read("""{"kind":"markdown","value":"**x**"}""", LspJsonContext.Default.LspHoverContents));
         markdown.Single().Value.ShouldBe("**x**");
 
-        var marked = LspConvert.ToMarkdownStrings(Json("""["text",{"language":"ts","value":"let x"},""]"""));
+        var marked = LspConvert.ToMarkdownStrings(Read("""["text",{"language":"ts","value":"let x"},""]""", LspJsonContext.Default.LspHoverContents));
         marked.Select(m => m.Value).ShouldBe(["text", "```ts\nlet x\n```"]);
     }
 
     [Fact]
     public void Documentation_Keeps_Plain_Text_As_Text()
     {
-        var plain = LspConvert.ToDocumentation(Json("""{"kind":"plaintext","value":"doc"}"""))!.Value;
+        var plain = LspConvert.ToDocumentation(Read("""{"kind":"plaintext","value":"doc"}""", LspJsonContext.Default.LspStringOrMarkup))!.Value;
         plain.IsMarkdown.ShouldBeFalse();
-        plain.Value.ShouldBe("doc");
+        plain.Content.ShouldBe("doc");
 
-        LspConvert.ToDocumentation(Json("\"s\""))!.Value.Value.ShouldBe("s");
-        LspConvert.ToDocumentation(Json("""{"kind":"markdown","value":"_m_"}"""))!.Value.IsMarkdown.ShouldBeTrue();
+        LspConvert.ToDocumentation(Read("\"s\"", LspJsonContext.Default.LspStringOrMarkup))!.Value.Content.ShouldBe("s");
+        LspConvert.ToDocumentation(Read("""{"kind":"markdown","value":"_m_"}""", LspJsonContext.Default.LspStringOrMarkup))!.Value.IsMarkdown.ShouldBeTrue();
         LspConvert.ToDocumentation(null).ShouldBeNull();
     }
 
@@ -133,13 +127,13 @@ public sealed class LspConvertTests
     public void Definition_Results_Of_Every_Shape_Become_Links()
     {
         const string range = """{"start":{"line":0,"character":0},"end":{"line":0,"character":3}}""";
-        LspConvert.ToLocationLinks(Json($$"""{"uri":"file:///a.ts","range":{{range}}}"""))!.Single().Uri.ShouldBe(new Uri("file:///a.ts"));
-        LspConvert.ToLocationLinks(Json($$"""[{"uri":"file:///a.ts","range":{{range}}},{"uri":"file:///b.ts","range":{{range}}}]"""))!.Count.ShouldBe(2);
-        var link = LspConvert.ToLocationLinks(Json($$"""[{"targetUri":"file:///c.ts","targetRange":{{range}},"targetSelectionRange":{{range}},"originSelectionRange":{{range}}}]"""))!.Single();
+        LspConvert.ToLocationLinks(Read($$"""{"uri":"file:///a.ts","range":{{range}}}""", LspJsonContext.Default.LspLocationResult))!.Single().Uri.ShouldBe(new Uri("file:///a.ts"));
+        LspConvert.ToLocationLinks(Read($$"""[{"uri":"file:///a.ts","range":{{range}}},{"uri":"file:///b.ts","range":{{range}}}]""", LspJsonContext.Default.LspLocationResult))!.Count.ShouldBe(2);
+        var link = LspConvert.ToLocationLinks(Read($$"""[{"targetUri":"file:///c.ts","targetRange":{{range}},"targetSelectionRange":{{range}},"originSelectionRange":{{range}}}]""", LspJsonContext.Default.LspLocationResult))!.Single();
         link.Uri.ShouldBe(new Uri("file:///c.ts"));
         link.OriginSelectionRange.ShouldBe(new TextRange(1, 1, 1, 4));
-        LspConvert.ToLocationLinks(Json("null")).ShouldBeNull();
-        LspConvert.ToLocationLinks(Json("[]"))!.ShouldBeEmpty();
+        LspConvert.ToLocationLinks(null).ShouldBeNull();
+        LspConvert.ToLocationLinks(Read("[]", LspJsonContext.Default.LspLocationResult))!.ShouldBeEmpty();
     }
 
     [Fact]
@@ -191,18 +185,18 @@ public sealed class LspConvertTests
     public void Document_Symbols_In_Both_Shapes()
     {
         const string range = """{"start":{"line":0,"character":0},"end":{"line":4,"character":1}}""";
-        var tree = LspConvert.ToDocumentSymbols(Json($$"""
+        var tree = LspConvert.ToDocumentSymbols(Read($$"""
             [{"name":"C","kind":5,"range":{{range}},"selectionRange":{{range}},"children":[{"name":"m","detail":"()","kind":6,"range":{{range}},"selectionRange":{{range}},"deprecated":true}]}]
-            """))!;
+            """, LspJsonContext.Default.LspDocumentSymbolItemArray))!;
         tree.Single().Kind.ShouldBe(SymbolKind.Class);
         var child = tree.Single().Children!.Single();
         child.Kind.ShouldBe(SymbolKind.Method);
         child.Detail.ShouldBe("()");
         child.Tags.ShouldBe([SymbolTag.Deprecated]);
 
-        var flat = LspConvert.ToDocumentSymbols(Json($$"""
+        var flat = LspConvert.ToDocumentSymbols(Read($$"""
             [{"name":"f","kind":12,"location":{"uri":"file:///a.ts","range":{{range}}},"containerName":"mod"}]
-            """))!;
+            """, LspJsonContext.Default.LspDocumentSymbolItemArray))!;
         flat.Single().Kind.ShouldBe(SymbolKind.Function);
         flat.Single().ContainerName.ShouldBe("mod");
         flat.Single().Range.ShouldBe(new TextRange(1, 1, 5, 2));
@@ -222,24 +216,24 @@ public sealed class LspConvertTests
         signature.Parameters[1].Documentation!.Value.IsMarkdown.ShouldBeTrue();
 
         var back = LspConvert.FromSignatureHelp(help);
-        back.Signatures[0].Parameters![1].Label.ValueKind.ShouldBe(JsonValueKind.Array);
-        back.Signatures[0].Parameters![0].Label.GetString().ShouldBe("a");
+        (back.Signatures[0].Parameters![1].Label is int[] { Length: 2 } offsets && offsets[0] == 5 && offsets[1] == 6).ShouldBeTrue();
+        (back.Signatures[0].Parameters![0].Label is string label && label == "a").ShouldBeTrue();
         back.ActiveParameter.ShouldBe(1);
     }
 
     [Fact]
     public void Code_Actions_And_Bare_Commands()
     {
-        var command = LspConvert.ToCodeAction(Json("""{"title":"Run","command":"run.it","arguments":[1]}"""))!;
+        var command = LspConvert.ToCodeAction(Read("""{"title":"Run","command":"run.it","arguments":[1]}""", LspJsonContext.Default.LspCodeActionOrCommand))!;
         command.Title.ShouldBe("Run");
         command.Command!.Id.ShouldBe("run.it");
         command.Command.Arguments!.Count.ShouldBe(1);
 
-        var action = LspConvert.ToCodeAction(Json("""
+        var action = LspConvert.ToCodeAction(Read("""
             {"title":"Fix","kind":"quickfix","isPreferred":true,"disabled":{"reason":"no"},
              "edit":{"changes":{"file:///a.ts":[{"range":{"start":{"line":0,"character":0},"end":{"line":0,"character":0}},"newText":"x"}]}},
              "command":{"title":"after","command":"after.fix"}}
-            """))!;
+            """, LspJsonContext.Default.LspCodeActionOrCommand))!;
         action.Kind.ShouldBe("quickfix");
         action.IsPreferred.ShouldBeTrue();
         action.Disabled.ShouldBe("no");

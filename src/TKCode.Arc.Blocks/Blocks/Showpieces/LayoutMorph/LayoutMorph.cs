@@ -650,28 +650,16 @@ public partial class LayoutMorph : TemplatedControl
     /// <summary>Follows a list set as <see cref="Items"/> in place of the morph's own (only while attached).</summary>
     private void WatchItems()
     {
-        if (_watchedItems is not null)
-        {
-            _watchedItems.CollectionChanged -= OnItemsChanged;
-        }
+        _watchedItems?.CollectionChanged -= OnItemsChanged;
         _watchedItems = _watching && !ReferenceEquals(Items, _ownItems) ? Items : null;
-        if (_watchedItems is not null)
-        {
-            _watchedItems.CollectionChanged += OnItemsChanged;
-        }
+        _watchedItems?.CollectionChanged += OnItemsChanged;
     }
 
     private void WatchSource()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourceChanged;
-        }
+        _observed?.CollectionChanged -= OnSourceChanged;
         _observed = _watching ? ItemsSource as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourceChanged;
-        }
+        _observed?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnLayoutPropertyChanged(LayoutMorphMode old, LayoutMorphMode layout)
@@ -680,10 +668,7 @@ public partial class LayoutMorph : TemplatedControl
         var front = _pendingFront;
         _pendingOrigin = null;
         _pendingFront = -1;
-        if (_viewBar is not null)
-        {
-            _viewBar.SelectedMode = layout;
-        }
+        _viewBar?.SelectedMode = layout;
         if (OpenedItem is not null)
         {
             Close();
@@ -736,10 +721,7 @@ public partial class LayoutMorph : TemplatedControl
         {
             _stageHost.Children.Remove(_stage);
         }
-        if (_viewBar is not null)
-        {
-            _viewBar.Chosen -= OnViewChosen;
-        }
+        _viewBar?.Chosen -= OnViewChosen;
         _stageHost = e.NameScope.Find<Panel>(StageHostPart);
         _stageHost?.Children.Insert(0, _stage);
         _viewBar = e.NameScope.Find<LayoutMorphViewBar>(ViewBarPart);
@@ -827,10 +809,7 @@ public partial class LayoutMorph : TemplatedControl
         var dense = width < LayoutMorphEngine.DenseWidth;
         PseudoClasses.Set(NarrowPseudoClass, narrow);
         PseudoClasses.Set(DensePseudoClass, dense);
-        if (_viewBar is not null)
-        {
-            _viewBar.IsCompact = narrow;
-        }
+        _viewBar?.IsCompact = narrow;
         var height = double.IsNaN(StageHeight) ? LayoutMorphEngine.StageHeightFor(width) : Math.Max(120, StageHeight);
         if (_stageHost is not null && (double.IsNaN(_stageHost.Height) || Math.Abs(_stageHost.Height - height) > 0.01))
         {

@@ -214,15 +214,9 @@ internal sealed class ProjectsAvatar : Control
         {
             return;
         }
-        if (_subscribed is not null)
-        {
-            _subscribed.PropertyChanged -= OnPersonChanged;
-        }
+        _subscribed?.PropertyChanged -= OnPersonChanged;
         _subscribed = next;
-        if (_subscribed is not null)
-        {
-            _subscribed.PropertyChanged += OnPersonChanged;
-        }
+        _subscribed?.PropertyChanged += OnPersonChanged;
     }
 
     private void OnPersonChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -377,15 +371,9 @@ internal sealed class ProjectsAvatarStack : Control
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnPeopleChanged;
-        }
+        _observed?.CollectionChanged -= OnPeopleChanged;
         _observed = next;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnPeopleChanged;
-        }
+        _observed?.CollectionChanged += OnPeopleChanged;
     }
 
     private void OnPeopleChanged(object? sender, NotifyCollectionChangedEventArgs e) => Rebuild();

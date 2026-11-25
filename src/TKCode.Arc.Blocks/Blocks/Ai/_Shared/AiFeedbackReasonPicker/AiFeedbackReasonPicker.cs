@@ -169,10 +169,7 @@ internal sealed class AiFeedbackReasonPicker : Control
         base.OnPropertyChanged(change);
         if (change.Property == TitleProperty)
         {
-            if (_reasonsView is not null)
-            {
-                _reasonsView.Title = Title;
-            }
+            _reasonsView?.Title = Title;
             if (_panel is not null)
             {
                 AutomationProperties.SetName(_panel, Title ?? string.Empty);
@@ -387,10 +384,7 @@ internal sealed class AiFeedbackReasonPicker : Control
         if (now < until)
         {
             // Early (a timer runs on its own clock): wait for the rest.
-            if (_timer is not null)
-            {
-                _timer.Interval = until - now;
-            }
+            _timer?.Interval = until - now;
             return;
         }
         StopTimer();

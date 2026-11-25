@@ -223,7 +223,6 @@ public class PropertyGrid : TemplatedControl
     private IReadOnlyList<PropertyGridRow> _rows = [];
     private List<PropertyGridCategory> _categories = [];
     private PropertyGridRow? _selectedRow;
-    private string? _descriptionTitle;
     private string? _descriptionText;
     private ItemsControl? _host;
     private INotifyCollectionChanged? _observedSelection;
@@ -291,8 +290,8 @@ public class PropertyGrid : TemplatedControl
 
     internal string? DescriptionTitle
     {
-        get => _descriptionTitle;
-        private set => SetAndRaise(DescriptionTitleProperty, ref _descriptionTitle, value);
+        get;
+        private set => SetAndRaise(DescriptionTitleProperty, ref field, value);
     }
 
     internal string? DescriptionText
@@ -982,15 +981,9 @@ public class PropertyGrid : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_host is not null)
-        {
-            _host.ItemsSource = null;
-        }
+        _host?.ItemsSource = null;
         _host = e.NameScope.Find<ItemsControl>(ItemsPart);
-        if (_host is not null)
-        {
-            _host.ItemsSource = _items;
-        }
+        _host?.ItemsSource = _items;
     }
 
     protected override void OnAttachedToLogicalTree(LogicalTreeAttachmentEventArgs e)

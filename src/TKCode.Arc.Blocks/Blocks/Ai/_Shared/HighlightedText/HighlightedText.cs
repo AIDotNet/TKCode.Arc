@@ -48,7 +48,6 @@ internal sealed class HighlightedText : DecoratedTextBlock
 
     private readonly List<TextRangeDecoration> _marks = new();
     private IBrush? _markBrush;
-    private int _matchCount;
 
     static HighlightedText()
     {
@@ -70,8 +69,8 @@ internal sealed class HighlightedText : DecoratedTextBlock
     /// <inheritdoc cref="MatchCountProperty"/>
     public int MatchCount
     {
-        get => _matchCount;
-        private set => SetAndRaise(MatchCountProperty, ref _matchCount, value);
+        get;
+        private set => SetAndRaise(MatchCountProperty, ref field, value);
     }
 
     /// <summary>The marks' background: the accent at 14% (null until the theme gives an accent).</summary>

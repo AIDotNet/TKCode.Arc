@@ -155,26 +155,11 @@ internal sealed class KanbanDrawer : TemplatedControl
         _stepField = e.NameScope.Find<TextBox>(StepFieldPart);
         _addStep = e.NameScope.Find<AvaloniaButton>(AddStepPart);
         _rows.Clear();
-        if (_surface is not null)
-        {
-            _surface.RenderTransform = _translate;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_title is not null)
-        {
-            _title.TextChanged += OnTitleChanged;
-        }
-        if (_notes is not null)
-        {
-            _notes.TextChanged += OnNotesChanged;
-        }
-        if (_status is not null)
-        {
-            _status.SelectionChanged += OnStatusChosen;
-        }
+        _surface?.RenderTransform = _translate;
+        _close?.Click += OnCloseClick;
+        _title?.TextChanged += OnTitleChanged;
+        _notes?.TextChanged += OnNotesChanged;
+        _status?.SelectionChanged += OnStatusChosen;
         if (_owner is not null)
         {
             DropdownMenu.SetMenu(_owner, _ownerMenu);
@@ -184,31 +169,16 @@ internal sealed class KanbanDrawer : TemplatedControl
             _stepField.TextChanged += OnStepFieldChanged;
             _stepField.AddHandler(KeyDownEvent, OnStepFieldKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_addStep is not null)
-        {
-            _addStep.Click += OnAddStepClick;
-        }
+        _addStep?.Click += OnAddStepClick;
         Refresh();
     }
 
     private void Unhook()
     {
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_title is not null)
-        {
-            _title.TextChanged -= OnTitleChanged;
-        }
-        if (_notes is not null)
-        {
-            _notes.TextChanged -= OnNotesChanged;
-        }
-        if (_status is not null)
-        {
-            _status.SelectionChanged -= OnStatusChosen;
-        }
+        _close?.Click -= OnCloseClick;
+        _title?.TextChanged -= OnTitleChanged;
+        _notes?.TextChanged -= OnNotesChanged;
+        _status?.SelectionChanged -= OnStatusChosen;
         if (_owner is not null)
         {
             DropdownMenu.SetMenu(_owner, null);
@@ -218,10 +188,7 @@ internal sealed class KanbanDrawer : TemplatedControl
             _stepField.TextChanged -= OnStepFieldChanged;
             _stepField.RemoveHandler(KeyDownEvent, OnStepFieldKeyDown);
         }
-        if (_addStep is not null)
-        {
-            _addStep.Click -= OnAddStepClick;
-        }
+        _addStep?.Click -= OnAddStepClick;
     }
 
     // Open / close -----------------------------------------------------------------------------------------------------
@@ -320,10 +287,7 @@ internal sealed class KanbanDrawer : TemplatedControl
         _boardWidth = boardWidth;
         var max = Board?.DrawerMaxWidth ?? 400;
         Width = Math.Max(0, Math.Min(max, boardWidth - 16));
-        if (_status is not null)
-        {
-            _status.Columns = boardWidth <= 440 ? 2 : 0;
-        }
+        _status?.Columns = boardWidth <= 440 ? 2 : 0;
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -370,24 +334,12 @@ internal sealed class KanbanDrawer : TemplatedControl
         {
             return;
         }
-        if (_watchedCard is not null)
-        {
-            _watchedCard.PropertyChanged -= OnCardChanged;
-        }
-        if (_watchedChecklist is not null)
-        {
-            _watchedChecklist.CollectionChanged -= OnChecklistChanged;
-        }
+        _watchedCard?.PropertyChanged -= OnCardChanged;
+        _watchedChecklist?.CollectionChanged -= OnChecklistChanged;
         _watchedCard = card;
         _watchedChecklist = card?.Checklist;
-        if (_watchedCard is not null)
-        {
-            _watchedCard.PropertyChanged += OnCardChanged;
-        }
-        if (_watchedChecklist is not null)
-        {
-            _watchedChecklist.CollectionChanged += OnChecklistChanged;
-        }
+        _watchedCard?.PropertyChanged += OnCardChanged;
+        _watchedChecklist?.CollectionChanged += OnChecklistChanged;
     }
 
     private void OnCardChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -519,10 +471,7 @@ internal sealed class KanbanDrawer : TemplatedControl
 
     private static void SetText(TextBlock? block, string? text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void RebuildOwnerMenu(KanbanBoard board, ProjectPerson? owner)
@@ -672,10 +621,7 @@ internal sealed class KanbanDrawer : TemplatedControl
 
     private void OnStepFieldChanged(object? sender, TextChangedEventArgs e)
     {
-        if (_addStep is not null)
-        {
-            _addStep.IsEnabled = !string.IsNullOrWhiteSpace(_stepField?.Text);
-        }
+        _addStep?.IsEnabled = !string.IsNullOrWhiteSpace(_stepField?.Text);
     }
 
     private void OnStepFieldKeyDown(object? sender, KeyEventArgs e)

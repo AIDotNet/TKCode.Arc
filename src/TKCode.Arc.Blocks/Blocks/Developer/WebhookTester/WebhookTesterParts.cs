@@ -245,18 +245,12 @@ internal sealed class WebhookTesterEditor : TextBox
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
+        _scroll?.ScrollChanged -= OnScrollChanged;
         base.OnApplyTemplate(e);
         _tint = e.NameScope.Find<TextBlock>(TintPart);
         _gutter = e.NameScope.Find<TextBlock>(GutterPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _scroll?.ScrollChanged += OnScrollChanged;
         Rebuild();
     }
 
@@ -303,10 +297,7 @@ internal sealed class WebhookTesterEditor : TextBox
     {
         var text = Text ?? string.Empty;
         _lines = WebhookTesterJson.LineCount(text);
-        if (_gutter is not null)
-        {
-            _gutter.Text = string.Join('\n', Enumerable.Range(1, _lines));
-        }
+        _gutter?.Text = string.Join('\n', Enumerable.Range(1, _lines));
         if (_tint is null)
         {
             return;

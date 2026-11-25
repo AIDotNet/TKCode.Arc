@@ -253,10 +253,7 @@ public class SettingsRow : ContentControl
         PseudoClasses.Set(IconPseudoClass, Icon is not null && !hasLeading);
         if (!hasLeading)
         {
-            if (_leading is not null)
-            {
-                _leading.IsVisible = false;
-            }
+            _leading?.IsVisible = false;
             return;
         }
         if (_leading is null)
@@ -278,10 +275,7 @@ public class SettingsRow : ContentControl
     /// <summary>Like the icon tile, the leading content is centered beside the text and sits at the top once the control drops under it.</summary>
     private void AlignLeading()
     {
-        if (_leading is not null)
-        {
-            _leading.VerticalAlignment = IsStacked ? VerticalAlignment.Top : VerticalAlignment.Center;
-        }
+        _leading?.VerticalAlignment = IsStacked ? VerticalAlignment.Top : VerticalAlignment.Center;
     }
 
     /// <summary>
@@ -294,10 +288,7 @@ public class SettingsRow : ContentControl
         PseudoClasses.Set(DetailsPseudoClass, hasDetails);
         if (!hasDetails)
         {
-            if (_details is not null)
-            {
-                _details.IsVisible = false;
-            }
+            _details?.IsVisible = false;
             return;
         }
         if (_details is null)

@@ -89,13 +89,12 @@ public class PasswordStrength : PasswordField
     public Func<string, int>? CharacterCounter { get => GetValue(CharacterCounterProperty); set => SetValue(CharacterCounterProperty, value); }
     public PasswordStrengthMessages Messages { get => GetValue(MessagesProperty); set => SetValue(MessagesProperty, value); }
 
-    private int _level;
 
     /// <summary>The current level, 0 (empty) to 4 (strong).</summary>
     public int Level
     {
-        get => _level;
-        private set => SetAndRaise(LevelProperty, ref _level, value);
+        get;
+        private set => SetAndRaise(LevelProperty, ref field, value);
     }
 
     private string _strengthLabel = string.Empty;

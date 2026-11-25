@@ -633,14 +633,8 @@ public class FormItem : Field
         var readOnly = GetValue(Form.IsReadOnlyProperty);
         var indicator = GetValue(Form.RequiredIndicatorProperty);
         var labelShown = IsLabelShown && !readOnly;
-        if (_asterisk is not null)
-        {
-            _asterisk.IsVisible = labelShown && indicator == FormRequiredIndicator.Asterisk && IsRequired;
-        }
-        if (_optional is not null)
-        {
-            _optional.IsVisible = labelShown && indicator == FormRequiredIndicator.Optional && !IsRequired;
-        }
+        _asterisk?.IsVisible = labelShown && indicator == FormRequiredIndicator.Asterisk && IsRequired;
+        _optional?.IsVisible = labelShown && indicator == FormRequiredIndicator.Optional && !IsRequired;
     }
 
     private void UpdateStatus()
@@ -677,10 +671,7 @@ public class FormItem : Field
         var template = ErrorTemplate;
         var inline = placement == FormErrorPlacement.Inline;
 
-        if (_errorRow is not null)
-        {
-            _errorRow.Text = inline && template is null ? text : null;
-        }
+        _errorRow?.Text = inline && template is null ? text : null;
 
         if (inline && template is not null && _shownError is not null)
         {
@@ -779,10 +770,7 @@ public class FormItem : Field
                 _announcementsSuppressed ? AutomationLiveSetting.Off : AutomationLiveSetting.Assertive);
             _layout.Children.Add(_announcer);
         }
-        if (_announcer is not null)
-        {
-            _announcer.Text = announced;
-        }
+        _announcer?.Text = announced;
     }
 
     #endregion

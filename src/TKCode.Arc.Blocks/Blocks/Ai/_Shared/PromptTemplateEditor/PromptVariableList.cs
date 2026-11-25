@@ -122,10 +122,7 @@ internal class PromptVariablePop : TemplatedControl
         _rows = rows;
         _active = 0;
         Sync();
-        if (_scroll is not null)
-        {
-            _scroll.Offset = default;
-        }
+        _scroll?.Offset = default;
         if (rows.Count != _announcedCount)
         {
             _announcedCount = rows.Count;

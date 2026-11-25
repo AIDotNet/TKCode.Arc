@@ -162,17 +162,11 @@ public class MetricTicker : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_pause is not null)
-        {
-            _pause.Click -= OnPauseClick;
-        }
+        _pause?.Click -= OnPauseClick;
         base.OnApplyTemplate(e);
         _strip = e.NameScope.Find<MetricTickerStrip>(StripPart);
         _pause = e.NameScope.Find<AvaloniaButton>(PauseButtonPart);
-        if (_pause is not null)
-        {
-            _pause.Click += OnPauseClick;
-        }
+        _pause?.Click += OnPauseClick;
         _strip?.Attach(this);
         Refresh();
     }
@@ -258,15 +252,9 @@ public class MetricTicker : TemplatedControl
 
     private void ObserveSource(IEnumerable<MetricTickerItem>? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => Refresh();

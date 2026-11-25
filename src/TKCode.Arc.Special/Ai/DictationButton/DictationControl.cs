@@ -245,52 +245,22 @@ public class DictationControl : TemplatedControl
         _insert = e.NameScope.Find<DictationIconButton>(InsertPart);
         _retry = e.NameScope.Find<DictationIconButton>(RetryPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_mic is not null)
-        {
-            _mic.Click += OnMic;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_insert is not null)
-        {
-            _insert.Click += OnInsert;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnMic;
-        }
-        if (_waveform is not null)
-        {
-            _waveform.LevelSource = () => _controller.Level;
-        }
+        _mic?.Click += OnMic;
+        _cancel?.Click += OnCancelClick;
+        _insert?.Click += OnInsert;
+        _retry?.Click += OnMic;
+        _waveform?.LevelSource = () => _controller.Level;
         _shownSeconds = -1;
         Refresh(instant: true);
     }
 
     private void Unhook()
     {
-        if (_mic is not null)
-        {
-            _mic.Click -= OnMic;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_insert is not null)
-        {
-            _insert.Click -= OnInsert;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnMic;
-        }
-        if (_waveform is not null)
-        {
-            _waveform.LevelSource = null;
-        }
+        _mic?.Click -= OnMic;
+        _cancel?.Click -= OnCancelClick;
+        _insert?.Click -= OnInsert;
+        _retry?.Click -= OnMic;
+        _waveform?.LevelSource = null;
     }
 
     /// <inheritdoc />
@@ -564,10 +534,7 @@ public class DictationControl : TemplatedControl
                 AutomationProperties.SetHelpText(_retry, labels.Error(code));
             }
         }
-        if (_waveform is not null)
-        {
-            _waveform.IsLive = status == DictationStatus.Listening;
-        }
+        _waveform?.IsLive = status == DictationStatus.Listening;
         if (_pill is null)
         {
             return;

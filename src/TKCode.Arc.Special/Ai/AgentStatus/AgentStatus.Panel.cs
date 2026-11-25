@@ -377,10 +377,7 @@ public sealed partial class AgentStatus
         _surface.Height = PillHeight + (Math.Max(PillHeight, _panelHeight.Value) - PillHeight) * p;
         _surface.CornerRadius = new CornerRadius(_surfaceClosedRadius + (_surfaceOpenRadius - _surfaceClosedRadius) * p);
         _clip.CornerRadius = new CornerRadius(_clipClosedRadius + (_clipOpenRadius - _clipClosedRadius) * p);
-        if (_slot is not null)
-        {
-            _slot.Width = pill;
-        }
+        _slot?.Width = pill;
         if (_floating)
         {
             PositionFloating();
@@ -517,18 +514,12 @@ public sealed partial class AgentStatus
             return;
         }
         var focus = CaptureFocus();
-        if (_slot is not null)
-        {
-            _slot.LayoutUpdated -= OnSlotLayoutUpdated;
-        }
+        _slot?.LayoutUpdated -= OnSlotLayoutUpdated;
         _overlay?.Children.Remove(_surface);
         _overlay = null;
         _floating = false;
         _surface.IsFloating = false;
-        if (_slot is not null)
-        {
-            _slot.Child = _surface;
-        }
+        _slot?.Child = _surface;
         RestoreFocus(focus);
     }
 

@@ -164,26 +164,14 @@ public partial class ToneTuner
             slider.Marks = [0d, 1d, 2d];
             slider.ValueChanged += OnSliderChanged;
         }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
-        if (_changes is not null)
-        {
-            _changes.IsCheckedChanged += OnChangesToggled;
-        }
-        if (_copy is not null)
-        {
-            _copy.Copied += OnCopied;
-        }
+        _retry?.Click += OnRetryClick;
+        _changes?.IsCheckedChanged += OnChangesToggled;
+        _copy?.Copied += OnCopied;
         if (_statusPanel is not null)
         {
             AutomationProperties.SetLiveSetting(_statusPanel, AutomationLiveSetting.Polite);
         }
-        if (_message is not null)
-        {
-            _message.ShowChanges = ShowChanges;
-        }
+        _message?.ShowChanges = ShowChanges;
         BuildChips();
         SyncControls();
         SyncHeader();
@@ -209,23 +197,11 @@ public partial class ToneTuner
     {
         foreach (var slider in new[] { _formality, _detail })
         {
-            if (slider is not null)
-            {
-                slider.ValueChanged -= OnSliderChanged;
-            }
+            slider?.ValueChanged -= OnSliderChanged;
         }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_changes is not null)
-        {
-            _changes.IsCheckedChanged -= OnChangesToggled;
-        }
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
+        _retry?.Click -= OnRetryClick;
+        _changes?.IsCheckedChanged -= OnChangesToggled;
+        _copy?.Copied -= OnCopied;
         foreach (var chip in _chipViews)
         {
             chip.Click -= OnChipClick;
@@ -251,10 +227,7 @@ public partial class ToneTuner
         }
         else if (change.Property == ShowChangesProperty)
         {
-            if (_message is not null)
-            {
-                _message.ShowChanges = ShowChanges;
-            }
+            _message?.ShowChanges = ShowChanges;
             SyncControls();
             UpdateStatus();
         }
@@ -345,22 +318,13 @@ public partial class ToneTuner
         _compact = width < CompactWidth;
         PseudoClasses.Set(StackedPseudoClass, _stacked);
         PseudoClasses.Set(CompactPseudoClass, _compact);
-        if (_chips is not null)
-        {
-            _chips.IsUniform = _stacked;
-        }
-        if (_sliders is not null)
-        {
-            _sliders.IsStacked = _stacked;
-        }
+        _chips?.IsUniform = _stacked;
+        _sliders?.IsStacked = _stacked;
         foreach (var chip in _chipViews)
         {
             chip.ShowsIcon = !_compact && chip.Icon is not null;
         }
-        if (_copy is not null)
-        {
-            _copy.IsIconOnly = _compact;
-        }
+        _copy?.IsIconOnly = _compact;
         UpdateStatus();
     }
 
@@ -430,10 +394,7 @@ public partial class ToneTuner
                 _copy.CopiedLabel = labels.Copied;
                 AutomationProperties.SetName(_copy, labels.Copy);
             }
-            if (_retry is not null)
-            {
-                _retry.Content = labels.Retry;
-            }
+            _retry?.Content = labels.Retry;
         }
         finally
         {
@@ -475,10 +436,7 @@ public partial class ToneTuner
         var enabled = HasDraft;
         foreach (var part in new Control?[] { _chips, _sliders, _changes, _copy })
         {
-            if (part is not null)
-            {
-                part.IsEnabled = enabled;
-            }
+            part?.IsEnabled = enabled;
         }
     }
 
@@ -748,10 +706,7 @@ public partial class ToneTuner
         ChangedWords = words;
         DisplayedText = text;
         _message?.Show(text, ranges, animate && IsLoaded);
-        if (_copy is not null)
-        {
-            _copy.Value = text;
-        }
+        _copy?.Value = text;
     }
 
     private void Announce(string text)
@@ -796,10 +751,7 @@ public partial class ToneTuner
             _settings.Text = show ? "· " + Labels.Settings(Value, Labels) : string.Empty;
             _settings.IsVisible = show;
         }
-        if (_retry is not null)
-        {
-            _retry.IsVisible = status == ToneTunerStatus.Failed;
-        }
+        _retry?.IsVisible = status == ToneTunerStatus.Failed;
         if (_count is not null && _countText is not null)
         {
             var words = ChangedWords;

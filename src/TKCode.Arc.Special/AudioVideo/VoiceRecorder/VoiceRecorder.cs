@@ -521,20 +521,14 @@ public class VoiceRecorder : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_composerHost is not null)
-        {
-            _composerHost.Child = null;
-        }
+        _composerHost?.Child = null;
         _messagesPanel?.Children.Clear();
         _headerHost = e.NameScope.Find<Control>(HeaderHostPart);
         _list = e.NameScope.Find<ScrollViewer>(ListPart);
         _messagesPanel = e.NameScope.Find<StackPanel>(MessagesPart);
         _composerHost = e.NameScope.Find<Decorator>(ComposerHostPart);
         _status = e.NameScope.Find<ExplainerAnnouncer>(StatusPart);
-        if (_composerHost is not null)
-        {
-            _composerHost.Child = _composer;
-        }
+        _composerHost?.Child = _composer;
         if (_list is not null)
         {
             AutomationProperties.SetName(_list, Labels.MessagesList);
@@ -638,15 +632,9 @@ public class VoiceRecorder : TemplatedControl
 
     private void Observe(IList<VoiceRecorderMessage>? list)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnMessagesChanged;
-        }
+        _observed?.CollectionChanged -= OnMessagesChanged;
         _observed = list as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnMessagesChanged;
-        }
+        _observed?.CollectionChanged += OnMessagesChanged;
     }
 
     private void OnMessagesChanged(object? sender, NotifyCollectionChangedEventArgs e)

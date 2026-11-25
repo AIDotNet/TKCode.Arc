@@ -440,14 +440,8 @@ public class TransferBox : TemplatedControl
         base.OnApplyTemplate(e);
         DetachList(_sourceList);
         DetachList(_targetList);
-        if (_sourceSelectAll is not null)
-        {
-            _sourceSelectAll.Click -= OnSelectAllClick;
-        }
-        if (_targetSelectAll is not null)
-        {
-            _targetSelectAll.Click -= OnSelectAllClick;
-        }
+        _sourceSelectAll?.Click -= OnSelectAllClick;
+        _targetSelectAll?.Click -= OnSelectAllClick;
 
         _sourceList = e.NameScope.Find<TransferBoxList>(SourceListPart);
         _targetList = e.NameScope.Find<TransferBoxList>(TargetListPart);
@@ -464,14 +458,8 @@ public class TransferBox : TemplatedControl
 
         AttachList(_sourceList, _sourceView);
         AttachList(_targetList, _targetView);
-        if (_sourceSelectAll is not null)
-        {
-            _sourceSelectAll.Click += OnSelectAllClick;
-        }
-        if (_targetSelectAll is not null)
-        {
-            _targetSelectAll.Click += OnSelectAllClick;
-        }
+        _sourceSelectAll?.Click += OnSelectAllClick;
+        _targetSelectAll?.Click += OnSelectAllClick;
         SetCommand(_moveToTargetButton, _moveToTarget);
         SetCommand(_moveToSourceButton, _moveToSource);
         SetCommand(_moveAllToTargetButton, _moveAllToTarget);
@@ -482,10 +470,7 @@ public class TransferBox : TemplatedControl
 
     private static void SetCommand(AvaloniaButton? button, ICommand command)
     {
-        if (button is not null)
-        {
-            button.Command = command;
-        }
+        button?.Command = command;
     }
 
     private void AttachList(TransferBoxList? list, TransferBoxView view)
@@ -559,14 +544,8 @@ public class TransferBox : TemplatedControl
         else if (change.Property == SelectionModeProperty)
         {
             // Set from here: a template binding does not reach the list box's selection mode.
-            if (_sourceList is not null)
-            {
-                _sourceList.SelectionMode = SelectionMode;
-            }
-            if (_targetList is not null)
-            {
-                _targetList.SelectionMode = SelectionMode;
-            }
+            _sourceList?.SelectionMode = SelectionMode;
+            _targetList?.SelectionMode = SelectionMode;
             UpdateState();
         }
         else if (change.Property == IsEnabledProperty || change.Property == IsSelectAllVisibleProperty || change.Property == SourceEmptyContentProperty

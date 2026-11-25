@@ -255,18 +255,9 @@ public partial class MetricsDashboard
             _range.Look = AnalyticsSegmentLook.Small;
             _range.SelectionChanged += OnRangeSwitched;
         }
-        if (_export is not null)
-        {
-            _export.Click += OnExportClick;
-        }
-        if (_compare is not null)
-        {
-            _compare.IsCheckedChanged += OnCompareToggled;
-        }
-        if (_plot is not null)
-        {
-            _plot.InspectionChanged += OnInspectionChanged;
-        }
+        _export?.Click += OnExportClick;
+        _compare?.IsCheckedChanged += OnCompareToggled;
+        _plot?.InspectionChanged += OnInspectionChanged;
 
         UpdateTexts();
         UpdateRangeItems();
@@ -279,22 +270,10 @@ public partial class MetricsDashboard
 
     private void Detach()
     {
-        if (_range is not null)
-        {
-            _range.SelectionChanged -= OnRangeSwitched;
-        }
-        if (_export is not null)
-        {
-            _export.Click -= OnExportClick;
-        }
-        if (_compare is not null)
-        {
-            _compare.IsCheckedChanged -= OnCompareToggled;
-        }
-        if (_plot is not null)
-        {
-            _plot.InspectionChanged -= OnInspectionChanged;
-        }
+        _range?.SelectionChanged -= OnRangeSwitched;
+        _export?.Click -= OnExportClick;
+        _compare?.IsCheckedChanged -= OnCompareToggled;
+        _plot?.InspectionChanged -= OnInspectionChanged;
         if (_tabs is not null)
         {
             foreach (var tab in _tabs.Tabs.ToList())
@@ -528,14 +507,8 @@ public partial class MetricsDashboard
         _secondary.AddRange(Collect(SecondaryItemsSource, SecondaryItems));
         Fill(_primaryRows, _primary);
         Fill(_secondaryRows, _secondary);
-        if (_primarySection is not null)
-        {
-            _primarySection.IsVisible = _primary.Count > 0;
-        }
-        if (_secondarySection is not null)
-        {
-            _secondarySection.IsVisible = _secondary.Count > 0;
-        }
+        _primarySection?.IsVisible = _primary.Count > 0;
+        _secondarySection?.IsVisible = _secondary.Count > 0;
 
         void Fill(StackPanel? panel, List<MetricsDashboardItem> items)
         {
@@ -755,24 +728,15 @@ public partial class MetricsDashboard
             _compare.IsVisible = IsCompareVisible;
             AutomationProperties.SetName(_compare, CompareText);
         }
-        if (_previousLegendText is not null)
-        {
-            _previousLegendText.Text = PreviousLegendText;
-        }
+        _previousLegendText?.Text = PreviousLegendText;
         SetListHeader(_primaryTitle, _primaryHeader, _primarySection, PrimaryListTitle);
         SetListHeader(_secondaryTitle, _secondaryHeader, _secondarySection, SecondaryListTitle);
         AutomationProperties.SetName(this, Title);
 
         void SetListHeader(TextBlock? title, TextBlock? header, Control? section, string? text)
         {
-            if (title is not null)
-            {
-                title.Text = text;
-            }
-            if (header is not null)
-            {
-                header.Text = ListValueHeader;
-            }
+            title?.Text = text;
+            header?.Text = ListValueHeader;
             if (section is not null)
             {
                 AutomationProperties.SetName(section, text);
@@ -783,10 +747,7 @@ public partial class MetricsDashboard
     private void UpdateChartTexts()
     {
         var metric = SelectedMetric;
-        if (_legendText is not null)
-        {
-            _legendText.Text = metric?.Label;
-        }
+        _legendText?.Text = metric?.Label;
         if (_plot is not null)
         {
             AutomationProperties.SetName(_plot, metric is null ? null : string.Format(ChartNameFormat, metric.Label, SelectedRange));
@@ -827,10 +788,7 @@ public partial class MetricsDashboard
             _compare.IsChecked = IsCompareEnabled;
             _syncingCompare = false;
         }
-        if (_previousLegend is not null)
-        {
-            _previousLegend.IsVisible = IsCompareEnabled;
-        }
+        _previousLegend?.IsVisible = IsCompareEnabled;
         _plot?.SetCompare(IsCompareEnabled, animate);
         if (_plot is not null && ActiveIndex >= 0)
         {
@@ -868,23 +826,14 @@ public partial class MetricsDashboard
             }
             ApplyDeltaFormatters();
         }
-        if (_lists is not null)
-        {
-            _lists.IsStacked = !large;
-        }
-        if (_header is not null)
-        {
-            _header.StretchActions = small;
-        }
+        _lists?.IsStacked = !large;
+        _header?.StretchActions = small;
         if (_range is not null)
         {
             _range.IsStretched = small;
             _range.HorizontalAlignment = small ? HorizontalAlignment.Stretch : HorizontalAlignment.Left;
         }
-        if (_plot is not null)
-        {
-            _plot.MaxLabels = MetricsDashboardEngine.MaxLabels(size);
-        }
+        _plot?.MaxLabels = MetricsDashboardEngine.MaxLabels(size);
     }
 
     #endregion
@@ -974,10 +923,7 @@ public partial class MetricsDashboard
     {
         IsExportConfirmed = confirmed;
         PseudoClasses.Set(ExportedPseudoClass, confirmed);
-        if (_export is not null)
-        {
-            _export.IsConfirmed = confirmed;
-        }
+        _export?.IsConfirmed = confirmed;
     }
 
     #endregion

@@ -256,18 +256,9 @@ public class SpendAlert : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_add is not null)
-        {
-            _add.Click -= OnAddClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
-        if (_budget is not null)
-        {
-            _budget.PropertyChanged -= OnBudgetFieldChanged;
-        }
+        _add?.Click -= OnAddClick;
+        _dismiss?.Click -= OnDismissClick;
+        _budget?.PropertyChanged -= OnBudgetFieldChanged;
         _rowsHost?.Children.Clear();
         _rows.Clear();
         base.OnApplyTemplate(e);
@@ -283,14 +274,8 @@ public class SpendAlert : TemplatedControl
         {
             glyph.Data = s_bell;
         }
-        if (_add is not null)
-        {
-            _add.Click += OnAddClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
+        _add?.Click += OnAddClick;
+        _dismiss?.Click += OnDismissClick;
         if (_budget is not null)
         {
             _budget.Minimum = 0;
@@ -487,14 +472,8 @@ public class SpendAlert : TemplatedControl
         SetText("PART_SpentWord", labels.Spent);
         SetText("PART_AlertsHeading", labels.AlertsHeading);
         SetText("PART_AlertsHint", labels.AlertsHint);
-        if (_dismiss is not null)
-        {
-            _dismiss.Content = labels.Dismiss;
-        }
-        if (_add is not null)
-        {
-            _add.Content = labels.AddAlert;
-        }
+        _dismiss?.Content = labels.Dismiss;
+        _add?.Content = labels.AddAlert;
         if (_budget is not null)
         {
             _budget.Label = labels.Budget;

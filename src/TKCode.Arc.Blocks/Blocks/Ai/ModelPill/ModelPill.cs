@@ -373,15 +373,9 @@ public class ModelPill : AvaloniaButton
         {
             return;
         }
-        if (_observedModel is not null)
-        {
-            _observedModel.PropertyChanged -= OnModelPropertyChanged;
-        }
+        _observedModel?.PropertyChanged -= OnModelPropertyChanged;
         _observedModel = next;
-        if (next is not null)
-        {
-            next.PropertyChanged += OnModelPropertyChanged;
-        }
+        next?.PropertyChanged += OnModelPropertyChanged;
     }
 
     private void ObserveProviders()
@@ -391,15 +385,9 @@ public class ModelPill : AvaloniaButton
         {
             return;
         }
-        if (_observedProviders is not null)
-        {
-            _observedProviders.CollectionChanged -= OnProvidersChanged;
-        }
+        _observedProviders?.CollectionChanged -= OnProvidersChanged;
         _observedProviders = next;
-        if (next is not null)
-        {
-            next.CollectionChanged += OnProvidersChanged;
-        }
+        next?.CollectionChanged += OnProvidersChanged;
     }
 
     private void OnModelPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

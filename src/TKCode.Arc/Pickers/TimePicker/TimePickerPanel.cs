@@ -98,14 +98,8 @@ internal sealed class TimePickerPanel : TemplatedControl
 
     private void ApplyLayout()
     {
-        if (Scroll is not null)
-        {
-            Scroll.IsVisible = !_usesColumns;
-        }
-        if (_columnsHost is not null)
-        {
-            _columnsHost.IsVisible = _usesColumns;
-        }
+        Scroll?.IsVisible = !_usesColumns;
+        _columnsHost?.IsVisible = _usesColumns;
         _visible.Clear();
         foreach (var column in _columns)
         {

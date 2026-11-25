@@ -431,14 +431,8 @@ public partial class DesignToCode
         Code = code;
         _codeView?.SetCode(code, RegionAt, fade);
         var writing = _shown > 0 ? RegionAt(_shown - 1) : null;
-        if (_canvas is not null)
-        {
-            _canvas.Active = writing;
-        }
-        if (_codeView is not null)
-        {
-            _codeView.WritingRegion = writing;
-        }
+        _canvas?.Active = writing;
+        _codeView?.WritingRegion = writing;
         RefreshAll();
     }
 
@@ -482,10 +476,7 @@ public partial class DesignToCode
             _canvas.Active = null;
             _canvas.ScanPosition = double.NaN;
         }
-        if (_codeView is not null)
-        {
-            _codeView.WritingRegion = null;
-        }
+        _codeView?.WritingRegion = null;
     }
 
     private void CancelRun()

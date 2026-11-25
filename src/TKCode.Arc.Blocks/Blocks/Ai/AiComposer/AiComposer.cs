@@ -179,7 +179,6 @@ public partial class AiComposer : TemplatedControl
 
     #endregion
 
-    private AiSendState _sendState;
 
     /// <summary>The commands the person can start a line with ("/"). None or empty means "/" is plain text.</summary>
     public AvaloniaList<AiCommand> Commands { get; } = new();
@@ -268,8 +267,8 @@ public partial class AiComposer : TemplatedControl
     /// <inheritdoc cref="SendStateProperty"/>
     public AiSendState SendState
     {
-        get => _sendState;
-        private set => SetAndRaise(SendStateProperty, ref _sendState, value);
+        get;
+        private set => SetAndRaise(SendStateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="SendCommandProperty"/>

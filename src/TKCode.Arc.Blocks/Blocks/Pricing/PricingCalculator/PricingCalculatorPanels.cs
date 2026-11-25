@@ -79,15 +79,9 @@ internal sealed class PricingCalculatorPlansPanel : Panel
                 _flipFrom = home + old.BadgeOffset;
                 _flipVelocity = old.BadgeVelocity;
             }
-            if (old is not null)
-            {
-                old.IsRecommended = false;
-            }
+            old?.IsRecommended = false;
             _recommended = value;
-            if (value is not null)
-            {
-                value.IsRecommended = true;
-            }
+            value?.IsRecommended = true;
             _flipPending = _flipFrom is not null && value is not null;
             InvalidateArrange();
         }

@@ -187,14 +187,8 @@ public class SemanticZoomPanel : TemplatedControl
     {
         var stack = Layout == SemanticZoomPanelLayout.Stack;
         PseudoClasses.Set(StackPseudoClass, stack);
-        if (_layout is not null)
-        {
-            _layout.IsStack = stack;
-        }
-        if (_people is not null)
-        {
-            _people.IsStack = stack;
-        }
+        _layout?.IsStack = stack;
+        _people?.IsStack = stack;
     }
 
     private void ApplyLabels()
@@ -209,10 +203,7 @@ public class SemanticZoomPanel : TemplatedControl
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -233,15 +224,9 @@ public class SemanticZoomPanel : TemplatedControl
 
     private void Observe(SemanticZoomNode? node)
     {
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnScopeValueChanged;
-        }
+        _observed?.PropertyChanged -= OnScopeValueChanged;
         _observed = node;
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged += OnScopeValueChanged;
-        }
+        _observed?.PropertyChanged += OnScopeValueChanged;
     }
 
     private void OnScopeValueChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -274,14 +259,8 @@ public class SemanticZoomPanel : TemplatedControl
         {
             return;
         }
-        if (_open is not null)
-        {
-            _open.Value = node.OpenTasks;
-        }
-        if (_blocked is not null)
-        {
-            _blocked.Value = node.BlockedTasks;
-        }
+        _open?.Value = node.OpenTasks;
+        _blocked?.Value = node.BlockedTasks;
         if (_dueMonth is not null && _dueDay is not null)
         {
             if (node.NextDue is not { } due)
@@ -301,20 +280,11 @@ public class SemanticZoomPanel : TemplatedControl
                 _dueDay.IsVisible = false;
             }
         }
-        if (_progressLabel is not null)
-        {
-            _progressLabel.Text = node is SemanticZoomTask ? texts.ChecklistProgressLabel : texts.ProgressLabel;
-        }
-        if (_progress is not null)
-        {
-            _progress.Value = Math.Round(node.Progress * 100) / 100;
-        }
+        _progressLabel?.Text = node is SemanticZoomTask ? texts.ChecklistProgressLabel : texts.ProgressLabel;
+        _progress?.Value = Math.Round(node.Progress * 100) / 100;
         _bar?.SetValue(node.Progress);
         var people = node.People;
-        if (_peopleCount is not null)
-        {
-            _peopleCount.Value = people.Count;
-        }
+        _peopleCount?.Value = people.Count;
         UpdateFaces(people, texts);
         if (_note is not null)
         {

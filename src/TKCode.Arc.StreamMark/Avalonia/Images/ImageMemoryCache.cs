@@ -60,7 +60,7 @@ public sealed class ImageMemoryCache : IDisposable
 
     private const int MaxRememberedSizes = 8192;
 
-    private readonly object _gate = new();
+    private readonly SyncLock _gate = new();
     private readonly Dictionary<string, List<Entry>> _byUrl = new(StringComparer.Ordinal);
     private readonly LinkedList<Entry> _lru = new();
     private readonly Dictionary<string, PixelSize> _sizes = new(StringComparer.Ordinal);

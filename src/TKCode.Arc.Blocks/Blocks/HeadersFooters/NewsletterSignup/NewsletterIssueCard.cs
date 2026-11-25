@@ -136,18 +136,9 @@ internal sealed class NewsletterStoryRow : TemplatedControl
     private void Sync()
     {
         var story = Story;
-        if (_thumb is not null)
-        {
-            _thumb.Source = story?.Image;
-        }
-        if (_title is not null)
-        {
-            _title.Text = story?.Title;
-        }
-        if (_minutes is not null)
-        {
-            _minutes.Text = story is null ? null : string.Format(CultureInfo.CurrentCulture, MinutesFormat, story.Minutes);
-        }
+        _thumb?.Source = story?.Image;
+        _title?.Text = story?.Title;
+        _minutes?.Text = story is null ? null : string.Format(CultureInfo.CurrentCulture, MinutesFormat, story.Minutes);
     }
 }
 

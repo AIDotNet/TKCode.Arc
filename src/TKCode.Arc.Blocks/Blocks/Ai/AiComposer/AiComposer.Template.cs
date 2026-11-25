@@ -212,10 +212,7 @@ public partial class AiComposer
         HookParts();
 
         SetUpEditor();
-        if (_tray is not null)
-        {
-            _tray.ItemsSource = Attachments;
-        }
+        _tray?.ItemsSource = Attachments;
         AttachModelMenu();
         RebuildTools();
         ApplyLabels();
@@ -245,10 +242,7 @@ public partial class AiComposer
             _plus.Click += OnPlusClick;
             _plus.AddHandler(KeyDownEvent, OnPlusKeyDown);
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         if (_tray is not null)
         {
             _tray.RemoveRequested += OnChipRemoveRequested;
@@ -270,10 +264,7 @@ public partial class AiComposer
             _plus.Click -= OnPlusClick;
             _plus.RemoveHandler(KeyDownEvent, OnPlusKeyDown);
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
         if (_tray is not null)
         {
             _tray.RemoveRequested -= OnChipRemoveRequested;
@@ -319,14 +310,8 @@ public partial class AiComposer
             _counter.OverText = labels.CharactersOver;
             _counter.Tip = labels.CounterTip;
         }
-        if (_dropTitle is not null)
-        {
-            _dropTitle.Text = labels.DropTitle;
-        }
-        if (_dropHint is not null)
-        {
-            _dropHint.Text = labels.DropHint(MaxFileSize ?? 0);
-        }
+        _dropTitle?.Text = labels.DropTitle;
+        _dropHint?.Text = labels.DropHint(MaxFileSize ?? 0);
         if (_suggest is not null)
         {
             _suggest.Pop.CommandListName = labels.CommandList;
@@ -419,10 +404,7 @@ public partial class AiComposer
             _modelPill.ShowEffort = !_isNarrow;
             _modelPill.ShowText = !_isTiny;
         }
-        if (_counter is not null)
-        {
-            _counter.IsTiny = _isTiny;
-        }
+        _counter?.IsTiny = _isTiny;
     }
 
     #endregion
@@ -518,10 +500,7 @@ public partial class AiComposer
         }
         else if (property == GenerationProgressProperty)
         {
-            if (_send is not null)
-            {
-                _send.Progress = change.GetNewValue<double>();
-            }
+            _send?.Progress = change.GetNewValue<double>();
         }
         else if (property == CompactWidthProperty || property == NarrowWidthProperty || property == TinyWidthProperty)
         {

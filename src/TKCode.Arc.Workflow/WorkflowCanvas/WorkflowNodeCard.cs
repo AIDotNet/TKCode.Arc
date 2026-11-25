@@ -113,7 +113,6 @@ public class WorkflowNodeCard : TemplatedControl
     internal static readonly StyledProperty<double> StateOpacityProperty =
         AvaloniaProperty.Register<WorkflowNodeCard, double>(nameof(StateOpacity), 1);
 
-    private WorkflowNodeState _displayState;
     private WorkflowNodeState? _hostState;
     private ContentPresenter? _icon;
     private TextBlock? _title;
@@ -161,8 +160,8 @@ public class WorkflowNodeCard : TemplatedControl
     /// <inheritdoc cref="DisplayStateProperty"/>
     public WorkflowNodeState DisplayState
     {
-        get => _displayState;
-        private set => SetAndRaise(DisplayStateProperty, ref _displayState, value);
+        get;
+        private set => SetAndRaise(DisplayStateProperty, ref field, value);
     }
 
     internal IBrush? AccentBrush
@@ -344,10 +343,7 @@ public class WorkflowNodeCard : TemplatedControl
         base.OnAttachedToVisualTree(e);
         Observe(Node);
         _languages = WorkflowText.Languages;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
         Refresh();
     }
 
@@ -397,15 +393,9 @@ public class WorkflowNodeCard : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnNodePropertyChanged;
-        }
+        _observed?.PropertyChanged -= OnNodePropertyChanged;
         _observed = node;
-        if (node is not null)
-        {
-            node.PropertyChanged += OnNodePropertyChanged;
-        }
+        node?.PropertyChanged += OnNodePropertyChanged;
     }
 
     private void OnNodePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -448,10 +438,7 @@ public class WorkflowNodeCard : TemplatedControl
         var node = Node;
         var custom = node is not null && ContentTemplate is { } template && template.Match(node);
         PseudoClasses.Set(CustomPseudoClass, custom);
-        if (_layout is not null)
-        {
-            _layout.IsVisible = !custom;
-        }
+        _layout?.IsVisible = !custom;
         if (_content is null)
         {
             return;
@@ -471,10 +458,7 @@ public class WorkflowNodeCard : TemplatedControl
     {
         var node = Node;
         PseudoClasses.Set(CompactPseudoClass, node?.Appearance == WorkflowNodeAppearance.Compact);
-        if (_layout is not null)
-        {
-            _layout.IsCompact = node?.Appearance == WorkflowNodeAppearance.Compact;
-        }
+        _layout?.IsCompact = node?.Appearance == WorkflowNodeAppearance.Compact;
         if (node?.Size is { } size)
         {
             Width = size.Width;
@@ -532,10 +516,7 @@ public class WorkflowNodeCard : TemplatedControl
         PseudoClasses.Set(LockedPseudoClass, node?.IsLocked == true);
 
         var subtitle = node is null ? null : SubtitleOf(node, state);
-        if (_title is not null)
-        {
-            _title.Text = node?.Title;
-        }
+        _title?.Text = node?.Title;
         if (_subtitle is not null)
         {
             _subtitle.Text = subtitle;

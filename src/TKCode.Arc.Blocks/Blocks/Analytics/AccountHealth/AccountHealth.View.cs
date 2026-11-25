@@ -141,10 +141,7 @@ public partial class AccountHealth
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_body is not null)
-        {
-            _body.Child = null;
-        }
+        _body?.Child = null;
         _body = e.NameScope.Find<Decorator>(BodyPart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
         if (_body is not null)

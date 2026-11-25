@@ -55,58 +55,22 @@ public sealed partial class TrainingRun
 
     private void HookButtons()
     {
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancel;
-        }
-        if (_pause is not null)
-        {
-            _pause.Click += OnPause;
-        }
-        if (_resume is not null)
-        {
-            _resume.Click += OnResume;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
-        if (_restart is not null)
-        {
-            _restart.Click += OnRestart;
-        }
-        if (_deploy is not null)
-        {
-            _deploy.Click += OnDeploy;
-        }
+        _cancel?.Click += OnCancel;
+        _pause?.Click += OnPause;
+        _resume?.Click += OnResume;
+        _retry?.Click += OnRetry;
+        _restart?.Click += OnRestart;
+        _deploy?.Click += OnDeploy;
     }
 
     private void UnhookButtons()
     {
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancel;
-        }
-        if (_pause is not null)
-        {
-            _pause.Click -= OnPause;
-        }
-        if (_resume is not null)
-        {
-            _resume.Click -= OnResume;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
-        if (_restart is not null)
-        {
-            _restart.Click -= OnRestart;
-        }
-        if (_deploy is not null)
-        {
-            _deploy.Click -= OnDeploy;
-        }
+        _cancel?.Click -= OnCancel;
+        _pause?.Click -= OnPause;
+        _resume?.Click -= OnResume;
+        _retry?.Click -= OnRetry;
+        _restart?.Click -= OnRestart;
+        _deploy?.Click -= OnDeploy;
     }
 
     /// <summary>Each button shows when its action is allowed and the status calls for it.</summary>

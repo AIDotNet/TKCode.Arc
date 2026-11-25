@@ -76,15 +76,9 @@ internal sealed class GhostTextEditor : TextBox
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (Presenter is not null)
-        {
-            Presenter.Editor = null;
-        }
+        Presenter?.Editor = null;
         Presenter = e.NameScope.Find<GhostTextPresenter>("PART_TextPresenter");
-        if (Presenter is not null)
-        {
-            Presenter.Editor = this;
-        }
+        Presenter?.Editor = this;
     }
 
     /// <summary>Types <paramref name="text"/> at the caret as if from the keyboard, so it joins the undo stack.</summary>

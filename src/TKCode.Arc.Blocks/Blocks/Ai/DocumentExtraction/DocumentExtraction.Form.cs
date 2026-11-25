@@ -99,16 +99,10 @@ public partial class DocumentExtraction
 
     private void CreateStore(ExtractionSchema? schema)
     {
-        if (_store is not null)
-        {
-            _store.Changed -= OnStoreChanged;
-        }
+        _store?.Changed -= OnStoreChanged;
         _storeSchema = schema;
         _store = schema is null ? null : new ExtractionStore(schema, () => ReviewThreshold) { Labels = Labels };
-        if (_store is not null)
-        {
-            _store.Changed += OnStoreChanged;
-        }
+        _store?.Changed += OnStoreChanged;
         _values.Clear();
         if (_store is not null)
         {
@@ -117,10 +111,7 @@ public partial class DocumentExtraction
         _pathSpan.Clear();
         _spanPaths.Clear();
         BuildForm();
-        if (_json is not null)
-        {
-            _json.Tones = _store is null ? null : _store.Info.ToneOf;
-        }
+        _json?.Tones = _store is null ? null : _store.Info.ToneOf;
     }
 
     #endregion
@@ -429,10 +420,7 @@ public partial class DocumentExtraction
             _summaryNote.Text = State is ExtractionState.Reading or ExtractionState.Extracting ? labels.ReadingShort : labels.NoValues;
         }
         var average = _store?.AverageConfidence ?? 0;
-        if (_averageGroup is not null)
-        {
-            _averageGroup.IsVisible = found > 0 && average > 0;
-        }
+        _averageGroup?.IsVisible = found > 0 && average > 0;
         if (found > 0 && average > 0)
         {
             RollAverage(average);
@@ -500,16 +488,10 @@ public partial class DocumentExtraction
         if (_json is not null)
         {
             _json.Output = Output;
-            if (_jsonCopy is not null)
-            {
-                _jsonCopy.Value = _json.Text;
-            }
+            _jsonCopy?.Value = _json.Text;
         }
         var invalid = _store?.InvalidValues.Count ?? 0;
-        if (_jsonNote is not null)
-        {
-            _jsonNote.Text = invalid == 0 ? Labels.JsonValid : Labels.JsonInvalid(invalid);
-        }
+        _jsonNote?.Text = invalid == 0 ? Labels.JsonValid : Labels.JsonInvalid(invalid);
         if (_jsonNoteIcon is not null)
         {
             _jsonNoteIcon.Data = invalid == 0 ? ArcIcons.CircleCheck : ArcIcons.TriangleAlert;
@@ -521,14 +503,8 @@ public partial class DocumentExtraction
     private void RefreshSchemaText()
     {
         var text = _storeSchema?.ToJsonSchema(Model?.Id);
-        if (_schema is not null)
-        {
-            _schema.SchemaText = text;
-        }
-        if (_schemaCopy is not null)
-        {
-            _schemaCopy.Value = text;
-        }
+        _schema?.SchemaText = text;
+        _schemaCopy?.Value = text;
         if (_schemaNote is not null)
         {
             var id = Model?.Id;

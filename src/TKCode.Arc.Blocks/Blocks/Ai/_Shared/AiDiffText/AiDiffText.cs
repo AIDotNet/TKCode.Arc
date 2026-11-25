@@ -304,10 +304,7 @@ internal class AiDiffText : TemplatedControl
                  property == Series1Property || property == Series2Property || property == Series3Property || property == Series4Property)
         {
             _palette = null;
-            if (_text is not null)
-            {
-                _text.Palette = Palette;
-            }
+            _text?.Palette = Palette;
         }
     }
 

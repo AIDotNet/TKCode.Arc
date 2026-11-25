@@ -299,7 +299,6 @@ public partial class RadialMenu : ItemsControl, ICustomHitTest
     private RadialMenuItem? _highlighted;
     private string? _centerText;
     private bool _syncingSelection;
-    private double _centerLabelWidth = 68;
     private bool _showsCenterContent = true;
 
     static RadialMenu()
@@ -326,9 +325,9 @@ public partial class RadialMenu : ItemsControl, ICustomHitTest
     /// <summary>Width the centre label may use.</summary>
     internal double CenterLabelWidth
     {
-        get => _centerLabelWidth;
-        private set => SetAndRaise(CenterLabelWidthProperty, ref _centerLabelWidth, value);
-    }
+        get;
+        private set => SetAndRaise(CenterLabelWidthProperty, ref field, value);
+    } = 68;
 
     /// <summary>Whether the centre shows <see cref="CenterContent"/> (no label is shown).</summary>
     internal bool ShowsCenterContent

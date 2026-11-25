@@ -78,10 +78,7 @@ internal sealed class SecuritySettingsSessionView
     public void Leave()
     {
         IsLeaving = true;
-        if (_button is not null)
-        {
-            _button.IsEnabled = false;
-        }
+        _button?.IsEnabled = false;
         Host.IsPresent = false;
     }
 
@@ -89,10 +86,7 @@ internal sealed class SecuritySettingsSessionView
     public void Detach()
     {
         Host.Exited -= OnExited;
-        if (_button is not null)
-        {
-            _button.Click -= OnSignOutClick;
-        }
+        _button?.Click -= OnSignOutClick;
     }
 
     private void OnSignOutClick(object? sender, RoutedEventArgs e) => _signOut(this);

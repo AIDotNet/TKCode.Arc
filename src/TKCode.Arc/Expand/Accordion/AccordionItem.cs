@@ -91,10 +91,7 @@ public class AccordionItem : HeaderedContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
+        _trigger?.Click -= OnTriggerClick;
         base.OnApplyTemplate(e);
         _trigger = e.NameScope.Find<AccordionTrigger>(TriggerPart);
         _panel = e.NameScope.Find<Control>(PanelPart);

@@ -155,10 +155,7 @@ public class ThemeSwitcher : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_button is not null)
-        {
-            _button.Click -= OnButtonClick;
-        }
+        _button?.Click -= OnButtonClick;
         _button = e.NameScope.Find<ThemeSwitcherButton>(ButtonPart);
         _icon = e.NameScope.Find<ButtonsGlyphSwap>(IconPart);
         if (_button is not null)

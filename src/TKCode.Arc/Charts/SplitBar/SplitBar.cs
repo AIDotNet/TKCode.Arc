@@ -489,15 +489,9 @@ public partial class SplitBar : TemplatedControl
 
     private void ObserveSource(IEnumerable<SplitBarSegment>? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => Sync();

@@ -79,10 +79,12 @@ internal sealed class ProcessedIndentRulesSupport
 }
 
 /// <summary>The processed text around a range (the result of <see cref="IndentationContextProcessor.GetProcessedTokenContextAroundRange"/>).</summary>
-internal sealed record ProcessedTokenContext(
-    IViewLineTokens BeforeRangeProcessedTokens,
-    IViewLineTokens AfterRangeProcessedTokens,
-    IViewLineTokens PreviousLineProcessedTokens);
+internal sealed class ProcessedTokenContext(IViewLineTokens beforeRangeProcessedTokens, IViewLineTokens afterRangeProcessedTokens, IViewLineTokens previousLineProcessedTokens)
+{
+    public IViewLineTokens BeforeRangeProcessedTokens { get; } = beforeRangeProcessedTokens;
+    public IViewLineTokens AfterRangeProcessedTokens { get; } = afterRangeProcessedTokens;
+    public IViewLineTokens PreviousLineProcessedTokens { get; } = previousLineProcessedTokens;
+}
 
 /// <summary>
 /// This class fetches the processed text around a range which can be used for indentation evaluation.

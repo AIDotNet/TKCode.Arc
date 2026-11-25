@@ -117,10 +117,7 @@ internal sealed class AvailabilitySlotButton : ToggleButton
         set
         {
             _busyMarks = value;
-            if (_marks is not null)
-            {
-                _marks.Busy = value;
-            }
+            _marks?.Busy = value;
         }
     }
 
@@ -141,10 +138,7 @@ internal sealed class AvailabilitySlotButton : ToggleButton
         _layout = e.NameScope.Find<AvailabilitySlotLayout>(LayoutPart);
         _marks = e.NameScope.Find<AvailabilityMarks>(MarksPart);
         _check = e.NameScope.Find<Control>(CheckPart);
-        if (_marks is not null)
-        {
-            _marks.Busy = _busyMarks;
-        }
+        _marks?.Busy = _busyMarks;
         UpdateCheck(animate: false);
     }
 
@@ -177,16 +171,10 @@ internal sealed class AvailabilitySlotButton : ToggleButton
             _fade = new MotionValue<double>(this, target, MotionVectors.Double);
             _fade.Changed += v =>
             {
-                if (_check is not null)
-                {
-                    _check.Opacity = v;
-                }
+                _check?.Opacity = v;
             };
         }
-        if (_layout is not null)
-        {
-            _layout.IsChecked = on;
-        }
+        _layout?.IsChecked = on;
         if (animate && IsLoaded && ArcMotion.IsFull(this))
         {
             _ = _width.AnimateTo(target, MotionSpec.Spring(ProjectsSprings.Width));
@@ -198,10 +186,7 @@ internal sealed class AvailabilitySlotButton : ToggleButton
             _fade.Jump(target);
         }
         _layout?.SetCheckProgress(_width.Value);
-        if (_check is not null)
-        {
-            _check.Opacity = _fade.Value;
-        }
+        _check?.Opacity = _fade.Value;
     }
 }
 
@@ -609,15 +594,9 @@ internal sealed class AvailabilityDayStrip : Panel
 
     private void Watch(AvailabilityDayButton? button)
     {
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged -= OnSelectedButtonChanged;
-        }
+        _watched?.PropertyChanged -= OnSelectedButtonChanged;
         _watched = button;
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged += OnSelectedButtonChanged;
-        }
+        _watched?.PropertyChanged += OnSelectedButtonChanged;
         FollowPress();
     }
 

@@ -96,9 +96,9 @@ internal sealed class UnchangedRegion
     /// <summary>Raised when the visible line counts changed.</summary>
     public event Action<UnchangedRegion>? Changed;
 
-    public LineRange OriginalUnchangedRange => LineRangeDiffExtensions.OfLength(OriginalLineNumber, LineCount);
+    public LineRange OriginalUnchangedRange => LineRange.OfLength(OriginalLineNumber, LineCount);
 
-    public LineRange ModifiedUnchangedRange => LineRangeDiffExtensions.OfLength(ModifiedLineNumber, LineCount);
+    public LineRange ModifiedUnchangedRange => LineRange.OfLength(ModifiedLineNumber, LineCount);
 
     /// <summary>The number of lines shown at the top of the region.</summary>
     public int VisibleLineCountTop => _visibleLineCountTop;
@@ -147,10 +147,10 @@ internal sealed class UnchangedRegion
     }
 
     public LineRange GetHiddenOriginalRange() =>
-        LineRangeDiffExtensions.OfLength(OriginalLineNumber + _visibleLineCountTop, LineCount - _visibleLineCountTop - _visibleLineCountBottom);
+        LineRange.OfLength(OriginalLineNumber + _visibleLineCountTop, LineCount - _visibleLineCountTop - _visibleLineCountBottom);
 
     public LineRange GetHiddenModifiedRange() =>
-        LineRangeDiffExtensions.OfLength(ModifiedLineNumber + _visibleLineCountTop, LineCount - _visibleLineCountTop - _visibleLineCountBottom);
+        LineRange.OfLength(ModifiedLineNumber + _visibleLineCountTop, LineCount - _visibleLineCountTop - _visibleLineCountBottom);
 
     public void SetHiddenModifiedRange(LineRange range)
     {

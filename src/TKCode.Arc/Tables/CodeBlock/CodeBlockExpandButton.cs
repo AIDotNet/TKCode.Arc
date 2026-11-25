@@ -50,13 +50,12 @@ internal sealed class CodeBlockExpandButton : AvaloniaButton
         set => SetValue(ExpandedLabelProperty, value);
     }
 
-    private string _currentLabel = string.Empty;
 
     public string CurrentLabel
     {
-        get => _currentLabel;
-        private set => SetAndRaise(CurrentLabelProperty, ref _currentLabel, value);
-    }
+        get;
+        private set => SetAndRaise(CurrentLabelProperty, ref field, value);
+    } = string.Empty;
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

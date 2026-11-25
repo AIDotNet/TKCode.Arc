@@ -16,7 +16,12 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Contrib.WordOperations;
 
 /// <summary>A word command: its id, whether it edits (upstream's precondition EditorContextKeys.writable), what it does.</summary>
-internal sealed record WordCommandDefinition(string Id, bool Writable, Action<IEditorActionHost> Run);
+internal sealed class WordCommandDefinition(string id, bool writable, Action<IEditorActionHost> run)
+{
+    public string Id { get; } = id;
+    public bool Writable { get; } = writable;
+    public Action<IEditorActionHost> Run { get; } = run;
+}
 
 /// <summary>The word commands of wordOperations.ts and wordPartOperations.ts.</summary>
 internal static class WordCommands

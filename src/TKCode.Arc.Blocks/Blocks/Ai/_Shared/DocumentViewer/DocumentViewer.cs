@@ -292,31 +292,16 @@ internal sealed partial class DocumentViewer : TemplatedControl
             _fileButton.AddHandler(KeyDownEvent, OnFileButtonKeyDown, RoutingStrategies.Tunnel, handledEventsToo: true);
             _fileButton.AddHandler(PointerPressedEvent, OnFileButtonPointerPressed, RoutingStrategies.Tunnel, handledEventsToo: true);
         }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click += OnZoomOutClick;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click += OnZoomInClick;
-        }
-        if (_zoomReset is not null)
-        {
-            _zoomReset.Click += OnZoomResetClick;
-        }
-        if (_fit is not null)
-        {
-            _fit.Click += OnFitClick;
-        }
+        _zoomOut?.Click += OnZoomOutClick;
+        _zoomIn?.Click += OnZoomInClick;
+        _zoomReset?.Click += OnZoomResetClick;
+        _fit?.Click += OnFitClick;
         if (_canvas is not null)
         {
             _canvas.PropertyChanged += OnCanvasPropertyChanged;
             _canvas.AddHandler(PointerWheelChangedEvent, OnCanvasWheel, RoutingStrategies.Tunnel, handledEventsToo: true);
         }
-        if (_page is not null)
-        {
-            _page.PropertyChanged += OnPagePropertyChanged;
-        }
+        _page?.PropertyChanged += OnPagePropertyChanged;
     }
 
     private void DetachParts()
@@ -329,22 +314,10 @@ internal sealed partial class DocumentViewer : TemplatedControl
             _fileButton.RemoveHandler(PointerPressedEvent, OnFileButtonPointerPressed);
             DropdownMenu.SetMenu(_fileButton, null);
         }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click -= OnZoomOutClick;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click -= OnZoomInClick;
-        }
-        if (_zoomReset is not null)
-        {
-            _zoomReset.Click -= OnZoomResetClick;
-        }
-        if (_fit is not null)
-        {
-            _fit.Click -= OnFitClick;
-        }
+        _zoomOut?.Click -= OnZoomOutClick;
+        _zoomIn?.Click -= OnZoomInClick;
+        _zoomReset?.Click -= OnZoomResetClick;
+        _fit?.Click -= OnFitClick;
         if (_canvas is not null)
         {
             _canvas.PropertyChanged -= OnCanvasPropertyChanged;
@@ -352,10 +325,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
             _canvas.LayoutUpdated -= OnLayoutUpdatedOnce;
             _offsetAfterLayout = false;
         }
-        if (_page is not null)
-        {
-            _page.PropertyChanged -= OnPagePropertyChanged;
-        }
+        _page?.PropertyChanged -= OnPagePropertyChanged;
         HoveredSpanId = null;
     }
 
@@ -453,14 +423,8 @@ internal sealed partial class DocumentViewer : TemplatedControl
         var email = document is not null && document.EffectiveKind == DocumentKind.Email;
         PseudoClasses.Set(EmailPseudoClass, email);
         AutomationProperties.SetName(this, labels.Document);
-        if (_fileMark is not null)
-        {
-            _fileMark.Kind = email ? DocumentKind.Email : DocumentKind.Pdf;
-        }
-        if (_fileName is not null)
-        {
-            _fileName.Text = name;
-        }
+        _fileMark?.Kind = email ? DocumentKind.Email : DocumentKind.Pdf;
+        _fileName?.Text = name;
         if (_fileButton is not null)
         {
             AutomationProperties.SetName(_fileButton, HasMenu ? labels.SwitchDocument(name) : name);
@@ -470,10 +434,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
             _pageCount.Text = labels.PageOf(1, 1);
             AutomationProperties.SetName(_pageCount, labels.PageOfName(1, 1));
         }
-        if (_page is not null)
-        {
-            _page.ArticleName = name;
-        }
+        _page?.ArticleName = name;
         UpdateCanvasName();
     }
 
@@ -483,10 +444,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
         var labels = Labels;
         var zoom = Zoom;
         var percent = PercentOf(zoom);
-        if (_percent is not null)
-        {
-            _percent.Text = string.Create(CultureInfo.CurrentCulture, $"{percent}%");
-        }
+        _percent?.Text = string.Create(CultureInfo.CurrentCulture, $"{percent}%");
         if (_zoomReset is not null)
         {
             AutomationProperties.SetName(_zoomReset, labels.ZoomReset(percent));
@@ -519,10 +477,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
 
     private void UpdateCanvasName()
     {
-        if (_canvas is not null)
-        {
-            _canvas.Label = Labels.CanvasName(Document?.Name ?? string.Empty, PercentOf(Zoom));
-        }
+        _canvas?.Label = Labels.CanvasName(Document?.Name ?? string.Empty, PercentOf(Zoom));
     }
 
     /// <summary>A zoom as the whole percentage the toolbar shows.</summary>
@@ -654,10 +609,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
 
     private void OnMenuOpened(object? sender, RoutedEventArgs e)
     {
-        if (_fileButton is not null)
-        {
-            _fileButton.IsOn = true;
-        }
+        _fileButton?.IsOn = true;
         if (_menuKeyOpen)
         {
             // Opened from the keyboard: the highlight starts on the chosen document (spec 6.2), after the surface put it on
@@ -669,10 +621,7 @@ internal sealed partial class DocumentViewer : TemplatedControl
     private void OnMenuClosed(object? sender, RoutedEventArgs e)
     {
         _menuKeyOpen = false;
-        if (_fileButton is not null)
-        {
-            _fileButton.IsOn = false;
-        }
+        _fileButton?.IsOn = false;
     }
 
     private void HighlightChecked()

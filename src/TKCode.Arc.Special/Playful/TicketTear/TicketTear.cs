@@ -189,36 +189,18 @@ public class TicketTear : ContentControl
         _flap = e.NameScope.Find<TicketTearFlap>(FlapPart);
         _stubShadow = e.NameScope.Find<Border>(StubShadowPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
-        if (_body is not null)
-        {
-            _body.Owner = this;
-        }
-        if (_stub is not null)
-        {
-            _stub.Owner = this;
-        }
-        if (_flap is not null)
-        {
-            _flap.Owner = this;
-        }
+        _body?.Owner = this;
+        _stub?.Owner = this;
+        _flap?.Owner = this;
         UpdateEdgePen();
         InvalidateShapes();
     }
 
     private void DetachParts()
     {
-        if (_body is not null)
-        {
-            _body.Owner = null;
-        }
-        if (_stub is not null)
-        {
-            _stub.Owner = null;
-        }
-        if (_flap is not null)
-        {
-            _flap.Owner = null;
-        }
+        _body?.Owner = null;
+        _stub?.Owner = null;
+        _flap?.Owner = null;
     }
 
     internal void OnStubTemplated()

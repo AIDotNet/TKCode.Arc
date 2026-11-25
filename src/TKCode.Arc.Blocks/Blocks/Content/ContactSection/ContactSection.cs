@@ -225,14 +225,8 @@ public class ContactSection : TemplatedControl
     {
         var copy = DefaultCopy;
         var title = Title ?? copy.Title;
-        if (_titleBlock is not null)
-        {
-            _titleBlock.Text = title;
-        }
-        if (_descriptionBlock is not null)
-        {
-            _descriptionBlock.Text = Description ?? copy.Description;
-        }
+        _titleBlock?.Text = title;
+        _descriptionBlock?.Text = Description ?? copy.Description;
         AutomationProperties.SetName(this, title);
     }
 
@@ -462,10 +456,7 @@ public class ContactSection : TemplatedControl
         var compact = width <= 520;
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_body is not null)
-        {
-            _body.Padding = compact ? new Thickness(16, 48) : new Thickness(32, 80);
-        }
+        _body?.Padding = compact ? new Thickness(16, 48) : new Thickness(32, 80);
         if (_titleBlock is not null)
         {
             HeroText.SetTitleSize(_titleBlock, Math.Clamp(16 + 0.03 * width, 28, ArcTokens.Get<double>(this, ArcDesignTokenKind.Type4XL)));
@@ -504,10 +495,7 @@ public class ContactSection : TemplatedControl
             Grid.SetRow(card, stacked ? 1 : 0);
             _tabScroller.Width = stacked ? double.NaN : Math.Clamp(width * 0.3, 220, 300);
             _tabScroller.HorizontalScrollBarVisibility = stacked ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled;
-            if (_tabStack is not null)
-            {
-                _tabStack.Orientation = stacked ? Orientation.Horizontal : Orientation.Vertical;
-            }
+            _tabStack?.Orientation = stacked ? Orientation.Horizontal : Orientation.Vertical;
             foreach (var tab in _tabs)
             {
                 tab.IsCompact = stacked;

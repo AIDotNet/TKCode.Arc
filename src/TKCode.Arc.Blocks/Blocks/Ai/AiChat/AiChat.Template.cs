@@ -297,10 +297,7 @@ public partial class AiChat
             _titlePill.ConversationChosen += OnConversationChosen;
             _titlePill.NewChatRequested += OnMenuNewChatRequested;
         }
-        if (_modelPill is not null)
-        {
-            _modelPill.OpenRequested += OnModelPillOpenRequested;
-        }
+        _modelPill?.OpenRequested += OnModelPillOpenRequested;
         if (_modelMenu is not null)
         {
             _modelMenu.ModelsSource = Models;
@@ -308,10 +305,7 @@ public partial class AiChat
             _modelMenu.ModelChosen += OnModelChosen;
             _modelMenu.PropertyChanged += OnModelMenuPropertyChanged;
         }
-        if (_newChat is not null)
-        {
-            _newChat.Click += OnNewChatClick;
-        }
+        _newChat?.Click += OnNewChatClick;
         if (_scroller is not null)
         {
             _scroller.FollowingChanged += OnFollowingChanged;
@@ -348,10 +342,7 @@ public partial class AiChat
             _titlePill.NewChatRequested -= OnMenuNewChatRequested;
             _titlePill.Conversations = null;
         }
-        if (_modelPill is not null)
-        {
-            _modelPill.OpenRequested -= OnModelPillOpenRequested;
-        }
+        _modelPill?.OpenRequested -= OnModelPillOpenRequested;
         if (_modelMenu is not null)
         {
             _modelMenu.ModelChosen -= OnModelChosen;
@@ -359,10 +350,7 @@ public partial class AiChat
             _modelMenu.Close(returnFocus: false);
             _modelMenu.ModelsSource = null;
         }
-        if (_newChat is not null)
-        {
-            _newChat.Click -= OnNewChatClick;
-        }
+        _newChat?.Click -= OnNewChatClick;
         if (_scroller is not null)
         {
             _scroller.FollowingChanged -= OnFollowingChanged;
@@ -438,10 +426,7 @@ public partial class AiChat
             AutomationProperties.SetName(_newChat, labels.NewChat);
             Tooltip.SetTip(_newChat, labels.NewChat);
         }
-        if (_scroller is not null)
-        {
-            _scroller.JumpButtonName = labels.ScrollToLatest;
-        }
+        _scroller?.JumpButtonName = labels.ScrollToLatest;
         if (_turns is not null)
         {
             AutomationProperties.SetName(_turns, labels.Messages);
@@ -575,10 +560,7 @@ public partial class AiChat
     /// <summary>The turn gap (24 when narrow) and the compact model pill's padding (0 6 0 8).</summary>
     private void ApplyBreakpointParts()
     {
-        if (_turns is not null)
-        {
-            _turns.Spacing = _isNarrow ? NarrowTurnGap : TurnGap;
-        }
+        _turns?.Spacing = _isNarrow ? NarrowTurnGap : TurnGap;
         if (_modelPill is not null)
         {
             if (_isCompact)
@@ -607,10 +589,7 @@ public partial class AiChat
             _threadHost.Padding = new Thickness(side, top, side, ThreadBottomPadding);
             _threadHost.MaxWidth = maxWidth;
         }
-        if (_header is not null)
-        {
-            _header.Padding = new Thickness(Math.Max(HeaderSideMin, side - HeaderSideOffset), 0, HeaderEndPadding, 0);
-        }
+        _header?.Padding = new Thickness(Math.Max(HeaderSideMin, side - HeaderSideOffset), 0, HeaderEndPadding, 0);
         if (_dock is not null)
         {
             var dockSide = Math.Max(DockSideMin, side - DockSideOffset);
@@ -672,17 +651,11 @@ public partial class AiChat
         }
         else if (property == IsAttachmentEnabledProperty)
         {
-            if (_composer is not null)
-            {
-                _composer.IsAttachmentEnabled = change.GetNewValue<bool>();
-            }
+            _composer?.IsAttachmentEnabled = change.GetNewValue<bool>();
         }
         else if (property == AcceptedFileTypesProperty)
         {
-            if (_composer is not null)
-            {
-                _composer.AcceptedFileTypes = change.GetNewValue<string?>();
-            }
+            _composer?.AcceptedFileTypes = change.GetNewValue<string?>();
         }
         else if (property == ColumnWidthProperty || property == ThreadSideRatioProperty || property == ThreadSideMinProperty ||
                  property == ThreadSideMaxProperty || property == ThreadTopPaddingProperty || property == NarrowThreadTopPaddingProperty ||

@@ -121,7 +121,7 @@ public sealed class LspProvidersTests
 
         var resolved = await provider.ResolveCompletionItem(log, CancellationToken.None);
 
-        resolved!.Documentation!.Value.Value.ShouldBe("Logs 7");
+        resolved!.Documentation!.Value.Content.ShouldBe("Logs 7");
         resolved.Range.ShouldBe(log.Range);
     }
 
@@ -370,13 +370,13 @@ public sealed class LspProvidersTests
 
         provider.GetLegend().TokenTypes.ShouldBe(["variable", "function"]);
         provider.GetLegend().TokenModifiers.ShouldBe(["readonly"]);
-        var full = await provider.ProvideDocumentSemanticTokens(session.Model, null, CancellationToken.None);
-        var delta = await provider.ProvideDocumentSemanticTokens(session.Model, full!.Tokens!.ResultId, CancellationToken.None);
+        var full = (await provider.ProvideDocumentSemanticTokens(session.Model, null, CancellationToken.None))!.Value;
+        var delta = (await provider.ProvideDocumentSemanticTokens(session.Model, full.Tokens!.ResultId, CancellationToken.None))!.Value;
         var range = await session.Features.DocumentRangeSemanticTokensProvider.Ordered(session.Model).Single()
             .ProvideDocumentRangeSemanticTokens(session.Model, new TextRange(1, 1, 1, 11), CancellationToken.None);
 
         full.Tokens.Data.ShouldBe([0u, 4u, 1u, 0u, 0u]);
-        delta!.Edits!.ResultId.ShouldBe("2");
+        delta.Edits!.ResultId.ShouldBe("2");
         delta.Edits.Edits.Single().Data.ShouldBe([0u, 4u, 1u, 1u, 1u]);
         range!.Data.ShouldBe([0u, 8u, 1u, 0u, 0u]);
     }
@@ -424,7 +424,7 @@ public sealed class LspProvidersTests
         resolvedLens!.Command!.Title.ShouldBe("resolved lens");
         hints.Hints.Single().Kind.ShouldBe(InlayHintKind.Parameter);
         hints.Hints.Single().Position.ShouldBe(new TextPosition(1, 3));
-        resolvedHint!.Tooltip!.Value.Value.ShouldBe("the count");
+        resolvedHint!.Tooltip!.Value.Content.ShouldBe("the count");
     }
 
     [Fact]

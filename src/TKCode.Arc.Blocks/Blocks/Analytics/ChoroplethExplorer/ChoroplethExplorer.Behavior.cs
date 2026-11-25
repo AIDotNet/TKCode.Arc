@@ -197,10 +197,7 @@ public partial class ChoroplethExplorer
 
         foreach (var swap in new[] { _title, _summaryName, _headlineLabel, _legendCaption, _sideCount, _sideNote })
         {
-            if (swap is not null)
-            {
-                swap.Swap = CrossFade;
-            }
+            swap?.Swap = CrossFade;
         }
         if (_map is not null)
         {
@@ -220,10 +217,7 @@ public partial class ChoroplethExplorer
             _list.RowFocused += OnRowFocused;
             _list.RowInvoked += OnRowInvoked;
         }
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged += OnMetricSwitchChanged;
-        }
+        _metricSwitch?.SelectionChanged += OnMetricSwitchChanged;
         if (_areaSwitch is not null)
         {
             _areaSwitch.SelectionChanged += OnAreaSwitchChanged;
@@ -231,14 +225,8 @@ public partial class ChoroplethExplorer
             _areaSwitch.PanelWidth = 248;
             _areaSwitch.PanelAlignment = MorphSelectAlignment.End;
         }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_emptyBack is not null)
-        {
-            _emptyBack.Click += OnBackClick;
-        }
+        _back?.Click += OnBackClick;
+        _emptyBack?.Click += OnBackClick;
         _width = double.NaN;
         _layout = -1;
         _shownArea = null;
@@ -267,22 +255,10 @@ public partial class ChoroplethExplorer
             _list.RowFocused -= OnRowFocused;
             _list.RowInvoked -= OnRowInvoked;
         }
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged -= OnMetricSwitchChanged;
-        }
-        if (_areaSwitch is not null)
-        {
-            _areaSwitch.SelectionChanged -= OnAreaSwitchChanged;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_emptyBack is not null)
-        {
-            _emptyBack.Click -= OnBackClick;
-        }
+        _metricSwitch?.SelectionChanged -= OnMetricSwitchChanged;
+        _areaSwitch?.SelectionChanged -= OnAreaSwitchChanged;
+        _back?.Click -= OnBackClick;
+        _emptyBack?.Click -= OnBackClick;
     }
 
     // Layout ----------------------------------------------------------------------------------------------------------------
@@ -310,14 +286,8 @@ public partial class ChoroplethExplorer
         PseudoClasses.Set(CompactPseudoClass, compact);
         var inner = width - (compact ? 32 : 40);
         var layout = inner >= HeaderInlineWidth ? 0 : compact ? 2 : 1;
-        if (_body is not null)
-        {
-            _body.IsWide = wide;
-        }
-        if (_scroller is not null)
-        {
-            _scroller.Height = wide ? double.NaN : compact ? 360 : 400;
-        }
+        _body?.IsWide = wide;
+        _scroller?.Height = wide ? double.NaN : compact ? 360 : 400;
         if (_legend is not null)
         {
             _legend.FillsWidth = compact;
@@ -469,15 +439,9 @@ public partial class ChoroplethExplorer
 
     private void ObserveSource(IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => QueueRefresh();
@@ -998,14 +962,8 @@ public partial class ChoroplethExplorer
 
         // List ------------------------------------------------------------------------------------------------------------
         var showEmpty = open is not null && !open.HasSubregions;
-        if (_empty is not null)
-        {
-            _empty.IsVisible = showEmpty;
-        }
-        if (_scroller is not null)
-        {
-            _scroller.IsVisible = !showEmpty;
-        }
+        _empty?.IsVisible = showEmpty;
+        _scroller?.IsVisible = !showEmpty;
         if (_list is not null)
         {
             _list.SetColors(_positive, _negative);
@@ -1031,35 +989,20 @@ public partial class ChoroplethExplorer
             var value = _top.Values[index] is { } ov ? metric.FormatValue(ov) : AnalyticsFormat.Missing;
             var lead = open.EmptyDetailText ?? area.EmptyDetailText;
             var sentence = ChoroplethMath.Format(labels.NoDetailFormat, open.Name, rankPhrase, metric.EffectiveNoun, value);
-            if (_emptyTitle is not null)
-            {
-                _emptyTitle.Text = ChoroplethMath.Format(labels.NoDetailTitleFormat, area.SubregionNounSingular, open.Name);
-            }
-            if (_emptyText is not null)
-            {
-                _emptyText.Text = string.IsNullOrWhiteSpace(lead) ? sentence : lead.Trim() + " " + sentence;
-            }
+            _emptyTitle?.Text = ChoroplethMath.Format(labels.NoDetailTitleFormat, area.SubregionNounSingular, open.Name);
+            _emptyText?.Text = string.IsNullOrWhiteSpace(lead) ? sentence : lead.Trim() + " " + sentence;
         }
 
         // Texts ------------------------------------------------------------------------------------------------------------
         var title = Title ?? area.Title ?? ChoroplethMath.Format(labels.TitleFormat, _metrics.Count > 0 ? _metrics[0].Label : metric.Label, area.RegionNounSingular);
-        if (_title is not null)
-        {
-            _title.Text = title;
-        }
+        _title?.Text = title;
         if (_description is not null)
         {
             _description.Text = Description;
             _description.IsVisible = !string.IsNullOrEmpty(Description);
         }
-        if (_summaryName is not null)
-        {
-            _summaryName.Text = open?.Name ?? area.Name;
-        }
-        if (_headlineLabel is not null)
-        {
-            _headlineLabel.Text = metric.HeadlineLabel ?? metric.Label;
-        }
+        _summaryName?.Text = open?.Name ?? area.Name;
+        _headlineLabel?.Text = metric.HeadlineLabel ?? metric.Label;
         if (_headline is not null)
         {
             double? headline = open is not null
@@ -1080,34 +1023,16 @@ public partial class ChoroplethExplorer
                 _headline.Value = headline ?? double.NaN;
             }
         }
-        if (_sideCount is not null)
-        {
-            _sideCount.Text = showEmpty && open is not null ? open.Name : CountPhrase(level.Regions.Count, area, levelIsSub);
-        }
-        if (_sideNote is not null)
-        {
-            _sideNote.Text = ChoroplethMath.Format(labels.RankedByFormat, metric.EffectiveNoun);
-        }
-        if (_back is not null)
-        {
-            _back.Content = ChoroplethMath.Format(labels.BackFormat, area.RegionNoun);
-        }
-        if (_emptyBack is not null)
-        {
-            _emptyBack.Content = ChoroplethMath.Format(labels.BackToAllFormat, area.RegionNoun);
-        }
-        if (_backPresence is not null)
-        {
-            _backPresence.IsPresent = open is not null;
-        }
+        _sideCount?.Text = showEmpty && open is not null ? open.Name : CountPhrase(level.Regions.Count, area, levelIsSub);
+        _sideNote?.Text = ChoroplethMath.Format(labels.RankedByFormat, metric.EffectiveNoun);
+        _back?.Content = ChoroplethMath.Format(labels.BackFormat, area.RegionNoun);
+        _emptyBack?.Content = ChoroplethMath.Format(labels.BackToAllFormat, area.RegionNoun);
+        _backPresence?.IsPresent = open is not null;
         if (_metricSwitch is not null)
         {
             AutomationProperties.SetName(_metricSwitch, labels.MetricSwitchName);
         }
-        if (_areaSwitch is not null)
-        {
-            _areaSwitch.Label = labels.AreaSwitchName;
-        }
+        _areaSwitch?.Label = labels.AreaSwitchName;
 
         _shownArea = area;
         _shownMetric = metric;

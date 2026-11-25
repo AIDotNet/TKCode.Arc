@@ -365,14 +365,8 @@ internal sealed class InstallSnippetTab : AvaloniaButton
             _mark.Data = _item.Mark;
             _mark.IsVisible = hasGlyph && _showsMarks;
         }
-        if (_monogram is not null)
-        {
-            _monogram.IsVisible = hasMonogram && _showsMarks;
-        }
-        if (_monogramText is not null)
-        {
-            _monogramText.Text = _item.Monogram;
-        }
+        _monogram?.IsVisible = hasMonogram && _showsMarks;
+        _monogramText?.Text = _item.Monogram;
         if (_label is not null)
         {
             _label.Text = _item.Label;

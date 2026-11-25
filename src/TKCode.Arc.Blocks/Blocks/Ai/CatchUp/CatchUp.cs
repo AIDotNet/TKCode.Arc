@@ -208,14 +208,8 @@ public class CatchUp : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_filter is not null)
-        {
-            _filter.SelectionChanged -= OnFilterChanged;
-        }
-        if (_markAll is not null)
-        {
-            _markAll.Click -= OnMarkAllClick;
-        }
+        _filter?.SelectionChanged -= OnFilterChanged;
+        _markAll?.Click -= OnMarkAllClick;
         _list = e.NameScope.Find<Panel>(ListPart);
         _filter = e.NameScope.Find<SegmentedControl>(FilterPart);
         _markAll = e.NameScope.Find<Button>(MarkAllPart);
@@ -223,14 +217,8 @@ public class CatchUp : TemplatedControl
         _unreadText = e.NameScope.Find<TextBlock>("PART_Unread");
         _recap = e.NameScope.Find<ArcContentSwap>("PART_Recap");
         _announcer = e.NameScope.Find<AiAnnouncer>("PART_Announcer");
-        if (_filter is not null)
-        {
-            _filter.SelectionChanged += OnFilterChanged;
-        }
-        if (_markAll is not null)
-        {
-            _markAll.Click += OnMarkAllClick;
-        }
+        _filter?.SelectionChanged += OnFilterChanged;
+        _markAll?.Click += OnMarkAllClick;
         BuildFilters();
         BuildList();
         Refresh();
@@ -388,14 +376,8 @@ public class CatchUp : TemplatedControl
         UnreadCount = (Items ?? []).Count(i => !_read.Contains(i.Id));
         var caughtUp = UnreadCount == 0;
         PseudoClasses.Set(CaughtUpPseudoClass, caughtUp);
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
-        if (_unreadText is not null)
-        {
-            _unreadText.Text = caughtUp ? Since : string.IsNullOrEmpty(Since) ? labels.UnreadCount(UnreadCount) : $"{Since} · {labels.UnreadCount(UnreadCount)}";
-        }
+        _title?.Text = labels.Title;
+        _unreadText?.Text = caughtUp ? Since : string.IsNullOrEmpty(Since) ? labels.UnreadCount(UnreadCount) : $"{Since} · {labels.UnreadCount(UnreadCount)}";
         if (_markAll is not null)
         {
             _markAll.Content = labels.MarkAllRead;

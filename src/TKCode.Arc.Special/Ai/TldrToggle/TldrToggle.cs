@@ -308,14 +308,8 @@ public partial class TldrToggle : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_mode is not null)
-        {
-            _mode.SelectionChanged -= OnModeSelected;
-        }
-        if (_length is not null)
-        {
-            _length.ValueCommitted -= OnLengthCommitted;
-        }
+        _mode?.SelectionChanged -= OnModeSelected;
+        _length?.ValueCommitted -= OnLengthCommitted;
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _meta = e.NameScope.Find<TextBlock>(MetaPart);
         _sourceMark = e.NameScope.Find<ArcGlyph>(SourceMarkPart);
@@ -327,10 +321,7 @@ public partial class TldrToggle : TemplatedControl
         _mode = e.NameScope.Find<SegmentedControl>(ModePart);
         _length = e.NameScope.Find<Slider>(LengthPart);
         _bodyBox = e.NameScope.Find<AiHeightBox>(BodyBoxPart);
-        if (_bodyBox is not null)
-        {
-            _bodyBox.HeightSpring = AiGlyphMotion.Settle;
-        }
+        _bodyBox?.HeightSpring = AiGlyphMotion.Settle;
         _body = e.NameScope.Find<ArcContentSwap>(BodyPart);
         _state = e.NameScope.Find<ArcContentSwap>(StatePart);
         _actions = e.NameScope.Find<ArcContentSwap>(ActionsPart);
@@ -349,10 +340,7 @@ public partial class TldrToggle : TemplatedControl
             _length.IsValueVisible = true;
             _length.ValueCommitted += OnLengthCommitted;
         }
-        if (_mode is not null)
-        {
-            _mode.SelectionChanged += OnModeSelected;
-        }
+        _mode?.SelectionChanged += OnModeSelected;
         _shownStatus = null;
         _shownActions = null;
         ApplyLabels();
@@ -563,10 +551,7 @@ public partial class TldrToggle : TemplatedControl
     private void BuildHeader()
     {
         var article = DisplayedArticle;
-        if (_title is not null)
-        {
-            _title.Text = article.Title;
-        }
+        _title?.Text = article.Title;
         AutomationProperties.SetName(this, article.Title);
         if (_meta is not null)
         {
@@ -581,28 +566,16 @@ public partial class TldrToggle : TemplatedControl
             _sourceMark.Data = article.SourceMark;
             _sourceMark.IsVisible = hasMark;
         }
-        if (_monogram is not null)
-        {
-            _monogram.IsVisible = !hasMark && hasSource;
-        }
-        if (_monogramText is not null)
-        {
-            _monogramText.Text = hasSource ? article.SourceName!.Trim()[..1].ToUpperInvariant() : null;
-        }
+        _monogram?.IsVisible = !hasMark && hasSource;
+        _monogramText?.Text = hasSource ? article.SourceName!.Trim()[..1].ToUpperInvariant() : null;
         var hasAuthor = !string.IsNullOrWhiteSpace(article.AuthorName);
-        if (_authorRow is not null)
-        {
-            _authorRow.IsVisible = hasAuthor;
-        }
+        _authorRow?.IsVisible = hasAuthor;
         if (_avatar is not null)
         {
             _avatar.DisplayName = article.AuthorName;
             _avatar.Source = article.AuthorAvatar;
         }
-        if (_author is not null)
-        {
-            _author.Text = article.AuthorName;
-        }
+        _author?.Text = article.AuthorName;
     }
 
     /// <summary>Starts watching for the card to be half in view for a second (autoplay).</summary>

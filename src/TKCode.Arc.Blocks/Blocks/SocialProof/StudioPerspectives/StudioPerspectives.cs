@@ -239,22 +239,10 @@ public class StudioPerspectives : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_pause is not null)
-        {
-            _pause.Click -= OnPauseClick;
-        }
-        if (_progress is not null)
-        {
-            _progress.SegmentPressed -= OnSegmentPressed;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
+        _pause?.Click -= OnPauseClick;
+        _progress?.SegmentPressed -= OnSegmentPressed;
         _quote = e.NameScope.Find<ArcContentSwap>(QuotePart);
         _person = e.NameScope.Find<ArcContentSwap>(PersonPart);
         _progress = e.NameScope.Find<StudioPerspectivesProgress>(ProgressPart);
@@ -262,22 +250,10 @@ public class StudioPerspectives : TemplatedControl
         _next = e.NameScope.Find<Button>(NextPart);
         _pause = e.NameScope.Find<Button>(PausePart);
         _announcer = e.NameScope.Find<SiteAnnouncer>("PART_Announcer");
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_pause is not null)
-        {
-            _pause.Click += OnPauseClick;
-        }
-        if (_progress is not null)
-        {
-            _progress.SegmentPressed += OnSegmentPressed;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
+        _pause?.Click += OnPauseClick;
+        _progress?.SegmentPressed += OnSegmentPressed;
         _shown = -1;
         ShowCurrent();
         UpdateLabels();
@@ -291,10 +267,7 @@ public class StudioPerspectives : TemplatedControl
             _clock = new MotionTimeline(this);
             _clock.Changed += value =>
             {
-                if (_progress is not null)
-                {
-                    _progress.Progress = value;
-                }
+                _progress?.Progress = value;
             };
             _clock.Completed += OnClockCompleted;
         }

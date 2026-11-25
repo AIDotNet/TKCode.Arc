@@ -288,15 +288,9 @@ internal sealed class DeveloperListPanel : Control
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnItemsChanged;
-        }
+        _observed?.CollectionChanged -= OnItemsChanged;
         _observed = next;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnItemsChanged;
-        }
+        _observed?.CollectionChanged += OnItemsChanged;
     }
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => Sync(animate: true);

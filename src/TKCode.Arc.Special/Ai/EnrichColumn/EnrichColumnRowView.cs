@@ -74,20 +74,14 @@ internal sealed class EnrichColumnRowView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnAction;
-        }
+        _action?.Click -= OnAction;
         _logo = e.NameScope.Find<EnrichColumnLogo>(LogoPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _status = e.NameScope.Find<EnrichColumnStatusGlyph>(StatusPart);
         _cell = e.NameScope.Find<ArcContentSwap>(CellPart);
         _action = e.NameScope.Find<EnrichColumnButton>(ActionPart);
         _actionGlyph = e.NameScope.Find<ArcGlyph>(ActionGlyphPart);
-        if (_action is not null)
-        {
-            _action.Click += OnAction;
-        }
+        _action?.Click += OnAction;
         _shownKey = null;
         _nameKey = null;
         _running = null;
@@ -103,25 +97,16 @@ internal sealed class EnrichColumnRowView : TemplatedControl
         {
             return;
         }
-        if (_item is not null)
-        {
-            _item.Changed -= OnItemChanged;
-        }
+        _item?.Changed -= OnItemChanged;
         _item = item;
-        if (_item is not null)
-        {
-            _item.Changed += OnItemChanged;
-        }
+        _item?.Changed += OnItemChanged;
         Apply(instant: true);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
-        if (_item is not null)
-        {
-            _item.Changed -= OnItemChanged;
-        }
+        _item?.Changed -= OnItemChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -187,10 +172,7 @@ internal sealed class EnrichColumnRowView : TemplatedControl
         var labels = Labels;
         var density = Density;
 
-        if (_logo is not null)
-        {
-            _logo.Row = row;
-        }
+        _logo?.Row = row;
         UpdateName(row, density);
 
         if (_status is not null)
@@ -213,10 +195,7 @@ internal sealed class EnrichColumnRowView : TemplatedControl
             var failed = cell.Status == EnrichColumnCellStatus.Failed;
             AutomationProperties.SetName(_action, failed ? labels.RetryRow(row.Name) : labels.RunRow(row.Name));
             Tooltip.SetTip(_action, failed ? labels.RetryRow(row.Name) : labels.RunRow(row.Name));
-            if (_actionGlyph is not null)
-            {
-                _actionGlyph.Data = failed ? ArcIcons.RotateCcw : cell.HasValue ? ArcIcons.RefreshCw : ArcIcons.Play;
-            }
+            _actionGlyph?.Data = failed ? ArcIcons.RotateCcw : cell.HasValue ? ArcIcons.RefreshCw : ArcIcons.Play;
         }
 
         UpdateCell(item, instant);

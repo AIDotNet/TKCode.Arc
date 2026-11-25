@@ -312,18 +312,9 @@ public partial class RolesPermissions
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged -= OnScrollChanged;
-        }
-        if (_discard is not null)
-        {
-            _discard.Click -= OnDiscardClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
+        _scroller?.ScrollChanged -= OnScrollChanged;
+        _discard?.Click -= OnDiscardClick;
+        _save?.Click -= OnSaveClick;
         _header = e.NameScope.Find<RolesPermissionsHeaderPanel>(HeaderPart);
         _subtitle = e.NameScope.Find<WrapPanel>(SubtitlePart);
         _members = e.NameScope.Find<AvatarGroup>(MembersPart);
@@ -345,32 +336,17 @@ public partial class RolesPermissions
             _grid.Owner = this;
             _grid.Scroller = _scroller;
         }
-        if (_viewport is not null)
-        {
-            _viewport.Grid = _grid;
-        }
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged += OnScrollChanged;
-        }
-        if (_discard is not null)
-        {
-            _discard.Click += OnDiscardClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
+        _viewport?.Grid = _grid;
+        _scroller?.ScrollChanged += OnScrollChanged;
+        _discard?.Click += OnDiscardClick;
+        _save?.Click += OnSaveClick;
         if (_bar is not null)
         {
             _bar.RenderTransform = _barTranslate;
             _bar.IsVisible = false;
             AutomationProperties.SetName(_bar, Labels.ReviewBarName);
         }
-        if (_barSlot is not null)
-        {
-            _barSlot.Height = 0;
-        }
+        _barSlot?.Height = 0;
         _barOpen = false;
         _barTitleKind = BarTitleKind.None;
         _saveContentKind = null;
@@ -474,15 +450,9 @@ public partial class RolesPermissions
 
     private static void Observe(ref INotifyCollectionChanged? field, object? oldValue, object? newValue, NotifyCollectionChangedEventHandler handler)
     {
-        if (field is not null)
-        {
-            field.CollectionChanged -= handler;
-        }
+        field?.CollectionChanged -= handler;
         field = newValue as INotifyCollectionChanged;
-        if (field is not null)
-        {
-            field.CollectionChanged += handler;
-        }
+        field?.CollectionChanged += handler;
     }
 
     private void OnRolesSourceChanged(object? sender, NotifyCollectionChangedEventArgs e)
@@ -514,10 +484,7 @@ public partial class RolesPermissions
             ((IPseudoClasses)_grid.Classes).Set(NarrowPseudoClass, narrow && !compact);
             ((IPseudoClasses)_grid.Classes).Set(CompactPseudoClass, compact);
         }
-        if (_pendingWord is not null)
-        {
-            _pendingWord.IsVisible = !compact;
-        }
+        _pendingWord?.IsVisible = !compact;
     }
 
     private void OnScrollChanged(object? sender, ScrollChangedEventArgs e)
@@ -746,34 +713,19 @@ public partial class RolesPermissions
 
     private void UpdateCounts()
     {
-        if (_memberDigits is not null)
-        {
-            _memberDigits.Value = MembersCount();
-        }
-        if (_roleDigits is not null)
-        {
-            _roleDigits.Value = _roles.Count;
-        }
+        _memberDigits?.Value = MembersCount();
+        _roleDigits?.Value = _roles.Count;
     }
 
     private void UpdateLegends()
     {
-        if (_lockedLegend is not null)
-        {
-            _lockedLegend.Text = Labels.LockedLegend;
-        }
-        if (_unsavedLegend is not null)
-        {
-            _unsavedLegend.Text = Labels.UnsavedLegend;
-        }
+        _lockedLegend?.Text = Labels.LockedLegend;
+        _unsavedLegend?.Text = Labels.UnsavedLegend;
         if (_bar is not null)
         {
             AutomationProperties.SetName(_bar, Labels.ReviewBarName);
         }
-        if (_discard is not null)
-        {
-            _discard.Content = Labels.Discard;
-        }
+        _discard?.Content = Labels.Discard;
     }
 
     #endregion

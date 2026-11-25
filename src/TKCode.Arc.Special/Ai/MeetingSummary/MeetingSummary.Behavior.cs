@@ -702,10 +702,7 @@ public partial class MeetingSummary
         card.Quote = "“" + quote.Text + "”";
         if (!ReferenceEquals(_quoteRow, row))
         {
-            if (_quoteRow is not null)
-            {
-                _quoteRow.IsQuoted = false;
-            }
+            _quoteRow?.IsQuoted = false;
             row.IsQuoted = true;
             _quoteRow = row;
         }

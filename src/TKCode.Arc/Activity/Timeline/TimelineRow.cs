@@ -183,10 +183,7 @@ internal sealed class TimelineRow : TemplatedControl
             _segment.RenderTransformOrigin = new RelativePoint(0.5, 0, RelativeUnit.Relative);
             _segment.RenderTransform = _segmentScale;
         }
-        if (_content is not null)
-        {
-            _content.RenderTransform = _contentShift;
-        }
+        _content?.RenderTransform = _contentShift;
         if (_time is not null)
         {
             // Times keep a steady column: "9m" becoming "10m" never rewraps the title beside it.
@@ -202,10 +199,7 @@ internal sealed class TimelineRow : TemplatedControl
             _trigger.Row = this;
             _trigger.Click += OnTriggerClick;
         }
-        if (_grow is not null)
-        {
-            _grow.Closed += OnGrowClosed;
-        }
+        _grow?.Closed += OnGrowClosed;
         if (Model is { } model)
         {
             ApplyModel(model);
@@ -257,10 +251,7 @@ internal sealed class TimelineRow : TemplatedControl
     public void Clear()
     {
         _revealGeneration++;
-        if (_detailHost is not null)
-        {
-            _detailHost.Child = null;
-        }
+        _detailHost?.Child = null;
         Model = null;
     }
 
@@ -393,10 +384,7 @@ internal sealed class TimelineRow : TemplatedControl
         var tone = hasAvatar ? TimelineTone.Neutral : item.Tone;
         if (tone == TimelineTone.Neutral)
         {
-            if (_markerTone is not null)
-            {
-                _markerTone.IsVisible = false;
-            }
+            _markerTone?.IsVisible = false;
             return;
         }
         if (_markerTone is null)
@@ -706,10 +694,7 @@ internal sealed class TimelineRow : TemplatedControl
         }
         _dropFade ??= CreateValue(1, ApplyDrop);
         IsHitTestVisible = false;
-        if (_trigger is not null)
-        {
-            _trigger.Focusable = false;
-        }
+        _trigger?.Focusable = false;
         if (level == ArcMotionLevel.Full)
         {
             _grow.Set(false, MotionSpec.Spring(TimelineMotion.RowExit));
@@ -748,10 +733,7 @@ internal sealed class TimelineRow : TemplatedControl
         _markerFade?.Jump(1);
         _lineDraw?.Jump(1);
         _markerScale.ScaleX = _markerScale.ScaleY = 1;
-        if (_marker is not null)
-        {
-            _marker.Opacity = 1;
-        }
+        _marker?.Opacity = 1;
         _segmentScale.ScaleY = 1;
     }
 
@@ -796,10 +778,7 @@ internal sealed class TimelineRow : TemplatedControl
     {
         var scale = _markerPop?.Value ?? 1;
         _markerScale.ScaleX = _markerScale.ScaleY = scale;
-        if (_marker is not null)
-        {
-            _marker.Opacity = Math.Clamp(_markerFade?.Value ?? 1, 0, 1);
-        }
+        _marker?.Opacity = Math.Clamp(_markerFade?.Value ?? 1, 0, 1);
     }
 
     private void ApplyLine(double _)

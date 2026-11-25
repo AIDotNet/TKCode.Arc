@@ -288,10 +288,7 @@ public partial class RichTextEditor
     private void ApplyCustomLanguage()
     {
         var name = _customLanguageBox?.Text?.Trim();
-        if (_customLanguagePopup is not null)
-        {
-            _customLanguagePopup.IsOpen = false;
-        }
+        _customLanguagePopup?.IsOpen = false;
         _engine.SetCodeLanguage(string.IsNullOrEmpty(name) ? null : name);
         FocusEditor();
     }

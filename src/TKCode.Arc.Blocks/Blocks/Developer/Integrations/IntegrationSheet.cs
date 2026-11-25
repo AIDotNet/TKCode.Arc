@@ -167,18 +167,9 @@ internal sealed class IntegrationSheet : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pill is not null)
-        {
-            _pill.Click -= OnPillClick;
-        }
-        if (_frequency is not null)
-        {
-            _frequency.SelectionChanged -= OnFrequencyChanged;
-        }
-        if (_hold is not null)
-        {
-            _hold.Confirmed -= OnHoldConfirmed;
-        }
+        _pill?.Click -= OnPillClick;
+        _frequency?.SelectionChanged -= OnFrequencyChanged;
+        _hold?.Confirmed -= OnHoldConfirmed;
         _pill = e.NameScope.Find<IntegrationConnectPill>(PillPart);
         _avatar = e.NameScope.Find<Avatar>(AvatarPart);
         _meta = e.NameScope.Find<ArcContentSwap>(MetaPart);
@@ -188,14 +179,8 @@ internal sealed class IntegrationSheet : TemplatedControl
         _settingsBody = e.NameScope.Find<Control>(SettingsBodyPart);
         _frequency = e.NameScope.Find<Select>(FrequencyPart);
         _hold = e.NameScope.Find<HoldToConfirm>(HoldPart);
-        if (_pill is not null)
-        {
-            _pill.Click += OnPillClick;
-        }
-        if (_frequency is not null)
-        {
-            _frequency.SelectionChanged += OnFrequencyChanged;
-        }
+        _pill?.Click += OnPillClick;
+        _frequency?.SelectionChanged += OnFrequencyChanged;
         if (_hold is not null)
         {
             _hold.Icon = IntegrationIcons.Unplug;
@@ -256,10 +241,7 @@ internal sealed class IntegrationSheet : TemplatedControl
                 break;
         }
         HasPerson = person;
-        if (_avatar is not null)
-        {
-            _avatar.DisplayName = person ? item.ConnectedBy : null;
-        }
+        _avatar?.DisplayName = person ? item.ConnectedBy : null;
         SetSwap(_meta, ref _metaText, text, animate);
     }
 

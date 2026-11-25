@@ -178,8 +178,8 @@ internal sealed class DetailedLineRangeMapping : LineRangeMapping
 {
     public static DetailedLineRangeMapping FromRangeMappings(IReadOnlyList<RangeMapping> rangeMappings)
     {
-        var originalRange = LineRangeDiffExtensions.Join(rangeMappings.Select(r => LineRangeDiffExtensions.FromRangeInclusive(r.OriginalRange)).ToList());
-        var modifiedRange = LineRangeDiffExtensions.Join(rangeMappings.Select(r => LineRangeDiffExtensions.FromRangeInclusive(r.ModifiedRange)).ToList());
+        var originalRange = LineRange.Join(rangeMappings.Select(r => LineRange.FromRangeInclusive(r.OriginalRange)).ToList());
+        var modifiedRange = LineRange.Join(rangeMappings.Select(r => LineRange.FromRangeInclusive(r.ModifiedRange)).ToList());
         return new DetailedLineRangeMapping(originalRange, modifiedRange, [.. rangeMappings]);
     }
 

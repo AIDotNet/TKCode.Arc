@@ -46,7 +46,11 @@ internal sealed class DiffChange(int originalStart, int originalLength, int modi
 }
 
 /// <summary>The result of <see cref="LcsDiff.ComputeDiff(bool)"/> (upstream's IDiffResult).</summary>
-internal sealed record DiffResult(bool QuitEarly, IReadOnlyList<DiffChange> Changes);
+internal sealed class DiffResult(bool quitEarly, IReadOnlyList<DiffChange> changes)
+{
+    public bool QuitEarly { get; } = quitEarly;
+    public IReadOnlyList<DiffChange> Changes { get; } = changes;
+}
 
 /// <summary>The characters of a string, by UTF-16 code unit (upstream's StringDiffSequence).</summary>
 internal sealed class StringDiffSequence(string source) : IDiffSequence

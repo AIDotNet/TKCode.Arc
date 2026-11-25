@@ -197,10 +197,7 @@ internal sealed class ImportWizardUploadView : ImportWizardStepView
             _footer.Left = null;
             _sample = null;
         }
-        if (_sample is not null)
-        {
-            _sample.Text = Labels.UseSample;
-        }
+        _sample?.Text = Labels.UseSample;
     }
 
     /// <summary>The drop zone was activated (click, Enter, Space).</summary>

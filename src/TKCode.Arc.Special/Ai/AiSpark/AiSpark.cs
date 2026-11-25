@@ -112,7 +112,6 @@ public class AiSpark : TemplatedControl
     public static readonly DirectProperty<AiSpark, AiSparkStatus> EffectiveStatusProperty =
         AvaloniaProperty.RegisterDirect<AiSpark, AiSparkStatus>(nameof(EffectiveStatus), o => o.EffectiveStatus);
 
-    private AiSparkStatus _effectiveStatus;
     private Border? _frame;
     private AiSparkMark? _mark;
     private ArcContentSwap? _label;
@@ -171,8 +170,8 @@ public class AiSpark : TemplatedControl
     /// <inheritdoc cref="EffectiveStatusProperty"/>
     public AiSparkStatus EffectiveStatus
     {
-        get => _effectiveStatus;
-        private set => SetAndRaise(EffectiveStatusProperty, ref _effectiveStatus, value);
+        get;
+        private set => SetAndRaise(EffectiveStatusProperty, ref field, value);
     }
 
     /// <summary>The text the pill shows now (the label, or the built-in word for the status).</summary>
@@ -195,10 +194,7 @@ public class AiSpark : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_mark is not null)
-        {
-            _mark.EffectiveStatusChanged -= OnMarkStatusChanged;
-        }
+        _mark?.EffectiveStatusChanged -= OnMarkStatusChanged;
         _frame = e.NameScope.Find<Border>(FramePart);
         _mark = e.NameScope.Find<AiSparkMark>(MarkPart);
         _labelBox = e.NameScope.Find<SpringSizeDecorator>(LabelBoxPart);
@@ -293,10 +289,7 @@ public class AiSpark : TemplatedControl
             _mark.Height = size;
             _mark.IsTile = Variant == AiSparkVariant.Avatar;
         }
-        if (_labelBox is not null)
-        {
-            _labelBox.IsVisible = Variant == AiSparkVariant.Pill;
-        }
+        _labelBox?.IsVisible = Variant == AiSparkVariant.Pill;
     }
 
     private void UpdateLabel()

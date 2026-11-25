@@ -33,10 +33,7 @@ internal sealed partial class CodeEditorView
     {
         DetachTokenTheme();
         _themeService = _editor?.LanguageServices.ThemeService;
-        if (_themeService is not null)
-        {
-            _themeService.DidColorThemeChange += OnColorThemeChanged;
-        }
+        _themeService?.DidColorThemeChange += OnColorThemeChanged;
 
         UpdatePalette();
     }

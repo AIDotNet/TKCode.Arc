@@ -151,13 +151,12 @@ public class Stepper : TemplatedControl
         remove => RemoveHandler(StepSelectedEvent, value);
     }
 
-    private bool _isComplete;
 
     /// <summary>True when <see cref="CurrentIndex"/> is at or past the step count.</summary>
     public bool IsComplete
     {
-        get => _isComplete;
-        private set => SetAndRaise(IsCompleteProperty, ref _isComplete, value);
+        get;
+        private set => SetAndRaise(IsCompleteProperty, ref field, value);
     }
 
     private string? _captionLabel;
@@ -271,15 +270,9 @@ public class Stepper : TemplatedControl
     // User data is observed only while the stepper is in the tree, so a long-lived source never keeps it alive.
     private void ObserveSource()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourceChanged;
-        }
+        _observed?.CollectionChanged -= OnSourceChanged;
         _observed = IsAttached ? ItemsSource as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourceChanged;
-        }
+        _observed?.CollectionChanged += OnSourceChanged;
     }
 
     private bool IsAttached => TopLevel.GetTopLevel(this) is not null;
@@ -460,10 +453,7 @@ public class Stepper : TemplatedControl
         var compact = IsCompact || (!vertical && _narrow);
         PseudoClasses.Set(VerticalPseudoClass, vertical);
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_panel is not null)
-        {
-            _panel.Orientation = Orientation;
-        }
+        _panel?.Orientation = Orientation;
         for (var i = 0; i < _items.Count; i++)
         {
             var step = steps[i];

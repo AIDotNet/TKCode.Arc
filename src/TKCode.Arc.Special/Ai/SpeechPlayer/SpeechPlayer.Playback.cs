@@ -90,10 +90,7 @@ public partial class SpeechPlayer
         }
         IsOpen = true;
         PseudoClasses.Set(OpenPseudoClass, true);
-        if (_dock is not null)
-        {
-            _dock.Content = _controls;
-        }
+        _dock?.Content = _controls;
         _time = 0;
         _shownSecond = -1;
         CurrentWordIndex = -1;
@@ -208,10 +205,7 @@ public partial class SpeechPlayer
         _error = null;
         _time = 0;
         CurrentWordIndex = -1;
-        if (_dock is not null)
-        {
-            _dock.Content = _actionRow;
-        }
+        _dock?.Content = _actionRow;
         SyncControls();
         SyncWords(animate: false);
         Announce(Labels.Stopped);
@@ -531,10 +525,7 @@ public partial class SpeechPlayer
         {
             IsOpen = false;
             PseudoClasses.Set(OpenPseudoClass, false);
-            if (_dock is not null)
-            {
-                _dock.Content = _actionRow;
-            }
+            _dock?.Content = _actionRow;
         }
         State = SpeechPlayerState.Idle;
         SyncControls();

@@ -405,10 +405,7 @@ public partial class WorkflowCanvas
         _pickedEdge = null;
         _pickedChange = null;
         _keyConnect = false;
-        if (_overlay is not null)
-        {
-            _overlay.Hint = null;
-        }
+        _overlay?.Hint = null;
         UpdatePorts();
     }
 

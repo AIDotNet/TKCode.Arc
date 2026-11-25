@@ -24,7 +24,7 @@ public sealed class MarkdownStream
     private readonly DispatcherTimer _timer;
     private readonly Action _drainIngress;
     private readonly Action<TimeSpan> _onFrame;
-    private readonly object _ingressLock = new();
+    private readonly SyncLock _ingressLock = new();
     private readonly StringBuilder _ingress = new();
     private TimeSpan _ingressTime;
     private bool _completeQueued;

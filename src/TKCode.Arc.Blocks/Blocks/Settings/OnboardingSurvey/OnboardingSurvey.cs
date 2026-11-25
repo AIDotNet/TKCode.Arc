@@ -72,13 +72,12 @@ public class OnboardingSurvey : TemplatedControl
     internal static readonly StyledProperty<double> NarrowWidthProperty =
         AvaloniaProperty.Register<OnboardingSurvey, double>(nameof(NarrowWidth), 440);
 
-    private int _currentIndex;
 
     /// <inheritdoc cref="CurrentIndexProperty"/>
     public int CurrentIndex
     {
-        get => _currentIndex;
-        private set => SetAndRaise(CurrentIndexProperty, ref _currentIndex, value);
+        get;
+        private set => SetAndRaise(CurrentIndexProperty, ref field, value);
     }
 
     private bool _isComplete;
@@ -322,26 +321,11 @@ public class OnboardingSurvey : TemplatedControl
         _doneDescription = e.NameScope.Find<TextBlock>("PART_DoneDescription");
         _doneGlyph = e.NameScope.Find<StrokeDrawGlyph>("PART_DoneGlyph");
         _announcer = e.NameScope.Find<AuthAnnouncer>(AnnouncerPart);
-        if (_continue is not null)
-        {
-            _continue.Click += OnContinueClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_skipQuestion is not null)
-        {
-            _skipQuestion.Click += OnSkipQuestionClick;
-        }
-        if (_skipSurvey is not null)
-        {
-            _skipSurvey.Click += OnSkipSurveyClick;
-        }
-        if (_doneGlyph is not null)
-        {
-            _doneGlyph.AttachedToVisualTree += OnDoneGlyphAttached;
-        }
+        _continue?.Click += OnContinueClick;
+        _back?.Click += OnBackClick;
+        _skipQuestion?.Click += OnSkipQuestionClick;
+        _skipSurvey?.Click += OnSkipSurveyClick;
+        _doneGlyph?.AttachedToVisualTree += OnDoneGlyphAttached;
         _views.Clear();
         ShowCurrent(1, animate: false);
         UpdateChrome();
@@ -349,26 +333,11 @@ public class OnboardingSurvey : TemplatedControl
 
     private void Detach()
     {
-        if (_continue is not null)
-        {
-            _continue.Click -= OnContinueClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_skipQuestion is not null)
-        {
-            _skipQuestion.Click -= OnSkipQuestionClick;
-        }
-        if (_skipSurvey is not null)
-        {
-            _skipSurvey.Click -= OnSkipSurveyClick;
-        }
-        if (_doneGlyph is not null)
-        {
-            _doneGlyph.AttachedToVisualTree -= OnDoneGlyphAttached;
-        }
+        _continue?.Click -= OnContinueClick;
+        _back?.Click -= OnBackClick;
+        _skipQuestion?.Click -= OnSkipQuestionClick;
+        _skipSurvey?.Click -= OnSkipSurveyClick;
+        _doneGlyph?.AttachedToVisualTree -= OnDoneGlyphAttached;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -619,14 +588,8 @@ public class OnboardingSurvey : TemplatedControl
         var labels = Labels;
         var total = _shown.Count;
         PseudoClasses.Set(DonePseudoClass, IsComplete);
-        if (_headerHost is not null)
-        {
-            _headerHost.IsPresent = !IsComplete;
-        }
-        if (_counter is not null)
-        {
-            _counter.Text = labels.Counter(Math.Min(CurrentIndex + 1, total), total);
-        }
+        _headerHost?.IsPresent = !IsComplete;
+        _counter?.Text = labels.Counter(Math.Min(CurrentIndex + 1, total), total);
         if (_progress is not null)
         {
             // The bar counts finished questions, so it fills as the person moves on, not when a question opens.
@@ -659,14 +622,8 @@ public class OnboardingSurvey : TemplatedControl
                 arc.Variant = IsComplete ? ButtonVariant.Secondary : ButtonVariant.Primary;
             }
         }
-        if (_doneTitle is not null)
-        {
-            _doneTitle.Text = _skipped ? labels.SkippedTitle : labels.DoneTitle;
-        }
-        if (_doneDescription is not null)
-        {
-            _doneDescription.Text = _skipped ? labels.SkippedDescription : labels.DoneDescription;
-        }
+        _doneTitle?.Text = _skipped ? labels.SkippedTitle : labels.DoneTitle;
+        _doneDescription?.Text = _skipped ? labels.SkippedDescription : labels.DoneDescription;
     }
 
     private void GoTo(int index, int direction)

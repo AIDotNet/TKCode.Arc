@@ -261,10 +261,7 @@ public partial class MetricExplorer
 
     private void UpdateHeader()
     {
-        if (_header is not null)
-        {
-            _header.IsVisible = Title is not null || Caption is not null;
-        }
+        _header?.IsVisible = Title is not null || Caption is not null;
     }
 
     private void OnMetricsCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnDataChanged();
@@ -273,28 +270,16 @@ public partial class MetricExplorer
 
     private void ObserveMetrics(IEnumerable? source)
     {
-        if (_observedMetrics is not null)
-        {
-            _observedMetrics.CollectionChanged -= OnMetricsCollectionChanged;
-        }
+        _observedMetrics?.CollectionChanged -= OnMetricsCollectionChanged;
         _observedMetrics = source as INotifyCollectionChanged;
-        if (_observedMetrics is not null)
-        {
-            _observedMetrics.CollectionChanged += OnMetricsCollectionChanged;
-        }
+        _observedMetrics?.CollectionChanged += OnMetricsCollectionChanged;
     }
 
     private void ObserveRanges(IEnumerable? source)
     {
-        if (_observedRanges is not null)
-        {
-            _observedRanges.CollectionChanged -= OnRangesCollectionChanged;
-        }
+        _observedRanges?.CollectionChanged -= OnRangesCollectionChanged;
         _observedRanges = source as INotifyCollectionChanged;
-        if (_observedRanges is not null)
-        {
-            _observedRanges.CollectionChanged += OnRangesCollectionChanged;
-        }
+        _observedRanges?.CollectionChanged += OnRangesCollectionChanged;
     }
 
     private void OnDataChanged()

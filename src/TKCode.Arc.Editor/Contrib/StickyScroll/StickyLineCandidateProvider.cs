@@ -45,8 +45,13 @@ internal interface IStickyScrollEditor
 }
 
 /// <summary>The scope lines that stick at the top (upstream's StickyScrollWidgetState).</summary>
-internal sealed record StickyScrollWidgetState(IReadOnlyList<int> StartLineNumbers, IReadOnlyList<int> EndLineNumbers, double LastLineRelativePosition, int? ShowEndForLine = null)
+internal sealed class StickyScrollWidgetState(IReadOnlyList<int> startLineNumbers, IReadOnlyList<int> endLineNumbers, double lastLineRelativePosition, int? showEndForLine = null)
 {
+    public IReadOnlyList<int> StartLineNumbers { get; } = startLineNumbers;
+    public IReadOnlyList<int> EndLineNumbers { get; } = endLineNumbers;
+    public double LastLineRelativePosition { get; } = lastLineRelativePosition;
+    public int? ShowEndForLine { get; } = showEndForLine;
+
     public static readonly StickyScrollWidgetState Empty = new([], [], 0);
 
     /// <summary>Whether the two states show the same lines at the same place (upstream's equals).</summary>

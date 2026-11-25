@@ -470,19 +470,13 @@ public class ScrubInput : TemplatedControl
         _tag = e.NameScope.Find<Border>(TagPart);
         _tagText = e.NameScope.Find<TextBlock>(TagTextPart);
 
-        if (_body is not null)
-        {
-            _body.RenderTransform = _lean;
-        }
+        _body?.RenderTransform = _lean;
         if (_tag is not null)
         {
             _tag.RenderTransform = new TransformGroup { Children = { _tagScale, _tagOffset } };
             _tag.IsVisible = false;
         }
-        if (_tagText is not null)
-        {
-            _tagText.FontFeatures = s_tabular;
-        }
+        _tagText?.FontFeatures = s_tabular;
         if (_handle is not null)
         {
             // Mouse and pen: Arc starts after 3px of travel whatever the direction. Touch: a vertical start scrolls (touch-action: pan-y).
@@ -516,10 +510,7 @@ public class ScrubInput : TemplatedControl
             _editor.LostFocus += OnEditorLostFocus;
             _editor.AddHandler(PointerReleasedEvent, OnEditorPointerReleased, RoutingStrategies.Bubble, true);
         }
-        if (_unit is not null)
-        {
-            _unit.Click += OnUnitClick;
-        }
+        _unit?.Click += OnUnitClick;
 
         _strain = new MotionValue<double>(this, 0, MotionVectors.Double);
         _strain.Changed += OnStrainChanged;
@@ -533,10 +524,7 @@ public class ScrubInput : TemplatedControl
         UpdateLabel();
         UpdateUnit();
         UpdateShell();
-        if (_shell is not null)
-        {
-            _shell.Fraction = TargetFraction;
-        }
+        _shell?.Fraction = TargetFraction;
         SyncText();
     }
 
@@ -567,10 +555,7 @@ public class ScrubInput : TemplatedControl
             _editor.LostFocus -= OnEditorLostFocus;
             _editor.RemoveHandler(PointerReleasedEvent, OnEditorPointerReleased);
         }
-        if (_unit is not null)
-        {
-            _unit.Click -= OnUnitClick;
-        }
+        _unit?.Click -= OnUnitClick;
         _strain?.Stop();
         _fill?.Stop();
         _tagRise?.Stop();
@@ -663,10 +648,7 @@ public class ScrubInput : TemplatedControl
 
     private void UpdateShell()
     {
-        if (_shell is not null)
-        {
-            _shell.IsTrackVisible = ShowTrack;
-        }
+        _shell?.IsTrackVisible = ShowTrack;
     }
 
     #endregion
@@ -678,19 +660,13 @@ public class ScrubInput : TemplatedControl
 
     private void OnStrainChanged(double strain)
     {
-        if (_shell is not null)
-        {
-            _shell.Strain = strain;
-        }
+        _shell?.Strain = strain;
         _lean.X = strain * 0.5;
     }
 
     private void OnFillChanged(double fraction)
     {
-        if (_shell is not null)
-        {
-            _shell.Fraction = fraction;
-        }
+        _shell?.Fraction = fraction;
     }
 
     /// <summary>The fill follows a drag 1:1 and glides to typed or stepped values on the smooth spring.</summary>

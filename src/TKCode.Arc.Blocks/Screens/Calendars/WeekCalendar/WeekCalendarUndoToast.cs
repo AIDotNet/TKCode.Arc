@@ -111,10 +111,7 @@ internal sealed class WeekCalendarUndoToast : TemplatedControl
         {
             _message = value;
             AutomationProperties.SetName(this, value);
-            if (_text is not null)
-            {
-                _text.Text = value;
-            }
+            _text?.Text = value;
         }
     }
 
@@ -131,22 +128,13 @@ internal sealed class WeekCalendarUndoToast : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_undo is not null)
-        {
-            _undo.Click -= OnUndo;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismiss;
-        }
+        _undo?.Click -= OnUndo;
+        _dismiss?.Click -= OnDismiss;
         _text = e.NameScope.Find<TextBlock>(TextPart);
         _undo = e.NameScope.Find<WeekCalendarToastButton>(UndoPart);
         _dismiss = e.NameScope.Find<WeekCalendarToastButton>(DismissPart);
         var labels = _owner.Labels;
-        if (_text is not null)
-        {
-            _text.Text = _message;
-        }
+        _text?.Text = _message;
         if (_undo is not null)
         {
             _undo.Content = labels.Undo;

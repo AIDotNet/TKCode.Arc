@@ -212,15 +212,9 @@ internal sealed class NewsletterIssueStack : Control
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.Changed -= OnPublicationChanged;
-        }
+        _observed?.Changed -= OnPublicationChanged;
         _observed = publication;
-        if (_observed is not null)
-        {
-            _observed.Changed += OnPublicationChanged;
-        }
+        _observed?.Changed += OnPublicationChanged;
     }
 
     private void OnPublicationChanged(object? sender, EventArgs e) => Rebuild();

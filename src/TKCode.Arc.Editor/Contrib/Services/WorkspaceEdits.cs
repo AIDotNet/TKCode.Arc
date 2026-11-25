@@ -11,11 +11,15 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Contrib;
 
 /// <summary>A workspace edit split into the edits of one model and the rest.</summary>
-/// <param name="ModelEdits">The text edits of the model, in the order the workspace edit lists them.</param>
-/// <param name="Other">The edits of other documents and the file operations, or null when there are none.</param>
-/// <param name="Error">Why the model's edits cannot be applied (the model changed since they were computed), or null.</param>
-internal sealed record SplitWorkspaceEdit(IReadOnlyList<TextEdit> ModelEdits, WorkspaceEdit? Other, string? Error)
+/// <param name="modelEdits">The text edits of the model, in the order the workspace edit lists them.</param>
+/// <param name="other">The edits of other documents and the file operations, or null when there are none.</param>
+/// <param name="error">Why the model's edits cannot be applied (the model changed since they were computed), or null.</param>
+internal sealed class SplitWorkspaceEdit(IReadOnlyList<TextEdit> modelEdits, WorkspaceEdit? other, string? error)
 {
+    public IReadOnlyList<TextEdit> ModelEdits { get; } = modelEdits;
+    public WorkspaceEdit? Other { get; } = other;
+    public string? Error { get; } = error;
+
     /// <summary>The model's edits as edit operations (insertions where the range is empty, as upstream).</summary>
     public IReadOnlyList<SingleEditOperation> ToEditOperations() => [.. ModelEdits.Select(TextEdit.AsEditOperation)];
 }

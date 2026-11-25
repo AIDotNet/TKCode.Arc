@@ -75,24 +75,12 @@ internal sealed class PrizeWheelCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.PropertyChanged -= OnCopyChanged;
-        }
-        if (_spinAgain is not null)
-        {
-            _spinAgain.Click -= OnSpinAgain;
-        }
+        _copy?.PropertyChanged -= OnCopyChanged;
+        _spinAgain?.Click -= OnSpinAgain;
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _spinAgain = e.NameScope.Find<AvaloniaButton>(SpinAgainPart);
-        if (_copy is not null)
-        {
-            _copy.PropertyChanged += OnCopyChanged;
-        }
-        if (_spinAgain is not null)
-        {
-            _spinAgain.Click += OnSpinAgain;
-        }
+        _copy?.PropertyChanged += OnCopyChanged;
+        _spinAgain?.Click += OnSpinAgain;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

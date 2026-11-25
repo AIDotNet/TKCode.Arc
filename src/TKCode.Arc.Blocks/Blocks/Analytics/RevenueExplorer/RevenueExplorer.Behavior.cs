@@ -156,10 +156,7 @@ public partial class RevenueExplorer
         _header = e.NameScope.Find<RevenueSplitPanel>(HeaderPart);
         _titleText = e.NameScope.Find<TextBlock>(TitlePart);
         _subtitle = e.NameScope.Find<AnalyticsTextSwap>(SubtitlePart);
-        if (_subtitle is not null)
-        {
-            _subtitle.Swap = AnalyticsSwapStyle.RiseEven;
-        }
+        _subtitle?.Swap = AnalyticsSwapStyle.RiseEven;
         _presetSwitch = e.NameScope.Find<AnalyticsSegmentSwitch>(PresetsPart);
         _metrics = e.NameScope.Find<RevenueKpiRow>(MetricsPart);
         _toolbar = e.NameScope.Find<RevenueSplitPanel>(ToolbarPart);
@@ -192,10 +189,7 @@ public partial class RevenueExplorer
         HookToggle(_newChip, RevenueSeries.New);
         HookToggle(_expansionChip, RevenueSeries.Expansion);
         HookToggle(_churnChip, RevenueSeries.Churn);
-        if (_compareSwitch is not null)
-        {
-            _compareSwitch.Toggled += OnCompareToggled;
-        }
+        _compareSwitch?.Toggled += OnCompareToggled;
         _monthsDirty = true;
         ApplyAll();
         UpdateBreakpoints(Bounds.Width);
@@ -203,23 +197,14 @@ public partial class RevenueExplorer
 
     private void Unhook()
     {
-        if (_chart is not null)
-        {
-            _chart.ScrubRequested -= OnScrubRequested;
-        }
+        _chart?.ScrubRequested -= OnScrubRequested;
         if (_overview is not null)
         {
             _overview.RangeRequested -= OnOverviewRangeRequested;
             _overview.DraggingChanged -= OnDraggingChanged;
         }
-        if (_presetSwitch is not null)
-        {
-            _presetSwitch.SelectionChanged -= OnPresetSelectionChanged;
-        }
-        if (_compareSwitch is not null)
-        {
-            _compareSwitch.Toggled -= OnCompareToggled;
-        }
+        _presetSwitch?.SelectionChanged -= OnPresetSelectionChanged;
+        _compareSwitch?.Toggled -= OnCompareToggled;
         foreach (var (chip, handler) in _chipHandlers)
         {
             chip.Toggled -= handler;
@@ -258,20 +243,11 @@ public partial class RevenueExplorer
         PseudoClasses.Set(TightPseudoClass, tight);
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(CompactPseudoClass, inner < CompactWidth);
-        if (_header is not null)
-        {
-            _header.IsWrapForced = stacked;
-        }
-        if (_presetSwitch is not null)
-        {
-            _presetSwitch.IsStretched = stacked;
-        }
+        _header?.IsWrapForced = stacked;
+        _presetSwitch?.IsStretched = stacked;
         foreach (var chip in new[] { _newChip, _expansionChip, _churnChip })
         {
-            if (chip is not null)
-            {
-                chip.IsCompact = stacked;
-            }
+            chip?.IsCompact = stacked;
         }
         if (_metrics is not null)
         {
@@ -349,15 +325,9 @@ public partial class RevenueExplorer
 
     private void ObserveSource(IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     private void OnSourceCollectionChanged(object? sender, NotifyCollectionChangedEventArgs e) => OnMonthsChanged();
@@ -512,22 +482,10 @@ public partial class RevenueExplorer
 
     private void SyncToggles()
     {
-        if (_newChip is not null)
-        {
-            _newChip.IsOn = IsNewVisible;
-        }
-        if (_expansionChip is not null)
-        {
-            _expansionChip.IsOn = IsExpansionVisible;
-        }
-        if (_churnChip is not null)
-        {
-            _churnChip.IsOn = IsChurnVisible;
-        }
-        if (_compareSwitch is not null)
-        {
-            _compareSwitch.IsOn = IsCompareEnabled;
-        }
+        _newChip?.IsOn = IsNewVisible;
+        _expansionChip?.IsOn = IsExpansionVisible;
+        _churnChip?.IsOn = IsChurnVisible;
+        _compareSwitch?.IsOn = IsCompareEnabled;
     }
 
     private void UpdatePseudoClasses()
@@ -678,10 +636,7 @@ public partial class RevenueExplorer
 
     private void UpdateTitle()
     {
-        if (_titleText is not null)
-        {
-            _titleText.Text = Title;
-        }
+        _titleText?.Text = Title;
     }
 
     /// <summary>Texts that come from properties (labels, formats, names): set once and when they change, then the numbers.</summary>
@@ -693,22 +648,10 @@ public partial class RevenueExplorer
         }
         _chart.SetOptions(BuildChartOptions());
         AutomationProperties.SetName(_chart, PlotLabel);
-        if (_newChip is not null)
-        {
-            _newChip.Text = NewLabel;
-        }
-        if (_expansionChip is not null)
-        {
-            _expansionChip.Text = ExpansionLabel;
-        }
-        if (_churnChip is not null)
-        {
-            _churnChip.Text = ChurnLabel;
-        }
-        if (_compareSwitch is not null)
-        {
-            _compareSwitch.Text = CompareText;
-        }
+        _newChip?.Text = NewLabel;
+        _expansionChip?.Text = ExpansionLabel;
+        _churnChip?.Text = ChurnLabel;
+        _compareSwitch?.Text = CompareText;
         if (_presetSwitch is not null)
         {
             AutomationProperties.SetName(_presetSwitch, PresetGroupLabel);
@@ -796,10 +739,7 @@ public partial class RevenueExplorer
             return;
         }
         var text = RangeText(_start, _end);
-        if (_subtitle is not null)
-        {
-            _subtitle.Text = text;
-        }
+        _subtitle?.Text = text;
         UpdatePresetSelection();
         UpdateMetrics();
         UpdateTable(text);

@@ -139,10 +139,7 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
             {
                 option.IsCompact = IsCompact;
             }
-            if (_panel is not null)
-            {
-                _panel.IsUniform = IsCompact;
-            }
+            _panel?.IsUniform = IsCompact;
             _pillPlaced = false;
             ArmPill();
         }
@@ -221,10 +218,7 @@ internal sealed class LayoutMorphViewBar : TemplatedControl
 
     private void OnPanelLayoutUpdated(object? sender, EventArgs e)
     {
-        if (_panel is not null)
-        {
-            _panel.LayoutUpdated -= OnPanelLayoutUpdated;
-        }
+        _panel?.LayoutUpdated -= OnPanelLayoutUpdated;
         _pillArmed = false;
         MovePill(animate: false, onlyIfMisplaced: true);
     }

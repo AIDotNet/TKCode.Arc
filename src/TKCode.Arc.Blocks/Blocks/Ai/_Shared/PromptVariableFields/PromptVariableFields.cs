@@ -338,10 +338,7 @@ internal class PromptVariableFields : TemplatedControl
             PseudoClasses.Set(TwoColumnPseudoClass, columns == 2);
             PseudoClasses.Set(OneColumnPseudoClass, columns == 1);
         }
-        if (_panel is not null)
-        {
-            _panel.Columns = _columns;
-        }
+        _panel?.Columns = _columns;
         return base.MeasureOverride(availableSize);
     }
 
@@ -358,15 +355,9 @@ internal class PromptVariableFields : TemplatedControl
         {
             return;
         }
-        if (_observedVariables is not null)
-        {
-            _observedVariables.CollectionChanged -= OnVariablesChanged;
-        }
+        _observedVariables?.CollectionChanged -= OnVariablesChanged;
         _observedVariables = observed;
-        if (_observedVariables is not null)
-        {
-            _observedVariables.CollectionChanged += OnVariablesChanged;
-        }
+        _observedVariables?.CollectionChanged += OnVariablesChanged;
     }
 
     private void OnVariablesChanged(object? sender, NotifyCollectionChangedEventArgs e) => RebuildFields();
@@ -506,15 +497,9 @@ internal class PromptVariableFields : TemplatedControl
         {
             return;
         }
-        if (_observedValues is not null)
-        {
-            _observedValues.CollectionChanged -= OnValuesChanged;
-        }
+        _observedValues?.CollectionChanged -= OnValuesChanged;
         _observedValues = values;
-        if (_observedValues is not null)
-        {
-            _observedValues.CollectionChanged += OnValuesChanged;
-        }
+        _observedValues?.CollectionChanged += OnValuesChanged;
     }
 
     private void OnValuesChanged(object? sender, NotifyCollectionChangedEventArgs e)

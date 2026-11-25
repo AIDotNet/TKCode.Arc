@@ -226,10 +226,7 @@ internal sealed class TreeTableRow : Grid
             _chevron.SetAngle(Line.Expanded ? 90 : 0, animate);
             _chevron.GlyphBrush = Line.Expanded ? _owner.Palette.Foreground : null;
         }
-        if (_spinner is not null)
-        {
-            _spinner.IsVisible = loading;
-        }
+        _spinner?.IsVisible = loading;
         PseudoClasses.Set(":busy", loading);
     }
 

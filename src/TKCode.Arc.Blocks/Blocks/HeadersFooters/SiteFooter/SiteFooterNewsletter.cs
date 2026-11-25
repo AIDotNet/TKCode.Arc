@@ -192,10 +192,7 @@ internal sealed class SiteFooterNewsletter : TemplatedControl
             _input.KeyDown -= OnInputKeyDown;
             _input.LostFocus -= OnInputLostFocus;
         }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
+        _submit?.Click -= OnSubmitClick;
         _input = e.NameScope.Find<SiteFooterInput>(InputPart);
         _submit = e.NameScope.Find<Button>(SubmitPart);
         _swap = e.NameScope.Find<SiteSwap>(MessagePart);
@@ -206,10 +203,7 @@ internal sealed class SiteFooterNewsletter : TemplatedControl
             _input.LostFocus += OnInputLostFocus;
             AutomationProperties.SetName(_input, EmailLabel);
         }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
+        _submit?.Click += OnSubmitClick;
         if (_swap is not null)
         {
             // The line under the input: Arc's message swap (in: y 4, blur 2, 240 ms enter; out: y -4, blur 2, 120 ms), fade only when reduced.
@@ -285,10 +279,7 @@ internal sealed class SiteFooterNewsletter : TemplatedControl
             _input.IsReadOnly = State != SiteFooterNewsletterState.Idle;
             _input.IsDone = State == SiteFooterNewsletterState.Done;
         }
-        if (_submit is not null)
-        {
-            _submit.IsLoading = State == SiteFooterNewsletterState.Loading;
-        }
+        _submit?.IsLoading = State == SiteFooterNewsletterState.Loading;
     }
 
     private void UpdateSubmitContent()
@@ -331,10 +322,7 @@ internal sealed class SiteFooterNewsletter : TemplatedControl
             return;
         }
         _message = next;
-        if (_swap is not null)
-        {
-            _swap.Content = next;
-        }
+        _swap?.Content = next;
         if (_messageReady && next is not null && _announcer is not null)
         {
             // Errors are alerts (assertive), the rest is polite (aria-live on the slot).

@@ -571,10 +571,7 @@ internal sealed class CommentThreadSequence : Panel
             return;
         }
         _exiting = false;
-        if (_displayed is not null)
-        {
-            _displayed.IsVisible = false;
-        }
+        _displayed?.IsVisible = false;
         _displayed = next;
         next.IsVisible = true;
         _x.Jump(_wantedOffset);

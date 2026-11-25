@@ -111,10 +111,7 @@ public partial class Webhooks
             _fresh = null;
         }
         AddPanelState = WebhookAddState.Closed;
-        if (_add is not null)
-        {
-            _add.Title = Labels.AddEndpoint;
-        }
+        _add?.Title = Labels.AddEndpoint;
         _syncingOpen = true;
         SetCurrentValue(IsAddPanelOpenProperty, false);
         _syncingOpen = false;

@@ -175,15 +175,9 @@ internal sealed partial class RevenueChartView : Control
         get => _viewport;
         set
         {
-            if (_viewport is not null)
-            {
-                _viewport.Changed -= MarkDirty;
-            }
+            _viewport?.Changed -= MarkDirty;
             _viewport = value;
-            if (value is not null)
-            {
-                value.Changed += MarkDirty;
-            }
+            value?.Changed += MarkDirty;
             MarkDirty();
         }
     }

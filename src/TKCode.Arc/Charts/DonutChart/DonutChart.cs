@@ -258,10 +258,7 @@ public class DonutChart : ChartBase
     private protected override void OnTemplateApplied(INameScope scope)
     {
         _rows = scope.Find<DonutChartLegend>(RowsPart);
-        if (_rows is not null)
-        {
-            _rows.Owner = this;
-        }
+        _rows?.Owner = this;
         _center = scope.Find<Control>(CenterPart);
         _centerLabel = scope.Find<ArcContentSwap>(CenterLabelPart);
         _centerValue = scope.Find<ArcContentSwap>(CenterValuePart);

@@ -76,13 +76,12 @@ public class ExpandingButtonGroup : ItemsControl
     /// <summary>How long a confirmation stays (default 1.4s).</summary>
     public TimeSpan ConfirmDuration { get => GetValue(ConfirmDurationProperty); set => SetValue(ConfirmDurationProperty, value); }
 
-    private ExpandingButtonGroupItem? _expandedItem;
 
     /// <summary>The action currently showing its label.</summary>
     public ExpandingButtonGroupItem? ExpandedItem
     {
-        get => _expandedItem;
-        private set => SetAndRaise(ExpandedItemProperty, ref _expandedItem, value);
+        get;
+        private set => SetAndRaise(ExpandedItemProperty, ref field, value);
     }
 
     /// <summary>Raised whenever an action runs, before its own <see cref="ExpandingButtonGroupItem.AsyncAction"/>.</summary>

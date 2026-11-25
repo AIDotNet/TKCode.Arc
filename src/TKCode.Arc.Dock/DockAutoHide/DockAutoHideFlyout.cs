@@ -403,14 +403,8 @@ internal sealed class DockAutoHideCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pin is not null)
-        {
-            _pin.Click -= OnPinClick;
-        }
-        if (_content is not null)
-        {
-            _content.Child = null;
-        }
+        _pin?.Click -= OnPinClick;
+        _content?.Child = null;
         _content = e.NameScope.Find<Decorator>(ContentPart);
         _pin = e.NameScope.Find<AvaloniaButton>(PinPart);
         if (_pin is not null)

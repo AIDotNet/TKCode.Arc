@@ -163,10 +163,7 @@ public sealed partial class TerminalView : Control
     {
         base.OnAttachedToVisualTree(e);
         _topLevel = TopLevel.GetTopLevel(this);
-        if (_topLevel is not null)
-        {
-            _topLevel.ScalingChanged += OnScalingChanged;
-        }
+        _topLevel?.ScalingChanged += OnScalingChanged;
         InvalidateMetrics();
     }
 

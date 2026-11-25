@@ -613,10 +613,7 @@ internal sealed class CommandPaletteList : Panel
     {
         base.OnAttachedToVisualTree(e);
         _scroll = this.FindAncestorOfType<ScrollViewer>();
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _scroll?.ScrollChanged += OnScrollChanged;
         ReadViewport();
     }
 

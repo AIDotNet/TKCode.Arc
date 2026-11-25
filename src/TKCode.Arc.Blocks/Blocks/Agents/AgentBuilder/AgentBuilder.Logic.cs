@@ -366,10 +366,7 @@ public partial class AgentBuilder
             Url = uri
         };
         ShowLinkError(null);
-        if (_linkInput is not null)
-        {
-            _linkInput.Text = string.Empty;
-        }
+        _linkInput?.Text = string.Empty;
         AddSources([source]);
         return true;
     }
@@ -549,10 +546,7 @@ public partial class AgentBuilder
 
     private void ShowLinkError(string? message)
     {
-        if (_linkInput is not null)
-        {
-            _linkInput.ErrorMessage = message;
-        }
+        _linkInput?.ErrorMessage = message;
     }
 
     private void OnLinkKeyDown(object? sender, KeyEventArgs e)

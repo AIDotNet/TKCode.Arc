@@ -86,6 +86,7 @@ internal sealed record CharChange(
     int ModifiedEndLineNumber,
     int ModifiedEndColumn)
 {
+
     internal static CharChange CreateFromDiffChange(DiffChange diffChange, LegacyCharSequence originalCharSequence, LegacyCharSequence modifiedCharSequence)
     {
         var originalStartLineNumber = originalCharSequence.GetStartLineNumber(diffChange.OriginalStart);
@@ -239,7 +240,11 @@ internal sealed record DiffComputerOpts
 }
 
 /// <summary>The result of <see cref="DiffComputer"/>.</summary>
-internal sealed record DiffComputerResult(bool QuitEarly, List<LineChange> Changes);
+internal sealed class DiffComputerResult(bool quitEarly, List<LineChange> changes)
+{
+    public bool QuitEarly { get; } = quitEarly;
+    public List<LineChange> Changes { get; } = changes;
+}
 
 /// <summary>Lines as a sequence of their trimmed text (upstream's legacy LineSequence).</summary>
 internal sealed class LegacyLineSequence : IDiffSequence

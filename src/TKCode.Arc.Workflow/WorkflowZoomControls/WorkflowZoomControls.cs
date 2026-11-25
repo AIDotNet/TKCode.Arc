@@ -95,10 +95,7 @@ public class WorkflowZoomControls : TemplatedControl
         base.OnAttachedToVisualTree(e);
         Observe(Target);
         _languages = WorkflowText.Languages;
-        if (_languages is not null)
-        {
-            _languages.Changed += OnLanguageChanged;
-        }
+        _languages?.Changed += OnLanguageChanged;
         Refresh();
     }
 
@@ -132,15 +129,9 @@ public class WorkflowZoomControls : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnCanvasPropertyChanged;
-        }
+        _observed?.PropertyChanged -= OnCanvasPropertyChanged;
         _observed = canvas;
-        if (canvas is not null)
-        {
-            canvas.PropertyChanged += OnCanvasPropertyChanged;
-        }
+        canvas?.PropertyChanged += OnCanvasPropertyChanged;
     }
 
     private void OnCanvasPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

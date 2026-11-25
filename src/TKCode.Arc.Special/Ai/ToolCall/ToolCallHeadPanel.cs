@@ -129,10 +129,7 @@ internal sealed class ToolCallHeadPanel : Panel
     {
         var slot = _slots[index];
         slot.Control = control;
-        if (control is not null)
-        {
-            control.IsVisible = slot.Shown;
-        }
+        control?.IsVisible = slot.Shown;
         InvalidateMeasure();
     }
 

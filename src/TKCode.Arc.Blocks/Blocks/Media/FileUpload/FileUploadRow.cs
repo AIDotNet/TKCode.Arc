@@ -100,10 +100,7 @@ internal sealed class FileUploadRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
+        _remove?.Click -= OnRemoveClick;
         _icon = e.NameScope.Find<ArcGlyph>(FileIconPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _size = e.NameScope.Find<TextBlock>(SizePart);
@@ -124,10 +121,7 @@ internal sealed class FileUploadRow : TemplatedControl
             _remove.Click += OnRemoveClick;
             AutomationProperties.SetName(_remove, $"Remove {Item.Name}");
         }
-        if (_icon is not null)
-        {
-            _icon.Data = FileUploadTypes.IconOf(Item.Name);
-        }
+        _icon?.Data = FileUploadTypes.IconOf(Item.Name);
         if (_name is not null)
         {
             _name.Text = Item.Name;
@@ -182,10 +176,7 @@ internal sealed class FileUploadRow : TemplatedControl
         DriveProgress(animate);
         var shown = ComputeShown();
         var hasStatus = shown != FileUploadStatus.None;
-        if (_dot is not null)
-        {
-            _dot.IsVisible = hasStatus;
-        }
+        _dot?.IsVisible = hasStatus;
         if (_phase is not null)
         {
             _phase.IsVisible = hasStatus;
@@ -200,10 +191,7 @@ internal sealed class FileUploadRow : TemplatedControl
             _error.Text = Item.Error;
             _error.IsVisible = !string.IsNullOrEmpty(Item.Error);
         }
-        if (_barFrame is not null)
-        {
-            _barFrame.IsOpen = shown == FileUploadStatus.Uploading;
-        }
+        _barFrame?.IsOpen = shown == FileUploadStatus.Uploading;
         var phase = !string.IsNullOrEmpty(Item.Error) ? "invalid"
             : shown switch
             {
@@ -382,10 +370,7 @@ internal sealed class FileUploadRow : TemplatedControl
     private void SetProgress(double value)
     {
         _progressValue = value;
-        if (_percent is not null)
-        {
-            _percent.Text = FormatPercent(value);
-        }
+        _percent?.Text = FormatPercent(value);
         UpdateFill();
     }
 

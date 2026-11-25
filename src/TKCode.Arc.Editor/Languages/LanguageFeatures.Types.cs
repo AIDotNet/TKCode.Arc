@@ -18,29 +18,24 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Languages;
 
 /// <summary>Plain text or Markdown (upstream's <c>string | IMarkdownString</c>).</summary>
-internal readonly record struct StringOrMarkdown
+internal union StringOrMarkdown(string, MarkdownString)
 {
-    private StringOrMarkdown(string? text, MarkdownString? markdown)
-    {
-        Text = text;
-        Markdown = markdown;
-    }
-
     /// <summary>The plain text, or null when this is Markdown.</summary>
-    public string? Text { get; }
+    public string? Text => this is string text ? text : null;
 
     /// <summary>The Markdown, or null when this is plain text.</summary>
-    public MarkdownString? Markdown { get; }
+    public MarkdownString? Markdown => this is MarkdownString markdown ? markdown : null;
 
     /// <summary>Whether this is Markdown.</summary>
-    public bool IsMarkdown => Markdown is not null;
+    public bool IsMarkdown => this is MarkdownString;
 
     /// <summary>The text whichever form it has (the Markdown source for Markdown).</summary>
-    public string Value => Markdown?.Value ?? Text ?? string.Empty;
-
-    public static implicit operator StringOrMarkdown(string text) => new(text, null);
-
-    public static implicit operator StringOrMarkdown(MarkdownString markdown) => new(null, markdown);
+    public string Content => this switch
+    {
+        MarkdownString markdown => markdown.Value,
+        string text => text,
+        _ => string.Empty,
+    };
 }
 
 /// <summary>A command a provider attaches to an item (upstream's languages.Command).</summary>
@@ -129,4 +124,7 @@ internal sealed record WorkspaceFileEdit(Uri? OldResource, Uri? NewResource) : W
 }
 
 /// <summary>Edits across documents (upstream's WorkspaceEdit; ICustomEdit is not ported).</summary>
-internal sealed record WorkspaceEdit(IReadOnlyList<WorkspaceEditEntry> Edits);
+internal sealed class WorkspaceEdit(IReadOnlyList<WorkspaceEditEntry> edits)
+{
+    public IReadOnlyList<WorkspaceEditEntry> Edits { get; } = edits;
+}

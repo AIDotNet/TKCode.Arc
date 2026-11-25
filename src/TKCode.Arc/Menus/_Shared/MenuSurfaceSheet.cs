@@ -149,10 +149,7 @@ internal sealed class MenuSurfaceSheet
             _scrimOpacity = new MotionValue<double>(_scrim, 0, MotionVectors.Double);
             _scrimOpacity.Changed += value =>
             {
-                if (_scrim is not null)
-                {
-                    _scrim.Opacity = value;
-                }
+                _scrim?.Opacity = value;
             };
         }
         if (!ReferenceEquals(_layer, layer))

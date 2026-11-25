@@ -142,10 +142,7 @@ public partial class SourceCards
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
         _popup = e.NameScope.Find<ArcPopup>(PopupPart);
         _preview = e.NameScope.Find<SourceCardsPreview>(PreviewPart);
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetryClick;
-        }
+        _retry?.Click += OnRetryClick;
         if (_toggle is not null)
         {
             _toggle.IsToggle = true;
@@ -167,24 +164,15 @@ public partial class SourceCards
         _emptyWord = null;
         _metaText = null;
         _announcedKey = null;
-        if (_sampleAnswer is not null)
-        {
-            _sampleAnswer.Content = _simulatedText;
-        }
+        _sampleAnswer?.Content = _simulatedText;
         AnnounceSimulated();
         Refresh();
     }
 
     private void Unhook()
     {
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetryClick;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _retry?.Click -= OnRetryClick;
+        _toggle?.Click -= OnToggleClick;
     }
 
     /// <summary>Brings every part in line with the state; a part that already shows the value is left alone.</summary>
@@ -231,24 +219,12 @@ public partial class SourceCards
                 _ when empty => _emptyWord ??= StatusText(ArcDesignTokenKind.Foreground, word: true),
                 _ => null
             };
-            if (_searchingWord is not null)
-            {
-                _searchingWord.Text = labels.Searching;
-            }
-            if (_failedWord is not null)
-            {
-                _failedWord.Text = labels.Failed;
-            }
-            if (_emptyWord is not null)
-            {
-                _emptyWord.Text = labels.Empty;
-            }
+            _searchingWord?.Text = labels.Searching;
+            _failedWord?.Text = labels.Failed;
+            _emptyWord?.Text = labels.Empty;
             _statusWord.Content = word;
         }
-        if (_count is not null)
-        {
-            _count.Text = DisplayedCount;
-        }
+        _count?.Text = DisplayedCount;
         if (_meta is not null)
         {
             var meta = DisplayedMeta;
@@ -277,14 +253,8 @@ public partial class SourceCards
             _toggle.IsExpanded = IsExpanded;
             _toggle.Content = IsExpanded ? labels.ShowLess : labels.ShowAll;
         }
-        if (_statusLeft is not null)
-        {
-            _statusLeft.IsVisible = IsStatusVisible;
-        }
-        if (_statusRow is not null)
-        {
-            _statusRow.IsVisible = IsStatusVisible || overflow || retry;
-        }
+        _statusLeft?.IsVisible = IsStatusVisible;
+        _statusRow?.IsVisible = IsStatusVisible || overflow || retry;
     }
 
     // The status parts are made here, outside the template, so their colors are bound to the tokens directly.
@@ -339,10 +309,7 @@ public partial class SourceCards
         var simulating = IsSimulating;
         var hasAnswer = simulating ? _simulatedText?.Inlines?.Count > 0 : Content is not null;
         _answer.Classes.Set("has-answer", hasAnswer);
-        if (_sampleAnswer is not null)
-        {
-            _sampleAnswer.IsVisible = simulating;
-        }
+        _sampleAnswer?.IsVisible = simulating;
     }
 
     private void RefreshCells(SourceCardsStatus status, IReadOnlyList<SourceCardsSource> sources)
@@ -566,10 +533,7 @@ public partial class SourceCards
                 card.IsHighlighted = highlighted == i + 1;
             }
         }
-        if (_stack is not null)
-        {
-            _stack.IsHighlighted = highlighted is { } n && n > Max && !IsExpanded;
-        }
+        _stack?.IsHighlighted = highlighted is { } n && n > Max && !IsExpanded;
         foreach (var citation in _citations)
         {
             citation.SetHighlighted(highlighted is { } h && h == citation.Number);

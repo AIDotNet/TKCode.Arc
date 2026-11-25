@@ -93,13 +93,12 @@ public abstract class ModalOverlay : ContentControl, IOverlayResultTarget
     /// <summary>Backdrop blur radius in px (the theme sets Arc's value; off under ReduceTransparency).</summary>
     public double BackdropBlur { get => GetValue(BackdropBlurProperty); set => SetValue(BackdropBlurProperty, value); }
 
-    private object? _closeResult;
 
     /// <summary>The result of the last close (from <c>arc:Dialog.Result</c> buttons, <see cref="Close"/> or <see cref="CloseCommand"/>).</summary>
     public object? CloseResult
     {
-        get => _closeResult;
-        private set => SetAndRaise(CloseResultProperty, ref _closeResult, value);
+        get;
+        private set => SetAndRaise(CloseResultProperty, ref field, value);
     }
 
     /// <summary>Why the last close happened.</summary>

@@ -280,10 +280,7 @@ internal sealed class TicketRouterRow : AvaloniaButton
 
     private void ApplyGlow(double value)
     {
-        if (_highlight is not null)
-        {
-            _highlight.Opacity = Math.Clamp(value, 0, 1);
-        }
+        _highlight?.Opacity = Math.Clamp(value, 0, 1);
     }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)

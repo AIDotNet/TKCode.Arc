@@ -368,14 +368,8 @@ public class ChangelogFeed : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged -= OnScrollChanged;
-        }
-        if (_monthNav is not null)
-        {
-            _monthNav.ItemPressed -= OnMonthPressed;
-        }
+        _scroller?.ScrollChanged -= OnScrollChanged;
+        _monthNav?.ItemPressed -= OnMonthPressed;
         if (_subscribe is not null)
         {
             _subscribe.Subscribed -= OnSubscribed;
@@ -394,14 +388,8 @@ public class ChangelogFeed : TemplatedControl
         _monthText = e.NameScope.Find<BlockSwap>("PART_MonthText");
         _monthCount = e.NameScope.Find<BlockSwap>("PART_MonthCount");
         _monthWord = e.NameScope.Find<TextBlock>("PART_MonthWord");
-        if (_scroller is not null)
-        {
-            _scroller.ScrollChanged += OnScrollChanged;
-        }
-        if (_monthNav is not null)
-        {
-            _monthNav.ItemPressed += OnMonthPressed;
-        }
+        _scroller?.ScrollChanged += OnScrollChanged;
+        _monthNav?.ItemPressed += OnMonthPressed;
         if (_subscribe is not null)
         {
             _subscribe.Subscribed += OnSubscribed;
@@ -409,10 +397,7 @@ public class ChangelogFeed : TemplatedControl
             _subscribe.StateChanged += OnSubscribeStateChanged;
             ApplySubscribeText();
         }
-        if (_flow is not null)
-        {
-            _flow.SizeChanged += (_, _) => Sync();
-        }
+        _flow?.SizeChanged += (_, _) => Sync();
         Rebuild();
     }
 
@@ -740,10 +725,7 @@ public class ChangelogFeed : TemplatedControl
     private void ApplyMonthBar(int direction, bool animate, bool labelChanged = false)
     {
         var group = _visibleGroups.FirstOrDefault(g => g.Month.Key == _activeKey) ?? _visibleGroups.FirstOrDefault();
-        if (_monthNav is not null)
-        {
-            _monthNav.SelectedIndex = group is null ? -1 : _visibleGroups.IndexOf(group);
-        }
+        _monthNav?.SelectedIndex = group is null ? -1 : _visibleGroups.IndexOf(group);
         if (_monthText is not null && (labelChanged || _monthText.Current is null))
         {
             var content = MonthLabel(group);
@@ -769,10 +751,7 @@ public class ChangelogFeed : TemplatedControl
             }
         }
         _monthValue = count;
-        if (_monthWord is not null)
-        {
-            _monthWord.Text = count == 1 ? UpdateWord : UpdatesWord;
-        }
+        _monthWord?.Text = count == 1 ? UpdateWord : UpdatesWord;
     }
 
     private Control MonthLabel(GroupView? group)

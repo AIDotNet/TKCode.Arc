@@ -245,22 +245,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             _input.GotFocus -= OnInputGotFocus;
             _inputHost!.Child = null;
         }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
-        if (_chevronButton is not null)
-        {
-            _chevronButton.Click -= OnChevronClick;
-        }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
-        if (_options is not null)
-        {
-            _options.Host = null;
-        }
+        _clear?.Click -= OnClearClick;
+        _chevronButton?.Click -= OnChevronClick;
+        _popup?.Closed -= OnPopupClosed;
+        _options?.Host = null;
 
         _frame = e.NameScope.Find<Border>(FramePart);
         _inputHost = e.NameScope.Find<Decorator>(InputHostPart);
@@ -286,23 +274,14 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             _settleShift = new TranslateTransform();
             _input.RenderTransform = _settleShift;
         }
-        if (_clear is not null)
-        {
-            _clear.Click += OnClearClick;
-        }
-        if (_chevronButton is not null)
-        {
-            _chevronButton.Click += OnChevronClick;
-        }
+        _clear?.Click += OnClearClick;
+        _chevronButton?.Click += OnChevronClick;
         if (_popup is not null)
         {
             _popup.OverlayInputPassThroughElement = _frame;
             _popup.Closed += OnPopupClosed;
         }
-        if (_options is not null)
-        {
-            _options.Host = this;
-        }
+        _options?.Host = this;
         SyncInput();
         UpdateClear();
     }
@@ -419,10 +398,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
 
     private void UpdateClear()
     {
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = SelectedIndex >= 0 && IsEffectivelyEnabled;
-        }
+        _clearHost?.IsPresent = SelectedIndex >= 0 && IsEffectivelyEnabled;
     }
 
     private void SetQuery(string query)
@@ -548,10 +524,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         _entries.Filter(_query, FilterPredicate, _visible);
         _options.SetOptions(_visible);
         _scroll?.SetCurrentValue(ScrollViewer.OffsetProperty, default(Vector));
-        if (_emptyHost is not null)
-        {
-            _emptyHost.IsPresent = _visible.Count == 0;
-        }
+        _emptyHost?.IsPresent = _visible.Count == 0;
         Announce(_query.Trim().Length == 0
             ? string.Empty
             : _visible.Count == 0 ? EmptyText ?? string.Empty : $"{_visible.Count} {(_visible.Count == 1 ? "result" : "results")}");

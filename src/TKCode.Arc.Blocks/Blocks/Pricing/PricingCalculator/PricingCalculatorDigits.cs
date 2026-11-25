@@ -550,10 +550,7 @@ internal sealed class PricingCalculatorDigitColumn : Control
     public void InvalidateGlyphs()
     {
         _a.Layout = null;
-        if (_b is not null)
-        {
-            _b.Layout = null;
-        }
+        _b?.Layout = null;
         OpacityMask = null;
     }
 

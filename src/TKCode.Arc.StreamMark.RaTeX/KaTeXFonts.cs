@@ -17,7 +17,7 @@ internal static class KaTeXFonts
 {
     private const string ResourcePrefix = "StreamMark.RaTeX.Fonts.KaTeX_";
 
-    private static readonly object Gate = new();
+    private static readonly Lock Gate = new();
     private static KaTeXFontCollection? _collection;
     private static readonly Dictionary<string, GlyphTypeface?> Typefaces = new(StringComparer.Ordinal);
     private static readonly ConcurrentDictionary<int, ResolvedGlyph?> SystemFallback = new();

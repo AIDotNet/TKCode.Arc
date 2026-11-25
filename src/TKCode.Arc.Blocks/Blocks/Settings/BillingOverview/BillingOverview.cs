@@ -445,10 +445,7 @@ public class BillingOverview : TemplatedControl
         Hook(_updateCard, OnUpdateCardClick);
         Hook(_editEmail, OnEditEmailClick);
         Hook(_showAll, OnShowAllClick);
-        if (_emailRow is not null)
-        {
-            _emailRow.PropertyChanged += OnEmailRowPropertyChanged;
-        }
+        _emailRow?.PropertyChanged += OnEmailRowPropertyChanged;
     }
 
     private void UnhookParts()
@@ -458,10 +455,7 @@ public class BillingOverview : TemplatedControl
         Unhook(_updateCard, OnUpdateCardClick);
         Unhook(_editEmail, OnEditEmailClick);
         Unhook(_showAll, OnShowAllClick);
-        if (_emailRow is not null)
-        {
-            _emailRow.PropertyChanged -= OnEmailRowPropertyChanged;
-        }
+        _emailRow?.PropertyChanged -= OnEmailRowPropertyChanged;
         StopWatchingCollapse();
         // Rows belong to the panels of the old template; take them out so the new template can host them.
         _invoiceRows?.Children.Clear();
@@ -486,18 +480,12 @@ public class BillingOverview : TemplatedControl
 
     private static void Hook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     /// <summary>The price ("$90 per month") and the next charge ("Next invoice $90.00 on …") are runs, so they share a baseline.</summary>
@@ -623,15 +611,9 @@ public class BillingOverview : TemplatedControl
         {
             return;
         }
-        if (_watchedPlan is not null)
-        {
-            _watchedPlan.PropertyChanged -= OnPlanPropertyChanged;
-        }
+        _watchedPlan?.PropertyChanged -= OnPlanPropertyChanged;
         _watchedPlan = plan;
-        if (plan is not null)
-        {
-            plan.PropertyChanged += OnPlanPropertyChanged;
-        }
+        plan?.PropertyChanged += OnPlanPropertyChanged;
     }
 
     private void WatchCard(BillingPaymentMethod? card)
@@ -640,15 +622,9 @@ public class BillingOverview : TemplatedControl
         {
             return;
         }
-        if (_watchedCard is not null)
-        {
-            _watchedCard.PropertyChanged -= OnCardPropertyChanged;
-        }
+        _watchedCard?.PropertyChanged -= OnCardPropertyChanged;
         _watchedCard = card;
-        if (card is not null)
-        {
-            card.PropertyChanged += OnCardPropertyChanged;
-        }
+        card?.PropertyChanged += OnCardPropertyChanged;
     }
 
     private void WatchInvoices(IEnumerable<BillingInvoice> invoices)
@@ -716,31 +692,16 @@ public class BillingOverview : TemplatedControl
         var labels = Labels;
         var culture = Culture;
         var plan = Plan;
-        if (_planEyebrow is not null)
-        {
-            _planEyebrow.Text = labels.CurrentPlan;
-        }
+        _planEyebrow?.Text = labels.CurrentPlan;
         if (plan is null)
         {
             SetText(_planName, labels.NoPlan);
-            if (_planStatus is not null)
-            {
-                _planStatus.IsVisible = false;
-            }
+            _planStatus?.IsVisible = false;
             SetText(_planDetail, labels.NoPlanDescription);
-            if (_price is not null)
-            {
-                _price.IsVisible = false;
-            }
-            if (_nextInvoice is not null)
-            {
-                _nextInvoice.IsVisible = false;
-            }
+            _price?.IsVisible = false;
+            _nextInvoice?.IsVisible = false;
             SetButton(_changePlan, labels.ChoosePlan, null);
-            if (_cancelPlan is not null)
-            {
-                _cancelPlan.IsVisible = false;
-            }
+            _cancelPlan?.IsVisible = false;
             return;
         }
 
@@ -808,10 +769,7 @@ public class BillingOverview : TemplatedControl
         }
         SetButton(_changePlan, labels.ChangePlan, null);
         SetButton(_cancelPlan, labels.CancelPlan, null);
-        if (_cancelPlan is not null)
-        {
-            _cancelPlan.IsVisible = plan.Status != BillingPlanStatus.Canceled;
-        }
+        _cancelPlan?.IsVisible = plan.Status != BillingPlanStatus.Canceled;
     }
 
     /// <summary>Writes <paramref name="text"/> into the footer runs with <paramref name="emphasis"/> (the amount) in the foreground color.</summary>
@@ -838,22 +796,13 @@ public class BillingOverview : TemplatedControl
     {
         var labels = Labels;
         var card = PaymentMethod;
-        if (_paymentGroup is not null)
-        {
-            _paymentGroup.Header = labels.Payment;
-        }
+        _paymentGroup?.Header = labels.Payment;
         if (card is null)
         {
             IsPaymentMethodExpiringSoon = false;
             IsPaymentMethodExpired = false;
-            if (_cardBrand is not null)
-            {
-                _cardBrand.IsVisible = false;
-            }
-            if (_cardGlyph is not null)
-            {
-                _cardGlyph.IsVisible = true;
-            }
+            _cardBrand?.IsVisible = false;
+            _cardGlyph?.IsVisible = true;
             SetText(_cardTitle, labels.NoPaymentMethod);
             SetText(_cardExpiry, labels.NoPaymentMethodDescription);
             SetButton(_updateCard, labels.AddCard, labels.AddCard);
@@ -869,10 +818,7 @@ public class BillingOverview : TemplatedControl
             _cardBrand.IsVisible = true;
             _cardBrand.Text = MarkOf(brand);
         }
-        if (_cardGlyph is not null)
-        {
-            _cardGlyph.IsVisible = false;
-        }
+        _cardGlyph?.IsVisible = false;
         SetText(_cardTitle, labels.CardEnding(brand, card.Last4));
         var month = Math.Clamp(card.ExpiryMonth, 1, 12).ToString("00", CultureInfo.InvariantCulture);
         var expiry = $"{month}/{card.ExpiryYear.ToString(CultureInfo.InvariantCulture)}";
@@ -944,10 +890,7 @@ public class BillingOverview : TemplatedControl
         // Newest first; invoices on the same day keep their order in the list (a stable sort).
         var sorted = _ordered.OrderByDescending(i => i.Date).ToList();
 
-        if (_invoicesGroup is not null)
-        {
-            _invoicesGroup.Header = labels.Invoices;
-        }
+        _invoicesGroup?.Header = labels.Invoices;
         SetText(_emptyTitle, labels.NoInvoices);
         SetText(_emptyHint, labels.NoInvoicesHint);
         if (_invoiceHeader is not null)
@@ -959,14 +902,8 @@ public class BillingOverview : TemplatedControl
             _invoiceHeader.IsNarrow = IsNarrow;
         }
         var hasInvoices = sorted.Count > 0;
-        if (_invoiceTable is not null)
-        {
-            _invoiceTable.IsVisible = hasInvoices;
-        }
-        if (_invoicesEmpty is not null)
-        {
-            _invoicesEmpty.IsVisible = !hasInvoices;
-        }
+        _invoiceTable?.IsVisible = hasInvoices;
+        _invoicesEmpty?.IsVisible = !hasInvoices;
 
         while (_rows.Count < sorted.Count)
         {
@@ -1002,10 +939,7 @@ public class BillingOverview : TemplatedControl
 
         var visible = Math.Max(0, VisibleInvoiceCount);
         var hasMore = sorted.Count > visible;
-        if (_invoicesGroup is not null)
-        {
-            _invoicesGroup.Footer = hasMore ? _invoicesFooter : null;
-        }
+        _invoicesGroup?.Footer = hasMore ? _invoicesFooter : null;
         UpdateShowAllText(sorted.Count);
     }
 
@@ -1041,10 +975,7 @@ public class BillingOverview : TemplatedControl
     {
         var labels = Labels;
         var text = IsInvoiceListExpanded ? labels.ShowFewer : labels.ShowAll(count);
-        if (_showAllText is not null)
-        {
-            _showAllText.Content = text;
-        }
+        _showAllText?.Content = text;
         if (_showAll is not null)
         {
             AutomationProperties.SetName(_showAll, text);
@@ -1053,10 +984,7 @@ public class BillingOverview : TemplatedControl
 
     private void ApplyNarrowToRows()
     {
-        if (_invoiceHeader is not null)
-        {
-            _invoiceHeader.IsNarrow = _isNarrow;
-        }
+        _invoiceHeader?.IsNarrow = _isNarrow;
         foreach (var row in _rows)
         {
             row.IsNarrow = _isNarrow;
@@ -1110,10 +1038,7 @@ public class BillingOverview : TemplatedControl
             return;
         }
         _watchingCollapse = false;
-        if (_moreInvoices is not null)
-        {
-            _moreInvoices.LayoutUpdated -= OnMoreInvoicesLayoutUpdated;
-        }
+        _moreInvoices?.LayoutUpdated -= OnMoreInvoicesLayoutUpdated;
     }
 
     #endregion

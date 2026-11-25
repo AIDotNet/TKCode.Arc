@@ -141,10 +141,7 @@ internal sealed class ReactionsPicker : TemplatedControl
         _panel = e.NameScope.Find<StackPanel>(OptionsPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);
         _caption = e.NameScope.Find<ArcContentSwap>(CaptionPart);
-        if (_caption is not null)
-        {
-            _caption.ContentTemplate = CaptionTemplate;
-        }
+        _caption?.ContentTemplate = CaptionTemplate;
         if (_panel is not null)
         {
             _panel.PointerExited += OnPanelPointerExited;

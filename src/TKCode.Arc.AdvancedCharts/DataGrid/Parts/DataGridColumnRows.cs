@@ -102,10 +102,7 @@ internal abstract class DataGridColumnRow<TCell> : Control where TCell : Control
         Realize(layout, finalSize.Width, finalSize.Height);
         var pinEdge = Math.Min(layout.PinEdge, finalSize.Width);
         Gutter?.Arrange(new Rect(0, 0, layout.Gutter, finalSize.Height));
-        if (Gutter is not null)
-        {
-            Gutter.IsVisible = layout.Gutter > 0;
-        }
+        Gutter?.IsVisible = layout.Gutter > 0;
         _pinned.Arrange(new Rect(0, 0, pinEdge, finalSize.Height));
         _scrollClip.Arrange(new Rect(pinEdge, 0, Math.Max(0, finalSize.Width - pinEdge), finalSize.Height));
         _scroll.Arrange(new Rect(0, 0, Math.Max(0, layout.Total - layout.PinEdge), finalSize.Height));

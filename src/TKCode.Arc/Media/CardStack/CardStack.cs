@@ -174,12 +174,11 @@ public class CardStack : ItemsControl
         set => SetValue(EmptyContentTemplateProperty, value);
     }
 
-    private int _currentIndex;
 
     public int CurrentIndex
     {
-        get => _currentIndex;
-        private set => SetAndRaise(CurrentIndexProperty, ref _currentIndex, value);
+        get;
+        private set => SetAndRaise(CurrentIndexProperty, ref field, value);
     }
 
     private bool _canUndo;
@@ -420,18 +419,9 @@ public class CardStack : ItemsControl
         CurrentIndex = _position;
         CanUndo = _history.Count > 0;
         ((CardStackResetCommand)ResetCommand).RaiseCanExecuteChanged();
-        if (_leftButton is not null)
-        {
-            _leftButton.IsSoftDisabled = _position >= count;
-        }
-        if (_rightButton is not null)
-        {
-            _rightButton.IsSoftDisabled = _position >= count;
-        }
-        if (_undoButton is not null)
-        {
-            _undoButton.IsSoftDisabled = _history.Count == 0;
-        }
+        _leftButton?.IsSoftDisabled = _position >= count;
+        _rightButton?.IsSoftDisabled = _position >= count;
+        _undoButton?.IsSoftDisabled = _history.Count == 0;
         UpdateEmpty(animate);
     }
 
@@ -794,10 +784,7 @@ public class CardStack : ItemsControl
         {
             button?.Classes.Set("compact", compact);
         }
-        if (_undoButton is not null)
-        {
-            _undoButton.IsLabelHidden = narrow;
-        }
+        _undoButton?.IsLabelHidden = narrow;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -837,22 +824,10 @@ public class CardStack : ItemsControl
         {
             _stage.Owner = null;
         }
-        if (_startOver is not null)
-        {
-            _startOver.Click -= OnStartOverClick;
-        }
-        if (_leftButton is not null)
-        {
-            _leftButton.Click -= OnLeftClick;
-        }
-        if (_undoButton is not null)
-        {
-            _undoButton.Click -= OnUndoClick;
-        }
-        if (_rightButton is not null)
-        {
-            _rightButton.Click -= OnRightClick;
-        }
+        _startOver?.Click -= OnStartOverClick;
+        _leftButton?.Click -= OnLeftClick;
+        _undoButton?.Click -= OnUndoClick;
+        _rightButton?.Click -= OnRightClick;
         if (_empty is not null)
         {
             _empty.RenderTransform = null;
@@ -870,22 +845,10 @@ public class CardStack : ItemsControl
         {
             _stage.Owner = this;
         }
-        if (_startOver is not null)
-        {
-            _startOver.Click += OnStartOverClick;
-        }
-        if (_leftButton is not null)
-        {
-            _leftButton.Click += OnLeftClick;
-        }
-        if (_undoButton is not null)
-        {
-            _undoButton.Click += OnUndoClick;
-        }
-        if (_rightButton is not null)
-        {
-            _rightButton.Click += OnRightClick;
-        }
+        _startOver?.Click += OnStartOverClick;
+        _leftButton?.Click += OnLeftClick;
+        _undoButton?.Click += OnUndoClick;
+        _rightButton?.Click += OnRightClick;
         if (_empty is not null)
         {
             _empty.RenderTransform = _emptyOffset;

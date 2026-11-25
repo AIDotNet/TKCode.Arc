@@ -414,10 +414,7 @@ internal class AiSuggestionPop : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_list is not null)
-        {
-            _list.Owner = null;
-        }
+        _list?.Owner = null;
         _size = e.NameScope.Find<SpringSizeDecorator>(SizePart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _list = e.NameScope.Find<AiSuggestionList>(ListPart);

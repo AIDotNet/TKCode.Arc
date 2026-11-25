@@ -149,7 +149,6 @@ public partial class TrialBanner : TemplatedControl
         RoutedEvent.Register<TrialBanner, TrialSnoozedEventArgs>(nameof(Snoozed), RoutingStrategies.Bubble);
 
     private readonly AvaloniaList<TrialFeature> _features = [];
-    private TrialStatus _status;
 
     /// <summary>Creates the banner.</summary>
     public TrialBanner()
@@ -213,8 +212,8 @@ public partial class TrialBanner : TemplatedControl
     /// <inheritdoc cref="StatusProperty"/>
     public TrialStatus Status
     {
-        get => _status;
-        private set => SetAndRaise(StatusProperty, ref _status, value);
+        get;
+        private set => SetAndRaise(StatusProperty, ref field, value);
     }
 
     /// <summary>What the workspace loses without paying, listed in the card (three or four rows). Empty shows the sample.</summary>

@@ -254,10 +254,7 @@ public class ExpandingSearch : TemplatedControl
         _clearButton = e.NameScope.Find<AvaloniaButton>(ClearButtonPart);
         _status = e.NameScope.Find<TextBlock>(StatusPart);
         _panelAnchor = e.NameScope.Find<Control>(PanelAnchorPart);
-        if (_popup is not null)
-        {
-            _popup.PlacementTarget = _panelAnchor;
-        }
+        _popup?.PlacementTarget = _panelAnchor;
         if (_trigger is not null)
         {
             _trigger.Click += OnTriggerClick;
@@ -298,10 +295,7 @@ public class ExpandingSearch : TemplatedControl
             _input.RemoveHandler(KeyDownEvent, OnInputKeyDown);
             _input.PropertyChanged -= OnInputPropertyChanged;
         }
-        if (_clearButton is not null)
-        {
-            _clearButton.Click -= OnClearClick;
-        }
+        _clearButton?.Click -= OnClearClick;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -335,10 +329,7 @@ public class ExpandingSearch : TemplatedControl
         else if (change.Property == AnchorProperty)
         {
             PseudoClasses.Set(AnchorStartPseudoClass, Anchor == ExpandingSearchAnchor.Start);
-            if (_panelSurface is not null)
-            {
-                _panelSurface.HorizontalAlignment = SurfaceAlignment;
-            }
+            _panelSurface?.HorizontalAlignment = SurfaceAlignment;
         }
     }
 
@@ -388,18 +379,9 @@ public class ExpandingSearch : TemplatedControl
             {
                 _width.Jump(goal);
             }
-            if (_panelBody is not null)
-            {
-                _panelBody.Width = Math.Max(0, full - 2);
-            }
-            if (_panelLane is not null)
-            {
-                _panelLane.Width = full;
-            }
-            if (_panelAnchor is not null)
-            {
-                _panelAnchor.Width = full;
-            }
+            _panelBody?.Width = Math.Max(0, full - 2);
+            _panelLane?.Width = full;
+            _panelAnchor?.Width = full;
         }
         return result;
     }
@@ -434,25 +416,13 @@ public class ExpandingSearch : TemplatedControl
     /// <summary>The radius rides the same spring as the width, so the two never drift apart.</summary>
     private void SyncShape(double width)
     {
-        if (_shellHost is not null)
-        {
-            _shellHost.Width = Math.Max(_collapsed, width);
-        }
+        _shellHost?.Width = Math.Max(_collapsed, width);
         var open = Math.Clamp((width - _collapsed) / Math.Max(1, _full - _collapsed), 0, 1);
         var half = Math.Min(_collapsed / 2, _pillRadius);
         var radius = half - (half - Math.Min(_openRadius, half)) * open;
-        if (_shell is not null)
-        {
-            _shell.CornerRadius = new CornerRadius(radius);
-        }
-        if (_focusRing is not null)
-        {
-            _focusRing.CornerRadius = new CornerRadius(radius > 0 ? radius + 3 : 0);
-        }
-        if (_panelSurface is not null)
-        {
-            _panelSurface.Width = Math.Max(_collapsed, width);
-        }
+        _shell?.CornerRadius = new CornerRadius(radius);
+        _focusRing?.CornerRadius = new CornerRadius(radius > 0 ? radius + 3 : 0);
+        _panelSurface?.Width = Math.Max(_collapsed, width);
     }
 
     private void MorphTo(double goal)
@@ -496,10 +466,7 @@ public class ExpandingSearch : TemplatedControl
         _focused = false;
         _active = -1;
         SyncIsExpanded(false);
-        if (_input is not null)
-        {
-            _input.Text = string.Empty;
-        }
+        _input?.Text = string.Empty;
         ApplyExpandedState(animate: true);
         if (returnFocus)
         {
@@ -526,10 +493,7 @@ public class ExpandingSearch : TemplatedControl
     private void ApplyExpandedState(bool animate)
     {
         PseudoClasses.Set(ExpandedPseudoClass, _open);
-        if (_trigger is not null)
-        {
-            _trigger.IsVisible = !_open;
-        }
+        _trigger?.IsVisible = !_open;
         if (_input is not null)
         {
             // Inert while collapsed: not focusable, not hit-testable.
@@ -563,24 +527,15 @@ public class ExpandingSearch : TemplatedControl
         var value = new MotionValue<double>(this, _open ? 1 : 0, MotionVectors.Double);
         value.Changed += o =>
         {
-            if (_input is not null)
-            {
-                _input.Opacity = o;
-            }
+            _input?.Opacity = o;
         };
-        if (_input is not null)
-        {
-            _input.Opacity = value.Value;
-        }
+        _input?.Opacity = value.Value;
         return value;
     }
 
     private void UpdateClear()
     {
-        if (_clearPresence is not null)
-        {
-            _clearPresence.IsPresent = _open && !string.IsNullOrEmpty(_input?.Text);
-        }
+        _clearPresence?.IsPresent = _open && !string.IsNullOrEmpty(_input?.Text);
     }
 
     // ---- input ---------------------------------------------------------------------------------------------------
@@ -972,10 +927,7 @@ public class ExpandingSearch : TemplatedControl
         {
             Dispatcher.UIThread.Post(() =>
             {
-                if (_panelHeight is not null)
-                {
-                    _panelHeight.IsExpanded = true;
-                }
+                _panelHeight?.IsExpanded = true;
             }, DispatcherPriority.Loaded);
         }
     }

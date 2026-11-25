@@ -697,10 +697,7 @@ public partial class WebhookTester
     private bool ValidateEndpoint(bool showError)
     {
         var ok = WebhookTesterJson.IsAllowedEndpoint(Endpoint);
-        if (_endpointInput is not null)
-        {
-            _endpointInput.ErrorMessage = showError && !ok ? Labels.EndpointInvalid : null;
-        }
+        _endpointInput?.ErrorMessage = showError && !ok ? Labels.EndpointInvalid : null;
         return ok;
     }
 

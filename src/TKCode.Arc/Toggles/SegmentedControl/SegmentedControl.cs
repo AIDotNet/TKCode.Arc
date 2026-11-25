@@ -138,16 +138,10 @@ public class SegmentedControl : SelectingItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged -= OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged -= OnScrollChanged;
         _scrollViewer = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _track = e.NameScope.Find<Control>(TrackPart);
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged += OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged += OnScrollChanged;
         // The pill's 1px stroke is centered half a pixel inside the segment, like a CSS border.
         _host.AttachIndicator(e.NameScope.Find<GlidingIndicator>(SelectionPart), inset: 0.5, fadeInFirst: false);
     }

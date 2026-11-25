@@ -81,7 +81,6 @@ public partial class CallInsights : TemplatedControl
 
     private TimeSpan _duration;
     private double _overallSentiment;
-    private CallInsightsUtterance? _currentUtterance;
 
     /// <summary>The people on the call. Empty together with <see cref="Utterances"/>: the built-in sample call is shown.</summary>
     public AvaloniaList<CallInsightsSpeaker> Speakers { get; } = new();
@@ -137,8 +136,8 @@ public partial class CallInsights : TemplatedControl
     /// <inheritdoc cref="CurrentUtteranceProperty"/>
     public CallInsightsUtterance? CurrentUtterance
     {
-        get => _currentUtterance;
-        private set => SetAndRaise(CurrentUtteranceProperty, ref _currentUtterance, value);
+        get;
+        private set => SetAndRaise(CurrentUtteranceProperty, ref field, value);
     }
 
     /// <inheritdoc cref="NextStepToggledEvent"/>

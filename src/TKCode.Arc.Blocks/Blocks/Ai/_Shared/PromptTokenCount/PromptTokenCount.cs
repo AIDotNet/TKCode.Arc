@@ -169,10 +169,7 @@ internal class PromptTokenCount : TemplatedControl
             // Not a number the wheels can show as written: the whole line as plain text.
             SetText(_prefix, text, default);
             SetText(_words, string.Empty, default);
-            if (_digits is not null)
-            {
-                _digits.IsVisible = false;
-            }
+            _digits?.IsVisible = false;
         }
     }
 

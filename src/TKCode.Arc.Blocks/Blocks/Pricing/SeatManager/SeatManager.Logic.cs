@@ -505,10 +505,7 @@ public partial class SeatManager
         var hadFocus = row is not null && IsFocusIn(row.RevokeButton);
         var pending = new PendingRevoke { Invite = invite, Cancel = new CancellationTokenSource(), Quiet = _quiet };
         _pending[invite] = pending;
-        if (row is not null)
-        {
-            row.IsRevoked = true;
-        }
+        row?.IsRevoked = true;
         Refresh();
         if (!pending.Quiet)
         {
@@ -540,10 +537,7 @@ public partial class SeatManager
         var hadFocus = row is not null && IsFocusIn(row.UndoButton);
         pending.Cancel.Cancel();
         _pending.Remove(invite);
-        if (row is not null)
-        {
-            row.IsRevoked = false;
-        }
+        row?.IsRevoked = false;
         Restore(invite, _quiet);
         FocusPart(row?.RevokeButton, hadFocus);
     }

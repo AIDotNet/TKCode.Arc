@@ -236,20 +236,14 @@ internal class AiAttachmentChip : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _action?.Click -= OnActionClick;
         _thumbnail = e.NameScope.Find<Border>(ThumbnailPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
         _icon = e.NameScope.Find<ArcGlyph>(IconPart);
         _meta = e.NameScope.Find<ArcContentSwap>(MetaPart);
         _action = e.NameScope.Find<AiAttachmentChipButton>(ActionPart);
         _glyph = e.NameScope.Find<AiAttachmentStatusGlyph>(GlyphPart);
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _action?.Click += OnActionClick;
         _metaKind = MetaKind.None;
         _metaLine = null;
         Refresh(instant: true);
@@ -302,15 +296,9 @@ internal class AiAttachmentChip : TemplatedControl
         {
             return;
         }
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged -= OnAttachmentChanged;
-        }
+        _watched?.PropertyChanged -= OnAttachmentChanged;
         _watched = attachment;
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged += OnAttachmentChanged;
-        }
+        _watched?.PropertyChanged += OnAttachmentChanged;
     }
 
     private void OnAttachmentChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
@@ -334,10 +322,7 @@ internal class AiAttachmentChip : TemplatedControl
         PseudoClasses.Set(ReadyPseudoClass, attachment is not null && status == AiAttachmentStatus.Ready);
         PseudoClasses.Set(ErrorPseudoClass, attachment is not null && status == AiAttachmentStatus.Error);
         var name = attachment?.Name ?? string.Empty;
-        if (_name is not null)
-        {
-            _name.Text = name;
-        }
+        _name?.Text = name;
         AutomationProperties.SetName(this, name);
         Tooltip.SetTip(this, string.IsNullOrEmpty(name) ? null : name);
 
@@ -349,10 +334,7 @@ internal class AiAttachmentChip : TemplatedControl
         {
             image.Source = thumbnail;
         }
-        if (_icon is not null)
-        {
-            _icon.Data = attachment is null ? null : compact ? CompactIconFor(attachment) : AiFileIntake.IconFor(attachment);
-        }
+        _icon?.Data = attachment is null ? null : compact ? CompactIconFor(attachment) : AiFileIntake.IconFor(attachment);
 
         // Button: cancel while uploading, remove otherwise.
         if (_action is not null)
@@ -383,10 +365,7 @@ internal class AiAttachmentChip : TemplatedControl
 
     private void UpdateProgress()
     {
-        if (_glyph is not null)
-        {
-            _glyph.Progress = Attachment?.Progress ?? 0;
-        }
+        _glyph?.Progress = Attachment?.Progress ?? 0;
         if (_metaKind == MetaKind.Uploading && _metaLine is not null)
         {
             _metaLine.Text = UploadingLine();

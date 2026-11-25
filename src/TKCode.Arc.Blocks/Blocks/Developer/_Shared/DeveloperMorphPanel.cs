@@ -174,10 +174,7 @@ internal sealed class DeveloperMorphPanel : TemplatedControl
         set
         {
             _openSpring = value;
-            if (_shell is not null)
-            {
-                _shell.OpenSpring = value;
-            }
+            _shell?.OpenSpring = value;
         }
     }
 
@@ -188,10 +185,7 @@ internal sealed class DeveloperMorphPanel : TemplatedControl
         set
         {
             _closeSpring = value;
-            if (_shell is not null)
-            {
-                _shell.CloseSpring = value;
-            }
+            _shell?.CloseSpring = value;
         }
     }
 
@@ -236,10 +230,7 @@ internal sealed class DeveloperMorphPanel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _toggle?.Click -= OnToggleClick;
         if (_shell is not null)
         {
             _shell.PointerPressed -= OnShellPressed;
@@ -252,10 +243,7 @@ internal sealed class DeveloperMorphPanel : TemplatedControl
         _toggle = e.NameScope.Find<DeveloperMorphToggle>(TogglePart);
         _bodyHost = e.NameScope.Find<Control>(BodyHostPart);
         _body = e.NameScope.Find<ArcContentSwap>(BodyPart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _toggle?.Click += OnToggleClick;
         if (_shell is not null)
         {
             _shell.OpenSpring = OpenSpring;
@@ -411,10 +399,7 @@ internal sealed class DeveloperMorphPanel : TemplatedControl
         _shell.Background = IsOpen
             ? palette.PillRest
             : _shellPressed ? palette.PillPressed : _shell.IsPointerOver ? palette.PillHover : palette.PillRest;
-        if (_toggle is not null)
-        {
-            _toggle.HoverBrush = palette.ToggleHover;
-        }
+        _toggle?.HoverBrush = palette.ToggleHover;
     }
 
     private void UpdateToggleName()

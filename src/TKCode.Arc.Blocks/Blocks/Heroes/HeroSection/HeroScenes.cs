@@ -818,10 +818,7 @@ internal sealed class HeroContentScene : HeroScene
         var stacked = width <= 800;
         _grid.Margin = phone ? new Thickness(16, 64) : new Thickness(40, 96);
         HeroText.SetTitleSize(_title, Math.Clamp(20.8 + 0.044 * width, 36, 72));
-        if (_description is not null)
-        {
-            _description.FontSize = phone ? ArcTokens.Get<double>(this, ArcDesignTokenKind.TypeBase) : ArcTokens.Get<double>(this, ArcDesignTokenKind.TypeLG);
-        }
+        _description?.FontSize = phone ? ArcTokens.Get<double>(this, ArcDesignTokenKind.TypeBase) : ArcTokens.Get<double>(this, ArcDesignTokenKind.TypeLG);
         if (_layout == HeroSectionVariant.Split && _media is not null)
         {
             _grid.ColumnDefinitions = stacked ? new ColumnDefinitions("*") : new ColumnDefinitions("*,1.05*");

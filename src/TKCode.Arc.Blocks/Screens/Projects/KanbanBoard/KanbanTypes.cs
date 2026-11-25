@@ -403,15 +403,9 @@ public sealed class KanbanCard : AvaloniaObject
         base.OnPropertyChanged(change);
         if (change.Property == ChecklistProperty)
         {
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged -= OnChecklistChanged;
-            }
+            _observed?.CollectionChanged -= OnChecklistChanged;
             _observed = change.GetNewValue<AvaloniaList<KanbanChecklistItem>?>();
-            if (_observed is not null)
-            {
-                _observed.CollectionChanged += OnChecklistChanged;
-            }
+            _observed?.CollectionChanged += OnChecklistChanged;
             WatchItems();
         }
     }

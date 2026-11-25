@@ -380,16 +380,10 @@ public class CommentThread : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_autoHeight is not null)
-        {
-            _autoHeight.Child = null;
-        }
+        _autoHeight?.Child = null;
         _root = e.NameScope.Find<Border>(RootPart);
         _autoHeight = e.NameScope.Find<CommentThreadAutoHeight>(AutoHeightPart);
-        if (_autoHeight is not null)
-        {
-            _autoHeight.Child = _faces;
-        }
+        _autoHeight?.Child = _faces;
         Refresh(animate: false);
     }
 

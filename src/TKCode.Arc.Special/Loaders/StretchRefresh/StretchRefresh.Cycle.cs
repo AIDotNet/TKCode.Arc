@@ -156,10 +156,7 @@ public partial class StretchRefresh
         }
         _runLoop?.Start();
         _status?.ShowText(Labels.Refreshing);
-        if (_spin is not null)
-        {
-            _spin.Angle = 0;
-        }
+        _spin?.Angle = 0;
         _spinLoop?.Start();
     }
 
@@ -171,14 +168,8 @@ public partial class StretchRefresh
         _ = _trackScale?.AnimateTo(StretchRefreshMath.ShrunkStretch, MotionSpec.Tween(ArcMotionPresets.Exit, ArcEasings.Standard));
         _ = _trackOpacity?.AnimateTo(0, MotionSpec.Tween(ArcMotionPresets.Exit, ArcEasings.Standard));
         _spinLoop?.Stop();
-        if (_meter is not null)
-        {
-            _meter.RunPulse = 1;
-        }
-        if (_spinGlyph is not null)
-        {
-            _spinGlyph.Opacity = 1;
-        }
+        _meter?.RunPulse = 1;
+        _spinGlyph?.Opacity = 1;
         ShowMark(failed);
         _status?.ShowText(text);
         if (_headerIcon is not null)
@@ -263,10 +254,7 @@ public partial class StretchRefresh
     {
         _spin ??= new RotateTransform();
         _spin.Angle = 0;
-        if (_spinGlyph is not null)
-        {
-            _spinGlyph.Opacity = 1;
-        }
+        _spinGlyph?.Opacity = 1;
         return _spinGlyph ??= new ArcGlyph
         {
             Data = ArcIcons.RotateCw,

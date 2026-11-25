@@ -125,10 +125,7 @@ public partial class ModelCard
     {
         _root?.Children.Clear();
         _root = null;
-        if (_compareSwitch is not null)
-        {
-            _compareSwitch.IsCheckedChanged -= OnCompareToggled;
-        }
+        _compareSwitch?.IsCheckedChanged -= OnCompareToggled;
         if (_rivalButton is not null)
         {
             DropdownMenu.SetMenu(_rivalButton, null);

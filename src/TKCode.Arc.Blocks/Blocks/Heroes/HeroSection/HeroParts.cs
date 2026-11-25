@@ -300,20 +300,14 @@ internal sealed class HeroActionButton : Button
     {
         _hover = e.Pointer.Type != PointerType.Touch;
         base.OnPointerEntered(e);
-        if (_content is not null)
-        {
-            _content.IsLeaning = _hover;
-        }
+        _content?.IsLeaning = _hover;
     }
 
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
         _hover = false;
-        if (_content is not null)
-        {
-            _content.IsLeaning = false;
-        }
+        _content?.IsLeaning = false;
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)

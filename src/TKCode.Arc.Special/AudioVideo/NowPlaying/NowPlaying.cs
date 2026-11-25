@@ -350,15 +350,9 @@ public sealed partial class NowPlaying : TemplatedControl
 
     private void OnTracksChanged(IList<NowPlayingTrack>? oldList, IList<NowPlayingTrack>? newList)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnTracksCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnTracksCollectionChanged;
         _observed = newList as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnTracksCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnTracksCollectionChanged;
         _ = oldList;
         RefreshQueue();
     }
@@ -425,15 +419,9 @@ public sealed partial class NowPlaying : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_slot is not null)
-        {
-            _slot.Child = null;
-        }
+        _slot?.Child = null;
         _slot = e.NameScope.Find<Border>(SlotPart);
-        if (_slot is not null)
-        {
-            _slot.Child = _root;
-        }
+        _slot?.Child = _root;
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new NowPlayingPeer(this);

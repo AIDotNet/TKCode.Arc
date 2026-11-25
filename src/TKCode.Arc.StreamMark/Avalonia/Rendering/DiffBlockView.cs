@@ -1014,7 +1014,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
 /// </summary>
 internal sealed class DiffHighlightState : IDisposable
 {
-    private readonly object _lock = new();
+    private readonly SyncLock _lock = new();
     private readonly ISyntaxHighlighter? _highlighter;
     private readonly HighlightThemeKind _theme;
     // 仅由后台单工作线程读写：按 (文件标识, 是否旧侧) 复用增量高亮会话

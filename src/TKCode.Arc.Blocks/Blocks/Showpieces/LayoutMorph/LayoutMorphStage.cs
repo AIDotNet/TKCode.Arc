@@ -1317,10 +1317,7 @@ internal sealed class LayoutMorphStage : ShowpieceStage
         EnsurePalette();
         ShowpieceRenderer.Detect(this, ApplyRenderer);
         _scalingSource = TopLevel.GetTopLevel(this);
-        if (_scalingSource is not null)
-        {
-            _scalingSource.ScalingChanged += OnScalingChanged;
-        }
+        _scalingSource?.ScalingChanged += OnScalingChanged;
         if (_hasMetrics)
         {
             // The picture copies went with the detach; the cards ask for them again.

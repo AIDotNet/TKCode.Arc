@@ -46,13 +46,12 @@ public class Progress : AvaloniaRangeBase
     public string? Label { get => GetValue(LabelProperty); set => SetValue(LabelProperty, value); }
     public bool IsValueVisible { get => GetValue(IsValueVisibleProperty); set => SetValue(IsValueVisibleProperty, value); }
 
-    private int _percentage;
 
     /// <summary>round(Value / Maximum × 100), clamped to 0–100.</summary>
     public int Percentage
     {
-        get => _percentage;
-        private set => SetAndRaise(PercentageProperty, ref _percentage, value);
+        get;
+        private set => SetAndRaise(PercentageProperty, ref field, value);
     }
 
     private bool _isComplete;
@@ -99,14 +98,8 @@ public class Progress : AvaloniaRangeBase
         _readout = e.NameScope.Find<ProgressReadout>(ReadoutPart);
         _shown?.Jump(Percentage);
         Apply(ShownPercentage);
-        if (_track is not null)
-        {
-            _track.IsComplete = IsComplete;
-        }
-        if (_readout is not null)
-        {
-            _readout.IsComplete = IsComplete;
-        }
+        _track?.IsComplete = IsComplete;
+        _readout?.IsComplete = IsComplete;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -124,14 +117,8 @@ public class Progress : AvaloniaRangeBase
         else if (change.Property == IsCompleteProperty)
         {
             PseudoClasses.Set(CompletePseudoClass, IsComplete);
-            if (_track is not null)
-            {
-                _track.IsComplete = IsComplete;
-            }
-            if (_readout is not null)
-            {
-                _readout.IsComplete = IsComplete;
-            }
+            _track?.IsComplete = IsComplete;
+            _readout?.IsComplete = IsComplete;
         }
     }
 
@@ -175,14 +162,8 @@ public class Progress : AvaloniaRangeBase
     private void Apply(double percent)
     {
         var clamped = Math.Clamp(percent, 0, 100);
-        if (_track is not null)
-        {
-            _track.Fraction = clamped / 100;
-        }
-        if (_readout is not null)
-        {
-            _readout.Count = clamped;
-        }
+        _track?.Fraction = clamped / 100;
+        _readout?.Count = clamped;
     }
 
     private void UpdateAutomation()

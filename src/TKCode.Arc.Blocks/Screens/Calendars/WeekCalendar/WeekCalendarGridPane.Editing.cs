@@ -148,14 +148,8 @@ internal sealed partial class WeekCalendarGridPane
         _lifted = null;
         _liftedAt = null;
         _originBox = null;
-        if (_origin is not null)
-        {
-            _origin.IsVisible = false;
-        }
-        if (_label is not null)
-        {
-            _label.IsVisible = false;
-        }
+        _origin?.IsVisible = false;
+        _label?.IsVisible = false;
         if (animate)
         {
             Flip.Arm(MotionSpec.Spring(WeekCalendarMotion.Relayout));

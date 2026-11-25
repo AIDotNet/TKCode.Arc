@@ -480,10 +480,7 @@ internal class RankedBarList : TemplatedControl
     /// <summary>Updates the rank column and every shown row's accessible name, and lays the rows out again.</summary>
     private void Relabel()
     {
-        if (_ranks is not null)
-        {
-            _ranks.Count = _shown.Count;
-        }
+        _ranks?.Count = _shown.Count;
         for (var i = 0; i < _shown.Count; i++)
         {
             AutomationProperties.SetName(_shown[i], AccessibleName(i + 1, _shown[i].Item));

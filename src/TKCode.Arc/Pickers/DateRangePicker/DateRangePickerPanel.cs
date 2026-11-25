@@ -189,26 +189,11 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
         CountText = e.NameScope.Find<PickerRollText>("PART_Count");
         SummarySlot = e.NameScope.Find<Control>("PART_SummarySlot");
         _months = new DateRangePickerMonthsView(this);
-        if (_monthsHost is not null)
-        {
-            _monthsHost.Child = _months;
-        }
-        if (_previous is not null)
-        {
-            _previous.Click += (_, _) => GoTo(CalendarMath.AddMonths(View, -1));
-        }
-        if (_next is not null)
-        {
-            _next.Click += (_, _) => GoTo(CalendarMath.AddMonths(View, 1));
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += (_, _) => CancelRequested?.Invoke(this, EventArgs.Empty);
-        }
-        if (_apply is not null)
-        {
-            _apply.Click += (_, _) => ApplyRequested?.Invoke(this, EventArgs.Empty);
-        }
+        _monthsHost?.Child = _months;
+        _previous?.Click += (_, _) => GoTo(CalendarMath.AddMonths(View, -1));
+        _next?.Click += (_, _) => GoTo(CalendarMath.AddMonths(View, 1));
+        _cancel?.Click += (_, _) => CancelRequested?.Invoke(this, EventArgs.Empty);
+        _apply?.Click += (_, _) => ApplyRequested?.Invoke(this, EventArgs.Empty);
         if (_calendars is not null)
         {
             _calendars.PointerExited += (_, _) =>
@@ -251,14 +236,8 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
         _compact = compact;
         PseudoClasses.Set(CompactPseudoClass, compact);
         Width = compact ? width : double.NaN;
-        if (_rail is not null)
-        {
-            _rail.Orientation = compact ? Orientation.Horizontal : Orientation.Vertical;
-        }
-        if (_railScroll is not null)
-        {
-            _railScroll.HorizontalScrollBarVisibility = compact ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled;
-        }
+        _rail?.Orientation = compact ? Orientation.Horizontal : Orientation.Vertical;
+        _railScroll?.HorizontalScrollBarVisibility = compact ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled;
         _months?.SetLayout(compact ? 1 : 2, cell);
         if (changed)
         {
@@ -461,10 +440,7 @@ internal sealed class DateRangePickerPanel : TemplatedControl, IDateRangePickerM
             _apply.IsEnabled = Shown is not null;
             _apply.Content = owner.ApplyText;
         }
-        if (_cancel is not null)
-        {
-            _cancel.Content = owner.CancelText;
-        }
+        _cancel?.Content = owner.CancelText;
         var shown = Shown;
         long? key = shown is { } k ? k.Start.DayNumber * 2L + k.End.DayNumber : null;
         if (key != _shownKey)

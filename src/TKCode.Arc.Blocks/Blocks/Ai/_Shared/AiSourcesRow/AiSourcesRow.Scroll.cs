@@ -92,10 +92,7 @@ internal sealed partial class AiSourcesRow
         _panel.IsRow = _isNarrow;
         _panel.CardWidth = AiSourceSnap.CardWidth(Bounds.Width);
         _scroller.HorizontalScrollBarVisibility = _isNarrow ? ScrollBarVisibility.Hidden : ScrollBarVisibility.Disabled;
-        if (_body is not null)
-        {
-            _body.CrossClipOverflow = pad;
-        }
+        _body?.CrossClipOverflow = pad;
         if (!_isNarrow)
         {
             StopScroll();

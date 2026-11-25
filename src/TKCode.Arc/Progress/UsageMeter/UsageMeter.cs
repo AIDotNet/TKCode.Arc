@@ -146,12 +146,11 @@ public partial class UsageMeter : TemplatedControl
     [Content]
     public AvaloniaList<UsageSegment> Segments { get; } = new();
 
-    private UsageMeterStatus _status;
 
     public UsageMeterStatus Status
     {
-        get => _status;
-        private set => SetAndRaise(StatusProperty, ref _status, value);
+        get;
+        private set => SetAndRaise(StatusProperty, ref field, value);
     }
 
     private double _total;
@@ -242,10 +241,7 @@ public partial class UsageMeter : TemplatedControl
         var host = e.NameScope.Find<Decorator>(BarHostPart);
         _bar = new UsageMeterBar(this);
         AutomationProperties.SetControlTypeOverride(_bar, AutomationControlType.Image);
-        if (host is not null)
-        {
-            host.Child = _bar;
-        }
+        host?.Child = _bar;
         _legend = e.NameScope.Find<UsageMeterLegendPanel>(LegendPart);
         _badgeIcon = e.NameScope.Find<ArcContentSwap>(BadgeIconPart);
         _items.Clear();
@@ -322,15 +318,9 @@ public partial class UsageMeter : TemplatedControl
     // User data is observed only while the meter is in the tree, so a long-lived source never keeps it alive.
     private void ObserveSource()
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourceChanged;
-        }
+        _observed?.CollectionChanged -= OnSourceChanged;
         _observed = IsAttached ? ItemsSource as INotifyCollectionChanged : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourceChanged;
-        }
+        _observed?.CollectionChanged += OnSourceChanged;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

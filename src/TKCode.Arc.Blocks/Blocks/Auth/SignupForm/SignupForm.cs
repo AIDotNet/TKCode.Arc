@@ -176,7 +176,6 @@ public partial class SignupForm : TemplatedControl
 
     #endregion
 
-    private SignupFormStep _step;
     private bool _busy;
     private SignupFormMethod? _busyMethod;
     private SignupFormMethod _signedUpWith;
@@ -227,8 +226,8 @@ public partial class SignupForm : TemplatedControl
     /// <inheritdoc cref="StepProperty"/>
     public SignupFormStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsBusyProperty"/>

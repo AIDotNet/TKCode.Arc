@@ -261,14 +261,8 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
             _popup.Closed -= OnPopupClosed;
             _popup.Opened -= OnPopupOpened;
         }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
-        if (_options is not null)
-        {
-            _options.Host = null;
-        }
+        _scroll?.ScrollChanged -= OnScrollChanged;
+        _options?.Host = null;
         DetachScrollButtons();
 
         _trigger = e.NameScope.Find<Border>(TriggerPart);
@@ -689,10 +683,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         _options.SetActive(position, animate: true);
         _options.ScrollIntoView(position);
         // Focus stays on the trigger, so the highlighted option is announced (Radix focuses the item instead).
-        if (_announcer is not null)
-        {
-            _announcer.Text = SelectOptionView.Describe(_entries, _options.EntryAt(position), position, _all.Count);
-        }
+        _announcer?.Text = SelectOptionView.Describe(_entries, _options.EntryAt(position), position, _all.Count);
     }
 
     private int NextEnabled(int from, int step)
@@ -822,14 +813,8 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         {
             _scrollDown ??= CreateScrollButton(up: false);
         }
-        if (_scrollUp is not null)
-        {
-            _scrollUp.IsVisible = showUp;
-        }
-        if (_scrollDown is not null)
-        {
-            _scrollDown.IsVisible = showDown;
-        }
+        _scrollUp?.IsVisible = showUp;
+        _scrollDown?.IsVisible = showDown;
         if ((_autoScrollDirection < 0 && offset <= 0.5) || (_autoScrollDirection > 0 && max - offset <= 0.5))
         {
             StopAutoScroll();

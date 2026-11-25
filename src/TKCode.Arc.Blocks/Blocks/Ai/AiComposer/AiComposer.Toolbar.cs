@@ -164,18 +164,12 @@ public partial class AiComposer
 
     private void HookModelPill()
     {
-        if (_modelPill is not null)
-        {
-            _modelPill.OpenRequested += OnModelPillOpenRequested;
-        }
+        _modelPill?.OpenRequested += OnModelPillOpenRequested;
     }
 
     private void UnhookModelPill()
     {
-        if (_modelPill is not null)
-        {
-            _modelPill.OpenRequested -= OnModelPillOpenRequested;
-        }
+        _modelPill?.OpenRequested -= OnModelPillOpenRequested;
     }
 
     /// <summary>
@@ -280,10 +274,7 @@ public partial class AiComposer
     /// <summary>Code set <see cref="SelectedModel"/>: the menu takes it (and snaps the effort), <see cref="ModelChanged"/> is raised.</summary>
     private void OnSelectedModelChanged(AiModel? oldModel, AiModel? newModel)
     {
-        if (_modelPill is not null)
-        {
-            _modelPill.Model = newModel;
-        }
+        _modelPill?.Model = newModel;
         if (_fromMenu)
         {
             return;
@@ -301,10 +292,7 @@ public partial class AiComposer
     /// </summary>
     private void OnEffortChanged(ModelEffort? oldEffort, ModelEffort? newEffort)
     {
-        if (_modelPill is not null)
-        {
-            _modelPill.Effort = newEffort;
-        }
+        _modelPill?.Effort = newEffort;
         if (_fromMenu)
         {
             return;

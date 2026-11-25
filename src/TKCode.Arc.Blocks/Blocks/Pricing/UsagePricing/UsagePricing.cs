@@ -422,42 +422,15 @@ public class UsagePricing : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_seatSlider is not null)
-        {
-            _seatSlider.PropertyChanged -= OnSliderChanged;
-        }
-        if (_usageSlider is not null)
-        {
-            _usageSlider.PropertyChanged -= OnSliderChanged;
-        }
-        if (_period is not null)
-        {
-            _period.SelectionChanged -= OnPeriodSelected;
-        }
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_layout is not null)
-        {
-            _layout.StackedChanged -= OnStackedChanged;
-        }
-        if (_billed is not null)
-        {
-            _billed.Content = null;
-        }
-        if (_usageValue is not null)
-        {
-            _usageValue.Content = null;
-        }
-        if (_note is not null)
-        {
-            _note.Content = null;
-        }
-        if (_action is not null)
-        {
-            _action.Content = null;
-        }
+        _seatSlider?.PropertyChanged -= OnSliderChanged;
+        _usageSlider?.PropertyChanged -= OnSliderChanged;
+        _period?.SelectionChanged -= OnPeriodSelected;
+        _action?.Click -= OnActionClick;
+        _layout?.StackedChanged -= OnStackedChanged;
+        _billed?.Content = null;
+        _usageValue?.Content = null;
+        _note?.Content = null;
+        _action?.Content = null;
         base.OnApplyTemplate(e);
         var n = e.NameScope;
         _layout = n.Find<UsagePricingLayout>(LayoutPart);
@@ -500,22 +473,10 @@ public class UsagePricing : TemplatedControl
         _announcer = n.Find<SiteAnnouncer>(AnnouncerPart);
         _yearlyFade = null;
 
-        if (_seatSlider is not null)
-        {
-            _seatSlider.PropertyChanged += OnSliderChanged;
-        }
-        if (_usageSlider is not null)
-        {
-            _usageSlider.PropertyChanged += OnSliderChanged;
-        }
-        if (_period is not null)
-        {
-            _period.SelectionChanged += OnPeriodSelected;
-        }
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _seatSlider?.PropertyChanged += OnSliderChanged;
+        _usageSlider?.PropertyChanged += OnSliderChanged;
+        _period?.SelectionChanged += OnPeriodSelected;
+        _action?.Click += OnActionClick;
         if (_layout is not null)
         {
             _layout.StackedChanged += OnStackedChanged;
@@ -673,14 +634,8 @@ public class UsagePricing : TemplatedControl
         SetText(_title, labels.Title);
         SetText(_description, labels.Description);
         AutomationProperties.SetName(this, labels.Title);
-        if (_seatSlider is not null)
-        {
-            _seatSlider.Label = labels.SeatsLabel;
-        }
-        if (_usageSlider is not null)
-        {
-            _usageSlider.Label = labels.UsageLabel;
-        }
+        _seatSlider?.Label = labels.SeatsLabel;
+        _usageSlider?.Label = labels.UsageLabel;
         if (_period is not null)
         {
             AutomationProperties.SetName(_period, labels.BillingPeriodName);
@@ -714,10 +669,7 @@ public class UsagePricing : TemplatedControl
         Func<decimal, string> money = Money;
         foreach (var digits in new[] { _savingDigits, _seatsCost, _yearlyOff, _totalDigits, _price, _usageCost, _billedDigits })
         {
-            if (digits is not null)
-            {
-                digits.Format = money;
-            }
+            digits?.Format = money;
         }
     }
 
@@ -765,19 +717,13 @@ public class UsagePricing : TemplatedControl
         {
             _period.SelectedIndex = yearly ? 1 : 0;
         }
-        if (_savingMark is not null)
-        {
-            _savingMark.IsApplied = yearly;
-        }
+        _savingMark?.IsApplied = yearly;
         SetDigits(_savingDigits, quote.YearlySaving, animate);
 
         // Breakdown.
         var labels = Labels;
         var planName = plan?.Name ?? string.Empty;
-        if (_seatsRowPlan is not null)
-        {
-            _seatsRowPlan.Text = planName;
-        }
+        _seatsRowPlan?.Text = planName;
         SetText(_seatsDetail, labels.SeatsDetail(FormatSeats(seats), Rate(plan?.SeatPrice ?? 0)));
         SetDigits(_seatsCost, quote.SeatCost, animate);
         SetDigits(_usageCost, quote.UsageCost, animate);
@@ -802,10 +748,7 @@ public class UsagePricing : TemplatedControl
             _meter.SetNames(plans.Select(p => p.Name).ToList());
             _meter.CurrentIndex = quote.PlanIndex;
         }
-        if (_planName is not null)
-        {
-            _planName.Text = planName;
-        }
+        _planName?.Text = planName;
         if (_card is not null)
         {
             AutomationProperties.SetName(_card, planName);

@@ -158,10 +158,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
             _article.RenderTransform = _rise;
             _article.Opacity = Math.Clamp(_riseProgress?.Value ?? 1, 0, 1);
         }
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _toggle?.Click += OnToggleClick;
         // The first state of every part lands without motion.
         _dot?.SetPresent(!_isRead, animate: false);
         _details?.Set(_expanded);
@@ -176,18 +173,9 @@ internal sealed class NotificationCenterRow : TemplatedControl
 
     private void Detach()
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
-        if (_readToggle is not null)
-        {
-            _readToggle.Click -= OnReadToggleClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
+        _toggle?.Click -= OnToggleClick;
+        _readToggle?.Click -= OnReadToggleClick;
+        _dismiss?.Click -= OnDismissClick;
     }
 
     private void OnToggleClick(object? sender, RoutedEventArgs e)
@@ -356,10 +344,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
         var value = new MotionValue<double>(this, 1, MotionVectors.Double);
         value.Changed += p =>
         {
-            if (_article is not null)
-            {
-                _article.Opacity = Math.Clamp(p, 0, 1);
-            }
+            _article?.Opacity = Math.Clamp(p, 0, 1);
             _rise.Y = RiseOffset * (1 - p);
         };
         return value;
@@ -369,10 +354,7 @@ internal sealed class NotificationCenterRow : TemplatedControl
     public void ResetRise()
     {
         _riseProgress?.Jump(1);
-        if (_article is not null)
-        {
-            _article.Opacity = 1;
-        }
+        _article?.Opacity = 1;
         _rise.Y = 0;
     }
 
@@ -436,14 +418,8 @@ internal sealed class NotificationCenterRow : TemplatedControl
         _readGlyph = content.ReadGlyph;
         _readLabel = content.ReadLabel;
         _dismiss = content.Dismiss;
-        if (_readToggle is not null)
-        {
-            _readToggle.Click += OnReadToggleClick;
-        }
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
+        _readToggle?.Click += OnReadToggleClick;
+        _dismiss?.Click += OnDismissClick;
         _readLabelText = null;
         UpdateReadAction(animate: false);
         UpdateAutomation();

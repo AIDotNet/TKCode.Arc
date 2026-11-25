@@ -183,10 +183,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _close?.Click -= OnCloseClick;
         if (_moods is not null)
         {
             _moods.Picked -= OnMoodPicked;
@@ -197,10 +194,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
             _note.TextChanged -= OnNoteTextChanged;
             _note.RemoveHandler(KeyDownEvent, OnNoteKeyDown);
         }
-        if (_send is not null)
-        {
-            _send.Click -= OnSendClick;
-        }
+        _send?.Click -= OnSendClick;
         _motions.Clear();
         _header = e.NameScope.Find<Control>(HeaderPart);
         _close = e.NameScope.Find<FeedbackMorphIconButton>(ClosePart);
@@ -213,10 +207,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
         _actions = e.NameScope.Find<Control>(ActionsPart);
         _status = e.NameScope.Find<ArcContentSwap>(StatusPart);
         _send = e.NameScope.Find<FeedbackMorphSend>(SendPart);
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
+        _close?.Click += OnCloseClick;
         if (_moods is not null)
         {
             _moods.Picked += OnMoodPicked;
@@ -229,10 +220,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
             // Tunnel: Ctrl/Cmd+Enter sends before the text box turns it into a new line.
             _note.AddHandler(KeyDownEvent, OnNoteKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_send is not null)
-        {
-            _send.Click += OnSendClick;
-        }
+        _send?.Click += OnSendClick;
         if (_moodBlock is not null)
         {
             _nudge = new TranslateTransform();
@@ -434,18 +422,9 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
     internal void SetBusy(bool busy)
     {
         PseudoClasses.Set(BusyPseudoClass, busy);
-        if (_note is not null)
-        {
-            _note.IsReadOnly = busy;
-        }
-        if (_send is not null)
-        {
-            _send.IsBusy = busy;
-        }
-        if (_moods is not null)
-        {
-            _moods.IsHitTestVisible = !busy;
-        }
+        _note?.IsReadOnly = busy;
+        _send?.IsBusy = busy;
+        _moods?.IsHitTestVisible = !busy;
         if (busy)
         {
             _statusKind = FeedbackStatusKind.None;
@@ -472,10 +451,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
             FeedbackStatusKind.Error => EnsureError(),
             _ => null
         };
-        if (_digits is not null)
-        {
-            _digits.Value = Math.Max(0, MaxLength - length);
-        }
+        _digits?.Value = Math.Max(0, MaxLength - length);
         if (!ReferenceEquals(_status.Content, content))
         {
             _status.Content = content;
@@ -506,10 +482,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
                 Children = { _digits, _counterLabel }
             };
         }
-        if (_counterLabel is not null)
-        {
-            _counterLabel.Text = _owner.RemainingLabel;
-        }
+        _counterLabel?.Text = _owner.RemainingLabel;
         return _counter;
     }
 
@@ -534,10 +507,7 @@ internal sealed class FeedbackMorphPanel : TemplatedControl, IFeedbackMorphFace
             _errorText.Bind(TextBlock.ForegroundProperty, this.GetObservable(DangerBrushProperty));
             _error = new StackPanel { Orientation = Orientation.Horizontal, Spacing = 6, Children = { glyph, _errorText } };
         }
-        if (_errorText is not null)
-        {
-            _errorText.Text = _owner.ErrorMessage;
-        }
+        _errorText?.Text = _owner.ErrorMessage;
         return _error;
     }
 

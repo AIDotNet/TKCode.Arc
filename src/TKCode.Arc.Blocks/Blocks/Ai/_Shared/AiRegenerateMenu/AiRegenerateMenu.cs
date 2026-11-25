@@ -806,15 +806,9 @@ internal sealed class AiRegenerateMenu : Control
         {
             return;
         }
-        if (_observedModels is not null)
-        {
-            _observedModels.CollectionChanged -= OnModelsChanged;
-        }
+        _observedModels?.CollectionChanged -= OnModelsChanged;
         _observedModels = next;
-        if (next is not null)
-        {
-            next.CollectionChanged += OnModelsChanged;
-        }
+        next?.CollectionChanged += OnModelsChanged;
     }
 
     private void OnModelsChanged(object? sender, NotifyCollectionChangedEventArgs e)

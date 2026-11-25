@@ -487,10 +487,7 @@ public class RaceBarChart : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_play is not null)
-        {
-            _play.Click -= OnPlayClick;
-        }
+        _play?.Click -= OnPlayClick;
         _stage = e.NameScope.Find<RaceBarStage>(StagePart);
         _timeline = e.NameScope.Find<RaceBarTimeline>(TimelinePart);
         _play = e.NameScope.Find<Button>(PlayPart);
@@ -498,10 +495,7 @@ public class RaceBarChart : TemplatedControl
         _period = e.NameScope.Find<ArcContentSwap>(PeriodPart);
         _firstPeriod = e.NameScope.Find<TextBlock>(FirstPeriodPart);
         _lastPeriod = e.NameScope.Find<TextBlock>(LastPeriodPart);
-        if (_play is not null)
-        {
-            _play.Click += OnPlayClick;
-        }
+        _play?.Click += OnPlayClick;
         _stage?.Attach(this);
         _timeline?.Attach(this);
         _modelDirty = true;
@@ -1045,24 +1039,15 @@ public class RaceBarChart : TemplatedControl
                 _period.Content = period;
             }
         }
-        if (_firstPeriod is not null)
-        {
-            _firstPeriod.Text = _engine.FrameCount == 0 ? null : _engine.Frames[0].Period;
-        }
-        if (_lastPeriod is not null)
-        {
-            _lastPeriod.Text = _engine.FrameCount == 0 ? null : _engine.Frames[last].Period;
-        }
+        _firstPeriod?.Text = _engine.FrameCount == 0 ? null : _engine.Frames[0].Period;
+        _lastPeriod?.Text = _engine.FrameCount == 0 ? null : _engine.Frames[last].Period;
         if (_play is not null)
         {
             _play.IsEnabled = ready && _engine.FrameCount > 1;
             var atEnd = _engine.FrameCount > 1 && CurrentIndex >= last;
             var name = IsPlaying ? "Pause" : atEnd ? "Replay from the start" : "Play";
             AutomationProperties.SetName(_play, name);
-            if (_playGlyph is not null)
-            {
-                _playGlyph.Data = IsPlaying ? ArcIcons.Pause : atEnd ? ArcIcons.RotateCcw : ArcIcons.Play;
-            }
+            _playGlyph?.Data = IsPlaying ? ArcIcons.Pause : atEnd ? ArcIcons.RotateCcw : ArcIcons.Play;
         }
         if (_timeline is not null)
         {

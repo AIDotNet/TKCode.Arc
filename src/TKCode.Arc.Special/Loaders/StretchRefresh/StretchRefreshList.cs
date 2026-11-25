@@ -237,16 +237,10 @@ internal sealed class StretchRefreshList : Panel
 
     public void SetItems(IEnumerable? items)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnCollectionChanged;
         _items = items;
         _observed = items as INotifyCollectionChanged;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnCollectionChanged;
         Sync(animate: false);
     }
 

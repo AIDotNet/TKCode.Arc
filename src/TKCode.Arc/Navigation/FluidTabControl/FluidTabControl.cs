@@ -297,10 +297,7 @@ public class FluidTabControl : SelectingItemsControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_listPanel is not null)
-        {
-            _listPanel.Arranged = null;
-        }
+        _listPanel?.Arranged = null;
         if (_listViewport is not null)
         {
             _listViewport.RemoveHandler(PointerWheelChangedEvent, OnListWheel);
@@ -327,10 +324,7 @@ public class FluidTabControl : SelectingItemsControl
         _highlightTarget = default;
         _writtenOffset = double.NaN;
 
-        if (_listPanel is not null)
-        {
-            _listPanel.Arranged = OnListArranged;
-        }
+        _listPanel?.Arranged = OnListArranged;
         if (_listViewport is not null)
         {
             _listViewport.AddHandler(PointerWheelChangedEvent, OnListWheel, RoutingStrategies.Tunnel);
@@ -935,10 +929,7 @@ public class FluidTabControl : SelectingItemsControl
             _listScroll = new MotionValue<double>(this, offset, MotionVectors.Double);
             _listScroll.Changed += value =>
             {
-                if (_listViewport is not null)
-                {
-                    _listViewport.Offset = new Vector(_listViewport.Offset.X, value);
-                }
+                _listViewport?.Offset = new Vector(_listViewport.Offset.X, value);
             };
         }
         if (!_listScroll.IsAnimating)

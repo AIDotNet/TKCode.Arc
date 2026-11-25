@@ -107,19 +107,13 @@ public sealed partial class LinkUnfurl
     private void SetSending(bool sending)
     {
         IsSending = sending;
-        if (_editor is not null)
-        {
-            _editor.IsReadOnly = sending;
-        }
+        _editor?.IsReadOnly = sending;
         if (_send is not null)
         {
             _send.IsSending = sending;
             AutomationProperties.SetName(_send, sending ? Labels.Sending : Labels.Send);
         }
-        if (_samples is not null)
-        {
-            _samples.IsEnabled = !sending;
-        }
+        _samples?.IsEnabled = !sending;
     }
 
     /// <summary>
@@ -130,10 +124,7 @@ public sealed partial class LinkUnfurl
     {
         var generation = ++_sendGeneration;
         Announce(Labels.AnnounceSent);
-        if (_send is not null)
-        {
-            _send.IsSent = true;
-        }
+        _send?.IsSent = true;
         _ = HoldSent(generation);
         _exit ??= CreateExitMotion();
         var full = ArcMotion.IsFull(this);
@@ -172,10 +163,7 @@ public sealed partial class LinkUnfurl
             _exit.Jump(0);
         }
         _contentShift.Y = 0;
-        if (_content is not null)
-        {
-            _content.Opacity = 1;
-        }
+        _content?.Opacity = 1;
     }
 
     private async Task HoldSent(int generation)
@@ -215,10 +203,7 @@ public sealed partial class LinkUnfurl
         var motion = new MotionValue<double>(this, 1, MotionVectors.Double);
         motion.Changed += value =>
         {
-            if (_body is not null)
-            {
-                _body.Progress = value;
-            }
+            _body?.Progress = value;
         };
         return motion;
     }

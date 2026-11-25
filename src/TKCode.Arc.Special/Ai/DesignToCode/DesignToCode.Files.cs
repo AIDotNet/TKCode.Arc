@@ -213,10 +213,7 @@ public partial class DesignToCode
         }
         _dragging = dragging;
         PseudoClasses.Set(DraggingPseudoClass, dragging);
-        if (_dragCover is not null)
-        {
-            _dragCover.IsVisible = dragging;
-        }
+        _dragCover?.IsVisible = dragging;
     }
 
     /// <summary>Whether the drag cover shows (tests).</summary>

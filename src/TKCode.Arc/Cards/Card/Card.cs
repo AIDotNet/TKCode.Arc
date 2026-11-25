@@ -382,10 +382,7 @@ public class Card : ContentControl
 
     private static void Show(Control? part, bool visible)
     {
-        if (part is not null)
-        {
-            part.IsVisible = visible;
-        }
+        part?.IsVisible = visible;
     }
 
     #endregion
@@ -438,10 +435,7 @@ public class Card : ContentControl
             }
             if (change.Property == DetailsProperty)
             {
-                if (_title is not null)
-                {
-                    _title.IsInteractive = IsInteractive;
-                }
+                _title?.IsInteractive = IsInteractive;
                 if (change.NewValue is null && IsDetailsOpen)
                 {
                     RequestClose(DismissReason.Programmatic);
@@ -585,10 +579,7 @@ public class Card : ContentControl
             Unlock(card);
             card.Content = value;
         }
-        if (quick is not null)
-        {
-            quick.Content = value;
-        }
+        quick?.Content = value;
     }
 
     private static void Lock(Control presenter)

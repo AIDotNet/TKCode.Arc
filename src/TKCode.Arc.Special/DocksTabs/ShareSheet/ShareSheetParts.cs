@@ -480,10 +480,7 @@ internal sealed class ShareSheetPersonButton : ToggleButton
     {
         base.OnApplyTemplate(e);
         Avatar = e.NameScope.Find<ShareSheetAvatar>(AvatarPart);
-        if (Avatar is not null)
-        {
-            Avatar.Person = Person;
-        }
+        Avatar?.Person = Person;
         if (e.NameScope.Find<TextBlock>(NamePart) is { } name)
         {
             name.Text = Person.ShortName;
@@ -909,10 +906,7 @@ internal sealed class ShareSheetChip : TemplatedControl
         Fill = e.NameScope.Find<Border>(FillPart);
         Avatar = e.NameScope.Find<ShareSheetAvatar>(AvatarPart);
         Remove = e.NameScope.Find<ShareSheetIconButton>(RemovePart);
-        if (Avatar is not null)
-        {
-            Avatar.Person = Person;
-        }
+        Avatar?.Person = Person;
         if (e.NameScope.Find<TextBlock>(NamePart) is { } name)
         {
             name.Text = Person.ShortName;

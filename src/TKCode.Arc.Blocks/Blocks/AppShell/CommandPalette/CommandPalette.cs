@@ -458,10 +458,7 @@ public class CommandPalette : TemplatedControl
             _clearPop = null;
             _clearOpacity = null;
         }
-        if (_closeButton is not null)
-        {
-            _closeButton.Click += OnCloseClick;
-        }
+        _closeButton?.Click += OnCloseClick;
         if (_list is not null)
         {
             _list.Arranged += OnListArranged;
@@ -471,10 +468,7 @@ public class CommandPalette : TemplatedControl
             _list.PointerReleased += OnListPointerReleased;
             _list.PointerCaptureLost += OnListPointerCaptureLost;
         }
-        if (_empty is not null)
-        {
-            _empty.RenderTransform = _emptyTranslate;
-        }
+        _empty?.RenderTransform = _emptyTranslate;
         _listFade = null;
         _emptyOpacity = null;
         _emptyRise = null;
@@ -493,14 +487,8 @@ public class CommandPalette : TemplatedControl
             _input.RemoveHandler(KeyDownEvent, OnInputKeyDown);
             _input.PropertyChanged -= OnInputPropertyChanged;
         }
-        if (_clearButton is not null)
-        {
-            _clearButton.Click -= OnClearClick;
-        }
-        if (_closeButton is not null)
-        {
-            _closeButton.Click -= OnCloseClick;
-        }
+        _clearButton?.Click -= OnClearClick;
+        _closeButton?.Click -= OnCloseClick;
         if (_list is not null)
         {
             _list.Arranged -= OnListArranged;
@@ -716,15 +704,9 @@ public class CommandPalette : TemplatedControl
         {
             return;
         }
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged -= OnSourceCollectionChanged;
-        }
+        _watchedSource?.CollectionChanged -= OnSourceCollectionChanged;
         _watchedSource = next;
-        if (_watchedSource is not null)
-        {
-            _watchedSource.CollectionChanged += OnSourceCollectionChanged;
-        }
+        _watchedSource?.CollectionChanged += OnSourceCollectionChanged;
     }
 
     /// <summary>Follows property changes of the listed commands while the palette is in a window (no leaks from long-lived items).</summary>
@@ -970,10 +952,7 @@ public class CommandPalette : TemplatedControl
         _listFade = new MotionValue<double>(this, 1, MotionVectors.Double);
         _listFade.Changed += opacity =>
         {
-            if (_list is not null)
-            {
-                _list.Opacity = Math.Clamp(opacity, 0, 1);
-            }
+            _list?.Opacity = Math.Clamp(opacity, 0, 1);
         };
         _emptyOpacity = new MotionValue<double>(this, 1, MotionVectors.Double);
         _emptyRise = new MotionValue<double>(this, 0, MotionVectors.Double);

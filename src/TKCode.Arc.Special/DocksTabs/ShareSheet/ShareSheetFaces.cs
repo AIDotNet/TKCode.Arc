@@ -142,22 +142,10 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (Copy is not null)
-        {
-            Copy.Click -= OnCopyClick;
-        }
-        if (AccessRow is not null)
-        {
-            AccessRow.Click -= OnAccessRowClick;
-        }
-        if (Send is not null)
-        {
-            Send.Click -= OnSendClick;
-        }
+        _close?.Click -= OnCloseClick;
+        Copy?.Click -= OnCopyClick;
+        AccessRow?.Click -= OnAccessRowClick;
+        Send?.Click -= OnSendClick;
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _close = e.NameScope.Find<ShareSheetIconButton>(ClosePart);
         _card = e.NameScope.Find<Control>(CardPart);
@@ -179,26 +167,11 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
         _error = e.NameScope.Find<Control>(ErrorPart);
         _errorText = e.NameScope.Find<TextBlock>(ErrorTextPart);
         Send = e.NameScope.Find<ShareSheetSendButton>(SendPart);
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (Copy is not null)
-        {
-            Copy.Click += OnCopyClick;
-        }
-        if (AccessRow is not null)
-        {
-            AccessRow.Click += OnAccessRowClick;
-        }
-        if (Send is not null)
-        {
-            Send.Click += OnSendClick;
-        }
-        if (_recipients is not null)
-        {
-            _recipients.RenderTransform = _shakeShift;
-        }
+        _close?.Click += OnCloseClick;
+        Copy?.Click += OnCopyClick;
+        AccessRow?.Click += OnAccessRowClick;
+        Send?.Click += OnSendClick;
+        _recipients?.RenderTransform = _shakeShift;
         if (_chipsRow is not null)
         {
             _ghosts = new Canvas { IsHitTestVisible = false, ClipToBounds = false };
@@ -217,10 +190,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
     public void RefreshWords()
     {
         var labels = _owner.Labels;
-        if (_title is not null)
-        {
-            _title.Text = labels.Title(_owner.Title ?? string.Empty);
-        }
+        _title?.Text = labels.Title(_owner.Title ?? string.Empty);
         AutomationProperties.SetName(this, labels.Title(_owner.Title ?? string.Empty));
         if (_close is not null)
         {
@@ -240,14 +210,8 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
         {
             AutomationProperties.SetName(_channelsHost, labels.Channels);
         }
-        if (_recipientsHeading is not null)
-        {
-            _recipientsHeading.Text = labels.Recipients;
-        }
-        if (_hint is not null)
-        {
-            _hint.Text = labels.RecipientsHint;
-        }
+        _recipientsHeading?.Text = labels.Recipients;
+        _hint?.Text = labels.RecipientsHint;
         if (_peopleHost is not null)
         {
             AutomationProperties.SetName(_peopleHost, labels.People);
@@ -286,10 +250,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
             _linkText.Text = Display(link);
             Tooltip.SetTip(_linkText, link);
         }
-        if (_linkRow is not null)
-        {
-            _linkRow.IsVisible = !string.IsNullOrEmpty(link);
-        }
+        _linkRow?.IsVisible = !string.IsNullOrEmpty(link);
         UpdateCard();
     }
 
@@ -306,10 +267,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
 
     private void UpdateCard()
     {
-        if (_card is not null)
-        {
-            _card.IsVisible = !string.IsNullOrEmpty(_owner.Link) || _owner.AccessLevels.Count > 0;
-        }
+        _card?.IsVisible = !string.IsNullOrEmpty(_owner.Link) || _owner.AccessLevels.Count > 0;
         if (AccessRow is not null)
         {
             AccessRow.IsVisible = _owner.AccessLevels.Count > 0;
@@ -348,10 +306,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
     public void ShowChosen()
     {
         var chosen = _owner.ChosenAccess;
-        if (AccessRow is not null)
-        {
-            AccessRow.Access = chosen;
-        }
+        AccessRow?.Access = chosen;
         foreach (var option in _options)
         {
             option.IsSelected = ReferenceEquals(option.Access, chosen);
@@ -384,10 +339,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
             _channelsHost.Children.Add(button);
         }
         _channelsHost.IsVisible = channels.Count > 0;
-        if (_divider is not null)
-        {
-            _divider.IsVisible = channels.Count > 0 && _owner.People.Count > 0;
-        }
+        _divider?.IsVisible = channels.Count > 0 && _owner.People.Count > 0;
     }
 
     public void RebuildPeople()
@@ -415,14 +367,8 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
         }
         var any = people.Count > 0;
         _peopleHost.IsVisible = any;
-        if (_recipients is not null)
-        {
-            _recipients.IsVisible = any;
-        }
-        if (_divider is not null)
-        {
-            _divider.IsVisible = any && _owner.Channels.Count > 0;
-        }
+        _recipients?.IsVisible = any;
+        _divider?.IsVisible = any && _owner.Channels.Count > 0;
     }
 
     #region Picks and chips
@@ -727,10 +673,7 @@ internal sealed class ShareSheetPanelFace : TemplatedControl
         }
         AccessRow.IsExpanded = open;
         PseudoClasses.Set(ListOpenPseudoClass, open);
-        if (_accessListSlot is not null)
-        {
-            _accessListSlot.IsExpanded = open;
-        }
+        _accessListSlot?.IsExpanded = open;
         // A folded list keeps its options out of the tab order and out of reach.
         _accessList.IsHitTestVisible = open;
         foreach (var option in _options)
@@ -959,50 +902,29 @@ internal sealed class ShareSheetSentFace : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (Undo is not null)
-        {
-            Undo.Click -= OnUndoClick;
-        }
-        if (Done is not null)
-        {
-            Done.Click -= OnDoneClick;
-        }
+        Undo?.Click -= OnUndoClick;
+        Done?.Click -= OnDoneClick;
         _avatars = e.NameScope.Find<Canvas>(AvatarsPart);
         _badge = e.NameScope.Find<Control>(BadgePart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _detail = e.NameScope.Find<TextBlock>(DetailPart);
         Undo = e.NameScope.Find<ShareSheetActionButton>(UndoPart);
         Done = e.NameScope.Find<ShareSheetActionButton>(DonePart);
-        if (Undo is not null)
-        {
-            Undo.Click += OnUndoClick;
-        }
-        if (Done is not null)
-        {
-            Done.Click += OnDoneClick;
-        }
+        Undo?.Click += OnUndoClick;
+        Done?.Click += OnDoneClick;
         Refresh();
     }
 
     public void Refresh()
     {
         var labels = _owner.Labels;
-        if (Undo is not null)
-        {
-            Undo.Content = labels.Undo;
-        }
-        if (Done is not null)
-        {
-            Done.Content = labels.Done;
-        }
+        Undo?.Content = labels.Undo;
+        Done?.Content = labels.Done;
         if (_submission is not { } submission)
         {
             return;
         }
-        if (_title is not null)
-        {
-            _title.Text = labels.SentTitle(submission.People);
-        }
+        _title?.Text = labels.SentTitle(submission.People);
         if (_detail is not null)
         {
             _detail.Text = labels.SentDetail(submission.Access);
@@ -1042,10 +964,7 @@ internal sealed class ShareSheetSentFace : TemplatedControl
             Canvas.SetTop(frame, -ring);
             _avatars.Children.Add(frame);
         }
-        if (_badge is not null)
-        {
-            _badge.IsVisible = count > 0;
-        }
+        _badge?.IsVisible = count > 0;
     }
 
     private double Resource(ShareSheetTokenKind kind, double fallback) =>

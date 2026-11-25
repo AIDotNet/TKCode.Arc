@@ -486,10 +486,7 @@ public class NumberField : FieldTextBox
             _scrub.Cancelled += OnScrubEnded;
             _scrub.Released += OnScrubReleased;
         }
-        if (_group is not null)
-        {
-            _group.IsEditing = _editing;
-        }
+        _group?.IsEditing = _editing;
         UpdateScrubState();
         UpdateSized();
         UpdateHead();
@@ -862,10 +859,7 @@ public class NumberField : FieldTextBox
         }
         _editing = editing;
         PseudoClasses.Set(EditingPseudoClass, editing);
-        if (_group is not null)
-        {
-            _group.IsEditing = editing;
-        }
+        _group?.IsEditing = editing;
     }
 
     /// <summary>Commits an open draft: snapped to the grid and clamped (with strain when clamped).</summary>
@@ -966,14 +960,8 @@ public class NumberField : FieldTextBox
     {
         var shown = Shown;
         var enabled = IsEffectivelyEnabled;
-        if (_decreaseGlyph is not null)
-        {
-            _decreaseGlyph.IsPressedVisual = enabled && shown > Minimum && (_pressedSide < 0 || _decrease?.IsPressed == true);
-        }
-        if (_increaseGlyph is not null)
-        {
-            _increaseGlyph.IsPressedVisual = enabled && shown < Maximum && (_pressedSide > 0 || _increase?.IsPressed == true);
-        }
+        _decreaseGlyph?.IsPressedVisual = enabled && shown > Minimum && (_pressedSide < 0 || _decrease?.IsPressed == true);
+        _increaseGlyph?.IsPressedVisual = enabled && shown < Maximum && (_pressedSide > 0 || _increase?.IsPressed == true);
     }
 
     // ---- Keyboard -----------------------------------------------------------------------------------------------------
@@ -1272,10 +1260,7 @@ public class NumberField : FieldTextBox
     {
         var active = ScrubActive;
         PseudoClasses.Set(ScrubPseudoClass, active);
-        if (_scrub is not null)
-        {
-            _scrub.IsEnabled = active;
-        }
+        _scrub?.IsEnabled = active;
         if (!active)
         {
             PseudoClasses.Set(ScrubHoverPseudoClass, false);
@@ -1400,14 +1385,8 @@ public class NumberField : FieldTextBox
 
     private void UpdateHead()
     {
-        if (_label is not null)
-        {
-            _label.IsVisible = IsLabelVisible && !string.IsNullOrEmpty(Label);
-        }
-        if (_head is not null)
-        {
-            _head.IsVisible = (_label?.IsVisible ?? false) || (_note?.IsShown ?? false);
-        }
+        _label?.IsVisible = IsLabelVisible && !string.IsNullOrEmpty(Label);
+        _head?.IsVisible = (_label?.IsVisible ?? false) || (_note?.IsShown ?? false);
     }
 
     private void UpdateDisplay()

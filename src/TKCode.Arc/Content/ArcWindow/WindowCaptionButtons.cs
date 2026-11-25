@@ -274,15 +274,9 @@ public class WindowCaptionButtons : TemplatedControl
         {
             return;
         }
-        if (_window is not null)
-        {
-            _window.PropertyChanged -= OnWindowPropertyChanged;
-        }
+        _window?.PropertyChanged -= OnWindowPropertyChanged;
         _window = window;
-        if (window is not null)
-        {
-            window.PropertyChanged += OnWindowPropertyChanged;
-        }
+        window?.PropertyChanged += OnWindowPropertyChanged;
         SyncRoles();
         SyncButtons();
         SyncState();
@@ -364,10 +358,7 @@ public class WindowCaptionButtons : TemplatedControl
 
     private void OnMinimizeClick(object? sender, RoutedEventArgs e)
     {
-        if (_window is not null)
-        {
-            _window.WindowState = WindowState.Minimized;
-        }
+        _window?.WindowState = WindowState.Minimized;
     }
 
     private void OnMaximizeClick(object? sender, RoutedEventArgs e) => ToggleMaximize(_window);
@@ -376,17 +367,11 @@ public class WindowCaptionButtons : TemplatedControl
 
     private static void Hook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 }

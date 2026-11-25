@@ -240,27 +240,15 @@ internal sealed class ActionMorphMenu : TemplatedControl, IActionMorphFace
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_rowsPanel is not null)
-        {
-            _rowsPanel.PointerExited -= OnRowsPointerExited;
-        }
+        _close?.Click -= OnCloseClick;
+        _rowsPanel?.PointerExited -= OnRowsPointerExited;
         _header = e.NameScope.Find<Control>(HeaderPart);
         _close = e.NameScope.Find<ActionMorphIconButton>(ClosePart);
         _rowsPanel = e.NameScope.Find<Panel>(RowsPart);
         _items = e.NameScope.Find<Panel>(ItemsPart);
         _highlight = e.NameScope.Find<GlidingIndicator>(HighlightPart);
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_rowsPanel is not null)
-        {
-            _rowsPanel.PointerExited += OnRowsPointerExited;
-        }
+        _close?.Click += OnCloseClick;
+        _rowsPanel?.PointerExited += OnRowsPointerExited;
         if (_items is not null)
         {
             _items.Children.Clear();
@@ -304,10 +292,7 @@ internal sealed class ActionMorphMenu : TemplatedControl, IActionMorphFace
         var value = new MotionValue<double>(_owner, 1, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_header is not null)
-            {
-                _header.Opacity = v;
-            }
+            _header?.Opacity = v;
         };
         return value;
     }

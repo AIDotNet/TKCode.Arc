@@ -34,14 +34,8 @@ public partial class DictationButton
     /// <summary>The composer's simulation stands still while the card is off screen (a replaced one runs freely again).</summary>
     private void PauseOffScreen(SimulatedDictationRecognizer? old, SimulatedDictationRecognizer? simulation)
     {
-        if (old is not null)
-        {
-            old.Paused = null;
-        }
-        if (simulation is not null)
-        {
-            simulation.Paused = () => !IsOnScreen();
-        }
+        old?.Paused = null;
+        simulation?.Paused = () => !IsOnScreen();
     }
 
     /// <summary>The autoplay loop runs.</summary>

@@ -1491,10 +1491,7 @@ internal sealed class EnvRedeployBanner : EnvTintBorder
         _actionSlot.HorizontalAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
         _actionSlot.HorizontalContentAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
         _actionSlot.Margin = narrow ? new Thickness(0, 8, 0, 0) : default;
-        if (_action is not null)
-        {
-            _action.HorizontalAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
-        }
+        _action?.HorizontalAlignment = narrow ? HorizontalAlignment.Stretch : HorizontalAlignment.Right;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

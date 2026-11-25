@@ -165,7 +165,6 @@ public class TocProgress : TemplatedControl
     private double _pinOffset;
     private double _lastSetOffset = double.NaN;
     private bool _before = true;
-    private int _activeIndex = -1;
     private double _progress;
     private bool _isCompact;
     private int _shownPercent = -1;
@@ -258,9 +257,9 @@ public class TocProgress : TemplatedControl
     /// <inheritdoc cref="ActiveIndexProperty"/>
     public int ActiveIndex
     {
-        get => _activeIndex;
-        private set => SetAndRaise(ActiveIndexProperty, ref _activeIndex, value);
-    }
+        get;
+        private set => SetAndRaise(ActiveIndexProperty, ref field, value);
+    } = -1;
 
     /// <inheritdoc cref="ProgressProperty"/>
     public double Progress
@@ -416,14 +415,8 @@ public class TocProgress : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_compact is not null)
-        {
-            _compact.Click -= OnCompactClick;
-        }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
+        _compact?.Click -= OnCompactClick;
+        _popup?.Closed -= OnPopupClosed;
         if (_list is not null)
         {
             Detach(_list);
@@ -438,10 +431,7 @@ public class TocProgress : TemplatedControl
         _compactText = e.NameScope.Find<ArcContentSwap>(CompactTextPart);
         _popup = e.NameScope.Find<ArcPopup>(PopupPart);
         _list ??= new TocProgressList { Owner = this };
-        if (_compact is not null)
-        {
-            _compact.Click += OnCompactClick;
-        }
+        _compact?.Click += OnCompactClick;
         if (_popup is not null)
         {
             _popup.PlacementTarget = _compact;
@@ -477,10 +467,7 @@ public class TocProgress : TemplatedControl
         _scroll?.Stop();
         _reading?.Stop();
         _navigating = false;
-        if (_popup is not null)
-        {
-            _popup.IsOpen = false;
-        }
+        _popup?.IsOpen = false;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -664,10 +651,7 @@ public class TocProgress : TemplatedControl
         }
         Progress = position.Progress;
         PseudoClasses.Set(DonePseudoClass, position.Progress >= 0.999);
-        if (_compactRing is not null)
-        {
-            _compactRing.Value = position.Progress;
-        }
+        _compactRing?.Value = position.Progress;
         var value = ReadingValue();
         if (animate && ArcMotion.IsFull(this) && _list is { Rows.Count: > 0 })
         {

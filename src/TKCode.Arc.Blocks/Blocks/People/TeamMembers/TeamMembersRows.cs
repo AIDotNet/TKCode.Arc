@@ -171,10 +171,7 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
             _mode = value;
             PseudoClasses.Set(NarrowPseudoClass, value == TeamMembersRowMode.Narrow);
             PseudoClasses.Set(TwoTierPseudoClass, value == TeamMembersRowMode.TwoTier);
-            if (_layout is not null)
-            {
-                _layout.Mode = value;
-            }
+            _layout?.Mode = value;
         }
     }
 
@@ -197,10 +194,7 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
         set
         {
             _isBusy = value;
-            if (_confirm is not null)
-            {
-                _confirm.IsLoading = value && _isConfirming;
-            }
+            _confirm?.IsLoading = value && _isConfirming;
         }
     }
 
@@ -209,22 +203,10 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_role is not null)
-        {
-            _role.Chosen -= OnRoleChosen;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click -= OnRemoveClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.Click -= OnConfirmClick;
-        }
+        _role?.Chosen -= OnRoleChosen;
+        _remove?.Click -= OnRemoveClick;
+        _cancel?.Click -= OnCancelClick;
+        _confirm?.Click -= OnConfirmClick;
         _layout = e.NameScope.Find<TeamMembersMemberRowPanel>(LayoutPart);
         _avatar = e.NameScope.Find<Avatar>(AvatarPart);
         _name = e.NameScope.Find<TextBlock>(NamePart);
@@ -239,26 +221,11 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
         _confirmDetail = e.NameScope.Find<TextBlock>(ConfirmDetailPart);
         _cancel = e.NameScope.Find<Button>(CancelPart);
         _confirm = e.NameScope.Find<Button>(ConfirmPart);
-        if (_role is not null)
-        {
-            _role.Chosen += OnRoleChosen;
-        }
-        if (_remove is not null)
-        {
-            _remove.Click += OnRemoveClick;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_confirm is not null)
-        {
-            _confirm.Click += OnConfirmClick;
-        }
-        if (_layout is not null)
-        {
-            _layout.Mode = _mode;
-        }
+        _role?.Chosen += OnRoleChosen;
+        _remove?.Click += OnRemoveClick;
+        _cancel?.Click += OnCancelClick;
+        _confirm?.Click += OnConfirmClick;
+        _layout?.Mode = _mode;
         Refresh();
         UpdateConfirmAccess();
     }
@@ -309,10 +276,7 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
             _avatar.Status = Person.IsOnline ? AvatarStatus.Online : AvatarStatus.None;
             AutomationProperties.SetName(_avatar, Person.IsOnline ? $"{name}, {labels.Online}" : name);
         }
-        if (_name is not null)
-        {
-            _name.Text = name;
-        }
+        _name?.Text = name;
         if (_you is not null)
         {
             _you.Text = labels.You;
@@ -323,14 +287,8 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
             _email.Text = Person.Email;
             _email.IsVisible = !string.IsNullOrEmpty(Person.Email);
         }
-        if (_active is not null)
-        {
-            _active.Text = Person.LastActive;
-        }
-        if (_activeInline is not null)
-        {
-            _activeInline.Text = Person.LastActive;
-        }
+        _active?.Text = Person.LastActive;
+        _activeInline?.Text = Person.LastActive;
         // Read only: every role is plain text like the owner's.
         var readOnly = Owner.IsReadOnly;
         if (_role is not null)
@@ -351,18 +309,9 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
             AutomationProperties.SetName(_remove, labels.RemoveName(name));
             Tooltip.SetTip(_remove, labels.RemoveName(name));
         }
-        if (_confirmTitle is not null)
-        {
-            _confirmTitle.Text = labels.RemoveTitle(name);
-        }
-        if (_confirmDetail is not null)
-        {
-            _confirmDetail.Text = labels.RemoveDetail(name, Owner.WorkspaceName);
-        }
-        if (_cancel is not null)
-        {
-            _cancel.Content = labels.Cancel;
-        }
+        _confirmTitle?.Text = labels.RemoveTitle(name);
+        _confirmDetail?.Text = labels.RemoveDetail(name, Owner.WorkspaceName);
+        _cancel?.Content = labels.Cancel;
         if (_confirm is not null)
         {
             _confirm.Content = labels.Remove;
@@ -374,18 +323,9 @@ internal sealed class TeamMembersMemberRow : TeamMembersRowBase
     private void UpdateConfirmAccess()
     {
         var confirming = _isConfirming;
-        if (_role is not null)
-        {
-            _role.IsEnabled = !confirming;
-        }
-        if (_remove is not null)
-        {
-            _remove.IsEnabled = !confirming;
-        }
-        if (_cancel is not null)
-        {
-            _cancel.IsEnabled = confirming;
-        }
+        _role?.IsEnabled = !confirming;
+        _remove?.IsEnabled = !confirming;
+        _cancel?.IsEnabled = confirming;
         if (_confirm is not null)
         {
             _confirm.IsEnabled = confirming;
@@ -520,10 +460,7 @@ internal sealed class TeamMembersInviteRow : TeamMembersRowBase
         {
             _actionsBelow = value;
             PseudoClasses.Set(ActionsBelowPseudoClass, value);
-            if (_layout is not null)
-            {
-                _layout.ActionsBelow = value;
-            }
+            _layout?.ActionsBelow = value;
         }
     }
 
@@ -534,10 +471,7 @@ internal sealed class TeamMembersInviteRow : TeamMembersRowBase
         set
         {
             _isRevoking = value;
-            if (_revoke is not null)
-            {
-                _revoke.IsLoading = value;
-            }
+            _revoke?.IsLoading = value;
         }
     }
 
@@ -546,42 +480,24 @@ internal sealed class TeamMembersInviteRow : TeamMembersRowBase
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_resend is not null)
-        {
-            _resend.Click -= OnResendClick;
-        }
-        if (_revoke is not null)
-        {
-            _revoke.Click -= OnRevokeClick;
-        }
+        _resend?.Click -= OnResendClick;
+        _revoke?.Click -= OnRevokeClick;
         _layout = e.NameScope.Find<TeamMembersInviteRowPanel>(LayoutPart);
         _avatar = e.NameScope.Find<TeamMembersDashedAvatar>(AvatarPart);
         _badge = e.NameScope.Find<Border>(EmailBadgePart);
-        if (_badge is not null)
-        {
-            _badge.Opacity = _badgeHidden ? 0 : 1;
-        }
+        _badge?.Opacity = _badgeHidden ? 0 : 1;
         _email = e.NameScope.Find<TextBlock>(EmailPart);
         _detail = e.NameScope.Find<ArcContentSwap>(DetailPart);
         _resend = e.NameScope.Find<Button>(ResendPart);
         _revoke = e.NameScope.Find<Button>(RevokePart);
-        if (_resend is not null)
-        {
-            _resend.Click += OnResendClick;
-        }
+        _resend?.Click += OnResendClick;
         if (_revoke is not null)
         {
             _revoke.Click += OnRevokeClick;
             _revoke.IsLoading = _isRevoking;
         }
-        if (_layout is not null)
-        {
-            _layout.ActionsBelow = _actionsBelow;
-        }
-        if (_detail is not null)
-        {
-            _detail.Content = null;
-        }
+        _layout?.ActionsBelow = _actionsBelow;
+        _detail?.Content = null;
         Refresh(animateDetail: false);
     }
 
@@ -629,20 +545,11 @@ internal sealed class TeamMembersInviteRow : TeamMembersRowBase
     {
         var labels = Owner.Labels ?? new TeamMembersLabels();
         var email = Invite.Email ?? string.Empty;
-        if (_avatar is not null)
-        {
-            _avatar.Initials = Invite.DisplayInitials;
-        }
-        if (_email is not null)
-        {
-            _email.Text = email;
-        }
+        _avatar?.Initials = Invite.DisplayInitials;
+        _email?.Text = email;
         SetDetail(labels.InviteDetail(Owner.RoleLabel(Invite.Role), Invite.Detail), animateDetail);
         UpdateResend(labels);
-        if (_resend is not null)
-        {
-            _resend.IsVisible = !Owner.IsReadOnly;
-        }
+        _resend?.IsVisible = !Owner.IsReadOnly;
         if (_revoke is not null)
         {
             _revoke.IsVisible = !Owner.IsReadOnly;
@@ -752,10 +659,7 @@ internal sealed class TeamMembersInviteRow : TeamMembersRowBase
     public void SetBadgeHidden(bool hidden)
     {
         _badgeHidden = hidden;
-        if (_badge is not null)
-        {
-            _badge.Opacity = hidden ? 0 : 1;
-        }
+        _badge?.Opacity = hidden ? 0 : 1;
     }
 
     private bool _badgeHidden;
@@ -824,15 +728,9 @@ internal sealed class TeamMembersEmptyRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClear;
-        }
+        _clear?.Click -= OnClear;
         _clear = e.NameScope.Find<Button>(ClearPart);
-        if (_clear is not null)
-        {
-            _clear.Click += OnClear;
-        }
+        _clear?.Click += OnClear;
     }
 
     private void OnClear(object? sender, RoutedEventArgs e)

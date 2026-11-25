@@ -144,14 +144,8 @@ public class GanttTimeline : TemplatedControl
         _subtitle = e.NameScope.Find<TextBlock>(SubtitlePart);
         _horizontal = e.NameScope.Find<ScrollBar>(HorizontalScrollPart);
         _vertical = e.NameScope.Find<ScrollBar>(VerticalScrollPart);
-        if (_horizontal is not null)
-        {
-            _horizontal.PropertyChanged += OnScrollBarChanged;
-        }
-        if (_vertical is not null)
-        {
-            _vertical.PropertyChanged += OnScrollBarChanged;
-        }
+        _horizontal?.PropertyChanged += OnScrollBarChanged;
+        _vertical?.PropertyChanged += OnScrollBarChanged;
         if (_chart is not null)
         {
             _chart.ScrollChanged += SyncScrollBars;
@@ -162,40 +156,22 @@ public class GanttTimeline : TemplatedControl
         Wire(_day, GanttZoom.Day);
         Wire(_week, GanttZoom.Week);
         Wire(_month, GanttZoom.Month);
-        if (_todayButton is not null)
-        {
-            _todayButton.Click += OnTodayClick;
-        }
-        if (_undoButton is not null)
-        {
-            _undoButton.Click += OnUndoClick;
-        }
-        if (_resetButton is not null)
-        {
-            _resetButton.Click += OnResetClick;
-        }
+        _todayButton?.Click += OnTodayClick;
+        _undoButton?.Click += OnUndoClick;
+        _resetButton?.Click += OnResetClick;
         LoadTasks();
         Sync(false);
     }
 
     private void Wire(AvToggle? button, GanttZoom zoom)
     {
-        if (button is not null)
-        {
-            button.Click += (_, _) => Zoom = zoom;
-        }
+        button?.Click += (_, _) => Zoom = zoom;
     }
 
     private void Unhook()
     {
-        if (_horizontal is not null)
-        {
-            _horizontal.PropertyChanged -= OnScrollBarChanged;
-        }
-        if (_vertical is not null)
-        {
-            _vertical.PropertyChanged -= OnScrollBarChanged;
-        }
+        _horizontal?.PropertyChanged -= OnScrollBarChanged;
+        _vertical?.PropertyChanged -= OnScrollBarChanged;
         if (_chart is not null)
         {
             _chart.ScrollChanged -= SyncScrollBars;
@@ -203,18 +179,9 @@ public class GanttTimeline : TemplatedControl
             _chart.GroupToggled -= OnGroupToggled;
             _chart.Announce -= OnAnnounce;
         }
-        if (_todayButton is not null)
-        {
-            _todayButton.Click -= OnTodayClick;
-        }
-        if (_undoButton is not null)
-        {
-            _undoButton.Click -= OnUndoClick;
-        }
-        if (_resetButton is not null)
-        {
-            _resetButton.Click -= OnResetClick;
-        }
+        _todayButton?.Click -= OnTodayClick;
+        _undoButton?.Click -= OnUndoClick;
+        _resetButton?.Click -= OnResetClick;
     }
 
     private void SyncScrollBars()
@@ -309,35 +276,17 @@ public class GanttTimeline : TemplatedControl
 
     private void UpdateZoomButtons()
     {
-        if (_day is not null)
-        {
-            _day.IsChecked = Zoom == GanttZoom.Day;
-        }
-        if (_week is not null)
-        {
-            _week.IsChecked = Zoom == GanttZoom.Week;
-        }
-        if (_month is not null)
-        {
-            _month.IsChecked = Zoom == GanttZoom.Month;
-        }
+        _day?.IsChecked = Zoom == GanttZoom.Day;
+        _week?.IsChecked = Zoom == GanttZoom.Week;
+        _month?.IsChecked = Zoom == GanttZoom.Month;
     }
 
     private void UpdateFooter(GanttModel model)
     {
-        if (_subtitle is not null)
-        {
-            _subtitle.Text = ((int)Math.Round(model.OverallProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "% done";
-        }
+        _subtitle?.Text = ((int)Math.Round(model.OverallProgress() * 100)).ToString(CultureInfo.InvariantCulture) + "% done";
         var dirty = _undo.Count > 0;
-        if (_undoButton is not null)
-        {
-            _undoButton.IsEnabled = dirty;
-        }
-        if (_resetButton is not null)
-        {
-            _resetButton.IsEnabled = dirty;
-        }
+        _undoButton?.IsEnabled = dirty;
+        _resetButton?.IsEnabled = dirty;
     }
 
     private void OnEdited(GanttTask task, DateOnly start, DateOnly end, GanttChangeKind kind)
@@ -391,10 +340,7 @@ public class GanttTimeline : TemplatedControl
 
     private void OnAnnounce(string text)
     {
-        if (_status is not null)
-        {
-            _status.Text = text;
-        }
+        _status?.Text = text;
     }
 
     private void OnTodayClick(object? sender, RoutedEventArgs e) => _chart?.ScrollToToday(true);

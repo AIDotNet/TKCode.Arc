@@ -101,10 +101,7 @@ public class Textarea : FieldTextBox
     // size triggers (FieldFrame[Size=Small] sets a 36px minimum).
     private void ApplyFrameMinHeight()
     {
-        if (Frame is not null)
-        {
-            Frame.MinHeight = FrameMinHeight;
-        }
+        Frame?.MinHeight = FrameMinHeight;
     }
 
     private void OnGripPressed(object? sender, PointerPressedEventArgs e)

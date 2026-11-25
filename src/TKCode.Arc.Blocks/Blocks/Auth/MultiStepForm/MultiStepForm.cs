@@ -553,14 +553,8 @@ public class MultiStepForm : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _back?.Click -= OnBackClick;
+        _next?.Click -= OnNextClick;
         foreach (var view in _views.Values)
         {
             ReleaseView(view);
@@ -586,14 +580,8 @@ public class MultiStepForm : TemplatedControl
         _back = e.NameScope.Find<MultiStepButton>(BackPart);
         _next = e.NameScope.Find<MultiStepButton>(NextPart);
         _announcer = e.NameScope.Find<AuthAnnouncer>(AnnouncerPart);
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
+        _back?.Click += OnBackClick;
+        _next?.Click += OnNextClick;
         if (_card is not null)
         {
             AutomationProperties.SetLandmarkType(_card, AutomationLandmarkType.Form);
@@ -807,10 +795,7 @@ public class MultiStepForm : TemplatedControl
             {
                 _currentLayer?.SetValue(IsVisibleProperty, false);
                 _currentLayer = null;
-                if (_viewport is not null)
-                {
-                    _viewport.Current = null;
-                }
+                _viewport?.Current = null;
                 _shownIndex = -1;
                 _shownComplete = false;
                 PseudoClasses.Set(FirstPseudoClass, false);
@@ -907,18 +892,9 @@ public class MultiStepForm : TemplatedControl
         var split = format.IndexOf("{0}", StringComparison.Ordinal);
         var prefix = split < 0 ? format : format[..split];
         var suffix = split < 0 ? string.Empty : format[(split + 3)..];
-        if (_countPrefix is not null)
-        {
-            _countPrefix.Text = Format(prefix, index + 1, count);
-        }
-        if (_countSuffix is not null)
-        {
-            _countSuffix.Text = Format(suffix, index + 1, count);
-        }
-        if (_countDigit is not null)
-        {
-            _countDigit.IsVisible = split >= 0;
-        }
+        _countPrefix?.Text = Format(prefix, index + 1, count);
+        _countSuffix?.Text = Format(suffix, index + 1, count);
+        _countDigit?.IsVisible = split >= 0;
         var progressName = Format(ProgressNameFormat, index + 1, count);
         if (_header is not null)
         {
@@ -961,10 +937,7 @@ public class MultiStepForm : TemplatedControl
     {
         var previous = _currentLayer;
         _currentLayer = layer;
-        if (_viewport is not null)
-        {
-            _viewport.Current = layer;
-        }
+        _viewport?.Current = layer;
         var success = layer as MultiStepSuccessView;
         if (!ReferenceEquals(previous, layer))
         {
@@ -1143,14 +1116,8 @@ public class MultiStepForm : TemplatedControl
         if (_steps.Count > 0)
         {
             var complete = IsComplete;
-            if (_next is not null)
-            {
-                _next.IsLoading = busy;
-            }
-            if (_back is not null)
-            {
-                _back.IsEnabled = EffectiveIndex > 0 && !complete && !busy;
-            }
+            _next?.IsLoading = busy;
+            _back?.IsEnabled = EffectiveIndex > 0 && !complete && !busy;
         }
     }
 
@@ -1158,10 +1125,7 @@ public class MultiStepForm : TemplatedControl
     {
         base.OnAttachedToVisualTree(e);
         _listening = true;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnStepsChanged;
-        }
+        _observedSource?.CollectionChanged += OnStepsChanged;
         // Catch up with whatever changed while the form was away.
         OnStepsChanged(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
     }
@@ -1171,10 +1135,7 @@ public class MultiStepForm : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         CancelOperation();
         _listening = false;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnStepsChanged;
-        }
+        _observedSource?.CollectionChanged -= OnStepsChanged;
         ListenToSteps(false);
     }
 

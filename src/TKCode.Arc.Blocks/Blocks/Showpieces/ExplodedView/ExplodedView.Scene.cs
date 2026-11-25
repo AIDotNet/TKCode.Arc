@@ -150,10 +150,7 @@ public partial class ExplodedView
         var count = Layers.Count;
         StopCount = ExplodedViewProgress.StopCount(count);
         _stage?.SetLayers(_observedLayers);
-        if (_layout is not null)
-        {
-            _layout.StopCount = StopCount;
-        }
+        _layout?.StopCount = StopCount;
         RebuildStops();
         RefreshTexts();
         _stopKnown = false;
@@ -182,27 +179,15 @@ public partial class ExplodedView
     {
         if (!ReferenceEquals(_observedStart, StartCaption))
         {
-            if (_observedStart is not null)
-            {
-                _observedStart.PropertyChanged -= OnCaptionPropertyChanged;
-            }
+            _observedStart?.PropertyChanged -= OnCaptionPropertyChanged;
             _observedStart = StartCaption;
-            if (_observedStart is not null)
-            {
-                _observedStart.PropertyChanged += OnCaptionPropertyChanged;
-            }
+            _observedStart?.PropertyChanged += OnCaptionPropertyChanged;
         }
         if (!ReferenceEquals(_observedEnd, EndCaption))
         {
-            if (_observedEnd is not null)
-            {
-                _observedEnd.PropertyChanged -= OnCaptionPropertyChanged;
-            }
+            _observedEnd?.PropertyChanged -= OnCaptionPropertyChanged;
             _observedEnd = EndCaption;
-            if (_observedEnd is not null)
-            {
-                _observedEnd.PropertyChanged += OnCaptionPropertyChanged;
-            }
+            _observedEnd?.PropertyChanged += OnCaptionPropertyChanged;
         }
     }
 
@@ -304,10 +289,7 @@ public partial class ExplodedView
             _description.Text = Description;
             _description.IsVisible = !string.IsNullOrEmpty(Description);
         }
-        if (_intro is not null)
-        {
-            _intro.IsVisible = !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Description);
-        }
+        _intro?.IsVisible = !string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Description);
     }
 
     private void UpdateAccessibleNames()
@@ -348,10 +330,7 @@ public partial class ExplodedView
             _title.LineHeight = metrics.TitleSize * 1.1;
             _title.LetterSpacing = -0.03 * metrics.TitleSize;
         }
-        if (_layout is not null)
-        {
-            _layout.Metrics = metrics;
-        }
+        _layout?.Metrics = metrics;
         if (_stage is not null)
         {
             _stage.IsCompact = metrics.IsCompact;

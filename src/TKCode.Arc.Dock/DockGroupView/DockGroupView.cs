@@ -64,10 +64,7 @@ internal sealed class DockGroupView : TemplatedControl, IDockView
         _drag?.Dispose();
         _drag = null;
         _strip?.SetTabs([]);
-        if (_content is not null)
-        {
-            _content.Child = null;
-        }
+        _content?.Child = null;
     }
 
     /// <summary>A double click on the strip's empty part maximizes the group or restores the layout (spec 5.3).</summary>
@@ -118,18 +115,9 @@ internal sealed class DockGroupView : TemplatedControl, IDockView
             _strip.OverflowChanged -= OnOverflowChanged;
             _strip.SetTabs([]);
         }
-        if (_overflow is not null)
-        {
-            _overflow.Click -= OnOverflowClick;
-        }
-        if (_more is not null)
-        {
-            _more.Click -= OnMoreClick;
-        }
-        if (_content is not null)
-        {
-            _content.Child = null;
-        }
+        _overflow?.Click -= OnOverflowClick;
+        _more?.Click -= OnMoreClick;
+        _content?.Child = null;
         _drag?.Dispose();
         _strip = e.NameScope.Find<DockTabStrip>(StripPart);
         // Tabs drag their pane; the strip's empty part drags the whole group (spec 9.1).
@@ -137,10 +125,7 @@ internal sealed class DockGroupView : TemplatedControl, IDockView
         _content = e.NameScope.Find<Decorator>(ContentPart);
         _overflow = e.NameScope.Find<AvaloniaButton>(OverflowPart);
         _more = e.NameScope.Find<AvaloniaButton>(MorePart);
-        if (_strip is not null)
-        {
-            _strip.OverflowChanged += OnOverflowChanged;
-        }
+        _strip?.OverflowChanged += OnOverflowChanged;
         if (_overflow is not null)
         {
             _overflow.Click += OnOverflowClick;
@@ -214,10 +199,7 @@ internal sealed class DockGroupView : TemplatedControl, IDockView
                 selected = tab;
             }
         }
-        if (_strip is not null)
-        {
-            _strip.SelectedTab = selected;
-        }
+        _strip?.SelectedTab = selected;
     }
 
     private void UpdateContent()

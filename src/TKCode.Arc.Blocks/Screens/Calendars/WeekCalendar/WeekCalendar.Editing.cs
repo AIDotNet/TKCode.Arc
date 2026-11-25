@@ -870,10 +870,7 @@ public partial class WeekCalendar
         {
             // The same run (keyboard nudges, one details popover): undo still goes back to before its first change.
             current.Description = text;
-            if (_toast is not null)
-            {
-                _toast.Message = text;
-            }
+            _toast?.Message = text;
             RestartUndoTimer();
             return;
         }

@@ -157,10 +157,7 @@ public partial class SourceCards
         if (_simulatedText is null)
         {
             _simulatedText = new TextBlock { Classes = { "sample-answer" }, TextWrapping = TextWrapping.Wrap, LineHeight = 22 };
-            if (_sampleAnswer is not null)
-            {
-                _sampleAnswer.Content = _simulatedText;
-            }
+            _sampleAnswer?.Content = _simulatedText;
         }
         var inlines = _simulatedText.Inlines ??= [];
         if (SourceCardsFormat.CitationOf(token, out var trailing) is { } number)

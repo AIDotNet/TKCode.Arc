@@ -67,14 +67,8 @@ public partial class AiWorkflow
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_runButton is not null)
-        {
-            _runButton.Click -= OnRunClick;
-        }
-        if (_addButton is not null)
-        {
-            _addButton.Click -= OnAddClick;
-        }
+        _runButton?.Click -= OnRunClick;
+        _addButton?.Click -= OnAddClick;
         _rail?.Children.Clear();
         _headerGrid = e.NameScope.Find<Grid>(HeaderGridPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
@@ -623,18 +617,9 @@ public partial class AiWorkflow
                 _ => labels.Ready
             };
         }
-        if (_footer is not null)
-        {
-            _footer.IsVisible = !loading && !empty;
-        }
-        if (_rail is not null)
-        {
-            _rail.IsVisible = !loading && !empty;
-        }
-        if (_skeleton is not null)
-        {
-            _skeleton.IsVisible = loading;
-        }
+        _footer?.IsVisible = !loading && !empty;
+        _rail?.IsVisible = !loading && !empty;
+        _skeleton?.IsVisible = loading;
         RefreshEmpty(empty);
     }
 

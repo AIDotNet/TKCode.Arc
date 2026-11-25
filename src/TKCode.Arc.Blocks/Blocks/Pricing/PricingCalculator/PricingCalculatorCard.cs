@@ -159,10 +159,7 @@ internal sealed class PricingCalculatorCard : TemplatedControl
         set
         {
             PseudoClasses.Set(RecommendedPseudoClass, value);
-            if (_badge is not null)
-            {
-                _badge.IsVisible = value;
-            }
+            _badge?.IsVisible = value;
             if (!value)
             {
                 _badgeOffset?.Jump(default);
@@ -195,10 +192,7 @@ internal sealed class PricingCalculatorCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _action?.Click -= OnActionClick;
         _badge = e.NameScope.Find<Border>(BadgePart);
         _action = e.NameScope.Find<Button>(ActionPart);
         _features = e.NameScope.Find<PricingCalculatorFeatureList>(FeaturesPart);

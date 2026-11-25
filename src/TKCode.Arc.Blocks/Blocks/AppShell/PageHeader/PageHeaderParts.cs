@@ -322,12 +322,11 @@ internal sealed class PageHeaderCompactTitle : AvaloniaButton
         set => SetValue(IsStatusVisibleProperty, value);
     }
 
-    private bool _showsStatus;
 
     public bool ShowsStatus
     {
-        get => _showsStatus;
-        private set => SetAndRaise(ShowsStatusProperty, ref _showsStatus, value);
+        get;
+        private set => SetAndRaise(ShowsStatusProperty, ref field, value);
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

@@ -163,17 +163,11 @@ public class BackToTop : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_button is not null)
-        {
-            _button.Click -= OnButtonClick;
-        }
+        _button?.Click -= OnButtonClick;
         _nameBinding?.Dispose();
         _tipBinding?.Dispose();
         _button = e.NameScope.Find<BackToTopButton>(ButtonPart);
-        if (_button is not null)
-        {
-            _button.Click += OnButtonClick;
-        }
+        _button?.Click += OnButtonClick;
         UpdateLabel();
         UpdateButtonState();
     }
@@ -298,16 +292,10 @@ public class BackToTop : TemplatedControl
             UpdateShown();
             return;
         }
-        if (_scrollViewer is not null)
-        {
-            _scrollViewer.ScrollChanged -= OnScrollChanged;
-        }
+        _scrollViewer?.ScrollChanged -= OnScrollChanged;
         _scroll?.Stop();
         _scrollViewer = found;
-        if (found is not null)
-        {
-            found.ScrollChanged += OnScrollChanged;
-        }
+        found?.ScrollChanged += OnScrollChanged;
         UpdateShown();
         ViewportChanged?.Invoke();
     }

@@ -234,10 +234,7 @@ public static class Sticky
         {
             UnwatchParent();
             _parent = _element.GetVisualParent();
-            if (_parent is not null)
-            {
-                _parent.PropertyChanged += OnParentPropertyChanged;
-            }
+            _parent?.PropertyChanged += OnParentPropertyChanged;
         }
 
         private void UnwatchParent()

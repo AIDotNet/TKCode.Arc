@@ -667,10 +667,7 @@ public class OnboardingIllustration : TemplatedControl
         if (_back is not null)
         {
             _back.IsInert = completed || index == 0;
-            if (_backText is not null)
-            {
-                _backText.Text = labels.Back;
-            }
+            _backText?.Text = labels.Back;
             AutomationProperties.SetName(_back, labels.Back);
         }
         if (_skip is not null)
@@ -778,22 +775,10 @@ public class OnboardingIllustration : TemplatedControl
             _stage.PointerMoved -= OnStagePointerMoved;
             _stage.PointerExited -= OnStagePointerExited;
         }
-        if (_skip is not null)
-        {
-            _skip.Click -= OnSkipClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click -= OnPrimaryClick;
-        }
-        if (_dots is not null)
-        {
-            _dots.Invoked = null;
-        }
+        _skip?.Click -= OnSkipClick;
+        _back?.Click -= OnBackClick;
+        _primary?.Click -= OnPrimaryClick;
+        _dots?.Invoked = null;
         _card = e.NameScope.Find<Border>(CardPart);
         _stage = e.NameScope.Find<Control>(StagePart);
         _art = e.NameScope.Find<OnboardingArt>(ArtPart);
@@ -816,18 +801,9 @@ public class OnboardingIllustration : TemplatedControl
             _skipFade = null;
             _skipShown = _skip.IsVisible;
         }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_primary is not null)
-        {
-            _primary.Click += OnPrimaryClick;
-        }
-        if (_dots is not null)
-        {
-            _dots.Invoked = OnDotInvoked;
-        }
+        _back?.Click += OnBackClick;
+        _primary?.Click += OnPrimaryClick;
+        _dots?.Invoked = OnDotInvoked;
         _shownCopy = null;
         ApplyDensity(Bounds.Width);
         UpdateView();

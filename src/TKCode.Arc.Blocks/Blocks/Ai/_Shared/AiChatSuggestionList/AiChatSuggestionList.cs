@@ -120,15 +120,9 @@ internal class AiChatSuggestionList : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnItemsChanged;
-        }
+        _observed?.CollectionChanged -= OnItemsChanged;
         _observed = next;
-        if (next is not null)
-        {
-            next.CollectionChanged += OnItemsChanged;
-        }
+        next?.CollectionChanged += OnItemsChanged;
     }
 
     private void OnItemsChanged(object? sender, NotifyCollectionChangedEventArgs e) => Rebuild();

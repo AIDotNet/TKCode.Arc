@@ -147,7 +147,6 @@ public partial class FeedbackMorph : TemplatedControl
     private FeedbackMorphSurface? _surface;
     private TextBlock? _status;
     private IReadOnlyList<FeedbackMood>? _defaultMoods;
-    private FeedbackMorphState _state;
 
     static FeedbackMorph()
     {
@@ -235,8 +234,8 @@ public partial class FeedbackMorph : TemplatedControl
     /// <inheritdoc cref="StateProperty"/>
     public FeedbackMorphState State
     {
-        get => _state;
-        private set => SetAndRaise(StateProperty, ref _state, value);
+        get;
+        private set => SetAndRaise(StateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="SubmittedEvent"/>
@@ -356,10 +355,7 @@ public partial class FeedbackMorph : TemplatedControl
         }
         else if (change.Property == SuccessLabelProperty)
         {
-            if (_sent is not null)
-            {
-                _sent.Text = SuccessLabel;
-            }
+            _sent?.Text = SuccessLabel;
         }
         else if (change.Property == ResetAfterProperty && _resetTimer is { IsEnabled: true } timer)
         {

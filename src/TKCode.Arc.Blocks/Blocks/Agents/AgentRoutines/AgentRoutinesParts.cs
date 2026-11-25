@@ -73,36 +73,18 @@ internal sealed class AgentRoutinesItem : TemplatedControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_header is not null)
-        {
-            _header.Click -= OnHeaderClick;
-        }
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_run is not null)
-        {
-            _run.Click -= OnRunClick;
-        }
+        _header?.Click -= OnHeaderClick;
+        _switch?.IsCheckedChanged -= OnSwitchChanged;
+        _run?.Click -= OnRunClick;
         base.OnApplyTemplate(e);
         _header = e.NameScope.Find<AgentRoutinesHeader>(HeaderPart);
         _switch = e.NameScope.Find<ToggleButton>(SwitchPart);
         _run = e.NameScope.Find<Button>(RunPart);
         _history = e.NameScope.Find<AgentRoutinesHistory>(HistoryPart);
         _detail = e.NameScope.Find<AiCollapsible>(DetailPart);
-        if (_header is not null)
-        {
-            _header.Click += OnHeaderClick;
-        }
-        if (_switch is not null)
-        {
-            _switch.IsCheckedChanged += OnSwitchChanged;
-        }
-        if (_run is not null)
-        {
-            _run.Click += OnRunClick;
-        }
+        _header?.Click += OnHeaderClick;
+        _switch?.IsCheckedChanged += OnSwitchChanged;
+        _run?.Click += OnRunClick;
         Refresh();
     }
 

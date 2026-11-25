@@ -42,15 +42,19 @@ internal enum CodeActionTriggerType
 }
 
 /// <summary>The context of a code action request (upstream's CodeActionContext).</summary>
-internal sealed record CodeActionContext(CodeActionTriggerType Trigger)
+internal sealed class CodeActionContext(CodeActionTriggerType trigger)
 {
+    public CodeActionTriggerType Trigger { get; } = trigger;
+
     /// <summary>Only actions of this kind are asked for, or null.</summary>
     public string? Only { get; init; }
 }
 
 /// <summary>The code actions of one request (upstream's CodeActionList).</summary>
-internal sealed record CodeActionList(IReadOnlyList<CodeAction> Actions)
+internal sealed class CodeActionList(IReadOnlyList<CodeAction> actions)
 {
+    public IReadOnlyList<CodeAction> Actions { get; } = actions;
+
     public Action? Dispose { get; init; }
 }
 
@@ -75,8 +79,11 @@ internal interface ICodeActionProvider
 }
 
 /// <summary>The range and text a rename starts with (upstream's RenameLocation &amp; Rejection).</summary>
-internal sealed record RenameLocationResult(TextRange Range, string Text)
+internal sealed class RenameLocationResult(TextRange range, string text)
 {
+    public TextRange Range { get; } = range;
+    public string Text { get; } = text;
+
     /// <summary>Why the symbol cannot be renamed; then range and text are not used.</summary>
     public string? RejectReason { get; init; }
 }

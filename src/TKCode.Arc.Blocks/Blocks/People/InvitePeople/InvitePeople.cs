@@ -411,15 +411,9 @@ public partial class InvitePeople : TemplatedControl
         }
         else if (change.Property == DirectorySourceProperty)
         {
-            if (_observedDirectory is not null)
-            {
-                _observedDirectory.CollectionChanged -= OnDirectorySourceChanged;
-            }
+            _observedDirectory?.CollectionChanged -= OnDirectorySourceChanged;
             _observedDirectory = DirectorySource as INotifyCollectionChanged;
-            if (_observedDirectory is not null)
-            {
-                _observedDirectory.CollectionChanged += OnDirectorySourceChanged;
-            }
+            _observedDirectory?.CollectionChanged += OnDirectorySourceChanged;
             OnDataChanged(DataPart.Directory);
         }
         else if (change.Property == RolesProperty)

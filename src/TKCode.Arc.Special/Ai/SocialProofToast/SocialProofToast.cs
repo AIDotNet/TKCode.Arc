@@ -301,10 +301,7 @@ public class SocialProofToast : TemplatedControl
         base.OnAttachedToVisualTree(e);
         // A minimized window is the desktop's background tab: the cycle waits until it is restored.
         _window = TopLevel.GetTopLevel(this) as Window;
-        if (_window is not null)
-        {
-            _window.PropertyChanged += OnWindowPropertyChanged;
-        }
+        _window?.PropertyChanged += OnWindowPropertyChanged;
         Mount();
         if (!_started)
         {

@@ -364,10 +364,7 @@ internal sealed class ProfilePagePanelSwap : Control
         _opacity = new MotionValue<double>(this, 1, MotionVectors.Double);
         _opacity.Changed += v =>
         {
-            if (_shown is not null)
-            {
-                _shown.Opacity = v;
-            }
+            _shown?.Opacity = v;
         };
         _rise = new MotionValue<double>(this, 0, MotionVectors.Double);
         _rise.Changed += v => _translate.Y = v;

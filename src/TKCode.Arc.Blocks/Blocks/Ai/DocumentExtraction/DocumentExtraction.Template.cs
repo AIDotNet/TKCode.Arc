@@ -301,21 +301,12 @@ public partial class DocumentExtraction
         _reviewAnnouncer = scope.Find<AiAnnouncer>(ReviewAnnouncerPart);
         HookParts();
 
-        if (_status is not null)
-        {
-            _status.RenderTransform = _statusShift;
-        }
+        _status?.RenderTransform = _statusShift;
         _fadeFields = PanelFade(_fieldsScroll);
         _fadeJson = PanelFade(_jsonScroll);
         _fadeSchema = PanelFade(_schemaScroll);
-        if (_viewer is not null)
-        {
-            _viewer.Document = EffectiveDocument;
-        }
-        if (_meta is not null)
-        {
-            _meta.ModelMark = ModelMark;
-        }
+        _viewer?.Document = EffectiveDocument;
+        _meta?.ModelMark = ModelMark;
         BuildForm();
         SyncSources();
         ApplyLabels();
@@ -344,18 +335,9 @@ public partial class DocumentExtraction
             // A new label re-lays out the head only: the fit is checked when the button or the tabs change size.
             _action.SizeChanged += OnHeadSizeChanged;
         }
-        if (_tabs is not null)
-        {
-            _tabs.SizeChanged += OnHeadSizeChanged;
-        }
-        if (_acceptAll is not null)
-        {
-            _acceptAll.Click += OnAcceptAllClick;
-        }
-        if (_viewer is not null)
-        {
-            _viewer.PropertyChanged += OnViewerPropertyChanged;
-        }
+        _tabs?.SizeChanged += OnHeadSizeChanged;
+        _acceptAll?.Click += OnAcceptAllClick;
+        _viewer?.PropertyChanged += OnViewerPropertyChanged;
         foreach (var panel in Panels())
         {
             panel.ScrollChanged += OnPanelScrollChanged;
@@ -371,18 +353,9 @@ public partial class DocumentExtraction
             _action.Click -= OnActionClick;
             _action.SizeChanged -= OnHeadSizeChanged;
         }
-        if (_tabs is not null)
-        {
-            _tabs.SizeChanged -= OnHeadSizeChanged;
-        }
-        if (_acceptAll is not null)
-        {
-            _acceptAll.Click -= OnAcceptAllClick;
-        }
-        if (_viewer is not null)
-        {
-            _viewer.PropertyChanged -= OnViewerPropertyChanged;
-        }
+        _tabs?.SizeChanged -= OnHeadSizeChanged;
+        _acceptAll?.Click -= OnAcceptAllClick;
+        _viewer?.PropertyChanged -= OnViewerPropertyChanged;
         foreach (var panel in Panels())
         {
             panel.ScrollChanged -= OnPanelScrollChanged;
@@ -455,10 +428,7 @@ public partial class DocumentExtraction
         }
         else if (change.Property == ModelMarkProperty)
         {
-            if (_meta is not null)
-            {
-                _meta.ModelMark = change.NewValue;
-            }
+            _meta?.ModelMark = change.NewValue;
         }
         else if (change.Property == ReviewThresholdProperty)
         {
@@ -614,23 +584,14 @@ public partial class DocumentExtraction
         PseudoClasses.Set(StackedPseudoClass, stacked);
         PseudoClasses.Set(FooterWrapPseudoClass, wrap);
         PseudoClasses.Set(NarrowPseudoClass, narrow);
-        if (_body is not null)
-        {
-            _body.IsStacked = stacked;
-        }
+        _body?.IsStacked = stacked;
         if (_viewer is not null)
         {
             _viewer.IsStacked = stacked;
             _viewer.IsNarrow = narrow;
         }
-        if (_footer is not null)
-        {
-            _footer.Mode = narrow ? ExtractionFooterMode.Narrow : wrap ? ExtractionFooterMode.Wrap : ExtractionFooterMode.Row;
-        }
-        if (_meta is not null)
-        {
-            _meta.ShowsModel = !narrow;
-        }
+        _footer?.Mode = narrow ? ExtractionFooterMode.Narrow : wrap ? ExtractionFooterMode.Wrap : ExtractionFooterMode.Row;
+        _meta?.ShowsModel = !narrow;
         if (force || narrowChanged)
         {
             foreach (var row in _rows.Values)
@@ -658,10 +619,7 @@ public partial class DocumentExtraction
     private void ApplyLabels()
     {
         var labels = Labels;
-        if (_store is not null)
-        {
-            _store.Labels = labels;
-        }
+        _store?.Labels = labels;
         if (_tabs is not null)
         {
             _tabs.FieldsText = labels.FieldsTab;
@@ -669,18 +627,9 @@ public partial class DocumentExtraction
             _tabs.SchemaText = labels.SchemaTab;
             _tabs.ListName = labels.Output;
         }
-        if (_status is not null)
-        {
-            _status.ActionText = labels.Review;
-        }
-        if (_json is not null)
-        {
-            _json.AutomationName = labels.JsonName;
-        }
-        if (_schema is not null)
-        {
-            _schema.AutomationName = labels.SchemaName;
-        }
+        _status?.ActionText = labels.Review;
+        _json?.AutomationName = labels.JsonName;
+        _schema?.AutomationName = labels.SchemaName;
         foreach (var copy in new[] { _jsonCopy, _schemaCopy })
         {
             if (copy is not null)
@@ -689,10 +638,7 @@ public partial class DocumentExtraction
                 copy.CopiedLabel = labels.Copied;
             }
         }
-        if (_averageWord is not null)
-        {
-            _averageWord.Text = labels.AverageWord;
-        }
+        _averageWord?.Text = labels.AverageWord;
         if (_formPane is not null)
         {
             AutomationProperties.SetName(_formPane, labels.Output);
@@ -718,10 +664,7 @@ public partial class DocumentExtraction
         Show(_fieldsScroll, _fadeFields, tab == ExtractionTab.Fields);
         Show(_jsonScroll, _fadeJson, tab == ExtractionTab.Json);
         Show(_schemaScroll, _fadeSchema, tab == ExtractionTab.Schema);
-        if (_panelRing is not null)
-        {
-            _panelRing.IsVisible = false;
-        }
+        _panelRing?.IsVisible = false;
         _hoverPath = null;
         ApplyLinked(LinkedPath, force: true);
 

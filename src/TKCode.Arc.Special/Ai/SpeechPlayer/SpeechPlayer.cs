@@ -352,10 +352,7 @@ public partial class SpeechPlayer : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_dock is not null)
-        {
-            _dock.Content = null;
-        }
+        _dock?.Content = null;
         _author = e.NameScope.Find<Panel>(AuthorPart);
         _authorMark = e.NameScope.Find<ArcGlyph>(AuthorMarkPart);
         _authorName = e.NameScope.Find<TextBlock>(AuthorNamePart);
@@ -366,10 +363,7 @@ public partial class SpeechPlayer : TemplatedControl
         PseudoClasses.Set(PlainPseudoClass, Variant == SpeechPlayerVariant.Plain);
         PseudoClasses.Set(OpenPseudoClass, IsOpen);
         BuildParagraphs();
-        if (_dock is not null)
-        {
-            _dock.Content = IsOpen ? _controls : _actionRow;
-        }
+        _dock?.Content = IsOpen ? _controls : _actionRow;
         SyncAuthor();
         SyncActionRow();
         SyncControls();
@@ -488,14 +482,8 @@ public partial class SpeechPlayer : TemplatedControl
     private void SyncAuthor()
     {
         var name = EffectiveAuthor;
-        if (_author is not null)
-        {
-            _author.IsVisible = !string.IsNullOrEmpty(name);
-        }
-        if (_authorName is not null)
-        {
-            _authorName.Text = name;
-        }
+        _author?.IsVisible = !string.IsNullOrEmpty(name);
+        _authorName?.Text = name;
         if (_authorMark is not null)
         {
             _authorMark.Data = AuthorMark;

@@ -155,10 +155,7 @@ public partial class LeadScoring
 
     private void OnStagesChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        if (_body is not null)
-        {
-            _body.Child = BuildBody();
-        }
+        _body?.Child = BuildBody();
         Refresh();
     }
 
@@ -167,10 +164,7 @@ public partial class LeadScoring
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_body is not null)
-        {
-            _body.Child = null;
-        }
+        _body?.Child = null;
         _body = e.NameScope.Find<Decorator>(BodyPart);
         _announcer = e.NameScope.Find<LeadScoringAnnouncer>(AnnouncerPart);
         if (_body is not null)
@@ -421,16 +415,10 @@ public partial class LeadScoring
                         || (l.JobTitle?.Contains(query, StringComparison.CurrentCultureIgnoreCase) ?? false))
             .OrderByDescending(l => l.Score)
             .ToList();
-        if (_table is not null)
-        {
-            _table.ItemsSource = _visible;
-        }
+        _table?.ItemsSource = _visible;
         _selected.RemoveAll(l => !_visible.Contains(l));
         UpdateBulk();
-        if (_count is not null)
-        {
-            _count.Text = string.Format(CultureInfo.CurrentCulture, Labels.CountFormat, _visible.Count, EffectiveLeads.Count);
-        }
+        _count?.Text = string.Format(CultureInfo.CurrentCulture, Labels.CountFormat, _visible.Count, EffectiveLeads.Count);
     }
 
     private void OnTableSelectionChanged(object? sender, DataTableSelectionChangedEventArgs e)

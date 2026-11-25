@@ -210,20 +210,11 @@ public class MagnifyDock : ItemsControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_shelf is not null)
-        {
-            _shelf.Dock = null;
-        }
-        if (_labels is not null)
-        {
-            _labels.Dock = null;
-        }
+        _shelf?.Dock = null;
+        _labels?.Dock = null;
         _shelf = e.NameScope.Find<MagnifyDockShelf>(ShelfPart);
         _labels = e.NameScope.Find<MagnifyDockLabels>(LabelsPart);
-        if (_shelf is not null)
-        {
-            _shelf.Dock = this;
-        }
+        _shelf?.Dock = this;
         if (_labels is not null)
         {
             _labels.Dock = this;

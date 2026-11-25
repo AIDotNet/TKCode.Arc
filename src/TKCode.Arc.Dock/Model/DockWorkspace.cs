@@ -67,10 +67,7 @@ public sealed partial class DockWorkspace : AvaloniaObject
             {
                 old.Owner = null;
             }
-            if (value is not null)
-            {
-                value.Owner = this;
-            }
+            value?.Owner = this;
             SetAndRaise(RootProperty, ref _root, value);
             NotifyStructure(removal: old is not null);
         }

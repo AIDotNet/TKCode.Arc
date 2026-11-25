@@ -224,10 +224,7 @@ public class AgentLoop : Explainer
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_speed is not null)
-        {
-            _speed.SelectionChanged -= OnSpeedSelectionChanged;
-        }
+        _speed?.SelectionChanged -= OnSpeedSelectionChanged;
         base.OnApplyTemplate(e);
         _stage = e.NameScope.Find<AgentLoopStage>(StagePart);
         _status = e.NameScope.Find<ExplainerStatus>(StatusPart);
@@ -548,15 +545,9 @@ public class AgentLoop : Explainer
 
     private void ObserveSource(IEnumerable<AgentLoopIteration>? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => ScheduleRebuild();
@@ -660,10 +651,7 @@ public class AgentLoop : Explainer
 
     private void UpdateLabels()
     {
-        if (_speedLabel is not null)
-        {
-            _speedLabel.Text = Labels.Speed;
-        }
+        _speedLabel?.Text = Labels.Speed;
         if (_speed is not null)
         {
             AutomationProperties.SetName(_speed, Labels.Speed);
@@ -707,10 +695,7 @@ public class AgentLoop : Explainer
 
     private void UpdateControlsEnabled()
     {
-        if (_controls is not null)
-        {
-            _controls.IsEnabled = _timeline.Count > 0;
-        }
+        _controls?.IsEnabled = _timeline.Count > 0;
     }
 
     private void UpdatePseudoClasses()

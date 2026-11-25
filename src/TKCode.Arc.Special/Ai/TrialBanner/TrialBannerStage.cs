@@ -66,10 +66,7 @@ internal sealed class TrialBannerStage : Panel
                 child.IsVisible = false;
             }
         }
-        if (face is not null)
-        {
-            face.IsVisible = true;
-        }
+        face?.IsVisible = true;
         var morphs = animate && _hasLaidOut && previous is not null && ArcMotion.IsFull(this) && this.IsAttachedToVisualTree();
         if (_leaving is not null && !ReferenceEquals(_leaving, face))
         {

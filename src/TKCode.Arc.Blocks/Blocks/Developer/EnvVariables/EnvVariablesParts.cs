@@ -664,10 +664,7 @@ internal sealed class EnvDisclosure : Control
     private void UpdateVisual()
     {
         var p = Math.Clamp(Progress, 0, 1);
-        if (_child is not null)
-        {
-            _child.Opacity = p;
-        }
+        _child?.Opacity = p;
         InvalidateMeasure();
     }
 

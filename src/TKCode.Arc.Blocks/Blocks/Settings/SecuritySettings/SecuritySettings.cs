@@ -265,13 +265,12 @@ public class SecuritySettings : TemplatedControl
         set => SetValue(SectionsProperty, value);
     }
 
-    private int _protectionScore;
 
     /// <inheritdoc cref="ProtectionScoreProperty"/>
     public int ProtectionScore
     {
-        get => _protectionScore;
-        private set => SetAndRaise(ProtectionScoreProperty, ref _protectionScore, value);
+        get;
+        private set => SetAndRaise(ProtectionScoreProperty, ref field, value);
     }
 
     private bool _isPasswordFormOpen;
@@ -459,18 +458,9 @@ public class SecuritySettings : TemplatedControl
         _sessionsGroup = scope.Find<SettingsGroup>(SessionsGroupPart);
         Hook();
 
-        if (_form is not null)
-        {
-            _form.IsVisible = IsPasswordFormOpen;
-        }
-        if (_formHost is not null)
-        {
-            _formHost.IsExpanded = IsPasswordFormOpen;
-        }
-        if (_changePassword is not null)
-        {
-            _changePassword.IsEnabled = !IsPasswordFormOpen;
-        }
+        _form?.IsVisible = IsPasswordFormOpen;
+        _formHost?.IsExpanded = IsPasswordFormOpen;
+        _changePassword?.IsEnabled = !IsPasswordFormOpen;
         SyncSwitches();
         UpdateSections();
         UpdateTexts();
@@ -481,106 +471,34 @@ public class SecuritySettings : TemplatedControl
 
     private void Hook()
     {
-        if (_changePassword is not null)
-        {
-            _changePassword.Click += OnChangePasswordClick;
-        }
-        if (_cancelPassword is not null)
-        {
-            _cancelPassword.Click += OnCancelPasswordClick;
-        }
-        if (_updatePassword is not null)
-        {
-            _updatePassword.Click += OnUpdatePasswordClick;
-        }
-        if (_currentPassword is not null)
-        {
-            _currentPassword.PropertyChanged += OnPasswordFieldChanged;
-        }
-        if (_newPassword is not null)
-        {
-            _newPassword.PropertyChanged += OnPasswordFieldChanged;
-        }
-        if (_form is not null)
-        {
-            _form.KeyDown += OnFormKeyDown;
-        }
-        if (_formHost is not null)
-        {
-            _formHost.PropertyChanged += OnFormHostChanged;
-        }
-        if (_passwordRow is not null)
-        {
-            _passwordRow.PropertyChanged += OnPasswordRowChanged;
-        }
-        if (_authenticatorSwitch is not null)
-        {
-            _authenticatorSwitch.IsCheckedChanged += OnSwitchChanged;
-        }
-        if (_textMessageSwitch is not null)
-        {
-            _textMessageSwitch.IsCheckedChanged += OnSwitchChanged;
-        }
-        if (_addPasskey is not null)
-        {
-            _addPasskey.Click += OnAddPasskeyClick;
-        }
-        if (_recoveryCodes is not null)
-        {
-            _recoveryCodes.Click += OnRecoveryCodesClick;
-        }
+        _changePassword?.Click += OnChangePasswordClick;
+        _cancelPassword?.Click += OnCancelPasswordClick;
+        _updatePassword?.Click += OnUpdatePasswordClick;
+        _currentPassword?.PropertyChanged += OnPasswordFieldChanged;
+        _newPassword?.PropertyChanged += OnPasswordFieldChanged;
+        _form?.KeyDown += OnFormKeyDown;
+        _formHost?.PropertyChanged += OnFormHostChanged;
+        _passwordRow?.PropertyChanged += OnPasswordRowChanged;
+        _authenticatorSwitch?.IsCheckedChanged += OnSwitchChanged;
+        _textMessageSwitch?.IsCheckedChanged += OnSwitchChanged;
+        _addPasskey?.Click += OnAddPasskeyClick;
+        _recoveryCodes?.Click += OnRecoveryCodesClick;
     }
 
     private void Unhook()
     {
-        if (_changePassword is not null)
-        {
-            _changePassword.Click -= OnChangePasswordClick;
-        }
-        if (_cancelPassword is not null)
-        {
-            _cancelPassword.Click -= OnCancelPasswordClick;
-        }
-        if (_updatePassword is not null)
-        {
-            _updatePassword.Click -= OnUpdatePasswordClick;
-        }
-        if (_currentPassword is not null)
-        {
-            _currentPassword.PropertyChanged -= OnPasswordFieldChanged;
-        }
-        if (_newPassword is not null)
-        {
-            _newPassword.PropertyChanged -= OnPasswordFieldChanged;
-        }
-        if (_form is not null)
-        {
-            _form.KeyDown -= OnFormKeyDown;
-        }
-        if (_formHost is not null)
-        {
-            _formHost.PropertyChanged -= OnFormHostChanged;
-        }
-        if (_passwordRow is not null)
-        {
-            _passwordRow.PropertyChanged -= OnPasswordRowChanged;
-        }
-        if (_authenticatorSwitch is not null)
-        {
-            _authenticatorSwitch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_textMessageSwitch is not null)
-        {
-            _textMessageSwitch.IsCheckedChanged -= OnSwitchChanged;
-        }
-        if (_addPasskey is not null)
-        {
-            _addPasskey.Click -= OnAddPasskeyClick;
-        }
-        if (_recoveryCodes is not null)
-        {
-            _recoveryCodes.Click -= OnRecoveryCodesClick;
-        }
+        _changePassword?.Click -= OnChangePasswordClick;
+        _cancelPassword?.Click -= OnCancelPasswordClick;
+        _updatePassword?.Click -= OnUpdatePasswordClick;
+        _currentPassword?.PropertyChanged -= OnPasswordFieldChanged;
+        _newPassword?.PropertyChanged -= OnPasswordFieldChanged;
+        _form?.KeyDown -= OnFormKeyDown;
+        _formHost?.PropertyChanged -= OnFormHostChanged;
+        _passwordRow?.PropertyChanged -= OnPasswordRowChanged;
+        _authenticatorSwitch?.IsCheckedChanged -= OnSwitchChanged;
+        _textMessageSwitch?.IsCheckedChanged -= OnSwitchChanged;
+        _addPasskey?.Click -= OnAddPasskeyClick;
+        _recoveryCodes?.Click -= OnRecoveryCodesClick;
         if (_sessionsGroup is not null)
         {
             _sessionsGroup.Items.Clear();
@@ -708,22 +626,10 @@ public class SecuritySettings : TemplatedControl
     private void UpdateSections()
     {
         var sections = Sections;
-        if (_summaryGroup is not null)
-        {
-            _summaryGroup.IsVisible = IsSummaryVisible && sections.HasFlag(SecuritySettingsSections.Summary);
-        }
-        if (_passwordGroup is not null)
-        {
-            _passwordGroup.IsVisible = sections.HasFlag(SecuritySettingsSections.Password);
-        }
-        if (_twoStepGroup is not null)
-        {
-            _twoStepGroup.IsVisible = sections.HasFlag(SecuritySettingsSections.TwoStep);
-        }
-        if (_sessionsGroup is not null)
-        {
-            _sessionsGroup.IsVisible = sections.HasFlag(SecuritySettingsSections.Sessions);
-        }
+        _summaryGroup?.IsVisible = IsSummaryVisible && sections.HasFlag(SecuritySettingsSections.Summary);
+        _passwordGroup?.IsVisible = sections.HasFlag(SecuritySettingsSections.Password);
+        _twoStepGroup?.IsVisible = sections.HasFlag(SecuritySettingsSections.TwoStep);
+        _sessionsGroup?.IsVisible = sections.HasFlag(SecuritySettingsSections.Sessions);
     }
 
     #endregion
@@ -739,22 +645,10 @@ public class SecuritySettings : TemplatedControl
         _signOutOthers.PendingLabel = labels.SigningOut;
         _signOutOthers.DoneLabel = labels.SignedOut;
         _emptyNote.Description = labels.NoSessions;
-        if (_passwordRow is not null)
-        {
-            _passwordRow.Header = labels.PasswordHeader;
-        }
-        if (_currentPassword is not null)
-        {
-            _currentPassword.Label = labels.CurrentPassword;
-        }
-        if (_newPassword is not null)
-        {
-            _newPassword.Label = labels.NewPassword;
-        }
-        if (_cancelPassword is not null)
-        {
-            _cancelPassword.Content = labels.Cancel;
-        }
+        _passwordRow?.Header = labels.PasswordHeader;
+        _currentPassword?.Label = labels.CurrentPassword;
+        _newPassword?.Label = labels.NewPassword;
+        _cancelPassword?.Content = labels.Cancel;
         if (_twoStepGroup is not null)
         {
             _twoStepGroup.Header = labels.TwoStepHeader;
@@ -765,26 +659,11 @@ public class SecuritySettings : TemplatedControl
             _authenticatorRow.Header = labels.AuthenticatorHeader;
             _authenticatorRow.Description = labels.AuthenticatorDescription;
         }
-        if (_textMessageRow is not null)
-        {
-            _textMessageRow.Header = labels.TextMessageHeader;
-        }
-        if (_passkeysRow is not null)
-        {
-            _passkeysRow.Header = labels.PasskeysHeader;
-        }
-        if (_addPasskey is not null)
-        {
-            _addPasskey.Content = labels.AddPasskey;
-        }
-        if (_recoveryRow is not null)
-        {
-            _recoveryRow.Header = labels.RecoveryCodesHeader;
-        }
-        if (_sessionsGroup is not null)
-        {
-            _sessionsGroup.Header = labels.SessionsHeader;
-        }
+        _textMessageRow?.Header = labels.TextMessageHeader;
+        _passkeysRow?.Header = labels.PasskeysHeader;
+        _addPasskey?.Content = labels.AddPasskey;
+        _recoveryRow?.Header = labels.RecoveryCodesHeader;
+        _sessionsGroup?.Header = labels.SessionsHeader;
         UpdatePasswordTexts();
         UpdateTwoStepTexts();
         UpdateSessionTexts();
@@ -794,22 +673,10 @@ public class SecuritySettings : TemplatedControl
     {
         var labels = Labels;
         var hasPassword = HasPassword;
-        if (_passwordRow is not null)
-        {
-            _passwordRow.Description = PasswordDescription(labels);
-        }
-        if (_changePassword is not null)
-        {
-            _changePassword.Content = hasPassword ? labels.ChangePassword : labels.SetPassword;
-        }
-        if (_updatePassword is not null)
-        {
-            _updatePassword.Content = hasPassword ? labels.UpdatePassword : labels.SetPassword;
-        }
-        if (_currentPassword is not null)
-        {
-            _currentPassword.IsVisible = hasPassword;
-        }
+        _passwordRow?.Description = PasswordDescription(labels);
+        _changePassword?.Content = hasPassword ? labels.ChangePassword : labels.SetPassword;
+        _updatePassword?.Content = hasPassword ? labels.UpdatePassword : labels.SetPassword;
+        _currentPassword?.IsVisible = hasPassword;
     }
 
     private string PasswordDescription(SecuritySettingsLabels labels)
@@ -833,18 +700,9 @@ public class SecuritySettings : TemplatedControl
     {
         var labels = Labels;
         var phone = MaskPhone(PhoneNumber);
-        if (_textMessageRow is not null)
-        {
-            _textMessageRow.Description = phone is null ? labels.TextMessageNoPhone : labels.TextMessageDescription(phone);
-        }
-        if (_textMessageSwitch is not null)
-        {
-            _textMessageSwitch.IsEnabled = phone is not null;
-        }
-        if (_passkeysRow is not null)
-        {
-            _passkeysRow.Description = PasskeyCount > 0 ? labels.PasskeyCount(PasskeyCount) : labels.NoPasskeys;
-        }
+        _textMessageRow?.Description = phone is null ? labels.TextMessageNoPhone : labels.TextMessageDescription(phone);
+        _textMessageSwitch?.IsEnabled = phone is not null;
+        _passkeysRow?.Description = PasskeyCount > 0 ? labels.PasskeyCount(PasskeyCount) : labels.NoPasskeys;
         var codes = RecoveryCodesCreatedAt;
         if (_recoveryRow is not null)
         {
@@ -852,10 +710,7 @@ public class SecuritySettings : TemplatedControl
                 ? labels.RecoveryCodesCreated(SettingsFormat.Date(created.LocalDateTime.Date, labels.Culture))
                 : labels.RecoveryCodesMissing;
         }
-        if (_recoveryCodes is not null)
-        {
-            _recoveryCodes.Content = codes is null ? labels.CreateCodes : labels.ViewCodes;
-        }
+        _recoveryCodes?.Content = codes is null ? labels.CreateCodes : labels.ViewCodes;
     }
 
     /// <summary>"•••• 4821" from the last four digits, or null when the number has no digits.</summary>
@@ -911,10 +766,7 @@ public class SecuritySettings : TemplatedControl
         }
         var labels = Labels;
         var count = labels.SummaryCount(score);
-        if (_summaryTitle is not null)
-        {
-            _summaryTitle.Content = score == 4 ? labels.SummaryProtected : labels.SummaryImprove;
-        }
+        _summaryTitle?.Content = score == 4 ? labels.SummaryProtected : labels.SummaryImprove;
         if (_summaryCount is not null)
         {
             _summaryCount.Direction = score >= previous ? 1 : -1;
@@ -924,10 +776,7 @@ public class SecuritySettings : TemplatedControl
         {
             AutomationProperties.SetName(_meter, count);
         }
-        if (_shieldGlyph is not null)
-        {
-            _shieldGlyph.Data = score >= 2 ? SecuritySettingsGlyphs.ShieldCheck : SecuritySettingsGlyphs.ShieldAlert;
-        }
+        _shieldGlyph?.Data = score >= 2 ? SecuritySettingsGlyphs.ShieldCheck : SecuritySettingsGlyphs.ShieldAlert;
     }
 
     #endregion
@@ -944,18 +793,9 @@ public class SecuritySettings : TemplatedControl
         }
         ClearForm();
         IsPasswordFormOpen = true;
-        if (_form is not null)
-        {
-            _form.IsVisible = true;
-        }
-        if (_formHost is not null)
-        {
-            _formHost.IsExpanded = true;
-        }
-        if (_changePassword is not null)
-        {
-            _changePassword.IsEnabled = false;
-        }
+        _form?.IsVisible = true;
+        _formHost?.IsExpanded = true;
+        _changePassword?.IsEnabled = false;
         UpdateCanSubmit();
         FocusFirstField();
     }
@@ -969,10 +809,7 @@ public class SecuritySettings : TemplatedControl
         }
         var focusWasInside = IsFocusWithin(_form);
         IsPasswordFormOpen = false;
-        if (_formHost is not null)
-        {
-            _formHost.IsExpanded = false;
-        }
+        _formHost?.IsExpanded = false;
         if (_changePassword is not null)
         {
             _changePassword.IsEnabled = true;
@@ -1030,10 +867,7 @@ public class SecuritySettings : TemplatedControl
 
     private void UpdateCanSubmit()
     {
-        if (_updatePassword is not null)
-        {
-            _updatePassword.IsEnabled = IsPasswordFormOpen && CanSubmit();
-        }
+        _updatePassword?.IsEnabled = IsPasswordFormOpen && CanSubmit();
     }
 
     private void FocusFirstField()
@@ -1064,10 +898,7 @@ public class SecuritySettings : TemplatedControl
         {
             return;
         }
-        if (_form is not null)
-        {
-            _form.IsVisible = false;
-        }
+        _form?.IsVisible = false;
         // Passwords do not linger in a closed form.
         ClearForm();
     }
@@ -1144,14 +975,8 @@ public class SecuritySettings : TemplatedControl
         _syncingSwitches = true;
         try
         {
-            if (_authenticatorSwitch is not null)
-            {
-                _authenticatorSwitch.IsChecked = IsAuthenticatorEnabled;
-            }
-            if (_textMessageSwitch is not null)
-            {
-                _textMessageSwitch.IsChecked = IsTextMessageEnabled;
-            }
+            _authenticatorSwitch?.IsChecked = IsAuthenticatorEnabled;
+            _textMessageSwitch?.IsChecked = IsTextMessageEnabled;
         }
         finally
         {
@@ -1190,15 +1015,9 @@ public class SecuritySettings : TemplatedControl
         {
             return;
         }
-        if (_watchedSessions is not null)
-        {
-            _watchedSessions.CollectionChanged -= OnSessionsChanged;
-        }
+        _watchedSessions?.CollectionChanged -= OnSessionsChanged;
         _watchedSessions = wanted;
-        if (_watchedSessions is not null)
-        {
-            _watchedSessions.CollectionChanged += OnSessionsChanged;
-        }
+        _watchedSessions?.CollectionChanged += OnSessionsChanged;
     }
 
     private void OnSessionsChanged(object? sender, NotifyCollectionChangedEventArgs e) => SyncSessions();

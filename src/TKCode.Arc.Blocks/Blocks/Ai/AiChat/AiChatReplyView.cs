@@ -102,10 +102,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         set
         {
             _isLast = value;
-            if (_actions is not null)
-            {
-                _actions.IsLast = value;
-            }
+            _actions?.IsLast = value;
         }
     }
 
@@ -116,10 +113,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         set
         {
             _isRevealed = value;
-            if (_actions is not null)
-            {
-                _actions.IsRevealed = value;
-            }
+            _actions?.IsRevealed = value;
         }
     }
 
@@ -130,10 +124,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         set
         {
             _alwaysShowsActions = value;
-            if (_actions is not null)
-            {
-                _actions.AlwaysVisible = value;
-            }
+            _actions?.AlwaysVisible = value;
         }
     }
 
@@ -155,10 +146,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         set
         {
             _pager = value;
-            if (_actions is not null)
-            {
-                _actions.VersionPager = value;
-            }
+            _actions?.VersionPager = value;
         }
     }
 
@@ -168,10 +156,7 @@ internal sealed class AiChatReplyView : TemplatedControl
     {
         base.OnApplyTemplate(e);
         ClearTools();
-        if (_actions is not null)
-        {
-            _actions.VersionPager = null;
-        }
+        _actions?.VersionPager = null;
         var scope = e.NameScope;
         _reasoning = scope.Find<AiReasoningDisclosure>(ReasoningPart);
         _toolsPanel = scope.Find<Panel>(ToolsPart);
@@ -180,10 +165,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         _text = scope.Find<AiReplyText>(TextPart);
         _status = scope.Find<AiStatusNote>(StatusPart);
         _actions = scope.Find<AiMessageActions>(ActionsPart);
-        if (_reasoning is not null)
-        {
-            _reasoning.Lead = _mark;
-        }
+        _reasoning?.Lead = _mark;
         if (_actions is not null)
         {
             _actions.IsLast = _isLast;
@@ -233,14 +215,8 @@ internal sealed class AiChatReplyView : TemplatedControl
         {
             return;
         }
-        if (_reasoning is not null)
-        {
-            _reasoning.ThinkingText = labels.Thinking;
-        }
-        if (_text is not null)
-        {
-            _text.CitationName = labels.SourceLink;
-        }
+        _reasoning?.ThinkingText = labels.Thinking;
+        _text?.CitationName = labels.SourceLink;
         if (_actions is not null)
         {
             _actions.CopyText = labels.Copy;
@@ -303,18 +279,9 @@ internal sealed class AiChatReplyView : TemplatedControl
     {
         UpdateMark();
         SyncTools();
-        if (_reasoning is not null)
-        {
-            _reasoning.Reasoning = Reply?.Reasoning;
-        }
-        if (_text is not null)
-        {
-            _text.Sources = Reply?.Sources;
-        }
-        if (_actions is not null)
-        {
-            _actions.Feedback = Reply?.Feedback ?? AiChatFeedback.None;
-        }
+        _reasoning?.Reasoning = Reply?.Reasoning;
+        _text?.Sources = Reply?.Sources;
+        _actions?.Feedback = Reply?.Feedback ?? AiChatFeedback.None;
         if (rebuildText)
         {
             SyncText();
@@ -355,10 +322,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         }
         else if (e.Property == AiChatReply.ReasoningProperty)
         {
-            if (_reasoning is not null)
-            {
-                _reasoning.Reasoning = e.GetNewValue<string>();
-            }
+            _reasoning?.Reasoning = e.GetNewValue<string>();
         }
         else if (e.Property == AiChatReply.ThoughtForProperty)
         {
@@ -370,10 +334,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         }
         else if (e.Property == AiChatReply.FeedbackProperty)
         {
-            if (_actions is not null)
-            {
-                _actions.Feedback = e.GetNewValue<AiChatFeedback>();
-            }
+            _actions?.Feedback = e.GetNewValue<AiChatFeedback>();
         }
         else if (e.Property == AiChatReply.ModelIdProperty)
         {
@@ -604,10 +565,7 @@ internal sealed class AiChatReplyView : TemplatedControl
             _actions.IsStreaming = status is AiChatReplyStatus.Thinking or AiChatReplyStatus.Streaming;
             _actions.IsVisible = status != AiChatReplyStatus.Failed || _hasVersions;
         }
-        if (_text is not null)
-        {
-            _text.IsVisible = _text.HasText || _text.IsRevealing || (_mode != TextMode.Driven && !string.IsNullOrEmpty(reply?.Text));
-        }
+        _text?.IsVisible = _text.HasText || _text.IsRevealing || (_mode != TextMode.Driven && !string.IsNullOrEmpty(reply?.Text));
     }
 
     private static void Show(AiStatusNote note)
@@ -669,10 +627,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         _tools.AddRange(kept);
         Place(_chips, _tools.Select(t => (Control)t.Chip));
         Place(_details, _tools.Select(t => (Control)t.Detail));
-        if (_toolsPanel is not null)
-        {
-            _toolsPanel.IsVisible = _tools.Count > 0;
-        }
+        _toolsPanel?.IsVisible = _tools.Count > 0;
     }
 
     /// <summary>Puts <paramref name="wanted"/> in <paramref name="panel"/> in order, touching only what changed.</summary>
@@ -707,10 +662,7 @@ internal sealed class AiChatReplyView : TemplatedControl
         _tools.Clear();
         _chips?.Children.Clear();
         _details?.Children.Clear();
-        if (_toolsPanel is not null)
-        {
-            _toolsPanel.IsVisible = false;
-        }
+        _toolsPanel?.IsVisible = false;
     }
 
     /// <summary>A chip opens and closes its own detail panel; several can be open at once.</summary>

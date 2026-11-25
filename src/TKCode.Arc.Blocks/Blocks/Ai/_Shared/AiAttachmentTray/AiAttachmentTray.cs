@@ -221,15 +221,9 @@ internal class AiAttachmentTray : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnCollectionChanged;
-        }
+        _observed?.CollectionChanged -= OnCollectionChanged;
         _observed = observed;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnCollectionChanged;
-        }
+        _observed?.CollectionChanged += OnCollectionChanged;
     }
 
     #region Items

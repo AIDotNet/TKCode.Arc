@@ -100,7 +100,6 @@ public class CoverFlow : TemplatedControl
     private ArcContentSwap? _caption;
     private TextBlock? _status;
     private LazyFocusRing? _focusRing;
-    private CoverFlowItem? _selectedItem;
     private bool _syncing;
     private double? _gestureVelocity;
 
@@ -179,8 +178,8 @@ public class CoverFlow : TemplatedControl
     /// <inheritdoc cref="SelectedItemProperty"/>
     public CoverFlowItem? SelectedItem
     {
-        get => _selectedItem;
-        private set => SetAndRaise(SelectedItemProperty, ref _selectedItem, value);
+        get;
+        private set => SetAndRaise(SelectedItemProperty, ref field, value);
     }
 
     /// <inheritdoc cref="ItemInvokedEvent"/>
@@ -344,10 +343,7 @@ public class CoverFlow : TemplatedControl
         var valid = index >= 0 && index < Count;
         SelectedItem = valid ? _feed[index] : null;
         var spoken = valid ? NameOf(index) : string.Empty;
-        if (_status is not null)
-        {
-            _status.Text = spoken;
-        }
+        _status?.Text = spoken;
         AutomationProperties.SetName(this, Label);
         AutomationProperties.SetHelpText(this, spoken);
         if (!valid && _caption is not null)
@@ -387,10 +383,7 @@ public class CoverFlow : TemplatedControl
         _focusRing ??= new LazyFocusRing(this, CoverFlowTokens.Key(CoverFlowTokenKind.FocusRingMargin),
             ArcDesignTokens.Key(ArcDesignTokenKind.RadiusPanel));
         _focusRing.Attach(e.NameScope.Find<Panel>(RootPart));
-        if (_caption is not null)
-        {
-            _caption.Content = SelectedItem;
-        }
+        _caption?.Content = SelectedItem;
         UpdateState(SelectedIndex);
     }
 

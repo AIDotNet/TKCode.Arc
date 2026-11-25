@@ -198,22 +198,10 @@ public partial class TeamDirectory
             _searchInput.TextChanged += OnSearchInputChanged;
             _searchInput.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
         }
-        if (_searchFrame is not null)
-        {
-            _searchFrame.PointerPressed += OnSearchFramePressed;
-        }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click += OnClearSearchClick;
-        }
-        if (_clearFilters is not null)
-        {
-            _clearFilters.Click += OnClearFiltersClick;
-        }
-        if (_list is not null)
-        {
-            _list.RowRemoved += OnRowRemoved;
-        }
+        _searchFrame?.PointerPressed += OnSearchFramePressed;
+        _clearSearch?.Click += OnClearSearchClick;
+        _clearFilters?.Click += OnClearFiltersClick;
+        _list?.RowRemoved += OnRowRemoved;
         _rows.Clear();
         _teams = new List<string>();
         UpdateVisibility();
@@ -228,22 +216,10 @@ public partial class TeamDirectory
             _searchInput.TextChanged -= OnSearchInputChanged;
             _searchInput.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
         }
-        if (_searchFrame is not null)
-        {
-            _searchFrame.PointerPressed -= OnSearchFramePressed;
-        }
-        if (_clearSearch is not null)
-        {
-            _clearSearch.Click -= OnClearSearchClick;
-        }
-        if (_clearFilters is not null)
-        {
-            _clearFilters.Click -= OnClearFiltersClick;
-        }
-        if (_list is not null)
-        {
-            _list.RowRemoved -= OnRowRemoved;
-        }
+        _searchFrame?.PointerPressed -= OnSearchFramePressed;
+        _clearSearch?.Click -= OnClearSearchClick;
+        _clearFilters?.Click -= OnClearFiltersClick;
+        _list?.RowRemoved -= OnRowRemoved;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
@@ -324,29 +300,17 @@ public partial class TeamDirectory
 
     private void UpdateVisibility()
     {
-        if (_searchFrame is not null)
-        {
-            _searchFrame.IsVisible = IsSearchVisible;
-        }
-        if (_filterBar is not null)
-        {
-            _filterBar.IsVisible = IsFilterVisible;
-        }
+        _searchFrame?.IsVisible = IsSearchVisible;
+        _filterBar?.IsVisible = IsFilterVisible;
     }
 
     #region People
 
     private void ObserveSource(System.Collections.IEnumerable? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => ReloadPeople();
@@ -422,26 +386,14 @@ public partial class TeamDirectory
             var visible = TeamDirectoryQuery.Visible(_people, SelectedTeam, SearchText, SearchFilter);
             var displayed = TeamDirectoryQuery.Displayed(visible, SelectedPersonId);
             _visible = visible;
-            if (_count is not null)
-            {
-                _count.Text = _people.Count.ToString(CultureInfo.CurrentCulture);
-            }
+            _count?.Text = _people.Count.ToString(CultureInfo.CurrentCulture);
             SyncFilters(animate);
             SyncRows(visible, displayed, animate);
             var empty = visible.Count == 0;
             PseudoClasses.Set(EmptyResultsPseudoClass, empty);
-            if (_empty is not null)
-            {
-                _empty.IsVisible = empty;
-            }
-            if (_noMatch is not null)
-            {
-                _noMatch.Text = Labels.NoMatches(SearchText ?? string.Empty);
-            }
-            if (_clearSearch is not null)
-            {
-                _clearSearch.IsVisible = !string.IsNullOrEmpty(SearchText);
-            }
+            _empty?.IsVisible = empty;
+            _noMatch?.Text = Labels.NoMatches(SearchText ?? string.Empty);
+            _clearSearch?.IsVisible = !string.IsNullOrEmpty(SearchText);
             SyncDetail(displayed, animate);
             MatchCount = visible.Count;
             DisplayedPerson = displayed;
@@ -568,10 +520,7 @@ public partial class TeamDirectory
     private void ApplyLabels()
     {
         var labels = Labels;
-        if (_title is not null)
-        {
-            _title.Text = labels.Title;
-        }
+        _title?.Text = labels.Title;
         if (_searchInput is not null)
         {
             _searchInput.PlaceholderText = labels.SearchPlaceholder;

@@ -8,16 +8,41 @@ using System.Buffers.Binary;
 namespace TKCode.Arc.Editor.Services;
 
 /// <summary>A full or delta semantic tokens result as sent between processes (upstream's ISemanticTokensDto).</summary>
-internal abstract record SemanticTokensDto(uint Id);
+internal union SemanticTokensDto(FullSemanticTokensDto, DeltaSemanticTokensDto)
+{
+    public uint Id => this switch
+    {
+        FullSemanticTokensDto full => full.Id,
+        DeltaSemanticTokensDto delta => delta.Id,
+        _ => 0,
+    };
+}
 
 /// <summary>All the tokens (upstream's IFullSemanticTokensDto).</summary>
-internal sealed record FullSemanticTokensDto(uint Id, uint[] Data) : SemanticTokensDto(Id);
+internal sealed class FullSemanticTokensDto(uint id, uint[] data)
+{
+    public uint Id { get; } = id;
+
+    public uint[] Data { get; } = data;
+}
 
 /// <summary>One change of a delta (start, delete count, inserted data).</summary>
-internal sealed record SemanticTokensDtoDelta(uint Start, uint DeleteCount, uint[]? Data);
+internal sealed class SemanticTokensDtoDelta(uint start, uint deleteCount, uint[]? data)
+{
+    public uint Start { get; } = start;
+
+    public uint DeleteCount { get; } = deleteCount;
+
+    public uint[]? Data { get; } = data;
+}
 
 /// <summary>Changes to the previous tokens (upstream's IDeltaSemanticTokensDto).</summary>
-internal sealed record DeltaSemanticTokensDto(uint Id, IReadOnlyList<SemanticTokensDtoDelta> Deltas) : SemanticTokensDto(Id);
+internal sealed class DeltaSemanticTokensDto(uint id, IReadOnlyList<SemanticTokensDtoDelta> deltas)
+{
+    public uint Id { get; } = id;
+
+    public IReadOnlyList<SemanticTokensDtoDelta> Deltas { get; } = deltas;
+}
 
 /// <summary>Encodes and decodes <see cref="SemanticTokensDto"/> (upstream's encodeSemanticTokensDto / decodeSemanticTokensDto).</summary>
 internal static class SemanticTokensDtoCodec
@@ -30,33 +55,33 @@ internal static class SemanticTokensDtoCodec
         var dest = new uint[EncodeSize(semanticTokens)];
         var offset = 0;
         dest[offset++] = semanticTokens.Id;
-        if (semanticTokens is FullSemanticTokensDto full)
+        switch (semanticTokens)
         {
-            dest[offset++] = Full;
-            dest[offset++] = (uint)full.Data.Length;
-            full.Data.CopyTo(dest, offset);
-            offset += full.Data.Length;
-        }
-        else
-        {
-            var delta = (DeltaSemanticTokensDto)semanticTokens;
-            dest[offset++] = Delta;
-            dest[offset++] = (uint)delta.Deltas.Count;
-            foreach (var d in delta.Deltas)
-            {
-                dest[offset++] = d.Start;
-                dest[offset++] = d.DeleteCount;
-                if (d.Data is { } data)
+            case FullSemanticTokensDto full:
+                dest[offset++] = Full;
+                dest[offset++] = (uint)full.Data.Length;
+                full.Data.CopyTo(dest, offset);
+                offset += full.Data.Length;
+                break;
+            case DeltaSemanticTokensDto delta:
+                dest[offset++] = Delta;
+                dest[offset++] = (uint)delta.Deltas.Count;
+                foreach (var d in delta.Deltas)
                 {
-                    dest[offset++] = (uint)data.Length;
-                    data.CopyTo(dest, offset);
-                    offset += data.Length;
+                    dest[offset++] = d.Start;
+                    dest[offset++] = d.DeleteCount;
+                    if (d.Data is { } data)
+                    {
+                        dest[offset++] = (uint)data.Length;
+                        data.CopyTo(dest, offset);
+                        offset += data.Length;
+                    }
+                    else
+                    {
+                        dest[offset++] = 0;
+                    }
                 }
-                else
-                {
-                    dest[offset++] = 0;
-                }
-            }
+                break;
         }
 
         var bytes = new byte[dest.Length * 4];
@@ -71,19 +96,19 @@ internal static class SemanticTokensDtoCodec
     private static int EncodeSize(SemanticTokensDto semanticTokens)
     {
         var result = 2; // id, type
-        if (semanticTokens is FullSemanticTokensDto full)
+        switch (semanticTokens)
         {
-            result += 1 + full.Data.Length; // data length, data
-        }
-        else
-        {
-            var delta = (DeltaSemanticTokensDto)semanticTokens;
-            result += 1; // delta count
-            result += 3 * delta.Deltas.Count; // start, deleteCount, data length
-            foreach (var d in delta.Deltas)
-            {
-                result += d.Data?.Length ?? 0;
-            }
+            case FullSemanticTokensDto full:
+                result += 1 + full.Data.Length; // data length, data
+                break;
+            case DeltaSemanticTokensDto delta:
+                result += 1; // delta count
+                result += 3 * delta.Deltas.Count; // start, deleteCount, data length
+                foreach (var d in delta.Deltas)
+                {
+                    result += d.Data?.Length ?? 0;
+                }
+                break;
         }
 
         return result;

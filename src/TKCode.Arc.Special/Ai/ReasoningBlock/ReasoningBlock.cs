@@ -309,32 +309,17 @@ public class ReasoningBlock : TemplatedControl
         _statusGlyph = e.NameScope.Find<ArcGlyph>(StatusGlyphPart);
         _statusText = e.NameScope.Find<TextBlock>(StatusTextPart);
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggle;
-        }
-        if (_stop is not null)
-        {
-            _stop.Click += OnStop;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click += OnRetry;
-        }
+        _toggle?.Click += OnToggle;
+        _stop?.Click += OnStop;
+        _retry?.Click += OnRetry;
         if (_preview is not null)
         {
             _preview.RenderTransform = _glide;
             _preview.SizeChanged += OnPreviewSizeChanged;
         }
         // Opening, closing and the preview folding away all use one critically damped spring (0.26s).
-        if (_body is not null)
-        {
-            _body.HeightSpring = AiGlyphMotion.Settle;
-        }
-        if (_previewBox is not null)
-        {
-            _previewBox.HeightSpring = AiGlyphMotion.Settle;
-        }
+        _body?.HeightSpring = AiGlyphMotion.Settle;
+        _previewBox?.HeightSpring = AiGlyphMotion.Settle;
         _views.Clear();
         _stepsPanel?.Children.Clear();
         _shownLabel = null;
@@ -346,22 +331,10 @@ public class ReasoningBlock : TemplatedControl
 
     private void Unhook()
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggle;
-        }
-        if (_stop is not null)
-        {
-            _stop.Click -= OnStop;
-        }
-        if (_retry is not null)
-        {
-            _retry.Click -= OnRetry;
-        }
-        if (_preview is not null)
-        {
-            _preview.SizeChanged -= OnPreviewSizeChanged;
-        }
+        _toggle?.Click -= OnToggle;
+        _stop?.Click -= OnStop;
+        _retry?.Click -= OnRetry;
+        _preview?.SizeChanged -= OnPreviewSizeChanged;
     }
 
     /// <inheritdoc />
@@ -428,15 +401,9 @@ public class ReasoningBlock : TemplatedControl
         {
             return;
         }
-        if (_hooked is not null)
-        {
-            _hooked.Changed -= OnSimulationChanged;
-        }
+        _hooked?.Changed -= OnSimulationChanged;
         _hooked = wanted;
-        if (_hooked is not null)
-        {
-            _hooked.Changed += OnSimulationChanged;
-        }
+        _hooked?.Changed += OnSimulationChanged;
     }
 
     private void OnSimulationChanged(object? sender, EventArgs e)
@@ -620,10 +587,7 @@ public class ReasoningBlock : TemplatedControl
             _shownLabel = label;
             _label.Text = label;
         }
-        if (_label is not null)
-        {
-            _label.IsShimmering = thinking;
-        }
+        _label?.IsShimmering = thinking;
         if (_time is not null)
         {
             if (_time.Text != time)
@@ -632,10 +596,7 @@ public class ReasoningBlock : TemplatedControl
             }
             _time.IsVisible = time.Length > 0;
         }
-        if (_mark is not null)
-        {
-            _mark.Data = status == ReasoningStatus.Error ? ArcIcons.CircleAlert : Mark ?? ArcIcons.Sparkles;
-        }
+        _mark?.Data = status == ReasoningStatus.Error ? ArcIcons.CircleAlert : Mark ?? ArcIcons.Sparkles;
         var name = time.Length > 0 ? label + " " + time : label;
         AutomationProperties.SetName(_toggle, name + ", " + (IsExpanded ? Labels.Hide : Labels.Show));
         _toggle.IsExpanded = IsExpanded;
@@ -665,14 +626,8 @@ public class ReasoningBlock : TemplatedControl
             _footer.IsVisible = finished;
             if (finished)
             {
-                if (_statusText is not null)
-                {
-                    _statusText.Text = status == ReasoningStatus.Done ? Labels.Done : Labels.StoppedStatus;
-                }
-                if (_statusGlyph is not null)
-                {
-                    _statusGlyph.Data = status == ReasoningStatus.Done ? ArcIcons.Check : ArcIcons.Square;
-                }
+                _statusText?.Text = status == ReasoningStatus.Done ? Labels.Done : Labels.StoppedStatus;
+                _statusGlyph?.Data = status == ReasoningStatus.Done ? ArcIcons.Check : ArcIcons.Square;
                 if (_copy is not null)
                 {
                     var plain = ReasoningBlockText.PlainText(steps);

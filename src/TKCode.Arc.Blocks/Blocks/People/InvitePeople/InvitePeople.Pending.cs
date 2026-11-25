@@ -297,14 +297,8 @@ public partial class InvitePeople
             }
         }
         UpdateDividers();
-        if (_pendingCount is not null)
-        {
-            _pendingCount.Value = PendingInvites.Count;
-        }
-        if (_pendingEmptyHost is not null)
-        {
-            _pendingEmptyHost.IsExpanded = PendingInvites.Count == 0;
-        }
+        _pendingCount?.Value = PendingInvites.Count;
+        _pendingEmptyHost?.IsExpanded = PendingInvites.Count == 0;
     }
 
     private static void ExpandOnLoad(object? sender, RoutedEventArgs e)

@@ -590,10 +590,7 @@ internal sealed class ShortcutRecorderButton : AvaloniaButton
             }
             x += cap.Width + gap;
         }
-        if (_hint is not null)
-        {
-            _hint.X = RowStart(_view.IsRecording) + PlaceholderInset;
-        }
+        _hint?.X = RowStart(_view.IsRecording) + PlaceholderInset;
         InvalidateMeasure();
         InvalidateVisual();
     }

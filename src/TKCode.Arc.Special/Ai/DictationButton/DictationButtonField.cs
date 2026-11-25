@@ -251,10 +251,7 @@ internal sealed class DictationButtonField : TextBox
 
     private void UpdatePlaceholder()
     {
-        if (_placeholder is not null)
-        {
-            _placeholder.IsVisible = string.IsNullOrEmpty(Text) && _words.Count == 0 && string.IsNullOrEmpty(Presenter?.PreeditText);
-        }
+        _placeholder?.IsVisible = string.IsNullOrEmpty(Text) && _words.Count == 0 && string.IsNullOrEmpty(Presenter?.PreeditText);
     }
 
     protected override AutomationPeer OnCreateAutomationPeer() => new TextBoxAutomationPeer(this);

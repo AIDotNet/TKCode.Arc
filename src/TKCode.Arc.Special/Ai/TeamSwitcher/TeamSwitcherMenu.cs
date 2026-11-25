@@ -273,10 +273,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
             _search.AddHandler(KeyDownEvent, OnSearchKeyDown, RoutingStrategies.Tunnel);
             _search.PropertyChanged += OnSearchPropertyChanged;
         }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged += OnScrollChanged;
-        }
+        _scroll?.ScrollChanged += OnScrollChanged;
         if (_createRow is not null)
         {
             _createRow.Click += OnCreateRowClick;
@@ -314,18 +311,12 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
 
     private static void Hook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     private void Unhook()
@@ -335,10 +326,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
             _search.RemoveHandler(KeyDownEvent, OnSearchKeyDown);
             _search.PropertyChanged -= OnSearchPropertyChanged;
         }
-        if (_scroll is not null)
-        {
-            _scroll.ScrollChanged -= OnScrollChanged;
-        }
+        _scroll?.ScrollChanged -= OnScrollChanged;
         if (_createRow is not null)
         {
             _createRow.Click -= OnCreateRowClick;
@@ -382,18 +370,12 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
             _search.Placeholder = labels.Search;
             AutomationProperties.SetName(_search, labels.Search);
         }
-        if (_section is not null)
-        {
-            _section.Text = labels.Workspaces;
-        }
+        _section?.Text = labels.Workspaces;
         if (_rowsPanel is not null)
         {
             AutomationProperties.SetName(_rowsPanel, labels.ListName);
         }
-        if (_emptyHint is not null)
-        {
-            _emptyHint.Text = labels.NoMatchesHint;
-        }
+        _emptyHint?.Text = labels.NoMatchesHint;
         if (_createRow is not null)
         {
             _createRow.Text = labels.CreateWorkspace;
@@ -404,14 +386,8 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
             _joinRow.Text = labels.JoinWorkspace;
             AutomationProperties.SetName(_joinRow, labels.JoinWorkspace);
         }
-        if (_createTitle is not null)
-        {
-            _createTitle.Text = labels.CreateWorkspace;
-        }
-        if (_joinTitle is not null)
-        {
-            _joinTitle.Text = labels.JoinWorkspace;
-        }
+        _createTitle?.Text = labels.CreateWorkspace;
+        _joinTitle?.Text = labels.JoinWorkspace;
         foreach (var back in new[] { _createBack, _joinBack })
         {
             if (back is not null)
@@ -434,22 +410,10 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
                 ? labels.SampleInvites(TeamSwitcherLogic.InviteCodes(invites))
                 : labels.InviteDescription;
         }
-        if (_createCancel is not null)
-        {
-            _createCancel.Content = labels.Cancel;
-        }
-        if (_joinCancel is not null)
-        {
-            _joinCancel.Content = labels.Cancel;
-        }
-        if (_createSubmit is not null)
-        {
-            _createSubmit.Content = labels.Create;
-        }
-        if (_joinSubmit is not null)
-        {
-            _joinSubmit.Content = labels.Join;
-        }
+        _createCancel?.Content = labels.Cancel;
+        _joinCancel?.Content = labels.Cancel;
+        _createSubmit?.Content = labels.Create;
+        _joinSubmit?.Content = labels.Join;
     }
 
     /// <summary>Builds one row per workspace (after the list changed), then filters again.</summary>
@@ -624,23 +588,14 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
         _items.Add(_createRow);
         _items.Add(_joinRow);
         var none = matches.Count == 0;
-        if (_empty is not null)
-        {
-            _empty.IsVisible = none;
-        }
-        if (_scroll is not null)
-        {
-            _scroll.IsVisible = !none;
-        }
+        _empty?.IsVisible = none;
+        _scroll?.IsVisible = !none;
         if (_emptyText is not null)
         {
             // With no workspaces at all (and nothing typed) the list just says so.
             _emptyText.Text = query.Trim().Length > 0 ? Labels.NoMatches(query.Trim()) : Labels.NoWorkspace;
         }
-        if (_emptyHint is not null)
-        {
-            _emptyHint.IsVisible = query.Trim().Length > 0;
-        }
+        _emptyHint?.IsVisible = query.Trim().Length > 0;
         _index = -1;
         if (keepHighlight && previous is not null && _items.IndexOf(previous) is >= 0 and var kept)
         {
@@ -877,10 +832,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
         input.Text = view == TeamSwitcherView.Create ? (_search?.Text ?? string.Empty).Trim() : string.Empty;
         SetFormError(view, null);
         input.IsEnabled = true;
-        if (submit is not null)
-        {
-            submit.IsLoading = false;
-        }
+        submit?.IsLoading = false;
         _view = view;
         _listView.IsEnabled = false;
         _listView.IsHitTestVisible = false;
@@ -945,10 +897,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
         var cts = new CancellationTokenSource();
         _formCts = cts;
         SetFormError(_view, null);
-        if (submit is not null)
-        {
-            submit.IsLoading = true;
-        }
+        submit?.IsLoading = true;
         try
         {
             var kind = create ? TeamSwitcherAddKind.Created : TeamSwitcherAddKind.Joined;
@@ -958,10 +907,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
                 return;
             }
             _formCts = null;
-            if (submit is not null)
-            {
-                submit.IsLoading = false;
-            }
+            submit?.IsLoading = false;
             _owner.Added(workspace, kind, simulated);
         }
         catch (OperationCanceledException) when (cts.IsCancellationRequested)
@@ -974,10 +920,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
                 return;
             }
             _formCts = null;
-            if (submit is not null)
-            {
-                submit.IsLoading = false;
-            }
+            submit?.IsLoading = false;
             SetFormError(create ? TeamSwitcherView.Create : TeamSwitcherView.Join,
                 string.IsNullOrWhiteSpace(error.Message) ? Labels.GenericError : error.Message);
             input.Focus(NavigationMethod.Tab);
@@ -995,14 +938,8 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
         var line = create ? _createError : _joinError;
         var text = create ? _createErrorText : _joinErrorText;
         var shown = !string.IsNullOrEmpty(message);
-        if (text is not null)
-        {
-            text.Text = message;
-        }
-        if (line is not null)
-        {
-            line.IsVisible = shown;
-        }
+        text?.Text = message;
+        line?.IsVisible = shown;
         if (input is not null)
         {
             input.IsInvalid = shown;
@@ -1020,13 +957,7 @@ internal sealed class TeamSwitcherMenu : TemplatedControl
             _formCts = null;
             cts.Cancel();
         }
-        if (_createSubmit is not null)
-        {
-            _createSubmit.IsLoading = false;
-        }
-        if (_joinSubmit is not null)
-        {
-            _joinSubmit.IsLoading = false;
-        }
+        _createSubmit?.IsLoading = false;
+        _joinSubmit?.IsLoading = false;
     }
 }

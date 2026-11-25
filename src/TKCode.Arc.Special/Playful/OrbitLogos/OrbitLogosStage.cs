@@ -328,17 +328,11 @@ internal sealed class OrbitLogosStage : Panel
         if (show)
         {
             _tagChip = chip;
-            if (_tagText is not null)
-            {
-                _tagText.Text = chip.Logo.Name;
-            }
+            _tagText?.Text = chip.Logo.Name;
             _tag?.Measure(Size.Infinity);
             _tag?.Arrange(new Rect(_tag.DesiredSize));
             UpdateTag();
-            if (_tag is not null)
-            {
-                _tag.Opacity = 1;
-            }
+            _tag?.Opacity = 1;
         }
         else if (_tagChip == chip)
         {
@@ -349,10 +343,7 @@ internal sealed class OrbitLogosStage : Panel
     private void HideTag()
     {
         _tagChip = null;
-        if (_tag is not null)
-        {
-            _tag.Opacity = 0;
-        }
+        _tag?.Opacity = 0;
     }
 
     private void UpdateTag()

@@ -375,10 +375,7 @@ public partial class WorkflowCanvas
                 UpdateAutoPan();
                 break;
             case Gesture.Marquee:
-                if (_overlay is not null)
-                {
-                    _overlay.Marquee = new Rect(_pressPoint, point).Normalize();
-                }
+                _overlay?.Marquee = new Rect(_pressPoint, point).Normalize();
                 UpdateAutoPan();
                 break;
             case Gesture.Connect:
@@ -515,10 +512,7 @@ public partial class WorkflowCanvas
         }
         _gesture = Gesture.None;
         _autoPan?.Stop();
-        if (_overlay is not null)
-        {
-            _overlay.Marquee = null;
-        }
+        _overlay?.Marquee = null;
         if (_panning)
         {
             _panning = false;

@@ -180,10 +180,7 @@ internal sealed class AgentHandoffStep : TemplatedControl
         base.OnApplyTemplate(e);
         _text?.Inlines?.Clear();
         _text = e.NameScope.Find<TextBlock>(TextPart);
-        if (_text is not null)
-        {
-            _text.Inlines = [_title, _separator, _meta];
-        }
+        _text?.Inlines = [_title, _separator, _meta];
         Sync();
     }
 
@@ -536,14 +533,8 @@ internal sealed class AgentHandoffCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnAction;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggle;
-        }
+        _action?.Click -= OnAction;
+        _toggle?.Click -= OnToggle;
         _title = e.NameScope.Find<ArcContentSwap>(TitlePart);
         _detail = e.NameScope.Find<TextBlock>(DetailPart);
         _action = e.NameScope.Find<AvaloniaButton>(ActionPart);
@@ -551,14 +542,8 @@ internal sealed class AgentHandoffCard : TemplatedControl
         _summary = e.NameScope.Find<AiHeightBox>(SummaryPart);
         _issue = e.NameScope.Find<TextBlock>(IssuePart);
         _fields = e.NameScope.Find<StackPanel>(FieldsPart);
-        if (_action is not null)
-        {
-            _action.Click += OnAction;
-        }
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggle;
-        }
+        _action?.Click += OnAction;
+        _toggle?.Click += OnToggle;
         var kind = _titleKind;
         var text = _titleText;
         _titleKind = null;
@@ -587,10 +572,7 @@ internal sealed class AgentHandoffCard : TemplatedControl
         }
         _titleKind = kind;
         _titleText = text;
-        if (_title is not null)
-        {
-            _title.Content = new AgentHandoffStatusLabel(kind, text) { GlyphSize = 16 };
-        }
+        _title?.Content = new AgentHandoffStatusLabel(kind, text) { GlyphSize = 16 };
     }
 
     /// <summary>Shows Cancel or Try again, or no button for null.</summary>
@@ -627,10 +609,7 @@ internal sealed class AgentHandoffCard : TemplatedControl
         {
             _issue.Text = summary?.Issue;
         }
-        if (_issue is not null)
-        {
-            _issue.IsVisible = !string.IsNullOrEmpty(summary?.Issue);
-        }
+        _issue?.IsVisible = !string.IsNullOrEmpty(summary?.Issue);
         SyncFields(summary);
         _shownSummary = summary;
         if (_summary is not null)
@@ -704,10 +683,7 @@ internal sealed class AgentHandoffMessageWatch
         {
             return;
         }
-        if (_list is not null)
-        {
-            _list.CollectionChanged -= OnCollectionChanged;
-        }
+        _list?.CollectionChanged -= OnCollectionChanged;
         foreach (var message in _watched)
         {
             message.PropertyChanged -= OnMessageChanged;

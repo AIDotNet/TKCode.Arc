@@ -98,15 +98,9 @@ internal sealed class ChoroplethRankList : Panel
         get => _scroller;
         set
         {
-            if (_scroller is not null)
-            {
-                _scroller.ScrollChanged -= OnScrollChanged;
-            }
+            _scroller?.ScrollChanged -= OnScrollChanged;
             _scroller = value;
-            if (_scroller is not null)
-            {
-                _scroller.ScrollChanged += OnScrollChanged;
-            }
+            _scroller?.ScrollChanged += OnScrollChanged;
         }
     }
 

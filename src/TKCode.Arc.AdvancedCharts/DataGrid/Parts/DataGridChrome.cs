@@ -33,10 +33,7 @@ internal sealed class DataGridSearchBox : TextBox
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _clear?.Click -= OnClearClick;
         _clear = e.NameScope.Find<Avalonia.Controls.Button>(ClearPart);
         if (_clear is not null)
         {

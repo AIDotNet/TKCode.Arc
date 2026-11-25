@@ -217,14 +217,8 @@ internal class RowEditor : TemplatedControl
             _box.TextChanged -= OnBoxTextChanged;
             _box.RemoveHandler(KeyDownEvent, OnBoxKeyDown);
         }
-        if (_cancel is not null)
-        {
-            _cancel.Click -= OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click -= OnSaveClick;
-        }
+        _cancel?.Click -= OnCancelClick;
+        _save?.Click -= OnSaveClick;
         base.OnApplyTemplate(e);
         _box = e.NameScope.Find<RowEditorTextBox>(TextBoxPart);
         _hintSwap = e.NameScope.Find<ArcContentSwap>(HintPart);
@@ -237,14 +231,8 @@ internal class RowEditor : TemplatedControl
             _box.AddHandler(KeyDownEvent, OnBoxKeyDown, RoutingStrategies.Tunnel);
             _box.TextChanged += OnBoxTextChanged;
         }
-        if (_cancel is not null)
-        {
-            _cancel.Click += OnCancelClick;
-        }
-        if (_save is not null)
-        {
-            _save.Click += OnSaveClick;
-        }
+        _cancel?.Click += OnCancelClick;
+        _save?.Click += OnSaveClick;
         if (_hintSwap is not null)
         {
             // A new host starts with the current line (its first content never animates).
@@ -371,15 +359,9 @@ internal class RowEditor : TemplatedControl
         {
             _hintKind = kind;
             _hintLine = new RowEditorHintLine { Text = text, IsAlert = kind != RowEditorHintKind.Hint };
-            if (_hintSwap is not null)
-            {
-                _hintSwap.Content = _hintLine;
-            }
+            _hintSwap?.Content = _hintLine;
         }
-        if (_box is not null)
-        {
-            _box.IsInvalid = IsInvalid;
-        }
+        _box?.IsInvalid = IsInvalid;
         UpdateAutomation();
     }
 

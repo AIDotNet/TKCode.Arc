@@ -158,17 +158,11 @@ public partial class CartDrawer
         _drawerX ??= CreateValue(1.04, v => _drawerShift.X = v * DrawerTravelWidth());
         _drawerFade ??= CreateValue(1, v =>
         {
-            if (_drawer is not null)
-            {
-                _drawer.Opacity = v;
-            }
+            _drawer?.Opacity = v;
         });
         _scrimFade ??= CreateValue(0, v =>
         {
-            if (_scrim is not null)
-            {
-                _scrim.Opacity = v;
-            }
+            _scrim?.Opacity = v;
         });
         var level = ArcMotion.GetEffectiveLevel(this);
         if (level == ArcMotionLevel.Full)
@@ -217,10 +211,7 @@ public partial class CartDrawer
             _cartButton?.Focus(CartDrawerBuild.Method(_keyboardInput));
         }
         _drawer.IsHitTestVisible = false;
-        if (_shopScroller is not null)
-        {
-            _shopScroller.IsHitTestVisible = true;
-        }
+        _shopScroller?.IsHitTestVisible = true;
         var level = ArcMotion.GetEffectiveLevel(this);
         bool done;
         if (level == ArcMotionLevel.Full)
@@ -309,14 +300,8 @@ public partial class CartDrawer
         _discLayer?.Children.Clear();
         _disc = null;
         _receiptView = null;
-        if (_drawerTitle is not null)
-        {
-            _drawerTitle.Text = Labels.DrawerTitle;
-        }
-        if (_countPanel is not null)
-        {
-            _countPanel.IsVisible = true;
-        }
+        _drawerTitle?.Text = Labels.DrawerTitle;
+        _countPanel?.IsVisible = true;
         LeavePlacing();
         _checkoutContent?.Show(_checkoutIdle, animate: false);
         _checkoutSwap?.Show(_checkout, animate: false);
@@ -822,10 +807,7 @@ public partial class CartDrawer
         }
 
         SetSummaryVisible(hasItems, animate);
-        if (_promoBlock is not null)
-        {
-            _promoBlock.IsVisible = IsPromoVisible;
-        }
+        _promoBlock?.IsVisible = IsPromoVisible;
         var culture = labels.Culture;
         if (_subtotalDigits is not null)
         {
@@ -964,10 +946,7 @@ public partial class CartDrawer
         }
         else
         {
-            if (_promoInput is not null)
-            {
-                _promoInput.Text = string.Empty;
-            }
+            _promoInput?.Text = string.Empty;
             SetPromoInvalid(null, animate: false);
             _promoSwap.ExitDuration = TimeSpan.FromMilliseconds(200);
             _promoSwap.ExitOffset = 0;
@@ -1074,14 +1053,8 @@ public partial class CartDrawer
         }
         var labels = Labels;
         _checkout.IsBusy = false;
-        if (_drawerTitle is not null)
-        {
-            _drawerTitle.Text = labels.OrderPlacedTitle;
-        }
-        if (_countPanel is not null)
-        {
-            _countPanel.IsVisible = false;
-        }
+        _drawerTitle?.Text = labels.OrderPlacedTitle;
+        _countPanel?.IsVisible = false;
         _receiptView = BuildReceipt(receipt, labels);
         _bodySwap.ExitDuration = TimeSpan.FromMilliseconds(150);
         _bodySwap.ExitOffset = 0;

@@ -156,10 +156,7 @@ internal class AiToolDetail : TemplatedControl
         _custom = e.NameScope.Find<ContentPresenter>(CustomPart);
         _inputText = e.NameScope.Find<TextBlock>(InputTextPart);
         _outputText = e.NameScope.Find<TextBlock>(OutputTextPart);
-        if (_body is not null)
-        {
-            _body.IsExpanded = IsExpanded;
-        }
+        _body?.IsExpanded = IsExpanded;
         Refresh();
     }
 
@@ -173,10 +170,7 @@ internal class AiToolDetail : TemplatedControl
         }
         else if (change.Property == IsExpandedProperty)
         {
-            if (_body is not null)
-            {
-                _body.IsExpanded = change.GetNewValue<bool>();
-            }
+            _body?.IsExpanded = change.GetNewValue<bool>();
         }
         else if (change.Property == IsNarrowProperty)
         {
@@ -253,18 +247,9 @@ internal class AiToolDetail : TemplatedControl
             AutomationProperties.SetName(_sources, SourcesName ?? string.Empty);
         }
         var query = tool is not null && kind == AiChatToolKind.Query;
-        if (_inputText is not null)
-        {
-            _inputText.Text = query ? tool!.Input : null;
-        }
-        if (_outputText is not null)
-        {
-            _outputText.Text = query ? tool!.Output : null;
-        }
-        if (_input is not null)
-        {
-            _input.IsVisible = query && !string.IsNullOrEmpty(tool!.Input);
-        }
+        _inputText?.Text = query ? tool!.Input : null;
+        _outputText?.Text = query ? tool!.Output : null;
+        _input?.IsVisible = query && !string.IsNullOrEmpty(tool!.Input);
         if (_result is not null)
         {
             // A failed query shows only what it ran.

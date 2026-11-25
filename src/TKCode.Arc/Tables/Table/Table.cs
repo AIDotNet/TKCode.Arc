@@ -400,14 +400,8 @@ public partial class Table : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_scroll is not null)
-        {
-            _scroll.Content = null;
-        }
-        if (_clear is not null)
-        {
-            _clear.Click -= OnClearClick;
-        }
+        _scroll?.Content = null;
+        _clear?.Click -= OnClearClick;
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollViewerPart);
         _announcer = e.NameScope.Find<TextBlock>(AnnouncerPart);
         _body = e.NameScope.Find<Grid>(BodyPart);
@@ -419,10 +413,7 @@ public partial class Table : TemplatedControl
         _countForeground?.Dispose();
         _countForeground = null;
         _presenter ??= new TablePresenter(this);
-        if (_scroll is not null)
-        {
-            _scroll.Content = _presenter;
-        }
+        _scroll?.Content = _presenter;
         if (IsLoading)
         {
             EnsureLoading();

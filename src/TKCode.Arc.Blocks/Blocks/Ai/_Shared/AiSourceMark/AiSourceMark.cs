@@ -123,15 +123,9 @@ internal sealed class AiSourceMark : Control
         {
             return;
         }
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged -= OnSourceChanged;
-        }
+        _watched?.PropertyChanged -= OnSourceChanged;
         _watched = source;
-        if (_watched is not null)
-        {
-            _watched.PropertyChanged += OnSourceChanged;
-        }
+        _watched?.PropertyChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

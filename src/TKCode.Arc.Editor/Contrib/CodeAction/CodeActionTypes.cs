@@ -78,8 +78,11 @@ internal sealed record CodeActionFilter
 }
 
 /// <summary>Where and why code actions were asked for (upstream's CodeActionTrigger).</summary>
-internal sealed record CodeActionTrigger(CodeActionTriggerType Type, CodeActionTriggerSource TriggerAction)
+internal sealed class CodeActionTrigger(CodeActionTriggerType type, CodeActionTriggerSource triggerAction)
 {
+    public CodeActionTriggerType Type { get; } = type;
+    public CodeActionTriggerSource TriggerAction { get; } = triggerAction;
+
     public CodeActionFilter? Filter { get; init; }
 
     public CodeActionAutoApply? AutoApply { get; init; }

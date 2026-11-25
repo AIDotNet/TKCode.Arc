@@ -1,28 +1,29 @@
 // The source-generated serializer of the protocol types: no reflection, AOT and trimming safe.
+// GenerationMode.Metadata emits reflection-free contract metadata for both reading and writing without duplicating
+// per-type fast-path SerializeHandler methods for response-only types.
 
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace TKCode.Arc.Editor.Lsp.Protocol;
 
 [JsonSourceGenerationOptions(
+    GenerationMode = JsonSourceGenerationMode.Metadata,
     PropertyNamingPolicy = JsonKnownNamingPolicy.CamelCase,
     DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
     NumberHandling = JsonNumberHandling.Strict,
     AllowTrailingCommas = true)]
 // base, lifecycle, sync, diagnostics, window, workspace
-[JsonSerializable(typeof(LspPosition))]
 [JsonSerializable(typeof(LspRange))]
-[JsonSerializable(typeof(LspRange[]))]
 [JsonSerializable(typeof(LspLocation))]
 [JsonSerializable(typeof(LspLocation[]))]
 [JsonSerializable(typeof(LspLocationLink))]
-[JsonSerializable(typeof(LspLocationLink[]))]
 [JsonSerializable(typeof(LspTextEdit))]
 [JsonSerializable(typeof(LspTextEdit[]))]
 [JsonSerializable(typeof(LspInsertReplaceEdit))]
+[JsonSerializable(typeof(LspInsertReplaceRange))]
 [JsonSerializable(typeof(LspCommand))]
 [JsonSerializable(typeof(LspMarkupContent))]
+[JsonSerializable(typeof(LspMarkedStringObject))]
 [JsonSerializable(typeof(TextDocumentPositionParams))]
 [JsonSerializable(typeof(TextDocumentParams))]
 [JsonSerializable(typeof(InitializeParams))]
@@ -38,15 +39,15 @@ namespace TKCode.Arc.Editor.Lsp.Protocol;
 [JsonSerializable(typeof(MessageActionItem))]
 [JsonSerializable(typeof(LspWorkspaceEdit))]
 [JsonSerializable(typeof(LspTextDocumentEdit))]
+[JsonSerializable(typeof(LspResourceOperation))]
 [JsonSerializable(typeof(ApplyWorkspaceEditParams))]
 [JsonSerializable(typeof(ApplyWorkspaceEditResult))]
-[JsonSerializable(typeof(ConfigurationParams))]
 [JsonSerializable(typeof(ExecuteCommandParams))]
-[JsonSerializable(typeof(CancelParams))]
 // features
 [JsonSerializable(typeof(CompletionParams))]
 [JsonSerializable(typeof(LspCompletionItem))]
 [JsonSerializable(typeof(LspCompletionItem[]))]
+[JsonSerializable(typeof(LspCompletionItemDefaults))]
 [JsonSerializable(typeof(LspCompletionList))]
 [JsonSerializable(typeof(LspHover))]
 [JsonSerializable(typeof(SignatureHelpParams))]
@@ -62,6 +63,8 @@ namespace TKCode.Arc.Editor.Lsp.Protocol;
 [JsonSerializable(typeof(CodeActionParams))]
 [JsonSerializable(typeof(LspCodeAction))]
 [JsonSerializable(typeof(RenameParams))]
+[JsonSerializable(typeof(LspPrepareRenamePlaceholder))]
+[JsonSerializable(typeof(LspPrepareRenameDefaultBehavior))]
 [JsonSerializable(typeof(DocumentFormattingParams))]
 [JsonSerializable(typeof(DocumentRangeFormattingParams))]
 [JsonSerializable(typeof(DocumentRangesFormattingParams))]
@@ -70,17 +73,30 @@ namespace TKCode.Arc.Editor.Lsp.Protocol;
 [JsonSerializable(typeof(ColorPresentationParams))]
 [JsonSerializable(typeof(LspColorPresentation[]))]
 [JsonSerializable(typeof(LspCodeLens))]
-[JsonSerializable(typeof(LspCodeLens[]))]
 [JsonSerializable(typeof(SemanticTokensDeltaParams))]
 [JsonSerializable(typeof(SemanticTokensRangeParams))]
 [JsonSerializable(typeof(LspSemanticTokens))]
 [JsonSerializable(typeof(LspSemanticTokensDelta))]
-[JsonSerializable(typeof(LspSemanticTokensLegend))]
 [JsonSerializable(typeof(InlayHintParams))]
 [JsonSerializable(typeof(LspInlayHint))]
 [JsonSerializable(typeof(LspInlayHint[]))]
 [JsonSerializable(typeof(LspInlayHintLabelPart[]))]
-[JsonSerializable(typeof(JsonElement))]
-[JsonSerializable(typeof(string[]))]
+// unions directly read as root payloads or by tests
+[JsonSerializable(typeof(LspStringOrMarkup))]
+[JsonSerializable(typeof(LspCompletionResult))]
+[JsonSerializable(typeof(LspHoverItem[]))]
+[JsonSerializable(typeof(LspHoverContents))]
+[JsonSerializable(typeof(LspLocationOrLink[]))]
+[JsonSerializable(typeof(LspLocationResult))]
+[JsonSerializable(typeof(LspDocumentSymbolItem[]))]
+[JsonSerializable(typeof(LspCodeActionOrCommand))]
+[JsonSerializable(typeof(LspCodeActionOrCommand[]))]
+[JsonSerializable(typeof(LspPrepareRenameResult))]
+[JsonSerializable(typeof(LspSemanticTokensResult))]
+// primitives used by LspConvert.ToElement / LspParameterLabelConverter
+[JsonSerializable(typeof(string))]
+[JsonSerializable(typeof(bool))]
+[JsonSerializable(typeof(int))]
+[JsonSerializable(typeof(double))]
 [JsonSerializable(typeof(int[]))]
 internal sealed partial class LspJsonContext : JsonSerializerContext;

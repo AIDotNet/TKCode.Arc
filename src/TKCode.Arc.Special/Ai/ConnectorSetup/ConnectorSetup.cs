@@ -252,10 +252,7 @@ public partial class ConnectorSetup : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_search is not null)
-        {
-            _search.PropertyChanged -= OnSearchPropertyChanged;
-        }
+        _search?.PropertyChanged -= OnSearchPropertyChanged;
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _description = e.NameScope.Find<TextBlock>(DescriptionPart);
         _search = e.NameScope.Find<SearchField>(SearchPart);
@@ -363,10 +360,7 @@ public partial class ConnectorSetup : TemplatedControl
             _title.Text = Title ?? labels.Title;
             AutomationProperties.SetName(this, _title.Text);
         }
-        if (_description is not null)
-        {
-            _description.Text = Description ?? labels.Description(EffectiveAssistantName);
-        }
+        _description?.Text = Description ?? labels.Description(EffectiveAssistantName);
         if (_search is not null)
         {
             var placeholder = SearchPlaceholder ?? labels.SearchPlaceholder;
@@ -374,14 +368,8 @@ public partial class ConnectorSetup : TemplatedControl
             _search.Label = placeholder;
             _search.IsVisible = IsSearchable;
         }
-        if (_footer is not null)
-        {
-            _footer.IsVisible = IsFooterVisible;
-        }
-        if (_footerContent is not null)
-        {
-            _footerContent.Content = Footer ?? labels.Footer(EffectiveAssistantName);
-        }
+        _footer?.IsVisible = IsFooterVisible;
+        _footerContent?.Content = Footer ?? labels.Footer(EffectiveAssistantName);
     }
 
     // Rows ----------------------------------------------------------------------------------------------------------------

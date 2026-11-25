@@ -398,10 +398,7 @@ public class SignaturePad : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_pad is not null)
-        {
-            _pad.Owner = null;
-        }
+        _pad?.Owner = null;
         _pad = e.NameScope.Find<SignaturePadCanvas>(PadPart);
         _colors = e.NameScope.Find<SignaturePadChoice>(ColorsPart);
         _widths = e.NameScope.Find<SignaturePadChoice>(WidthsPart);
@@ -442,14 +439,8 @@ public class SignaturePad : TemplatedControl
             _widths.Select((int)InkWidth, animate: false);
             _widths.Chosen += index => InkWidth = (SignatureInkWidth)index;
         }
-        if (_undo is not null)
-        {
-            _undo.Click += (_, _) => Undo();
-        }
-        if (_redo is not null)
-        {
-            _redo.Click += (_, _) => Redo();
-        }
+        _undo?.Click += (_, _) => Undo();
+        _redo?.Click += (_, _) => Redo();
         if (_replay is not null)
         {
             _replayIcon = new ArcContentSwap { Mode = ContentSwapMode.Pop, Width = 18, Height = 18, Content = ReplayGlyph(false) };
@@ -466,10 +457,7 @@ public class SignaturePad : TemplatedControl
                 }
             };
         }
-        if (_clear is not null)
-        {
-            _clear.Click += (_, _) => Clear();
-        }
+        _clear?.Click += (_, _) => Clear();
         if (_png is not null)
         {
             _pngContent = new ArcContentSwap { Mode = ContentSwapMode.BlurSwap, Content = ExportLabel("PNG", false) };
@@ -824,18 +812,9 @@ public class SignaturePad : TemplatedControl
     private void UpdateButtons()
     {
         var empty = _strokes.Count == 0;
-        if (_undo is not null)
-        {
-            _undo.IsEnabled = _past.Count > 0 && !_wiping;
-        }
-        if (_redo is not null)
-        {
-            _redo.IsEnabled = _future.Count > 0 && !_wiping;
-        }
-        if (_clear is not null)
-        {
-            _clear.IsEnabled = !empty && !_wiping;
-        }
+        _undo?.IsEnabled = _past.Count > 0 && !_wiping;
+        _redo?.IsEnabled = _future.Count > 0 && !_wiping;
+        _clear?.IsEnabled = !empty && !_wiping;
         if (_replay is not null)
         {
             _replay.IsEnabled = !empty && !_wiping;
@@ -848,26 +827,14 @@ public class SignaturePad : TemplatedControl
                 _replayIcon.Content = ReplayGlyph(_isReplaying);
             }
         }
-        if (_png is not null)
-        {
-            _png.IsEnabled = !empty;
-        }
-        if (_svg is not null)
-        {
-            _svg.IsEnabled = !empty;
-        }
+        _png?.IsEnabled = !empty;
+        _svg?.IsEnabled = !empty;
     }
 
     private void ShowSaved(SignatureFileKind? kind)
     {
-        if (_pngContent is not null)
-        {
-            _pngContent.Content = ExportLabel("PNG", kind == SignatureFileKind.Png);
-        }
-        if (_svgContent is not null)
-        {
-            _svgContent.Content = ExportLabel("SVG", kind == SignatureFileKind.Svg);
-        }
+        _pngContent?.Content = ExportLabel("PNG", kind == SignatureFileKind.Png);
+        _svgContent?.Content = ExportLabel("SVG", kind == SignatureFileKind.Svg);
         _savedTimer?.Stop();
         if (kind is null)
         {

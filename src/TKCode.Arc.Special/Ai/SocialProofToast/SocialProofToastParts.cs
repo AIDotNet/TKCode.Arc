@@ -364,10 +364,7 @@ internal sealed class SocialProofToastCard : AvaloniaButton
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_dismiss is not null)
-        {
-            _dismiss.Click -= OnDismissClick;
-        }
+        _dismiss?.Click -= OnDismissClick;
         if (_title is not null)
         {
             _title.Inlines?.Clear();
@@ -381,10 +378,7 @@ internal sealed class SocialProofToastCard : AvaloniaButton
         _badge = e.NameScope.Find<Control>(BadgePart);
         _badgeText = e.NameScope.Find<TextBlock>(BadgeTextPart);
         _dismiss = e.NameScope.Find<SocialProofToastDismiss>(DismissPart);
-        if (_dismiss is not null)
-        {
-            _dismiss.Click += OnDismissClick;
-        }
+        _dismiss?.Click += OnDismissClick;
         if (_title is not null)
         {
             _title.Inlines ??= [];
@@ -464,10 +458,7 @@ internal sealed class SocialProofToastCard : AvaloniaButton
             _avatar.DisplayName = e.Name;
             _avatar.Source = avatar ? e.Portrait : null;
         }
-        if (_monogram is not null)
-        {
-            _monogram.IsVisible = !avatar;
-        }
+        _monogram?.IsVisible = !avatar;
         if (_logo is not null)
         {
             _logo.Data = e.Logo;
@@ -490,14 +481,8 @@ internal sealed class SocialProofToastCard : AvaloniaButton
             _meta.IsVisible = meta.Length > 0;
         }
         var verified = SocialProofToastFormat.Verified(e, _labels);
-        if (_badge is not null)
-        {
-            _badge.IsVisible = verified is not null;
-        }
-        if (_badgeText is not null)
-        {
-            _badgeText.Text = verified;
-        }
+        _badge?.IsVisible = verified is not null;
+        _badgeText?.Text = verified;
         AutomationProperties.SetName(this, SocialProofToastFormat.Accessible(e, _now, _labels));
         if (_dismiss is not null)
         {

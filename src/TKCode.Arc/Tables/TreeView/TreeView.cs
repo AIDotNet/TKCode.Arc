@@ -947,10 +947,7 @@ public class TreeView : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_panel is not null)
-        {
-            _panel.Owner = null;
-        }
+        _panel?.Owner = null;
         _panel = e.NameScope.Find<TreeViewRowsPanel>(RowsPart);
         UpdatePalette();
         if (_panel is not null)

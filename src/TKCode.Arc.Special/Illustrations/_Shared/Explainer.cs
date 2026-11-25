@@ -747,15 +747,9 @@ public abstract class Explainer : TemplatedControl
 
     private static void Hook(ref AvaloniaButton? field, AvaloniaButton? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (field is not null)
-        {
-            field.Click -= handler;
-        }
+        field?.Click -= handler;
         field = button;
-        if (field is not null)
-        {
-            field.Click += handler;
-        }
+        field?.Click += handler;
     }
 
     private void OnPlayClick(object? sender, RoutedEventArgs e)

@@ -23,10 +23,7 @@ internal sealed class RolesPermissionsViewport : Decorator
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        if (Grid is not null)
-        {
-            Grid.ViewportWidth = finalSize.Width;
-        }
+        Grid?.ViewportWidth = finalSize.Width;
         return base.ArrangeOverride(finalSize);
     }
 }

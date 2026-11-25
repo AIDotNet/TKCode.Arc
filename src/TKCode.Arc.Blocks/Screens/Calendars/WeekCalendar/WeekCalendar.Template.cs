@@ -87,26 +87,11 @@ public partial class WeekCalendar
         _announcer = scope.Find<ProjectsAnnouncer>(AnnouncerPart);
         ApplyEditingTemplate(scope);
 
-        if (_todayButton is not null)
-        {
-            _todayButton.Click += OnTodayClick;
-        }
-        if (_previousButton is not null)
-        {
-            _previousButton.Click += OnPreviousClick;
-        }
-        if (_nextButton is not null)
-        {
-            _nextButton.Click += OnNextClick;
-        }
-        if (_newEventButton is not null)
-        {
-            _newEventButton.Click += OnNewEventClick;
-        }
-        if (_views is not null)
-        {
-            _views.SelectionChanged += OnViewsSelectionChanged;
-        }
+        _todayButton?.Click += OnTodayClick;
+        _previousButton?.Click += OnPreviousClick;
+        _nextButton?.Click += OnNextClick;
+        _newEventButton?.Click += OnNewEventClick;
+        _views?.SelectionChanged += OnViewsSelectionChanged;
         _miniMonth?.Attach(this);
         _sidebarList?.Attach(this);
         _popoverList?.Attach(this);
@@ -136,26 +121,11 @@ public partial class WeekCalendar
 
     private void Unhook()
     {
-        if (_todayButton is not null)
-        {
-            _todayButton.Click -= OnTodayClick;
-        }
-        if (_previousButton is not null)
-        {
-            _previousButton.Click -= OnPreviousClick;
-        }
-        if (_nextButton is not null)
-        {
-            _nextButton.Click -= OnNextClick;
-        }
-        if (_newEventButton is not null)
-        {
-            _newEventButton.Click -= OnNewEventClick;
-        }
-        if (_views is not null)
-        {
-            _views.SelectionChanged -= OnViewsSelectionChanged;
-        }
+        _todayButton?.Click -= OnTodayClick;
+        _previousButton?.Click -= OnPreviousClick;
+        _nextButton?.Click -= OnNextClick;
+        _newEventButton?.Click -= OnNewEventClick;
+        _views?.SelectionChanged -= OnViewsSelectionChanged;
         _main?.Children.Clear();
     }
 
@@ -250,22 +220,13 @@ public partial class WeekCalendar
         {
             AutomationProperties.SetName(_newEventButton, labels.NewEvent);
         }
-        if (_newEventLabel is not null)
-        {
-            _newEventLabel.Text = labels.NewEvent;
-        }
-        if (_calendarsLabel is not null)
-        {
-            _calendarsLabel.Text = labels.Calendars;
-        }
+        _newEventLabel?.Text = labels.NewEvent;
+        _calendarsLabel?.Text = labels.Calendars;
         if (_calendarsButton is not null)
         {
             AutomationProperties.SetName(_calendarsButton, labels.Calendars);
         }
-        if (_calendarsHeading is not null)
-        {
-            _calendarsHeading.Text = labels.Calendars;
-        }
+        _calendarsHeading?.Text = labels.Calendars;
         if (_sidebar is not null)
         {
             AutomationProperties.SetName(_sidebar, labels.Sidebar);
@@ -331,10 +292,7 @@ public partial class WeekCalendar
         }
         var stacked = width < WeekCalendarMetrics.StackedWidth;
         PseudoClasses.Set(StackedPseudoClass, stacked);
-        if (_toolbar is not null)
-        {
-            _toolbar.IsStacked = stacked;
-        }
+        _toolbar?.IsStacked = stacked;
         _gridView?.SetStacked(stacked, width < WeekCalendarMetrics.TightWidth);
         UpdateSidebar(wide);
         if (compact != _compact)
@@ -350,10 +308,7 @@ public partial class WeekCalendar
         var shown = IsSidebarVisible ?? wide;
         _sidebarShown = shown;
         PseudoClasses.Set(SidebarPseudoClass, shown);
-        if (_sidebar is not null)
-        {
-            _sidebar.IsVisible = shown;
-        }
+        _sidebar?.IsVisible = shown;
         if (shown && _calendarsPopover?.IsOpen == true)
         {
             _calendarsPopover.Close();
@@ -364,14 +319,8 @@ public partial class WeekCalendar
     private void UpdateCalendarsVisibility()
     {
         var any = _calendars.Count > 0;
-        if (_calendarsPopover is not null)
-        {
-            _calendarsPopover.IsVisible = any && !_sidebarShown;
-        }
-        if (_calendarsSection is not null)
-        {
-            _calendarsSection.IsVisible = any;
-        }
+        _calendarsPopover?.IsVisible = any && !_sidebarShown;
+        _calendarsSection?.IsVisible = any;
     }
 
     // Grid height -------------------------------------------------------------------------------------------------------

@@ -548,10 +548,7 @@ public partial class SlideToConfirm
 
     private void OnHintTick(object? sender, EventArgs e)
     {
-        if (_hintTimer is not null)
-        {
-            _hintTimer.Interval = TimeSpan.FromMilliseconds(4400);
-        }
+        _hintTimer?.Interval = TimeSpan.FromMilliseconds(4400);
         _hintFirst = false;
         if (_touched || _hovered || !IsHintEnabled || _state != SlideToConfirmState.Idle || _mode != Mode.Rest
             || Math.Abs(_pos) > 0.01 || !ArcMotion.IsFull(this))

@@ -113,6 +113,23 @@ internal sealed partial class LspProviders
         }
     }
 
+    private static T? ReadStruct<T>(JsonElement? element, JsonTypeInfo<T> typeInfo)
+        where T : struct
+    {
+        if (element is not { } value)
+        {
+            return null;
+        }
+        try
+        {
+            return value.Deserialize(typeInfo);
+        }
+        catch (JsonException)
+        {
+            return null;
+        }
+    }
+
     private sealed class RawValue(JsonElement value)
     {
         public JsonElement Value { get; } = value;

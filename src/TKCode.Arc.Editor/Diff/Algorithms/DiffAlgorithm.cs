@@ -20,10 +20,10 @@ internal interface IDiffAlgorithm
 internal sealed class DiffAlgorithmResult(List<SequenceDiff> diffs, bool hitTimeout)
 {
     public static DiffAlgorithmResult Trivial(ISequence seq1, ISequence seq2) =>
-        new([new SequenceDiff(OffsetRangeDiffExtensions.OfLength(seq1.Length), OffsetRangeDiffExtensions.OfLength(seq2.Length))], false);
+        new([new SequenceDiff(OffsetRange.OfLength(seq1.Length), OffsetRange.OfLength(seq2.Length))], false);
 
     public static DiffAlgorithmResult TrivialTimedOut(ISequence seq1, ISequence seq2) =>
-        new([new SequenceDiff(OffsetRangeDiffExtensions.OfLength(seq1.Length), OffsetRangeDiffExtensions.OfLength(seq2.Length))], true);
+        new([new SequenceDiff(OffsetRange.OfLength(seq1.Length), OffsetRange.OfLength(seq2.Length))], true);
 
     public List<SequenceDiff> Diffs { get; } = diffs;
 

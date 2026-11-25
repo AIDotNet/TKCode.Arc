@@ -346,18 +346,12 @@ internal sealed class OnboardingChecklistStepPanel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnAction;
-        }
+        _action?.Click -= OnAction;
         _description = e.NameScope.Find<TextBlock>("PART_Description");
         _error = e.NameScope.Find<TextBlock>("PART_Error");
         _errorFold = e.NameScope.Find<OnboardingChecklistFold>("PART_ErrorFold");
         _action = e.NameScope.Find<OnboardingChecklistActionButton>("PART_Action");
-        if (_action is not null)
-        {
-            _action.Click += OnAction;
-        }
+        _action?.Click += OnAction;
         _errorFold?.SetOpen(false, false);
         Apply(false);
     }
@@ -482,27 +476,15 @@ internal sealed class OnboardingChecklistStepRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_check is not null)
-        {
-            _check.Click -= OnCheck;
-        }
-        if (_title is not null)
-        {
-            _title.Click -= OnTitle;
-        }
+        _check?.Click -= OnCheck;
+        _title?.Click -= OnTitle;
         _check = e.NameScope.Find<OnboardingChecklistCheck>("PART_Check");
         _title = e.NameScope.Find<OnboardingChecklistTitleButton>("PART_Title");
         _titleText = e.NameScope.Find<OnboardingChecklistStrikeText>("PART_TitleText");
         _panelFold = e.NameScope.Find<OnboardingChecklistFold>("PART_PanelFold");
         _panel = null;
-        if (_check is not null)
-        {
-            _check.Click += OnCheck;
-        }
-        if (_title is not null)
-        {
-            _title.Click += OnTitle;
-        }
+        _check?.Click += OnCheck;
+        _title?.Click += OnTitle;
         _panelFold?.SetOpen(false, false);
         ApplyTexts();
         Apply(false);
@@ -517,10 +499,7 @@ internal sealed class OnboardingChecklistStepRow : TemplatedControl
     private void ApplyTexts()
     {
         var title = Step.Title ?? string.Empty;
-        if (_titleText is not null)
-        {
-            _titleText.Text = title;
-        }
+        _titleText?.Text = title;
         if (_check is not null)
         {
             AutomationProperties.SetName(_check, title);
@@ -597,10 +576,7 @@ internal sealed class OnboardingChecklistCompletedRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_check is not null)
-        {
-            _check.Click -= OnCheck;
-        }
+        _check?.Click -= OnCheck;
         _check = e.NameScope.Find<OnboardingChecklistCheck>("PART_Check");
         _titleText = e.NameScope.Find<TextBlock>("PART_TitleText");
         if (_check is not null)
@@ -616,10 +592,7 @@ internal sealed class OnboardingChecklistCompletedRow : TemplatedControl
     private void ApplyTexts()
     {
         var title = Step.Title ?? string.Empty;
-        if (_titleText is not null)
-        {
-            _titleText.Text = title;
-        }
+        _titleText?.Text = title;
         if (_check is not null)
         {
             AutomationProperties.SetName(_check, title);

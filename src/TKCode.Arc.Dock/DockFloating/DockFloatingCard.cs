@@ -192,14 +192,8 @@ internal sealed class DockFloatingCard : ContentControl, IDockFloatHost
         {
             _titleBar.RemoveHandler(PointerPressedEvent, OnTitlePressed);
         }
-        if (_dock is not null)
-        {
-            _dock.Click -= OnDockClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
+        _dock?.Click -= OnDockClick;
+        _close?.Click -= OnCloseClick;
         if (_grip is not null)
         {
             _grip.PointerPressed -= OnGripPressed;

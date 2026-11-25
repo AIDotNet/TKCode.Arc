@@ -109,13 +109,12 @@ public class ExpandingButtonGroupItem : AvaloniaButton
 
     internal double TrailingInset { get => GetValue(TrailingInsetProperty); set => SetValue(TrailingInsetProperty, value); }
 
-    private bool _isExpanded;
 
     /// <summary>True while this action shows its label.</summary>
     public bool IsExpanded
     {
-        get => _isExpanded;
-        private set => SetAndRaise(IsExpandedProperty, ref _isExpanded, value);
+        get;
+        private set => SetAndRaise(IsExpandedProperty, ref field, value);
     }
 
     private bool _isDone;

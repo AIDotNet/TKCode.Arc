@@ -116,31 +116,16 @@ public partial class MediaPlayer
         _volume = e.NameScope.Find<MediaPlayerRange>(VolumePart);
         _playlistTitle = e.NameScope.Find<TextBlock>(PlaylistTitlePart);
         _queue = e.NameScope.Find<MediaPlayerQueue>(QueuePart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_play is not null)
-        {
-            _play.Click += OnPlayClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
-        if (_mute is not null)
-        {
-            _mute.Click += OnMuteClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _play?.Click += OnPlayClick;
+        _next?.Click += OnNextClick;
+        _mute?.Click += OnMuteClick;
         if (_seek is not null)
         {
             _seek.UserChanged += OnSeekChanged;
             _seek.DraggingChanged += OnSeekDragging;
         }
-        if (_volume is not null)
-        {
-            _volume.UserChanged += OnVolumeChanged;
-        }
+        _volume?.UserChanged += OnVolumeChanged;
         _playGlyph.Data = MediaPlayerGlyphs.Play;
         _pauseGlyph.Data = MediaPlayerGlyphs.Pause;
         if (_playIcon is { Width: > 0 and var size })
@@ -163,31 +148,16 @@ public partial class MediaPlayer
 
     private void Unhook()
     {
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_play is not null)
-        {
-            _play.Click -= OnPlayClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
-        if (_mute is not null)
-        {
-            _mute.Click -= OnMuteClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _play?.Click -= OnPlayClick;
+        _next?.Click -= OnNextClick;
+        _mute?.Click -= OnMuteClick;
         if (_seek is not null)
         {
             _seek.UserChanged -= OnSeekChanged;
             _seek.DraggingChanged -= OnSeekDragging;
         }
-        if (_volume is not null)
-        {
-            _volume.UserChanged -= OnVolumeChanged;
-        }
+        _volume?.UserChanged -= OnVolumeChanged;
         if (_queue is not null)
         {
             foreach (var row in _queue.Rows.ToList())
@@ -735,10 +705,7 @@ public partial class MediaPlayer
     private void UpdateVolume()
     {
         var volume = Volume;
-        if (_player is not null)
-        {
-            _player.Volume = volume;
-        }
+        _player?.Volume = volume;
         var muted = volume <= 0;
         IsMuted = muted;
         PseudoClasses.Set(MutedPseudoClass, muted);
@@ -747,10 +714,7 @@ public partial class MediaPlayer
             _volume.SetCurrentValue(RangeBase.ValueProperty, volume);
             AutomationProperties.SetItemStatus(_volume, Labels.VolumeValue((int)Math.Round(volume * 100)));
         }
-        if (_muteGlyph is not null)
-        {
-            _muteGlyph.Data = muted ? MediaPlayerGlyphs.VolumeOff : MediaPlayerGlyphs.Volume;
-        }
+        _muteGlyph?.Data = muted ? MediaPlayerGlyphs.VolumeOff : MediaPlayerGlyphs.Volume;
         if (_mute is not null)
         {
             AutomationProperties.SetName(_mute, muted ? Labels.Unmute : Labels.Mute);
@@ -788,10 +752,7 @@ public partial class MediaPlayer
         {
             AutomationProperties.SetName(_seek, labels.Seek(_selectedTrack?.Title ?? string.Empty));
         }
-        if (_playlistTitle is not null)
-        {
-            _playlistTitle.Text = labels.Playlist;
-        }
+        _playlistTitle?.Text = labels.Playlist;
     }
 
     /// <summary>Moves the seek bar and, when the whole second changed (or <paramref name="force"/>), the time labels.</summary>
@@ -820,14 +781,8 @@ public partial class MediaPlayer
         var labels = Labels;
         var elapsed = labels.FormatTime(TimeSpan.FromSeconds(second));
         var total = labels.FormatTime(length);
-        if (_elapsed is not null)
-        {
-            _elapsed.Text = elapsed;
-        }
-        if (_length is not null)
-        {
-            _length.Text = total;
-        }
+        _elapsed?.Text = elapsed;
+        _length?.Text = total;
         if (_seek is not null)
         {
             AutomationProperties.SetItemStatus(_seek, labels.SeekValue(elapsed, total));

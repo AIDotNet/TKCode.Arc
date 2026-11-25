@@ -151,10 +151,7 @@ public partial class UsageForecast
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged -= OnMetricSwitchChanged;
-        }
+        _metricSwitch?.SelectionChanged -= OnMetricSwitchChanged;
         if (_plot is not null)
         {
             _plot.InspectRequested -= OnInspectRequested;
@@ -174,10 +171,7 @@ public partial class UsageForecast
         _legend = e.NameScope.Find<UsageLegend>(LegendPart);
         _table = e.NameScope.Find<UsageForecastDataTable>(TablePart);
         _announcer = e.NameScope.Find<AnalyticsAnnouncer>(AnnouncerPart);
-        if (_metricSwitch is not null)
-        {
-            _metricSwitch.SelectionChanged += OnMetricSwitchChanged;
-        }
+        _metricSwitch?.SelectionChanged += OnMetricSwitchChanged;
         if (_plot is not null)
         {
             _plot.InspectRequested += OnInspectRequested;
@@ -185,10 +179,7 @@ public partial class UsageForecast
             _plot.PanelProvider = PanelFor;
             _plot.Handle = _handle;
         }
-        if (_handle is not null)
-        {
-            _handle.Plot = _plot;
-        }
+        _handle?.Plot = _plot;
         _chips.Clear();
         _ready = true;
         _metricsDirty = true;
@@ -212,25 +203,16 @@ public partial class UsageForecast
         var narrow = width < NarrowWidth;
         PseudoClasses.Set(CompactPseudoClass, compact);
         PseudoClasses.Set(NarrowPseudoClass, narrow);
-        if (_header is not null)
-        {
-            _header.IsWrapForced = compact;
-        }
+        _header?.IsWrapForced = compact;
         if (_tiles is not null)
         {
             _tiles.IsStacked = narrow;
             foreach (var tile in new[] { _used, _forecastTile, _cost })
             {
-                if (tile is not null)
-                {
-                    tile.ValueSize = compact ? CompactTileValueSize : TileValueSize;
-                }
+                tile?.ValueSize = compact ? CompactTileValueSize : TileValueSize;
             }
         }
-        if (_alerts is not null)
-        {
-            _alerts.IsStacked = narrow;
-        }
+        _alerts?.IsStacked = narrow;
         var size = Math.Clamp(Math.Round(width * HeadlineScale, 2), HeadlineMinSize, HeadlineSize);
         foreach (var words in new[] { _headline })
         {
@@ -252,15 +234,9 @@ public partial class UsageForecast
         var property = change.Property;
         if (property == MetricsSourceProperty)
         {
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged -= OnSourceChanged;
-            }
+            _observedSource?.CollectionChanged -= OnSourceChanged;
             _observedSource = change.GetNewValue<IEnumerable?>() as INotifyCollectionChanged;
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged += OnSourceChanged;
-            }
+            _observedSource?.CollectionChanged += OnSourceChanged;
             OnMetricsChanged();
         }
         else if (property == SelectedMetricProperty)

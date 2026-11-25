@@ -66,10 +66,7 @@ public sealed partial class AgentStatus
 
     private void OnSimulationReplaced(AgentRunSimulation? old, AgentRunSimulation? sim)
     {
-        if (old is not null)
-        {
-            old.Changed -= OnSimulationChanged;
-        }
+        old?.Changed -= OnSimulationChanged;
         _sim = sim;
         // A host's simulation (and its steps) can outlive the pill: the pill listens only while attached. It starts the
         // run once it drives the pill (see Refresh).

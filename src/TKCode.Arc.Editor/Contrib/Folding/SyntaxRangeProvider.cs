@@ -11,7 +11,13 @@ using TKCode.Arc.Editor.Model;
 namespace TKCode.Arc.Editor.Contrib.Folding;
 
 /// <summary>A folding range from a provider with the provider's rank (upstream's IFoldingRangeData).</summary>
-internal sealed record FoldingRangeData(int Start, int End, int Rank, FoldingRangeKind? Kind);
+internal sealed class FoldingRangeData(int start, int end, int rank, FoldingRangeKind? kind)
+{
+    public int Start { get; } = start;
+    public int End { get; } = end;
+    public int Rank { get; } = rank;
+    public FoldingRangeKind? Kind { get; } = kind;
+}
 
 /// <summary>The regions the language's folding range providers report (upstream's SyntaxRangeProvider).</summary>
 internal sealed class SyntaxRangeProvider : IRangeProvider

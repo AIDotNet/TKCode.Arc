@@ -224,10 +224,7 @@ public class PresenceStack : TemplatedControl
         {
             _panel.Overflow.Click -= OnOverflowClick;
         }
-        if (_popup is not null)
-        {
-            _popup.Closed -= OnPopupClosed;
-        }
+        _popup?.Closed -= OnPopupClosed;
         base.OnApplyTemplate(e);
         _panel = e.NameScope.Find<PresenceStackPanel>(PanelPart);
         _count = e.NameScope.Find<RollingDigits>(CountPart);
@@ -292,15 +289,9 @@ public class PresenceStack : TemplatedControl
 
     private void ObserveSource(IEnumerable<PresenceStackViewer>? source)
     {
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged -= OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged -= OnSourceChanged;
         _observedSource = source as INotifyCollectionChanged;
-        if (_observedSource is not null)
-        {
-            _observedSource.CollectionChanged += OnSourceChanged;
-        }
+        _observedSource?.CollectionChanged += OnSourceChanged;
     }
 
     private void OnSourceChanged(object? sender, NotifyCollectionChangedEventArgs e) => ScheduleSync();

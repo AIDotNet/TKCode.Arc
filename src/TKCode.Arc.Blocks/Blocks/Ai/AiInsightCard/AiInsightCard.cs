@@ -320,10 +320,7 @@ public class AiInsightCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_chart is not null)
-        {
-            _chart.HoverChanged -= OnHoverChanged;
-        }
+        _chart?.HoverChanged -= OnHoverChanged;
         Unhook(_helpful, OnHelpfulClick);
         Unhook(_notHelpful, OnNotHelpfulClick);
         Unhook(_action, OnActionClick);
@@ -340,10 +337,7 @@ public class AiInsightCard : TemplatedControl
         _nextStepHeading = e.NameScope.Find<TextBlock>("PART_NextStepHeading");
         _analyzingText = e.NameScope.Find<TextShimmer>("PART_AnalyzingText");
 
-        if (_chart is not null)
-        {
-            _chart.HoverChanged += OnHoverChanged;
-        }
+        _chart?.HoverChanged += OnHoverChanged;
         Hook(_helpful, OnHelpfulClick);
         Hook(_notHelpful, OnNotHelpfulClick);
         Hook(_action, OnActionClick);
@@ -361,18 +355,12 @@ public class AiInsightCard : TemplatedControl
 
     private static void Hook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click += handler;
-        }
+        button?.Click += handler;
     }
 
     private static void Unhook(Button? button, EventHandler<RoutedEventArgs> handler)
     {
-        if (button is not null)
-        {
-            button.Click -= handler;
-        }
+        button?.Click -= handler;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -419,10 +407,7 @@ public class AiInsightCard : TemplatedControl
         else if (property == IsAnalyzingProperty)
         {
             PseudoClasses.Set(AnalyzingPseudoClass, IsAnalyzing);
-            if (_analyzingText is not null)
-            {
-                _analyzingText.IsActive = IsAnalyzing;
-            }
+            _analyzingText?.IsActive = IsAnalyzing;
             if (IsAnalyzing)
             {
                 _announcer?.Announce(Labels.Analyzing);
@@ -624,10 +609,7 @@ public class AiInsightCard : TemplatedControl
             _analyzingText.Text = labels.Analyzing;
             _analyzingText.IsActive = IsAnalyzing;
         }
-        if (_action is not null)
-        {
-            _action.Content = labels.Action;
-        }
+        _action?.Content = labels.Action;
         if (_chart is null)
         {
             return;
@@ -643,10 +625,7 @@ public class AiInsightCard : TemplatedControl
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void OnHoverChanged(int index)

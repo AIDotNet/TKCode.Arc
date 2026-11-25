@@ -81,10 +81,7 @@ public partial class TreeSelect
 
     private void UpdateClear()
     {
-        if (_clearHost is not null)
-        {
-            _clearHost.IsPresent = IsClearable && !IsReadOnly && IsEffectivelyEnabled && _selectedItems.Count > 0;
-        }
+        _clearHost?.IsPresent = IsClearable && !IsReadOnly && IsEffectivelyEnabled && _selectedItems.Count > 0;
     }
 
     private void OnClearClick(object? sender, RoutedEventArgs e)

@@ -91,10 +91,7 @@ public partial class TrialBanner
             _row.CompactChanged += OnCompactChanged;
             OnCompactChanged(_row.IsCompact);
         }
-        if (_pill is not null)
-        {
-            _pill.Click += OnPillClick;
-        }
+        _pill?.Click += OnPillClick;
         _featuresDirty = true;
         UpdateVariantClasses();
         Refresh(instant: true);
@@ -144,14 +141,8 @@ public partial class TrialBanner
 
     private void Unhook()
     {
-        if (_row is not null)
-        {
-            _row.CompactChanged -= OnCompactChanged;
-        }
-        if (_pill is not null)
-        {
-            _pill.Click -= OnPillClick;
-        }
+        _row?.CompactChanged -= OnCompactChanged;
+        _pill?.Click -= OnPillClick;
         foreach (var face in new[] { _banner, _card })
         {
             if (face.Primary is not null)
@@ -537,9 +528,6 @@ public partial class TrialBanner
         {
             _card.Ring.Value = value;
         }
-        if (_pill is not null)
-        {
-            _pill.RingValue = value;
-        }
+        _pill?.RingValue = value;
     }
 }

@@ -229,10 +229,7 @@ internal sealed class ReorderableListItem : ContentControl
     {
         base.OnApplyTemplate(e);
         _handle = e.NameScope.Find<ReorderableListHandle>(HandlePart);
-        if (_handle is not null)
-        {
-            _handle.Owner = this;
-        }
+        _handle?.Owner = this;
         _layers = e.NameScope.Find<Panel>("PART_Layers");
         _lift = null;
         if (PseudoClasses.Contains(LiftedPseudoClass))

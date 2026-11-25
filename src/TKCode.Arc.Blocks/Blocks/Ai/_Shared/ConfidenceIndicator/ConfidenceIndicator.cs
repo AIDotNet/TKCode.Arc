@@ -200,15 +200,9 @@ internal sealed class ConfidenceIndicator : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged -= OnValuePropertyChanged;
-        }
+        _observed?.PropertyChanged -= OnValuePropertyChanged;
         _observed = value;
-        if (_observed is not null)
-        {
-            _observed.PropertyChanged += OnValuePropertyChanged;
-        }
+        _observed?.PropertyChanged += OnValuePropertyChanged;
     }
 
     private void OnValuePropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)

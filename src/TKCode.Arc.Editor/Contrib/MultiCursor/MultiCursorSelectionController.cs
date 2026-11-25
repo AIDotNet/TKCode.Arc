@@ -15,7 +15,12 @@ using TKCode.Arc.Editor.ViewModel;
 namespace TKCode.Arc.Editor.Contrib.MultiCursor;
 
 /// <summary>The selections a session step produces and what to reveal (upstream's MultiCursorSessionResult).</summary>
-internal sealed record MultiCursorSessionResult(IReadOnlyList<TextSelection> Selections, TextRange RevealRange, ScrollType RevealScrollType);
+internal sealed class MultiCursorSessionResult(IReadOnlyList<TextSelection> selections, TextRange revealRange, ScrollType revealScrollType)
+{
+    public IReadOnlyList<TextSelection> Selections { get; } = selections;
+    public TextRange RevealRange { get; } = revealRange;
+    public ScrollType RevealScrollType { get; } = revealScrollType;
+}
 
 /// <summary>
 /// A run of "add selection to next find match" and its kin: what is searched for and how (upstream's

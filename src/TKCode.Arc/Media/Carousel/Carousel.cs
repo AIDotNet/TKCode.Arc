@@ -119,12 +119,11 @@ public class Carousel : SelectingItemsControl
 
     public bool IsAutoPlay { get => GetValue(IsAutoPlayProperty); set => SetValue(IsAutoPlayProperty, value); }
 
-    private bool _canRotate;
 
     public bool CanRotate
     {
-        get => _canRotate;
-        private set => SetAndRaise(CanRotateProperty, ref _canRotate, value);
+        get;
+        private set => SetAndRaise(CanRotateProperty, ref field, value);
     }
 
     private bool _isRotating;
@@ -407,18 +406,9 @@ public class Carousel : SelectingItemsControl
             }
         }
         _pager?.Sync(count, selected, LabelFor);
-        if (_controls is not null)
-        {
-            _controls.IsVisible = count > 1;
-        }
-        if (_previous is not null)
-        {
-            _previous.IsSoftDisabled = selected <= 0;
-        }
-        if (_next is not null)
-        {
-            _next.IsSoftDisabled = selected >= count - 1;
-        }
+        _controls?.IsVisible = count > 1;
+        _previous?.IsSoftDisabled = selected <= 0;
+        _next?.IsSoftDisabled = selected >= count - 1;
         UpdateRotation();
     }
 
@@ -447,10 +437,7 @@ public class Carousel : SelectingItemsControl
     {
         var compact = _width <= CarouselMath.CompactWidth;
         PseudoClasses.Set(CompactPseudoClass, compact);
-        if (_pager is not null)
-        {
-            _pager.IsCompact = compact;
-        }
+        _pager?.IsCompact = compact;
         if (_controls is not null)
         {
             // Controls line up with the edges of the centered slide.
@@ -475,10 +462,7 @@ public class Carousel : SelectingItemsControl
     {
         var count = ItemCount;
         CanRotate = Interval > TimeSpan.Zero && count > 1 && Classes.Contains(ArcMotion.FullPseudoClass);
-        if (_playButton is not null)
-        {
-            _playButton.IsVisible = CanRotate;
-        }
+        _playButton?.IsVisible = CanRotate;
         if (CanRotate)
         {
             HookPauseSources();
@@ -591,10 +575,7 @@ public class Carousel : SelectingItemsControl
 
     private void UpdatePlayButton()
     {
-        if (_playIcon is not null)
-        {
-            _playIcon.Content = IsAutoPlay ? s_pause : s_play;
-        }
+        _playIcon?.Content = IsAutoPlay ? s_pause : s_play;
         if (_playButton is not null)
         {
             AutomationProperties.SetName(_playButton, IsAutoPlay ? "Pause slide rotation" : "Start slide rotation");
@@ -859,22 +840,10 @@ public class Carousel : SelectingItemsControl
         {
             DetachViewport(_viewport);
         }
-        if (_pager is not null)
-        {
-            _pager.Owner = null;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click -= OnPlayClick;
-        }
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _pager?.Owner = null;
+        _playButton?.Click -= OnPlayClick;
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         _viewport = e.NameScope.Find<CarouselViewport>(ViewportPart);
         _controls = e.NameScope.Find<Control>(ControlsPart);
         _pager = e.NameScope.Find<CarouselPager>(PagerPart);
@@ -887,18 +856,9 @@ public class Carousel : SelectingItemsControl
         {
             AttachViewport(_viewport);
         }
-        if (_pager is not null)
-        {
-            _pager.Owner = this;
-        }
-        if (_playButton is not null)
-        {
-            _playButton.Click += OnPlayClick;
-        }
-        if (_playIcon is not null)
-        {
-            _playIcon.ContentTemplate = CarouselPlayGlyph.Template;
-        }
+        _pager?.Owner = this;
+        _playButton?.Click += OnPlayClick;
+        _playIcon?.ContentTemplate = CarouselPlayGlyph.Template;
         if (_previous is not null)
         {
             _previous.Click += OnPreviousClick;

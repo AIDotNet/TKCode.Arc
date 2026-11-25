@@ -279,10 +279,7 @@ internal sealed class CodeReviewToggle : CodeReviewPressable
     {
         set
         {
-            if (_label is not null)
-            {
-                _label.IsVisible = value;
-            }
+            _label?.IsVisible = value;
         }
     }
 

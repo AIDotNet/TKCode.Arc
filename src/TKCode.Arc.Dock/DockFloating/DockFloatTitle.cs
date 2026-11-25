@@ -20,15 +20,9 @@ internal sealed class DockFloatTitle : IDisposable
         var group = dock.Root?.SelfAndDescendants().OfType<DockGroup>().FirstOrDefault();
         if (!ReferenceEquals(group, _group))
         {
-            if (_group is not null)
-            {
-                _group.PropertyChanged -= OnGroupPropertyChanged;
-            }
+            _group?.PropertyChanged -= OnGroupPropertyChanged;
             _group = group;
-            if (group is not null)
-            {
-                group.PropertyChanged += OnGroupPropertyChanged;
-            }
+            group?.PropertyChanged += OnGroupPropertyChanged;
         }
         FollowPane(group?.ActivePane);
     }
@@ -45,15 +39,9 @@ internal sealed class DockFloatTitle : IDisposable
     {
         if (!ReferenceEquals(pane, _pane))
         {
-            if (_pane is not null)
-            {
-                _pane.PropertyChanged -= OnPanePropertyChanged;
-            }
+            _pane?.PropertyChanged -= OnPanePropertyChanged;
             _pane = pane;
-            if (pane is not null)
-            {
-                pane.PropertyChanged += OnPanePropertyChanged;
-            }
+            pane?.PropertyChanged += OnPanePropertyChanged;
         }
         _apply(pane?.ToString() ?? string.Empty);
     }
@@ -68,14 +56,8 @@ internal sealed class DockFloatTitle : IDisposable
 
     public void Dispose()
     {
-        if (_group is not null)
-        {
-            _group.PropertyChanged -= OnGroupPropertyChanged;
-        }
-        if (_pane is not null)
-        {
-            _pane.PropertyChanged -= OnPanePropertyChanged;
-        }
+        _group?.PropertyChanged -= OnGroupPropertyChanged;
+        _pane?.PropertyChanged -= OnPanePropertyChanged;
         _group = null;
         _pane = null;
     }

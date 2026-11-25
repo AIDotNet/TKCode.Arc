@@ -124,6 +124,15 @@ public static class Jpeg
         AcRefine,
     }
 
+    private enum AcRefineState : byte
+    {
+        ReadSymbol = 0,
+        ZeroRunOnly = 1,
+        ZeroRunBeforeCoeff = 2,
+        WriteCoeff = 3,
+        EndOfBandRun = 4,
+    }
+
     private ref struct Decoder
     {
         private readonly ReadOnlySpan<byte> _data;
@@ -147,7 +156,7 @@ public static class Jpeg
         private int _adobeTransform;
         private bool _adobe;
         private int _eobRun;
-        private int _refineState;
+        private AcRefineState _refineState;
         private int _refineNext;
         private int _spectralStart;
         private int _spectralEnd;
@@ -769,7 +778,7 @@ public static class Jpeg
                 var sign = coefficients[z] < 0 ? -1 : 1;
                 switch (_refineState)
                 {
-                    case 0:
+                    case AcRefineState.ReadSymbol:
                     {
                         var rs = DecodeSymbol(c.AcTable!);
                         var s = rs & 15;
@@ -779,12 +788,12 @@ public static class Jpeg
                             if (r < 15)
                             {
                                 _eobRun = ReadBits(r) + (1 << r);
-                                _refineState = 4;
+                                _refineState = AcRefineState.EndOfBandRun;
                             }
                             else
                             {
                                 r = 16;
-                                _refineState = 1;
+                                _refineState = AcRefineState.ZeroRunOnly;
                             }
                         }
                         else
@@ -795,14 +804,14 @@ public static class Jpeg
                             }
 
                             _refineNext = ReceiveExtend(s);
-                            _refineState = r != 0 ? 2 : 3;
+                            _refineState = r != 0 ? AcRefineState.ZeroRunBeforeCoeff : AcRefineState.WriteCoeff;
                         }
 
                         continue;
                     }
 
-                    case 1:
-                    case 2:
+                    case AcRefineState.ZeroRunOnly:
+                    case AcRefineState.ZeroRunBeforeCoeff:
                         if (coefficients[z] != 0)
                         {
                             if ((coefficients[z] & bit) == 0)
@@ -819,12 +828,14 @@ public static class Jpeg
                             r--;
                             if (r == 0)
                             {
-                                _refineState = _refineState == 2 ? 3 : 0;
+                                _refineState = _refineState == AcRefineState.ZeroRunBeforeCoeff
+                                    ? AcRefineState.WriteCoeff
+                                    : AcRefineState.ReadSymbol;
                             }
                         }
 
                         break;
-                    case 3:
+                    case AcRefineState.WriteCoeff:
                         if (coefficients[z] != 0)
                         {
                             if ((coefficients[z] & bit) == 0)
@@ -839,7 +850,7 @@ public static class Jpeg
                         else
                         {
                             coefficients[z] = (short)(_refineNext * bit);
-                            _refineState = 0;
+                            _refineState = AcRefineState.ReadSymbol;
                         }
 
                         break;
@@ -862,18 +873,18 @@ public static class Jpeg
                 k++;
             }
 
-            if (_refineState == 4)
+            if (_refineState == AcRefineState.EndOfBandRun)
             {
                 _eobRun--;
                 if (_eobRun == 0)
                 {
-                    _refineState = 0;
+                    _refineState = AcRefineState.ReadSymbol;
                 }
             }
-            else if (_refineState != 0)
+            else if (_refineState != AcRefineState.ReadSymbol)
             {
                 // Zero runs never cross a block boundary in a valid stream.
-                _refineState = 0;
+                _refineState = AcRefineState.ReadSymbol;
             }
         }
 

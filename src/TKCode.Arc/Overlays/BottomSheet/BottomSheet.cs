@@ -106,13 +106,12 @@ public class BottomSheet : ModalOverlay
     /// <summary>Index into the sorted detents the sheet opens at (default 0, the smallest).</summary>
     public int InitialDetentIndex { get => GetValue(InitialDetentIndexProperty); set => SetValue(InitialDetentIndexProperty, value); }
 
-    private int _detentIndex;
 
     /// <summary>The detent the sheet rests on (index into the sorted detents).</summary>
     public int DetentIndex
     {
-        get => _detentIndex;
-        private set => SetAndRaise(DetentIndexProperty, ref _detentIndex, value);
+        get;
+        private set => SetAndRaise(DetentIndexProperty, ref field, value);
     }
 
     /// <summary>The sheet came to rest on another detent.</summary>
@@ -248,15 +247,9 @@ public class BottomSheet : ModalOverlay
     /// <summary>Listens to the current detents while in a visual tree (and to nothing otherwise).</summary>
     private void WatchDetents()
     {
-        if (_observedDetents is not null)
-        {
-            _observedDetents.CollectionChanged -= OnDetentsChanged;
-        }
+        _observedDetents?.CollectionChanged -= OnDetentsChanged;
         _observedDetents = _watching ? Detents : null;
-        if (_observedDetents is not null)
-        {
-            _observedDetents.CollectionChanged += OnDetentsChanged;
-        }
+        _observedDetents?.CollectionChanged += OnDetentsChanged;
     }
 
     private void OnDetentsChanged(object? sender, NotifyCollectionChangedEventArgs? e)
@@ -273,10 +266,7 @@ public class BottomSheet : ModalOverlay
         var source = (IEnumerable<double>?)Detents ?? s_defaultDetents;
         var stops = source.Where(v => v > 0 && double.IsFinite(v)).Select(v => Math.Min(v, 1)).Distinct().OrderBy(v => v).ToArray();
         _stops = stops.Length == 0 ? s_defaultDetents : stops;
-        if (_sheet is not null)
-        {
-            _sheet.MaxDetent = _stops[^1];
-        }
+        _sheet?.MaxDetent = _stops[^1];
     }
 
     #endregion

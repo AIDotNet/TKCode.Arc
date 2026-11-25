@@ -133,14 +133,8 @@ public partial class Integrations
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_search is not null)
-        {
-            _search.TextChanged -= OnSearchTextChanged;
-        }
-        if (_filters is not null)
-        {
-            _filters.SelectionRequested -= OnFilterRequested;
-        }
+        _search?.TextChanged -= OnSearchTextChanged;
+        _filters?.SelectionRequested -= OnFilterRequested;
         if (_rows is not null)
         {
             _rows.ItemPrepared -= OnRowPrepared;
@@ -164,10 +158,7 @@ public partial class Integrations
             _search.Text = SearchText;
             _search.TextChanged += OnSearchTextChanged;
         }
-        if (_filters is not null)
-        {
-            _filters.SelectionRequested += OnFilterRequested;
-        }
+        _filters?.SelectionRequested += OnFilterRequested;
         if (_rows is not null)
         {
             // The list frame's height follows on the outer SpringSizeDecorator (one spring for rows and empty state).
@@ -205,15 +196,9 @@ public partial class Integrations
         base.OnPropertyChanged(change);
         if (change.Property == ItemsSourceProperty)
         {
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged -= OnItemsChanged;
-            }
+            _observedSource?.CollectionChanged -= OnItemsChanged;
             _observedSource = ItemsSource as INotifyCollectionChanged;
-            if (_observedSource is not null)
-            {
-                _observedSource.CollectionChanged += OnItemsChanged;
-            }
+            _observedSource?.CollectionChanged += OnItemsChanged;
             Track();
             Recompute(RecomputeReason.Data);
         }
@@ -279,10 +264,7 @@ public partial class Integrations
         if (compact != IsCompact)
         {
             IsCompact = compact;
-            if (_filters is not null)
-            {
-                _filters.IsCompact = compact;
-            }
+            _filters?.IsCompact = compact;
             UpdateRows();
         }
         else if (wasTight != _isTight)
@@ -433,10 +415,7 @@ public partial class Integrations
         var next = IntegrationsQuery.Visible(items, filter, SearchText, CategoryLabel);
         var refocus = FindFocusTargetForLeavingRow(next);
         _visible = next;
-        if (_rows is not null)
-        {
-            _rows.Items = next;
-        }
+        _rows?.Items = next;
         UpdateRows();
         if (refocus is { } target)
         {
@@ -499,10 +478,7 @@ public partial class Integrations
 
     private void UpdateTexts()
     {
-        if (_title is not null)
-        {
-            _title.Text = Title ?? Labels.Title;
-        }
+        _title?.Text = Title ?? Labels.Title;
         if (_subtitle is not null)
         {
             var subtitle = Subtitle ?? Labels.Subtitle;

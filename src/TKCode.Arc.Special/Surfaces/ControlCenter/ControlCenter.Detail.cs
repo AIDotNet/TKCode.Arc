@@ -208,10 +208,7 @@ public sealed partial class ControlCenter
         _frame.SetFrame(null);
         _scrimOpacity.Jump(0);
         _scrim.IsVisible = false;
-        if (_source is not null)
-        {
-            _source.Opacity = 1;
-        }
+        _source?.Opacity = 1;
         _bodyOpacity.Jump(0);
         _iconFlight.Apply(1);
         _titleFlight.Apply(1);
@@ -288,10 +285,7 @@ public sealed partial class ControlCenter
         if (_closing && ArcMotion.IsFull(this))
         {
             var (tile, detail) = ControlCenterMath.CloseCrossfade(1 - p);
-            if (_source is not null)
-            {
-                _source.Opacity = tile;
-            }
+            _source?.Opacity = tile;
             _frame.Opacity = detail;
         }
         else if (_closing)

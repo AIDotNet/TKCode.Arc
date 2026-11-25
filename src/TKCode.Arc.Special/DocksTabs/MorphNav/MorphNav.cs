@@ -186,7 +186,6 @@ public class MorphNav : TemplatedControl
     private TopLevel? _pressRoot;
     private IDisposable? _viewport;
     private MorphNavItem[] _watched = [];
-    private string? _openValue;
     private bool _searchOpen;
     private bool _collapsed;
     private bool _tiny;
@@ -285,8 +284,8 @@ public class MorphNav : TemplatedControl
     /// <inheritdoc cref="OpenValueProperty"/>
     public string? OpenValue
     {
-        get => _openValue;
-        private set => SetAndRaise(OpenValueProperty, ref _openValue, value);
+        get;
+        private set => SetAndRaise(OpenValueProperty, ref field, value);
     }
 
     /// <inheritdoc cref="IsSearchOpenProperty"/>
@@ -402,22 +401,10 @@ public class MorphNav : TemplatedControl
         {
             _barMotion = new MorphNavLayerMotion(_bar, scales: true);
         }
-        if (_brand is not null)
-        {
-            _brand.Click += OnBrandClick;
-        }
-        if (_searchButton is not null)
-        {
-            _searchButton.Click += OnSearchButtonClick;
-        }
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
-        if (_track is not null)
-        {
-            _track.Arranged += OnTrackArranged;
-        }
+        _brand?.Click += OnBrandClick;
+        _searchButton?.Click += OnSearchButtonClick;
+        _action?.Click += OnActionClick;
+        _track?.Arranged += OnTrackArranged;
         RebuildTriggers();
         UpdateTools();
         UpdateCompact();
@@ -427,26 +414,11 @@ public class MorphNav : TemplatedControl
 
     private void Unhook()
     {
-        if (_brand is not null)
-        {
-            _brand.Click -= OnBrandClick;
-        }
-        if (_searchButton is not null)
-        {
-            _searchButton.Click -= OnSearchButtonClick;
-        }
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
-        if (_track is not null)
-        {
-            _track.Arranged -= OnTrackArranged;
-        }
-        if (_layers is not null)
-        {
-            _layers.Measured -= OnLayersMeasured;
-        }
+        _brand?.Click -= OnBrandClick;
+        _searchButton?.Click -= OnSearchButtonClick;
+        _action?.Click -= OnActionClick;
+        _track?.Arranged -= OnTrackArranged;
+        _layers?.Measured -= OnLayersMeasured;
         CancelTimers();
         OpenValue = null;
         IsSearchOpen = false;
@@ -605,10 +577,7 @@ public class MorphNav : TemplatedControl
         {
             trigger.IsVisible = !collapsed;
         }
-        if (_menuTrigger is not null)
-        {
-            _menuTrigger.IsVisible = collapsed;
-        }
+        _menuTrigger?.IsVisible = collapsed;
         _brand?.SetBare(IsCompact || collapsed);
         if (changed && _openTrigger is not null)
         {
@@ -724,18 +693,9 @@ public class MorphNav : TemplatedControl
 
     private void UpdateTools()
     {
-        if (_brand is not null)
-        {
-            _brand.IsVisible = BrandName is { Length: > 0 } || BrandMark is not null;
-        }
-        if (_searchButton is not null)
-        {
-            _searchButton.IsVisible = SearchEntries.Count > 0;
-        }
-        if (_action is not null)
-        {
-            _action.IsVisible = ActionLabel is { Length: > 0 };
-        }
+        _brand?.IsVisible = BrandName is { Length: > 0 } || BrandMark is not null;
+        _searchButton?.IsVisible = SearchEntries.Count > 0;
+        _action?.IsVisible = ActionLabel is { Length: > 0 };
     }
 
     private void UpdateNames()

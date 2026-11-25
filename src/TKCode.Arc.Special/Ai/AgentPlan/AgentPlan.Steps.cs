@@ -290,10 +290,7 @@ public partial class AgentPlan
     /// </summary>
     private void Observe(AvaloniaList<AgentPlanStep>? list)
     {
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnStepsChanged;
-        }
+        _observed?.CollectionChanged -= OnStepsChanged;
         foreach (var step in _watchedSteps)
         {
             step.PropertyChanged -= OnStepPropertyChanged;
@@ -301,10 +298,7 @@ public partial class AgentPlan
         }
         _watchedSteps.Clear();
         _observed = _attached ? list : null;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnStepsChanged;
-        }
+        _observed?.CollectionChanged += OnStepsChanged;
     }
 
     /// <summary>Listens to the steps again on attach and brings the rows up to date with what changed while it did not.</summary>

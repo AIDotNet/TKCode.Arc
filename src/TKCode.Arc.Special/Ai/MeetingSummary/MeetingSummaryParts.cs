@@ -69,10 +69,7 @@ internal abstract class MeetingSummaryRow : TemplatedControl
         {
             _quoted = value;
             PseudoClasses.Set(QuotedPseudoClass, value);
-            if (Stamp is not null)
-            {
-                Stamp.IsExpanded = value;
-            }
+            Stamp?.IsExpanded = value;
         }
     }
 
@@ -327,10 +324,7 @@ internal sealed class MeetingSummaryActionRow : MeetingSummaryRow
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (Check is not null)
-        {
-            Check.Click -= OnCheckClick;
-        }
+        Check?.Click -= OnCheckClick;
         base.OnApplyTemplate(e);
         Check = e.NameScope.Find<MeetingSummaryCheck>(CheckPart);
         _meta = e.NameScope.Find<Panel>(MetaPart);
@@ -338,10 +332,7 @@ internal sealed class MeetingSummaryActionRow : MeetingSummaryRow
         OwnerText = e.NameScope.Find<TextBlock>(OwnerPart);
         DueText = e.NameScope.Find<TextBlock>(DuePart);
         _sendsPanel = e.NameScope.Find<StackPanel>(SendsPart);
-        if (Check is not null)
-        {
-            Check.Click += OnCheckClick;
-        }
+        Check?.Click += OnCheckClick;
         _strike = null;
         _muted = null;
         UpdateStamp(_labels);

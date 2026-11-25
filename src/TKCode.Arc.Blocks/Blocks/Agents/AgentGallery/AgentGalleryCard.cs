@@ -144,10 +144,7 @@ internal sealed class AgentGalleryCard : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_install is not null)
-        {
-            _install.Click -= OnInstallClick;
-        }
+        _install?.Click -= OnInstallClick;
         _mark = e.NameScope.Find<AgentGalleryMark>(MarkPart);
         _name = e.NameScope.Find<HighlightedText>(NamePart);
         _maker = e.NameScope.Find<TextBlock>(MakerPart);
@@ -218,18 +215,9 @@ internal sealed class AgentGalleryCard : TemplatedControl
             _tags[i].IsVisible = has;
             _tags[i].Text = has ? agent.Tags[i] : null;
         }
-        if (_tagsHost is not null)
-        {
-            _tagsHost.IsVisible = agent.Tags.Count > 0;
-        }
-        if (_rating is not null)
-        {
-            _rating.Text = AgentGalleryFormat.Rating(agent, _labels, _culture);
-        }
-        if (_installs is not null)
-        {
-            _installs.Text = _labels.Installs(AgentGalleryFormat.Compact(agent.Installs, _culture));
-        }
+        _tagsHost?.IsVisible = agent.Tags.Count > 0;
+        _rating?.Text = AgentGalleryFormat.Rating(agent, _labels, _culture);
+        _installs?.Text = _labels.Installs(AgentGalleryFormat.Compact(agent.Installs, _culture));
         ApplyState();
     }
 

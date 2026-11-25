@@ -163,15 +163,9 @@ public class Field : ContentControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_label is not null)
-        {
-            _label.PointerPressed -= OnLabelPressed;
-        }
+        _label?.PointerPressed -= OnLabelPressed;
         _label = e.NameScope.Find<TextBlock>(LabelPart);
-        if (_label is not null)
-        {
-            _label.PointerPressed += OnLabelPressed;
-        }
+        _label?.PointerPressed += OnLabelPressed;
         UpdateContentAutomation();
     }
 

@@ -205,10 +205,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
         NeedsReset = false;
         _text = string.Empty;
         _choice = Action.EffectiveDefaultChoice;
-        if (_field is not null)
-        {
-            _field.Text = string.Empty;
-        }
+        _field?.Text = string.Empty;
         _choices?.Select(_choice, animate: false);
         ClearMessage(animate: false);
     }
@@ -229,10 +226,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
     {
         _messageToken++;
         _messageWords = words;
-        if (_messageText is not null)
-        {
-            _messageText.Text = words;
-        }
+        _messageText?.Text = words;
         if (_field is not null)
         {
             _field.IsInvalid = true;
@@ -285,10 +279,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
         else
         {
             _messageOpacity.Jump(0);
-            if (_messageText is not null)
-            {
-                _messageText.Text = null;
-            }
+            _messageText?.Text = null;
         }
     }
 
@@ -323,10 +314,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
             var busy = change.GetNewValue<bool>();
             PseudoClasses.Set(BusyPseudoClass, busy);
             AutomationProperties.SetItemStatus(this, busy ? BusyLabel : null);
-            if (_field is not null)
-            {
-                _field.IsReadOnly = busy;
-            }
+            _field?.IsReadOnly = busy;
         }
         else if (change.Property == TitleProperty)
         {
@@ -351,18 +339,9 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
             _choice = _choices.Selected;
             _choices.SelectionChanged -= OnChoiceChanged;
         }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click -= OnCloseClick;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click -= OnSubmitClick;
-        }
+        _back?.Click -= OnBackClick;
+        _close?.Click -= OnCloseClick;
+        _submit?.Click -= OnSubmitClick;
         _header = e.NameScope.Find<Control>(HeaderPart);
         _back = e.NameScope.Find<ActionMorphIconButton>(BackPart);
         _close = e.NameScope.Find<ActionMorphIconButton>(ClosePart);
@@ -372,20 +351,14 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
         _message = e.NameScope.Find<Control>(MessagePart);
         _messageText = e.NameScope.Find<TextBlock>(MessageTextPart);
         _submit = e.NameScope.Find<ActionMorphSubmit>(SubmitPart);
-        if (_fieldHost is not null)
-        {
-            _fieldHost.RenderTransform = _shake;
-        }
+        _fieldHost?.RenderTransform = _shake;
         if (_message is not null)
         {
             _message.RenderTransform = _messageLift;
             _message.Opacity = _messageOpacity?.Value ?? 0;
             AutomationProperties.SetLiveSetting(_message, AutomationLiveSetting.Polite);
         }
-        if (_messageText is not null)
-        {
-            _messageText.Text = _messageWords;
-        }
+        _messageText?.Text = _messageWords;
         if (_header is not null && _headerOpacity is not null)
         {
             _header.Opacity = _headerOpacity.Value;
@@ -404,18 +377,9 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
             AutomationProperties.SetName(_choices, ChoicesLabel);
             _choices.SelectionChanged += OnChoiceChanged;
         }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_close is not null)
-        {
-            _close.Click += OnCloseClick;
-        }
-        if (_submit is not null)
-        {
-            _submit.Click += OnSubmitClick;
-        }
+        _back?.Click += OnBackClick;
+        _close?.Click += OnCloseClick;
+        _submit?.Click += OnSubmitClick;
     }
 
     private void OnTextChanged(object? sender, TextChangedEventArgs e)
@@ -467,10 +431,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
         var value = new MotionValue<double>(_owner, 1, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_header is not null)
-            {
-                _header.Opacity = v;
-            }
+            _header?.Opacity = v;
         };
         return value;
     }
@@ -487,10 +448,7 @@ internal sealed class ActionMorphComposer : TemplatedControl, IActionMorphFace
         var value = new MotionValue<double>(_owner, 0, MotionVectors.Double);
         value.Changed += v =>
         {
-            if (_message is not null)
-            {
-                _message.Opacity = v;
-            }
+            _message?.Opacity = v;
         };
         return value;
     }

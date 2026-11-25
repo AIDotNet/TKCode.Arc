@@ -145,10 +145,7 @@ internal sealed class FaqRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
+        _trigger?.Click -= OnTriggerClick;
         _trigger = e.NameScope.Find<FaqTrigger>(TriggerPart);
         _question = e.NameScope.Find<DecoratedTextBlock>(QuestionPart);
         _hintBlock = e.NameScope.Find<DecoratedTextBlock>(HintPart);
@@ -159,14 +156,8 @@ internal sealed class FaqRow : TemplatedControl
             AutomationProperties.SetName(_trigger, Item.Question);
             UpdateExpandedHelp();
         }
-        if (_question is not null)
-        {
-            _question.Text = Item.Question;
-        }
-        if (_answer is not null)
-        {
-            _answer.Text = Item.Answer;
-        }
+        _question?.Text = Item.Question;
+        _answer?.Text = Item.Answer;
         Update();
     }
 
@@ -182,10 +173,7 @@ internal sealed class FaqRow : TemplatedControl
         else if (change.Property == IsPresentProperty)
         {
             PseudoClasses.Set(AbsentPseudoClass, !IsPresent);
-            if (_trigger is not null)
-            {
-                _trigger.IsTabStop = IsPresent;
-            }
+            _trigger?.IsTabStop = IsPresent;
         }
         else if (change.Property == IsNarrowProperty)
         {

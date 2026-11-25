@@ -420,10 +420,7 @@ public class ProviderStatus : TemplatedControl
     /// <summary>The ring drains linearly; the seconds text changes at most once a second.</summary>
     private void UpdateCountdown()
     {
-        if (_ring is not null)
-        {
-            _ring.Value = _total > 0 ? _left / _total : 0;
-        }
+        _ring?.Value = _total > 0 ? _left / _total : 0;
         if (_countdownText is null)
         {
             return;
@@ -445,10 +442,7 @@ public class ProviderStatus : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_refresh is not null)
-        {
-            _refresh.Click -= OnRefreshClick;
-        }
+        _refresh?.Click -= OnRefreshClick;
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _summary = e.NameScope.Find<ArcContentSwap>(SummaryPart);
         _countdownBox = e.NameScope.Find<Control>(CountdownPart);
@@ -464,10 +458,7 @@ public class ProviderStatus : TemplatedControl
         _footnoteBox = e.NameScope.Find<Control>("PART_FootnoteBox");
         _footnoteSource = null;
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_refresh is not null)
-        {
-            _refresh.Click += OnRefreshClick;
-        }
+        _refresh?.Click += OnRefreshClick;
         foreach (var row in _rows.Values)
         {
             Unhook(row);
@@ -599,23 +590,14 @@ public class ProviderStatus : TemplatedControl
         }
 
         var canRefresh = CanRefresh;
-        if (_countdownBox is not null)
-        {
-            _countdownBox.IsVisible = canRefresh && (_checking || EffectiveInterval is not null);
-        }
-        if (_ring is not null)
-        {
-            _ring.IsVisible = !_checking && _total > 0;
-        }
+        _countdownBox?.IsVisible = canRefresh && (_checking || EffectiveInterval is not null);
+        _ring?.IsVisible = !_checking && _total > 0;
         if (_spinner is not null)
         {
             // Reduced motion drops the spinner; the Checking label stays.
             _spinner.IsVisible = _checking && ArcMotion.IsFull(this);
         }
-        if (_countdownText is not null)
-        {
-            _countdownText.IsVisible = !_checking;
-        }
+        _countdownText?.IsVisible = !_checking;
         if (_checkingText is not null)
         {
             _checkingText.IsVisible = _checking;
@@ -664,10 +646,7 @@ public class ProviderStatus : TemplatedControl
                 // A string footnote wraps; anything else is shown as given.
                 _footnote.Content = footnote is string text ? new TextBlock { Text = text, TextWrapping = TextWrapping.Wrap } : footnote;
             }
-            if (_footnoteBox is not null)
-            {
-                _footnoteBox.IsVisible = footnote is not null;
-            }
+            _footnoteBox?.IsVisible = footnote is not null;
         }
         AutomationProperties.SetName(this, Title);
     }

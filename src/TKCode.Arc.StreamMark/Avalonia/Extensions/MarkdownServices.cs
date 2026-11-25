@@ -21,7 +21,7 @@ public sealed class MarkdownServices
 
     private PluginRegistry? _registry;
     private ExceptionDispatchInfo? _registryError;
-    private readonly object _registryLock = new();
+    private readonly SyncLock _registryLock = new();
     private readonly ConditionalWeakTable<StreamingDocument, object> _mismatchReported = new();
 
     /// <summary>插件（公式、高亮、图表、组件等）。内置组件（details、think、kbd、引用等）总是启用。</summary>

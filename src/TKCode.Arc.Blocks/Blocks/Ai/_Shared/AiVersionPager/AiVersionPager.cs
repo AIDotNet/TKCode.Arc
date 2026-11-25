@@ -184,28 +184,16 @@ internal class AiVersionPager : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_previous is not null)
-        {
-            _previous.Click -= OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click -= OnNextClick;
-        }
+        _previous?.Click -= OnPreviousClick;
+        _next?.Click -= OnNextClick;
         _previous = e.NameScope.Find<AvaloniaButton>(PreviousPart);
         _next = e.NameScope.Find<AvaloniaButton>(NextPart);
         _number = e.NameScope.Find<RollingDigits>(NumberPart);
         _total = e.NameScope.Find<RollingDigits>(TotalPart);
         _separator = e.NameScope.Find<TextBlock>(SeparatorPart);
         _countText = e.NameScope.Find<TextBlock>(CountTextPart);
-        if (_previous is not null)
-        {
-            _previous.Click += OnPreviousClick;
-        }
-        if (_next is not null)
-        {
-            _next.Click += OnNextClick;
-        }
+        _previous?.Click += OnPreviousClick;
+        _next?.Click += OnNextClick;
         Update();
     }
 
@@ -243,22 +231,10 @@ internal class AiVersionPager : TemplatedControl
         }
         var separator = SeparatorOf(CountText);
         PseudoClasses.Set(TextCountPseudoClass, separator is null);
-        if (_number is not null)
-        {
-            _number.Value = number;
-        }
-        if (_total is not null)
-        {
-            _total.Value = count;
-        }
-        if (_separator is not null)
-        {
-            _separator.Text = separator ?? DefaultSeparator;
-        }
-        if (_countText is not null)
-        {
-            _countText.Text = separator is null ? CountString(number, count) : null;
-        }
+        _number?.Value = number;
+        _total?.Value = count;
+        _separator?.Text = separator ?? DefaultSeparator;
+        _countText?.Text = separator is null ? CountString(number, count) : null;
     }
 
     private static void SetButtonText(AvaloniaButton button, string? text)

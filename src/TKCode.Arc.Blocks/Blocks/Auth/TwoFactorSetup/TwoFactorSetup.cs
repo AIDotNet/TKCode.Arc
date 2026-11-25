@@ -148,13 +148,12 @@ public class TwoFactorSetup : TemplatedControl
         }
     }
 
-    private TwoFactorSetupStep _step;
 
     /// <inheritdoc cref="StepProperty"/>
     public TwoFactorSetupStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     /// <inheritdoc cref="LabelsProperty"/>
@@ -390,43 +389,19 @@ public class TwoFactorSetup : TemplatedControl
         _doneDescription = e.NameScope.Find<TextBlock>("PART_DoneDescription");
         _doneGlyph = e.NameScope.Find<StrokeDrawGlyph>("PART_DoneGlyph");
 
-        if (_primary is not null)
-        {
-            _primary.Click += OnPrimaryClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click += OnBackClick;
-        }
-        if (_methods is not null)
-        {
-            _methods.SelectionChanged += OnMethodSelectionChanged;
-        }
-        if (_phone is not null)
-        {
-            _phone.PropertyChanged += OnPhonePropertyChanged;
-        }
+        _primary?.Click += OnPrimaryClick;
+        _back?.Click += OnBackClick;
+        _methods?.SelectionChanged += OnMethodSelectionChanged;
+        _phone?.PropertyChanged += OnPhonePropertyChanged;
         if (_code is not null)
         {
             _code.Completed += OnCodeCompleted;
             _code.ValueChanged += OnCodeValueChanged;
         }
-        if (_resend is not null)
-        {
-            _resend.Click += OnResendClick;
-        }
-        if (_download is not null)
-        {
-            _download.Click += OnDownloadClick;
-        }
-        if (_saved is not null)
-        {
-            _saved.IsCheckedChanged += OnSavedChanged;
-        }
-        if (_doneGlyph is not null)
-        {
-            _doneGlyph.AttachedToVisualTree += OnDoneGlyphAttached;
-        }
+        _resend?.Click += OnResendClick;
+        _download?.Click += OnDownloadClick;
+        _saved?.IsCheckedChanged += OnSavedChanged;
+        _doneGlyph?.AttachedToVisualTree += OnDoneGlyphAttached;
 
         BuildMethods();
         BuildStepper();
@@ -439,43 +414,19 @@ public class TwoFactorSetup : TemplatedControl
 
     private void Detach()
     {
-        if (_primary is not null)
-        {
-            _primary.Click -= OnPrimaryClick;
-        }
-        if (_back is not null)
-        {
-            _back.Click -= OnBackClick;
-        }
-        if (_methods is not null)
-        {
-            _methods.SelectionChanged -= OnMethodSelectionChanged;
-        }
-        if (_phone is not null)
-        {
-            _phone.PropertyChanged -= OnPhonePropertyChanged;
-        }
+        _primary?.Click -= OnPrimaryClick;
+        _back?.Click -= OnBackClick;
+        _methods?.SelectionChanged -= OnMethodSelectionChanged;
+        _phone?.PropertyChanged -= OnPhonePropertyChanged;
         if (_code is not null)
         {
             _code.Completed -= OnCodeCompleted;
             _code.ValueChanged -= OnCodeValueChanged;
         }
-        if (_resend is not null)
-        {
-            _resend.Click -= OnResendClick;
-        }
-        if (_download is not null)
-        {
-            _download.Click -= OnDownloadClick;
-        }
-        if (_saved is not null)
-        {
-            _saved.IsCheckedChanged -= OnSavedChanged;
-        }
-        if (_doneGlyph is not null)
-        {
-            _doneGlyph.AttachedToVisualTree -= OnDoneGlyphAttached;
-        }
+        _resend?.Click -= OnResendClick;
+        _download?.Click -= OnDownloadClick;
+        _saved?.IsCheckedChanged -= OnSavedChanged;
+        _doneGlyph?.AttachedToVisualTree -= OnDoneGlyphAttached;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -496,10 +447,7 @@ public class TwoFactorSetup : TemplatedControl
         }
         else if (change.Property == MethodProperty)
         {
-            if (_methods is not null)
-            {
-                _methods.SelectedIndex = Method == TwoFactorSetupMethod.TextMessage && IsTextMessageAvailable ? 1 : 0;
-            }
+            _methods?.SelectedIndex = Method == TwoFactorSetupMethod.TextMessage && IsTextMessageAvailable ? 1 : 0;
             UpdateTexts();
             UpdateChrome();
         }
@@ -597,34 +545,16 @@ public class TwoFactorSetup : TemplatedControl
             _phone.Placeholder = labels.PhonePlaceholder;
             _phone.Description = labels.PhoneDescription;
         }
-        if (_code is not null)
-        {
-            _code.Label = labels.CodeLabel;
-        }
-        if (_resend is not null)
-        {
-            _resend.Content = labels.Resend;
-        }
-        if (_copyCodes is not null)
-        {
-            _copyCodes.Label = labels.CopyCodes;
-        }
-        if (_download is not null)
-        {
-            _download.Content = labels.Download;
-        }
-        if (_saved is not null)
-        {
-            _saved.Content = labels.SavedConfirm;
-        }
+        _code?.Label = labels.CodeLabel;
+        _resend?.Content = labels.Resend;
+        _copyCodes?.Label = labels.CopyCodes;
+        _download?.Content = labels.Download;
+        _saved?.Content = labels.SavedConfirm;
         if (_codes is not null)
         {
             AutomationProperties.SetName(_codes, labels.BackupListName);
         }
-        if (_back is not null)
-        {
-            _back.Content = labels.Back;
-        }
+        _back?.Content = labels.Back;
     }
 
     private void BuildStepper()
@@ -643,10 +573,7 @@ public class TwoFactorSetup : TemplatedControl
 
     private static void SetText(TextBlock? block, string text)
     {
-        if (block is not null)
-        {
-            block.Text = text;
-        }
+        block?.Text = text;
     }
 
     private void UpdateQr()
@@ -657,14 +584,8 @@ public class TwoFactorSetup : TemplatedControl
             _qr.Text = ProvisioningUri;
             AutomationProperties.SetName(_qr, Labels.QrName(Issuer, AccountName));
         }
-        if (_key is not null)
-        {
-            _key.Text = GroupKey(secret);
-        }
-        if (_copyKey is not null)
-        {
-            _copyKey.Value = secret;
-        }
+        _key?.Text = GroupKey(secret);
+        _copyKey?.Value = secret;
     }
 
     /// <summary>The key in groups of four, the way people copy it by hand.</summary>
@@ -685,14 +606,8 @@ public class TwoFactorSetup : TemplatedControl
     private void UpdateCodes()
     {
         var codes = ShownBackupCodes;
-        if (_codes is not null)
-        {
-            _codes.ItemsSource = codes;
-        }
-        if (_copyCodes is not null)
-        {
-            _copyCodes.Value = BackupText(codes);
-        }
+        _codes?.ItemsSource = codes;
+        _copyCodes?.Value = BackupText(codes);
     }
 
     private string BackupText(IReadOnlyList<string> codes)
@@ -896,10 +811,7 @@ public class TwoFactorSetup : TemplatedControl
     private void UpdateChrome()
     {
         var labels = Labels;
-        if (_stepper is not null)
-        {
-            _stepper.CurrentIndex = (int)Step;
-        }
+        _stepper?.CurrentIndex = (int)Step;
         if (_back is not null)
         {
             var canGoBack = Step is TwoFactorSetupStep.Connect or TwoFactorSetupStep.Verify or TwoFactorSetupStep.BackupCodes;
@@ -927,10 +839,7 @@ public class TwoFactorSetup : TemplatedControl
                 _ => true
             };
         }
-        if (_resend is not null)
-        {
-            _resend.IsVisible = Step == TwoFactorSetupStep.Verify && Method == TwoFactorSetupMethod.TextMessage;
-        }
+        _resend?.IsVisible = Step == TwoFactorSetupStep.Verify && Method == TwoFactorSetupMethod.TextMessage;
     }
 
     private async Task ContinueAsync()

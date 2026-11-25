@@ -184,10 +184,7 @@ internal sealed partial class AiSourcesRow : TemplatedControl
         _body = e.NameScope.Find<AiCollapsible>(BodyPart);
         _scroller = e.NameScope.Find<ScrollViewer>(ScrollerPart);
         _panel = e.NameScope.Find<AiSourceCardPanel>(CardsPart);
-        if (_toggle is not null)
-        {
-            _toggle.Click += OnToggleClick;
-        }
+        _toggle?.Click += OnToggleClick;
         AttachScroller();
         // Cards built for an earlier template move to the new panel.
         if (_panel is not null)
@@ -205,10 +202,7 @@ internal sealed partial class AiSourcesRow : TemplatedControl
 
     private void DetachParts()
     {
-        if (_toggle is not null)
-        {
-            _toggle.Click -= OnToggleClick;
-        }
+        _toggle?.Click -= OnToggleClick;
         DetachScroller();
         _panel?.Children.Clear();
     }
@@ -304,10 +298,7 @@ internal sealed partial class AiSourcesRow : TemplatedControl
             _scroller.IsHitTestVisible = open;
             KeyboardNavigation.SetTabNavigation(_scroller, open ? KeyboardNavigationMode.Continue : KeyboardNavigationMode.None);
         }
-        if (_body is not null)
-        {
-            _body.IsExpanded = open;
-        }
+        _body?.IsExpanded = open;
         if (!open)
         {
             StopScroll();
@@ -325,15 +316,9 @@ internal sealed partial class AiSourcesRow : TemplatedControl
         {
             return;
         }
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged -= OnSourcesChanged;
-        }
+        _observed?.CollectionChanged -= OnSourcesChanged;
         _observed = next;
-        if (_observed is not null)
-        {
-            _observed.CollectionChanged += OnSourcesChanged;
-        }
+        _observed?.CollectionChanged += OnSourcesChanged;
     }
 
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)

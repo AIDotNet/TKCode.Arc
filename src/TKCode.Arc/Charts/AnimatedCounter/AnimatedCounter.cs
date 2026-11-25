@@ -61,11 +61,10 @@ public class AnimatedCounter : TemplatedControl
     public bool AnimateOnView { get => GetValue(AnimateOnViewProperty); set => SetValue(AnimateOnViewProperty, value); }
     public string CultureName { get => GetValue(CultureNameProperty); set => SetValue(CultureNameProperty, value); }
 
-    private bool _isArmed;
     internal bool IsArmed
     {
-        get => _isArmed;
-        private set => SetAndRaise(IsArmedProperty, ref _isArmed, value);
+        get;
+        private set => SetAndRaise(IsArmedProperty, ref field, value);
     }
 
     private ViewportVisibility? _visibility;

@@ -52,10 +52,7 @@ internal sealed class ReleaseReadinessRow : TemplatedControl
         set
         {
             _isLocked = value;
-            if (_checkbox is not null)
-            {
-                _checkbox.IsEnabled = !value;
-            }
+            _checkbox?.IsEnabled = !value;
         }
     }
 
@@ -109,10 +106,7 @@ internal sealed class ReleaseReadinessRow : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_checkbox is not null)
-        {
-            _checkbox.IsCheckedChanged -= OnCheckboxChanged;
-        }
+        _checkbox?.IsCheckedChanged -= OnCheckboxChanged;
         _checkbox = e.NameScope.Find<Checkbox>(CheckboxPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _description = e.NameScope.Find<TextBlock>(DescriptionPart);
@@ -146,10 +140,7 @@ internal sealed class ReleaseReadinessRow : TemplatedControl
     private void Refresh()
     {
         PseudoClasses.Set(DonePseudoClass, Check.IsDone);
-        if (_title is not null)
-        {
-            _title.Text = Check.Title;
-        }
+        _title?.Text = Check.Title;
         if (_description is not null)
         {
             _description.Text = Check.Description;

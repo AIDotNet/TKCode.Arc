@@ -185,10 +185,7 @@ public class NumberFilterBox : FilterBox
     protected override void UpdateAutomation()
     {
         base.UpdateAutomation();
-        if (_value is not null)
-        {
-            _value.Label = LabelText ?? "Value";
-        }
+        _value?.Label = LabelText ?? "Value";
     }
 
     private void UpdateCondition()

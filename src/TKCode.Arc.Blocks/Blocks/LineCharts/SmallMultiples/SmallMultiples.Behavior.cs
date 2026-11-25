@@ -62,18 +62,9 @@ public partial class SmallMultiples
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_sortSwitch is not null)
-        {
-            _sortSwitch.SelectionChanged -= OnSortSwitchChanged;
-        }
-        if (_scaleSwitch is not null)
-        {
-            _scaleSwitch.SelectionChanged -= OnScaleSwitchChanged;
-        }
-        if (_dimSwitch is not null)
-        {
-            _dimSwitch.IsCheckedChanged -= OnDimSwitchChanged;
-        }
+        _sortSwitch?.SelectionChanged -= OnSortSwitchChanged;
+        _scaleSwitch?.SelectionChanged -= OnScaleSwitchChanged;
+        _dimSwitch?.IsCheckedChanged -= OnDimSwitchChanged;
         _gridHost?.Children.Remove(_grid);
 
         _sortSwitch = e.NameScope.Find<SegmentedControl>(SortSwitchPart);
@@ -95,18 +86,9 @@ public partial class SmallMultiples
 
         _gridHost?.Children.Insert(0, _grid);
         UpdateOptions();
-        if (_sortSwitch is not null)
-        {
-            _sortSwitch.SelectionChanged += OnSortSwitchChanged;
-        }
-        if (_scaleSwitch is not null)
-        {
-            _scaleSwitch.SelectionChanged += OnScaleSwitchChanged;
-        }
-        if (_dimSwitch is not null)
-        {
-            _dimSwitch.IsCheckedChanged += OnDimSwitchChanged;
-        }
+        _sortSwitch?.SelectionChanged += OnSortSwitchChanged;
+        _scaleSwitch?.SelectionChanged += OnScaleSwitchChanged;
+        _dimSwitch?.IsCheckedChanged += OnDimSwitchChanged;
         UpdateGridTexts();
         _containerWidth = double.NaN;
         Rebuild(flip: false);
@@ -211,10 +193,7 @@ public partial class SmallMultiples
                 _scaleSwitch.SelectedIndex = (int)Scale;
                 AutomationProperties.SetName(_scaleSwitch, ScaleLabel);
             }
-            if (_dimSwitch is not null)
-            {
-                _dimSwitch.IsChecked = IsFlatDimmed;
-            }
+            _dimSwitch?.IsChecked = IsFlatDimmed;
         }
         finally
         {
@@ -351,28 +330,16 @@ public partial class SmallMultiples
         var series = SeriesSource as INotifyCollectionChanged;
         if (!ReferenceEquals(series, _observedSeries))
         {
-            if (_observedSeries is not null)
-            {
-                _observedSeries.CollectionChanged -= OnSourceCollectionChanged;
-            }
+            _observedSeries?.CollectionChanged -= OnSourceCollectionChanged;
             _observedSeries = series;
-            if (series is not null)
-            {
-                series.CollectionChanged += OnSourceCollectionChanged;
-            }
+            series?.CollectionChanged += OnSourceCollectionChanged;
         }
         var periods = PeriodsSource as INotifyCollectionChanged;
         if (!ReferenceEquals(periods, _observedPeriods))
         {
-            if (_observedPeriods is not null)
-            {
-                _observedPeriods.CollectionChanged -= OnSourceCollectionChanged;
-            }
+            _observedPeriods?.CollectionChanged -= OnSourceCollectionChanged;
             _observedPeriods = periods;
-            if (periods is not null)
-            {
-                periods.CollectionChanged += OnSourceCollectionChanged;
-            }
+            periods?.CollectionChanged += OnSourceCollectionChanged;
         }
     }
 
@@ -457,20 +424,14 @@ public partial class SmallMultiples
     {
         var count = _grid.PeriodCount;
         var index = _grid.CrosshairIndex ?? count - 1;
-        if (_periodText is not null)
-        {
-            _periodText.Text = index >= 0 && index < _periods.Count ? _periods[index].LongText : "";
-        }
+        _periodText?.Text = index >= 0 && index < _periods.Count ? _periods[index].LongText : "";
         if (_stateText is not null)
         {
             _stateText.Text = _grid.CrosshairIndex is { } i
                 ? string.Format(CultureInfo.CurrentCulture, PositionFormat, i + 1, count)
                 : LatestText;
         }
-        if (_totalText is not null)
-        {
-            _totalText.Text = index >= 0 ? FormatValueText(TotalAt(index)) : "";
-        }
+        _totalText?.Text = index >= 0 ? FormatValueText(TotalAt(index)) : "";
     }
 
     private void OnCrosshairChanged(int? index, SmallMultiplesCrosshairSource source)
@@ -494,9 +455,6 @@ public partial class SmallMultiples
     /// <summary>Shows the shared focus ring around the panels while they have keyboard focus.</summary>
     internal void OnGridFocusChanged()
     {
-        if (_focusRing is not null)
-        {
-            _focusRing.IsVisible = _grid.IsFocused && _grid.Classes.Contains(":focus-visible");
-        }
+        _focusRing?.IsVisible = _grid.IsFocused && _grid.Classes.Contains(":focus-visible");
     }
 }

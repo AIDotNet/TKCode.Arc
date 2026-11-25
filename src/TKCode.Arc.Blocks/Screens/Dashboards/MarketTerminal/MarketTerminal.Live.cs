@@ -89,44 +89,23 @@ public partial class MarketTerminal
         _watchSelection = scope.Find<GlidingIndicator>("PART_WatchSelection");
         _watchRows = scope.Find<StackPanel>("PART_WatchRows");
 
-        if (_live is not null)
-        {
-            _live.Click += OnLiveClick;
-        }
+        _live?.Click += OnLiveClick;
         if (_ranges is not null)
         {
             _ranges.ItemsSource = Enum.GetValues<MarketRange>().Select(r => new SegmentedOption(r, Labels.RangeLabel(r))).ToList();
             _ranges.SelectionChanged += OnRangesSelectionChanged;
         }
-        if (_ma20 is not null)
-        {
-            _ma20.IsCheckedChanged += OnAverageToggled;
-        }
-        if (_ma50 is not null)
-        {
-            _ma50.IsCheckedChanged += OnAverageToggled;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click += OnZoomInClick;
-        }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click += OnZoomOutClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click += OnResetClick;
-        }
+        _ma20?.IsCheckedChanged += OnAverageToggled;
+        _ma50?.IsCheckedChanged += OnAverageToggled;
+        _zoomIn?.Click += OnZoomInClick;
+        _zoomOut?.Click += OnZoomOutClick;
+        _reset?.Click += OnResetClick;
         if (_watchRows is not null)
         {
             _watchRows.PropertyChanged += OnWatchRowsPropertyChanged;
             _watchRows.AddHandler(KeyDownEvent, OnWatchKeyDown, RoutingStrategies.Bubble);
         }
-        if (_chart is not null)
-        {
-            _chart.Announce = text => _announcer?.Announce(text);
-        }
+        _chart?.Announce = text => _announcer?.Announce(text);
         HookTicket(scope);
         ApplyLabels();
         SyncToolbar();
@@ -134,34 +113,13 @@ public partial class MarketTerminal
 
     private void UnhookParts()
     {
-        if (_live is not null)
-        {
-            _live.Click -= OnLiveClick;
-        }
-        if (_ranges is not null)
-        {
-            _ranges.SelectionChanged -= OnRangesSelectionChanged;
-        }
-        if (_ma20 is not null)
-        {
-            _ma20.IsCheckedChanged -= OnAverageToggled;
-        }
-        if (_ma50 is not null)
-        {
-            _ma50.IsCheckedChanged -= OnAverageToggled;
-        }
-        if (_zoomIn is not null)
-        {
-            _zoomIn.Click -= OnZoomInClick;
-        }
-        if (_zoomOut is not null)
-        {
-            _zoomOut.Click -= OnZoomOutClick;
-        }
-        if (_reset is not null)
-        {
-            _reset.Click -= OnResetClick;
-        }
+        _live?.Click -= OnLiveClick;
+        _ranges?.SelectionChanged -= OnRangesSelectionChanged;
+        _ma20?.IsCheckedChanged -= OnAverageToggled;
+        _ma50?.IsCheckedChanged -= OnAverageToggled;
+        _zoomIn?.Click -= OnZoomInClick;
+        _zoomOut?.Click -= OnZoomOutClick;
+        _reset?.Click -= OnResetClick;
         if (_watchRows is not null)
         {
             _watchRows.PropertyChanged -= OnWatchRowsPropertyChanged;
@@ -209,14 +167,8 @@ public partial class MarketTerminal
         SetText(_todayText, labels.Today);
         SetText(_watchTitle, labels.Watchlist);
         SetText(_watchCount, labels.SymbolCount(Symbols.Count));
-        if (_ma20 is not null)
-        {
-            _ma20.Content = labels.Ma20;
-        }
-        if (_ma50 is not null)
-        {
-            _ma50.Content = labels.Ma50;
-        }
+        _ma20?.Content = labels.Ma20;
+        _ma50?.Content = labels.Ma50;
         SetName(_zoomIn, labels.ZoomIn);
         SetName(_zoomOut, labels.ZoomOut);
         SetName(_reset, labels.ResetView);
@@ -239,10 +191,7 @@ public partial class MarketTerminal
 
     private static void SetText(TextBlock? text, string? value)
     {
-        if (text is not null)
-        {
-            text.Text = value;
-        }
+        text?.Text = value;
     }
 
     private static void SetName(Control? control, string name)
@@ -294,18 +243,9 @@ public partial class MarketTerminal
         _syncing = true;
         try
         {
-            if (_ranges is not null)
-            {
-                _ranges.SelectedValue = Range;
-            }
-            if (_ma20 is not null)
-            {
-                _ma20.IsChecked = ShowMa20;
-            }
-            if (_ma50 is not null)
-            {
-                _ma50.IsChecked = ShowMa50;
-            }
+            _ranges?.SelectedValue = Range;
+            _ma20?.IsChecked = ShowMa20;
+            _ma50?.IsChecked = ShowMa50;
             if (_chart is not null)
             {
                 _chart.ShowMa20 = ShowMa20;
@@ -404,17 +344,11 @@ public partial class MarketTerminal
         SetText(_nameText, symbol.Name);
         SetText(_exchangeText, $"{symbol.Exchange}, {symbol.Currency}");
         var price = _simulation.Price(ticker);
-        if (_price is not null)
-        {
-            _price.Value = price;
-        }
+        _price?.Value = price;
         var change = price - symbol.PreviousClose;
         var share = symbol.PreviousClose > 0 ? change / symbol.PreviousClose : 0;
         SetText(_changeText, $"{FinanceFormat.SignedPrice(change)} ({FinanceFormat.SignedPercent(share, 2)})");
-        if (_changeGlyph is not null)
-        {
-            _changeGlyph.Data = change >= 0 ? ArcIcons.ArrowUpRight : s_arrowDownRight;
-        }
+        _changeGlyph?.Data = change >= 0 ? ArcIcons.ArrowUpRight : s_arrowDownRight;
         _changeLine?.Classes.Set("down", change < 0);
         var today = _simulation.Today(ticker);
         SetText(_openValue, FinanceFormat.Price(today.Open));

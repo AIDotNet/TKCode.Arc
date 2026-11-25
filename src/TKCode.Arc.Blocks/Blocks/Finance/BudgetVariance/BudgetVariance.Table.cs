@@ -65,10 +65,7 @@ public partial class BudgetVariance
 
         public void ApplyStacked(bool stacked)
         {
-            if (Sub is not null)
-            {
-                Sub.IsVisible = !stacked;
-            }
+            Sub?.IsVisible = !stacked;
             StackedLine.IsVisible = stacked;
             Actual.IsVisible = !stacked;
             Budget.IsVisible = !stacked;

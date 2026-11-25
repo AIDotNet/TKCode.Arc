@@ -332,23 +332,14 @@ public partial class MeetingSummary : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_regenerate is not null)
-        {
-            _regenerate.Click -= OnRegenerateClick;
-        }
-        if (_tryAgain is not null)
-        {
-            _tryAgain.Click -= OnRegenerateClick;
-        }
+        _regenerate?.Click -= OnRegenerateClick;
+        _tryAgain?.Click -= OnRegenerateClick;
         _mark = e.NameScope.Find<ArcGlyph>(MarkPart);
         _title = e.NameScope.Find<TextBlock>(TitlePart);
         _meta = e.NameScope.Find<TextBlock>(MetaPart);
         _attendees = e.NameScope.Find<AvatarGroup>(AttendeesPart);
         _body = e.NameScope.Find<AiHeightBox>(BodyPart);
-        if (_body is not null)
-        {
-            _body.HeightSpring = AiHeightBox.PanelSpring;
-        }
+        _body?.HeightSpring = AiHeightBox.PanelSpring;
         _loading = e.NameScope.Find<Panel>(LoadingPart);
         _loadingLabel = e.NameScope.Find<ToolCallText>(LoadingLabelPart);
         _notes = e.NameScope.Find<Panel>(NotesPart);
@@ -373,14 +364,8 @@ public partial class MeetingSummary : TemplatedControl
         _regenerate = e.NameScope.Find<AvaloniaButton>(RegeneratePart);
         _tryAgain = e.NameScope.Find<AvaloniaButton>(TryAgainPart);
         _announcer = e.NameScope.Find<ExplainerAnnouncer>(AnnouncerPart);
-        if (_regenerate is not null)
-        {
-            _regenerate.Click += OnRegenerateClick;
-        }
-        if (_tryAgain is not null)
-        {
-            _tryAgain.Click += OnRegenerateClick;
-        }
+        _regenerate?.Click += OnRegenerateClick;
+        _tryAgain?.Click += OnRegenerateClick;
         _shownPanel = null;
         ClearRows();
         SyncRows(stream: false);
@@ -469,10 +454,7 @@ public partial class MeetingSummary : TemplatedControl
         var status = EffectiveStatus;
         _title.Text = data.Title;
         AutomationProperties.SetName(this, data.Title);
-        if (_mark is not null)
-        {
-            _mark.Data = data.PlatformMark ?? VideoGlyph;
-        }
+        _mark?.Data = data.PlatformMark ?? VideoGlyph;
         if (_meta is not null)
         {
             var parts = new List<string>(3);
@@ -498,43 +480,19 @@ public partial class MeetingSummary : TemplatedControl
             _attendees.ItemsSource = members;
         }
 
-        if (_summaryHeading is not null)
-        {
-            _summaryHeading.Text = labels.Summary;
-        }
-        if (_decisionsHeading is not null)
-        {
-            _decisionsHeading.Text = labels.Decisions;
-        }
-        if (_actionsHeading is not null)
-        {
-            _actionsHeading.Text = labels.ActionItems;
-        }
+        _summaryHeading?.Text = labels.Summary;
+        _decisionsHeading?.Text = labels.Decisions;
+        _actionsHeading?.Text = labels.ActionItems;
         if (_loadingLabel is not null)
         {
             _loadingLabel.Text = labels.Summarizing;
             _loadingLabel.IsShimmering = status == MeetingSummaryStatus.Summarizing;
         }
-        if (_errorTitle is not null)
-        {
-            _errorTitle.Text = labels.ErrorTitle;
-        }
-        if (_errorText is not null)
-        {
-            _errorText.Text = ErrorText ?? _ownError ?? labels.ErrorFallback;
-        }
-        if (_tryAgain is not null)
-        {
-            _tryAgain.Content = labels.TryAgain;
-        }
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = labels.EmptyTitle;
-        }
-        if (_emptyText is not null)
-        {
-            _emptyText.Text = labels.EmptyText;
-        }
+        _errorTitle?.Text = labels.ErrorTitle;
+        _errorText?.Text = ErrorText ?? _ownError ?? labels.ErrorFallback;
+        _tryAgain?.Content = labels.TryAgain;
+        _emptyTitle?.Text = labels.EmptyTitle;
+        _emptyText?.Text = labels.EmptyText;
 
         var model = EffectiveModel;
         if (_modelMark is not null)
@@ -601,10 +559,7 @@ public partial class MeetingSummary : TemplatedControl
         var fades = _shownPanel is not null && IsLoaded && ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Off;
         foreach (var candidate in new[] { _loading, _notes, _error, _empty })
         {
-            if (candidate is not null)
-            {
-                candidate.IsVisible = ReferenceEquals(candidate, panel);
-            }
+            candidate?.IsVisible = ReferenceEquals(candidate, panel);
         }
         _shownPanel = panel;
         if (panel is not null && fades)
@@ -616,18 +571,9 @@ public partial class MeetingSummary : TemplatedControl
         {
             panel.Opacity = 1;
         }
-        if (_summarySection is not null)
-        {
-            _summarySection.IsVisible = EffectiveMeeting.Summary.Count > 0;
-        }
-        if (_decisionsSection is not null)
-        {
-            _decisionsSection.IsVisible = EffectiveMeeting.Decisions.Count > 0;
-        }
-        if (_actionsSection is not null)
-        {
-            _actionsSection.IsVisible = EffectiveMeeting.ActionItems.Count > 0;
-        }
+        _summarySection?.IsVisible = EffectiveMeeting.Summary.Count > 0;
+        _decisionsSection?.IsVisible = EffectiveMeeting.Decisions.Count > 0;
+        _actionsSection?.IsVisible = EffectiveMeeting.ActionItems.Count > 0;
     }
 
     /// <summary>Says <paramref name="text"/> in the polite live region (a repeat is still announced).</summary>

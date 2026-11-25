@@ -77,14 +77,8 @@ internal sealed class SplitBarLegendItem : TemplatedControl
         _name = e.NameScope.Find<TextBlock>("PART_Name");
         _share = e.NameScope.Find<RollingDigits>("PART_Share");
         _off = e.NameScope.Find<TextBlock>("PART_Off");
-        if (_label is not null)
-        {
-            _label.RenderTransform = _shake;
-        }
-        if (_share is not null)
-        {
-            _share.WheelMotion = SplitBar.DigitMotion;
-        }
+        _label?.RenderTransform = _shake;
+        _share?.WheelMotion = SplitBar.DigitMotion;
         _shown = false;
         Apply(false);
     }
@@ -125,10 +119,7 @@ internal sealed class SplitBarLegendItem : TemplatedControl
             // The strike line is drawn in the strong border color, quieter than the muted name.
             _name.TextDecorations = _isOff ? Strike(_owner.Track?.Neutral2) : null;
         }
-        if (_off is not null)
-        {
-            _off.IsVisible = _isOff;
-        }
+        _off?.IsVisible = _isOff;
         if (_share is not null)
         {
             _share.IsVisible = !_isOff;

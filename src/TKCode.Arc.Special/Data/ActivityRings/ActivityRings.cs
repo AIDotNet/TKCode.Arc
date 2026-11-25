@@ -245,18 +245,12 @@ public class ActivityRings : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_canvas is not null)
-        {
-            _canvas.Owner = null;
-        }
+        _canvas?.Owner = null;
         _legend?.Children.Clear();
         _canvas = e.NameScope.Find<ActivityRingsCanvas>(CanvasPart);
         _legend = e.NameScope.Find<StackPanel>(LegendPart);
         _live = e.NameScope.Find<ExplainerAnnouncer>(LivePart);
-        if (_canvas is not null)
-        {
-            _canvas.Owner = this;
-        }
+        _canvas?.Owner = this;
         if (_legend is not null)
         {
             foreach (var row in _rows)

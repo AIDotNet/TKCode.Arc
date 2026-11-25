@@ -110,10 +110,7 @@ internal sealed class ArenaRunButton : AvaloniaButton
         _stopReserve = e.NameScope.Find<Decorator>(StopReservePart);
         RefreshReserves();
         // The first content of a swap never animates.
-        if (_face is not null)
-        {
-            _face.Content = BuildFace(IsRunning);
-        }
+        _face?.Content = BuildFace(IsRunning);
         UpdateName();
     }
 
@@ -148,22 +145,13 @@ internal sealed class ArenaRunButton : AvaloniaButton
 
     private void SwapFace()
     {
-        if (_face is not null)
-        {
-            _face.Content = BuildFace(IsRunning);
-        }
+        _face?.Content = BuildFace(IsRunning);
     }
 
     private void RefreshReserves()
     {
-        if (_runReserve is not null)
-        {
-            _runReserve.Child = BuildFace(false);
-        }
-        if (_stopReserve is not null)
-        {
-            _stopReserve.Child = BuildFace(true);
-        }
+        _runReserve?.Child = BuildFace(false);
+        _stopReserve?.Child = BuildFace(true);
     }
 
     private void UpdateName() => AutomationProperties.SetName(this, (IsRunning ? StopText : RunText) ?? string.Empty);

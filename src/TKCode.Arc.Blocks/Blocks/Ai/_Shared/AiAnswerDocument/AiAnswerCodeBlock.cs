@@ -171,10 +171,7 @@ internal sealed class AiAnswerCodeBlock : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_copy is not null)
-        {
-            _copy.Copied -= OnCopied;
-        }
+        _copy?.Copied -= OnCopied;
         if (_scroll is not null)
         {
             _scroll.GotFocus -= OnScrollFocus;
@@ -183,10 +180,7 @@ internal sealed class AiAnswerCodeBlock : TemplatedControl
         _copy = e.NameScope.Find<CopyButton>(CopyPart);
         _scroll = e.NameScope.Find<ScrollViewer>(ScrollPart);
         _text = e.NameScope.Find<AiAnswerCodeText>(TextPart);
-        if (_copy is not null)
-        {
-            _copy.Copied += OnCopied;
-        }
+        _copy?.Copied += OnCopied;
         if (_scroll is not null)
         {
             _scroll.GotFocus += OnScrollFocus;

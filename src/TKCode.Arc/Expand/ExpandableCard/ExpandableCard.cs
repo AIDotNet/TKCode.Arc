@@ -110,10 +110,7 @@ public class ExpandableCard : HeaderedContentControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_trigger is not null)
-        {
-            _trigger.Click -= OnTriggerClick;
-        }
+        _trigger?.Click -= OnTriggerClick;
         base.OnApplyTemplate(e);
         _card = e.NameScope.Find<Control>(CardPart);
         _trigger = e.NameScope.Find<ExpandableCardTrigger>(TriggerPart);
@@ -273,10 +270,7 @@ public class ExpandableCard : HeaderedContentControl
         _morphPending = false;
         var width = Math.Max(0, _width.Value);
         // The details are laid out at their final width the whole time, so nothing reflows while the box changes size.
-        if (_panel is not null)
-        {
-            _panel.InnerWidth = Math.Max(0, inner - 2);
-        }
+        _panel?.InnerWidth = Math.Max(0, inner - 2);
         _card.Measure(new Size(width, availableSize.Height));
         return new Size(double.IsInfinity(availableSize.Width) ? width : Math.Min(availableSize.Width, room), _card.DesiredSize.Height);
     }

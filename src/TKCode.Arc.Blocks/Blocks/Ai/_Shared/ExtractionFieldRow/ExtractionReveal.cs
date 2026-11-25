@@ -212,10 +212,7 @@ internal sealed class ExtractionReveal : Control
 
     private void ApplyOpacity(double value)
     {
-        if (_mounted is not null)
-        {
-            _mounted.Opacity = Math.Clamp(value, 0, 1);
-        }
+        _mounted?.Opacity = Math.Clamp(value, 0, 1);
     }
 
     private void OnHeightChanged(double value)

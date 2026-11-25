@@ -139,17 +139,11 @@ internal class AiStatusNote : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_action is not null)
-        {
-            _action.Click -= OnActionClick;
-        }
+        _action?.Click -= OnActionClick;
         _text?.Inlines?.Clear();
         _text = e.NameScope.Find<TextBlock>(TextPart);
         _action = e.NameScope.Find<Button>(ActionPart);
-        if (_action is not null)
-        {
-            _action.Click += OnActionClick;
-        }
+        _action?.Click += OnActionClick;
         if (_text is not null)
         {
             _text.Inlines ??= new InlineCollection();

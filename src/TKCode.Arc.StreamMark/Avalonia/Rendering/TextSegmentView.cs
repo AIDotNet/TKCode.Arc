@@ -514,10 +514,7 @@ public sealed class TextSegmentView : Control, ISelectableSegment
             _subscribedStreaming.CaretVisibilityChanged -= OnCaretVisibilityChanged;
         }
         _subscribedStreaming = target;
-        if (target is not null)
-        {
-            target.CaretVisibilityChanged += OnCaretVisibilityChanged;
-        }
+        target?.CaretVisibilityChanged += OnCaretVisibilityChanged;
     }
 
     private void OnCaretVisibilityChanged()

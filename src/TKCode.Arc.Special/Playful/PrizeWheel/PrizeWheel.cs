@@ -250,7 +250,6 @@ public class PrizeWheel : TemplatedControl
     private bool _dirty = true;
     private int _resultIndex = -1;
     private PrizeWheelSegment? _result;
-    private bool _isSpinning;
     private bool _isClaimed;
     private bool _weak;
     private string _displayHint = string.Empty;
@@ -516,8 +515,8 @@ public class PrizeWheel : TemplatedControl
     /// <inheritdoc cref="IsSpinningProperty"/>
     public bool IsSpinning
     {
-        get => _isSpinning;
-        private set => SetAndRaise(IsSpinningProperty, ref _isSpinning, value);
+        get;
+        private set => SetAndRaise(IsSpinningProperty, ref field, value);
     }
 
     /// <summary>The hint the panel shows now: the gesture hint, or the weak-flick hint after a gentle flick.</summary>
@@ -669,10 +668,7 @@ public class PrizeWheel : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_face is not null)
-        {
-            _face.Owner = null;
-        }
+        _face?.Owner = null;
         if (_card is not null)
         {
             _card.SpinAgainRequested -= OnSpinAgain;

@@ -61,7 +61,11 @@ internal interface ITokenizationSupport
 }
 
 /// <summary>What a change of the registry touched: some languages' tokenizers, and/or the color map.</summary>
-internal sealed record TokenizationSupportChangedEvent(IReadOnlyList<string> ChangedLanguages, bool ChangedColorMap);
+internal sealed class TokenizationSupportChangedEvent(IReadOnlyList<string> changedLanguages, bool changedColorMap)
+{
+    public IReadOnlyList<string> ChangedLanguages { get; } = changedLanguages;
+    public bool ChangedColorMap { get; } = changedColorMap;
+}
 
 /// <summary>A tokenizer that is created when first asked for (upstream's ILazyTokenizationSupport).</summary>
 internal interface ILazyTokenizationSupport<TSupport>

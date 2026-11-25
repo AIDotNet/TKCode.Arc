@@ -346,15 +346,9 @@ public class SettingsCommand : TemplatedControl
         {
             return;
         }
-        if (_watchedItems is not null)
-        {
-            _watchedItems.CollectionChanged -= OnItemsCollectionChanged;
-        }
+        _watchedItems?.CollectionChanged -= OnItemsCollectionChanged;
         _watchedItems = wanted;
-        if (_watchedItems is not null)
-        {
-            _watchedItems.CollectionChanged += OnItemsCollectionChanged;
-        }
+        _watchedItems?.CollectionChanged += OnItemsCollectionChanged;
     }
 
     #region Items and rows
@@ -550,10 +544,7 @@ public class SettingsCommand : TemplatedControl
         var empty = _visibleRows.Count == 0;
         PseudoClasses.Set(EmptyPseudoClass, empty);
         PseudoClasses.Set(NoResultsPseudoClass, empty && query.Length > 0);
-        if (_emptyTitle is not null)
-        {
-            _emptyTitle.Text = query.Length > 0 ? Labels.NoResults(query) : null;
-        }
+        _emptyTitle?.Text = query.Length > 0 ? Labels.NoResults(query) : null;
 
         if (resetActive || _active is null || !_active.IsVisible || !_active.Item.IsEnabled)
         {

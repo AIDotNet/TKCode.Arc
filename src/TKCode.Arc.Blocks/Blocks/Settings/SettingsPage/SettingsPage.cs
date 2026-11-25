@@ -293,18 +293,9 @@ public class SettingsPage : SelectingItemsControl
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
-        if (_navHost is not null)
-        {
-            _navHost.Arranged = null;
-        }
-        if (_saveButton is not null)
-        {
-            _saveButton.Click -= OnSaveClick;
-        }
-        if (_discardButton is not null)
-        {
-            _discardButton.Click -= OnDiscardClick;
-        }
+        _navHost?.Arranged = null;
+        _saveButton?.Click -= OnSaveClick;
+        _discardButton?.Click -= OnDiscardClick;
 
         base.OnApplyTemplate(e);
 
@@ -321,18 +312,9 @@ public class SettingsPage : SelectingItemsControl
         _pillTarget = default;
         _revealPending = true;
 
-        if (_navHost is not null)
-        {
-            _navHost.Arranged = OnNavArranged;
-        }
-        if (_saveButton is not null)
-        {
-            _saveButton.Click += OnSaveClick;
-        }
-        if (_discardButton is not null)
-        {
-            _discardButton.Click += OnDiscardClick;
-        }
+        _navHost?.Arranged = OnNavArranged;
+        _saveButton?.Click += OnSaveClick;
+        _discardButton?.Click += OnDiscardClick;
         ApplyLabels();
         UpdateFooter();
         UpdateContent(animate: false);
@@ -342,27 +324,15 @@ public class SettingsPage : SelectingItemsControl
     /// <summary>The footer shows when there is one and the page has two columns.</summary>
     private void UpdateFooter()
     {
-        if (_footerSlot is not null)
-        {
-            _footerSlot.IsVisible = Footer is not null && !IsCompact;
-        }
+        _footerSlot?.IsVisible = Footer is not null && !IsCompact;
     }
 
     private void ApplyLabels()
     {
         var labels = Labels;
-        if (_saveNote is not null)
-        {
-            _saveNote.Text = labels.UnsavedChanges;
-        }
-        if (_saveButton is not null)
-        {
-            _saveButton.Content = labels.Save;
-        }
-        if (_discardButton is not null)
-        {
-            _discardButton.Content = labels.Discard;
-        }
+        _saveNote?.Text = labels.UnsavedChanges;
+        _saveButton?.Content = labels.Save;
+        _discardButton?.Content = labels.Discard;
         if (_navHost is not null)
         {
             AutomationProperties.SetName(_navHost, labels.NavigationName);
@@ -431,20 +401,14 @@ public class SettingsPage : SelectingItemsControl
             return;
         }
         _contentHost.Show(section, animate && IsLoaded);
-        if (_contentScroll is not null)
-        {
-            _contentScroll.Offset = default;
-        }
+        _contentScroll?.Offset = default;
     }
 
     private void UpdateSaveBar()
     {
         var dirty = SelectedItem is SettingsSection { IsDirty: true };
         PseudoClasses.Set(DirtyPseudoClass, dirty);
-        if (_saveBar is not null)
-        {
-            _saveBar.IsPresent = dirty;
-        }
+        _saveBar?.IsPresent = dirty;
     }
 
     private void OnSaveClick(object? sender, RoutedEventArgs e) => RequestSave();

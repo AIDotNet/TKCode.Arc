@@ -100,8 +100,6 @@ public partial class OnScreenKeyboard : TemplatedControl
 
     #endregion
 
-    private string? _currentPage;
-    private OnScreenKeyboardShiftState _shiftState;
     private OnScreenKeyboardLayout? _builtIn;
     private OnScreenKeyboardLayout? _subscribed;
     private OnScreenKeyboardPanel? _panel;
@@ -137,15 +135,15 @@ public partial class OnScreenKeyboard : TemplatedControl
     /// <inheritdoc cref="CurrentPageProperty"/>
     public string? CurrentPage
     {
-        get => _currentPage;
-        set => SetAndRaise(CurrentPageProperty, ref _currentPage, value);
+        get;
+        set => SetAndRaise(CurrentPageProperty, ref field, value);
     }
 
     /// <inheritdoc cref="ShiftStateProperty"/>
     public OnScreenKeyboardShiftState ShiftState
     {
-        get => _shiftState;
-        set => SetAndRaise(ShiftStateProperty, ref _shiftState, value);
+        get;
+        set => SetAndRaise(ShiftStateProperty, ref field, value);
     }
 
     /// <inheritdoc cref="TargetProperty"/>

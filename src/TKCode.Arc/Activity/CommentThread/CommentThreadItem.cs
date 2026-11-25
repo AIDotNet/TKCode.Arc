@@ -263,14 +263,8 @@ internal sealed class CommentThreadItem : CommentThreadGrow
         }
         else
         {
-            if (_deletedDot is not null)
-            {
-                _deletedDot.IsVisible = false;
-            }
-            if (_deletedText is not null)
-            {
-                _deletedText.IsVisible = false;
-            }
+            _deletedDot?.IsVisible = false;
+            _deletedText?.IsVisible = false;
             ActivityAvatar.Update(_avatar, comment.Author.Name, comment.Author.Avatar);
             _name.Text = comment.Author.Name;
             _time.Text = comment.IsEdited ? $"{comment.CreatedAt} · {labels.Edited}" : comment.CreatedAt;

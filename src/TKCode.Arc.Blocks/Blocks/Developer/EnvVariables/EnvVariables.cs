@@ -267,7 +267,6 @@ public partial class EnvVariables : TemplatedControl
 
     #endregion
 
-    private int _pendingChangeCount;
     private IReadOnlyList<string> _pendingEnvironments = Array.Empty<string>();
     private EnvRedeployState _redeployState;
 
@@ -354,8 +353,8 @@ public partial class EnvVariables : TemplatedControl
     /// <inheritdoc cref="PendingChangeCountProperty"/>
     public int PendingChangeCount
     {
-        get => _pendingChangeCount;
-        private set => SetAndRaise(PendingChangeCountProperty, ref _pendingChangeCount, value);
+        get;
+        private set => SetAndRaise(PendingChangeCountProperty, ref field, value);
     }
 
     /// <inheritdoc cref="PendingEnvironmentsProperty"/>

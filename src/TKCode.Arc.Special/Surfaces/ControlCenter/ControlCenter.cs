@@ -259,15 +259,9 @@ public sealed partial class ControlCenter : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_slot is not null)
-        {
-            _slot.Child = null;
-        }
+        _slot?.Child = null;
         _slot = e.NameScope.Find<Border>(SlotPart);
-        if (_slot is not null)
-        {
-            _slot.Child = _root;
-        }
+        _slot?.Child = _root;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)

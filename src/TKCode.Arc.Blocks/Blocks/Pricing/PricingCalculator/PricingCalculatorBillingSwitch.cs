@@ -81,18 +81,9 @@ internal sealed class PricingCalculatorBillingSwitch : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_panel is not null)
-        {
-            _panel.Arranged = null;
-        }
-        if (_monthly is not null)
-        {
-            _monthly.Click -= OnMonthlyClick;
-        }
-        if (_yearly is not null)
-        {
-            _yearly.Click -= OnYearlyClick;
-        }
+        _panel?.Arranged = null;
+        _monthly?.Click -= OnMonthlyClick;
+        _yearly?.Click -= OnYearlyClick;
         _panel = e.NameScope.Find<PricingCalculatorBillingPanel>(PanelPart);
         _thumb = e.NameScope.Find<GlidingIndicator>(ThumbPart);
         _monthly = e.NameScope.Find<PricingCalculatorBillingOption>(MonthlyPart);
@@ -102,14 +93,8 @@ internal sealed class PricingCalculatorBillingSwitch : TemplatedControl
             _panel.Arranged = OnPanelArranged;
             _panel.IsUniform = IsUniform;
         }
-        if (_monthly is not null)
-        {
-            _monthly.Click += OnMonthlyClick;
-        }
-        if (_yearly is not null)
-        {
-            _yearly.Click += OnYearlyClick;
-        }
+        _monthly?.Click += OnMonthlyClick;
+        _yearly?.Click += OnYearlyClick;
         SyncOptions();
     }
 

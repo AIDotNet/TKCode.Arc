@@ -346,13 +346,12 @@ public class PageHeader : SelectingItemsControl
     /// <inheritdoc cref="IsTitleBarProperty"/>
     public bool IsTitleBar { get => GetValue(IsTitleBarProperty); set => SetValue(IsTitleBarProperty, value); }
 
-    private bool _isCondensed;
 
     /// <summary>True while the header is folded into the compact bar (the body scrolled past 16px, until it is back within 4px).</summary>
     public bool IsCondensed
     {
-        get => _isCondensed;
-        private set => SetAndRaise(IsCondensedProperty, ref _isCondensed, value);
+        get;
+        private set => SetAndRaise(IsCondensedProperty, ref field, value);
     }
 
     private bool _areActionsFolded;
@@ -585,14 +584,8 @@ public class PageHeader : SelectingItemsControl
         _pageScroll = null;
         _tabScroll = null;
 
-        if (_header is not null)
-        {
-            _header.PointerPressed += OnHeaderPointerPressed;
-        }
-        if (_bar is not null)
-        {
-            _bar.SizeChanged += OnBarSizeChanged;
-        }
+        _header?.PointerPressed += OnHeaderPointerPressed;
+        _bar?.SizeChanged += OnBarSizeChanged;
         if (_breadcrumb is not null)
         {
             _breadcrumb.ItemClick += OnBreadcrumbItemClick;
@@ -615,19 +608,13 @@ public class PageHeader : SelectingItemsControl
         {
             DropdownMenu.SetMenu(_moreButton, EnsureMenu());
         }
-        if (_primaryButton is not null)
-        {
-            _primaryButton.Click += OnPrimaryClick;
-        }
+        _primaryButton?.Click += OnPrimaryClick;
         if (_tabsViewport is not null)
         {
             _tabsViewport.SizeChanged += OnTabsViewportSizeChanged;
             _tabsViewport.AddHandler(PointerWheelChangedEvent, OnTabsWheel, RoutingStrategies.Tunnel);
         }
-        if (_tabStrip is not null)
-        {
-            _tabStrip.Arranged = OnTabStripArranged;
-        }
+        _tabStrip?.Arranged = OnTabStripArranged;
         if (_scroller is not null)
         {
             _scroller.ScrollChanged += OnScrollChanged;
@@ -648,23 +635,14 @@ public class PageHeader : SelectingItemsControl
 
     private void Unhook()
     {
-        if (_header is not null)
-        {
-            _header.PointerPressed -= OnHeaderPointerPressed;
-        }
-        if (_bar is not null)
-        {
-            _bar.SizeChanged -= OnBarSizeChanged;
-        }
+        _header?.PointerPressed -= OnHeaderPointerPressed;
+        _bar?.SizeChanged -= OnBarSizeChanged;
         if (_breadcrumb is not null)
         {
             _breadcrumb.ItemClick -= OnBreadcrumbItemClick;
             _breadcrumb.ItemsSource = null;
         }
-        if (_compact is not null)
-        {
-            _compact.Click -= OnCompactClick;
-        }
+        _compact?.Click -= OnCompactClick;
         if (_moreButton is not null)
         {
             DropdownMenu.SetMenu(_moreButton, null);
@@ -679,10 +657,7 @@ public class PageHeader : SelectingItemsControl
             _tabsViewport.SizeChanged -= OnTabsViewportSizeChanged;
             _tabsViewport.RemoveHandler(PointerWheelChangedEvent, OnTabsWheel);
         }
-        if (_tabStrip is not null)
-        {
-            _tabStrip.Arranged = null;
-        }
+        _tabStrip?.Arranged = null;
         if (_scroller is not null)
         {
             _scroller.ScrollChanged -= OnScrollChanged;
@@ -1066,10 +1041,7 @@ public class PageHeader : SelectingItemsControl
             _pageScroll = new MotionValue<double>(this, scroller.Offset.Y, MotionVectors.Double);
             _pageScroll.Changed += value =>
             {
-                if (_scroller is not null)
-                {
-                    _scroller.Offset = new Vector(_scroller.Offset.X, Math.Max(0, value));
-                }
+                _scroller?.Offset = new Vector(_scroller.Offset.X, Math.Max(0, value));
             };
         }
         if (!_pageScroll.IsAnimating)
@@ -1414,10 +1386,7 @@ public class PageHeader : SelectingItemsControl
             return;
         }
         var iconOnly = _isTight && _primaryHasIcon && _primaryLabel is not null;
-        if (_primaryLabel is not null)
-        {
-            _primaryLabel.IsVisible = !iconOnly;
-        }
+        _primaryLabel?.IsVisible = !iconOnly;
         _primaryButton.Classes.Set("icon-only", iconOnly);
     }
 
@@ -1565,10 +1534,7 @@ public class PageHeader : SelectingItemsControl
 
     private void UpdateTabsVisibility()
     {
-        if (_tabsViewport is not null)
-        {
-            _tabsViewport.IsVisible = ItemCount > 0 && !IsHeaderOnly;
-        }
+        _tabsViewport?.IsVisible = ItemCount > 0 && !IsHeaderOnly;
     }
 
     /// <summary>Called by a <see cref="PageHeaderTab"/> when its content or template changes.</summary>
@@ -1789,10 +1755,7 @@ public class PageHeader : SelectingItemsControl
             _tabScroll = new MotionValue<double>(this, offset, MotionVectors.Double);
             _tabScroll.Changed += value =>
             {
-                if (_tabsViewport is not null)
-                {
-                    _tabsViewport.Offset = new Vector(value, _tabsViewport.Offset.Y);
-                }
+                _tabsViewport?.Offset = new Vector(value, _tabsViewport.Offset.Y);
             };
         }
         if (!_tabScroll.IsAnimating)

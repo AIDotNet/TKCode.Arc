@@ -244,13 +244,12 @@ public partial class LoginSplit : TemplatedControl
     /// <summary>Sends a password reset link; throw to show an error. Null (default) simulates 900 ms.</summary>
     public Func<LoginSplitAccount, CancellationToken, Task>? SendResetLinkAsync { get; set; }
 
-    private LoginSplitStep _step;
 
     /// <inheritdoc cref="StepProperty"/>
     public LoginSplitStep Step
     {
-        get => _step;
-        private set => SetAndRaise(StepProperty, ref _step, value);
+        get;
+        private set => SetAndRaise(StepProperty, ref field, value);
     }
 
     private LoginSplitAccount? _account;
@@ -390,18 +389,9 @@ public partial class LoginSplit : TemplatedControl
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
-        if (_signUp is not null)
-        {
-            _signUp.Click -= OnSignUpClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click -= OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click -= OnPrivacyClick;
-        }
+        _signUp?.Click -= OnSignUpClick;
+        _terms?.Click -= OnTermsClick;
+        _privacy?.Click -= OnPrivacyClick;
         _frame = e.NameScope.Find<Border>(FramePart);
         _layout = e.NameScope.Find<Grid>(LayoutPart);
         _viewport = e.NameScope.Find<LoginSplitViewport>(ViewportPart);
@@ -417,18 +407,9 @@ public partial class LoginSplit : TemplatedControl
         _privacy = e.NameScope.Find<LoginSplitTextButton>(PrivacyPart);
         _noAccount = e.NameScope.Find<TextBlock>(NoAccountPart);
         _legal = e.NameScope.Find<Panel>(LegalPart);
-        if (_signUp is not null)
-        {
-            _signUp.Click += OnSignUpClick;
-        }
-        if (_terms is not null)
-        {
-            _terms.Click += OnTermsClick;
-        }
-        if (_privacy is not null)
-        {
-            _privacy.Click += OnPrivacyClick;
-        }
+        _signUp?.Click += OnSignUpClick;
+        _terms?.Click += OnTermsClick;
+        _privacy?.Click += OnPrivacyClick;
         ApplyLabels();
         if (_status is not null && _statusText is not null)
         {
@@ -456,15 +437,9 @@ public partial class LoginSplit : TemplatedControl
         }
         else if (change.Property == ProvidersSourceProperty)
         {
-            if (_observedProviders is not null)
-            {
-                _observedProviders.CollectionChanged -= OnProvidersSourceChanged;
-            }
+            _observedProviders?.CollectionChanged -= OnProvidersSourceChanged;
             _observedProviders = change.NewValue as INotifyCollectionChanged;
-            if (_observedProviders is not null)
-            {
-                _observedProviders.CollectionChanged += OnProvidersSourceChanged;
-            }
+            _observedProviders?.CollectionChanged += OnProvidersSourceChanged;
             OnProvidersChanged();
         }
         else if (change.Property == EmailProperty)
@@ -491,10 +466,7 @@ public partial class LoginSplit : TemplatedControl
     {
         var labels = Labels;
         AutomationProperties.SetName(this, labels.Region(BrandName));
-        if (_noAccount is not null)
-        {
-            _noAccount.Text = labels.NoAccount;
-        }
+        _noAccount?.Text = labels.NoAccount;
         SetText(_signUp, labels.SignUp, small: false);
         SetText(_terms, labels.Terms, small: true);
         SetText(_privacy, labels.Privacy, small: true);
@@ -540,10 +512,7 @@ public partial class LoginSplit : TemplatedControl
                 layout.ColumnDefinitions[1].Width = photo;
             }
         }
-        if (_photoSide is not null)
-        {
-            _photoSide.IsVisible = split;
-        }
+        _photoSide?.IsVisible = split;
     }
 
     private Control StatusLine(string text)

@@ -52,10 +52,6 @@ public class Object3D
     private bool _localDirty;
     private bool _worldDirty;
     private bool _visible = true;
-    private Layers _layers = Layers.Default;
-    private bool _castShadow;
-    private bool _receiveShadow;
-    private bool _frustumCulled = true;
     private List<Object3D>? _children;
     private Object3D? _parent;
     private Scene? _scene;
@@ -147,21 +143,21 @@ public class Object3D
     /// <summary>The layers this node is in (not inherited by children).</summary>
     public Layers Layers
     {
-        get => _layers;
+        get;
         set
         {
-            _layers = value;
+            field = value;
             NotifyRenderStateChanged();
         }
-    }
+    } = Layers.Default;
 
     /// <summary>True when the object is drawn into shadow maps.</summary>
     public bool CastShadow
     {
-        get => _castShadow;
+        get;
         set
         {
-            _castShadow = value;
+            field = value;
             NotifyRenderStateChanged();
         }
     }
@@ -169,10 +165,10 @@ public class Object3D
     /// <summary>True when shadows darken the object.</summary>
     public bool ReceiveShadow
     {
-        get => _receiveShadow;
+        get;
         set
         {
-            _receiveShadow = value;
+            field = value;
             NotifyRenderStateChanged();
         }
     }
@@ -180,13 +176,13 @@ public class Object3D
     /// <summary>False draws the object even when its bounds are outside the camera's view.</summary>
     public bool FrustumCulled
     {
-        get => _frustumCulled;
+        get;
         set
         {
-            _frustumCulled = value;
+            field = value;
             NotifyRenderStateChanged();
         }
-    }
+    } = true;
 
     /// <summary>The transform relative to the parent.</summary>
     public Matrix4x4 LocalMatrix

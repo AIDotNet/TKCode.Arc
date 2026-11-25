@@ -15,15 +15,21 @@ namespace StreamMark.Core.Streaming;
 /// </remarks>
 public sealed class StreamingDocument
 {
-    private readonly object _sourceLock = new();
+    private enum WorkerState : byte
+    {
+        Idle = 0,
+        Running = 1,
+        RunningDirty = 2,
+    }
+
+    private readonly SyncLock _sourceLock = new();
     private readonly StringBuilder _source = new();
     private long _version;
     private int _sourceGeneration;
     private bool _completeRequested;
 
-    private readonly object _gate = new();
-    private bool _dirty;
-    private bool _running;
+    private readonly SyncLock _gate = new();
+    private WorkerState _workerState;
     private TaskCompletionSource? _idle;
 
     // 以下字段只由工作线程访问
@@ -153,12 +159,12 @@ public sealed class StreamingDocument
     {
         lock (_gate)
         {
-            if (_running || _dirty)
+            if (_workerState != WorkerState.Idle)
             {
                 throw new InvalidOperationException("LoadNow requires a document with no pending work.");
             }
             // 占用工作者：期间到达的追加只标记脏，结束后再交给后台
-            _running = true;
+            _workerState = WorkerState.Running;
         }
         try
         {
@@ -213,7 +219,7 @@ public sealed class StreamingDocument
     {
         lock (_gate)
         {
-            if (!_running && !_dirty)
+            if (_workerState == WorkerState.Idle)
             {
                 return Task.CompletedTask;
             }
@@ -226,12 +232,12 @@ public sealed class StreamingDocument
     {
         lock (_gate)
         {
-            _dirty = true;
-            if (_running)
+            if (_workerState != WorkerState.Idle)
             {
+                _workerState = WorkerState.RunningDirty;
                 return;
             }
-            _running = true;
+            _workerState = WorkerState.RunningDirty;
         }
         ThreadPool.UnsafeQueueUserWorkItem(static self => self.Run(), this, preferLocal: false);
     }
@@ -265,12 +271,12 @@ public sealed class StreamingDocument
         TaskCompletionSource? idle;
         lock (_gate)
         {
-            if (_dirty)
+            if (_workerState == WorkerState.RunningDirty)
             {
-                _dirty = false;
+                _workerState = WorkerState.Running;
                 return true;
             }
-            _running = false;
+            _workerState = WorkerState.Idle;
             idle = _idle;
             _idle = null;
         }
