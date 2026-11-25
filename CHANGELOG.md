@@ -10,6 +10,18 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Added
+
+- `ArcWindow.OverlayCoversTitleBar` (`TKCode.Arc`, default `false`): `ArcWindow`'s template now wraps its content in `ArcOverlayHost` (`PART_ContentOverlayHost`) so in-app modal overlays (`Dialog`, `Drawer`, `BottomSheet`) cover only the content area by default—keeping content backdrop blur while leaving `TitleBar` sharp, draggable, and its minimize/maximize/close buttons clickable (including for modals anchored to the window or title bar). Set `OverlayCoversTitleBar="True"` to cover the full window instead; `TitleBar` tooltips, menus and toasts continue to share the window overlay layer ([#197](https://github.com/AIDotNet/TKCode.Arc/issues/197)).
+- `UsageMeter` localization (`TKCode.Arc`): new `UsageMeterLangResourceKind` (`ArcLanguage` built-in `en-US`, `zh-CN` and `zh-TW` resources with automatic refresh on runtime language changes) and `UsageMeter.Labels` (`UsageMeterLabels`) for custom overrides of summary captions, status badges, default legend labels and accessibility text. Existing English defaults and explicit `FreeLabel` / `OverLabel` values stay backward compatible ([#199](https://github.com/AIDotNet/TKCode.Arc/issues/199)).
+
+### Fixed
+
+- `ArcWindow` on Linux X11 (`TKCode.Arc`): while `ExtendClientAreaToDecorationsHint` is `true`, the theme now sets `WindowDecorations="BorderOnly"` on Linux (at theme priority so explicit local values still win, and reverting to `Full` when extended client area is turned off) and adds `:frame-edge` (`ArcWindow.FrameEdgePseudoClass`) to draw a 1 px border in the normal state, removing the duplicate server-side title bar on X11 window managers such as `ukwm` while keeping Avalonia's edge resize grips active ([#201](https://github.com/AIDotNet/TKCode.Arc/issues/201)).
+- `SettingsPage` and `SettingsSection` (`TKCode.Arc.Blocks`): replaced the nested vertical `StackPanel` containers in `SettingsPageTheme.axaml` (`PART_ContentStack` and the `SettingsSection` template) with `Grid` layouts and bound `SettingsSection`'s `PART_ContentPresenter` to `VerticalContentAlignment` (default `Stretch`), so section content shorter than the viewport can vertically center, stretch, or anchor footers with `*`-sized rows while taller content continues to scroll normally and preserve `PART_SaveBarRoom` spacing when dirty ([#198](https://github.com/AIDotNet/TKCode.Arc/issues/198)).
+
 ## 1.3.2-preview.1 - 2026-11-24
 
 A preview of the new code editor: three new packages, `TKCode.Arc.Editor` (an engine ported from the Monaco editor, the editor of Visual Studio Code), `TKCode.Arc.Editor.Controls` (`CodeEditor` and `DiffEditor`, enabled with `UseArcCodeEditor()`) and `TKCode.Arc.Editor.Lsp` (a Language Server Protocol client). `CodeEditor` highlights the 89 languages of the Monaco editor and has Monaco's editing features: find and replace, folding, multiple cursors, snippets, a minimap, sticky scroll and, from a language server, completion, hovers, problems, navigation, rename and code actions. `DiffEditor` compares two texts side by side or inline. This preview also carries the fixes and additions for [#186](https://github.com/AIDotNet/TKCode.Arc/issues/186) to [#195](https://github.com/AIDotNet/TKCode.Arc/issues/195) (`Tabs` card variant and closable tabs, `TimePicker` seconds, picker prefix icons, `Sidebar` section header content, native glass backdrops and several fixes). No existing public API changes. Install it with `--version 1.3.2-preview.1`.

@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
 using Avalonia.Controls.Primitives;
@@ -8,6 +9,7 @@ using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc.Tests.Blocks.Settings;
@@ -342,6 +344,64 @@ public class SettingsPageTests
             Nav(page, 0).Focus(NavigationMethod.Tab);
             window.KeyPressQwerty(PhysicalKey.Home, RawInputModifiers.None);
             model.Tab.ShouldBe("profile");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Section_Content_Receives_Viewport_Height_For_Centering_And_Bottom_Anchoring()
+    {
+        var centeredCard = new Border
+        {
+            Height = 80,
+            Width = 200,
+            VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+        };
+        var footerBar = new Border { Height = 36 };
+        Grid.SetRow(footerBar, 1);
+        var anchoredGrid = new Grid
+        {
+            RowDefinitions = RowDefinitions.Parse("*,Auto"),
+            Children = { new TextBlock { Text = "Top" }, footerBar }
+        };
+        var tallContent = new Border { Height = 900 };
+
+        var centeredSection = new SettingsSection { Header = "About", Content = centeredCard };
+        var anchoredSection = new SettingsSection { Header = "License", Content = anchoredGrid };
+        var tallSection = new SettingsSection { Header = "Long", Content = tallContent, IsDirty = true };
+        var page = new SettingsPage
+        {
+            Width = 820,
+            Height = 480,
+            Items = { centeredSection, anchoredSection, tallSection }
+        };
+        var window = Show(page);
+        try
+        {
+            var scroll = TestHelpers.Descendant<ScrollViewer>(page, SettingsPage.ContentScrollPart);
+            var viewportHeight = scroll.Viewport.Height;
+            viewportHeight.ShouldBeGreaterThan(400);
+
+            // Short section content centers vertically within the remaining viewport height rather than collapsing to the top.
+            var cardOrigin = centeredCard.TranslatePoint(default, scroll)!.Value;
+            cardOrigin.Y.ShouldBeGreaterThan(150);
+            (cardOrigin.Y + centeredCard.Bounds.Height).ShouldBeLessThan(viewportHeight - 50);
+
+            // Star-sized Grid fills viewport height so bottom-anchored footer sits near the bottom of the viewport.
+            page.SelectedIndex = 1;
+            Dispatcher.UIThread.RunJobs();
+            var footerOrigin = footerBar.TranslatePoint(default, scroll)!.Value;
+            (footerOrigin.Y + footerBar.Bounds.Height).ShouldBeGreaterThan(viewportHeight - 60);
+
+            // Tall content still expands past the viewport and scrolls normally, keeping dirty SaveBarRoom spacing.
+            page.SelectedIndex = 2;
+            Dispatcher.UIThread.RunJobs();
+            scroll.Extent.Height.ShouldBeGreaterThan(950);
+            var saveRoom = TestHelpers.Descendant<Panel>(page, "PART_SaveBarRoom");
+            saveRoom.Bounds.Height.ShouldBeGreaterThan(0);
         }
         finally
         {

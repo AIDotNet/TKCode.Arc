@@ -91,3 +91,74 @@ TKCode.Arc.Tabs.Variant.set -> void
 TKCode.Arc.TabsVariant
 TKCode.Arc.TabsVariant.Card = 1 -> TKCode.Arc.TabsVariant
 TKCode.Arc.TabsVariant.Pill = 0 -> TKCode.Arc.TabsVariant
+const TKCode.Arc.ArcWindow.ContentOverlayHostPart = "PART_ContentOverlayHost" -> string!
+const TKCode.Arc.ArcWindow.FrameEdgePseudoClass = ":frame-edge" -> string!
+static readonly TKCode.Arc.ArcWindow.OverlayCoversTitleBarProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.UsageMeter.LabelsProperty -> Avalonia.StyledProperty<TKCode.Arc.UsageMeterLabels?>!
+static TKCode.Arc.Localization.UsageMeterLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.UsageMeterLangResources.Format(TKCode.Arc.Localization.UsageMeterLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.UsageMeterLangResources.Get(TKCode.Arc.Localization.UsageMeterLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.UsageMeterLangResources.Index(TKCode.Arc.Localization.UsageMeterLangResourceKind kind) -> int
+static TKCode.Arc.Localization.UsageMeterLangResources.Key(TKCode.Arc.Localization.UsageMeterLangResourceKind kind) -> object!
+TKCode.Arc.ArcWindow.OverlayCoversTitleBar.get -> bool
+TKCode.Arc.ArcWindow.OverlayCoversTitleBar.set -> void
+TKCode.Arc.Localization.UsageMeterLangResourceExtension
+TKCode.Arc.Localization.UsageMeterLangResourceExtension.Kind.get -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.UsageMeterLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.UsageMeterLangResourceExtension.UsageMeterLangResourceExtension() -> void
+TKCode.Arc.Localization.UsageMeterLangResourceExtension.UsageMeterLangResourceExtension(TKCode.Arc.Localization.UsageMeterLangResourceKind kind) -> void
+TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.BarFreeTail = 0 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.BarNearTail = 1 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.BarOverTail = 2 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.BarSummary = 3 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.FreeBadge = 4 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.FreeCaption = 5 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.FreeLabel = 6 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.NearBadge = 7 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.OverBadge = 8 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.OverCaption = 9 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.OverLabel = 10 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.SegmentCaption = 11 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.StatusNear = 12 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.StatusOk = 13 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.StatusOver = 14 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResourceKind.TotalCaption = 15 -> TKCode.Arc.Localization.UsageMeterLangResourceKind
+TKCode.Arc.Localization.UsageMeterLangResources
+TKCode.Arc.UsageMeter.Labels.get -> TKCode.Arc.UsageMeterLabels?
+TKCode.Arc.UsageMeter.Labels.set -> void
+TKCode.Arc.UsageMeterLabels
+TKCode.Arc.UsageMeterLabels.BarFreeTailFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.BarFreeTailFormat.init -> void
+TKCode.Arc.UsageMeterLabels.BarNearTailFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.BarNearTailFormat.init -> void
+TKCode.Arc.UsageMeterLabels.BarOverTailFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.BarOverTailFormat.init -> void
+TKCode.Arc.UsageMeterLabels.BarSummaryFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.BarSummaryFormat.init -> void
+TKCode.Arc.UsageMeterLabels.FreeBadgeFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.FreeBadgeFormat.init -> void
+TKCode.Arc.UsageMeterLabels.FreeCaptionFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.FreeCaptionFormat.init -> void
+TKCode.Arc.UsageMeterLabels.FreeLabel.get -> string?
+TKCode.Arc.UsageMeterLabels.FreeLabel.init -> void
+TKCode.Arc.UsageMeterLabels.NearBadgeText.get -> string?
+TKCode.Arc.UsageMeterLabels.NearBadgeText.init -> void
+TKCode.Arc.UsageMeterLabels.OverBadgeFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.OverBadgeFormat.init -> void
+TKCode.Arc.UsageMeterLabels.OverCaptionFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.OverCaptionFormat.init -> void
+TKCode.Arc.UsageMeterLabels.OverLabel.get -> string?
+TKCode.Arc.UsageMeterLabels.OverLabel.init -> void
+TKCode.Arc.UsageMeterLabels.SegmentCaptionFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.SegmentCaptionFormat.init -> void
+TKCode.Arc.UsageMeterLabels.StatusNearFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.StatusNearFormat.init -> void
+TKCode.Arc.UsageMeterLabels.StatusOkFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.StatusOkFormat.init -> void
+TKCode.Arc.UsageMeterLabels.StatusOverFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.StatusOverFormat.init -> void
+TKCode.Arc.UsageMeterLabels.TotalCaptionFormat.get -> string?
+TKCode.Arc.UsageMeterLabels.TotalCaptionFormat.init -> void
+TKCode.Arc.UsageMeterLabels.UsageMeterLabels() -> void

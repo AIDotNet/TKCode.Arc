@@ -1,4 +1,5 @@
 using TKCode.Arc.DesignTokens;
+using TKCode.Arc.Localization;
 using System.Collections;
 using System.Collections.Specialized;
 using System.Globalization;
@@ -87,6 +88,13 @@ public partial class UsageMeter : TemplatedControl
     public static readonly StyledProperty<double> WarnThresholdProperty =
         AvaloniaProperty.Register<UsageMeter, double>(nameof(WarnThreshold), 0.9);
 
+    /// <summary>
+    /// Optional overrides for the meter's built-in text (captions, badges, default legend labels and accessibility
+    /// summaries). Replace the object to update text dynamically; any null member falls back to <see cref="ArcLanguage"/>.
+    /// </summary>
+    public static readonly StyledProperty<UsageMeterLabels?> LabelsProperty =
+        AvaloniaProperty.Register<UsageMeter, UsageMeterLabels?>(nameof(Labels));
+
     /// <summary>Where the total stands against the limit.</summary>
     public static readonly DirectProperty<UsageMeter, UsageMeterStatus> StatusProperty =
         AvaloniaProperty.RegisterDirect<UsageMeter, UsageMeterStatus>(nameof(Status), o => o.Status);
@@ -125,6 +133,8 @@ public partial class UsageMeter : TemplatedControl
     public string FreeLabel { get => GetValue(FreeLabelProperty); set => SetValue(FreeLabelProperty, value); }
     public string OverLabel { get => GetValue(OverLabelProperty); set => SetValue(OverLabelProperty, value); }
     public double WarnThreshold { get => GetValue(WarnThresholdProperty); set => SetValue(WarnThresholdProperty, value); }
+    /// <inheritdoc cref="LabelsProperty"/>
+    public UsageMeterLabels? Labels { get => GetValue(LabelsProperty); set => SetValue(LabelsProperty, value); }
     internal IBrush? AccentBrush { get => GetValue(AccentBrushProperty); set => SetValue(AccentBrushProperty, value); }
     internal IBrush? SurfaceBrush { get => GetValue(SurfaceBrushProperty); set => SetValue(SurfaceBrushProperty, value); }
     internal IBrush? TrackBrush { get => GetValue(TrackBrushProperty); set => SetValue(TrackBrushProperty, value); }
@@ -192,6 +202,7 @@ public partial class UsageMeter : TemplatedControl
     private int _roving;
     private UsageMeterStatus? _announcedStatus;
     private double _announcedOver = double.NaN;
+    private bool _languageSubscribed;
 
     internal UsageMeterPalette? Palette { get; private set; }
 
@@ -247,6 +258,11 @@ public partial class UsageMeter : TemplatedControl
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        if (!_languageSubscribed)
+        {
+            _languageSubscribed = true;
+            ArcLanguage.Changed += OnLanguageChanged;
+        }
         ObserveSource();
         Resubscribe();
         Refresh();
@@ -282,6 +298,11 @@ public partial class UsageMeter : TemplatedControl
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnDetachedFromVisualTree(e);
+        if (_languageSubscribed)
+        {
+            _languageSubscribed = false;
+            ArcLanguage.Changed -= OnLanguageChanged;
+        }
         _visibility?.Dispose();
         _visibility = null;
         if (_observed is not null)
@@ -323,7 +344,8 @@ public partial class UsageMeter : TemplatedControl
         }
         else if (change.Property == LimitProperty || change.Property == UnitProperty || change.Property == DecimalsProperty ||
                  change.Property == FreeLabelProperty || change.Property == OverLabelProperty ||
-                 change.Property == WarnThresholdProperty || change.Property == LabelProperty)
+                 change.Property == WarnThresholdProperty || change.Property == LabelProperty ||
+                 change.Property == LabelsProperty)
         {
             Refresh();
         }
@@ -366,6 +388,23 @@ public partial class UsageMeter : TemplatedControl
         }
         CurrentSegments = list;
     }
+
+    private void OnLanguageChanged(object? sender, LanguageChangedEventArgs e) => Refresh();
+
+    private string EffectiveFreeLabel() =>
+        IsSet(FreeLabelProperty)
+            ? FreeLabel
+            : Labels?.FreeLabel ?? UsageMeterLangResources.Get(UsageMeterLangResourceKind.FreeLabel);
+
+    private string EffectiveOverLabel() =>
+        IsSet(OverLabelProperty)
+            ? OverLabel
+            : Labels?.OverLabel ?? UsageMeterLangResources.Get(UsageMeterLangResourceKind.OverLabel);
+
+    private static string FormatText(string? overrideFormat, UsageMeterLangResourceKind kind, params object?[] args) =>
+        overrideFormat is not null
+            ? string.Format(CultureInfo.InvariantCulture, overrideFormat, args)
+            : UsageMeterLangResources.Format(kind, args);
 
     private void OnSegmentChanged(object? sender, AvaloniaPropertyChangedEventArgs e) => Refresh();
 
@@ -439,25 +478,28 @@ public partial class UsageMeter : TemplatedControl
         var active = ActiveKey;
         var activeItem = _items.FirstOrDefault(i => i.Key == active);
         Headline = _ready ? activeItem?.Value ?? total : 0;
+        var labels = Labels;
         var unit = Unit;
         if (activeItem is null)
         {
-            Caption = $"{unit} of {LimitText} used".TrimStart();
+            Caption = FormatText(labels?.TotalCaptionFormat, UsageMeterLangResourceKind.TotalCaption, unit, LimitText).TrimStart();
         }
         else if (activeItem.Key == FreeKey)
         {
-            Caption = $"{unit} {(status == UsageMeterStatus.Over ? "over the limit" : "free")}".TrimStart();
+            Caption = (status == UsageMeterStatus.Over
+                ? FormatText(labels?.OverCaptionFormat, UsageMeterLangResourceKind.OverCaption, unit)
+                : FormatText(labels?.FreeCaptionFormat, UsageMeterLangResourceKind.FreeCaption, unit)).TrimStart();
         }
         else
         {
             var share = Limit > 0 ? (int)Math.Round(activeItem.Value / Limit * 100, MidpointRounding.AwayFromZero) : 0;
-            Caption = $"{unit} in {activeItem.Label} · {share}% of plan".TrimStart();
+            Caption = FormatText(labels?.SegmentCaptionFormat, UsageMeterLangResourceKind.SegmentCaption, unit, activeItem.Label, share).TrimStart();
         }
         BadgeText = status switch
         {
-            UsageMeterStatus.Over => $"{Format(over)} over",
-            UsageMeterStatus.Near => "Almost full",
-            _ => $"{Format(free)} free"
+            UsageMeterStatus.Over => FormatText(labels?.OverBadgeFormat, UsageMeterLangResourceKind.OverBadge, Format(over)),
+            UsageMeterStatus.Near => labels?.NearBadgeText ?? UsageMeterLangResources.Get(UsageMeterLangResourceKind.NearBadge),
+            _ => FormatText(labels?.FreeBadgeFormat, UsageMeterLangResourceKind.FreeBadge, Format(free))
         };
         UpdateBadgeIcon(status);
         _bar?.SetHighlight(active, level);
@@ -468,12 +510,16 @@ public partial class UsageMeter : TemplatedControl
         }
 
         var parts = string.Join(", ", segments.Select(s => $"{s.Label} {Format(s.Value)}"));
-        var tail = status == UsageMeterStatus.Over
-            ? $"Over the limit by {Format(over)}."
-            : $"{Format(free)} free{(status == UsageMeterStatus.Near ? ", almost full" : string.Empty)}.";
+        var tail = status switch
+        {
+            UsageMeterStatus.Over => FormatText(labels?.BarOverTailFormat, UsageMeterLangResourceKind.BarOverTail, Format(over)),
+            UsageMeterStatus.Near => FormatText(labels?.BarNearTailFormat, UsageMeterLangResourceKind.BarNearTail, Format(free)),
+            _ => FormatText(labels?.BarFreeTailFormat, UsageMeterLangResourceKind.BarFreeTail, Format(free))
+        };
         if (_bar is not null)
         {
-            AutomationProperties.SetName(_bar, $"{Label}: {Format(total)} of {LimitText} used. {parts}. {tail}");
+            AutomationProperties.SetName(_bar,
+                FormatText(labels?.BarSummaryFormat, UsageMeterLangResourceKind.BarSummary, Label, Format(total), LimitText, parts, tail));
         }
         AutomationProperties.SetName(this, Label ?? string.Empty);
         // Status changes are announced, and so is a growing overage; routine changes inside a status stay quiet.
@@ -486,9 +532,9 @@ public partial class UsageMeter : TemplatedControl
             {
                 AutomationProperties.SetItemStatus(this, status switch
                 {
-                    UsageMeterStatus.Over => $"Over the plan limit by {Format(over)}.",
-                    UsageMeterStatus.Near => $"Almost full. {Format(free)} free.",
-                    _ => $"Under the limit. {Format(free)} free."
+                    UsageMeterStatus.Over => FormatText(labels?.StatusOverFormat, UsageMeterLangResourceKind.StatusOver, Format(over)),
+                    UsageMeterStatus.Near => FormatText(labels?.StatusNearFormat, UsageMeterLangResourceKind.StatusNear, Format(free)),
+                    _ => FormatText(labels?.StatusOkFormat, UsageMeterLangResourceKind.StatusOk, Format(free))
                 });
             }
         }
@@ -547,7 +593,7 @@ public partial class UsageMeter : TemplatedControl
             var item = _items[i];
             var isFree = item.Key == FreeKey;
             var segment = isFree ? null : segments[i];
-            var label = isFree ? status == UsageMeterStatus.Over ? OverLabel : FreeLabel : segment!.Label ?? string.Empty;
+            var label = isFree ? status == UsageMeterStatus.Over ? EffectiveOverLabel() : EffectiveFreeLabel() : segment!.Label ?? string.Empty;
             var value = isFree ? status == UsageMeterStatus.Over ? over : free : Math.Max(0, segment!.Value);
             item.Label = label;
             item.Value = _ready ? value : 0;

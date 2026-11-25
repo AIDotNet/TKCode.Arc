@@ -52,10 +52,10 @@
                             </Border>
                             <Panel Name="PART_ContentPane">
                                 <arc:ScrollArea Name="PART_ContentScroll" Orientation="Vertical">
-                                    <StackPanel Name="PART_ContentStack">
-                                        <arc:SettingsPageContentHost Name="PART_ContentHost" />
-                                        <Panel Name="PART_SaveBarRoom" />
-                                    </StackPanel>
+                                    <Grid Name="PART_ContentStack" RowDefinitions="*,Auto">
+                                        <arc:SettingsPageContentHost Name="PART_ContentHost" Grid.Row="0" />
+                                        <Panel Name="PART_SaveBarRoom" Grid.Row="1" />
+                                    </Grid>
                                 </arc:ScrollArea>
                                 <arc:PresenceHost Name="PART_SaveBar"
                                                   IsPresent="False"
@@ -119,7 +119,7 @@
         <Style Selector="^ /template/ arc|SettingsPageNavHost#PART_NavHost">
             <Setter Property="Margin" Value="{arc:SettingsPageTokenResource NavListInset}" />
         </Style>
-        <Style Selector="^ /template/ StackPanel#PART_ContentStack">
+        <Style Selector="^ /template/ Grid#PART_ContentStack">
             <Setter Property="Margin" Value="{arc:SettingsPageTokenResource ContentInset}" />
         </Style>
         <Style Selector="^ /template/ Panel#PART_SaveBarRoom">
@@ -149,7 +149,7 @@
             <Style Selector="^ /template/ arc|SettingsPageNavHost#PART_NavHost">
                 <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactNavListInset}" />
             </Style>
-            <Style Selector="^ /template/ StackPanel#PART_ContentStack">
+            <Style Selector="^ /template/ Grid#PART_ContentStack">
                 <Setter Property="Margin" Value="{arc:SettingsPageTokenResource CompactContentInset}" />
             </Style>
         </Style>
@@ -278,14 +278,16 @@
     <ControlTheme x:Key="{x:Type arc:SettingsSection}" TargetType="arc:SettingsSection">
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:SettingsSection">
-                <StackPanel>
+                <Grid RowDefinitions="Auto,Auto,*">
                     <ContentPresenter Name="PART_HeaderPresenter"
+                                      Grid.Row="0"
                                       Content="{TemplateBinding Header}"
                                       ContentTemplate="{TemplateBinding HeaderTemplate}"
                                       FontSize="{arc:ArcDesignTokenResource TypeXL}"
                                       FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
                                       Foreground="{arc:ArcDesignTokenResource Foreground}" />
                     <TextBlock Name="PART_Description"
+                               Grid.Row="1"
                                Text="{TemplateBinding Description}"
                                IsVisible="{TemplateBinding Description, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
                                Margin="{arc:SettingsSectionTokenResource DescriptionMargin}"
@@ -294,13 +296,17 @@
                                LineHeight="{arc:SettingsSectionTokenResource BodyLineHeight}"
                                Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
                     <ContentPresenter Name="PART_ContentPresenter"
+                                      Grid.Row="2"
                                       Margin="{arc:SettingsSectionTokenResource ContentMargin}"
                                       Content="{TemplateBinding Content}"
                                       ContentTemplate="{TemplateBinding ContentTemplate}"
-                                      HorizontalContentAlignment="Stretch" />
-                </StackPanel>
+                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                </Grid>
             </ControlTemplate>
         </Setter>
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />

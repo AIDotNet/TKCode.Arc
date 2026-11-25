@@ -638,9 +638,9 @@ public sealed class ModalPresence : IDisposable
         }
     }
 
-    /// <summary>Window content under the overlay layer (null inside an <see cref="ArcOverlayHost"/>).</summary>
-    internal Visual? BlurTarget => _blurTargetCache ??= _layer is ArcOverlayLayer
-        ? null
+    /// <summary>Window content under the overlay layer (null inside an <see cref="ArcOverlayHost"/> without a blur target).</summary>
+    internal Visual? BlurTarget => _blurTargetCache ??= _layer is ArcOverlayLayer overlayLayer
+        ? overlayLayer.Host.BlurTarget
         : _layer is null ? null : ModalStack.FindBlurTarget(_layer);
 
     private Visual? _blurTargetCache;

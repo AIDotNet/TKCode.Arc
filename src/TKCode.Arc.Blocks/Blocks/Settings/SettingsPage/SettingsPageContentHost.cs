@@ -47,7 +47,13 @@ internal sealed class SettingsPageContentHost : Control
     private Slot CreateSlot()
     {
         var translate = new TranslateTransform();
-        var presenter = new ContentPresenter { RenderTransform = translate, IsVisible = false };
+        var presenter = new ContentPresenter
+        {
+            RenderTransform = translate,
+            IsVisible = false,
+            HorizontalContentAlignment = Avalonia.Layout.HorizontalAlignment.Stretch,
+            VerticalContentAlignment = Avalonia.Layout.VerticalAlignment.Stretch
+        };
         LogicalChildren.Add(presenter);
         VisualChildren.Add(presenter);
         return new Slot { Presenter = presenter, Translate = translate };

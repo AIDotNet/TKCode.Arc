@@ -716,4 +716,132 @@ public class ArcWindowTests
             window.Close();
         }
     }
+
+    [Theory]
+    [InlineData(true, true, true)]
+    [InlineData(false, true, false)]
+    [InlineData(true, false, false)]
+    [InlineData(false, false, false)]
+    public void Linux_Extended_Uses_BorderOnly_Decorations(bool isLinux, bool extended, bool expected) =>
+        ArcWindow.UsesLinuxBorderOnly(isLinux, extended).ShouldBe(expected);
+
+    [Theory]
+    [InlineData(true, true, WindowDecorations.BorderOnly, WindowState.Normal, true)]
+    [InlineData(false, true, WindowDecorations.BorderOnly, WindowState.Normal, false)]
+    [InlineData(true, false, WindowDecorations.BorderOnly, WindowState.Normal, false)]
+    [InlineData(true, true, WindowDecorations.Full, WindowState.Normal, false)]
+    [InlineData(true, true, WindowDecorations.None, WindowState.Normal, false)]
+    [InlineData(true, true, WindowDecorations.BorderOnly, WindowState.Maximized, false)]
+    [InlineData(true, true, WindowDecorations.BorderOnly, WindowState.FullScreen, false)]
+    public void Frame_Edge_Only_Shows_On_Linux_BorderOnly_Normal_Window(bool isLinux, bool extended,
+        WindowDecorations decorations, WindowState state, bool expected) =>
+        ArcWindow.ShowsFrameEdge(isLinux, extended, decorations, state).ShouldBe(expected);
+
+    [AvaloniaFact]
+    public void Linux_Extended_Style_Sets_BorderOnly_And_Respects_Local_Override()
+    {
+        var window = Open();
+        try
+        {
+            var root = Part<Border>(window, ArcWindow.RootPart);
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.LinuxExtendedPseudoClass, true);
+            Dispatcher.UIThread.RunJobs();
+            window.WindowDecorations.ShouldBe(WindowDecorations.BorderOnly);
+
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.FrameEdgePseudoClass, true);
+            Dispatcher.UIThread.RunJobs();
+            root.BorderThickness.ShouldBe(new Thickness(1));
+            root.BorderBrush.ShouldNotBeNull();
+
+            // Explicit user WindowDecorations wins over the theme rule.
+            window.WindowDecorations = WindowDecorations.None;
+            Dispatcher.UIThread.RunJobs();
+            window.WindowDecorations.ShouldBe(WindowDecorations.None);
+
+            window.ClearValue(Window.WindowDecorationsProperty);
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.LinuxExtendedPseudoClass, false);
+            ((IPseudoClasses)window.Classes).Set(ArcWindow.FrameEdgePseudoClass, false);
+            Dispatcher.UIThread.RunJobs();
+            window.WindowDecorations.ShouldBe(WindowDecorations.Full);
+            root.BorderThickness.ShouldBe(default);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Modals_Mount_Below_The_TitleBar_By_Default_And_Blur_Only_Content()
+    {
+        var anchor = new Border();
+        var titleBarButton = new AvaloniaButton { Content = "Open" };
+        var window = Open(new ArcWindow
+        {
+            TitleBar = new TitleBar { RightContent = titleBarButton },
+            Content = anchor
+        });
+        try
+        {
+            var host = Part<ArcOverlayHost>(window, ArcWindow.ContentOverlayHostPart);
+            var contentPresenter = Part<ContentPresenter>(window, "PART_ContentPresenter");
+            var bar = window.TitleBar!;
+
+            window.OverlayCoversTitleBar.ShouldBeFalse();
+            ArcOverlayLayer.Find(anchor).ShouldBeSameAs(host.Layer);
+            ArcOverlayLayer.Find(window).ShouldBeSameAs(host.Layer);
+            ArcOverlayLayer.Find(titleBarButton).ShouldBeSameAs(host.Layer);
+
+            var dialog = new Dialog { Title = "Confirm", Content = "Proceed?" };
+            _ = dialog.ShowAsync(anchor);
+            Dispatcher.UIThread.RunJobs();
+            try
+            {
+                var presence = dialog.Presence.ShouldNotBeNull();
+                presence.Host.GetVisualParent().ShouldBeSameAs(host.Layer);
+                BoundsIn(presence.Host, window).Y.ShouldBe(bar.Bounds.Height);
+                presence.Host.Bounds.Height.ShouldBe(window.Bounds.Height - bar.Bounds.Height);
+                contentPresenter.Effect.ShouldBeAssignableTo<IBlurEffect>();
+                bar.Effect.ShouldBeNull();
+            }
+            finally
+            {
+                dialog.Close();
+                Dispatcher.UIThread.RunJobs();
+            }
+            contentPresenter.Effect.ShouldBeNull();
+
+            // Opting in lets modals cover the full window including the title bar.
+            window.OverlayCoversTitleBar = true;
+            Dispatcher.UIThread.RunJobs();
+            ArcOverlayLayer.Find(anchor).ShouldBeSameAs(OverlayLayer.GetOverlayLayer(anchor));
+            ArcOverlayLayer.Find(window).ShouldBeSameAs(OverlayLayer.GetOverlayLayer(window));
+
+            // Hiding the title bar also falls back to the window overlay layer.
+            window.OverlayCoversTitleBar = false;
+            window.IsTitleBarVisible = false;
+            Dispatcher.UIThread.RunJobs();
+            ArcOverlayLayer.Find(anchor).ShouldBeSameAs(OverlayLayer.GetOverlayLayer(anchor));
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void A_Nested_Overlay_Host_Inside_ArcWindow_Still_Bounds_Its_Own_Modals()
+    {
+        var anchor = new Border();
+        var inner = new ArcOverlayHost { Width = 280, Height = 180, Children = { anchor } };
+        var window = Open(new ArcWindow { Content = inner });
+        try
+        {
+            ArcOverlayLayer.Find(anchor).ShouldBeSameAs(inner.Layer);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

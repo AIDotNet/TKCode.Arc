@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-CN" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.UsageMeterLangResourceKind">
+    <unit id="BarFreeTail">
+      <segment>
+        <source>{0} free.</source>
+        <target state="translated">剩余 {0}。</target>
+      </segment>
+    </unit>
+    <unit id="BarNearTail">
+      <segment>
+        <source>{0} free, almost full.</source>
+        <target state="translated">剩余 {0}，即将用满。</target>
+      </segment>
+    </unit>
+    <unit id="BarOverTail">
+      <segment>
+        <source>Over the limit by {0}.</source>
+        <target state="translated">超出限额 {0}。</target>
+      </segment>
+    </unit>
+    <unit id="BarSummary">
+      <segment>
+        <source>{0}: {1} of {2} used. {3}. {4}</source>
+        <target state="translated">{0}：已用 {1} / {2}。{3}。{4}</target>
+      </segment>
+    </unit>
+    <unit id="FreeBadge">
+      <segment>
+        <source>{0} free</source>
+        <target state="translated">剩余 {0}</target>
+      </segment>
+    </unit>
+    <unit id="FreeCaption">
+      <segment>
+        <source>{0} free</source>
+        <target state="translated">{0} 剩余</target>
+      </segment>
+    </unit>
+    <unit id="FreeLabel">
+      <segment>
+        <source>Free</source>
+        <target state="translated">剩余</target>
+      </segment>
+    </unit>
+    <unit id="NearBadge">
+      <segment>
+        <source>Almost full</source>
+        <target state="translated">即将用满</target>
+      </segment>
+    </unit>
+    <unit id="OverBadge">
+      <segment>
+        <source>{0} over</source>
+        <target state="translated">超出 {0}</target>
+      </segment>
+    </unit>
+    <unit id="OverCaption">
+      <segment>
+        <source>{0} over the limit</source>
+        <target state="translated">{0} 超出限额</target>
+      </segment>
+    </unit>
+    <unit id="OverLabel">
+      <segment>
+        <source>Over limit</source>
+        <target state="translated">超出限额</target>
+      </segment>
+    </unit>
+    <unit id="SegmentCaption">
+      <segment>
+        <source>{0} in {1} · {2}% of plan</source>
+        <target state="translated">{0} 来自 {1} · 占限额 {2}%</target>
+      </segment>
+    </unit>
+    <unit id="StatusNear">
+      <segment>
+        <source>Almost full. {0} free.</source>
+        <target state="translated">即将用满，剩余 {0}。</target>
+      </segment>
+    </unit>
+    <unit id="StatusOk">
+      <segment>
+        <source>Under the limit. {0} free.</source>
+        <target state="translated">未超限额，剩余 {0}。</target>
+      </segment>
+    </unit>
+    <unit id="StatusOver">
+      <segment>
+        <source>Over the plan limit by {0}.</source>
+        <target state="translated">超出限额 {0}。</target>
+      </segment>
+    </unit>
+    <unit id="TotalCaption">
+      <segment>
+        <source>{0} of {1} used</source>
+        <target state="translated">{0} / {1} 已用</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

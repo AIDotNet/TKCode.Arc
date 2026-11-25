@@ -30,21 +30,30 @@
                                                   DockPanel.Dock="Top"
                                                   Content="{TemplateBinding TitleBar}"
                                                   IsVisible="{TemplateBinding IsTitleBarVisible}" />
-                                <ContentPresenter Name="PART_ContentPresenter"
-                                                  Margin="{TemplateBinding Padding}"
-                                                  HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
-                                                  VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                  Content="{TemplateBinding Content}"
-                                                  ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                <arc:ArcOverlayHost Name="PART_ContentOverlayHost">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Margin="{TemplateBinding Padding}"
+                                                      HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                                      VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </arc:ArcOverlayHost>
                             </DockPanel>
                         </VisualLayerManager>
                     </Border>
                 </Panel>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^:linux-extended">
+            <Setter Property="WindowDecorations" Value="BorderOnly" />
+        </Style>
         <Style Selector="^:top-edge /template/ Border#PART_Root">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
+        </Style>
+        <Style Selector="^:frame-edge /template/ Border#PART_Root">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         </Style>
     </ControlTheme>
 </ResourceDictionary>
