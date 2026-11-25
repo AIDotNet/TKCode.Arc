@@ -41,4 +41,14 @@ internal sealed class AlertToken : AbstractControlDesignToken
         DismissDiameter = 28;
         DismissMargin = new Thickness(12, -5, -6, -5);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SurfacePadding = new Thickness(12);
+        GlyphSize = 16;
+        GlyphMargin = new Thickness(0, 1, 10, 0);
+        TitleLineHeight = 13 * 1.38;
+        DismissDiameter = 24;
+    }
 }

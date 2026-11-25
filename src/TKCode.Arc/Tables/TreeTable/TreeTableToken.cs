@@ -39,4 +39,16 @@ internal sealed class TreeTableToken : AbstractControlDesignToken
         BodyPadding = new Thickness(0, 0, 0, 6);
         TableCornerRadius = new CornerRadius(26);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowHeight = 32;
+        HeaderHeight = 32;
+        IndentWidth = 16;
+        ChevronExtent = 20;
+        CheckColumnWidth = 36;
+        CellInlinePadding = 10;
+        TableCornerRadius = new CornerRadius(16);
+    }
 }

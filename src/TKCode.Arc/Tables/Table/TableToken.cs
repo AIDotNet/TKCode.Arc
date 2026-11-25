@@ -87,4 +87,21 @@ internal sealed class TableToken : AbstractControlDesignToken
         MinTableWidth = 560;
         CompactBreakpoint = 620;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        HeaderHeight = 34;
+        RowHeight = 36;
+        CompactRowHeight = 48;
+        CompactHeaderHeight = 32;
+        CellBlockPadding = 8;
+        CompactCellBlockPadding = 6;
+        CellInlinePadding = 12;
+        SelectColumnWidth = 36;
+        FooterHeight = 34;
+        FooterInset = new Thickness(12, 0, 6, 0);
+        ClearButtonHeight = 24;
+        LoadingInset = new Thickness(0, 34, 0, 0);
+    }
 }

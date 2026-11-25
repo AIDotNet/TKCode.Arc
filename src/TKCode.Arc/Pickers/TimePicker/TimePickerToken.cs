@@ -45,4 +45,16 @@ internal sealed class TimePickerToken : AbstractControlDesignToken
         ColumnGap = 4;
         ColumnOptionInset = 8;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        AffixGap = 6;
+        PopupGap = 4;
+        ListInset = new Thickness(4);
+        OptionHeight = 28;
+        OptionInset = 10;
+        OptionRadius = 10;
+        ValueLineHeight = 13 * 1.38;
+    }
 }

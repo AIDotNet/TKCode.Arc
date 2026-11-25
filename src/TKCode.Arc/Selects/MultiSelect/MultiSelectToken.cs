@@ -80,4 +80,21 @@ internal sealed class MultiSelectToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         SearchRowHeight = 40;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(10, 3, 9, 3);
+        ValueMinHeight = 22;
+        ClearButtonSize = 20;
+        ChipPadding = new Thickness(6, 2);
+        ChipSpacing = 4;
+        MenuOffset = 6;
+        MenuPadding = new Thickness(4);
+        OptionHeight = 30;
+        OptionCornerRadius = new CornerRadius(12);
+        OptionPadding = new Thickness(10, 0);
+        FocusRingRadius = new CornerRadius(14);
+        SearchRowHeight = 34;
+    }
 }

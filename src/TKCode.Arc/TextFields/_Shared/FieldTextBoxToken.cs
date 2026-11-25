@@ -25,4 +25,11 @@ internal sealed class FieldTextBoxToken : AbstractControlDesignToken
         TextLineHeightLG = 16 * 1.4;
         SelectionFill = Oklch.WithAlpha(ArcPalette.Neutrals(isDarkMode).Foreground, 0.16);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TextLineHeight = 13 * 1.38;
+        TextLineHeightLG = 14 * 1.4;
+    }
 }

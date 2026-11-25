@@ -38,4 +38,18 @@ internal sealed class FilterToolbarToken : AbstractControlDesignToken
         SearchInset = new Thickness(12, 0);
         StackBreakpoint = 520;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SearchFocusRingRadius = new CornerRadius(13);
+        ToolbarInset = new Thickness(12, 8);
+        SectionGap = 12;
+        ChipGap = 6;
+        ActionGap = 8;
+        ChipInset = new Thickness(10, 0, 6, 0);
+        ChipInnerGap = 6;
+        ClearInset = new Thickness(10, 0);
+        SearchInset = new Thickness(10, 0);
+    }
 }

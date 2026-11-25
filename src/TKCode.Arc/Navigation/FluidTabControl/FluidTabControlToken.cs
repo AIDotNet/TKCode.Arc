@@ -56,4 +56,14 @@ internal sealed class FluidTabControlToken : AbstractControlDesignToken
         IndicatorRadius = new CornerRadius(1.5);
         ScrollDuration = TimeSpan.FromMilliseconds(480);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TabListPadding = new Thickness(6);
+        SectionSpacing = 24;
+        ContentPadding = new Thickness(16);
+        HighlightRadius = new CornerRadius(8);
+        IndicatorInset = 6;
+    }
 }

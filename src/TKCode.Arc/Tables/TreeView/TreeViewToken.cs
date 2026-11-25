@@ -41,4 +41,16 @@ internal sealed class TreeViewToken : AbstractControlDesignToken
         MarkdownTint = Oklch.MixOklab(Color.Parse("#38896B"), foreground, 0.26);
         JsonTint = Oklch.MixOklab(Color.Parse("#C48637"), foreground, 0.22);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowSlotHeight = 28;
+        RowRadius = 8;
+        IndentWidth = 16;
+        RowInlinePadding = 8;
+        ContentGap = 6;
+        TreePadding = new Thickness(6, 4, 6, 6);
+        TreeCornerRadius = new CornerRadius(12);
+    }
 }

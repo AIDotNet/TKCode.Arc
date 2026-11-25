@@ -83,6 +83,24 @@ internal sealed class CodeBlockToken : AbstractControlDesignToken
         SyntaxInserted = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Inserted, isDarkMode);
         SyntaxDeleted = CodeBlockSyntaxColors.Get(CodeBlockSyntaxKind.Deleted, isDarkMode);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        HeaderMinHeight = 38;
+        HeaderPadding = new Thickness(12, 6, 10, 6);
+        HeaderPaddingCompact = new Thickness(10, 6, 10, 6);
+        HeaderCornerRadius = new CornerRadius(15, 15, 0, 0);
+        ExpandCornerRadius = new CornerRadius(0, 0, 15, 15);
+        HeaderGap = 8;
+        CodePadding = new Thickness(14);
+        CodePaddingCompact = new Thickness(12);
+        LineNumbersPadding = new Thickness(14, 14, 0, 14);
+        LineNumbersPaddingCompact = new Thickness(12, 12, 0, 12);
+        CodeLineHeight = 13 * 1.6;
+        ExpandMinHeight = 34;
+        ExpandPadding = new Thickness(12, 0);
+    }
 }
 
 /// <summary>

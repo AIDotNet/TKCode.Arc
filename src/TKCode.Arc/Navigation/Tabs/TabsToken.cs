@@ -97,4 +97,20 @@ internal sealed class TabsToken : AbstractControlDesignToken
         AddFocusRingMargin = new Thickness(-2);
         AddFocusRingRadius = new CornerRadius(10);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ListPadding = new Thickness(3);
+        ContentMargin = new Thickness(0, 10, 0, 0);
+        ContentLineHeight = 13 * 1.38;
+        ScrollButtonWidth = 28;
+        ScrollGlyphSize = 15;
+        PillRadius = new CornerRadius(8);
+        ContentFocusRingRadius = new CornerRadius(14);
+        CardListPadding = new Thickness(4, 4, 4, 0);
+        AddButtonSize = 28;
+        CardAddButtonSize = 24;
+        AddGlyphSize = 14;
+    }
 }

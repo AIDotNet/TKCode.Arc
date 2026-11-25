@@ -31,4 +31,18 @@ internal sealed class SwitchToken : AbstractControlDesignToken
         DisabledOpacity = 0.5;
         FocusRingMargin = new Thickness(-4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        // Track inner width (34 - 2 x 2 padding) minus the 16px thumb = 14px travel; pressed thumb widens by 4px.
+        TrackWidth = 34;
+        TrackHeight = 20;
+        TrackInset = new Thickness(2);
+        ThumbSize = 16;
+        ThumbStretchedWidth = 20;
+        ThumbOnOffset = 14;
+        ThumbOnPressedOffset = 10;
+        LabelMargin = new Thickness(8, 0, 0, 0);
+    }
 }

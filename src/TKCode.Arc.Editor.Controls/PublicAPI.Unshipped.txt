@@ -230,6 +230,7 @@ const TKCode.Arc.DesignTokens.CodeEditorSuggestWidgetTokens.Identity = "CodeEdit
 const TKCode.Arc.DesignTokens.CodeEditorTokens.Identity = "CodeEditor" -> string!
 const TKCode.Arc.DesignTokens.DiffEditorTokens.Identity = "DiffEditor" -> string!
 const TKCode.Arc.DesignTokens.SnippetChoiceListTokens.Identity = "SnippetChoiceList" -> string!
+override TKCode.Arc.CodeEditorToken.ApplyCompact(bool isDarkMode) -> void
 override TKCode.Arc.CodeEditorToken.CalculateTokenValues(bool isDarkMode) -> void
 override TKCode.Arc.DiffEditorToken.CalculateTokenValues(bool isDarkMode) -> void
 static TKCode.Arc.ArcCodeEditorBuilderExtensions.UseArcCodeEditor(this TKCode.Arc.ArcBuilder! builder) -> TKCode.Arc.ArcBuilder!

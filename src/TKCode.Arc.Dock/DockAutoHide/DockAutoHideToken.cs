@@ -55,4 +55,13 @@ internal sealed class DockAutoHideToken : AbstractControlDesignToken
         GripThickness = 6;
         FocusRingMargin = new Thickness(0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ButtonThickness = 22;
+        ButtonPadding = new Thickness(8, 0);
+        HeaderHeight = 28;
+        HeaderPadding = new Thickness(8, 0, 4, 0);
+    }
 }

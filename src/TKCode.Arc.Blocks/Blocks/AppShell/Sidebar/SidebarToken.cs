@@ -162,4 +162,29 @@ internal sealed class SidebarToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(14);
         DisabledOpacity = 0.45;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ExpandedWidth = 216;
+        RailWidth = 52;
+        PanePadding = new Thickness(0, 6, 0, 0);
+        HeaderMargin = new Thickness(8, 2, 8, 6);
+        FilterMargin = new Thickness(8, 2, 8, 4);
+        FilterHeight = 28;
+        FooterMargin = new Thickness(8, 6, 8, 6);
+        ListMargin = new Thickness(8, 2, 8, 6);
+        IconButtonWidth = 32;
+        RowHeight = 26;
+        NestedRowHeight = 24;
+        RowRadius = new CornerRadius(8);
+        RowInlinePadding = new Thickness(8, 0);
+        RowGlyphSize = 14;
+        RowGlyphMargin = new Thickness(0, 0, 8, 0);
+        SectionGap = 10;
+        SectionTitleMargin = new Thickness(0, 6, 0, 0);
+        SectionHeaderHeight = 24;
+        BadgeDotMargin = new Thickness(18, 4, 0, 0);
+        FocusRingRadius = new CornerRadius(12);
+    }
 }

@@ -57,4 +57,15 @@ internal sealed class ToastToken : AbstractControlDesignToken
         IconFill = Oklch.MixOklab(n.Surface, n.Success, 0.10);
         IconRing = Oklch.MixOklab(n.Border, n.Success, 0.24);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SurfacePadding = new Thickness(12, 10, 10, 10);
+        IconMargin = new Thickness(0, 0, 10, 0);
+        IconDiameter = 26;
+        CopyPadding = new Thickness(0, 3, 0, 0);
+        CopyLineHeight = 13 * 1.38;
+        CloseDiameter = 26;
+    }
 }

@@ -104,4 +104,19 @@ internal sealed class TreeSelectToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(22);
         FocusRingMargin = new Thickness(-4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(10, 2);
+        ValueMinHeight = 22;
+        MenuCornerRadius = new CornerRadius(14);
+        MenuPadding = new Thickness(4);
+        RowHeight = 30;
+        RowRadius = 8;
+        ChipPadding = new Thickness(6, 2);
+        ChipSpacing = 4;
+        ClearButtonSize = 20;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

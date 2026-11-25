@@ -44,4 +44,13 @@ internal sealed class MorphSelectToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(26);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(10, 0, 32, 0);
+        ChevronMargin = new Thickness(0, 0, 10, 0);
+        ShapeCornerRadius = new CornerRadius(14);
+        FocusRingRadius = new CornerRadius(18);
+    }
 }

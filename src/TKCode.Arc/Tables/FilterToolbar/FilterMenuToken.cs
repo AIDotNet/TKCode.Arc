@@ -43,4 +43,15 @@ internal sealed class FilterMenuToken : AbstractControlDesignToken
         var neutrals = ArcPalette.Neutrals(isDarkMode);
         PressedFill = Oklch.MixOklab(neutrals.SurfaceMuted, neutrals.Border, 0.55);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerInset = new Thickness(10, 0);
+        TriggerGap = 6;
+        PanelInset = new Thickness(4);
+        HeadHeight = 26;
+        ItemHeight = 28;
+        FocusRingRadius = new CornerRadius(13);
+    }
 }

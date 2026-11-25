@@ -24,4 +24,13 @@ internal sealed class FieldFrameToken : AbstractControlDesignToken
         AffixSpacing = 8;
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePaddingSM = new Thickness(8, 0);
+        InlinePaddingMD = new Thickness(10, 0);
+        InlinePaddingLG = new Thickness(12, 0);
+        AffixSpacing = 6;
+    }
 }

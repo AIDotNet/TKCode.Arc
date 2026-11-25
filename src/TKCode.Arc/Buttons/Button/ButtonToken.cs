@@ -43,4 +43,15 @@ internal sealed class ButtonToken : AbstractControlDesignToken
         DangerDisabledForeground = Oklch.MixOklab(neutrals.SurfaceMuted, neutrals.Danger, 0.55);
         GhostRaisedHoverBackground = Oklch.MixOklab(neutrals.SurfaceRaised, neutrals.Foreground, isDarkMode ? 0.07 : 0.05);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePaddingSM = new Thickness(10, 0);
+        InlinePaddingMD = new Thickness(12, 0);
+        InlinePaddingLG = new Thickness(16, 0);
+        LabelGap = 6;
+        SpinnerSize = 14;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

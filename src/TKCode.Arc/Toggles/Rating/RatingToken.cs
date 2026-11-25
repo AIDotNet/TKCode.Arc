@@ -39,4 +39,16 @@ internal sealed class RatingToken : AbstractControlDesignToken
         DisabledOpacity = 0.5;
         CellRadius = new CornerRadius(12);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        CellSizeSM = 24;
+        CellSizeMD = 28;
+        CellSizeLG = 34;
+        GlyphSizeSM = 16;
+        GlyphSizeMD = 20;
+        GlyphSizeLG = 24;
+        CellRadius = new CornerRadius(8);
+    }
 }

@@ -42,4 +42,11 @@ internal sealed class DockFloatingWindowToken : AbstractControlDesignToken
         CardGripSize = 14;
         CardContentPadding = new Thickness(6, 0, 6, 6);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        CardTitleHeight = 26;
+        CardContentPadding = new Thickness(4, 0, 4, 4);
+    }
 }

@@ -38,4 +38,14 @@ internal sealed class SegmentedControlToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(16);
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TrackInset = new Thickness(2);
+        SegmentInset = new Thickness(10, 0);
+        SegmentRadius = new CornerRadius(8);
+        SelectionRadius = new CornerRadius(8);
+        FocusRingRadius = new CornerRadius(10);
+    }
 }

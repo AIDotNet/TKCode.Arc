@@ -65,4 +65,16 @@ internal sealed class TitleBarToken : AbstractControlDesignToken
         DividerHeight = 16;
         BorderThickness = new Thickness(0, 0, 0, 1);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        Height = 34;
+        Padding = new Thickness(10, 0, 4, 0);
+        SectionSpacing = 8;
+        ItemSpacing = 6;
+        CaptionButtonSize = 26;
+        CaptionGlyphSize = 13;
+        IconSize = 16;
+    }
 }

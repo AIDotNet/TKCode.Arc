@@ -96,4 +96,25 @@ internal sealed class DateRangePickerToken : AbstractControlDesignToken
         PresetFocusFill = Oklch.WithAlpha(n.Foreground, 0.05);
         DayHoverFill = Oklch.WithAlpha(n.Foreground, 0.07);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerRadius = new CornerRadius(10);
+        TriggerInset = new Thickness(10, 0, 9, 0);
+        TriggerGap = 8;
+        TriggerFocusRingRadius = new CornerRadius(14);
+        ValueLineHeight = 13 * 1.38;
+        PanelInset = new Thickness(8);
+        PanelCompactInset = new Thickness(6);
+        BodyGap = 8;
+        BodyCompactGap = 6;
+        PresetHeight = 26;
+        PresetInset = new Thickness(10, 0);
+        PresetRadius = new CornerRadius(8);
+        NavButtonSize = 26;
+        FooterMargin = new Thickness(0, 8, 0, 0);
+        ActionHeight = 28;
+        ActionInset = new Thickness(10, 0);
+    }
 }

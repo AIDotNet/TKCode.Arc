@@ -20,4 +20,11 @@ internal sealed class FieldIconButtonToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(22);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ButtonSize = 24;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

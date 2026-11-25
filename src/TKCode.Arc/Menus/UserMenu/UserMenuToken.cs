@@ -52,4 +52,16 @@ internal sealed class UserMenuToken : AbstractControlDesignToken
         PanelGap = 8;
         CompactBreakpoint = 640;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerHeight = 32;
+        TriggerInset = new Thickness(3);
+        NamedTriggerInset = new Thickness(3, 3, 8, 3);
+        TriggerGap = 6;
+        FaceSize = 24;
+        ChevronSize = 14;
+        PanelGap = 6;
+    }
 }

@@ -60,4 +60,15 @@ internal sealed class AnnouncementBarToken : AbstractControlDesignToken
         InvertedIconHoverFill = Oklch.WithAlpha(n.Background, 0.10);
         InvertedIconPressedFill = Oklch.WithAlpha(n.Background, 0.12);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        BarPadding = new Thickness(12, 4, 6, 4);
+        NarrowBarPadding = new Thickness(10, 4, 6, 4);
+        ColumnGap = 8;
+        IconDiameter = 26;
+        FaceMinHeight = 26;
+        MessageLineHeight = 13 * 1.38;
+    }
 }

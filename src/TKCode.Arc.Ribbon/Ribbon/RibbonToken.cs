@@ -49,4 +49,15 @@ internal sealed class RibbonToken : AbstractControlDesignToken
         TabFocusRingMargin = new Thickness(0);
         ContentPadding = new Thickness(0, 4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TabRowHeight = 28;
+        TabRowPadding = new Thickness(6, 0);
+        TabHeight = 24;
+        TabPadding = new Thickness(8, 0);
+        TabFontSize = 12;
+        ContentPadding = new Thickness(0, 2);
+    }
 }

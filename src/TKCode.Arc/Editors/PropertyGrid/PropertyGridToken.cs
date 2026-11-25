@@ -31,6 +31,16 @@ internal sealed class PropertyGridToken : AbstractControlDesignToken
         DescriptionGap = 2;
         EmptyPadding = new Thickness(16, 24);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SearchMargin = new Thickness(6, 6, 6, 4);
+        ListPadding = new Thickness(4, 2, 4, 6);
+        DescriptionPadding = new Thickness(10, 8, 10, 8);
+        DescriptionHeight = 56;
+        EmptyPadding = new Thickness(12, 16);
+    }
 }
 
 [ControlDesignToken]
@@ -72,6 +82,15 @@ internal sealed class PropertyGridItemToken : AbstractControlDesignToken
         SplitterWidth = 7;
         ActionSize = 28;
         FocusRingMargin = new Thickness(-2);
+    }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowHeight = 30;
+        RowPadding = new Thickness(4, 1, 4, 1);
+        LabelGap = 8;
+        ActionSize = 24;
     }
 }
 

@@ -65,4 +65,19 @@ internal sealed class JsonViewerToken : AbstractControlDesignToken
         MarkCurrentFill = Oklch.WithAlpha(n.Warning, 0.48);
         ActionPressedFill = Oklch.WithAlpha(n.Foreground, 0.08);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowSlotHeight = 24;
+        TreePadding = new Thickness(4);
+        ToolbarPadding = new Thickness(4);
+        ToolSize = 28;
+        InsetToolSize = 22;
+        ToolRadius = new CornerRadius(10);
+        SearchRadius = new CornerRadius(10);
+        ToolFocusRingRadius = new CornerRadius(12);
+        PathBarPadding = new Thickness(10, 4, 4, 4);
+        PathCopySize = 24;
+    }
 }

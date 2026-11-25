@@ -45,4 +45,16 @@ internal sealed class RadioGroupToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(22);
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        LegendMargin = new Thickness(0, 0, 0, 6);
+        RowGap = 6;
+        RowInset = new Thickness(8);
+        MarkGap = 8;
+        LabelLineHeight = 13 * 1.38;
+        HighlightRadius = new CornerRadius(10);
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

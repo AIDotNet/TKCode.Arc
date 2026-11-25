@@ -38,4 +38,15 @@ internal sealed class ReorderableListToken : AbstractControlDesignToken
         CopyGap = 2;
         CopyInset = new Thickness(12, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowGap = 6;
+        RowMinHeight = 40;
+        RowInset = new Thickness(5, 5, 12, 5);
+        HandleExtent = 32;
+        HandleRadius = new CornerRadius(8);
+        CopyInset = new Thickness(8, 0);
+    }
 }

@@ -45,4 +45,17 @@ internal sealed class ExpandableCardToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(38);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerMinHeight = 44;
+        TriggerPadding = new Thickness(14, 10);
+        ChevronMargin = new Thickness(12, 0, 0, 0);
+        ChevronSize = 16;
+        DescriptionMargin = new Thickness(0, 2, 0, 0);
+        DetailsPadding = new Thickness(14, 12, 14, 14);
+        DetailsLineHeight = 13 * 1.38;
+        FocusRingRadius = new CornerRadius(24);
+    }
 }

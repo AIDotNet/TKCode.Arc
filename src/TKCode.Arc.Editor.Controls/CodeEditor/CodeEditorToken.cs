@@ -83,4 +83,15 @@ public sealed class CodeEditorToken : AbstractControlDesignToken
         MinimapSliderActiveOpacity = 0.26;
         FoldingWidth = 18;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        LineHeightRatio = 1.25;
+        GutterPadding = 12;
+        GutterLeadingPadding = 8;
+        HoverRowPadding = new Thickness(6, 3);
+        ColorPickerPadding = new Thickness(6);
+        FoldingWidth = 14;
+    }
 }

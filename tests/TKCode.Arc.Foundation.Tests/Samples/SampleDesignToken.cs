@@ -74,6 +74,15 @@ internal sealed class SampleDesignToken : AbstractControlDesignToken
         };
     }
 
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ControlSizeMD = 34;
+        RadiusControl = new CornerRadius(10);
+        SpaceInset = new Thickness(12, 6);
+        Density = SampleDensity.Compact;
+    }
+
     internal static Color Mix(Color a, Color b, double amount)
     {
         byte Lerp(byte x, byte y) => (byte)Math.Round(x + (y - x) * amount);

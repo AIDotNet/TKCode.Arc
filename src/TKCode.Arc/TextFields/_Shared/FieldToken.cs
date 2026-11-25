@@ -19,4 +19,11 @@ internal sealed class FieldToken : AbstractControlDesignToken
         LabelLineHeight = 14 * 1.4;
         LabelLineHeightSM = 12 * 1.4;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        LabelMargin = new Thickness(0, 0, 0, 4);
+        LabelLineHeight = 13 * 1.38;
+    }
 }

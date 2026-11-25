@@ -54,4 +54,17 @@ internal sealed class ButtonGroupItemToken : AbstractControlDesignToken
         InertContentOpacity = 0.4;
         MorphOverflow = 12;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SegmentExtentMD = 32;
+        SegmentExtentSM = 26;
+        SegmentInsetMD = new Thickness(10, 0);
+        SegmentInsetSM = new Thickness(8, 0);
+        LabelGapMD = 6;
+        LabelGapSM = 4;
+        DividerMarginMD = new Thickness(-0.5, 8, 0, 8);
+        DividerMarginSM = new Thickness(-0.5, 6, 0, 6);
+    }
 }

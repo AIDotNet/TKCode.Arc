@@ -102,4 +102,16 @@ internal sealed class RichTextEditorToken : AbstractControlDesignToken
         TextPurple = Text(6);
         FillPurple = Fill(6);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SurfaceMinHeight = 96;
+        ToolButtonSize = 26;
+        ToolButtonRadius = new CornerRadius(8);
+        ToolbarRadius = 12;
+        SlashMenuRadius = 12;
+        SlashRowHeight = 28;
+        SlashRowRadius = new CornerRadius(8);
+    }
 }

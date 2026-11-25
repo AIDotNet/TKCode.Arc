@@ -21,4 +21,11 @@ internal sealed class HoverCardToken : AbstractControlDesignToken
         SideOffset = 8;
         CardPadding = new Thickness(16);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        SideOffset = 6;
+        CardPadding = new Thickness(12);
+    }
 }

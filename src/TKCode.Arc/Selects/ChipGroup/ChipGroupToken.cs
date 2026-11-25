@@ -16,4 +16,11 @@ internal sealed class ChipGroupToken : AbstractControlDesignToken
         ChipInlinePadding = 14;
         ChipGap = 8;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ChipInlinePadding = 10;
+        ChipGap = 6;
+    }
 }

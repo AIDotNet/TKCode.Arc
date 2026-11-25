@@ -54,4 +54,18 @@ internal sealed class MetricCardToken : AbstractControlDesignToken
         UpFill = Oklch.WithAlpha(n.Success, 0.11);
         DownFill = Oklch.WithAlpha(n.Danger, 0.11);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        CardPadding = new Thickness(16);
+        NarrowCardPadding = new Thickness(12);
+        TopRowMargin = new Thickness(0, 0, 0, 16);
+        NarrowTopRowMargin = new Thickness(0, 0, 0, 12);
+        ContextMargin = new Thickness(0, 10, 0, 0);
+        ChipPadding = new Thickness(6, 2);
+        NarrowChipMargin = new Thickness(0, 8, 0, 0);
+        CopyLineHeight = 13 * 1.38;
+        SparklineHeight = 28;
+    }
 }

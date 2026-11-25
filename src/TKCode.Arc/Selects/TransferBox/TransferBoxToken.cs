@@ -78,4 +78,16 @@ internal sealed class TransferBoxToken : AbstractControlDesignToken
         EmptyPadding = new Thickness(16);
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        HeaderPadding = new Thickness(4, 0, 10, 0);
+        HeaderMinHeight = 36;
+        ListPadding = new Thickness(4);
+        RowMinHeight = 28;
+        RowPadding = new Thickness(10, 4, 8, 4);
+        MoveButtonExtent = 28;
+        EmptyPadding = new Thickness(12);
+    }
 }

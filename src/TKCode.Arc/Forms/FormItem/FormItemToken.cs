@@ -15,4 +15,10 @@ internal sealed class FormItemToken : AbstractControlDesignToken
         LabelColumnGap = 16;
         RequiredMarkGap = 4;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        LabelColumnGap = 12;
+    }
 }

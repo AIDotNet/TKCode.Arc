@@ -18,4 +18,12 @@ internal sealed class CopyButtonToken : AbstractControlDesignToken
         DisabledOpacity = 0.5;
         FocusRingRadius = new CornerRadius(22);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePadding = new Thickness(10, 0);
+        IconLabelGap = 6;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

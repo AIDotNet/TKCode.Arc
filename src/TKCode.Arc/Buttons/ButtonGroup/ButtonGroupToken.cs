@@ -68,4 +68,16 @@ internal sealed class ButtonGroupToken : AbstractControlDesignToken
         DividerMarginSM = new Thickness(-0.5, 9, 0, 9);
         DividerMarginVertical = new Thickness(10, -0.5, 10, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerExtentMD = 30;
+        TriggerExtentSM = 24;
+        TriggerHeightMD = 32;
+        TriggerHeightSM = 26;
+        HighlightRadius = new CornerRadius(8);
+        DividerMarginMD = new Thickness(-0.5, 8, 0, 8);
+        DividerMarginSM = new Thickness(-0.5, 6, 0, 6);
+    }
 }

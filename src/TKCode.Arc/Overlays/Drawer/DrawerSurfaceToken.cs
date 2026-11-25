@@ -67,4 +67,18 @@ internal sealed class DrawerSurfaceToken : AbstractControlDesignToken
         GrabberMargin = new Thickness(0, 9, 0, 0);
         GrabberOpacity = 0.75;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ViewportGutter = 12;
+        SectionPadding = new Thickness(16);
+        NarrowSectionPadding = new Thickness(14);
+        HeaderGap = 12;
+        DescriptionMargin = new Thickness(0, 6, 0, 0);
+        ActionsMargin = new Thickness(0, 16, 0, 0);
+        CloseButtonSize = 28;
+        var lineHeight = 16 * 1.4;
+        CloseButtonMargin = new Thickness(0, (lineHeight - 28) / 2, 0, 0);
+    }
 }

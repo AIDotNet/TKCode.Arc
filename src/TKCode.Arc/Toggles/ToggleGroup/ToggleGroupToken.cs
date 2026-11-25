@@ -45,4 +45,17 @@ internal sealed class ToggleGroupToken : AbstractControlDesignToken
         DisabledOpacity = 0.52;
         ItemDisabledOpacity = 0.45;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        GroupPadding = new Thickness(2);
+        ItemSizeSM = 24;
+        ItemSizeMD = 28;
+        ItemInsetSM = new Thickness(6, 0);
+        ItemInsetMD = new Thickness(8, 0);
+        IconSizeSM = 13;
+        IconSizeMD = 14;
+        FocusRingRadius = new CornerRadius(12);
+    }
 }

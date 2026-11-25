@@ -289,6 +289,40 @@ internal sealed class ArcDesignToken : AbstractControlDesignToken
         ReduceTransparency = false;
     }
 
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ControlSizeSM = 28;
+        ControlSizeMD = 34;
+        ControlSizeLG = 40;
+        GlyphSizeSM = 14;
+        GlyphSizeMD = 16;
+        GlyphSizeLG = 20;
+        Space1 = 4;
+        Space2 = 6;
+        Space3 = 8;
+        Space4 = 12;
+        Space5 = 14;
+        Space6 = 16;
+        Space8 = 24;
+        Space10 = 28;
+        Space12 = 36;
+        Space16 = 48;
+        Space20 = 60;
+        Space24 = 72;
+        RadiusControl = new CornerRadius(10);
+        RadiusPanel = new CornerRadius(16);
+        RadiusSurface = new CornerRadius(20);
+        TypeSM = 13;
+        TypeBase = 14;
+        TypeLG = 16;
+        TypeXL = 18;
+        Type2XL = 24;
+        Type3XL = 30;
+        Type4XL = 42;
+        Type5XL = 56;
+    }
+
     // Literals parsed once: Compute runs on every theme change and these never vary.
     private static readonly Color[] s_neutralRamp =
     [

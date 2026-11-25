@@ -35,4 +35,13 @@ internal sealed class CheckboxToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(22);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        BoxSize = 16;
+        CopyMargin = new Thickness(1, 8, 0, 0);
+        LabelLineHeight = 13 * 1.38;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

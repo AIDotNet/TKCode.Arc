@@ -15,4 +15,11 @@ internal sealed class MenuEntryLabelToken : AbstractControlDesignToken
         LabelInset = new Thickness(11, 8, 11, 4);
         AccountLabelInset = new Thickness(8, 6, 8, 4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        LabelInset = new Thickness(8, 5, 8, 3);
+        AccountLabelInset = new Thickness(8, 4, 8, 2);
+    }
 }

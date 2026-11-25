@@ -74,4 +74,19 @@ internal sealed class MenuEntryToken : AbstractControlDesignToken
         SheetSeparatorMargin = new Thickness(-10, 10);
         AccountSeparatorColor = Oklch.WithAlpha(n.Foreground, 0.09);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowHeight = 28;
+        ContextRowHeight = 28;
+        AccountRowHeight = 26;
+        SheetRowHeight = 38;
+        RowInset = new Thickness(8, 0);
+        RowRadius = new CornerRadius(10);
+        IconSpacing = new Thickness(0, 0, 8, 0);
+        ContextIconSpacing = new Thickness(0, 0, 7, 0);
+        GlyphSize = 14;
+        SeparatorMargin = new Thickness(-4, 3);
+    }
 }

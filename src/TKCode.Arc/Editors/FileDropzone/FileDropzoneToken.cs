@@ -47,4 +47,16 @@ internal sealed class FileDropzoneToken : AbstractControlDesignToken
         RetryHeight = 30;
         RemoveSize = 32;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(16, 16, 16, 20);
+        TriggerPaddingCompact = new Thickness(14, 12, 14, 12);
+        TriggerPaddingInside = new Thickness(16, 16, 16, 16);
+        TriggerPaddingCompactInside = new Thickness(14, 12, 14, 6);
+        RowMinHeight = 44;
+        RetryHeight = 26;
+        RemoveSize = 26;
+    }
 }

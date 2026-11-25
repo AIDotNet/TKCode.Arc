@@ -61,4 +61,19 @@ internal sealed class ComboboxToken : AbstractControlDesignToken
         EmptyPadding = new Thickness(12);
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        FieldPadding = new Thickness(10, 0);
+        FieldGap = 6;
+        ClearButtonSize = 20;
+        FocusRingRadius = new CornerRadius(13);
+        PopoverOffset = 6;
+        PopoverPadding = new Thickness(4);
+        OptionHeight = 30;
+        OptionCornerRadius = new CornerRadius(12);
+        OptionPadding = new Thickness(10, 0);
+        EmptyPadding = new Thickness(10);
+    }
 }

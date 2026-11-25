@@ -147,13 +147,14 @@ public sealed class ArcThemeManager
     public Dictionary<object, object?> Compute(ArcThemeState state, bool isDark)
         => ArcTokenCalculator.Compute(_descriptors, _tokenCount, state, isDark);
 
-    /// <summary>The values of the applied state for one appearance, computed once per state and appearance.</summary>
-    internal Dictionary<object, object?> GetCachedValues(bool isDark)
+    /// <summary>The values of the applied state for one appearance and density, computed once per state, appearance and density.</summary>
+    internal Dictionary<object, object?> GetCachedValues(bool isDark, ArcDensity density)
     {
-        var slot = isDark ? 1 : 0;
+        var slot = CacheSlot(isDark, density);
         if (_cacheStates[slot] != State || _cacheValues[slot] is null)
         {
-            _cacheValues[slot] = Compute(State, isDark);
+            var state = density == State.Density ? State : State.With(t => t.Density(density));
+            _cacheValues[slot] = Compute(state, isDark);
             _cacheStates[slot] = State;
         }
         return _cacheValues[slot]!;
@@ -178,21 +179,24 @@ public sealed class ArcThemeManager
         var values = ArcTokenCalculator.Compute(all, tokenCount, State, IsDark);
         _descriptors.AddRange(descriptors);
         _tokenCount = tokenCount;
-        var slot = IsDark ? 1 : 0;
-        _cacheStates[1 - slot] = null;
-        _cacheValues[1 - slot] = null;
+        Array.Clear(_cacheStates);
+        Array.Clear(_cacheValues);
+        var slot = CacheSlot(IsDark, State.Density);
         _cacheStates[slot] = State;
         _cacheValues[slot] = values;
         LastPublishedCount = ArcTokenCalculator.Publish(Resources, values);
         DescriptorsAdded?.Invoke(this, EventArgs.Empty);
     }
 
-    private readonly ArcThemeState?[] _cacheStates = new ArcThemeState?[2];
-    private readonly Dictionary<object, object?>?[] _cacheValues = new Dictionary<object, object?>?[2];
+    private readonly ArcThemeState?[] _cacheStates = new ArcThemeState?[4];
+    private readonly Dictionary<object, object?>?[] _cacheValues = new Dictionary<object, object?>?[4];
+
+    private static int CacheSlot(bool isDark, ArcDensity density)
+        => (isDark ? 2 : 0) + (density == ArcDensity.Compact ? 1 : 0);
 
     private void Commit(ArcThemeState state, bool isDark, Dictionary<object, object?> values)
     {
-        var slot = isDark ? 1 : 0;
+        var slot = CacheSlot(isDark, state.Density);
         _cacheStates[slot] = state;
         _cacheValues[slot] = values;
         var watch = Stopwatch.StartNew();

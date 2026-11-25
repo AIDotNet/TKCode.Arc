@@ -63,4 +63,21 @@ internal sealed class AccordionItemToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4, -2);
         FocusRingRadius = new CornerRadius(10);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(0, 5);
+        ChevronMargin = new Thickness(12, 0, 0, 0);
+        ChevronSize = 15;
+        TriggerLineHeight = 13 * 1.38;
+        AnswerPadding = new Thickness(0, 0, 24, 12);
+        AnswerLineHeight = 13 * 1.38;
+        TriggerMinHeightLG = 52;
+        TriggerPaddingLG = new Thickness(0, 12);
+        ChevronMarginLG = new Thickness(20, 0, 0, 0);
+        TriggerLineHeightLG = 16 * 1.38;
+        AnswerPaddingLG = new Thickness(0, 0, 32, 16);
+        AnswerLineHeightLG = 14 * 1.5;
+    }
 }

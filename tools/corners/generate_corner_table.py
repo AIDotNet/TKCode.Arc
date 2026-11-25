@@ -55,7 +55,25 @@ def read_sources(catalog, control):
     return "".join(open(f, encoding="utf-8-sig").read() for f in files)
 
 
+def strip_apply_compact(source):
+    # Remove any ApplyCompact method bodies so compact radii do not appear as competing defaults.
+    while True:
+        m = re.search(r"\bvoid\s+ApplyCompact\s*\([^)]*\)\s*\{", source)
+        if not m:
+            return source
+        depth = 1
+        i = m.end()
+        while i < len(source) and depth > 0:
+            if source[i] == "{":
+                depth += 1
+            elif source[i] == "}":
+                depth -= 1
+            i += 1
+        source = source[:m.start()] + source[i:]
+
+
 def default_of(source, token, is_double):
+    source = strip_apply_compact(source)
     if is_double:
         values = set(re.findall(r"\b" + token + r"\s*=\s*(" + num + r")\s*;", source))
     else:

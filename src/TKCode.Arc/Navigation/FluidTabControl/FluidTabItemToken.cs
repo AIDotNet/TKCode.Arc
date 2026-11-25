@@ -30,4 +30,13 @@ internal sealed class FluidTabItemToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(14);
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePadding = new Thickness(10, 5);
+        IconMargin = new Thickness(0, 0, 8, 0);
+        ItemRadius = new CornerRadius(8);
+        FocusRingRadius = new CornerRadius(10);
+    }
 }

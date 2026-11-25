@@ -25,4 +25,11 @@ internal sealed class TextareaToken : AbstractControlDesignToken
         DisabledOpacity = 0.6;
         ResizeGripMargin = new Thickness(0, 0, -10, -10);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        FrameMinHeight = 80;
+        FramePadding = new Thickness(8);
+    }
 }

@@ -70,4 +70,18 @@ internal sealed class TagInputToken : AbstractControlDesignToken
         EditorInset = new Thickness(5, 0);
         PlaceholderInset = new Thickness(12, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ContentInset = new Thickness(4);
+        ItemGap = 4;
+        ContentMinHeight = 34 - 2;
+        ChipMinHeight = 22;
+        ChipInset = new Thickness(7, 0, 3, 0);
+        RemoveButtonDiameter = 18;
+        RemoveGlyphSize = 12;
+        EditorMinHeight = 22;
+        PlaceholderInset = new Thickness(10, 0);
+    }
 }

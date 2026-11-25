@@ -20,4 +20,10 @@ internal sealed class TooltipToken : AbstractControlDesignToken
         var neutrals = ArcPalette.Neutrals(isDarkMode);
         BubbleBorderColor = Oklch.MixOklab(neutrals.Foreground, neutrals.Background, 0.14);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        BubblePadding = new Thickness(10, 6);
+    }
 }

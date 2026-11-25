@@ -21,6 +21,10 @@ public static class ArcThemeScope
     public static readonly AttachedProperty<ArcAppearance?> AppearanceProperty =
         AvaloniaProperty.RegisterAttached<StyledElement, ArcAppearance?>("Appearance", typeof(ArcThemeScope));
 
+    /// <summary>Fixes the layout density for the subtree; everything else follows the application's theme.</summary>
+    public static readonly AttachedProperty<ArcDensity?> DensityProperty =
+        AvaloniaProperty.RegisterAttached<StyledElement, ArcDensity?>("Density", typeof(ArcThemeScope));
+
     /// <summary>Fixes the whole theme state of the subtree.</summary>
     public static readonly AttachedProperty<ArcThemeState?> StateProperty =
         AvaloniaProperty.RegisterAttached<StyledElement, ArcThemeState?>("State", typeof(ArcThemeScope));
@@ -39,6 +43,7 @@ public static class ArcThemeScope
     static ArcThemeScope()
     {
         AppearanceProperty.Changed.AddClassHandler<StyledElement>((element, _) => Update(element));
+        DensityProperty.Changed.AddClassHandler<StyledElement>((element, _) => Update(element));
         StateProperty.Changed.AddClassHandler<StyledElement>((element, _) => Update(element));
     }
 
@@ -47,6 +52,12 @@ public static class ArcThemeScope
 
     /// <summary>Fixes light or dark for <paramref name="element"/>'s subtree; null removes the scope.</summary>
     public static void SetAppearance(StyledElement element, ArcAppearance? value) => element.SetValue(AppearanceProperty, value);
+
+    /// <summary>Gets the fixed layout density of <paramref name="element"/>'s scope.</summary>
+    public static ArcDensity? GetDensity(StyledElement element) => element.GetValue(DensityProperty);
+
+    /// <summary>Fixes the layout density for <paramref name="element"/>'s subtree; null removes the density override.</summary>
+    public static void SetDensity(StyledElement element, ArcDensity? value) => element.SetValue(DensityProperty, value);
 
     /// <summary>Gets the fixed state of <paramref name="element"/>'s scope.</summary>
     public static ArcThemeState? GetState(StyledElement element) => element.GetValue(StateProperty);
@@ -60,7 +71,7 @@ public static class ArcThemeScope
     private static void Update(StyledElement element)
     {
         var host = element.GetValue(HostProperty);
-        if (GetAppearance(element) is null && GetState(element) is null)
+        if (GetAppearance(element) is null && GetDensity(element) is null && GetState(element) is null)
         {
             if (host is not null)
             {
@@ -107,15 +118,20 @@ public static class ArcThemeScope
             }
             var fixedState = GetState(_element);
             var appearance = GetAppearance(_element);
+            var density = GetDensity(_element);
             var state = fixedState ?? manager.State;
             if (appearance is { } fixedAppearance)
             {
                 state = state.With(t => t.Appearance(fixedAppearance));
             }
+            if (density is { } fixedDensity)
+            {
+                state = state.With(t => t.Density(fixedDensity));
+            }
             var isDark = state.ResolveIsDark(manager.SystemIsDark);
-            // Without a fixed state the scope differs from the application only in light or dark, so it shares the
-            // manager's cached values for that appearance.
-            var values = fixedState is null ? manager.GetCachedValues(isDark) : manager.Compute(state, isDark);
+            // Without a fixed state the scope differs from the application only in appearance and/or density, so it
+            // shares the manager's cached values for that (isDark, density) pair.
+            var values = fixedState is null ? manager.GetCachedValues(isDark, state.Density) : manager.Compute(state, isDark);
             ArcTokenCalculator.Publish(_tokens, values);
             var variant = isDark ? ThemeVariant.Dark : ThemeVariant.Light;
             if (_element is ThemeVariantScope scope)

@@ -16,4 +16,10 @@ internal sealed class PopoverSurfaceToken : AbstractControlDesignToken
         PanelMaxWidth = 352;
         PanelPadding = new Thickness(16);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        PanelPadding = new Thickness(12);
+    }
 }

@@ -28,4 +28,13 @@ internal sealed class ActionButtonToken : AbstractControlDesignToken
         DisabledOpacity = 0.7;
         FocusRingRadius = new CornerRadius(22);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePadding = new Thickness(14, 0);
+        LabelIconGap = 6;
+        IconSlotExtent = 15;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

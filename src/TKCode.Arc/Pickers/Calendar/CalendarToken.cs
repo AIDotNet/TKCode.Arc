@@ -24,4 +24,14 @@ internal sealed class CalendarToken : AbstractControlDesignToken
         WeekdaysMargin = new Thickness(0, 0, 0, 6);
         NavDisabledOpacity = 0.36;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        HeaderMinHeight = 28;
+        HeaderMargin = new Thickness(0, 0, 0, 8);
+        NavButtonSize = 26;
+        TodayButtonPadding = new Thickness(8, 0);
+        WeekdaysMargin = new Thickness(0, 0, 0, 4);
+    }
 }

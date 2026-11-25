@@ -43,4 +43,17 @@ internal sealed class DatePickerToken : AbstractControlDesignToken
         FooterButtonDisabledOpacity = 0.4;
         ValueLineHeight = 14 * 1.4;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        AffixGap = 6;
+        DropDownButtonSize = 24;
+        PopupInset = new Thickness(12);
+        PopupCompactInset = new Thickness(10);
+        PopupGap = 6;
+        FooterMargin = new Thickness(0, 10, 0, 0);
+        FooterInset = new Thickness(0, 8, 0, 0);
+        ValueLineHeight = 13 * 1.38;
+    }
 }

@@ -29,4 +29,12 @@ internal sealed class DockGroupViewToken : AbstractControlDesignToken
         ActionSize = 24;
         ActionGlyphSize = 14;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        StripHeight = 28;
+        ActionSize = 20;
+        ActionGlyphSize = 12;
+    }
 }

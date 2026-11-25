@@ -36,4 +36,13 @@ internal sealed class BreadcrumbToken : AbstractControlDesignToken
         MenuItemPadding = new Thickness(11, 0);
         MenuItemRadius = new CornerRadius(20);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        MenuPadding = new Thickness(4);
+        MenuItemMinHeight = 28;
+        MenuItemPadding = new Thickness(8, 0);
+        MenuItemRadius = new CornerRadius(10);
+    }
 }

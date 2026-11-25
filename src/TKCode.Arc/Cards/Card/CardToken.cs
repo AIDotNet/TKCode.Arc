@@ -96,4 +96,24 @@ internal sealed class CardToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(30);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ContentPadding = new Thickness(14);
+        QuickLookContentPadding = new Thickness(16);
+        MediaMinHeight = 84;
+        TitleLineHeight = 16 * 1.3;
+        QuickLookTitleLineHeight = 18 * 1.3;
+        BodyLineHeight = 13 * 1.38;
+        DescriptionMargin = new Thickness(0, 4, 0, 0);
+        FooterMargin = new Thickness(0, 12, 0, 0);
+        FooterGap = 8;
+        AvatarSlotSize = 26;
+        DetailsMargin = new Thickness(0, 16, 0, 0);
+        DetailsPadding = new Thickness(0, 14, 0, 0);
+        CloseSlotMargin = new Thickness(0, 12, 12, 0);
+        CloseButtonSize = 28;
+        FocusRingRadius = new CornerRadius(20);
+    }
 }

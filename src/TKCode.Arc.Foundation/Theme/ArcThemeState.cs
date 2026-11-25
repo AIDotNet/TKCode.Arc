@@ -29,17 +29,18 @@ public sealed class ArcThemeState
     private static readonly ImmutableDictionary<string, ImmutableDictionary<string, string>> s_noOverrides =
         ImmutableDictionary.Create<string, ImmutableDictionary<string, string>>(StringComparer.Ordinal);
 
-    /// <summary>Light appearance, default accent, full motion, no overrides.</summary>
-    public static ArcThemeState Default { get; } = new(ArcAppearance.Light, null, ArcMotionLevel.Full, s_noOverrides,
+    /// <summary>Light appearance, default accent, full motion, default density, no overrides.</summary>
+    public static ArcThemeState Default { get; } = new(ArcAppearance.Light, null, ArcMotionLevel.Full, ArcDensity.Default, s_noOverrides,
         ImmutableArray<ArcThemePreset>.Empty);
 
-    internal ArcThemeState(ArcAppearance appearance, Color? accent, ArcMotionLevel motionLevel,
+    internal ArcThemeState(ArcAppearance appearance, Color? accent, ArcMotionLevel motionLevel, ArcDensity density,
                            ImmutableDictionary<string, ImmutableDictionary<string, string>> overrides,
                            ImmutableArray<ArcThemePreset> presets)
     {
         Appearance = appearance;
         Accent = accent;
         MotionLevel = motionLevel;
+        Density = density;
         Overrides = overrides;
         Presets = presets;
     }
@@ -52,6 +53,9 @@ public sealed class ArcThemeState
 
     /// <summary>The motion level.</summary>
     public ArcMotionLevel MotionLevel { get; }
+
+    /// <summary>The layout density.</summary>
+    public ArcDensity Density { get; }
 
     /// <summary>
     /// Token overrides: identity → (token name → value text). Overrides of the global identity that name no identity are
@@ -94,6 +98,7 @@ public sealed class ArcThemeBuilder
     private ArcAppearance _appearance;
     private Color? _accent;
     private ArcMotionLevel _motionLevel;
+    private ArcDensity _density;
     private ImmutableDictionary<string, ImmutableDictionary<string, string>> _overrides;
     private ImmutableArray<ArcThemePreset> _presets;
 
@@ -104,6 +109,7 @@ public sealed class ArcThemeBuilder
         _appearance = from.Appearance;
         _accent = from.Accent;
         _motionLevel = from.MotionLevel;
+        _density = from.Density;
         _overrides = from.Overrides;
         _presets = from.Presets;
     }
@@ -135,6 +141,16 @@ public sealed class ArcThemeBuilder
         _motionLevel = level;
         return this;
     }
+
+    /// <summary>Sets the layout density (<see cref="ArcDensity.Default"/> or <see cref="ArcDensity.Compact"/>).</summary>
+    public ArcThemeBuilder Density(ArcDensity density)
+    {
+        _density = density;
+        return this;
+    }
+
+    /// <summary>Switches the layout density to <see cref="ArcDensity.Compact"/>.</summary>
+    public ArcThemeBuilder Compact() => Density(ArcDensity.Compact);
 
     /// <summary>Overrides the final value of a token of the global identity (Arc's <c>ArcDesign</c>).</summary>
     /// <param name="name">The token name, for example <c>RadiusControl</c>.</param>
@@ -197,5 +213,5 @@ public sealed class ArcThemeBuilder
     }
 
     /// <summary>Builds the state.</summary>
-    public ArcThemeState Build() => new(_appearance, _accent, _motionLevel, _overrides, _presets);
+    public ArcThemeState Build() => new(_appearance, _accent, _motionLevel, _density, _overrides, _presets);
 }

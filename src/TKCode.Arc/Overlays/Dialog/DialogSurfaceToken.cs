@@ -43,4 +43,18 @@ internal sealed class DialogSurfaceToken : AbstractControlDesignToken
         CloseButtonMargin = new Thickness(0, (lineHeight - 32) / 2, 0, (lineHeight - 32) / 2);
         CloseButtonBackground = Oklch.WithAlpha(ArcPalette.Neutrals(isDarkMode).SurfaceMuted, 0.5);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ViewportMargin = new Thickness(12);
+        HeaderPadding = new Thickness(16);
+        BodyPadding = new Thickness(16);
+        HeaderGap = 12;
+        DescriptionMargin = new Thickness(0, 6, 0, 0);
+        ActionsMargin = new Thickness(0, 16, 0, 0);
+        CloseButtonSize = 28;
+        var lineHeight = 16 * 1.4;
+        CloseButtonMargin = new Thickness(0, (lineHeight - 28) / 2, 0, (lineHeight - 28) / 2);
+    }
 }

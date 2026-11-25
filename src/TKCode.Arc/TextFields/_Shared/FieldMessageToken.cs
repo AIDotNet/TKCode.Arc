@@ -17,4 +17,10 @@ internal sealed class FieldMessageToken : AbstractControlDesignToken
         RowPadding = new Thickness(0, 8, 0, 0);
         TextLineHeight = 12 * 1.4;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowPadding = new Thickness(0, 4, 0, 0);
+    }
 }

@@ -136,4 +136,19 @@ internal sealed class DataGridToken : AbstractControlDesignToken
         StatusMessageDuration = TimeSpan.FromMilliseconds(2400);
         StatusActionDuration = TimeSpan.FromSeconds(6);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        RowHeightCompact = 26;
+        RowHeightStandard = 32;
+        RowHeightComfortable = 38;
+        HeaderRowHeight = 32;
+        FilterRowHeight = 32;
+        TotalsRowHeight = 32;
+        CellInlinePadding = 10;
+        ToolbarHeight = 40;
+        ToolButtonHeight = 26;
+        StatusBarHeight = 28;
+    }
 }

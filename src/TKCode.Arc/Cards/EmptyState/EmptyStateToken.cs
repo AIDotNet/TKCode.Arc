@@ -51,4 +51,20 @@ internal sealed class EmptyStateToken : AbstractControlDesignToken
         TitleMarginSmall = new Thickness(0, 12, 0, 0);
         ActionMarginSmall = new Thickness(0, 12, 0, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        IconBlockSize = 36;
+        TitleMargin = new Thickness(0, 14, 0, 0);
+        DescriptionMargin = new Thickness(0, 6, 0, 0);
+        ActionMargin = new Thickness(0, 14, 0, 0);
+        InlinePadding = 14;
+        TitleLineHeight = 14 * 1.38;
+        DescriptionLineHeight = 13 * 1.38;
+        IconBlockSizeSmall = 26;
+        BlockPaddingSmall = 12;
+        TitleMarginSmall = new Thickness(0, 8, 0, 0);
+        ActionMarginSmall = new Thickness(0, 8, 0, 0);
+    }
 }

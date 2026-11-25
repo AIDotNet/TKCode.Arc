@@ -59,4 +59,17 @@ internal sealed class RadioCardsToken : AbstractControlDesignToken
         FocusRingMargin = new Thickness(-4);
         FocusRingRadius = new CornerRadius(24);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        GridGap = 8;
+        ListGap = 6;
+        CardRadius = new CornerRadius(12);
+        CardInsetGrid = new Thickness(12, 10);
+        CardInsetList = new Thickness(12, 8, 12, 8);
+        MetaMarginGrid = new Thickness(0, 8, 0, 0);
+        RingRadius = new CornerRadius(11.25);
+        FocusRingRadius = new CornerRadius(16);
+    }
 }

@@ -82,4 +82,18 @@ internal sealed class SplitButtonToken : AbstractControlDesignToken
         PrimaryDividerColor = Oklch.MixOklab(n.Foreground, n.Background, 0.18);
         SecondaryPressedColor = Oklch.MixOklab(n.SurfaceMuted, n.Border, 0.55);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        PrimaryInset = new Thickness(12, 0);
+        SecondaryInset = new Thickness(10, 0);
+        TriggerExtentPrimary = 30;
+        TriggerExtentSecondary = 26;
+        LabelGap = 6;
+        StartRadius = new CornerRadius(10, 0, 0, 10);
+        EndRadius = new CornerRadius(0, 10, 10, 0);
+        StartRingRadius = new CornerRadius(14, 4, 4, 14);
+        EndRingRadius = new CornerRadius(4, 14, 14, 4);
+    }
 }

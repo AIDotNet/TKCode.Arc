@@ -51,4 +51,17 @@ internal sealed class FloatingButtonGroupToken : AbstractControlDesignToken
         HighlightColor = Oklch.WithAlpha(n.Foreground, isDarkMode ? 0.09 : 0.07);
         HighlightPressColor = Oklch.WithAlpha(n.Foreground, isDarkMode ? 0.15 : 0.12);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TrayInsetMD = new Thickness(3);
+        TrayInsetSM = new Thickness(2);
+        ItemGapMD = 3;
+        ItemGapSM = 2;
+        TrayRadiusMD = new CornerRadius(12);
+        TrayRadiusSM = new CornerRadius(10);
+        HighlightRadiusMD = new CornerRadius(9);
+        HighlightRadiusSM = new CornerRadius(8);
+    }
 }

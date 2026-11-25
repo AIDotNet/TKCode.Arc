@@ -44,4 +44,17 @@ internal sealed class FloatingButtonGroupItemToken : AbstractControlDesignToken
         OnTintOpacity = isDarkMode ? 0.16 : 0.12;
         DisabledOpacity = 0.5;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ItemExtentMD = 28;
+        ItemExtentSM = 24;
+        ItemInsetMD = new Thickness(10, 0);
+        ItemInsetSM = new Thickness(8, 0);
+        IconItemInsetMD = new Thickness(8, 0, 10, 0);
+        IconItemInsetSM = new Thickness(6, 0, 8, 0);
+        ItemRadiusMD = new CornerRadius(9);
+        ItemRadiusSM = new CornerRadius(8);
+    }
 }

@@ -82,4 +82,19 @@ internal sealed class ChatComposerToken : AbstractControlDesignToken
         RemoveSize = 20;
         RemoveMargin = new Thickness(0, -6, -6, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ComposerPadding = new Thickness(8, 6, 8, 8);
+        AttachSize = 32;
+        BoxRadius = new CornerRadius(14);
+        FieldRadius = new CornerRadius(13);
+        TextPadding = new Thickness(12, 6, 4, 6);
+        TextLineHeight = 19;
+        FieldMaxHeight = 6 * 19 + 12;
+        SendSize = 26;
+        TrayPadding = new Thickness(4, 6, 6, 6);
+        TrayGap = 6;
+    }
 }

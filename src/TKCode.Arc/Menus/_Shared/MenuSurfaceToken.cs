@@ -72,4 +72,12 @@ internal sealed class MenuSurfaceToken : AbstractControlDesignToken
         HandleHeight = 5;
         HandleMargin = new Thickness(0, 0, 0, 10);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        PanelInset = new Thickness(4);
+        HighlightRadius = new CornerRadius(10);
+        AccountInset = new Thickness(3);
+    }
 }

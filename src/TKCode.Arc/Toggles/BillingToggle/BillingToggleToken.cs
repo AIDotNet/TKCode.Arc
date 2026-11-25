@@ -64,4 +64,19 @@ internal sealed class BillingToggleToken : AbstractControlDesignToken
                 ]);
         FocusRingMargin = new Thickness(-4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TrackInset = new Thickness(2);
+        TrackInsetLG = new Thickness(3);
+        OptionHeight = 28;
+        OptionHeightLG = 34;
+        OptionInset = new Thickness(10, 0);
+        OptionInsetBadge = new Thickness(10, 0, 4, 0);
+        OptionInsetLG = new Thickness(14, 0);
+        OptionInsetBadgeLG = new Thickness(14, 0, 5, 0);
+        BadgeHeight = 20;
+        BadgeHeightLG = 26;
+    }
 }

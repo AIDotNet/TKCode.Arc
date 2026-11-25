@@ -124,4 +124,25 @@ internal sealed class ColorPickerToken : AbstractControlDesignToken
         GradeLargeFill = Oklch.WithAlpha(n.Warning, 0.16);
         GradeFailFill = Oklch.WithAlpha(n.Danger, 0.12);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerHeight = 34;
+        TriggerRadius = new CornerRadius(10);
+        TriggerInset = new Thickness(5, 4, 12, 4);
+        ChipDiameter = 24;
+        TriggerGap = 8;
+        TriggerFocusRingRadius = new CornerRadius(14);
+        TriggerHeightSM = 28;
+        TriggerRadiusSM = new CornerRadius(10);
+        TriggerInsetSM = new Thickness(4, 4, 10, 4);
+        ChipDiameterSM = 20;
+        TriggerFocusRingRadiusSM = new CornerRadius(14);
+        BodyInset = new Thickness(12, 6, 12, 12);
+        BodyGap = 10;
+        FieldHeight = 32;
+        FieldRadius = new CornerRadius(10);
+        IconButtonSize = 26;
+    }
 }

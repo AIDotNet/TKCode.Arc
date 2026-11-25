@@ -28,7 +28,7 @@ internal static class ArcTokenCalculator
     public static Dictionary<object, object?> Compute(IReadOnlyList<ArcTokenDescriptor> descriptors, int tokenCount,
                                                       ArcThemeState state, bool isDark)
     {
-        var seed = new ArcSeedToken(state.Accent ?? ArcSeedToken.DefaultAccent, state.MotionLevel);
+        var seed = new ArcSeedToken(state.Accent ?? ArcSeedToken.DefaultAccent, state.MotionLevel, state.Density);
         List<string>? errors = null;
         var used = state.Overrides.Count == 0 ? null : new HashSet<string>(StringComparer.Ordinal);
         var result = new Dictionary<object, object?>(tokenCount);
@@ -39,6 +39,10 @@ internal static class ArcTokenCalculator
             var token = descriptor.CreateToken();
             token.EffectiveGlobalToken = seed;
             token.CalculateTokenValues(isDark);
+            if (seed.IsCompact)
+            {
+                token.ApplyCompact(isDark);
+            }
 
             // Presets first (in state order), then the state's own overrides, so the app wins over every preset.
             foreach (var preset in state.Presets)

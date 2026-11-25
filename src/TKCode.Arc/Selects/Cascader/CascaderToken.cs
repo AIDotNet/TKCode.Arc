@@ -66,4 +66,17 @@ internal sealed class CascaderToken : AbstractControlDesignToken
         FocusRingRadius = new CornerRadius(22);
         FocusRingMargin = new Thickness(-4);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerPadding = new Thickness(10, 0);
+        MenuCornerRadius = new CornerRadius(14);
+        MenuPadding = new Thickness(4);
+        OptionHeight = 30;
+        OptionCornerRadius = new CornerRadius(10);
+        OptionPadding = new Thickness(10, 0, 28, 0);
+        ClearButtonSize = 20;
+        FocusRingRadius = new CornerRadius(14);
+    }
 }

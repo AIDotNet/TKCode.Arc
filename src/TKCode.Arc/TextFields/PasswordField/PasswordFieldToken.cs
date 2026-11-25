@@ -24,4 +24,15 @@ internal sealed class PasswordFieldToken : AbstractControlDesignToken
         RevealButtonSizeSM = 26;
         EyeSize = 18;
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        FramePaddingSM = new Thickness(8, 0, 3, 0);
+        FramePaddingMD = new Thickness(10, 0, 5, 0);
+        FramePaddingLG = new Thickness(12, 0, 7, 0);
+        RevealButtonSize = 24;
+        RevealButtonSizeSM = 22;
+        EyeSize = 16;
+    }
 }

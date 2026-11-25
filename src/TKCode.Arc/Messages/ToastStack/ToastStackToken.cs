@@ -55,4 +55,15 @@ internal sealed class ToastStackToken : AbstractControlDesignToken
         CloseDiameter = 28;
         CloseMargin = new Thickness(12, -4, -2, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ContentPadding = new Thickness(12, 8, 8, 8);
+        IconMargin = new Thickness(0, 0, 10, 0);
+        CopyLineHeight = 18;
+        ActionHeight = 24;
+        ActionPadding = new Thickness(10, 0);
+        CloseDiameter = 24;
+    }
 }

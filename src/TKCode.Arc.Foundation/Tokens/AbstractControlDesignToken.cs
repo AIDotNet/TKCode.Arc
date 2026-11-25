@@ -22,4 +22,15 @@ public abstract class AbstractControlDesignToken
     public virtual void CalculateTokenValues(bool isDarkMode)
     {
     }
+
+    /// <summary>
+    /// Tightens geometry and sizing tokens for <see cref="ArcDensity.Compact"/>. Called by the theme manager right after
+    /// <see cref="CalculateTokenValues"/> and before presets or explicit token overrides when compact density is active.
+    /// Must depend only on <see cref="EffectiveGlobalToken"/>, <paramref name="isDarkMode"/> and values computed by
+    /// <see cref="CalculateTokenValues"/>.
+    /// </summary>
+    /// <param name="isDarkMode">True for the dark appearance.</param>
+    public virtual void ApplyCompact(bool isDarkMode)
+    {
+    }
 }

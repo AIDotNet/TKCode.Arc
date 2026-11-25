@@ -101,4 +101,16 @@ internal sealed class ScrubInputToken : AbstractControlDesignToken
         TrackFillActive = Oklch.WithAlpha(n.Foreground, 0.10);
         UnitHoverFill = Oklch.WithAlpha(n.Foreground, 0.07);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        ShellHeightSM = 24;
+        ShellRadius = new CornerRadius(8);
+        ShellRadiusSM = new CornerRadius(7);
+        HandleMinWidth = 24;
+        HandlePadding = new Thickness(8, 0, 3, 0);
+        BodyPadding = new Thickness(0, 0, 8, 0);
+        UnitHeight = 18;
+    }
 }

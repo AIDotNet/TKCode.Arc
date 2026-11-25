@@ -56,4 +56,14 @@ internal sealed class ActionSwapToken : AbstractControlDesignToken
         DangerEdge = Oklch.MixOklab(n.Danger, n.Border, 0.75);
         DangerEdgeHover = Oklch.MixOklab(n.Danger, n.Border, 0.58);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        InlinePaddingSM = new Thickness(12, 0);
+        InlinePaddingMD = new Thickness(14, 0);
+        InlinePaddingLG = new Thickness(18, 0);
+        IconExtent = 14;
+        LabelGap = 6;
+    }
 }

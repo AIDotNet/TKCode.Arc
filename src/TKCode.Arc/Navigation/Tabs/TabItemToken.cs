@@ -79,4 +79,14 @@ internal sealed class TabItemToken : AbstractControlDesignToken
         CardFocusRingMargin = new Thickness(-3, -3, -3, 0);
         CardFocusRingRadius = new CornerRadius(13, 13, 0, 0);
     }
+
+    public override void ApplyCompact(bool isDarkMode)
+    {
+        base.ApplyCompact(isDarkMode);
+        TriggerMinWidth = 68;
+        InlinePadding = new Thickness(10, 0);
+        ClosableInlinePadding = new Thickness(10, 0, 5, 0);
+        TriggerRadius = new CornerRadius(8);
+        FocusRingRadius = new CornerRadius(12);
+    }
 }
