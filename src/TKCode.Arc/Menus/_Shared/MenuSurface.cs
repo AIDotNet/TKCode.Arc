@@ -637,9 +637,14 @@ public class MenuSurface : HeaderedItemsControl
             // Light dismiss (another window, the anchor detached): sync the state.
             SetCurrentValue(IsOpenProperty, false);
         }
-        if (_popup is { Parent: not null } popup)
+        if (_popup is { } closedPopup)
         {
-            ((ISetLogicalParent)popup).SetParent(null);
+            if (closedPopup.Parent is not null)
+            {
+                ((ISetLogicalParent)closedPopup).SetParent(null);
+            }
+            closedPopup.PlacementTarget = null;
+            closedPopup.OverlayInputPassThroughElement = null;
         }
         RaiseEvent(new RoutedEventArgs(ClosedEvent, this));
     }

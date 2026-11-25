@@ -66,10 +66,11 @@ public sealed partial class DockWorkspace
     /// <summary>Drops a pane from the panes this workspace remembers (a pane made from a source whose item went away).</summary>
     internal void Forget(DockPane pane)
     {
-        if (_known.TryGetValue(pane.Id, out var known) && ReferenceEquals(known, pane))
+        if (_known.TryGetValue(pane.Id, out var weak) && (!weak.TryGetTarget(out var known) || ReferenceEquals(known, pane)))
         {
             _known.Remove(pane.Id);
         }
+        _closedIds.Remove(pane.Id);
     }
 }
 

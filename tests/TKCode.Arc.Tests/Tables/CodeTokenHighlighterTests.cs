@@ -49,4 +49,16 @@ public class CodeTokenHighlighterTests
             CodeBlockHighlighter.Provider = provider;
         }
     }
+
+    [Fact]
+    public void ArcHighlighting_SharedHighlighter_Exposes_Shared_LightPlus_Engine()
+    {
+        var engine = ArcHighlighting.SharedHighlighter;
+        engine.ShouldBeSameAs(TextMateCodeHighlighter.Engine);
+        engine.SupportsLanguage("csharp").ShouldBeTrue();
+        using var session = engine.CreateSession("csharp", StreamMark.Core.Highlighting.HighlightThemeKind.Light);
+        var lines = session.Update("public sealed class Demo { }");
+        lines.Count.ShouldBe(1);
+        lines[0].ShouldNotBeEmpty();
+    }
 }

@@ -186,6 +186,11 @@ namespace TKCode.Arc.Foundation.Generators
             {
                 return;
             }
+            if (assets.Count > 0)
+            {
+                context.AddSource("ArcGeneratedThemeAssets.g.cs",
+                    SourceText.From(ThemeEmitter.EmitThemeAssets(compilation.AssemblyName ?? "Assembly", assets), Encoding.UTF8));
+            }
             context.AddSource("ArcGeneratedAssets.g.cs",
                 SourceText.From(ThemeEmitter.EmitAssets(compilation.AssemblyName ?? "Assembly", validTokens, assets, catalogs), Encoding.UTF8));
         }

@@ -88,6 +88,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     private readonly HashSet<Row> _realized = [];
     private readonly SelectionController _selection;
     private INotifyCollectionChanged? _subscribedCollection;
+    private bool _subscribed = true;
     private IReadOnlyList<TranscriptEntry> _source = [];
     private bool _rowsDirty = true;
     private bool _topsDirty = true;
@@ -290,10 +291,16 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
 
     public void SetEntries(IReadOnlyList<TranscriptEntry> entries)
     {
-        _subscribedCollection?.CollectionChanged -= OnCollectionChanged;
+        if (_subscribed)
+        {
+            _subscribedCollection?.CollectionChanged -= OnCollectionChanged;
+        }
         _source = entries;
         _subscribedCollection = entries as INotifyCollectionChanged;
-        _subscribedCollection?.CollectionChanged += OnCollectionChanged;
+        if (_subscribed)
+        {
+            _subscribedCollection?.CollectionChanged += OnCollectionChanged;
+        }
         SyncEntries();
     }
 
@@ -314,7 +321,7 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
             else
             {
                 state = new EntryState(entry);
-                if (entry is MarkdownEntry markdown)
+                if (_subscribed && entry is MarkdownEntry markdown)
                 {
                     markdown.Document.SnapshotReady += OnSnapshotReady;
                 }
@@ -1147,7 +1154,42 @@ public sealed class TranscriptPanel : Panel, ILogicalScrollable, ISelectionHost
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
+        if (!_subscribed)
+        {
+            _subscribed = true;
+            _subscribedCollection?.CollectionChanged += OnCollectionChanged;
+            for (var i = 0; i < _entries.Count; i++)
+            {
+                if (_entries[i].Entry is MarkdownEntry markdown)
+                {
+                    markdown.Document.SnapshotReady += OnSnapshotReady;
+                }
+            }
+            SyncEntries();
+        }
         InvalidateStyle();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        if (_subscribed)
+        {
+            _subscribed = false;
+            _subscribedCollection?.CollectionChanged -= OnCollectionChanged;
+            for (var i = 0; i < _entries.Count; i++)
+            {
+                if (_entries[i].Entry is MarkdownEntry markdown)
+                {
+                    markdown.Document.SnapshotReady -= OnSnapshotReady;
+                }
+            }
+        }
+        if (_tail is not null)
+        {
+            _tail.IsDocumentTail = false;
+            _tail = null;
+        }
     }
 
     /// <summary>滚动到底部并恢复贴底。</summary>

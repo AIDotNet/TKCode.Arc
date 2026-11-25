@@ -169,10 +169,13 @@ internal sealed class TextMateHighlightSession : IHighlightSession
             return (ImmutableArray<HighlightToken>.Empty, state);
         }
 
-        // 行尾正好是 '\n'（且无 '\r'）时直接把它一起传入，TextMateSharp 就不必再复制一份加换行的缓冲区
-        ReadOnlyMemory<char> text = contentEnd == end && end < code.Length
-            ? code.AsMemory(start, length + 1)
-            : code.AsMemory(start, length);
+        // 仅传单行字符串，避免 Onigwrap.OnigRegExp._lastSearchString 长期钉住整段大代码串；
+        // 行尾正好是 '\n'（且无 '\r'）时把 '\n' 一并截出，TextMateSharp 就不必再复制一份加换行的缓冲区，
+        // 同时保持字符串底层让 MemoryMarshal.TryGetString 命中，保留单行内多规则的正则匹配缓存性能。
+        int sliceLength = contentEnd == end && end < code.Length ? length + 1 : length;
+        ReadOnlyMemory<char> text = sliceLength == code.Length
+            ? code.AsMemory()
+            : code.Substring(start, sliceLength).AsMemory();
 
         ITokenizeLineResult2 result;
         bool stoppedEarly;

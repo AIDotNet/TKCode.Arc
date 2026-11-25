@@ -92,6 +92,11 @@ public class GeneratorTests
         MatchSnapshot("DemoDesignToken.g.cs", result.Sources["DemoDesignToken.g.cs"]);
         MatchSnapshot("ArcGeneratedAssets.g.cs", result.Sources["ArcGeneratedAssets.g.cs"]);
         MatchSnapshot("Demo.Controls.Themes.DemoButtonTheme.g.cs", result.Sources["Demo.Controls.Themes.DemoButtonTheme.g.cs"]);
+        result.Sources.Keys.ShouldContain("ArcGeneratedThemeAssets.g.cs");
+        var themeAssets = result.Sources["ArcGeneratedThemeAssets.g.cs"];
+        themeAssets.ShouldContain("internal static class ArcGeneratedThemeAssets");
+        themeAssets.ShouldContain("public static global::TKCode.Arc.ArcThemeAsset DemoButtonTheme()");
+        themeAssets.ShouldNotContain("static readonly");
     }
 
     [Fact]

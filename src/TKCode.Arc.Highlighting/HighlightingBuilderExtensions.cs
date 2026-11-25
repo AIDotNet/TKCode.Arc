@@ -1,3 +1,5 @@
+using StreamMark.Highlighting.TextMate;
+
 namespace TKCode.Arc;
 
 public static class ArcHighlightingBuilderExtensions
@@ -19,4 +21,17 @@ public static class ArcHighlightingBuilderExtensions
             // blocks built before the application starts already highlight.
             CodeBlockHighlighter.Provider = TextMateCodeHighlighter.Shared;
         });
+}
+
+/// <summary>
+/// Access to the shared syntax-highlighting engine installed by <see cref="ArcHighlightingBuilderExtensions.UseArcHighlighting"/>.
+/// </summary>
+public static class ArcHighlighting
+{
+    /// <summary>
+    /// The process-wide TextMate highlighter shared by <see cref="CodeBlock"/>, the rich text editor and Markdown fenced
+    /// code. Both its light and dark theme contexts use VS Code's Light+ theme because Arc maps Light+ token colors to
+    /// its own syntax roles; reusing it avoids loading a second TextMate registry and native Oniguruma regex cache.
+    /// </summary>
+    public static TextMateSyntaxHighlighter SharedHighlighter => TextMateCodeHighlighter.Engine;
 }

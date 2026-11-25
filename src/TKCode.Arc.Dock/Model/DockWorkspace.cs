@@ -24,7 +24,8 @@ public sealed partial class DockWorkspace : AvaloniaObject
     public static readonly DirectProperty<DockWorkspace, DockNode?> RootProperty =
         AvaloniaProperty.RegisterDirect<DockWorkspace, DockNode?>(nameof(Root), o => o.Root, (o, v) => o.Root = v);
 
-    private readonly Dictionary<string, DockPane> _known = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, WeakReference<DockPane>> _known = new(StringComparer.Ordinal);
+    private readonly HashSet<string> _closedIds = new(StringComparer.Ordinal);
     private DockNode? _root;
     private int _batch;
     private bool _changed;
@@ -169,10 +170,39 @@ public sealed partial class DockWorkspace : AvaloniaObject
     }
 
     /// <summary>
-    /// Every pane this workspace has held, by id, including closed ones: a restored layout can bring back a pane that was
-    /// declared in XAML and closed since.
+    /// Every still-alive pane this workspace has held, by id, including closed ones the host still keeps: a restored
+    /// layout can bring back a pane declared in XAML and closed since, without pinning closed dynamic panes in memory.
     /// </summary>
-    internal IReadOnlyDictionary<string, DockPane> KnownPanes => _known;
+    internal IEnumerable<KeyValuePair<string, DockPane>> LiveKnownPanes()
+    {
+        foreach (var (id, weak) in _known)
+        {
+            if (weak.TryGetTarget(out var pane))
+            {
+                yield return new KeyValuePair<string, DockPane>(id, pane);
+            }
+        }
+    }
+
+    /// <summary>Ids of panes this workspace has held that are not in <paramref name="openIds"/>.</summary>
+    internal IEnumerable<string> ClosedIds(IReadOnlySet<string> openIds)
+    {
+        var yielded = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var id in _closedIds)
+        {
+            if (!openIds.Contains(id) && yielded.Add(id))
+            {
+                yield return id;
+            }
+        }
+        foreach (var id in _known.Keys)
+        {
+            if (!openIds.Contains(id) && yielded.Add(id))
+            {
+                yield return id;
+            }
+        }
+    }
 
     /// <summary>The document group that last had an active pane; documents opened without a target go there.</summary>
     internal DockGroup? RecentDocumentGroup
@@ -366,13 +396,43 @@ public sealed partial class DockWorkspace : AvaloniaObject
         {
             group.RefreshPlacement();
         }
+        var open = new HashSet<string>(StringComparer.Ordinal);
         foreach (var pane in AllPanes())
         {
             pane.RefreshState();
             if (pane.Id.Length > 0)
             {
-                _known[pane.Id] = pane;
+                open.Add(pane.Id);
+                _closedIds.Remove(pane.Id);
+                if (!_known.TryGetValue(pane.Id, out var existing) || !existing.TryGetTarget(out var target) || !ReferenceEquals(target, pane))
+                {
+                    _known[pane.Id] = new WeakReference<DockPane>(pane);
+                }
             }
+        }
+        List<string>? dead = null;
+        foreach (var (id, weak) in _known)
+        {
+            if (!open.Contains(id))
+            {
+                _closedIds.Add(id);
+                if (!weak.TryGetTarget(out _))
+                {
+                    (dead ??= []).Add(id);
+                }
+            }
+        }
+        if (dead is not null)
+        {
+            foreach (var id in dead)
+            {
+                _known.Remove(id);
+            }
+        }
+        if (_recentDocumentGroup is { } recent
+            && (!recent.IsDocumentGroup || !ReferenceEquals(recent.Workspace, this) || recent.Float is not null))
+        {
+            _recentDocumentGroup = null;
         }
         Changed?.Invoke(this, EventArgs.Empty);
     }

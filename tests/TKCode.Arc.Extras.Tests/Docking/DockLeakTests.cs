@@ -148,4 +148,37 @@ public class DockLeakTests
         ShouldBeCollected(refs);
         GC.KeepAlive(sample);
     }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference[] OpenAndCloseImperativePane(DockLayout layout)
+    {
+        var content = new Border { Child = new TextBlock { Text = "Ephemeral document" } };
+        var pane = new DockPane { Id = "doc:ephemeral", Title = "Ephemeral", Content = content };
+        layout.Open(pane);
+        Dispatcher.UIThread.RunJobs();
+        layout.ShowPaneMenu(pane, DockLayoutViewTests.TabOf(layout, "doc:ephemeral"), null);
+        layout.Menu!.Close();
+        Dispatcher.UIThread.RunJobs();
+        layout.Close(pane).ShouldBeTrue();
+        Dispatcher.UIThread.RunJobs();
+        return [new WeakReference(pane), new WeakReference(content)];
+    }
+
+    [AvaloniaFact]
+    public void Closed_Imperative_Panes_And_Their_Content_Are_Collected_While_SaveLayout_Remembers_Closed_Ids()
+    {
+        var layout = new DockLayout { Workspace = new DockWorkspace { Root = new DockDocumentArea() } };
+        var window = DockLayoutViewTests.Show(layout, 1000, 600);
+        try
+        {
+            var refs = OpenAndCloseImperativePane(layout);
+            ShouldBeCollected(refs);
+            layout.SaveLayout().ShouldContain("\"doc:ephemeral\"");
+            layout.SaveLayout().ShouldContain("\"closed\"");
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
 }

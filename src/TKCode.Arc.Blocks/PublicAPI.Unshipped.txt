@@ -1,4 +1,17 @@
 #nullable enable
+static TKCode.Arc.ArcBlocksBuilderExtensions.UseArcBlocks(this TKCode.Arc.ArcBuilder! builder, System.Action<TKCode.Arc.ArcBlocksBuilder!>! configure) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcBlocksBuilder
+TKCode.Arc.ArcBlocksBuilder.UseAll() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseCommandPalette() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseEmptyStates() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseNotificationCenter() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UsePageHeader() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSelectionToolbar() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSettings() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSettingsGroup() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSettingsPage() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSettingsRow() -> TKCode.Arc.ArcBlocksBuilder!
+TKCode.Arc.ArcBlocksBuilder.UseSidebar() -> TKCode.Arc.ArcBlocksBuilder!
 TKCode.Arc.Sidebar.SectionHeaderTrailingTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
 TKCode.Arc.Sidebar.SectionHeaderTrailingTemplate.set -> void
 TKCode.Arc.Sidebar.TrailingPlacement.get -> TKCode.Arc.SidebarTrailingPlacement

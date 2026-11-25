@@ -1,4 +1,15 @@
 #nullable enable
+static TKCode.Arc.ArcSpecialBuilderExtensions.UseArcSpecial(this TKCode.Arc.ArcBuilder! builder, System.Action<TKCode.Arc.ArcSpecialBuilder!>! configure) -> TKCode.Arc.ArcBuilder!
+TKCode.Arc.ArcSpecialBuilder
+TKCode.Arc.ArcSpecialBuilder.UseAll() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseConfirmPopover() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseEmojiPicker() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseGlass() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseImageReveal() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseReasoningBlock() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseTocProgress() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseToolCall() -> TKCode.Arc.ArcSpecialBuilder!
+TKCode.Arc.ArcSpecialBuilder.UseUndoToast() -> TKCode.Arc.ArcSpecialBuilder!
 TKCode.Arc.GlassBackdropMode
 TKCode.Arc.GlassBackdropMode.Brush = 0 -> TKCode.Arc.GlassBackdropMode
 TKCode.Arc.GlassBackdropMode.Native = 1 -> TKCode.Arc.GlassBackdropMode

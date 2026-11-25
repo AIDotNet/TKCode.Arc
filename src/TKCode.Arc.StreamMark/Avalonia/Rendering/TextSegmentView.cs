@@ -473,6 +473,10 @@ public sealed class TextSegmentView : Control, ISelectableSegment
         if (_context is not null)
         {
             _context.Selection.Changed += OnSelectionChanged;
+            if (_layout is null)
+            {
+                InvalidateMeasure();
+            }
         }
         SyncStreamingSubscription();
     }
@@ -498,8 +502,33 @@ public sealed class TextSegmentView : Control, ISelectableSegment
                 slot.Dispose();
             }
             _images.Clear();
-            InvalidateLayout();
         }
+        ReleaseLayout();
+    }
+
+    private void ReleaseLayout()
+    {
+        if (_layout is not null)
+        {
+            _layout.Dispose();
+            _layout = null;
+        }
+        if (_lines.Count > 0)
+        {
+            for (var i = 0; i < _lines.Count; i++)
+            {
+                VisualChildren.Remove(_lines[i]);
+            }
+            _lines.Clear();
+        }
+#pragma warning disable CS0618
+        _runCache.Invalidate();
+#pragma warning restore CS0618
+        _uncoveredRuns.Clear();
+        _fullRebuild = true;
+        _runCacheWidth = double.NaN;
+        _dirtyFrom = 0;
+        InvalidateMeasure();
     }
 
     private void SyncStreamingSubscription()

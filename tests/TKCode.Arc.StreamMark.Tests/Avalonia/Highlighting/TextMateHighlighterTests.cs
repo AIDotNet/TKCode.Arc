@@ -1,4 +1,5 @@
 using System.Collections.Immutable;
+using System.Runtime.CompilerServices;
 using System.Text;
 using StreamMark.Core.Highlighting;
 using StreamMark.Highlighting.TextMate;
@@ -417,5 +418,34 @@ public sealed class TextMateHighlighterTests
         var lines = session.Update("fn main() { let x = 1; }");
         Assert.True(Internal(session).HasGrammar);
         Assert.NotEqual(0u, ColorAt(lines, 0, 0));
+    }
+
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static WeakReference HighlightLargeMultilineStringAndDispose(TextMateSyntaxHighlighter highlighter)
+    {
+        var sb = new StringBuilder(64 * 1024);
+        for (int i = 0; i < 600; i++)
+        {
+            sb.Append("public sealed class Item").Append(i).Append(" { public int Value => ").Append(i).AppendLine("; }");
+        }
+        string code = sb.ToString();
+        using IHighlightSession session = highlighter.CreateSession("csharp", HighlightThemeKind.Light);
+        IReadOnlyList<ImmutableArray<HighlightToken>> lines = session.Update(code);
+        Assert.True(lines.Count >= 600);
+        return new WeakReference(code);
+    }
+
+    [Fact]
+    public void TokenizeLine_DoesNotPinFullMultilineCodeStringInOnigRegExp()
+    {
+        var highlighter = new TextMateSyntaxHighlighter();
+        WeakReference weak = HighlightLargeMultilineStringAndDispose(highlighter);
+        for (int i = 0; i < 5 && weak.IsAlive; i++)
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+        }
+        Assert.False(weak.IsAlive);
+        GC.KeepAlive(highlighter);
     }
 }

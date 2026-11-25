@@ -113,6 +113,15 @@ public partial class DockLayout
             // Nothing left to focus: let go of the closed pane's tab (the window would remember it as its focused element).
             TopLevel.GetTopLevel(this)?.FocusManager?.Focus(null);
         }
+        if (ReferenceEquals(_paneBeforeFlyout, pane))
+        {
+            _paneBeforeFlyout = null;
+        }
+        if (_menu is { IsOpen: false })
+        {
+            _menu.Items.Clear();
+            _menu.PlacementTarget = null;
+        }
         Announce(DockText.Format(DockLangResourceKind.AnnounceClosed, pane.ToString()));
         RaiseEvent(new DockPaneEventArgs(PaneClosedEvent, pane));
         RaiseLayoutChanged(DockLayoutChangeKind.Close, pane);
@@ -243,8 +252,7 @@ public partial class DockLayout
     public string SaveLayout()
     {
         var open = _workspace.AllPanes().Select(p => p.Id).ToHashSet(StringComparer.Ordinal);
-        var closed = _workspace.KnownPanes.Keys.Where(id => !open.Contains(id));
-        return DockLayoutSerializer.Write(_workspace, ActivePane?.Id, closed);
+        return DockLayoutSerializer.Write(_workspace, ActivePane?.Id, _workspace.ClosedIds(open));
     }
 
     /// <summary>
@@ -284,7 +292,19 @@ public partial class DockLayout
 
     private MenuSurface EnsureMenu()
     {
-        return _menu ??= new MenuSurface { Variant = MenuSurfaceVariant.Context, ClosesOnViewportChange = true };
+        if (_menu is null)
+        {
+            _menu = new MenuSurface { Variant = MenuSurfaceVariant.Context, ClosesOnViewportChange = true };
+            _menu.Closed += (_, _) =>
+            {
+                if (_menu is { IsOpen: false })
+                {
+                    _menu.Items.Clear();
+                    _menu.PlacementTarget = null;
+                }
+            };
+        }
+        return _menu;
     }
 
     /// <summary>

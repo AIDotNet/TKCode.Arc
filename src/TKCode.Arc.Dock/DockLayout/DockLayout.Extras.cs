@@ -91,6 +91,10 @@ public partial class DockLayout
         ClosePaneSwitcher(restoreFocus: false);
         _menu?.Close(returnFocus: false);
         _menu?.Items.Clear();
+        if (_menu is not null)
+        {
+            _menu.PlacementTarget = null;
+        }
         if (_maximized is not null)
         {
             _maximized = null;

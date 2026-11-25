@@ -35,6 +35,7 @@ public sealed class CodeBlockView : BlockView
     private readonly BlockActionBar _actions;
     private readonly List<IconButton> _headerButtons = [];
     private TextLayout? _title;
+    private string? _titleText;
     private string? _parsedInfo;
     private int _parsedFirstLine = 1;
     private DispatcherTimer? _copiedTimer;
@@ -215,8 +216,9 @@ public sealed class CodeBlockView : BlockView
             {
                 title += " · " + path + (fence.StartLine is { } start ? $"#L{start}" + (fence.EndLine is { } end && end != start ? $"-{end}" : "") : "");
             }
-            _title = new TextLayout(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
-                textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 480);
+            _titleText = title;
+            DisposeTitle();
+            _title = CreateTitleLayout(title, style);
             _actions.Rebuild(context, Plugins.BlockActionTargets.Code, code, IsFirstChunk);
             RebuildHeaderButtons();
             for (var i = 0; i < _headerButtons.Count; i++)
@@ -282,7 +284,7 @@ public sealed class CodeBlockView : BlockView
         {
             var wasShowing = _lineNumbers;
             _lineNumbers = false;
-            _numbers.Clear();
+            DisposeNumbers();
             _gutter = 0;
             _lineNumberDigits = 0;
             _lineNumbersStyle = null;
@@ -307,9 +309,9 @@ public sealed class CodeBlockView : BlockView
         if (rebuild)
         {
             _lineNumberDigits = digits;
-            var probe = new TextLayout(new string('0', digits), typeface, style.CodeFontSize, style.SecondaryForeground);
+            using var probe = new TextLayout(new string('0', digits), typeface, style.CodeFontSize, style.SecondaryForeground);
             _gutter = Math.Ceiling(probe.WidthIncludingTrailingWhitespace) + 14;
-            _numbers.Clear();
+            DisposeNumbers();
         }
         if (_numbers.Count == count && !rebuild)
         {
@@ -317,6 +319,10 @@ public sealed class CodeBlockView : BlockView
         }
         if (_numbers.Count > count)
         {
+            for (var i = count; i < _numbers.Count; i++)
+            {
+                _numbers[i].Dispose();
+            }
             _numbers.RemoveRange(count, _numbers.Count - count);
         }
         for (var i = _numbers.Count; i < count; i++)
@@ -360,6 +366,10 @@ public sealed class CodeBlockView : BlockView
 
     protected override Size MeasureOverride(Size availableSize)
     {
+        if (_lineNumbers && _numbers.Count == 0 && Context is not null && Block is CodeBlock code && _code.State is { } shared)
+        {
+            UpdateLineNumbers(Context, code, shared, _lineNumberStart);
+        }
         for (var i = 0; i < _headerButtons.Count; i++)
         {
             _headerButtons[i].Measure(Size.Infinity);
@@ -453,6 +463,10 @@ public sealed class CodeBlockView : BlockView
         }
         if (IsFirstChunk)
         {
+            if (_title is null && _titleText is not null)
+            {
+                _title = CreateTitleLayout(_titleText, style);
+            }
             _title?.Draw(context, new Point(Padding, (HeaderHeight - _title.Height) / 2));
         }
         if (_lineNumbers)
@@ -483,6 +497,39 @@ public sealed class CodeBlockView : BlockView
     }
 
     public override IEnumerable<ISelectableSegment> Segments() => [_code];
+
+    private static TextLayout CreateTitleLayout(string title, MarkdownStyle style) =>
+        new(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
+            textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 480);
+
+    private void DisposeTitle()
+    {
+        _title?.Dispose();
+        _title = null;
+    }
+
+    private void DisposeNumbers()
+    {
+        for (var i = 0; i < _numbers.Count; i++)
+        {
+            _numbers[i].Dispose();
+        }
+        _numbers.Clear();
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _copiedTimer?.Stop();
+        _copiedTimer = null;
+        DisposeTitle();
+        if (_numbers.Count > 0)
+        {
+            DisposeNumbers();
+            _lineNumbersStyle = null;
+            InvalidateMeasure();
+        }
+    }
 }
 
 /// <summary>
@@ -569,10 +616,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
             {
                 _wrap = value;
                 _offsetX = 0;
-                foreach (var line in _lines)
-                {
-                    line.Layout = null;
-                }
+                DisposeLineLayouts();
                 _layoutWidth = double.NaN;
                 _allStripsDirty = true;
                 InvalidateMeasure();
@@ -620,12 +664,12 @@ public sealed class CodeTextView : Control, ISelectableSegment
             {
                 state.HighlightUpdated += OnHighlightUpdated;
             }
-            _lines.Clear();
+            ClearLines();
             reset = true;
         }
         if (styleChanged || lineStart != _windowStart || lineCount != _windowLines)
         {
-            _lines.Clear();
+            ClearLines();
             reset = true;
         }
         _windowStart = lineStart;
@@ -660,6 +704,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
                 {
                     line.Text = text;
                     line.Tokens = tokens;
+                    line.Layout?.Dispose();
                     line.Layout = null;
                     if (textChanged)
                     {
@@ -689,6 +734,11 @@ public sealed class CodeTextView : Control, ISelectableSegment
         }
         if (_lines.Count > index)
         {
+            for (var i = index; i < _lines.Count; i++)
+            {
+                _lines[i].Layout?.Dispose();
+                _lines[i].Layout = null;
+            }
             _lines.RemoveRange(index, _lines.Count - index);
             textOrCountChanged = true;
             if (index < localDirtyStart)
@@ -875,10 +925,7 @@ public sealed class CodeTextView : Control, ISelectableSegment
         var maxWidth = double.IsFinite(availableSize.Width) ? Math.Max(availableSize.Width, 1) : double.PositiveInfinity;
         if (_wrap && !_layoutWidth.Equals(maxWidth))
         {
-            foreach (var line in _lines)
-            {
-                line.Layout = null;
-            }
+            DisposeLineLayouts();
             _allStripsDirty = true;
         }
         _layoutWidth = maxWidth;
@@ -1141,6 +1188,21 @@ public sealed class CodeTextView : Control, ISelectableSegment
         return default;
     }
 
+    private void DisposeLineLayouts()
+    {
+        for (var i = 0; i < _lines.Count; i++)
+        {
+            _lines[i].Layout?.Dispose();
+            _lines[i].Layout = null;
+        }
+    }
+
+    private void ClearLines()
+    {
+        DisposeLineLayouts();
+        _lines.Clear();
+    }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
@@ -1153,6 +1215,10 @@ public sealed class CodeTextView : Control, ISelectableSegment
             _state.HighlightUpdated += OnHighlightUpdated;
             // 回收期间可能已有新的着色结果
             ApplyWindow();
+        }
+        if (_lines.Count > 0 && double.IsNaN(_layoutWidth))
+        {
+            InvalidateMeasure();
         }
     }
 
@@ -1167,6 +1233,10 @@ public sealed class CodeTextView : Control, ISelectableSegment
         {
             _state.HighlightUpdated -= OnHighlightUpdated;
         }
+        DisposeLineLayouts();
+        _layoutWidth = double.NaN;
+        _allStripsDirty = true;
+        InvalidateMeasure();
     }
 }
 

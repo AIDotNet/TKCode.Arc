@@ -28,7 +28,7 @@ internal static class DockLayoutLoader
                 known.Add(pane);
             }
         }
-        foreach (var (id, pane) in workspace.KnownPanes)
+        foreach (var (id, pane) in workspace.LiveKnownPanes())
         {
             if (byId.TryAdd(id, pane))
             {

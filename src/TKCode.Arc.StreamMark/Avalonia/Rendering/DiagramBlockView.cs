@@ -43,6 +43,7 @@ public sealed class DiagramBlockView : BlockView
     private Color _surface;
     private CancellationTokenSource? _cts;
     private TextLayout? _title;
+    private string? _titleText;
     private TextLayout? _status;
     private string? _statusText;
     private bool _statusIsError;
@@ -86,7 +87,9 @@ public sealed class DiagramBlockView : BlockView
             button.Foreground = style.SecondaryForeground;
             button.HoverBackground = style.HoverBackground;
         }
-        _title = new TextLayout(code.Language ?? "diagram", new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground);
+        _titleText = code.Language ?? "diagram";
+        _title?.Dispose();
+        _title = new TextLayout(_titleText, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground);
         if (contextChanged || previous is not CodeBlock old || old.Info != code.Info)
         {
             _actions.Rebuild(context, Plugins.BlockActionTargets.Diagram, code, visible: true);
@@ -198,6 +201,7 @@ public sealed class DiagramBlockView : BlockView
     private void StartRender(CodeBlock code, DiagramRenderContext renderContext, IDiagramRenderer? renderer)
     {
         _cts?.Cancel();
+        _cts?.Dispose();
         _cts = new CancellationTokenSource();
         var token = _cts.Token;
         if (DiagramCache.TryGet(_renderKey, out var cached))
@@ -214,6 +218,7 @@ public sealed class DiagramBlockView : BlockView
         _error = null;
         _statusText = "Rendering…";
         _statusIsError = false;
+        _status?.Dispose();
         _status = null;
         var key = _renderKey;
         var language = code.Language ?? "";
@@ -252,6 +257,7 @@ public sealed class DiagramBlockView : BlockView
                 _error = error;
                 _statusText = error;
                 _statusIsError = error is not null;
+                _status?.Dispose();
                 _status = null;
                 UpdateVisibility();
             });
@@ -306,6 +312,7 @@ public sealed class DiagramBlockView : BlockView
             var size = FitDiagram(inner);
             return new Size(width, HeaderHeight + size.Height + Padding);
         }
+        _status?.Dispose();
         _status = _statusText is null || Context is null
             ? null
             : new TextLayout(_statusText, new Typeface(Context.Style.FontFamily), Context.Style.FontSize * 0.85,
@@ -354,6 +361,10 @@ public sealed class DiagramBlockView : BlockView
         var style = Context.Style;
         var radius = style.CornerRadius.TopLeft;
         context.DrawRectangle(style.CodeBackground, new Pen(style.CodeBorderBrush, 1), new Rect(Bounds.Size).Deflate(0.5), radius, radius);
+        if (_title is null && _titleText is not null)
+        {
+            _title = new TextLayout(_titleText, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground);
+        }
         _title?.Draw(context, new Point(Padding, (HeaderHeight - _title.Height) / 2));
         if (DiagramVisible)
         {
@@ -373,11 +384,18 @@ public sealed class DiagramBlockView : BlockView
     {
         base.OnDetachedFromVisualTree(e);
         _cts?.Cancel();
+        _cts?.Dispose();
+        _cts = null;
+        _title?.Dispose();
+        _title = null;
+        _status?.Dispose();
+        _status = null;
         // 取消后重新挂载时需要重新渲染（缓存命中则立即显示）
         if (_diagram is null)
         {
             _renderKey = "";
         }
+        InvalidateMeasure();
     }
 
     // 进程内共享：同样的代码与环境不必重新渲染（视图回收、重建后立即显示）

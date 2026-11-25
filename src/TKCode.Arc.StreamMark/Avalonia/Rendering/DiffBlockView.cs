@@ -46,6 +46,8 @@ public sealed class DiffBlockView : BlockView
     private readonly DiffBodyView _body = new();
     private TextLayout? _title;
     private TextLayout? _stats;
+    private string? _titleText;
+    private bool _showStats;
     private string? _code;
     private DiffDocument _document = new([]);
     private DispatcherTimer? _copiedTimer;
@@ -146,8 +148,10 @@ public sealed class DiffBlockView : BlockView
                 1 when _document.Files[0].DisplayPath is { } path => "diff · " + path,
                 _ => $"diff · {files} files",
             };
-            _title = new TextLayout(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
-                textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 420);
+            _titleText = title;
+            _showStats = !plain;
+            DisposeHeaderLayouts();
+            _title = CreateTitleLayout(title, style);
             _stats = plain ? null : DiffBodyView.StatsLayout(style, _document.Additions, _document.Deletions);
         }
         _body.Set(context, segmentKey, code.Code, _document, topKey);
@@ -210,6 +214,11 @@ public sealed class DiffBlockView : BlockView
             _framePen = new Pen(style.CodeBorderBrush, 1);
         }
         context.DrawRectangle(style.CodeBackground, _framePen, new Rect(Bounds.Size).Deflate(0.5), r, r);
+        if (_title is null && _titleText is not null)
+        {
+            _title = CreateTitleLayout(_titleText, style);
+            _stats = _showStats ? DiffBodyView.StatsLayout(style, _document.Additions, _document.Deletions) : null;
+        }
         if (_title is not null)
         {
             _title.Draw(context, new Point(14, (HeaderHeight - _title.Height) / 2));
@@ -221,6 +230,26 @@ public sealed class DiffBlockView : BlockView
     }
 
     public override IEnumerable<ISelectableSegment> Segments() => [_body];
+
+    private static TextLayout CreateTitleLayout(string title, MarkdownStyle style) =>
+        new(title, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
+            textTrimming: TextTrimming.CharacterEllipsis, maxWidth: 420);
+
+    private void DisposeHeaderLayouts()
+    {
+        _title?.Dispose();
+        _title = null;
+        _stats?.Dispose();
+        _stats = null;
+    }
+
+    protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
+    {
+        base.OnDetachedFromVisualTree(e);
+        _copiedTimer?.Stop();
+        _copiedTimer = null;
+        DisposeHeaderLayouts();
+    }
 }
 
 internal static class DiffIcons
@@ -370,10 +399,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         }
         if (_context is null || !ReferenceEquals(_context.Style, context.Style))
         {
-            _layouts.Clear();
-            _numberLayouts.Clear();
-            _plusMarker = null;
-            _minusMarker = null;
+            DisposeLayouts();
             _cachedStyle = null;
         }
         _context = context;
@@ -425,6 +451,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
 
     private void BuildRows(double width)
     {
+        DisposeRowLabels();
         _rows.Clear();
         if (_context is null)
         {
@@ -457,7 +484,8 @@ public sealed class DiffBodyView : Control, ISelectableSegment
                 }
             }
         }
-        var digitWidth = new TextLayout("0", new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.9, null).WidthIncludingTrailingWhitespace;
+        using var digitProbe = new TextLayout("0", new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.9, null);
+        var digitWidth = digitProbe.WidthIncludingTrailingWhitespace;
         _numberWidth = Math.Ceiling(digitWidth * Math.Max(2, maxNumber.ToString().Length)) + 16;
 
         var showFiles = _document.Files.Length > 1 || _document.Files.Any(f => f.DisplayPath is not null) && _document.Files.Length > 1;
@@ -603,9 +631,13 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         // 元数据行（文件头、区段头）不着色
         var tokens = cell.Tone is Tone.Meta or Tone.Hunk ? default : _highlight?.TokensFor(cell.Line.RawLine) ?? default;
         var key = (cell.Line.RawLine, Math.Round(width, 1), cell.Shift);
-        if (_layouts.TryGetValue(key, out var cached) && cached.Text == cell.Text && cached.Changed == cell.Changed && SameTokens(cached.Tokens, tokens))
+        if (_layouts.TryGetValue(key, out var cached))
         {
-            return cached.Layout;
+            if (cached.Text == cell.Text && cached.Changed == cell.Changed && SameTokens(cached.Tokens, tokens))
+            {
+                return cached.Layout;
+            }
+            cached.Layout.Dispose();
         }
         var typeface = new Typeface(style.MonospaceFontFamily);
         List<ValueSpan<TextRunProperties>>? overrides = null;
@@ -681,11 +713,13 @@ public sealed class DiffBodyView : Control, ISelectableSegment
             switch (row.Kind)
             {
                 case RowKind.File:
+                    row.Label?.Dispose();
                     row.Label = new TextLayout(row.File!.DisplayPath ?? "(unknown)", new Typeface(style.MonospaceFontFamily, FontStyle.Normal, FontWeight.SemiBold),
                         style.CodeFontSize * 0.92, style.Foreground, textTrimming: TextTrimming.PathSegmentEllipsis, maxWidth: Math.Max(1, width - 140));
                     row.Height = FileRowHeight;
                     break;
                 case RowKind.Hunk:
+                    row.Label?.Dispose();
                     row.Label = new TextLayout(row.Hunk!.Header, new Typeface(style.MonospaceFontFamily), style.CodeFontSize * 0.92, style.SecondaryForeground,
                         textWrapping: TextWrapping.Wrap, maxWidth: Math.Max(1, width - 28), lineHeight: style.CodeLineHeight);
                     row.Height = row.Label.Height + 4;
@@ -759,9 +793,7 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         {
             _cachedStyle = style;
             _cachedNumberWidth = _numberWidth;
-            _numberLayouts.Clear();
-            _plusMarker = null;
-            _minusMarker = null;
+            DisposeNumberAndMarkerLayouts();
         }
         var numberTypeface = new Typeface(style.MonospaceFontFamily);
         var numberSize = style.CodeFontSize * 0.9;
@@ -773,9 +805,9 @@ public sealed class DiffBodyView : Control, ISelectableSegment
                     context.FillRectangle(style.TableHeaderBackground, new Rect(0, row.Top, width, row.Height));
                     context.DrawLine(_borderPen, new Point(0, row.Top + 0.5), new Point(width, row.Top + 0.5));
                     row.Label!.Draw(context, new Point(14, row.Top + (row.Height - row.Label.Height) / 2));
-                    if (StatsLayout(style, row.File!.Additions, row.File.Deletions) is { } stats)
+                    using (var stats = StatsLayout(style, row.File!.Additions, row.File.Deletions))
                     {
-                        stats.Draw(context, new Point(width - stats.WidthIncludingTrailingWhitespace - 14, row.Top + (row.Height - stats.Height) / 2));
+                        stats?.Draw(context, new Point(width - stats.WidthIncludingTrailingWhitespace - 14, row.Top + (row.Height - stats.Height) / 2));
                     }
                     break;
                 case RowKind.Hunk:
@@ -979,6 +1011,39 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         Cursor = new Cursor(StandardCursorType.Ibeam);
     }
 
+    private void DisposeRowLabels()
+    {
+        for (var i = 0; i < _rows.Count; i++)
+        {
+            _rows[i].Label?.Dispose();
+            _rows[i].Label = null;
+        }
+    }
+
+    private void DisposeNumberAndMarkerLayouts()
+    {
+        foreach (var layout in _numberLayouts.Values)
+        {
+            layout.Dispose();
+        }
+        _numberLayouts.Clear();
+        _plusMarker?.Dispose();
+        _plusMarker = null;
+        _minusMarker?.Dispose();
+        _minusMarker = null;
+    }
+
+    private void DisposeLayouts()
+    {
+        foreach (var entry in _layouts.Values)
+        {
+            entry.Layout.Dispose();
+        }
+        _layouts.Clear();
+        DisposeNumberAndMarkerLayouts();
+        DisposeRowLabels();
+    }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
@@ -991,6 +1056,10 @@ public sealed class DiffBodyView : Control, ISelectableSegment
             _highlight.Updated += OnHighlightUpdated;
             InvalidateMeasure();
             InvalidateVisual();
+        }
+        else if (_rowsDirty && _context is not null)
+        {
+            InvalidateMeasure();
         }
     }
 
@@ -1005,6 +1074,10 @@ public sealed class DiffBodyView : Control, ISelectableSegment
         {
             _highlight.Updated -= OnHighlightUpdated;
         }
+        DisposeLayouts();
+        _rowsDirty = true;
+        _layoutWidth = double.NaN;
+        InvalidateMeasure();
     }
 }
 

@@ -45,7 +45,7 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
             CancelBackgroundWork();
             _layout = null;
             _error = null;
-            _source = null;
+            DisposeSourceLayout();
             InvalidateMeasure();
             InvalidateVisual();
             return;
@@ -65,7 +65,7 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
                 // 已闭合仍失败：显示源码而不是旧结果
                 _layout = null;
             }
-            _source = null;
+            DisposeSourceLayout();
             InvalidateMeasure();
             InvalidateVisual();
             return;
@@ -76,7 +76,7 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
         {
             if (_layout is null)
             {
-                _source = null;
+                DisposeSourceLayout();
                 InvalidateMeasure();
                 InvalidateVisual();
             }
@@ -97,21 +97,21 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
                 {
                     _layout = applied.result;
                     _error = null;
-                    _source = null;
+                    DisposeSourceLayout();
                     InvalidateMeasure();
                     InvalidateVisual();
                 }
                 else if (_layout is null)
                 {
                     _error = applied.error;
-                    _source = null;
+                    DisposeSourceLayout();
                     InvalidateMeasure();
                     InvalidateVisual();
                 }
             });
         if (_layout is null)
         {
-            _source = null;
+            DisposeSourceLayout();
             InvalidateMeasure();
             InvalidateVisual();
         }
@@ -190,6 +190,7 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
             return default;
         }
         // 无法排版：以源码显示
+        DisposeSourceLayout();
         _source = new TextLayout(_latex, new Typeface(Context.Style.MonospaceFontFamily), Context.Style.CodeFontSize, Context.Style.SecondaryForeground,
             textWrapping: TextWrapping.Wrap, maxWidth: double.IsFinite(availableSize.Width) ? availableSize.Width : double.PositiveInfinity);
         return new Size(Math.Min(_source.WidthIncludingTrailingWhitespace, availableSize.Width), _source.Height);
@@ -254,12 +255,22 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
 
     public override IEnumerable<ISelectableSegment> Segments() => [this];
 
+    private void DisposeSourceLayout()
+    {
+        _source?.Dispose();
+        _source = null;
+    }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
         if (Context is not null)
         {
             Context.Selection.Changed += InvalidateVisual;
+            if (_layout is null && _source is null)
+            {
+                InvalidateMeasure();
+            }
         }
     }
 
@@ -269,6 +280,11 @@ public sealed class MathBlockView : BlockView, ISelectableSegment
         if (Context is not null)
         {
             Context.Selection.Changed -= InvalidateVisual;
+        }
+        DisposeSourceLayout();
+        if (_layout is null)
+        {
+            InvalidateMeasure();
         }
     }
 }
