@@ -6,6 +6,16 @@ using Avalonia.VisualTree;
 namespace TKCode.Arc.Primitives;
 
 /// <summary>
+/// Implemented by a window (such as <c>ArcWindow</c>) that keeps an <see cref="ArcOverlayHost"/> around its content area
+/// so in-app modals do not cover the title bar.
+/// </summary>
+internal interface IArcContentOverlayWindow
+{
+    /// <summary>The content overlay host while active, or null when modals should cover the full window.</summary>
+    ArcOverlayHost? ActiveContentOverlayHost { get; }
+}
+
+/// <summary>
 /// A panel that gives its descendants their own overlay layer: modals opened from inside it (dialogs, drawers, bottom
 /// sheets, command palettes) mount on this panel's <see cref="Layer"/> and are bounded by it instead of covering the
 /// whole window. Children stack like a <see cref="Panel"/>; the layer sits above all of them. An app uses it to keep its own
@@ -35,13 +45,19 @@ public class ArcOverlayHost : Panel
     /// <summary>The overlay layer hosted modals mount on; it covers the host's bounds.</summary>
     public ArcOverlayLayer Layer => _layer;
 
+    /// <summary>When false, <see cref="FindHost"/> skips this host so modals fall through to the outer layer.</summary>
+    internal bool IsModalHostEnabled { get; set; } = true;
+
+    /// <summary>Optional content visual blurred while a modal is open on <see cref="Layer"/> (null by default).</summary>
+    internal Visual? BlurTarget { get; set; }
+
     /// <summary>The nearest <see cref="ArcOverlayHost"/> that contains <paramref name="visual"/>, or null.</summary>
     public static ArcOverlayHost? FindHost(Visual visual)
     {
         ArgumentNullException.ThrowIfNull(visual);
         foreach (var ancestor in visual.GetVisualAncestors())
         {
-            if (ancestor is ArcOverlayHost host)
+            if (ancestor is ArcOverlayHost { IsModalHostEnabled: true } host)
             {
                 return host;
             }
@@ -92,6 +108,11 @@ public sealed class ArcOverlayLayer : Canvas
         if (ArcOverlayHost.FindHost(anchor) is { } host)
         {
             return host.Layer;
+        }
+        if ((anchor as TopLevel ?? TopLevel.GetTopLevel(anchor)) is IArcContentOverlayWindow { ActiveContentOverlayHost: { IsModalHostEnabled: true } windowHost } &&
+            !ReferenceEquals(anchor, windowHost))
+        {
+            return windowHost.Layer;
         }
         if (OverlayLayer.GetOverlayLayer(anchor) is { } overlay)
         {

@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.UsageMeterLangResourceKind">
+    <unit id="BarFreeTail">
+      <segment>
+        <source>{0} free.</source>
+      </segment>
+    </unit>
+    <unit id="BarNearTail">
+      <segment>
+        <source>{0} free, almost full.</source>
+      </segment>
+    </unit>
+    <unit id="BarOverTail">
+      <segment>
+        <source>Over the limit by {0}.</source>
+      </segment>
+    </unit>
+    <unit id="BarSummary">
+      <segment>
+        <source>{0}: {1} of {2} used. {3}. {4}</source>
+      </segment>
+    </unit>
+    <unit id="FreeBadge">
+      <segment>
+        <source>{0} free</source>
+      </segment>
+    </unit>
+    <unit id="FreeCaption">
+      <segment>
+        <source>{0} free</source>
+      </segment>
+    </unit>
+    <unit id="FreeLabel">
+      <segment>
+        <source>Free</source>
+      </segment>
+    </unit>
+    <unit id="NearBadge">
+      <segment>
+        <source>Almost full</source>
+      </segment>
+    </unit>
+    <unit id="OverBadge">
+      <segment>
+        <source>{0} over</source>
+      </segment>
+    </unit>
+    <unit id="OverCaption">
+      <segment>
+        <source>{0} over the limit</source>
+      </segment>
+    </unit>
+    <unit id="OverLabel">
+      <segment>
+        <source>Over limit</source>
+      </segment>
+    </unit>
+    <unit id="SegmentCaption">
+      <segment>
+        <source>{0} in {1} · {2}% of plan</source>
+      </segment>
+    </unit>
+    <unit id="StatusNear">
+      <segment>
+        <source>Almost full. {0} free.</source>
+      </segment>
+    </unit>
+    <unit id="StatusOk">
+      <segment>
+        <source>Under the limit. {0} free.</source>
+      </segment>
+    </unit>
+    <unit id="StatusOver">
+      <segment>
+        <source>Over the plan limit by {0}.</source>
+      </segment>
+    </unit>
+    <unit id="TotalCaption">
+      <segment>
+        <source>{0} of {1} used</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -1,3 +1,4 @@
+using TKCode.Arc.Localization;
 using TKCode.Arc.Motion;
 using Avalonia.Automation;
 using Avalonia.Headless;
@@ -137,6 +138,106 @@ public class UsageMeterTests
             meter.Bar.Used.ShouldBeLessThan(32.3);
             clock.Advance(TimeSpan.FromSeconds(2));
             meter.Bar.Used.ShouldBe(32.3, 0.01);
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Localizes_Captions_Badges_Legend_And_Accessibility_On_Language_Switch()
+    {
+        var languages = ArcLanguageManager.Current!;
+        var meter = Storage(out var media);
+        var window = TestHelpers.Show(meter);
+        window.Width = 520;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            languages.Set(LanguageTags.ZhCN);
+            Dispatcher.UIThread.RunJobs();
+            meter.Caption.ShouldBe("GB / 50 GB 已用");
+            meter.BadgeText.ShouldBe("剩余 17.7 GB");
+            meter.LegendItems[4].Label.ShouldBe("剩余");
+            AutomationProperties.GetName(meter.Bar!).ShouldNotBeNull().ShouldContain("已用 32.3 GB / 50 GB");
+            AutomationProperties.GetName(meter.Bar!).ShouldNotBeNull().ShouldContain("剩余 17.7 GB");
+
+            meter.LegendItems[0].Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            meter.Caption.ShouldBe("GB 来自 Media · 占限额 28%");
+
+            meter.LegendItems[4].Focus(NavigationMethod.Tab);
+            Dispatcher.UIThread.RunJobs();
+            meter.Caption.ShouldBe("GB 剩余");
+
+            media.Value = 30;
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("即将用满");
+            AutomationProperties.GetItemStatus(meter).ShouldBe("即将用满，剩余 1.9 GB。");
+
+            media.Value = 40;
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("超出 8.1 GB");
+            meter.Caption.ShouldBe("GB 超出限额");
+            meter.LegendItems[4].Label.ShouldBe("超出限额");
+            AutomationProperties.GetItemStatus(meter).ShouldBe("超出限额 8.1 GB。");
+
+            languages.Set(LanguageTags.ZhTW);
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("超出 8.1 GB");
+            meter.Caption.ShouldBe("GB 超出限額");
+            meter.LegendItems[4].Label.ShouldBe("超出限額");
+        }
+        finally
+        {
+            languages.Set(LanguageTags.EnUS);
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Labels_Property_Overrides_Text_And_Explicit_FreeLabel_Wins()
+    {
+        var meter = Storage(out var media);
+        meter.Labels = new UsageMeterLabels
+        {
+            TotalCaptionFormat = "{0} sur {1}",
+            FreeBadgeFormat = "{0} disponibles",
+            NearBadgeText = "Presque plein",
+            OverBadgeFormat = "{0} en excès",
+            FreeLabel = "Disponible",
+            OverLabel = "Dépassement"
+        };
+        var window = TestHelpers.Show(meter);
+        window.Width = 520;
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            meter.Caption.ShouldBe("GB sur 50 GB");
+            meter.BadgeText.ShouldBe("17.7 GB disponibles");
+            meter.LegendItems[4].Label.ShouldBe("Disponible");
+
+            // Explicit FreeLabel still takes precedence over Labels.FreeLabel and ArcLanguage.
+            meter.FreeLabel = "Custom free";
+            Dispatcher.UIThread.RunJobs();
+            meter.LegendItems[4].Label.ShouldBe("Custom free");
+
+            media.Value = 30;
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("Presque plein");
+
+            media.Value = 40;
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("8.1 GB en excès");
+            meter.LegendItems[4].Label.ShouldBe("Dépassement");
+
+            // Replacing Labels triggers an immediate refresh.
+            meter.Labels = new UsageMeterLabels { OverBadgeFormat = "+{0}" };
+            Dispatcher.UIThread.RunJobs();
+            meter.BadgeText.ShouldBe("+8.1 GB");
+            // Unset fields fall back to ArcLanguage (en-US).
+            meter.LegendItems[4].Label.ShouldBe("Over limit");
         }
         finally
         {
