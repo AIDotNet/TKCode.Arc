@@ -162,3 +162,84 @@ TKCode.Arc.UsageMeterLabels.StatusOverFormat.init -> void
 TKCode.Arc.UsageMeterLabels.TotalCaptionFormat.get -> string?
 TKCode.Arc.UsageMeterLabels.TotalCaptionFormat.init -> void
 TKCode.Arc.UsageMeterLabels.UsageMeterLabels() -> void
+TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.CheckSizeLG = 11 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.CheckSizeMD = 10 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.CheckSizeSM = 9 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.DiameterLG = 2 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.DiameterMD = 1 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.DiameterSM = 0 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.LabelLineHeight = 13 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.LabelMargin = 12 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.StrokeThicknessLG = 5 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.StrokeThicknessMD = 4 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.StrokeThicknessSM = 3 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.ValueFontSizeLG = 8 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.ValueFontSizeMD = 7 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenKind.ValueFontSizeSM = 6 -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension.Kind.get -> TKCode.Arc.DesignTokens.ProgressRingTokenKind
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension.Kind.set -> void
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension.ProgressRingTokenResourceExtension() -> void
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension.ProgressRingTokenResourceExtension(TKCode.Arc.DesignTokens.ProgressRingTokenKind kind) -> void
+TKCode.Arc.DesignTokens.ProgressRingTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.DesignTokens.ProgressRingTokens
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessFocusRingMargin = 21 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessFocusRingRadius = 22 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessHorizontalGap = 18 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessMarkGap = 20 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessRowGap = 17 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.BorderlessRowInset = 19 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.DesignTokens.RadioGroupTokenKind.HorizontalGap = 16 -> TKCode.Arc.DesignTokens.RadioGroupTokenKind
+TKCode.Arc.ProgressRing
+TKCode.Arc.ProgressRing.Content.get -> object?
+TKCode.Arc.ProgressRing.Content.set -> void
+TKCode.Arc.ProgressRing.ContentTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.ProgressRing.ContentTemplate.set -> void
+TKCode.Arc.ProgressRing.IsComplete.get -> bool
+TKCode.Arc.ProgressRing.IsIndeterminate.get -> bool
+TKCode.Arc.ProgressRing.IsIndeterminate.set -> void
+TKCode.Arc.ProgressRing.IsValueVisible.get -> bool
+TKCode.Arc.ProgressRing.IsValueVisible.set -> void
+TKCode.Arc.ProgressRing.Label.get -> string?
+TKCode.Arc.ProgressRing.Label.set -> void
+TKCode.Arc.ProgressRing.Percentage.get -> int
+TKCode.Arc.ProgressRing.ProgressRing() -> void
+TKCode.Arc.ProgressRing.Size.get -> TKCode.Arc.ControlSize
+TKCode.Arc.ProgressRing.Size.set -> void
+TKCode.Arc.ProgressRing.Thickness.get -> double
+TKCode.Arc.ProgressRing.Thickness.set -> void
+TKCode.Arc.RadioGroup.Orientation.get -> Avalonia.Layout.Orientation
+TKCode.Arc.RadioGroup.Orientation.set -> void
+TKCode.Arc.RadioGroup.Variant.get -> TKCode.Arc.RadioGroupVariant
+TKCode.Arc.RadioGroup.Variant.set -> void
+TKCode.Arc.RadioGroupVariant
+TKCode.Arc.RadioGroupVariant.Borderless = 1 -> TKCode.Arc.RadioGroupVariant
+TKCode.Arc.RadioGroupVariant.Default = 0 -> TKCode.Arc.RadioGroupVariant
+const TKCode.Arc.DesignTokens.ProgressRingTokens.Identity = "ProgressRing" -> string!
+const TKCode.Arc.ProgressRing.CompletePseudoClass = ":complete" -> string!
+const TKCode.Arc.ProgressRing.IndeterminatePseudoClass = ":indeterminate" -> string!
+const TKCode.Arc.ProgressRing.LargePseudoClass = ":large" -> string!
+const TKCode.Arc.ProgressRing.ReadoutPart = "PART_Readout" -> string!
+const TKCode.Arc.ProgressRing.SmallPseudoClass = ":small" -> string!
+const TKCode.Arc.ProgressRing.TrackPart = "PART_Track" -> string!
+const TKCode.Arc.RadioGroup.BorderlessPseudoClass = ":borderless" -> string!
+const TKCode.Arc.RadioGroup.HorizontalPseudoClass = ":horizontal" -> string!
+const TKCode.Arc.RadioGroupItem.BorderlessPseudoClass = ":borderless" -> string!
+override TKCode.Arc.ProgressRing.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.ProgressRing.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.RadioGroup.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+static TKCode.Arc.DesignTokens.ProgressRingTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.DesignTokens.ProgressRingTokens.Key(TKCode.Arc.DesignTokens.ProgressRingTokenKind kind) -> object!
+static TKCode.Arc.ProgressRing.ComputePercentage(double value, double minimum, double maximum) -> int
+static readonly TKCode.Arc.ProgressRing.ContentProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.ProgressRing.ContentTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.ProgressRing.IsCompleteProperty -> Avalonia.DirectProperty<TKCode.Arc.ProgressRing!, bool>!
+static readonly TKCode.Arc.ProgressRing.IsIndeterminateProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ProgressRing.IsValueVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.ProgressRing.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.ProgressRing.PercentageProperty -> Avalonia.DirectProperty<TKCode.Arc.ProgressRing!, int>!
+static readonly TKCode.Arc.ProgressRing.SizeProperty -> Avalonia.StyledProperty<TKCode.Arc.ControlSize>!
+static readonly TKCode.Arc.ProgressRing.ThicknessProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.RadioGroup.OrientationProperty -> Avalonia.StyledProperty<Avalonia.Layout.Orientation>!
+static readonly TKCode.Arc.RadioGroup.VariantProperty -> Avalonia.StyledProperty<TKCode.Arc.RadioGroupVariant>!

@@ -30,12 +30,17 @@
         </Setter>
         <Setter Property="ItemsPanel">
             <ItemsPanelTemplate>
-                <StackPanel Spacing="{arc:RadioGroupTokenResource RowGap}" />
+                <arc:RadioGroupPanel />
             </ItemsPanelTemplate>
         </Setter>
         <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
         <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
         <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Style Selector="^:borderless">
+            <Style Selector="^ /template/ arc|GlidingIndicator#PART_Highlight">
+                <Setter Property="IsVisible" Value="False" />
+            </Style>
+        </Style>
         <Style Selector="^:disabled">
             <Setter Property="Opacity" Value="{arc:RadioGroupTokenResource DisabledOpacity}" />
         </Style>
@@ -50,12 +55,8 @@
             <ControlTemplate TargetType="arc:RadioGroupItem">
                 <Panel>
                     <Border Name="PART_Row"
-                            Background="{TemplateBinding Background}"
-                            BorderBrush="{arc:ArcDesignTokenResource Border}"
-                            BorderThickness="{arc:ArcDesignTokenResource EdgeThickness}"
-                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
-                            Padding="{arc:RadioGroupTokenResource RowInset}">
-                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="{arc:RadioGroupTokenResource MarkGap}">
+                            Background="{TemplateBinding Background}">
+                        <Grid Name="PART_RowGrid" ColumnDefinitions="Auto,*">
                             <Panel Name="PART_Mark"
                                    Width="{arc:RadioGroupTokenResource RingDiameter}"
                                    Height="{arc:RadioGroupTokenResource RingDiameter}"
@@ -98,7 +99,16 @@
         <Setter Property="MinHeight" Value="{arc:RadioGroupItemTokenResource MinRowHeight}" />
         <Setter Property="Cursor" Value="Hand" />
 
-        <!-- Token values that states override are set by styles: token markup in a template is a local value. -->
+        <!-- Token values that states or variants override are set by styles: token markup in a template is a local value. -->
+        <Style Selector="^ /template/ Border#PART_Row">
+            <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+            <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+            <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+            <Setter Property="Padding" Value="{arc:RadioGroupTokenResource RowInset}" />
+        </Style>
+        <Style Selector="^ /template/ Grid#PART_RowGrid">
+            <Setter Property="ColumnSpacing" Value="{arc:RadioGroupTokenResource MarkGap}" />
+        </Style>
         <Style Selector="^ /template/ Border#PART_Ring">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource BorderStrong}" />
         </Style>
@@ -121,6 +131,30 @@
         </Style>
         <Style Selector="^:pressed:not(:selected) /template/ Border#PART_Preview">
             <Setter Property="Opacity" Value="{arc:RadioGroupTokenResource PreviewOpacity}" />
+        </Style>
+        <Style Selector="^:borderless">
+            <Setter Property="MinHeight" Value="0" />
+            <Style Selector="^ /template/ Border#PART_Row">
+                <Setter Property="BorderBrush" Value="Transparent" />
+                <Setter Property="BorderThickness" Value="0" />
+                <Setter Property="CornerRadius" Value="0" />
+                <Setter Property="Padding" Value="{arc:RadioGroupTokenResource BorderlessRowInset}" />
+            </Style>
+            <Style Selector="^ /template/ Grid#PART_RowGrid">
+                <Setter Property="ColumnSpacing" Value="{arc:RadioGroupTokenResource BorderlessMarkGap}" />
+            </Style>
+            <Style Selector="^:pointerover">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style Selector="^:pressed">
+                <Setter Property="Background" Value="Transparent" />
+            </Style>
+            <Style Selector="^:pointerover:not(:selected) /template/ Border#PART_Ring">
+                <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
+            <Style Selector="^:pointerover:not(:selected) /template/ ContentPresenter#PART_Label">
+                <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            </Style>
         </Style>
         <Style Selector="^:selected">
             <Style Selector="^ /template/ Border#PART_Ring">

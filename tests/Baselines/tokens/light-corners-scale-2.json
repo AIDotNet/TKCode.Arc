@@ -6514,6 +6514,22 @@
       "ReadoutMargin": "12,0,0,0",
       "TrackHeight": "7"
     },
+    "ProgressRing": {
+      "CheckSizeLG": "24",
+      "CheckSizeMD": "16",
+      "CheckSizeSM": "10",
+      "DiameterLG": "64",
+      "DiameterMD": "40",
+      "DiameterSM": "20",
+      "LabelLineHeight": "19.6",
+      "LabelMargin": "0,8,0,0",
+      "StrokeThicknessLG": "4",
+      "StrokeThicknessMD": "3",
+      "StrokeThicknessSM": "2",
+      "ValueFontSizeLG": "14",
+      "ValueFontSizeMD": "11",
+      "ValueFontSizeSM": "9"
+    },
     "ProjectBoard": {
       "ActionGap": "10",
       "AddFocusRadius": "28,28,28,28",
@@ -6828,6 +6844,12 @@
       "SelectedTintOpacity": "0.04"
     },
     "RadioGroup": {
+      "BorderlessFocusRingMargin": "-6,-3,-6,-3",
+      "BorderlessFocusRingRadius": "8,8,8,8",
+      "BorderlessHorizontalGap": "20",
+      "BorderlessMarkGap": "8",
+      "BorderlessRowGap": "10",
+      "BorderlessRowInset": "0,2,0,2",
       "DescriptionLineHeight": "16.8",
       "DescriptionMargin": "0,2,0,0",
       "DisabledOpacity": "0.5",
@@ -6836,6 +6858,7 @@
       "FocusRingMargin": "-4,-4,-4,-4",
       "FocusRingRadius": "44,44,44,44",
       "HighlightRadius": "35,35,35,35",
+      "HorizontalGap": "12",
       "LabelLineHeight": "19.6",
       "LegendMargin": "0,0,0,8",
       "MarkGap": "12",
