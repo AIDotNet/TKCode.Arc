@@ -10,6 +10,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## 1.3.2-preview.3 - 2026-11-25
+
+A patch preview focused on performance, memory and binary size across the library using C# 13, 14 and 15 features, with no public API changes: `TKCode.Arc.Editor.Lsp` moves its 16 untagged LSP 3.17 unions from `JsonElement` to C# 15 `union` types with a unified zero-allocation `System.Text.Json` 11 classifier, cutting DLL size by ~106 KB and speeding up batch decoding by up to 2.89× (`Completion`, `DocumentSymbols`, `Diagnostics`, `InlayHints`); `TKCode.Arc.Editor`, `TKCode.Arc`, `TKCode.Arc.StreamMark`, `TKCode.Arc.StreamMark.RaTeX`, `TKCode.Arc.Graphics3D`, `TKCode.Arc.Workflow`, `TKCode.Arc.AdvancedCharts`, `TKCode.Arc.Blocks` and `TKCode.Arc.Special` adopt internal C# 15 `union` types, `System.Threading.Lock`, `params ReadOnlySpan<T>`, `JsonSourceGenerationMode.Metadata`, explicit state enums, `field` and null-conditional assignments (`-181.5 KB` combined Release DLLs on `net11.0`, `-160.3 KB` generated `.g.cs`, `-12,441` LOC). Install it with `--version 1.3.2-preview.3` (or `--prerelease`).
+
+### Changed
+
+- `TKCode.Arc.Editor.Lsp`: replaced 16 untagged `JsonElement` LSP 3.17 union properties with C# 15 `union` types backed by a unified zero-allocation `JsonTypeClassifierFactory` on `net11.0` (with AOT-safe fallback converters on `net8.0` and `net10.0`), enabled `JsonSourceGenerationMode.Metadata` on `LspJsonContext`, converted 86 protocol DTOs from `record` to `sealed class`, and removed unused protocol types (`-16.7%` DLL size on `net11.0`, up to `2.89×` faster batch decoding and `-51.6%` GC allocation on `Completion`).
+- `TKCode.Arc.Editor`, `TKCode.Arc` and `TKCode.Arc.StreamMark.RaTeX`: converted internal discriminated unions (`StringOrMarkdown`, `SemanticTokensOrEdits`, `SemanticTokensDto`, `PendingChange`, `MentionInputSuggestion` and `DrawOp`) to C# 15 `union` types (`-100%` wrapper heap allocation on `SemanticTokensOrEdits`, `-64.8%` allocation on `MentionInput` suggestions) and trimmed ~44 internal `TKCode.Arc.Editor` record types to `sealed class` (`-61 KB` DLL).
+- Concurrency, hot paths and state machines: adopted C# 13 `System.Threading.Lock` on `net10.0+` across `TKCode.Arc.Editor`, `TKCode.Arc.StreamMark` and `TKCode.Arc.StreamMark.RaTeX` (19 locks); switched `ContextKeyExpr.And`/`Or`, `HierarchicalKind.Append`, `LspCapabilities` and `TKCode.Arc.Graphics3D` material helpers to `params ReadOnlySpan<T>` (`-47.8%` allocation on `HierarchicalKind.Append`); enabled `JsonSourceGenerationMode.Metadata` on `RaTeX`, `WorkflowClipboard` and `DataGridLayoutState` JSON contexts; replaced raw integer/boolean state fields with explicit `byte` enums in `Jpeg` (`AcRefineState`) and `StreamingDocument` (`WorkerState`); and simplified boilerplate across 14 packages with C# 14 `?.=` / `field` / `extension(...)`.
+
 ## 1.3.2-preview.2 - 2026-11-25
 
 A patch preview for [#197](https://github.com/AIDotNet/TKCode.Arc/issues/197), [#198](https://github.com/AIDotNet/TKCode.Arc/issues/198), [#199](https://github.com/AIDotNet/TKCode.Arc/issues/199) and [#201](https://github.com/AIDotNet/TKCode.Arc/issues/201): `ArcWindow` keeps its title bar interactive during in-app modals and removes the duplicate X11 system title bar on Linux, `SettingsPage` / `SettingsSection` support viewport-height stretching and vertical centering, and `UsageMeter` adds `ArcLanguage` localization plus `UsageMeterLabels` overrides. No existing public API changes. Install it with `--version 1.3.2-preview.2` (or `--prerelease`).
@@ -2678,6 +2688,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.2-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.2...v1.3.2-preview.3
 [1.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.1...v1.3.2-preview.2
 [1.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1...v1.3.2-preview.1
 [1.3.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1
