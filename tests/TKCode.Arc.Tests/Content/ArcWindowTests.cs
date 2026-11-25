@@ -743,15 +743,15 @@ public class ArcWindowTests
         var window = Open();
         try
         {
-            var root = Part<Border>(window, ArcWindow.RootPart);
+            var frameEdge = Part<Border>(window, "PART_FrameEdge");
             ((IPseudoClasses)window.Classes).Set(ArcWindow.LinuxExtendedPseudoClass, true);
             Dispatcher.UIThread.RunJobs();
             window.WindowDecorations.ShouldBe(WindowDecorations.BorderOnly);
 
             ((IPseudoClasses)window.Classes).Set(ArcWindow.FrameEdgePseudoClass, true);
             Dispatcher.UIThread.RunJobs();
-            root.BorderThickness.ShouldBe(new Thickness(1));
-            root.BorderBrush.ShouldNotBeNull();
+            frameEdge.BorderThickness.ShouldBe(new Thickness(1));
+            frameEdge.BorderBrush.ShouldNotBeNull();
 
             // Explicit user WindowDecorations wins over the theme rule.
             window.WindowDecorations = WindowDecorations.None;
@@ -763,7 +763,7 @@ public class ArcWindowTests
             ((IPseudoClasses)window.Classes).Set(ArcWindow.FrameEdgePseudoClass, false);
             Dispatcher.UIThread.RunJobs();
             window.WindowDecorations.ShouldBe(WindowDecorations.Full);
-            root.BorderThickness.ShouldBe(default);
+            frameEdge.BorderThickness.ShouldBe(default);
         }
         finally
         {

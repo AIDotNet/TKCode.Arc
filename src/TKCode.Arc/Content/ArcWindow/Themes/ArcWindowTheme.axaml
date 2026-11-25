@@ -41,6 +41,7 @@
                             </DockPanel>
                         </VisualLayerManager>
                     </Border>
+                    <Border Name="PART_FrameEdge" IsHitTestVisible="False" />
                 </Panel>
             </ControlTemplate>
         </Setter>
@@ -51,7 +52,7 @@
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThicknessTop}" />
         </Style>
-        <Style Selector="^:frame-edge /template/ Border#PART_Root">
+        <Style Selector="^:frame-edge /template/ Border#PART_FrameEdge">
             <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
             <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
         </Style>
