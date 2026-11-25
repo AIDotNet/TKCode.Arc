@@ -10,7 +10,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.3.2-preview.2 - 2026-11-25
+
+A patch preview for [#197](https://github.com/AIDotNet/TKCode.Arc/issues/197), [#198](https://github.com/AIDotNet/TKCode.Arc/issues/198), [#199](https://github.com/AIDotNet/TKCode.Arc/issues/199) and [#201](https://github.com/AIDotNet/TKCode.Arc/issues/201): `ArcWindow` keeps its title bar interactive during in-app modals and removes the duplicate X11 system title bar on Linux, `SettingsPage` / `SettingsSection` support viewport-height stretching and vertical centering, and `UsageMeter` adds `ArcLanguage` localization plus `UsageMeterLabels` overrides. No existing public API changes. Install it with `--version 1.3.2-preview.2` (or `--prerelease`).
 
 ### Added
 
@@ -2676,6 +2678,7 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.1...v1.3.2-preview.2
 [1.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1...v1.3.2-preview.1
 [1.3.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.0...v1.3.1
 [1.3.1-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1-preview.1...v1.3.1-preview.2
