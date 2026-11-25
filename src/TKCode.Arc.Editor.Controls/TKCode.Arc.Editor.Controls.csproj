@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Editor.Controls</AssemblyName>
+        <!-- The controls live in the flat TKCode.Arc namespace (design/decisions/0056-code-editor-package.md). -->
+        <RootNamespace>TKCode.Arc</RootNamespace>
+        <PackageId>TKCode.Arc.Editor.Controls</PackageId>
+        <Description>Avalonia controls for the TKCode.Arc.Editor engine: CodeEditor, a code editor modelled on the Monaco editor (piece tree buffer, multi-cursor editing, undo, auto-closing, auto-indent, word wrap, keybindings), themed with Arc tokens.</Description>
+        <PackageTags>$(PackageTags);editor;code-editor;monaco;text</PackageTags>
+        <!-- TKCode.Arc and Core contain generated types with identical names. -->
+        <NoWarn>$(NoWarn);CS0436</NoWarn>
+        <ArcFoundationGenerator>true</ArcFoundationGenerator>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="../TKCode.Arc/TKCode.Arc.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Editor/TKCode.Arc.Editor.csproj" />
+        <ProjectReference Include="../TKCode.Arc.Editor.Lsp/TKCode.Arc.Editor.Lsp.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Integration.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Gallery.Tests" />
+    </ItemGroup>
+</Project>

@@ -248,6 +248,64 @@ SOFTWARE.
 
 `TKCode.Arc.Pdf.Browser` ships pdf.js and the data and decoders it needs. Only that package carries them, so their notices and license texts travel with it and not with every package: see [`src/TKCode.Arc.Pdf.Browser/PDFJS-NOTICES.md`](src/TKCode.Arc.Pdf.Browser/PDFJS-NOTICES.md) (`PDFJS-NOTICES.md` and the files under `staticwebassets/pdfjs/` in the package).
 
+## Visual Studio Code and the Monaco editor — `TKCode.Arc.Editor`
+
+`TKCode.Arc.Editor` is a code editor engine for .NET modelled on the Monaco editor, the editor of Visual Studio Code
+(https://github.com/microsoft/vscode, `src/vs/editor`). Its layering, object model and behavior follow Monaco's, and
+parts of it are ported from the TypeScript source: the position, range and selection types, the piece tree text buffer
+and its red-black tree, the text model with its edit stack, events and options, the decoration interval tree, find, the
+indentation guesser, string helpers from `src/vs/base/common`, the undo-redo service from `src/vs/platform/undoRedo`, the cursor and view model, context keys and `when`
+expressions from `src/vs/platform/contextkey`, key codes, keybindings and the keybinding resolver from
+`src/vs/base/common` and `src/vs/platform/keybinding`, the command registry from `src/vs/platform/commands`, the core
+editor commands from `src/vs/editor/browser/coreCommands.ts`, the model's tokenization (`src/vs/editor/common/tokens`,
+`model/textModelTokens.ts`, `model/tokens`), the Monarch tokenizer, the token themes and the built-in themes
+(`src/vs/editor/standalone/common`, `languages/supports/tokenization.ts`), the language registry, the bracket pairs
+and their colorization (`model/bracketPairsTextModelPart`), the indent and bracket pair guides
+(`model/guidesTextModelPart.ts`), with the bracket highlight colors of
+`core/editorColorRegistry.ts`, the language feature provider types and registries
+(`languages.ts`, `languageFeatureRegistry.ts`, `languageSelector.ts`), the marker service from `src/vs/platform/markers`,
+the editor features of `src/vs/editor/contrib` (find, folding, lines operations, comment, bracket matching, indentation,
+multicursor, word highlighter, clipboard, drag and drop, links, unicode highlighter, snippet, suggest, hover, gotoError,
+parameter hints, code action, rename, goto symbol, peek view, code lens, inlay hints, inline completions, semantic
+tokens, sticky scroll, document symbols, color picker, format, linked editing and others), the minimap character
+renderer and overview zones from `src/vs/editor/browser/viewParts`, the diff algorithms from `src/vs/editor/common/diff`
+and `src/vs/base/common/diff`, the fuzzy filters from `src/vs/base/common/filters.ts`, and the unit tests
+that go with them. Each ported file names the upstream file and commit it came from. Visual Studio
+Code is under the MIT license:
+
+```
+MIT License
+
+Copyright (c) 2015 - present Microsoft Corporation
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+"Monaco" and "Visual Studio Code" are names of Microsoft's products; TKCode.Arc is not affiliated with or endorsed by
+Microsoft.
+
+The built-in languages of `TKCode.Arc.Editor` (`src/TKCode.Arc.Editor/Languages/BuiltIn`) are generated from the
+language definitions of monaco-editor (https://github.com/microsoft/monaco-editor, `src/languages/definitions`: their
+Monarch grammars, language configurations and registrations), and the editor's tests replay those definitions' own
+tokenization tests (`tests/TKCode.Arc.Editor.Tests/Languages/BuiltIn/TestData`). monaco-editor is under the MIT license,
+with the same text and copyright (Copyright (c) 2016 - present Microsoft Corporation) as above.
+
 ## three.js — `TKCode.Arc.Graphics3D`
 
 `TKCode.Arc.Graphics3D` is an independent implementation for .NET whose module layout, object model, lighting and

@@ -1,0 +1,97 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorSuggestWidgetTheme">
+
+    <!--
+        The suggest widget of the code editor (Monaco's suggestWidget): a floating surface below or above the cursor with
+        the completions (kind icon, label with the typed characters highlighted, details on the right), a message while
+        loading or when nothing matches, and the details pane (Ctrl+Space) beside the list or, in a narrow editor, below
+        it. The list is drawn (CodeEditorSuggestList); every color it uses is set here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorSuggestWidget}" TargetType="arc:CodeEditorSuggestWidget">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Padding" Value="{arc:CodeEditorSuggestWidgetTokenResource Padding}" />
+        <Setter Property="DetailsFontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="DetailsWidth" Value="{arc:CodeEditorSuggestWidgetTokenResource DetailsWidth}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeEditorSuggestWidget">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <DockPanel>
+                        <Border Name="PART_Details"
+                                DockPanel.Dock="Right"
+                                IsVisible="False"
+                                MaxHeight="{arc:CodeEditorSuggestWidgetTokenResource DetailsMaxHeight}"
+                                BorderBrush="{arc:ArcDesignTokenResource Border}"
+                                BorderThickness="1,0,0,0">
+                            <ScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                          VerticalScrollBarVisibility="Auto">
+                                <StackPanel Margin="{arc:CodeEditorSuggestWidgetTokenResource DetailsPadding}"
+                                            Spacing="6">
+                                    <TextBlock Name="PART_DetailsTitle"
+                                               FontWeight="SemiBold"
+                                               TextWrapping="Wrap" />
+                                    <TextBlock Name="PART_DetailsType"
+                                               Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                               TextWrapping="Wrap" />
+                                    <StackPanel Name="PART_DetailsDocs"
+                                                Spacing="6" />
+                                </StackPanel>
+                            </ScrollViewer>
+                        </Border>
+                        <Panel Margin="{TemplateBinding Padding}">
+                            <arc:CodeEditorSuggestList Name="PART_List"
+                                                       HorizontalAlignment="Left"
+                                                       Foreground="{TemplateBinding Foreground}"
+                                                       HighlightBrush="{arc:ArcDesignTokenResource Accent}"
+                                                       MutedBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                       IconBrush="{arc:ArcDesignTokenResource TextMuted}"
+                                                       FocusedBackground="{arc:ArcDesignTokenResource AccentSubtle}"
+                                                       FocusedForeground="{arc:ArcDesignTokenResource Foreground}"
+                                                       HoverBackground="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                                       RowHeight="{arc:CodeEditorSuggestWidgetTokenResource RowHeight}"
+                                                       MaxVisibleItems="{arc:CodeEditorSuggestWidgetTokenResource MaxVisibleItems}"
+                                                       IconSize="{arc:CodeEditorSuggestWidgetTokenResource IconSize}"
+                                                       IconStrokeWidth="{arc:CodeEditorSuggestWidgetTokenResource IconStrokeWidth}"
+                                                       RowPadding="{arc:CodeEditorSuggestWidgetTokenResource RowPadding}"
+                                                       RowSpacing="{arc:CodeEditorSuggestWidgetTokenResource RowSpacing}"
+                                                       RowCornerRadius="{arc:CodeEditorSuggestWidgetTokenResource RowCornerRadius}"
+                                                       ListWidth="{arc:CodeEditorSuggestWidgetTokenResource ListWidth}" />
+                            <TextBlock Name="PART_Message"
+                                       IsVisible="False"
+                                       Text="{TemplateBinding Message}"
+                                       Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                       Margin="{arc:CodeEditorSuggestWidgetTokenResource DetailsPadding}" />
+                        </Panel>
+                    </DockPanel>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:message /template/ arc|CodeEditorSuggestList#PART_List">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+        <Style Selector="^:message /template/ TextBlock#PART_Message">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:frozen /template/ arc|CodeEditorSuggestList#PART_List">
+            <Setter Property="Opacity" Value="0.6" />
+        </Style>
+        <Style Selector="^:details-below /template/ Border#PART_Details">
+            <Setter Property="BorderThickness" Value="0,1,0,0" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

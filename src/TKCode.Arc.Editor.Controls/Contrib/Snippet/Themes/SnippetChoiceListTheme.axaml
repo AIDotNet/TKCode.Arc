@@ -1,0 +1,42 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.SnippetChoiceListTheme">
+
+    <!--
+        The options of a snippet choice placeholder (${1|one,two|}), under the cursor. A raised surface like the menus;
+        the rows are drawn by SnippetChoiceRows with the brushes set here.
+    -->
+    <ControlTheme x:Key="{x:Type arc:SnippetChoiceList}" TargetType="arc:SnippetChoiceList">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="SelectedBackground" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        <Setter Property="SelectedForeground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="ItemCornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="ItemHeight" Value="{arc:SnippetChoiceListTokenResource ItemHeight}" />
+        <Setter Property="ItemPadding" Value="{arc:SnippetChoiceListTokenResource ItemPadding}" />
+        <Setter Property="Padding" Value="{arc:SnippetChoiceListTokenResource ListPadding}" />
+        <Setter Property="MaxVisibleItems" Value="{arc:SnippetChoiceListTokenResource MaxVisibleItems}" />
+        <Setter Property="MinWidth" Value="{arc:SnippetChoiceListTokenResource MinWidth}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:SnippetChoiceList">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                        Padding="{TemplateBinding Padding}">
+                    <arc:SnippetChoiceRows Name="PART_Rows" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

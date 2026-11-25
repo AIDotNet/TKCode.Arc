@@ -21,6 +21,8 @@ public partial class PackageEntryTests
         ["TKCode.Arc.StreamMark.TextMate"] = "a StreamMark plugin: add TextMatePlugin to MarkdownServices.Plugins",
         ["TKCode.Arc.StreamMark.RaTeX"] = "a StreamMark plugin: add RaTeXPlugin to MarkdownServices.Plugins",
         ["TKCode.Arc.StreamMark.Mermaid"] = "a StreamMark plugin: add MermaidPlugin to MarkdownServices.Plugins",
+        ["TKCode.Arc.Editor"] = "a code editor engine without UI dependency (ADR 0056); TKCode.Arc.Editor.Controls has the entry",
+        ["TKCode.Arc.Editor.Lsp"] = "a language server client for the editor engine, without UI dependency: create a LanguageClient",
         ["TKCode.Arc.Graphics3D"] = "a 3D engine without UI dependency (ADR 0051); TKCode.Arc.Graphics3D.Controls has the entry",
         ["TKCode.Arc.Graphics3D.WebGpu"] = "a rendering backend of the 3D engine, without UI dependency: create it with WgpuDevice.Create",
     };

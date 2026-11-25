@@ -1,0 +1,68 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.DiffEditorTheme">
+
+    <!--
+        The diff editor (design/architecture/code-editor.md, phase 7): two code editors side by side (or one, inline)
+        in a bordered surface, a strip between them that connects moved blocks, and an overview ruler of the changes.
+        The editors draw the diff as decorations, view zones and gutter columns with the brushes set here (inserted:
+        success, removed: danger), so a new theme changes what they draw.
+    -->
+    <ControlTheme x:Key="{x:Type arc:DiffEditor}" TargetType="arc:DiffEditor">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="MinHeight" Value="{arc:DiffEditorTokenResource MinHeight}" />
+        <Setter Property="InsertedLineBrush" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        <Setter Property="RemovedLineBrush" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        <Setter Property="InsertedTextBrush" Value="{arc:ArcDesignTokenResource Success}" />
+        <Setter Property="RemovedTextBrush" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="MovedBlockBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="SeparatorBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="EmptyLinesBrush" Value="{arc:ArcDesignTokenResource BorderSubtle}" />
+        <Setter Property="CollapsedRegionBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CollapsedRegionForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="RevertArrowBrush" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="OverviewViewportBrush" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="CharHighlightOpacity" Value="{arc:DiffEditorTokenResource CharHighlightOpacity}" />
+        <Setter Property="IndicatorWidth" Value="{arc:DiffEditorTokenResource IndicatorWidth}" />
+        <Setter Property="RevertColumnWidth" Value="{arc:DiffEditorTokenResource RevertColumnWidth}" />
+        <Setter Property="CollapsedRegionHeight" Value="{arc:DiffEditorTokenResource CollapsedRegionHeight}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:DiffEditor">
+                <Border Name="PART_Root"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid Name="PART_Grid" ColumnDefinitions="*,Auto,*,Auto">
+                        <arc:CodeEditor Name="PART_OriginalEditor"
+                                        Grid.Column="0"
+                                        BorderThickness="0"
+                                        CornerRadius="0"
+                                        MinHeight="0" />
+                        <arc:DiffEditorMovedBlocksStrip Name="PART_MovedBlocks"
+                                                        Grid.Column="1"
+                                                        MovedBlocksWidth="{arc:DiffEditorTokenResource MovedBlocksWidth}"
+                                                        SeparatorWidth="{arc:DiffEditorTokenResource SeparatorWidth}" />
+                        <arc:CodeEditor Name="PART_ModifiedEditor"
+                                        Grid.Column="2"
+                                        BorderThickness="0"
+                                        CornerRadius="0"
+                                        MinHeight="0" />
+                        <arc:DiffEditorOverviewRuler Name="PART_OverviewRuler"
+                                                     Grid.Column="3"
+                                                     Width="{arc:DiffEditorTokenResource OverviewRulerWidth}" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

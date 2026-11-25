@@ -1,0 +1,56 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorHoverSurfaceTheme">
+
+    <!--
+        The card of the code editor's floating widgets (content hover, parameter hints, the problem widget): a raised
+        surface with Arc's floating shadow. The Markdown, problem rows and signatures inside bind to the brushes below.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorHoverSurface}" TargetType="arc:CodeEditorHoverSurface">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceRaised}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusControl}" />
+        <Setter Property="Shadow" Value="{arc:ArcDesignTokenResource ShadowFloating}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="MutedForeground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        <Setter Property="LinkForeground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="HighlightForeground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="CodeBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="SeparatorBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="StatusBarBackground" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="ErrorForeground" Value="{arc:ArcDesignTokenResource Danger}" />
+        <Setter Property="WarningForeground" Value="{arc:ArcDesignTokenResource Warning}" />
+        <Setter Property="InfoForeground" Value="{arc:ArcDesignTokenResource Accent}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="CodeFontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="RowPadding" Value="{arc:CodeEditorTokenResource HoverRowPadding}" />
+        <Setter Property="MaxWidth" Value="{arc:CodeEditorTokenResource HoverMaxWidth}" />
+        <Setter Property="Focusable" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeEditorHoverSurface">
+                <Border Name="PART_Card"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        BoxShadow="{TemplateBinding Shadow}">
+                    <ContentPresenter Name="PART_ContentPresenter"
+                                      Content="{TemplateBinding Content}"
+                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <!-- The problem widget sits in a view zone between lines: flat, as wide as the text, framed by its severity. -->
+        <Style Selector="^.marker-navigation">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Shadow" Value="0 0 0 0 Transparent" />
+            <Setter Property="MaxWidth" Value="Infinity" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

@@ -1,0 +1,217 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.CodeEditorFindWidgetTheme">
+
+    <!--
+        The find widget of the code editor (Monaco's findWidget): an overlay in the editor's top right corner with the
+        find input and its toggles (match case, whole word, regex), the match count, previous / next, find in selection
+        and close; below it, while replace is shown, the replace input with preserve case, replace and replace all.
+        Arc inputs (Input, FieldIconButton) on a floating surface; the toggles are tinted while on.
+    -->
+    <ControlTheme x:Key="{x:Type arc:CodeEditorFindWidget}" TargetType="arc:CodeEditorFindWidget">
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="{arc:ArcDesignTokenResource EdgeThickness}" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPanel}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="Width" Value="{arc:CodeEditorFindWidgetTokenResource Width}" />
+        <Setter Property="Margin" Value="{arc:CodeEditorFindWidgetTokenResource Margin}" />
+        <Setter Property="Padding" Value="{arc:CodeEditorFindWidgetTokenResource Padding}" />
+        <Setter Property="NarrowEditorWidth" Value="{arc:CodeEditorFindWidgetTokenResource NarrowEditorWidth}" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="ClipToBounds" Value="False" />
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="RenderTransform" Value="translateY(-12px)" />
+        <Setter Property="Opacity" Value="0" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:CodeEditorFindWidget">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        Padding="{TemplateBinding Padding}"
+                        BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}">
+                    <Grid Name="PART_Grid"
+                          ColumnDefinitions="Auto,*,Auto"
+                          RowDefinitions="Auto,Auto">
+                        <arc:FieldIconButton Name="PART_ToggleReplace"
+                                             Grid.RowSpan="2"
+                                             Classes="findButton"
+                                             Width="{arc:CodeEditorFindWidgetTokenResource ReplaceToggleWidth}"
+                                             Height="NaN"
+                                             VerticalAlignment="Stretch"
+                                             Margin="0,0,4,0"
+                                             IsToggle="True">
+                            <arc:ArcGlyph Name="PART_ReplaceChevron"
+                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                        </arc:FieldIconButton>
+
+                        <!-- The toggles sit over the end of the input, where its suffix keeps room for them (so they stay
+                             parts of this template, which styles them). -->
+                        <Panel Grid.Column="1" VerticalAlignment="Center">
+                            <arc:Input Name="PART_FindInput"
+                                       Size="Small"
+                                       VerticalAlignment="Center">
+                                <arc:Input.Suffix>
+                                    <Border Width="{arc:CodeEditorFindWidgetTokenResource FindTogglesWidth}" />
+                                </arc:Input.Suffix>
+                            </arc:Input>
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="1"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Margin="{arc:CodeEditorFindWidgetTokenResource TogglesMargin}">
+                                <arc:FieldIconButton Name="PART_MatchCase" Classes="findToggle" IsToggle="True">
+                                    <TextBlock Text="Aa" />
+                                </arc:FieldIconButton>
+                                <arc:FieldIconButton Name="PART_WholeWord" Classes="findToggle" IsToggle="True">
+                                    <TextBlock Text="ab" TextDecorations="Underline" />
+                                </arc:FieldIconButton>
+                                <arc:FieldIconButton Name="PART_Regex" Classes="findToggle" IsToggle="True">
+                                    <TextBlock Text=".*" />
+                                </arc:FieldIconButton>
+                            </StackPanel>
+                        </Panel>
+
+                        <StackPanel Name="PART_FindActions"
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="1"
+                                    Margin="4,0,0,0">
+                            <TextBlock Name="PART_MatchesCount"
+                                       MinWidth="{arc:CodeEditorFindWidgetTokenResource MatchesCountMinWidth}"
+                                       Margin="2,0,4,0"
+                                       VerticalAlignment="Center"
+                                       FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                       Text="{TemplateBinding MatchesCountText}" />
+                            <arc:FieldIconButton Name="PART_Previous" Classes="findButton">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowUp}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                            <arc:FieldIconButton Name="PART_Next" Classes="findButton">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ArrowDown}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                            <arc:FieldIconButton Name="PART_FindInSelection" Classes="findButton findToggle" IsToggle="True">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.TextSelect}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                            <arc:FieldIconButton Name="PART_Close" Classes="findButton">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.X}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                        </StackPanel>
+
+                        <Panel Name="PART_ReplaceRow"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               Margin="0,4,0,0"
+                               IsVisible="False"
+                               VerticalAlignment="Center">
+                            <arc:Input Name="PART_ReplaceInput"
+                                       Size="Small"
+                                       VerticalAlignment="Center">
+                                <arc:Input.Suffix>
+                                    <Border Width="{arc:CodeEditorFindWidgetTokenResource ReplaceTogglesWidth}" />
+                                </arc:Input.Suffix>
+                            </arc:Input>
+                            <arc:FieldIconButton Name="PART_PreserveCase"
+                                                 Classes="findToggle"
+                                                 IsToggle="True"
+                                                 HorizontalAlignment="Right"
+                                                 Margin="{arc:CodeEditorFindWidgetTokenResource TogglesMargin}">
+                                <TextBlock Text="AB" />
+                            </arc:FieldIconButton>
+                        </Panel>
+
+                        <StackPanel Name="PART_ReplaceActions"
+                                    Grid.Row="1"
+                                    Grid.Column="2"
+                                    Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="1"
+                                    Margin="4,4,0,0"
+                                    IsVisible="False">
+                            <arc:FieldIconButton Name="PART_Replace" Classes="findButton">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Replace}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                            <arc:FieldIconButton Name="PART_ReplaceAll" Classes="findButton">
+                                <arc:ArcGlyph Data="{x:Static arc:ArcIcons.ReplaceAll}" Size="{arc:CodeEditorFindWidgetTokenResource GlyphSize}" />
+                            </arc:FieldIconButton>
+                        </StackPanel>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|FieldIconButton.findToggle">
+            <Setter Property="Width" Value="{arc:CodeEditorFindWidgetTokenResource ToggleSize}" />
+            <Setter Property="Height" Value="{arc:CodeEditorFindWidgetTokenResource ToggleSize}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource MonoFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.findButton">
+            <Setter Property="Width" Value="{arc:CodeEditorFindWidgetTokenResource ButtonSize}" />
+            <Setter Property="Height" Value="{arc:CodeEditorFindWidgetTokenResource ButtonSize}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton.findToggle:on">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        </Style>
+        <Style Selector="^ /template/ arc|FieldIconButton:disabled">
+            <Setter Property="Opacity" Value="{arc:CodeEditorFindWidgetTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- The replace row and the chevron that shows it. -->
+        <Style Selector="^:replace">
+            <Style Selector="^ /template/ Panel#PART_ReplaceRow">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ StackPanel#PART_ReplaceActions">
+                <Setter Property="IsVisible" Value="True" />
+            </Style>
+            <Style Selector="^ /template/ arc|ArcGlyph#PART_ReplaceChevron">
+                <Setter Property="Data" Value="{x:Static arc:ArcIcons.ChevronDown}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^ /template/ TextBlock#PART_MatchesCount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <!-- A search string with no match: the count in the danger color (Monaco's no-results outline is the input's). -->
+        <Style Selector="^:no-results /template/ TextBlock#PART_MatchesCount">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <!-- An editor too narrow for the whole widget: no match count (Monaco's narrow-find-widget). -->
+        <Style Selector="^:narrow /template/ TextBlock#PART_MatchesCount">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+
+        <!-- Slides in from above while it fades in (Monaco: top from -height to 0 over 200 ms). -->
+        <Style Selector="^:revealed">
+            <Setter Property="RenderTransform" Value="translateY(0px)" />
+            <Setter Property="Opacity" Value="1" />
+        </Style>
+        <Style Selector="^:motion-full">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcTransformOperationsTransition Property="RenderTransform" Tween="Spring" />
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcDoubleTransition Property="Opacity" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

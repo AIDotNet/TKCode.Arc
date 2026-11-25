@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <!-- BenchmarkDotNet over the code editor engine (design/architecture/code-editor.md section 8, task 1.9).
+         Usage is in Program.cs. -->
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <RootNamespace>TKCode.Arc.Editor.Benchmarks</RootNamespace>
+        <Optimize>true</Optimize>
+    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="BenchmarkDotNet" />
+        <ProjectReference Include="../../../src/TKCode.Arc.Editor/TKCode.Arc.Editor.csproj" />
+    </ItemGroup>
+</Project>

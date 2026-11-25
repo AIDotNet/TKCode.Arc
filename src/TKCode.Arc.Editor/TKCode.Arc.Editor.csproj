@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFrameworks>$(ArcTargetFrameworks)</TargetFrameworks>
+        <AssemblyName>TKCode.Arc.Editor</AssemblyName>
+        <!-- The engine has its own namespace: its type names (Selection, Token, Command, ...) would collide with Avalonia and
+             with Arc controls in the flat TKCode.Arc namespace, and the CodeEditor control itself lives in TKCode.Arc
+             (design/decisions/0056-code-editor-package.md). -->
+        <RootNamespace>TKCode.Arc.Editor</RootNamespace>
+        <PackageId>TKCode.Arc.Editor</PackageId>
+        <Description>Code editor engine for .NET, modelled on the Monaco editor: piece tree text buffer, text model with edits, undo and decorations, cursors, view model, tokenization, language features and diff. No UI dependency; TKCode.Arc.Editor.Controls hosts it in Avalonia.</Description>
+        <PackageTags>editor;code;text;monaco;piece-tree;syntax</PackageTags>
+    </PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Controls" />
+        <InternalsVisibleTo Include="TKCode.Arc.Extras.Tests" />
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Benchmarks" />
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Lsp" />
+        <InternalsVisibleTo Include="TKCode.Arc.Editor.Lsp.Tests" />
+    </ItemGroup>
+</Project>

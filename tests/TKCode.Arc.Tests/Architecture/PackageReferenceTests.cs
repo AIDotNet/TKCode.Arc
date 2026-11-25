@@ -49,6 +49,11 @@ public class PackageReferenceTests
         ["TKCode.Arc.Pdf.Native"] = ["TKCode.Arc.Pdf"],
         ["TKCode.Arc.Pdf.Browser"] = ["TKCode.Arc.Pdf"],
         // ADR 0051: the engine has no dependency at all; only its controls bring Avalonia and Arc.
+        // ADR 0056: the code editor engine is pure .NET.
+        ["TKCode.Arc.Editor"] = [],
+        ["TKCode.Arc.Editor.Controls"] = ["TKCode.Arc", "TKCode.Arc.Editor", "TKCode.Arc.Editor.Lsp"],
+        // The language server client is pure .NET on the engine (System.Text.Json is part of the framework).
+        ["TKCode.Arc.Editor.Lsp"] = ["TKCode.Arc.Editor"],
         ["TKCode.Arc.Graphics3D"] = [],
         // The WebGPU backend binds wgpu-native itself (function pointers): no package for it, and no native library inside.
         ["TKCode.Arc.Graphics3D.WebGpu"] = ["TKCode.Arc.Graphics3D"],

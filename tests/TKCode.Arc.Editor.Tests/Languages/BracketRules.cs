@@ -1,0 +1,111 @@
+// Ported from vscode (src/vs/editor/test/common/modes/supports/bracketRules.ts, commit b57d5c9e), MIT license.
+
+using TKCode.Arc.Editor.Languages;
+
+namespace TKCode.Arc.Editor.Tests;
+
+internal static class BracketRules
+{
+    private static readonly IReadOnlyList<CharacterPair> s_standardBracketRules =
+    [
+        (@"{", @"}"),
+        (@"[", @"]"),
+        (@"(", @")"),
+    ];
+
+    public static readonly IReadOnlyList<CharacterPair> RubyBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> CppBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> GoBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> PhpBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> VbBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> LuaBracketRules = s_standardBracketRules;
+
+    public static readonly IReadOnlyList<CharacterPair> HtmlBracketRules =
+    [
+        (@"<!--", @"-->"),
+        (@"{", @"}"),
+        (@"(", @")"),
+    ];
+
+    public static readonly IReadOnlyList<CharacterPair> TypescriptBracketRules =
+    [
+        (@"${", @"}"),
+        (@"{", @"}"),
+        (@"[", @"]"),
+        (@"(", @")"),
+    ];
+
+    public static readonly IReadOnlyList<CharacterPair> LatexBracketRules =
+    [
+        (@"{", @"}"),
+        (@"[", @"]"),
+        (@"(", @")"),
+        (@"[", @")"),
+        (@"(", @"]"),
+        (@"\left(", @"\right)"),
+        (@"\left(", @"\right."),
+        (@"\left.", @"\right)"),
+        (@"\left[", @"\right]"),
+        (@"\left[", @"\right."),
+        (@"\left.", @"\right]"),
+        (@"\left\{", @"\right\}"),
+        (@"\left\{", @"\right."),
+        (@"\left.", @"\right\}"),
+        (@"\left<", @"\right>"),
+        (@"\bigl(", @"\bigr)"),
+        (@"\bigl[", @"\bigr]"),
+        (@"\bigl\{", @"\bigr\}"),
+        (@"\Bigl(", @"\Bigr)"),
+        (@"\Bigl[", @"\Bigr]"),
+        (@"\Bigl\{", @"\Bigr\}"),
+        (@"\biggl(", @"\biggr)"),
+        (@"\biggl[", @"\biggr]"),
+        (@"\biggl\{", @"\biggr\}"),
+        (@"\Biggl(", @"\Biggr)"),
+        (@"\Biggl[", @"\Biggr]"),
+        (@"\Biggl\{", @"\Biggr\}"),
+        (@"\langle", @"\rangle"),
+        (@"\lvert", @"\rvert"),
+        (@"\lVert", @"\rVert"),
+        (@"\left|", @"\right|"),
+        (@"\left\vert", @"\right\vert"),
+        (@"\left\|", @"\right\|"),
+        (@"\left\Vert", @"\right\Vert"),
+        (@"\left\langle", @"\right\rangle"),
+        (@"\left\lvert", @"\right\rvert"),
+        (@"\left\lVert", @"\right\rVert"),
+        (@"\bigl\langle", @"\bigr\rangle"),
+        (@"\bigl|", @"\bigr|"),
+        (@"\bigl\vert", @"\bigr\vert"),
+        (@"\bigl\lvert", @"\bigr\rvert"),
+        (@"\bigl\|", @"\bigr\|"),
+        (@"\bigl\lVert", @"\bigr\rVert"),
+        (@"\bigl\Vert", @"\bigr\Vert"),
+        (@"\Bigl\langle", @"\Bigr\rangle"),
+        (@"\Bigl|", @"\Bigr|"),
+        (@"\Bigl\lvert", @"\Bigr\rvert"),
+        (@"\Bigl\vert", @"\Bigr\vert"),
+        (@"\Bigl\|", @"\Bigr\|"),
+        (@"\Bigl\lVert", @"\Bigr\rVert"),
+        (@"\Bigl\Vert", @"\Bigr\Vert"),
+        (@"\biggl\langle", @"\biggr\rangle"),
+        (@"\biggl|", @"\biggr|"),
+        (@"\biggl\lvert", @"\biggr\rvert"),
+        (@"\biggl\vert", @"\biggr\vert"),
+        (@"\biggl\|", @"\biggr\|"),
+        (@"\biggl\lVert", @"\biggr\rVert"),
+        (@"\biggl\Vert", @"\biggr\Vert"),
+        (@"\Biggl\langle", @"\Biggr\rangle"),
+        (@"\Biggl|", @"\Biggr|"),
+        (@"\Biggl\lvert", @"\Biggr\rvert"),
+        (@"\Biggl\vert", @"\Biggr\vert"),
+        (@"\Biggl\|", @"\Biggr\|"),
+        (@"\Biggl\lVert", @"\Biggr\rVert"),
+        (@"\Biggl\Vert", @"\Biggr\Vert"),
+    ];
+}

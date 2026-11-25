@@ -1,0 +1,41 @@
+#nullable enable
+TKCode.Arc.Editor.Lsp.LanguageClient
+TKCode.Arc.Editor.Lsp.LanguageClient.Disconnected -> System.EventHandler?
+TKCode.Arc.Editor.Lsp.LanguageClient.Dispose() -> void
+TKCode.Arc.Editor.Lsp.LanguageClient.DisposeAsync() -> System.Threading.Tasks.ValueTask
+TKCode.Arc.Editor.Lsp.LanguageClient.IsRunning.get -> bool
+TKCode.Arc.Editor.Lsp.LanguageClient.LanguageClient(TKCode.Arc.Editor.Lsp.LanguageClientOptions? options = null) -> void
+TKCode.Arc.Editor.Lsp.LanguageClient.LogMessage -> System.EventHandler<TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs!>?
+TKCode.Arc.Editor.Lsp.LanguageClient.ServerName.get -> string?
+TKCode.Arc.Editor.Lsp.LanguageClient.ServerVersion.get -> string?
+TKCode.Arc.Editor.Lsp.LanguageClient.ShowMessage -> System.EventHandler<TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs!>?
+TKCode.Arc.Editor.Lsp.LanguageClient.StartAsync(System.IO.Stream! input, System.IO.Stream! output, System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+TKCode.Arc.Editor.Lsp.LanguageClient.StopAsync(System.Threading.CancellationToken cancellationToken = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!
+TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs
+TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs.LanguageClientMessageEventArgs(TKCode.Arc.Editor.Lsp.LanguageClientMessageType type, string! message) -> void
+TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs.Message.get -> string!
+TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs.Type.get -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType.Debug = 5 -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType.Error = 1 -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType.Info = 3 -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType.Log = 4 -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientMessageType.Warning = 2 -> TKCode.Arc.Editor.Lsp.LanguageClientMessageType
+TKCode.Arc.Editor.Lsp.LanguageClientOptions
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ClientName.get -> string!
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ClientName.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ClientVersion.get -> string?
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ClientVersion.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.InitializationOptions.get -> string?
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.InitializationOptions.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.LanguageClientOptions() -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.Locale.get -> string?
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.Locale.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.Name.get -> string!
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.Name.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.RootUri.get -> System.Uri?
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.RootUri.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ShowMessageRequest.get -> System.Func<TKCode.Arc.Editor.Lsp.LanguageClientMessageEventArgs!, System.Collections.Generic.IReadOnlyList<string!>!, System.Threading.CancellationToken, System.Threading.Tasks.Task<string?>!>?
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ShowMessageRequest.init -> void
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ShutdownTimeout.get -> System.TimeSpan
+TKCode.Arc.Editor.Lsp.LanguageClientOptions.ShutdownTimeout.init -> void
