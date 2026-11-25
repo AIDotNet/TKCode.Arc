@@ -1,0 +1,78 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.ProgressRingTheme">
+    <ControlTheme x:Key="{x:Type arc:ProgressRing}" TargetType="arc:ProgressRing">
+        <Setter Property="HorizontalAlignment" Value="Center" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="Thickness" Value="{arc:ProgressRingTokenResource StrokeThicknessMD}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeSM}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightRegular}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextSecondary}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arc:ProgressRing">
+                <Grid RowDefinitions="*,Auto">
+                    <Panel Name="PART_RingHost">
+                        <arc:ProgressRingTrack Name="PART_Track"
+                                               Thickness="{TemplateBinding Thickness}"
+                                               TrackBrush="{arc:ArcDesignTokenResource ControlTrack}"
+                                               IndicatorBrush="{arc:ArcDesignTokenResource Accent}"
+                                               CompleteBrush="{arc:ArcDesignTokenResource Success}" />
+                        <arc:ProgressRingReadout Name="PART_Readout"
+                                                 IsVisible="{TemplateBinding ShowsReadout}"
+                                                 FontFamily="{arc:ArcDesignTokenResource BodyFontFamily}"
+                                                 FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                                 Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                 CheckBrush="{arc:ArcDesignTokenResource Success}" />
+                        <ContentPresenter Name="PART_ContentPresenter"
+                                          IsVisible="{TemplateBinding HasCustomContent}"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          HorizontalAlignment="Center"
+                                          VerticalAlignment="Center" />
+                    </Panel>
+                    <arc:ProgressSwapText Name="PART_Label"
+                                          Grid.Row="1"
+                                          IsVisible="{TemplateBinding HasLabel}"
+                                          Text="{TemplateBinding Label}"
+                                          HorizontalAlignment="Center"
+                                          Margin="{arc:ProgressRingTokenResource LabelMargin}"
+                                          LineHeight="{arc:ProgressRingTokenResource LabelLineHeight}"
+                                          Foreground="{TemplateBinding Foreground}" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^ /template/ arc|ProgressRingTrack#PART_Track">
+            <Setter Property="DefaultDiameter" Value="{arc:ProgressRingTokenResource DiameterMD}" />
+        </Style>
+        <Style Selector="^ /template/ arc|ProgressRingReadout#PART_Readout">
+            <Setter Property="FontSize" Value="{arc:ProgressRingTokenResource ValueFontSizeMD}" />
+            <Setter Property="CheckSize" Value="{arc:ProgressRingTokenResource CheckSizeMD}" />
+        </Style>
+
+        <Style Selector="^:small">
+            <Setter Property="Thickness" Value="{arc:ProgressRingTokenResource StrokeThicknessSM}" />
+            <Style Selector="^ /template/ arc|ProgressRingTrack#PART_Track">
+                <Setter Property="DefaultDiameter" Value="{arc:ProgressRingTokenResource DiameterSM}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ProgressRingReadout#PART_Readout">
+                <Setter Property="FontSize" Value="{arc:ProgressRingTokenResource ValueFontSizeSM}" />
+                <Setter Property="CheckSize" Value="{arc:ProgressRingTokenResource CheckSizeSM}" />
+            </Style>
+        </Style>
+
+        <Style Selector="^:large">
+            <Setter Property="Thickness" Value="{arc:ProgressRingTokenResource StrokeThicknessLG}" />
+            <Style Selector="^ /template/ arc|ProgressRingTrack#PART_Track">
+                <Setter Property="DefaultDiameter" Value="{arc:ProgressRingTokenResource DiameterLG}" />
+            </Style>
+            <Style Selector="^ /template/ arc|ProgressRingReadout#PART_Readout">
+                <Setter Property="FontSize" Value="{arc:ProgressRingTokenResource ValueFontSizeLG}" />
+                <Setter Property="CheckSize" Value="{arc:ProgressRingTokenResource CheckSizeLG}" />
+            </Style>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

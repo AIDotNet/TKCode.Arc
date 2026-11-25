@@ -23,14 +23,28 @@ internal sealed class RadioGroupToken : AbstractControlDesignToken
     public Thickness FocusRingMargin { get; set; }
     public CornerRadius FocusRingRadius { get; set; }
     public double DisabledOpacity { get; set; }
+    public double HorizontalGap { get; set; }
+    public double BorderlessRowGap { get; set; }
+    public double BorderlessHorizontalGap { get; set; }
+    public Thickness BorderlessRowInset { get; set; }
+    public double BorderlessMarkGap { get; set; }
+    public Thickness BorderlessFocusRingMargin { get; set; }
+    public CornerRadius BorderlessFocusRingRadius { get; set; }
 
     public override void CalculateTokenValues(bool isDarkMode)
     {
         base.CalculateTokenValues(isDarkMode);
         LegendMargin = new Thickness(0, 0, 0, 8);
         RowGap = 8;
+        HorizontalGap = 12;
         RowInset = new Thickness(12);
         MarkGap = 12;
+        BorderlessRowGap = 10;
+        BorderlessHorizontalGap = 20;
+        BorderlessRowInset = new Thickness(0, 2);
+        BorderlessMarkGap = 8;
+        BorderlessFocusRingMargin = new Thickness(-6, -3);
+        BorderlessFocusRingRadius = new CornerRadius(8);
         // 17px ring; a 7px dot stays on whole pixels inside the 15px interior.
         RingDiameter = 17;
         RingRadius = new CornerRadius(8.5);
@@ -51,8 +65,15 @@ internal sealed class RadioGroupToken : AbstractControlDesignToken
         base.ApplyCompact(isDarkMode);
         LegendMargin = new Thickness(0, 0, 0, 6);
         RowGap = 6;
+        HorizontalGap = 8;
         RowInset = new Thickness(8);
         MarkGap = 8;
+        BorderlessRowGap = 6;
+        BorderlessHorizontalGap = 14;
+        BorderlessRowInset = new Thickness(0, 1);
+        BorderlessMarkGap = 6;
+        BorderlessFocusRingMargin = new Thickness(-4, -2);
+        BorderlessFocusRingRadius = new CornerRadius(6);
         LabelLineHeight = 13 * 1.38;
         HighlightRadius = new CornerRadius(10);
         FocusRingRadius = new CornerRadius(14);

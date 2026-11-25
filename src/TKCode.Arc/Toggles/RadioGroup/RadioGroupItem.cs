@@ -3,6 +3,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
+using Avalonia.Controls.Metadata;
 using Avalonia.Controls.Presenters;
 using Avalonia.Controls.Primitives;
 using Avalonia.Data;
@@ -18,8 +19,12 @@ namespace TKCode.Arc;
 /// style on <c>arc|RadioGroupItem</c> (or the group's <c>ItemContainerTheme</c>) can bind <see cref="Description"/>,
 /// <c>IsEnabled</c> and <c>AutomationProperties.Name</c> to the item.
 /// </summary>
+[PseudoClasses(BorderlessPseudoClass)]
 public sealed class RadioGroupItem : TogglesItem
 {
+    /// <summary>Set while the owning <see cref="RadioGroup"/> uses <see cref="RadioGroupVariant.Borderless"/>.</summary>
+    public const string BorderlessPseudoClass = ":borderless";
+
     private protected override (object Margin, object Radius)? FocusRingKeys => (RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingMargin), RadioGroupTokens.Key(RadioGroupTokenKind.FocusRingRadius));
 
     /// <summary>A line under the label that explains the option; also the row's accessible help text.</summary>
@@ -35,6 +40,38 @@ public sealed class RadioGroupItem : TogglesItem
 
     private Panel? _copy;
     private TextBlock? _description;
+    private bool _isBorderless;
+
+    internal void SetBorderless(bool borderless)
+    {
+        if (_isBorderless == borderless)
+        {
+            return;
+        }
+        _isBorderless = borderless;
+        PseudoClasses.Set(BorderlessPseudoClass, borderless);
+        UpdateRingShape();
+    }
+
+    private protected override void OnFocusRingUpdated() => UpdateRingShape();
+
+    private void UpdateRingShape()
+    {
+        if (FocusRing?.Ring is not { } ring)
+        {
+            return;
+        }
+        if (_isBorderless)
+        {
+            ring.Bind(MarginProperty, ring.GetResourceObservable(RadioGroupTokens.Key(RadioGroupTokenKind.BorderlessFocusRingMargin)), BindingPriority.LocalValue);
+            ring.Bind(Border.CornerRadiusProperty, ring.GetResourceObservable(RadioGroupTokens.Key(RadioGroupTokenKind.BorderlessFocusRingRadius)), BindingPriority.LocalValue);
+        }
+        else
+        {
+            ring.ClearValue(MarginProperty);
+            ring.ClearValue(Border.CornerRadiusProperty);
+        }
+    }
 
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {

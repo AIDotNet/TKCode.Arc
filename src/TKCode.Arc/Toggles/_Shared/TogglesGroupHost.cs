@@ -16,7 +16,7 @@ namespace TKCode.Arc;
 internal sealed class TogglesGroupHost
 {
     private readonly SelectingItemsControl _owner;
-    private readonly bool _flipInRtl;
+    private bool _flipInRtl;
     private readonly Func<int, bool> _usable;
     private readonly Action<Control, object?>? _apply;
     private readonly ObservedItems _options;
@@ -38,6 +38,16 @@ internal sealed class TogglesGroupHost
         owner.AttachedToVisualTree += (_, _) => OnAttached();
         owner.DetachedFromVisualTree += (_, _) => _options.Observe(null);
     }
+
+    /// <summary>Whether horizontal arrow keys flip in right-to-left layouts.</summary>
+    public bool FlipInRtl
+    {
+        get => _flipInRtl;
+        set => _flipInRtl = value;
+    }
+
+    /// <summary>Re-places the selection indicator on the current selected container without gliding.</summary>
+    public void RefreshIndicator() => _tracker?.Place();
 
     private void OnAttached()
     {

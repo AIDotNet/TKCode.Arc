@@ -135,6 +135,13 @@ public abstract class TogglesItem : ContentControl
     /// </summary>
     private protected virtual (object Margin, object Radius)? FocusRingKeys => null;
 
+    /// <summary>The item's lazily created keyboard focus ring, once attached.</summary>
+    private protected LazyFocusRing? FocusRing => _focusRing;
+
+    private protected virtual void OnFocusRingUpdated()
+    {
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);
@@ -144,18 +151,21 @@ public abstract class TogglesItem : ContentControl
         }
         _focusRing ??= new LazyFocusRing(this, keys.Margin, keys.Radius);
         _focusRing.Attach(VisualChildren.Count > 0 ? VisualChildren[0] as Panel : null);
+        OnFocusRingUpdated();
     }
 
     protected override void OnGotFocus(FocusChangedEventArgs e)
     {
         base.OnGotFocus(e);
         _focusRing?.Update();
+        OnFocusRingUpdated();
     }
 
     protected override void OnLostFocus(FocusChangedEventArgs e)
     {
         base.OnLostFocus(e);
         _focusRing?.Update();
+        OnFocusRingUpdated();
     }
 
     private void EndPress()
