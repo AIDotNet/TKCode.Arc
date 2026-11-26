@@ -99,6 +99,7 @@ public class NavigationStack : TemplatedControl
     private Panel? _topLayer;
     private MotionValue<double>? _x;
     private DragTracker? _drag;
+    private IDisposable? _backRegistration;
     private Transition _transition;
     private Control? _under;
     private bool _canGoBack;
@@ -242,6 +243,8 @@ public class NavigationStack : TemplatedControl
         _drag.Moved += (_, args) => MovePeek(args.Offset.X);
         _drag.Completed += (_, args) => EndPeek(args.Velocity.X);
         _drag.Cancelled += (_, _) => EndPeek(0);
+        _backRegistration?.Dispose();
+        _backRegistration = MobileBackNavigation.Register(this, MobileBackPriority.Navigation, HandleBackRequested);
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -249,7 +252,11 @@ public class NavigationStack : TemplatedControl
         base.OnDetachedFromVisualTree(e);
         _drag?.Dispose();
         _drag = null;
+        _backRegistration?.Dispose();
+        _backRegistration = null;
     }
+
+    private bool HandleBackRequested() => CanGoBack && Pop();
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {

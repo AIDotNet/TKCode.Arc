@@ -144,7 +144,7 @@ public class Toast : TemplatedControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == BottomOffsetProperty)
+        if (change.Property == BottomOffsetProperty || change.Property == Page.KeyboardInsetProperty)
         {
             UpdateInset();
         }
@@ -179,7 +179,7 @@ public class Toast : TemplatedControl
         }
     }
 
-    /// <summary>Keeps the stack above the page's footer and bottom safe area (the overlay itself covers both).</summary>
+    /// <summary>Keeps the stack above the page's footer, bottom safe area and any open soft keyboard (the overlay covers all of them).</summary>
     private void UpdateInset()
     {
         if (_stack is null)
@@ -189,11 +189,12 @@ public class Toast : TemplatedControl
         var inset = BottomOffset;
         if (this.FindAncestorOfType<Page>() is { } page)
         {
-            inset += page.SafeArea.Bottom;
+            var bottom = page.SafeArea.Bottom;
             if (page.Footer is Control { IsVisible: true } footer)
             {
-                inset += footer.Bounds.Height;
+                bottom += footer.Bounds.Height;
             }
+            inset += Math.Max(bottom, page.KeyboardInset);
         }
         if (!double.IsNaN(_lastInset) && Math.Abs(inset - _lastInset) < 0.01)
         {

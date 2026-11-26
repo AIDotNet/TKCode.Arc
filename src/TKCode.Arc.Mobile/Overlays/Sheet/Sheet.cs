@@ -57,9 +57,10 @@ public sealed class SheetDetentChangedEventArgs : EventArgs
 
 /// <summary>
 /// A bottom sheet: a panel that rises over a <see cref="Page"/> with a scrim behind it. The person closes it by tapping
-/// the scrim, pulling the handle down or flicking it, or with Escape. Put it in <see cref="Page.Overlay"/> and open it
-/// with <see cref="IsOpen"/>; it sizes to its content, up to <see cref="MaxHeightFraction"/> of the page, and the
-/// content scrolls beyond that. Closed, it does not catch touches.
+/// the scrim, pulling the handle down or flicking it, or with Escape (and the Android system back button/gesture). Put it
+/// in <see cref="Page.Overlay"/> and open it with <see cref="IsOpen"/>; it sizes to its content, up to
+/// <see cref="MaxHeightFraction"/> of the available height above any soft keyboard, and the content scrolls beyond that.
+/// Closed, it does not catch touches.
 /// <para>
 /// With <see cref="Detents"/> the sheet rests at several heights instead (a peek and a full view): a pull follows the
 /// finger, stretches like a rubber band past the tallest detent, and on release looks 0.2 s ahead to pick the nearest
@@ -76,7 +77,7 @@ public sealed class SheetDetentChangedEventArgs : EventArgs
 [TemplatePart("PART_Panel", typeof(Border))]
 [TemplatePart("PART_Handle", typeof(Control))]
 [TemplatePart("PART_Body", typeof(ScrollViewer))]
-public class Sheet : ContentControl
+public partial class Sheet : ContentControl
 {
     /// <summary>The panel slides this far past its own height when closed, so its outline and shadow are out of sight.</summary>
     private const double ClosedGap = 24;
@@ -144,9 +145,11 @@ public class Sheet : ContentControl
     private Border? _panel;
     private Control? _handle;
     private ScrollViewer? _body;
+    private Border? _safeArea;
     private MotionValue<double>? _y;
     private DragTracker? _drag;
     private DragTracker? _bodyDrag;
+    private IDisposable? _backRegistration;
     private double _dragOrigin;
     private int _dragFrom;
     private bool _dragging;
@@ -159,6 +162,7 @@ public class Sheet : ContentControl
     private SheetDetents? _observedDetents;
     private bool _watching;
     private double _effectiveSafeAreaBottom;
+    private double _keyboardBottom;
 
     /// <inheritdoc cref="IsOpenProperty"/>
     public bool IsOpen
@@ -264,6 +268,7 @@ public class Sheet : ContentControl
         _panel = e.NameScope.Find<Border>("PART_Panel");
         _handle = e.NameScope.Find<Control>("PART_Handle");
         _body = e.NameScope.Find<ScrollViewer>("PART_Body");
+        _safeArea = e.NameScope.Find<Border>("PART_SafeArea");
         if (_panel is null)
         {
             return;
@@ -276,42 +281,11 @@ public class Sheet : ContentControl
         {
             _scrim.PointerPressed += OnScrimPressed;
         }
-        if (_handle is not null)
-        {
-            _drag = new DragTracker(_handle, new DragOptions { Axis = DragAxis.Vertical, Threshold = 3, RejectCrossAxis = false })
-            {
-                CanBegin = _ => IsOpen,
-            };
-            _drag.Started += (_, _) => BeginDrag(0);
-            _drag.Moved += (_, args) => MoveDrag(args.Offset.Y);
-            _drag.Completed += (_, args) => EndDrag(args.Velocity.Y);
-            _drag.Cancelled += (_, _) => EndDrag(0);
-        }
-        if (_body is { } body)
-        {
-            // A finger on the content moves the sheet until it is at its tallest detent; there the content scrolls, and a
-            // pull down from its top moves the sheet again.
-            _bodyDrag = new DragTracker(body, new DragOptions { Axis = DragAxis.Vertical, Threshold = 4, HandledEventsToo = true })
-            {
-                CanBegin = args => IsOpen && args.Pointer.Type == PointerType.Touch,
-            };
-            _bodyDrag.Starting += (_, args) =>
-            {
-                if (DetentIndex == Top)
-                {
-                    var scrollable = body.Extent.Height > body.Viewport.Height + 1;
-                    args.Cancel = scrollable && !(body.Offset.Y <= 0 && args.Offset.Y > 0);
-                }
-            };
-            _bodyDrag.Started += (_, args) => BeginDrag(args.Offset.Y);
-            _bodyDrag.Moved += (_, args) => MoveDrag(args.Offset.Y);
-            _bodyDrag.Completed += (_, args) => EndDrag(args.Velocity.Y);
-            _bodyDrag.Cancelled += (_, _) => EndDrag(0);
-            body.AddHandler(PointerWheelChangedEvent, OnBodyWheel, RoutingStrategies.Tunnel);
-        }
+        AttachGestures();
         _mounted = false;
         _present = false;
         UpdateStops();
+        UpdateKeyboardInset();
         UpdateSize();
         if (IsOpen)
         {
@@ -320,15 +294,13 @@ public class Sheet : ContentControl
             DetentIndex = _aim;
         }
         UpdatePresence();
+        UpdateBackRegistration();
         Apply();
     }
 
     private void Detach()
     {
-        _drag?.Dispose();
-        _drag = null;
-        _bodyDrag?.Dispose();
-        _bodyDrag = null;
+        DetachGestures();
         _y?.Dispose();
         _y = null;
         if (_panel is not null)
@@ -339,7 +311,7 @@ public class Sheet : ContentControl
         {
             _scrim.PointerPressed -= OnScrimPressed;
         }
-        _body?.RemoveHandler(PointerWheelChangedEvent, OnBodyWheel);
+        _safeArea = null;
     }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
@@ -347,6 +319,7 @@ public class Sheet : ContentControl
         base.OnPropertyChanged(change);
         if (change.Property == IsOpenProperty)
         {
+            UpdateBackRegistration();
             if (change.GetNewValue<bool>())
             {
                 Open();
@@ -369,19 +342,49 @@ public class Sheet : ContentControl
         {
             UpdateSafeArea();
         }
+        else if (change.Property == Page.KeyboardInsetProperty)
+        {
+            UpdateKeyboardInset();
+        }
     }
 
     /// <summary>An explicit <see cref="SafeAreaBottom"/> wins; otherwise the page's safe area reaches the sheet by inheritance.</summary>
     private void UpdateSafeArea()
         => EffectiveSafeAreaBottom = Math.Max(0, IsSet(SafeAreaBottomProperty) ? SafeAreaBottom : Page.GetInheritedSafeArea(this).Bottom);
 
+    /// <summary>
+    /// Lifts the sheet panel above the soft keyboard when one is up (reported through <see cref="Page.KeyboardInsetProperty"/>)
+    /// and shrinks the available height so the top of the panel stays inside the screen.
+    /// </summary>
+    private void UpdateKeyboardInset()
+    {
+        var keyboard = Math.Max(0, Page.GetKeyboardInset(this));
+        _keyboardBottom = keyboard;
+        if (_panel is not null)
+        {
+            _panel.Margin = keyboard > 0 ? new Thickness(0, 0, 0, keyboard) : default;
+        }
+        if (_safeArea is not null)
+        {
+            // While the keyboard sits below the panel, the panel is already clear of the home indicator.
+            _safeArea.IsVisible = keyboard <= 0;
+        }
+        UpdateSize();
+        if (_y is not null && !_dragging && !_y.IsAnimating)
+        {
+            _y.Jump(IsOpen ? OffsetOf(_aim) : ClosedOffset);
+        }
+    }
+
     protected override void OnAttachedToVisualTree(VisualTreeAttachmentEventArgs e)
     {
         base.OnAttachedToVisualTree(e);
         UpdateSafeArea();
+        UpdateKeyboardInset();
         _watching = true;
         WatchDetents();
         OnDetentsChanged(null, null);
+        UpdateBackRegistration();
     }
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
@@ -389,6 +392,32 @@ public class Sheet : ContentControl
         base.OnDetachedFromVisualTree(e);
         _watching = false;
         WatchDetents();
+        _backRegistration?.Dispose();
+        _backRegistration = null;
+    }
+
+    private void UpdateBackRegistration()
+    {
+        _backRegistration?.Dispose();
+        _backRegistration = null;
+        if (_watching && IsOpen)
+        {
+            _backRegistration = MobileBackNavigation.Register(this, MobileBackPriority.Overlay, HandleBackRequested);
+        }
+    }
+
+    private bool HandleBackRequested()
+    {
+        if (!IsOpen)
+        {
+            return false;
+        }
+        if (IsDismissible)
+        {
+            IsOpen = false;
+        }
+        // Even a non-dismissible open modal sheet absorbs system back so the page stack behind it is not popped.
+        return true;
     }
 
     /// <summary>Listens to the current detents while in a visual tree (a view model's list may outlive the sheet).</summary>
@@ -441,6 +470,8 @@ public class Sheet : ContentControl
 
     private bool Reduced => ArcMotion.GetEffectiveLevel(this) != ArcMotionLevel.Full;
 
+    private double AvailableHeight => Math.Max(0, Bounds.Height - _keyboardBottom);
+
     /// <summary>Height of the panel at its tallest detent.</summary>
     private double Full
     {
@@ -450,14 +481,14 @@ public class Sheet : ContentControl
             {
                 return panel.Bounds.Height;
             }
-            return _hasDetents ? Bounds.Height * _stops[^1] : 0;
+            return _hasDetents ? AvailableHeight * _stops[^1] : 0;
         }
     }
 
     /// <summary>The offset below the tallest position at which detent <paramref name="stop"/> rests.</summary>
     private double OffsetOf(int stop) => _hasDetents ? Full * (1 - _stops[stop] / _stops[^1]) : 0;
 
-    private double ClosedOffset => Full + ClosedGap;
+    private double ClosedOffset => Full + ClosedGap + _keyboardBottom;
 
     /// <summary>Sizes the panel: to the tallest detent when there are detents, otherwise to its content up to the maximum.</summary>
     private void UpdateSize()
@@ -466,15 +497,16 @@ public class Sheet : ContentControl
         {
             return;
         }
+        var available = AvailableHeight;
         if (_hasDetents)
         {
             _panel.MaxHeight = double.PositiveInfinity;
-            _panel.Height = Bounds.Height * _stops[^1];
+            _panel.Height = available * _stops[^1];
         }
         else
         {
             _panel.ClearValue(Avalonia.Layout.Layoutable.HeightProperty);
-            _panel.MaxHeight = Bounds.Height * Math.Clamp(MaxHeightFraction, 0.1, 1);
+            _panel.MaxHeight = available * Math.Clamp(MaxHeightFraction, 0.1, 1);
         }
     }
 
@@ -616,104 +648,5 @@ public class Sheet : ContentControl
             e.Handled = true;
             IsOpen = false;
         }
-    }
-
-    private void OnBodyWheel(object? sender, PointerWheelEventArgs e)
-    {
-        if (DetentIndex == Top || !_hasDetents)
-        {
-            return;
-        }
-        // Below the tallest detent the content does not scroll; scrolling down raises the sheet the rest of the way.
-        e.Handled = true;
-        if (e.Delta.Y < 0 && !_dragging)
-        {
-            Rest(Top);
-        }
-    }
-
-    private void BeginDrag(double offsetAtStart)
-    {
-        if (_y is null)
-        {
-            return;
-        }
-        // Catch the panel where it is, even in flight; a stretched panel converts back to finger distance.
-        _y.Stop();
-        var current = _y.Value;
-        var low = OffsetOf(0);
-        double origin;
-        if (current < 0)
-        {
-            origin = -RubberBand.Invert(-current, Stretch);
-        }
-        else if (!IsDismissible && current > low)
-        {
-            origin = low + RubberBand.Invert(current - low, Stretch);
-        }
-        else
-        {
-            origin = current;
-        }
-        _dragOrigin = origin - offsetAtStart;
-        _dragFrom = DetentIndex;
-        _dragging = true;
-    }
-
-    private void MoveDrag(double offset)
-    {
-        if (!_dragging || _y is null || Reduced)
-        {
-            return;
-        }
-        var raw = _dragOrigin + offset;
-        var low = OffsetOf(0);
-        // Between the detents (and down, when it may close) the panel follows the finger 1:1; past the tallest detent, and
-        // past the lowest when it may not close, it resists like a rubber band.
-        if (raw < 0)
-        {
-            _y.Jump(-RubberBand.Apply(-raw, Stretch));
-        }
-        else if (!IsDismissible && raw > low)
-        {
-            _y.Jump(low + RubberBand.Apply(raw - low, Stretch));
-        }
-        else
-        {
-            _y.Jump(raw);
-        }
-    }
-
-    private void EndDrag(double velocity)
-    {
-        if (!_dragging || _y is null)
-        {
-            return;
-        }
-        _dragging = false;
-        var current = _y.Value;
-        var low = OffsetOf(0);
-        // A stretched panel springs back without the finger's speed, so it never launches past the stretch.
-        if (current < 0 || (!IsDismissible && current > low))
-        {
-            velocity = 0;
-        }
-        var count = _stops.Length;
-        Span<double> points = stackalloc double[count + 1];
-        for (var i = 0; i < count; i++)
-        {
-            points[i] = OffsetOf(i);
-        }
-        points[count] = ClosedOffset;
-        var from = Math.Clamp(_dragFrom, 0, Top);
-        var chosen = MomentumProjector.SelectSnapPoint(
-            IsDismissible ? points : points[..count], current, velocity, SnapProjection.Linear(Projection, from, FlickVelocity));
-        if (chosen == count)
-        {
-            // The exit starts in this frame with the finger's velocity; IsOpen = false then only waits for it to land.
-            IsOpen = false;
-            return;
-        }
-        Rest(chosen, velocity);
     }
 }

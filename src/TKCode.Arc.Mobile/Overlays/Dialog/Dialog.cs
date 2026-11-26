@@ -66,6 +66,8 @@ public class Dialog : ItemsControl
     private Border? _scrim;
     private Border? _panel;
     private MotionValue<double>? _progress;
+    private IDisposable? _backRegistration;
+    private bool _attached;
     private bool _present;
 
     static Dialog()
@@ -119,6 +121,45 @@ public class Dialog : ItemsControl
     public Dialog()
     {
         AddHandler(AvaloniaButton.ClickEvent, OnActionClick, RoutingStrategies.Bubble);
+        AttachedToVisualTree += OnDialogAttachedToVisualTree;
+        DetachedFromVisualTree += OnDialogDetachedFromVisualTree;
+    }
+
+    private void OnDialogAttachedToVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _attached = true;
+        UpdateBackRegistration();
+    }
+
+    private void OnDialogDetachedFromVisualTree(object? sender, VisualTreeAttachmentEventArgs e)
+    {
+        _attached = false;
+        _backRegistration?.Dispose();
+        _backRegistration = null;
+    }
+
+    private void UpdateBackRegistration()
+    {
+        _backRegistration?.Dispose();
+        _backRegistration = null;
+        if (_attached && IsOpen)
+        {
+            _backRegistration = MobileBackNavigation.Register(this, MobileBackPriority.Overlay, HandleBackRequested);
+        }
+    }
+
+    private bool HandleBackRequested()
+    {
+        if (!IsOpen)
+        {
+            return false;
+        }
+        if (IsDismissible)
+        {
+            IsOpen = false;
+        }
+        // Even a non-dismissible open alert absorbs system back so the navigation stack underneath is not popped.
+        return true;
     }
 
     /// <inheritdoc cref="IsOpenProperty"/>
@@ -201,6 +242,7 @@ public class Dialog : ItemsControl
         base.OnPropertyChanged(change);
         if (change.Property == IsOpenProperty)
         {
+            UpdateBackRegistration();
             if (change.GetNewValue<bool>())
             {
                 Open();

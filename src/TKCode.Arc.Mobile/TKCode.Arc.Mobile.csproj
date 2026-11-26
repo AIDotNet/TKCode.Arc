@@ -4,7 +4,7 @@
         <AssemblyName>TKCode.Arc.Mobile</AssemblyName>
         <RootNamespace>TKCode.Arc.Mobile</RootNamespace>
         <PackageId>TKCode.Arc.Mobile</PackageId>
-        <Description>Touch-first Arc components for Avalonia (first slice: page, navbar, tabbar, button, switch) with press states and 44px touch targets. Previewed in a desktop phone frame; not yet verified on Android or iOS devices.</Description>
+        <Description>Touch-first Arc components for Avalonia (shell, navigation stack, sheets, dialogs, lists, pull to refresh, touch inputs, pickers and radio cards) with press states, safe areas, keyboard avoidance and 44px touch targets.</Description>
         <!-- Core contains generated types with identical names. -->
         <NoWarn>$(NoWarn);CS0436</NoWarn>
         <ArcFoundationGenerator>true</ArcFoundationGenerator>
