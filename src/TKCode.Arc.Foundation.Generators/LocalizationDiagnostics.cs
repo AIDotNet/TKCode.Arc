@@ -29,7 +29,7 @@ namespace TKCode.Arc.Foundation.Generators
 
         public static readonly DiagnosticDescriptor MissingSource = new DiagnosticDescriptor(
             "ARCF024", "Catalog has no source-language file",
-            "Language catalog '{0}' has no source-language file (a Localization/<language>.xlf without trgLang whose <file id> is '{0}')",
+            "Language catalog '{0}' has no source-language file (a Localization/<language>.xlf without trgLang or a Localization/<language>.json for its source language)",
             Category, DiagnosticSeverity.Error, isEnabledByDefault: true);
 
         public static readonly DiagnosticDescriptor PlaceholderMismatch = new DiagnosticDescriptor(

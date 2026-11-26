@@ -117,7 +117,7 @@ public class LatePackageTests
         Should.Throw<InvalidOperationException>(() => runtime.UsePackages(b => b.UseLate(chinese: false)))
               .Message.ShouldBe("""
                   The application's languages are not covered by every enabled package:
-                  - Package 'Late' has no 'zh-CN' text for 'Tests.LateTextKind' (add Localization/zh-CN.xlf).
+                  - Package 'Late' has no 'zh-CN' text for 'Tests.LateTextKind' (add Localization/zh-CN.xlf or .json).
                   """.ReplaceLineEndings("\n"));
         Should.Throw<InvalidOperationException>(() => runtime.UsePackages(b => b.UseLate(tokens: [new LateDescriptor("LateGlobal", isGlobal: true)])))
               .Message.ShouldBe("Package 'Late' registers the global token identity 'LateGlobal'; that is only possible at startup.");

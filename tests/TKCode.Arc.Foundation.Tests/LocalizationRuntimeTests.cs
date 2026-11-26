@@ -18,8 +18,26 @@ public class LocalizationRuntimeTests
         languages.Language.ShouldBe(LanguageTags.EnUS);
         languages.SupportedLanguages.ShouldBe([LanguageTags.EnUS, LanguageTags.ZhCN, LanguageTags.ZhTW]);
         languages.Catalogs.ShouldContain(SampleLangResources.Catalog);
-        ArcGeneratedAssets.Languages.ShouldBe([SampleLangResources.Catalog]);
+        languages.Catalogs.ShouldContain(SampleJsonLangResources.Catalog);
+        ArcGeneratedAssets.Languages.ShouldBe([SampleJsonLangResources.Catalog, SampleLangResources.Catalog]);
         ArcRuntime.Current!.Languages.ShouldBeSameAs(languages);
+    }
+
+    [AvaloniaFact]
+    public void Json_catalog_lookup_and_live_switching_work_like_xliff()
+    {
+        SampleJsonLangResources.Get(SampleJsonLangResourceKind.Apply).ShouldBe("Apply");
+        SampleJsonLangResources.Format(SampleJsonLangResourceKind.ItemCount, 5).ShouldBe("5 items");
+        TestHelpers.AppResource(SampleJsonLangResourceKind.Apply).ShouldBe("Apply");
+
+        ArcLanguage.Set(LanguageTags.ZhCN);
+        SampleJsonLangResources.Get(SampleJsonLangResourceKind.Apply).ShouldBe("应用");
+        SampleJsonLangResources.Format(SampleJsonLangResourceKind.ItemCount, 5).ShouldBe("5 项");
+        TestHelpers.AppResource(SampleJsonLangResourceKind.Apply).ShouldBe("应用");
+
+        ArcLanguage.Set(LanguageTags.ZhTW);
+        SampleJsonLangResources.Get(SampleJsonLangResourceKind.Apply).ShouldBe("套用");
+        SampleJsonLangResources.Format(SampleJsonLangResourceKind.ItemCount, 5).ShouldBe("5 項");
     }
 
     [AvaloniaFact]
@@ -170,9 +188,10 @@ public class LocalizationRuntimeTests
 
         error.Message.ShouldBe("""
             The application's languages are not covered by every enabled package:
-            - Package 'TKCode.Arc.Foundation.Tests' has no 'pt-BR' text for 'TKCode.Arc.Foundation.Samples.SampleLangResourceKind' (add Localization/pt-BR.xlf).
+            - Package 'TKCode.Arc.Foundation.Tests' has no 'pt-BR' text for 'TKCode.Arc.Foundation.Samples.SampleJsonLangResourceKind' (add Localization/pt-BR.xlf or .json).
+            - Package 'TKCode.Arc.Foundation.Tests' has no 'pt-BR' text for 'TKCode.Arc.Foundation.Samples.SampleLangResourceKind' (add Localization/pt-BR.xlf or .json).
             - Package 'Gappy' is missing 2 'zh-CN' entries of 'Tests.TestKind': B, D.
-            - Package 'Gappy' has no 'pt-BR' text for 'Tests.TestKind' (add Localization/pt-BR.xlf).
+            - Package 'Gappy' has no 'pt-BR' text for 'Tests.TestKind' (add Localization/pt-BR.xlf or .json).
             """.ReplaceLineEndings("\n"));
         ArcRuntime.Find(application).ShouldBeNull();
         application.Resources.MergedDictionaries.ShouldBeEmpty();

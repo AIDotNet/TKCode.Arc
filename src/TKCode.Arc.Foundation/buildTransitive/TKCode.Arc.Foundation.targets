@@ -10,11 +10,12 @@
         <AvaloniaXaml Remove="@(_ArcFoundationThemeXaml)" />
         <AvaloniaResource Include="@(_ArcFoundationThemeXaml)" />
     </ItemGroup>
-    <!-- Language catalogs: the generator reads Localization/<language>.xlf (design/architecture/foundation.md section 12).
-         Only files directly in a Localization folder count, so other xlf files (the gallery's Docs/Api) are left alone.
+    <!-- Language catalogs: the generator reads Localization/<language>.xlf and Localization/<language>.json
+         (design/architecture/foundation.md section 12). Only files directly in a Localization folder count, so other xlf
+         or json files (such as the gallery's Docs/Api or project config files) are left alone.
          Set ArcFoundationLanguageItems=false to opt out. -->
     <ItemGroup Condition="'$(ArcFoundationLanguageItems)' != 'false'">
-        <_ArcFoundationLanguageFile Include="**/Localization/*.xlf" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
+        <_ArcFoundationLanguageFile Include="**/Localization/*.xlf;**/Localization/*.json" Exclude="$(DefaultItemExcludes);$(DefaultExcludesInProjectFolder)" />
         <AdditionalFiles Remove="@(_ArcFoundationLanguageFile)" />
         <AdditionalFiles Include="@(_ArcFoundationLanguageFile)" />
     </ItemGroup>

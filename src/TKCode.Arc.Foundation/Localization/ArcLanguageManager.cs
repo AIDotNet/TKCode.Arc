@@ -132,7 +132,7 @@ public sealed class ArcLanguageManager
                 }
                 if (!hasTable)
                 {
-                    gaps.Add($"Package '{package}' has no '{language}' text for '{catalog.Id}' (add Localization/{language}.xlf).");
+                    gaps.Add($"Package '{package}' has no '{language}' text for '{catalog.Id}' (add Localization/{language}.xlf or .json).");
                     continue;
                 }
                 var missing = new List<string>();

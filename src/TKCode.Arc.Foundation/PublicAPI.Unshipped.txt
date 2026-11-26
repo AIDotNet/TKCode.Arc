@@ -8,6 +8,8 @@ TKCode.Arc.ArcSeedToken.IsCompact.get -> bool
 TKCode.Arc.ArcThemeBuilder.Compact() -> TKCode.Arc.ArcThemeBuilder!
 TKCode.Arc.ArcThemeBuilder.Density(TKCode.Arc.ArcDensity density) -> TKCode.Arc.ArcThemeBuilder!
 TKCode.Arc.ArcThemeState.Density.get -> TKCode.Arc.ArcDensity
+TKCode.Arc.Localization.LanguageCatalogAttribute.SourceLanguage.get -> string?
+TKCode.Arc.Localization.LanguageCatalogAttribute.SourceLanguage.set -> void
 static TKCode.Arc.ArcThemeScope.GetDensity(Avalonia.StyledElement! element) -> TKCode.Arc.ArcDensity?
 static TKCode.Arc.ArcThemeScope.SetDensity(Avalonia.StyledElement! element, TKCode.Arc.ArcDensity? value) -> void
 static readonly TKCode.Arc.ArcThemeScope.DensityProperty -> Avalonia.AttachedProperty<TKCode.Arc.ArcDensity?>!

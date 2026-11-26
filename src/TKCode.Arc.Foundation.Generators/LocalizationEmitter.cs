@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
+using System.IO;
 using System.Linq;
 using System.Text;
 using Microsoft.CodeAnalysis;
@@ -10,8 +11,9 @@ using Microsoft.CodeAnalysis.Text;
 namespace TKCode.Arc.Foundation.Generators
 {
     /// <summary>
-    /// Checks the <c>[LanguageCatalog]</c> enums against their <c>Localization/*.xlf</c> files and generates, per catalog,
-    /// <c>XxxLangResources</c> (the reflection-free text tables and C# lookup) and <c>XxxLangResourceExtension</c>.
+    /// Checks the <c>[LanguageCatalog]</c> enums against their <c>Localization/*.xlf</c> and <c>Localization/*.json</c>
+    /// files and generates, per catalog, <c>XxxLangResources</c> (the reflection-free text tables and C# lookup) and
+    /// <c>XxxLangResourceExtension</c>.
     /// </summary>
     internal static class LocalizationEmitter
     {
@@ -19,7 +21,7 @@ namespace TKCode.Arc.Foundation.Generators
 
         /// <summary>Reports diagnostics, adds the catalog sources and returns the generated resources classes (global names).</summary>
         public static List<string> Execute(SourceProductionContext context, ImmutableArray<CatalogModel> catalogModels,
-                                           ImmutableArray<XlfFile> files)
+                                           ImmutableArray<LanguageFile> files)
         {
             var generated = new List<string>();
             if (catalogModels.IsDefaultOrEmpty && files.IsDefaultOrEmpty)
@@ -27,7 +29,7 @@ namespace TKCode.Arc.Foundation.Generators
                 return generated;
             }
 
-            var catalogs = new Dictionary<string, CatalogModel>(StringComparer.Ordinal);
+            var catalogs = new Dictionary<string, (CatalogModel Model, string? SourceLanguage)>(StringComparer.Ordinal);
             foreach (var catalog in catalogModels.OrderBy(c => c.FullName, StringComparer.Ordinal))
             {
                 if (catalog.IsNested)
@@ -35,6 +37,17 @@ namespace TKCode.Arc.Foundation.Generators
                     context.ReportDiagnostic(catalog.CreateDiagnostic(LocalizationDiagnostics.InvalidCatalog, catalog.FullName,
                         "is nested in a type; declare it at namespace level"));
                     continue;
+                }
+                string? declaredSource = null;
+                if (catalog.SourceLanguage is not null)
+                {
+                    declaredSource = LanguageFile.CanonicalTag(catalog.SourceLanguage);
+                    if (declaredSource is null)
+                    {
+                        context.ReportDiagnostic(catalog.CreateDiagnostic(LocalizationDiagnostics.InvalidCatalog, catalog.FullName,
+                            $"declares invalid SourceLanguage '{catalog.SourceLanguage}' (must be a BCP 47 language tag, for example 'en-US')"));
+                        continue;
+                    }
                 }
                 var byValue = new Dictionary<string, string>(StringComparer.Ordinal);
                 string? clash = null;
@@ -54,11 +67,11 @@ namespace TKCode.Arc.Foundation.Generators
                     context.ReportDiagnostic(catalog.CreateDiagnostic(LocalizationDiagnostics.InvalidCatalog, catalog.FullName, clash));
                     continue;
                 }
-                catalogs[catalog.FullName] = catalog;
+                catalogs[catalog.FullName] = (catalog, declaredSource);
             }
 
             // Catalog → language → the file section holding that language's text.
-            var sections = new Dictionary<string, SortedDictionary<string, (XlfFile File, XlfSection Section)>>(StringComparer.Ordinal);
+            var sections = new Dictionary<string, SortedDictionary<string, (LanguageFile File, LanguageSection Section)>>(StringComparer.Ordinal);
             foreach (var file in files.OrderBy(f => f.RelativePath, StringComparer.Ordinal))
             {
                 if (file.Error is not null)
@@ -69,32 +82,48 @@ namespace TKCode.Arc.Foundation.Generators
                 }
                 foreach (var section in file.Sections)
                 {
-                    if (!catalogs.ContainsKey(section.Id))
+                    string catalogId;
+                    if (section.Id is not null)
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.UnknownCatalog,
-                            file.LocationAt(section.Line), file.RelativePath, section.Id));
-                        continue;
+                        catalogId = section.Id;
+                        if (!catalogs.ContainsKey(catalogId))
+                        {
+                            context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.UnknownCatalog,
+                                file.LocationAt(section.Line), file.RelativePath, catalogId));
+                            continue;
+                        }
                     }
-                    if (!sections.TryGetValue(section.Id, out var languages))
+                    else
                     {
-                        languages = new SortedDictionary<string, (XlfFile, XlfSection)>(StringComparer.Ordinal);
-                        sections.Add(section.Id, languages);
+                        var resolved = ResolveFlatCatalog(context, file, section, catalogs);
+                        if (resolved is null)
+                        {
+                            continue;
+                        }
+                        catalogId = resolved;
+                    }
+                    if (!sections.TryGetValue(catalogId, out var languages))
+                    {
+                        languages = new SortedDictionary<string, (LanguageFile, LanguageSection)>(StringComparer.Ordinal);
+                        sections.Add(catalogId, languages);
                     }
                     if (languages.TryGetValue(file.Language!, out var existing))
                     {
-                        context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.Duplicate, file.LocationAt(section.Line),
-                            $"'{existing.File.RelativePath}' and '{file.RelativePath}' both hold the {file.Language} text of '{section.Id}'"));
+                        var message = ReferenceEquals(existing.File, file)
+                            ? $"'{file.RelativePath}' defines the {file.Language} text of '{catalogId}' twice"
+                            : $"'{existing.File.RelativePath}' and '{file.RelativePath}' both hold the {file.Language} text of '{catalogId}'";
+                        context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.Duplicate, file.LocationAt(section.Line), message));
                         continue;
                     }
                     languages.Add(file.Language!, (file, section));
                 }
             }
 
-            foreach (var catalog in catalogs.Values)
+            foreach (var (catalog, declaredSource) in catalogs.Values)
             {
                 sections.TryGetValue(catalog.FullName, out var languages);
-                languages ??= new SortedDictionary<string, (XlfFile, XlfSection)>(StringComparer.Ordinal);
-                var tables = Check(context, catalog, languages, out var sourceLanguage);
+                languages ??= new SortedDictionary<string, (LanguageFile, LanguageSection)>(StringComparer.Ordinal);
+                var tables = Check(context, catalog, declaredSource, languages, out var sourceLanguage);
                 var className = (catalog.Namespace is null ? "global::" : "global::" + catalog.Namespace + ".") + catalog.ResourcesName;
                 context.AddSource(catalog.FullName + ".Localization.g.cs",
                     SourceText.From(EmitCatalog(catalog, sourceLanguage, tables), Encoding.UTF8));
@@ -103,9 +132,85 @@ namespace TKCode.Arc.Foundation.Generators
             return generated;
         }
 
+        private static string? ResolveFlatCatalog(
+            SourceProductionContext context, LanguageFile file, LanguageSection section,
+            Dictionary<string, (CatalogModel Model, string? SourceLanguage)> catalogs)
+        {
+            if (catalogs.Count == 0)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.UnknownCatalog,
+                    file.LocationAt(section.Line), file.RelativePath, "(flat JSON)"));
+                return null;
+            }
+
+            var fileDir = NormalizeDirectory(Path.GetDirectoryName(file.Path));
+            if (fileDir.Length > 0)
+            {
+                var sameDir = new List<string>();
+                foreach (var pair in catalogs)
+                {
+                    if (NormalizeDirectory(Path.GetDirectoryName(pair.Value.Model.FilePath)) == fileDir)
+                    {
+                        sameDir.Add(pair.Key);
+                    }
+                }
+                if (sameDir.Count == 1)
+                {
+                    return sameDir[0];
+                }
+                if (sameDir.Count > 1)
+                {
+                    ReportAmbiguousFlatCatalog(context, file, section, sameDir);
+                    return null;
+                }
+
+                var parentDir = NormalizeDirectory(Path.GetDirectoryName(fileDir));
+                if (parentDir.Length > 0)
+                {
+                    var inParent = new List<string>();
+                    foreach (var pair in catalogs)
+                    {
+                        if (NormalizeDirectory(Path.GetDirectoryName(pair.Value.Model.FilePath)) == parentDir)
+                        {
+                            inParent.Add(pair.Key);
+                        }
+                    }
+                    if (inParent.Count == 1)
+                    {
+                        return inParent[0];
+                    }
+                    if (inParent.Count > 1)
+                    {
+                        ReportAmbiguousFlatCatalog(context, file, section, inParent);
+                        return null;
+                    }
+                }
+            }
+
+            if (catalogs.Count == 1)
+            {
+                return catalogs.Keys.First();
+            }
+
+            ReportAmbiguousFlatCatalog(context, file, section, catalogs.Keys.ToList());
+            return null;
+        }
+
+        private static void ReportAmbiguousFlatCatalog(
+            SourceProductionContext context, LanguageFile file, LanguageSection section, List<string> candidates)
+        {
+            candidates.Sort(StringComparer.Ordinal);
+            context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.InvalidLanguageFile,
+                file.LocationAt(section.Line), file.RelativePath,
+                $"cannot infer which [LanguageCatalog] this flat JSON file belongs to (candidates: {string.Join(", ", candidates)}); set \"$catalog\" or nest entries under each catalog's full name"));
+        }
+
+        private static string NormalizeDirectory(string? directory)
+            => string.IsNullOrEmpty(directory) ? "" : directory!.Replace('\\', '/').TrimEnd('/');
+
         private static List<(string Language, string?[] Texts)> Check(
-            SourceProductionContext context, CatalogModel catalog,
-            SortedDictionary<string, (XlfFile File, XlfSection Section)> languages, out string sourceLanguageResult)
+            SourceProductionContext context, CatalogModel catalog, string? declaredSource,
+            SortedDictionary<string, (LanguageFile File, LanguageSection Section)> languages, out string sourceLanguageResult)
         {
             var index = new Dictionary<string, int>(StringComparer.Ordinal);
             for (var i = 0; i < catalog.Members.Count; i++)
@@ -113,13 +218,22 @@ namespace TKCode.Arc.Foundation.Generators
                 index[catalog.Members[i]] = i;
             }
 
-            var source = languages.Values.Where(e => e.File.IsSource).Select(e => e.File).FirstOrDefault();
-            if (source is null)
+            var explicitSource = languages.Values.Where(e => e.File.IsSourceExplicit == true).Select(e => e.File).FirstOrDefault();
+            var hasDefaultEnglishSource = languages.TryGetValue("en-US", out var defaultEnglish)
+                && defaultEnglish.File.IsSourceExplicit != false;
+            var sourceLanguage = declaredSource
+                ?? explicitSource?.Language
+                ?? (hasDefaultEnglishSource ? "en-US" : null)
+                ?? languages.Values.Select(e => e.File.SourceLanguage).FirstOrDefault(s => s is not null)
+                ?? "en-US";
+            sourceLanguageResult = sourceLanguage;
+
+            var hasSource = languages.TryGetValue(sourceLanguage, out var sourceEntry)
+                && sourceEntry.File.IsSourceExplicit != false;
+            if (!hasSource)
             {
                 context.ReportDiagnostic(catalog.CreateDiagnostic(LocalizationDiagnostics.MissingSource, catalog.FullName));
             }
-            var sourceLanguage = source?.Language ?? languages.Values.Select(e => e.File.SourceLanguage).FirstOrDefault() ?? "en-US";
-            sourceLanguageResult = sourceLanguage;
 
             var tables = new List<(string Language, string?[] Texts)>();
             var lines = new Dictionary<string, int[]>(StringComparer.Ordinal);
@@ -128,10 +242,11 @@ namespace TKCode.Arc.Foundation.Generators
             {
                 var file = pair.Value.File;
                 var section = pair.Value.Section;
-                if (file.SourceLanguage != sourceLanguage)
+                if (file.SourceLanguage is not null && file.SourceLanguage != sourceLanguage)
                 {
+                    var label = file.Format == LanguageFileFormat.Json ? "$sourceLanguage" : "srcLang";
                     context.ReportDiagnostic(Diagnostic.Create(LocalizationDiagnostics.InvalidLanguageFile, file.LocationAt(1),
-                        file.RelativePath, $"srcLang '{file.SourceLanguage}' differs from the source language '{sourceLanguage}' of '{catalog.FullName}'"));
+                        file.RelativePath, $"{label} '{file.SourceLanguage}' differs from the source language '{sourceLanguage}' of '{catalog.FullName}'"));
                 }
                 var texts = new string?[catalog.Members.Count];
                 var unitLines = new int[catalog.Members.Count];
@@ -150,8 +265,7 @@ namespace TKCode.Arc.Foundation.Generators
                             file.RelativePath, unit.Id, catalog.FullName));
                         continue;
                     }
-                    var text = file.IsSource ? unit.Source : unit.Target;
-                    texts[i] = string.IsNullOrEmpty(text) ? null : text;
+                    texts[i] = string.IsNullOrEmpty(unit.Text) ? null : unit.Text;
                     unitLines[i] = unit.Line;
                 }
                 for (var i = 0; i < texts.Length; i++)
@@ -247,7 +361,7 @@ namespace TKCode.Arc.Foundation.Generators
             }
 
             // Tables and C# lookup.
-            sb.Append(indent).Append("/// <summary>The text of <see cref=\"").Append(kind).AppendLine("\"/> in every language (Localization/*.xlf).</summary>");
+            sb.Append(indent).Append("/// <summary>The text of <see cref=\"").Append(kind).AppendLine("\"/> in every language (Localization/*.xlf, *.json).</summary>");
             sb.Append(indent).Append(visibility).Append(" static class ").AppendLine(resources);
             sb.Append(indent).AppendLine("{");
             sb.Append(indent).AppendLine("    private static readonly object[] s_keys = new object[]");

@@ -3,7 +3,7 @@
 
 namespace Demo.Controls.Localization
 {
-    /// <summary>The text of <see cref="global::Demo.Controls.Localization.DemoLangResourceKind"/> in every language (Localization/*.xlf).</summary>
+    /// <summary>The text of <see cref="global::Demo.Controls.Localization.DemoLangResourceKind"/> in every language (Localization/*.xlf, *.json).</summary>
     public static class DemoLangResources
     {
         private static readonly object[] s_keys = new object[]

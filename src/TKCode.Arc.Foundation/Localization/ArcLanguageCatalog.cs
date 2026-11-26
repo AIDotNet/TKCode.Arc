@@ -1,14 +1,20 @@
 namespace TKCode.Arc.Localization;
 
 /// <summary>
-/// Marks an enum as a language catalog: its members are text ids, and the <c>Localization/&lt;language&gt;.xlf</c> files of
-/// the project (XLIFF 2, <c>&lt;file id&gt;</c> = the enum's full name, <c>&lt;unit id&gt;</c> = a member name) hold the text.
+/// Marks an enum as a language catalog: its members are text ids, and the <c>Localization/&lt;language&gt;.xlf</c>
+/// (XLIFF 2, <c>&lt;file id&gt;</c> = the enum's full name, <c>&lt;unit id&gt;</c> = a member name) or
+/// <c>Localization/&lt;language&gt;.json</c> files of the project hold the text.
 /// The Foundation generator turns it into <c>XxxLangResources</c> (C# lookup) and <c>XxxLangResourceExtension</c>
 /// (<c>{arc:XxxLangResource Member}</c> in XAML), with <c>XxxLangResourceKind</c> → <c>XxxLangResource</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Enum, Inherited = false)]
 public sealed class LanguageCatalogAttribute : Attribute
 {
+    /// <summary>
+    /// The catalog's source language as a BCP 47 tag (for example <c>en-US</c> or <c>zh-CN</c>). Used by formats such as
+    /// JSON that do not carry a source-language header; defaults to <c>en-US</c> when omitted.
+    /// </summary>
+    public string? SourceLanguage { get; set; }
 }
 
 /// <summary>The text of one language of a catalog, aligned with <see cref="ArcLanguageCatalog.Keys"/> (null = missing).</summary>

@@ -44,16 +44,16 @@ namespace TKCode.Arc.Foundation.Generators
                     ThemeFile.MakeRelative(pair.Left.Path, pair.Right.Directory), pair.Left.GetText(cancellation)))
                 .Collect();
 
-            // Language catalogs: [LanguageCatalog] enums and Localization/*.xlf (LocalizationEmitter).
+            // Language catalogs: [LanguageCatalog] enums and Localization/*.xlf or *.json (LocalizationEmitter).
             var catalogs = context.SyntaxProvider.ForAttributeWithMetadataName(
                     CatalogAttributeName,
                     static (node, _) => node is EnumDeclarationSyntax,
-                    static (ctx, _) => CatalogModel.Create((INamedTypeSymbol)ctx.TargetSymbol))
+                    static (ctx, _) => CatalogModel.Create((INamedTypeSymbol)ctx.TargetSymbol, ctx.Attributes[0]))
                 .Collect();
             var languageFiles = context.AdditionalTextsProvider
-                .Where(static file => XlfFile.IsLanguageFile(file.Path))
+                .Where(static file => LanguageFile.IsLanguageFile(file.Path))
                 .Combine(projectDirectory)
-                .Select(static (pair, cancellation) => XlfFile.Parse(pair.Left.Path,
+                .Select(static (pair, cancellation) => LanguageFile.Parse(pair.Left.Path,
                     ThemeFile.MakeRelative(pair.Left.Path, pair.Right.Directory), pair.Left.GetText(cancellation)))
                 .Collect();
             var languages = catalogs.Combine(languageFiles);
@@ -61,14 +61,14 @@ namespace TKCode.Arc.Foundation.Generators
             var input = tokens.Combine(themes).Combine(projectDirectory).Combine(languages).Combine(context.CompilationProvider);
             context.RegisterSourceOutput(input, static (spc, source) =>
             {
-                var ((((tokenModels, themeFiles), project), (catalogModels, xlfFiles)), compilation) = source;
-                Execute(spc, tokenModels, themeFiles, catalogModels, xlfFiles, project.RootNamespace, compilation);
+                var ((((tokenModels, themeFiles), project), (catalogModels, langFiles)), compilation) = source;
+                Execute(spc, tokenModels, themeFiles, catalogModels, langFiles, project.RootNamespace, compilation);
             });
         }
 
         private static void Execute(SourceProductionContext context, ImmutableArray<TokenModel> tokenModels,
                                     ImmutableArray<ThemeFile> themeFiles, ImmutableArray<CatalogModel> catalogModels,
-                                    ImmutableArray<XlfFile> xlfFiles, string? rootNamespace, Compilation compilation)
+                                    ImmutableArray<LanguageFile> languageFiles, string? rootNamespace, Compilation compilation)
         {
             if (compilation.GetTypeByMetadataName(FoundationMarker) is null)
             {
@@ -180,7 +180,7 @@ namespace TKCode.Arc.Foundation.Generators
             }
 
             // Language catalogs.
-            var catalogs = LocalizationEmitter.Execute(context, catalogModels, xlfFiles);
+            var catalogs = LocalizationEmitter.Execute(context, catalogModels, languageFiles);
 
             if (validTokens.Count == 0 && assets.Count == 0 && catalogs.Count == 0)
             {
