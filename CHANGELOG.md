@@ -10,7 +10,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.3.2-preview.5 - 2026-11-26
+
+A patch preview that cuts memory: the modal backdrop blur in `TKCode.Arc.Core` becomes a one-time blurred snapshot instead of a per-frame blur `Effect` on the whole window (about 100 MB less GPU memory on a Retina Metal window in a long session, about 1.5 MB while a blurring modal is open), and `TKCode.Arc.StreamMark.TextMate` stops compiling Markdown and its ~48 fenced languages into grammars that embed it (a shell snippet: about 66 MB to 14 MB of managed memory). No public API changes. Install it with `--version 1.3.2-preview.5` (or `--prerelease`).
 
 ### Changed
 
