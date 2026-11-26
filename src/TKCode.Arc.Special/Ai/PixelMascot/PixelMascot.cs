@@ -1,10 +1,12 @@
+using System.Runtime.InteropServices;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Controls;
 using Avalonia.Interactivity;
 using Avalonia.Media;
-using Avalonia.Media.Immutable;
+using Avalonia.Media.Imaging;
+using Avalonia.Platform;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc;
@@ -91,7 +93,13 @@ public class PixelMascot : Control
     private const int MaxStepsPerFrame = 6;
 
     private readonly LiveLoop _loop;
-    private readonly ImmutableSolidColorBrush?[] _palette = new ImmutableSolidColorBrush?[PixelMascotSprite.PaletteSize];
+    // The palette as premultiplied BGRA (0 is empty) and the sprite drawn with it: one 24 x 24 bitmap, scaled up with
+    // nearest-neighbor sampling. One image per frame instead of a rectangle per run of pixels (about 150) keeps the
+    // recorded frame small (some 35 KB less retained per mascot) and rasterizes faster.
+    private readonly int[] _palette = new int[PixelMascotSprite.PaletteSize];
+    private readonly int[] _pixels = new int[PixelMascotSprite.Size * PixelMascotSprite.Size];
+    private WriteableBitmap? _bitmap;
+    private bool _bitmapDirty = true;
     private readonly double[] _edgesX = new double[PixelMascotSprite.Size + 1];
     private readonly double[] _edgesY = new double[PixelMascotSprite.Size + 1];
     private byte[] _grid = new byte[PixelMascotSprite.Size * PixelMascotSprite.Size];
@@ -240,31 +248,38 @@ public class PixelMascot : Control
         {
             BuildPalette();
         }
+        var bitmap = Sprite();
         ComputeEdges();
         const int n = PixelMascotSprite.Size;
-        using (context.PushRenderOptions(new RenderOptions { EdgeMode = EdgeMode.Aliased }))
+        // The outer edges sit on whole device pixels; inside, nearest-neighbor sampling gives every sprite pixel whole
+        // device pixels too (exactly Scale × render scaling of them when that is a whole number).
+        var dest = new Rect(_edgesX[0], _edgesY[0], _edgesX[n] - _edgesX[0], _edgesY[n] - _edgesY[0]);
+        using (context.PushRenderOptions(new RenderOptions { BitmapInterpolationMode = BitmapInterpolationMode.None, EdgeMode = EdgeMode.Aliased }))
         {
-            for (var y = 0; y < n; y++)
-            {
-                var top = _edgesY[y];
-                var height = _edgesY[y + 1] - top;
-                var x = 0;
-                while (x < n)
-                {
-                    var index = _grid[y * n + x];
-                    var start = x;
-                    while (x < n && _grid[y * n + x] == index)
-                    {
-                        x++;
-                    }
-                    if (index == PixelMascotSprite.Empty || _palette[index] is not { } brush)
-                    {
-                        continue;
-                    }
-                    context.FillRectangle(brush, new Rect(_edgesX[start], top, _edgesX[x] - _edgesX[start], height));
-                }
-            }
+            context.DrawImage(bitmap, new Rect(0, 0, n, n), dest);
         }
+    }
+
+    /// <summary>The sprite bitmap, repainted from the grid and the palette when either changed.</summary>
+    private WriteableBitmap Sprite()
+    {
+        const int n = PixelMascotSprite.Size;
+        _bitmap ??= new WriteableBitmap(new PixelSize(n, n), new Vector(96, 96), PixelFormat.Bgra8888, AlphaFormat.Premul);
+        if (!_bitmapDirty)
+        {
+            return _bitmap;
+        }
+        _bitmapDirty = false;
+        for (var i = 0; i < _pixels.Length; i++)
+        {
+            _pixels[i] = _palette[_grid[i]];
+        }
+        using var buffer = _bitmap.Lock();
+        for (var y = 0; y < n; y++)
+        {
+            Marshal.Copy(_pixels, y * n, buffer.Address + y * buffer.RowBytes, n);
+        }
+        return _bitmap;
     }
 
     /// <summary>
@@ -309,8 +324,18 @@ public class PixelMascot : Control
         Set(PixelMascotSprite.EyeDim, Oklch.MixOklab(screen, eye, 0.4));
         Set(PixelMascotSprite.ScreenTintHalf, Oklch.MixOklab(screen, danger, 0.14));
         Set(PixelMascotSprite.ScreenTintFull, Oklch.MixOklab(screen, danger, 0.28));
+        _bitmapDirty = true;
 
-        void Set(byte index, Color color) => _palette[index] = new ImmutableSolidColorBrush(color);
+        void Set(byte index, Color color) => _palette[index] = Premultiplied(color);
+    }
+
+    // BGRA in memory (little endian), alpha premultiplied.
+    private static int Premultiplied(Color color)
+    {
+        var a = color.A;
+        return a << 24 | Channel(color.R) << 16 | Channel(color.G) << 8 | Channel(color.B);
+
+        int Channel(byte c) => (c * a + 127) / 255;
     }
 
     private static Color ColorOf(IBrush? brush, Color fallback) => brush is ISolidColorBrush solid
@@ -353,6 +378,7 @@ public class PixelMascot : Control
             return;
         }
         (_grid, _next) = (_next, _grid);
+        _bitmapDirty = true;
         InvalidateVisual();
     }
 

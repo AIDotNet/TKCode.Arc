@@ -140,10 +140,12 @@ public class CubeMascot : Control
     // A four-point sparkle in a unit box, shared by every cube (never changed).
     private static readonly Geometry s_sparkle = BuildSparkle();
 
+    // A face in its own coordinates; drawn through the face's frame it is the projected quad, with no path to rebuild.
+    private static readonly Rect s_unitFace = new(-0.5, -0.5, 1, 1);
+
     private readonly LiveLoop _loop;
     private readonly CubeMascotScene _scene = new();
     private readonly CubeMascotShape _hull = new(8);
-    private readonly CubeMascotShape[] _faces = [new(4), new(4), new(4), new(4), new(4), new(4)];
     private readonly AiCurve _mouth = new();
     private readonly double[] _pose = new double[CubeMascotPose.Count];
     private readonly double[] _target = new double[CubeMascotPose.Count];
@@ -681,7 +683,6 @@ public class CubeMascot : Control
         {
             if (_scene.Facing[f] > 0.001)
             {
-                _faces[f].SetQuad(_scene.Corners, CubeMascotScene.FaceCorners(f));
                 var light = _scene.Light[f];
                 if (light != _faceLight[f])
                 {
@@ -884,7 +885,10 @@ public class CubeMascot : Control
             {
                 if (_scene.Facing[f] > 0.001)
                 {
-                    context.DrawGeometry(_faceBrushes[f], null, _faces[f].Geometry);
+                    using (context.PushTransform(_scene.FaceFrames[f]))
+                    {
+                        context.DrawRectangle(_faceBrushes[f], null, s_unitFace);
+                    }
                 }
             }
             for (var s = 0; s < 4; s++)

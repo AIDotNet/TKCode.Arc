@@ -4,12 +4,13 @@ using Avalonia.Media;
 namespace TKCode.Arc;
 
 /// <summary>
-/// A closed polygon of a fixed number of slots for <see cref="CubeMascot"/>. With a corner rounding each slot is a line
-/// into the corner and a quadratic curve around it (the silhouette); without it the curves collapse onto the corners (the
-/// faces). Unused slots repeat the last point, so a 4-sided hull fits in an 8-slot path.
+/// A closed polygon of a fixed number of slots for <see cref="CubeMascot"/>'s silhouette: with a corner rounding each
+/// slot is a line into the corner and a quadratic curve around it; without it the curves collapse onto the corners.
+/// Unused slots repeat the last point, so a 4-sided hull fits in an 8-slot path. (The faces need no path: each is a unit
+/// square drawn through its frame, <see cref="CubeMascotScene.FaceFrames"/>.)
 /// <para>
 /// A frame moves the points in an array; the path is built from them when it is next drawn, and only if a point moved,
-/// so a face that is turned away or a cube that holds still builds nothing. A path object edited in place would raise a
+/// so a cube that holds still builds nothing. A path object edited in place would raise a
 /// property change for every point and be rebuilt for the renderer all the same.
 /// </para>
 /// </summary>
@@ -104,17 +105,6 @@ internal sealed class CubeMascotShape
         {
             _geometry = null;
         }
-    }
-
-    /// <summary>Moves the path onto the four corners of a face, given as indices into <paramref name="corners"/>.</summary>
-    public void SetQuad(Point[] corners, ReadOnlySpan<int> indices)
-    {
-        Span<Point> quad = stackalloc Point[4];
-        for (var i = 0; i < 4; i++)
-        {
-            quad[i] = corners[indices[i]];
-        }
-        Set(quad, 4, 0);
     }
 
     // The point on the edge from corner toward other, at most rounding px away and never past the edge's middle.

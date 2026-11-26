@@ -4,6 +4,8 @@ using Avalonia.Controls;
 using Avalonia.Headless.XUnit;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
+using TKCode.Arc.Primitives;
 using TKCode.Arc.Motion;
 
 namespace TKCode.Arc.Tests.Special.Ai;
@@ -71,8 +73,12 @@ public class AiSparkTests
         var (spark, mark, _) = Open(setup: s => s.Variant = AiSparkVariant.Avatar);
         spark.ResolvedSize.ShouldBe(32);
         mark.IsTile.ShouldBeTrue();
+        // The mark and the avatar build no label parts (they are often many at once); the pill takes its own template.
+        spark.GetVisualDescendants().OfType<SpringSizeDecorator>().ShouldBeEmpty();
         spark.Variant = AiSparkVariant.Pill;
         Dispatcher.UIThread.RunJobs();
+        spark.GetVisualDescendants().OfType<SpringSizeDecorator>().ShouldHaveSingleItem();
+        mark = spark.Mark!;
         spark.ResolvedSize.ShouldBe(16);
         mark.IsTile.ShouldBeFalse();
         spark.Size = 96;

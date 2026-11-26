@@ -43,6 +43,12 @@ internal sealed class AiMascotCanvas : Control
     private const double BlinkSeconds = 0.16;
 
     private static readonly Geometry s_body = StreamGeometry.Parse("M50,30 C69,30 81,42 81,58 C81,74 68,82 50,82 C32,82 19,74 19,58 C19,42 31,30 50,30 Z");
+
+    // The quiet form shade: the body minus a large ellipse up and to the left, which leaves a soft crescent along the
+    // lower right. Both shapes are fixed in body coordinates, so the crescent is built once; drawing it costs one fill,
+    // where clipping the ellipse to the body every frame cost a clip mask (about half the mascot's raster time).
+    private static readonly Geometry s_shade = new CombinedGeometry(GeometryCombineMode.Exclude, s_body,
+        new EllipseGeometry(new Rect(46.5 - 31, 52.5 - 26.5, 62, 53)));
     private static readonly Geometry s_squint = StreamGeometry.Parse("M-5,2 Q0,-5.5 5,2");
     private static readonly Geometry s_sparkle = StreamGeometry.Parse(
         "M0,-1 C0.1,-0.22 0.22,-0.1 1,0 C0.22,0.1 0.1,0.22 0,1 C-0.1,0.22 -0.22,0.1 -1,0 C-0.22,-0.1 -0.1,-0.22 0,-1 Z");
@@ -644,13 +650,7 @@ internal sealed class AiMascotCanvas : Control
         using (context.PushTransform(body))
         {
             context.DrawGeometry(_bodyBrush, null, s_body);
-            // The quiet form shade: the body darkened, then lit again by a large ellipse up and to the left, which leaves
-            // a soft crescent along the lower right.
-            context.DrawGeometry(_shadeBrush, null, s_body);
-            using (context.PushGeometryClip(s_body))
-            {
-                context.DrawEllipse(_bodyBrush, null, new Point(46.5, 52.5), 31, 26.5);
-            }
+            context.DrawGeometry(_shadeBrush, null, s_shade);
             if (_borderPen is not null)
             {
                 context.DrawGeometry(null, _borderPen, s_body);

@@ -42,10 +42,16 @@ internal sealed class CubeMascotScene
         [0, 0, 1], [1, 0, 0], [0, 0, -1], [-1, 0, 0], [0, 1, 0], [0, -1, 0]
     ];
 
-    // Each side's "right" direction seen from outside the cube (its down direction is always -y).
-    private static readonly double[][] s_sideRight =
+    // Each face's "right" and "down" directions in its plane: the sides seen from outside the cube (down is always -y),
+    // then the top and bottom (any pair that spans the face works for them; nothing is painted there).
+    private static readonly double[][] s_faceRight =
     [
-        [1, 0, 0], [0, 0, -1], [-1, 0, 0], [0, 0, 1]
+        [1, 0, 0], [0, 0, -1], [-1, 0, 0], [0, 0, 1], [1, 0, 0], [1, 0, 0]
+    ];
+
+    private static readonly double[][] s_faceDown =
+    [
+        [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]
     ];
 
     /// <summary>Each side's angle from the face side (degrees): the front is 0, the next side to arrive (left) is -90.</summary>
@@ -97,8 +103,14 @@ internal sealed class CubeMascotScene
     /// <summary>Each face's light term (its normal against the light).</summary>
     public double[] Light { get; } = new double[FaceCount];
 
-    /// <summary>Each side's affine frame: face coordinates (-0.5 to 0.5, y down) to screen px.</summary>
-    public Matrix[] SideFrames { get; } = new Matrix[4];
+    /// <summary>
+    /// Each face's affine frame: face coordinates (-0.5 to 0.5, y down) to screen px. The projection is orthographic, so
+    /// the unit square drawn through a frame is exactly the face's projected quad.
+    /// </summary>
+    public Matrix[] FaceFrames { get; } = new Matrix[FaceCount];
+
+    /// <summary>Each side's affine frame (the first four of <see cref="FaceFrames"/>): the painted face is drawn through it.</summary>
+    public ReadOnlySpan<Matrix> SideFrames => FaceFrames.AsSpan(0, 4);
 
     /// <summary>Each side's angle from the front position (degrees, wrapped): 0 in front, negative while arriving.</summary>
     public double[] SideAngles { get; } = new double[4];
@@ -146,15 +158,15 @@ internal sealed class CubeMascotScene
             var (nx, ny, nz) = Transform(n[0], n[1], n[2]);
             Facing[f] = nz;
             Light[f] = nx * s_lx + ny * s_ly + nz * s_lz;
+            var r = s_faceRight[f];
+            var d = s_faceDown[f];
+            var (ux, uy, _) = Transform(r[0], r[1], r[2]);
+            var (vx, vy, _) = Transform(d[0], d[1], d[2]);
+            var (cx, cy, _) = Transform(n[0] * 0.5, n[1] * 0.5, n[2] * 0.5);
+            FaceFrames[f] = new Matrix(ux * unit, -uy * unit, vx * unit, -vy * unit, center.X + cx * unit, center.Y - cy * unit);
         }
         for (var s = 0; s < 4; s++)
         {
-            var n = s_normals[s];
-            var r = s_sideRight[s];
-            var (ux, uy, _) = Transform(r[0], r[1], r[2]);
-            var (vx, vy, _) = Transform(0, -1, 0);
-            var (cx, cy, _) = Transform(n[0] * 0.5, n[1] * 0.5, n[2] * 0.5);
-            SideFrames[s] = new Matrix(ux * unit, -uy * unit, vx * unit, -vy * unit, center.X + cx * unit, center.Y - cy * unit);
             SideAngles[s] = CubeMascotPose.WrapSigned(yaw - CubeMascotPose.HomeYaw + s_sideAngle[s]);
         }
         BuildHull();

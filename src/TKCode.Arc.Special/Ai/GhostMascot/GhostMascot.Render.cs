@@ -55,7 +55,15 @@ public partial class GhostMascot
     private ImmutablePen _shaftPen = null!;
     private ImmutablePen _nibPen = null!;
     private ImmutablePen _featurePen = null!;
+    private ImmutablePen _swirlPen = null!;
     private bool _drawingReady;
+
+    // The swirl's path and what it was built for.
+    private StreamGeometry? _swirl;
+    private Point _swirlCenter;
+    private double _swirlRadius;
+    private double _swirlTail;
+    private double _swirlHead;
 
     private GhostMascotLayout _layout = GhostMascotLayout.Regular;
 
@@ -110,6 +118,7 @@ public partial class GhostMascot
         var unit = Math.Max(0.01, Size / 100 * layout.Frame);
         _hairlinePen = new ImmutablePen(_hairlineBrush, GetValue(HairlineWidthProperty) / unit);
         _markPen = new ImmutablePen(_markBrush, 1.7 * layout.Stroke, lineCap: PenLineCap.Round);
+        _swirlPen = new ImmutablePen(_markBrush, 1.7 * layout.Stroke, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
         _shaftPen = new ImmutablePen(_markBrush, 2.8 * layout.Stroke, lineCap: PenLineCap.Round);
         _nibPen = new ImmutablePen(_markBrush, 1.1 * layout.Stroke, lineCap: PenLineCap.Round);
         _featurePen = new ImmutablePen(_eyeBrush, 1.6 * layout.Stroke, lineCap: PenLineCap.Round, lineJoin: PenLineJoin.Round);
@@ -472,15 +481,34 @@ public partial class GhostMascot
         var center = new Point(layout.SwirlCenter.X + shift, layout.SwirlCenter.Y + lift);
         using (context.PushOpacity(visible))
         {
-            var previous = SwirlPoint(center, layout.SwirlRadius, tail);
+            context.DrawGeometry(null, _swirlPen, Swirl(center, layout.SwirlRadius, tail, head));
+        }
+    }
+
+    // The swirl as one open polyline with round joins: the same shape as its segments drawn one by one with round caps,
+    // stroked once instead of twenty times (about half the thinking frame's raster time). Rebuilt only when it moves.
+    private StreamGeometry Swirl(Point center, double radius, double tail, double head)
+    {
+        if (_swirl is { } swirl && center == _swirlCenter && radius == _swirlRadius && tail == _swirlTail && head == _swirlHead)
+        {
+            return swirl;
+        }
+        _swirlCenter = center;
+        _swirlRadius = radius;
+        _swirlTail = tail;
+        _swirlHead = head;
+        swirl = new StreamGeometry();
+        using (var path = swirl.Open())
+        {
+            path.BeginFigure(SwirlPoint(center, radius, tail), false);
             for (var i = 1; i <= SwirlSegments; i++)
             {
-                var u = tail + (head - tail) * i / SwirlSegments;
-                var next = SwirlPoint(center, layout.SwirlRadius, u);
-                context.DrawLine(_markPen, previous, next);
-                previous = next;
+                path.LineTo(SwirlPoint(center, radius, tail + (head - tail) * i / SwirlSegments));
             }
+            path.EndFigure(false);
         }
+        _swirl = swirl;
+        return swirl;
     }
 
     /// <summary>A point on the swirl: <paramref name="u"/> 0 is its outer end, 1 its center (an inward spiral, 1.6 turns).</summary>

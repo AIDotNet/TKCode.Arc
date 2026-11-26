@@ -5,37 +5,50 @@
                     x:Class="TKCode.Arc.AiSparkTheme">
 
     <!-- The spark: the drawn mark, and in the pill a crossfading label whose width eases on a spring. The mark itself is
-         drawn and animated in code (AiSparkMark), so there are no transitions here. -->
+         drawn and animated in code (AiSparkMark), so there are no transitions here. The mark and the avatar (one per
+         message in a chat, so often many at once) take a template without the label parts; only the pill builds them,
+         which roughly halves what a mark or avatar keeps in memory. -->
     <ControlTheme x:Key="{x:Type arc:AiSpark}" TargetType="arc:AiSpark">
         <Setter Property="arc:ArcMotion.Tracks" Value="True" />
         <Setter Property="ClipToBounds" Value="False" />
         <Setter Property="Template">
             <ControlTemplate TargetType="arc:AiSpark">
                 <Border Name="PART_Frame" ClipToBounds="False">
-                    <StackPanel Orientation="Horizontal"
-                                VerticalAlignment="Center"
-                                Spacing="{arc:AiSparkTokenResource PillGap}">
-                        <arc:AiSparkMark Name="PART_Mark"
-                                         VerticalAlignment="Center"
-                                         InheritInk="{TemplateBinding Foreground}" />
-                        <arc:SpringSizeDecorator Name="PART_LabelBox"
-                                                 Axis="Width"
-                                                 Spring="Smooth"
-                                                 IsVisible="False"
-                                                 VerticalAlignment="Center">
-                            <arc:ArcContentSwap Name="PART_Label"
-                                                Mode="Label"
-                                                ClipToBounds="False"
-                                                HorizontalContentAlignment="Left"
-                                                VerticalContentAlignment="Center"
-                                                TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
-                                                TextElement.FontWeight="Medium"
-                                                TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
-                        </arc:SpringSizeDecorator>
-                    </StackPanel>
+                    <arc:AiSparkMark Name="PART_Mark"
+                                     VerticalAlignment="Center"
+                                     InheritInk="{TemplateBinding Foreground}" />
                 </Border>
             </ControlTemplate>
         </Setter>
+        <Style Selector="^:pill">
+            <Setter Property="Template">
+                <ControlTemplate TargetType="arc:AiSpark">
+                    <Border Name="PART_Frame" ClipToBounds="False">
+                        <StackPanel Orientation="Horizontal"
+                                    VerticalAlignment="Center"
+                                    Spacing="{arc:AiSparkTokenResource PillGap}">
+                            <arc:AiSparkMark Name="PART_Mark"
+                                             VerticalAlignment="Center"
+                                             InheritInk="{TemplateBinding Foreground}" />
+                            <arc:SpringSizeDecorator Name="PART_LabelBox"
+                                                     Axis="Width"
+                                                     Spring="Smooth"
+                                                     IsVisible="False"
+                                                     VerticalAlignment="Center">
+                                <arc:ArcContentSwap Name="PART_Label"
+                                                    Mode="Label"
+                                                    ClipToBounds="False"
+                                                    HorizontalContentAlignment="Left"
+                                                    VerticalContentAlignment="Center"
+                                                    TextElement.FontSize="{arc:ArcDesignTokenResource TypeXS}"
+                                                    TextElement.FontWeight="Medium"
+                                                    TextElement.Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                            </arc:SpringSizeDecorator>
+                        </StackPanel>
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
         <Style Selector="^:pill /template/ Border#PART_Frame">
             <Setter Property="Height" Value="{arc:AiSparkTokenResource PillHeight}" />
             <Setter Property="Padding" Value="{arc:AiSparkTokenResource PillPadding}" />
