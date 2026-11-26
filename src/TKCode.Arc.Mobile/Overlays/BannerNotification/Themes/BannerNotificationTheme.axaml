@@ -1,0 +1,112 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.BannerNotificationTheme">
+
+    <!-- BannerNotification: top in-app notification card floating below the status bar / notch safe area, swipeable upward to dismiss. -->
+    <ControlTheme x:Key="{x:Type arcm:BannerNotification}" TargetType="arcm:BannerNotification">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:BannerNotification">
+                <Border Name="PART_Host"
+                        HorizontalAlignment="Stretch"
+                        VerticalAlignment="Top"
+                        Background="Transparent">
+                    <Border Name="PART_Card"
+                            MaxWidth="{arcm:BannerNotificationTokenResource MaxWidth}"
+                            HorizontalAlignment="Stretch"
+                            Background="{arc:ArcDesignTokenResource SurfaceRaised}"
+                            BorderBrush="{arc:ArcDesignTokenResource Border}"
+                            BorderThickness="1"
+                            CornerRadius="{arcm:BannerNotificationTokenResource CardRadius}"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                            Padding="14,12,14,10"
+                            IsVisible="False">
+                        <StackPanel Spacing="8">
+                            <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="10">
+                                <Border Name="PART_IconWrap"
+                                        Grid.Column="0"
+                                        Width="32"
+                                        Height="32"
+                                        CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                        Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                                        VerticalAlignment="Center"
+                                        IsVisible="False">
+                                    <arc:ArcGlyph Name="PART_Icon"
+                                                  Size="{arcm:BannerNotificationTokenResource IconSize}"
+                                                  Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                                  HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center" />
+                                </Border>
+                                <StackPanel Grid.Column="1"
+                                            Spacing="2"
+                                            VerticalAlignment="Center">
+                                    <TextBlock Name="PART_Title"
+                                               Text="{TemplateBinding Title}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                               Foreground="{arc:ArcDesignTokenResource Foreground}"
+                                               TextTrimming="CharacterEllipsis" />
+                                    <TextBlock Name="PART_Message"
+                                               Text="{TemplateBinding Message}"
+                                               FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                               Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                               TextWrapping="Wrap"
+                                               MaxLines="2"
+                                               TextTrimming="CharacterEllipsis" />
+                                </StackPanel>
+                                <arcm:Button Name="PART_Action"
+                                             Grid.Column="2"
+                                             Content="{TemplateBinding ActionText}"
+                                             Variant="Plain"
+                                             VerticalAlignment="Center"
+                                             IsVisible="False" />
+                            </Grid>
+                            <Border Name="PART_Handle"
+                                    Width="32"
+                                    Height="3"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource BorderStrong}"
+                                    Opacity="0.65"
+                                    HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:info /template/ Border#PART_IconWrap">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource AccentSubtle}" />
+        </Style>
+        <Style Selector="^:info /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Accent}" />
+        </Style>
+
+        <Style Selector="^:success /template/ Border#PART_IconWrap">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SuccessSubtle}" />
+        </Style>
+        <Style Selector="^:success /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Success}" />
+        </Style>
+
+        <Style Selector="^:warning /template/ Border#PART_IconWrap">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource WarningSubtle}" />
+        </Style>
+        <Style Selector="^:warning /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Warning}" />
+        </Style>
+
+        <Style Selector="^:danger /template/ Border#PART_IconWrap">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource DangerSubtle}" />
+        </Style>
+        <Style Selector="^:danger /template/ arc|ArcGlyph#PART_Icon">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

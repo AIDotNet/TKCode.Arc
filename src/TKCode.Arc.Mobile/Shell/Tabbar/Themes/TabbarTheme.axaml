@@ -46,17 +46,47 @@
                                 VerticalAlignment="Center"
                                 RenderTransformOrigin="50%,50%"
                                 RenderTransform="scale(1)">
-                        <Border Name="PART_Indicator"
-                                Background="Transparent"
-                                CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
-                                Padding="{arcm:TabbarItemTokenResource IndicatorPadding}"
-                                HorizontalAlignment="Center">
-                            <arc:ArcGlyph Name="PART_Icon"
-                                          Data="{TemplateBinding Icon}"
-                                          Foreground="{TemplateBinding Foreground}"
-                                          Size="{arcm:TabbarItemTokenResource IconExtent}"
-                                          HorizontalAlignment="Center" />
-                        </Border>
+                        <Panel HorizontalAlignment="Center">
+                            <Border Name="PART_Indicator"
+                                    Background="Transparent"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Padding="{arcm:TabbarItemTokenResource IndicatorPadding}"
+                                    HorizontalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Data="{TemplateBinding Icon}"
+                                              Foreground="{TemplateBinding Foreground}"
+                                              Size="{arcm:TabbarItemTokenResource IconExtent}"
+                                              HorizontalAlignment="Center" />
+                            </Border>
+                            <Border Name="PART_Badge"
+                                    MinWidth="16"
+                                    Height="16"
+                                    Padding="4,0"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource Danger}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="0,-3,-4,0"
+                                    IsHitTestVisible="False"
+                                    IsVisible="False">
+                                <TextBlock Text="{TemplateBinding Badge}"
+                                           Foreground="{arc:ArcDesignTokenResource AccentForeground}"
+                                           FontSize="10"
+                                           FontWeight="{arc:ArcDesignTokenResource WeightMedium}"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center" />
+                            </Border>
+                            <Border Name="PART_BadgeDot"
+                                    Width="8"
+                                    Height="8"
+                                    CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                    Background="{arc:ArcDesignTokenResource Danger}"
+                                    HorizontalAlignment="Right"
+                                    VerticalAlignment="Top"
+                                    Margin="0,-1,-1,0"
+                                    IsHitTestVisible="False"
+                                    IsVisible="False" />
+                        </Panel>
                         <ContentPresenter Name="PART_ContentPresenter"
                                           Content="{TemplateBinding Content}"
                                           ContentTemplate="{TemplateBinding ContentTemplate}"
@@ -81,6 +111,12 @@
         </Style>
         <Style Selector="^:pressed">
             <Setter Property="Opacity" Value="{arcm:TabbarItemTokenResource PressedOpacity}" />
+        </Style>
+        <Style Selector="^:has-badge /template/ Border#PART_Badge">
+            <Setter Property="IsVisible" Value="True" />
+        </Style>
+        <Style Selector="^:has-badge-dot /template/ Border#PART_BadgeDot">
+            <Setter Property="IsVisible" Value="True" />
         </Style>
 
         <Style Selector="^:motion-full">

@@ -15,10 +15,11 @@ namespace TKCode.Arc.Mobile;
 /// <typeparam name="TApp">The Avalonia application.</typeparam>
 public class ArcAppDelegate<TApp> : AvaloniaAppDelegate<TApp> where TApp : Application, new()
 {
-    /// <summary>Creates the delegate and installs <see cref="ArcIosTextEditing"/>.</summary>
+    /// <summary>Creates the delegate, installs <see cref="ArcIosTextEditing"/> and enables native iOS haptics.</summary>
     public ArcAppDelegate()
     {
         ArcIosTextEditing.Install();
+        Haptics.Platform ??= new IosHapticsPlatform();
     }
 
     /// <inheritdoc />

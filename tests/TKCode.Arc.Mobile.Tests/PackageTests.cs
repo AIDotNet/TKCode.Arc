@@ -66,6 +66,6 @@ public class PackageTests
     {
         var controls = typeof(Button).Assembly.GetExportedTypes()
             .Where(t => typeof(Avalonia.Controls.Control).IsAssignableFrom(t)).Select(t => t.Name).Order().ToList();
-        controls.ShouldBe(["ActionSheet", "ActionSheetItem", "Button", "Checkbox", "Dialog", "IconButton", "ListCell", "ListGroup", "ListItem", "Navbar", "NavigationStack", "Page", "Picker", "PullToRefresh", "Radio", "RadioCard", "RadioCards", "Searchbar", "Segmented", "SegmentedItem", "Sheet", "Switch", "Tabbar", "TabbarItem", "TextField", "Toast", "Toolbar"]);
+        controls.ShouldBe(["ActionSheet", "ActionSheetItem", "BannerNotification", "Button", "CarouselPager", "Checkbox", "DateWheelPicker", "Dialog", "IconButton", "InfiniteScroll", "ListCell", "ListGroup", "ListItem", "ModalPage", "Navbar", "NavigationStack", "NumberStepper", "Page", "Picker", "PinInput", "PullToRefresh", "Radio", "RadioCard", "RadioCards", "Searchbar", "Segmented", "SegmentedItem", "Sheet", "SideDrawer", "SwipeableRow", "Switch", "Tabbar", "TabbarItem", "TextArea", "TextField", "Toast", "Toolbar", "TouchSlider", "WheelPicker"]);
     }
 }

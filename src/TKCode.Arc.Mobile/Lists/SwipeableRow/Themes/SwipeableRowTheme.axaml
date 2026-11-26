@@ -1,0 +1,99 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.SwipeableRowTheme">
+
+    <!-- SwipeableRow: a list row whose content slides horizontally over leading and trailing action trays.
+         The slide is driven by a MotionValue in code so a drag follows the finger 1:1 and hands velocity to a spring. -->
+    <ControlTheme x:Key="{x:Type arcm:SwipeableRow}" TargetType="arcm:SwipeableRow">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:SwipeableRow">
+                <Grid Name="PART_Root" ClipToBounds="True">
+                    <StackPanel Name="PART_LeadingTray"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Stretch" />
+                    <StackPanel Name="PART_TrailingTray"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Stretch" />
+                    <Border Name="PART_ContentHost"
+                            Background="{TemplateBinding Background}">
+                        <Grid>
+                            <ContentPresenter Name="PART_ContentPresenter"
+                                              Content="{TemplateBinding Content}"
+                                              ContentTemplate="{TemplateBinding ContentTemplate}"
+                                              HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+                            <Border Name="PART_Separator"
+                                    Height="1"
+                                    Margin="{arcm:ListItemTokenResource SeparatorInset}"
+                                    Background="{arc:ArcDesignTokenResource Border}"
+                                    VerticalAlignment="Bottom"
+                                    IsHitTestVisible="False" />
+                        </Grid>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Surface}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Stretch" />
+
+        <!-- Action buttons inside the leading/trailing trays: touch-first, no hover state, press dims. -->
+        <Style Selector="^ /template/ Button.arc-swipe-action">
+            <Setter Property="Width" Value="{arcm:SwipeableRowTokenResource ActionWidth}" />
+            <Setter Property="MinHeight" Value="44" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+            <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXS}" />
+            <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border Name="PART_ActionFrame"
+                            Background="{TemplateBinding Background}"
+                            Padding="{TemplateBinding Padding}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-swipe-action.primary">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Accent}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-swipe-action.destructive">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Danger}" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource AccentForeground}" />
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-swipe-action:pressed">
+            <Setter Property="Opacity" Value="0.82" />
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-swipe-action:disabled">
+            <Setter Property="Opacity" Value="{arcm:SwipeableRowTokenResource DisabledOpacity}" />
+        </Style>
+
+        <!-- Inside a ListGroup, hide the separator on the last row. -->
+        <Style Selector="^:nth-last-child(1) /template/ Border#PART_Separator">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

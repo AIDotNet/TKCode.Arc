@@ -619,6 +619,7 @@ public partial class Sheet : ContentControl
             DetentIndex = stop;
             if (_hasDetents)
             {
+                Haptics.Trigger(HapticKind.Light);
                 DetentChanged?.Invoke(this, new SheetDetentChangedEventArgs(stop, _stops[stop]));
             }
         }

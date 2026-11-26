@@ -126,6 +126,7 @@ public class PullToRefresh : ContentControl
     private double _pull;
     private double _releaseVelocity;
     private bool _dragging;
+    private bool _thresholdReached;
 
     /// <summary>Raised when a release past the threshold starts a refresh. Take a deferral if the work is asynchronous.</summary>
     public event EventHandler<PullRefreshRequestedEventArgs>? RefreshRequested;
@@ -261,6 +262,7 @@ public class PullToRefresh : ContentControl
         // Catch the content where it is, even in flight, and convert the stretch back to finger distance.
         _y.Stop();
         _dragOrigin = RubberBand.Invert(_y.Value, MaxStretch, Resistance);
+        _thresholdReached = _y.Value >= PullThreshold;
         _dragging = true;
     }
 
@@ -272,6 +274,12 @@ public class PullToRefresh : ContentControl
         }
         var raw = _dragOrigin + offset;
         _pull = raw <= 0 ? 0 : RubberBand.Apply(raw, MaxStretch, Resistance);
+        var reached = PullThreshold > 0 && _pull >= PullThreshold;
+        if (reached && !_thresholdReached)
+        {
+            Haptics.Trigger(HapticKind.Medium);
+        }
+        _thresholdReached = reached;
         if (!Reduced)
         {
             _y.Jump(_pull);

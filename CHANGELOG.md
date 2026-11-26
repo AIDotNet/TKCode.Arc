@@ -14,6 +14,10 @@ Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode
 
 ### Added
 
+- Mobile component library expansion and platform compatibility (`TKCode.Arc.Mobile`, `TKCode.Arc.Mobile.iOS`):
+  - Platform compatibility: built-in Android system back coordination (`TopLevel.BackRequested`, modal overlays prioritized LIFO above `NavigationStack`, non-dismissible modals absorbing back), soft-keyboard avoidance for `Sheet`, `ActionSheet`, `ModalPage` and `Toast`, and cross-platform `Haptics` / `IHapticsPlatform` / `HapticKind` abstraction with `IosHapticsPlatform` auto-wired in `ArcAppDelegate<TApp>`.
+  - New mobile controls: `SwipeableRow` (+ `SwipeRowAction`), `ModalPage` (`Sheet` / `FullScreen`), `TextArea`, `NumberStepper`, `WheelPicker`, `DateWheelPicker` (`Date` / `Time` / `DateTime`), `TouchSlider`, `PinInput`, `InfiniteScroll`, `SideDrawer` (`Left` / `Right`), `BannerNotification` (`Neutral` / `Info` / `Success` / `Warning` / `Danger`) and `CarouselPager`.
+  - `TabbarItem.Badge` and `TabbarItem.ShowBadgeDot` for numeric badges and unread indicator dots on bottom tabs.
 - JSON localization files (`TKCode.Arc.Foundation`, `TKCode.Arc.Foundation.Generators`): `[LanguageCatalog]` enums now accept `Localization/<language>.json` alongside `Localization/<language>.xlf`, supporting both flat single-catalog maps (resolved automatically by directory or via `"$catalog"`) and multi-catalog maps keyed by the enum's full name, optional `"$schema"` / `"$language"` / `"$sourceLanguage"` metadata, and `[LanguageCatalog(SourceLanguage = "...")]` (default `en-US`) with full `ARCF020`–`ARCF027` build-time validation and identical AOT-safe generated code.
 
 ### Changed

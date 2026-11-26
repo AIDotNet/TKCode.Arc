@@ -1,0 +1,62 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.SideDrawerTheme">
+
+    <!-- SideDrawer: left or right edge slide-out navigation drawer over a Page, inheriting safe area and handling Android system back. -->
+    <ControlTheme x:Key="{x:Type arcm:SideDrawer}" TargetType="arcm:SideDrawer">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:SideDrawer">
+                <Grid Name="PART_Root" ClipToBounds="True">
+                    <Border Name="PART_Scrim"
+                            Background="{arcm:SideDrawerTokenResource ScrimColor}"
+                            Opacity="0" />
+                    <Border Name="PART_Panel"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Stretch"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="0,0,1,0"
+                            BoxShadow="{arc:ArcDesignTokenResource ShadowFloating}"
+                            IsVisible="False">
+                        <Border Name="PART_Safe">
+                            <Grid RowDefinitions="Auto,*,Auto">
+                                <ContentPresenter Name="PART_Header"
+                                                  Grid.Row="0"
+                                                  Content="{TemplateBinding Header}" />
+                                <ScrollViewer Name="PART_Scroller"
+                                              Grid.Row="1"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Auto">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Padding="{arcm:SideDrawerTokenResource ContentInset}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </ScrollViewer>
+                                <ContentPresenter Name="PART_Footer"
+                                                  Grid.Row="2"
+                                                  Content="{TemplateBinding Footer}" />
+                            </Grid>
+                        </Border>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:right /template/ Border#PART_Panel">
+            <Setter Property="HorizontalAlignment" Value="Right" />
+            <Setter Property="BorderThickness" Value="1,0,0,0" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

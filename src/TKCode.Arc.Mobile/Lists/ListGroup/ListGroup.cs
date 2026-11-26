@@ -43,23 +43,23 @@ public class ListGroup : ItemsControl
 
     protected override bool NeedsContainerOverride(object? item, int index, out object? recycleKey)
     {
-        if (item is ListCell)
+        if (item is ListCell or SwipeableRow)
         {
-            // A content cell is a row of its own, like a ListItem.
+            // A content cell or swipeable row is a row of its own, like a ListItem.
             recycleKey = null;
             return false;
         }
         return NeedsContainer<ListItem>(item, out recycleKey);
     }
 
-    // Rows the item template built itself (a ListItem or a ListCell): they are the container and keep the content the
-    // template gave them. Weak, so a removed row is not kept alive; a recycled one stays a template row and only takes the
-    // new item.
+    // Rows the item template built itself (a ListItem, ListCell or SwipeableRow): they are the container and keep the
+    // content the template gave them. Weak, so a removed row is not kept alive; a recycled one stays a template row and
+    // only takes the new item.
     private readonly System.Runtime.CompilerServices.ConditionalWeakTable<Control, object> _templateRows = new();
 
     protected override Control CreateContainerForItemOverride(object? item, int index, object? recycleKey)
     {
-        if (this.FindDataTemplate(item, ItemTemplate)?.Build(item) is { } built and (ListItem or ListCell))
+        if (this.FindDataTemplate(item, ItemTemplate)?.Build(item) is { } built and (ListItem or ListCell or SwipeableRow))
         {
             _templateRows.AddOrUpdate(built, built);
             return built;

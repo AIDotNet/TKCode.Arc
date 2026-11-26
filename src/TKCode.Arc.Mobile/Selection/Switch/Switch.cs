@@ -25,6 +25,11 @@ public class Switch : ToggleButton
 
     private readonly TranslateTransform _slide = new();
 
+    public Switch()
+    {
+        Click += (_, _) => Haptics.Trigger(HapticKind.Selection);
+    }
+
     protected override void OnApplyTemplate(TemplateAppliedEventArgs e)
     {
         base.OnApplyTemplate(e);

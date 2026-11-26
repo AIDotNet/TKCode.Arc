@@ -1,0 +1,107 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.NumberStepperTheme">
+
+    <!-- NumberStepper: touch-first minus / value / plus pill with 44px hit targets, press feedback and no hover state. -->
+    <ControlTheme x:Key="{x:Type arcm:NumberStepper}" TargetType="arcm:NumberStepper">
+        <Setter Property="arc:ArcMotion.Tracks" Value="True" />
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:NumberStepper">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="{TemplateBinding CornerRadius}"
+                        ClipToBounds="True">
+                    <Grid ColumnDefinitions="Auto,*,Auto">
+                        <Button Name="PART_Decrement"
+                                Grid.Column="0"
+                                Classes="arc-stepper-btn"
+                                Focusable="False">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Minus}"
+                                          Size="{arcm:NumberStepperTokenResource IconExtent}" />
+                        </Button>
+                        <TextBlock Name="PART_Value"
+                                   Grid.Column="1"
+                                   MinWidth="{arcm:NumberStepperTokenResource ValueMinWidth}"
+                                   Padding="{arcm:NumberStepperTokenResource ValuePadding}"
+                                   Text="{TemplateBinding FormattedValue}"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"
+                                   TextAlignment="Center"
+                                   FontWeight="{arc:ArcDesignTokenResource WeightMedium}" />
+                        <Button Name="PART_Increment"
+                                Grid.Column="2"
+                                Classes="arc-stepper-btn"
+                                Focusable="False">
+                            <arc:ArcGlyph Data="{x:Static arc:ArcIcons.Plus}"
+                                          Size="{arcm:NumberStepperTokenResource IconExtent}" />
+                        </Button>
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="CornerRadius" Value="{arc:ArcDesignTokenResource RadiusPill}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Left" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+
+        <Style Selector="^ /template/ Button.arc-stepper-btn">
+            <Setter Property="MinWidth" Value="{arcm:NumberStepperTokenResource TouchTarget}" />
+            <Setter Property="MinHeight" Value="{arcm:NumberStepperTokenResource TouchTarget}" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="HorizontalContentAlignment" Value="Center" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <ControlTemplate TargetType="Button">
+                    <Border Name="PART_BtnFrame"
+                            Background="{TemplateBinding Background}">
+                        <ContentPresenter Content="{TemplateBinding Content}"
+                                          HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                    </Border>
+                </ControlTemplate>
+            </Setter>
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-stepper-btn:pressed">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource Border}" />
+        </Style>
+
+        <Style Selector="^ /template/ Button.arc-stepper-btn:disabled">
+            <Setter Property="Opacity" Value="{arcm:NumberStepperTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:NumberStepperTokenResource DisabledOpacity}" />
+        </Style>
+
+        <Style Selector="^:motion-full /template/ Button.arc-stepper-btn">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Fast" />
+                </Transitions>
+            </Setter>
+        </Style>
+        <Style Selector="^:motion-reduced /template/ Button.arc-stepper-btn">
+            <Setter Property="Transitions">
+                <Transitions>
+                    <arc:ArcBrushTransition Property="Background" Tween="Instant" />
+                </Transitions>
+            </Setter>
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

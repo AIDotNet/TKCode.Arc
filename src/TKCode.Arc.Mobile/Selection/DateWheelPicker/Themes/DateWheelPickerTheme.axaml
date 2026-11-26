@@ -1,0 +1,86 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.DateWheelPickerTheme">
+
+    <!-- DateWheelPicker: ListItem row that displays the selected date/time at its trailing edge and opens a bottom Sheet
+         with WheelPicker columns. -->
+    <ControlTheme x:Key="{x:Type arcm:DateWheelPicker}"
+                  TargetType="arcm:DateWheelPicker"
+                  BasedOn="{StaticResource {x:Type arcm:ListItem}}">
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:DateWheelPicker">
+                <Border Name="PART_Frame"
+                        Background="{TemplateBinding Background}">
+                    <Grid>
+                        <Grid ColumnDefinitions="Auto,*,Auto,Auto"
+                              Margin="{TemplateBinding Padding}">
+                            <Panel Name="PART_LeadingSlot"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center">
+                                <arc:ArcGlyph Name="PART_Icon"
+                                              Data="{TemplateBinding Icon}"
+                                              IsVisible="{TemplateBinding Icon, Converter={x:Static ObjectConverters.IsNotNull}}"
+                                              Size="{arcm:ListItemTokenResource IconExtent}"
+                                              Margin="{arcm:ListItemTokenResource LeadingMargin}"
+                                              Foreground="{arc:ArcDesignTokenResource TextSecondary}" />
+                                <ContentPresenter Name="PART_Leading"
+                                                  Content="{TemplateBinding Leading}"
+                                                  IsVisible="False"
+                                                  Margin="{arcm:ListItemTokenResource LeadingMargin}"
+                                                  VerticalAlignment="Center" />
+                            </Panel>
+                            <StackPanel Grid.Column="1"
+                                        VerticalAlignment="Center"
+                                        Spacing="2">
+                                <ContentPresenter Name="PART_ContentPresenter"
+                                                  Content="{TemplateBinding Content}"
+                                                  ContentTemplate="{TemplateBinding ContentTemplate}"
+                                                  HorizontalContentAlignment="Left"
+                                                  VerticalContentAlignment="Center" />
+                                <TextBlock Name="PART_Subtitle"
+                                           Text="{TemplateBinding Subtitle}"
+                                           IsVisible="{TemplateBinding Subtitle, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           TextTrimming="CharacterEllipsis" />
+                            </StackPanel>
+                            <TextBlock Name="PART_Value"
+                                       Grid.Column="2"
+                                       Text="{TemplateBinding DisplayText}"
+                                       MaxWidth="{arcm:DateWheelPickerTokenResource ValueMaxWidth}"
+                                       Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                       VerticalAlignment="Center"
+                                       Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                       TextTrimming="CharacterEllipsis"
+                                       MaxLines="1" />
+                            <arc:ArcGlyph Name="PART_Chevron"
+                                          Grid.Column="3"
+                                          Data="{x:Static arc:ArcIcons.ChevronRight}"
+                                          IsVisible="{TemplateBinding ShowChevron}"
+                                          Size="{arcm:ListItemTokenResource ChevronExtent}"
+                                          Margin="{arcm:ListItemTokenResource TrailingMargin}"
+                                          Foreground="{arc:ArcDesignTokenResource TextMuted}"
+                                          VerticalAlignment="Center" />
+                        </Grid>
+                        <Border Name="PART_Separator"
+                                Height="1"
+                                Margin="{arcm:ListItemTokenResource SeparatorInset}"
+                                Background="{arc:ArcDesignTokenResource Border}"
+                                VerticalAlignment="Bottom" />
+                    </Grid>
+                </Border>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:placeholder /template/ TextBlock#PART_Value">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource TextMuted}" />
+        </Style>
+
+        <Style Selector="^:focus-visible /template/ Border#PART_Frame">
+            <Setter Property="Background" Value="{arc:ArcDesignTokenResource SurfaceMuted}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

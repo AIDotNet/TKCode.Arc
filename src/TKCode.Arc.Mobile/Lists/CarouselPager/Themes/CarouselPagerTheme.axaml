@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.CarouselPagerTheme">
+
+    <!-- CarouselPager: full-width clipped horizontal track driven by MotionValue with tappable page indicator dots. -->
+    <ControlTheme x:Key="{x:Type arcm:CarouselPager}" TargetType="arcm:CarouselPager">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:CarouselPager">
+                <Grid Name="PART_Root" RowDefinitions="*,Auto">
+                    <Border Name="PART_Viewport"
+                            Grid.Row="0"
+                            Background="Transparent"
+                            ClipToBounds="True">
+                        <Canvas Name="PART_Track" />
+                    </Border>
+                    <Border Name="PART_IndicatorsHost"
+                            Grid.Row="1"
+                            MinHeight="{arcm:CarouselPagerTokenResource IndicatorStripHeight}"
+                            Background="Transparent">
+                        <StackPanel Name="PART_Indicators"
+                                    Orientation="Horizontal"
+                                    Spacing="{arcm:CarouselPagerTokenResource IndicatorSpacing}"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center" />
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+    </ControlTheme>
+</ResourceDictionary>

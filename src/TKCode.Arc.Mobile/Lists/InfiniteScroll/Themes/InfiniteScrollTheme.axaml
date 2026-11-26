@@ -1,0 +1,61 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.InfiniteScrollTheme">
+
+    <!-- InfiniteScroll: vertical ScrollViewer with a bottom load-more footer (loading spinner, finished label or tap-to-retry error). -->
+    <ControlTheme x:Key="{x:Type arcm:InfiniteScroll}" TargetType="arcm:InfiniteScroll">
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        <Setter Property="VerticalContentAlignment" Value="Top" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:InfiniteScroll">
+                <ScrollViewer Name="PART_ScrollViewer"
+                              HorizontalScrollBarVisibility="Disabled"
+                              VerticalScrollBarVisibility="Auto">
+                    <StackPanel Orientation="Vertical">
+                        <ContentPresenter Name="PART_Content"
+                                          Content="{TemplateBinding Content}"
+                                          ContentTemplate="{TemplateBinding ContentTemplate}"
+                                          Padding="{TemplateBinding Padding}" />
+                        <Border Name="PART_Footer"
+                                MinHeight="{arcm:InfiniteScrollTokenResource FooterMinHeight}"
+                                Padding="16,12"
+                                Background="Transparent">
+                            <StackPanel Orientation="Horizontal"
+                                        Spacing="{arcm:InfiniteScrollTokenResource ContentGap}"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Center">
+                                <arc:ArcSpinner Name="PART_Spinner"
+                                                Foreground="{arc:ArcDesignTokenResource Accent}"
+                                                Width="{arcm:InfiniteScrollTokenResource SpinnerSize}"
+                                                Height="{arcm:InfiniteScrollTokenResource SpinnerSize}"
+                                                Thickness="{arcm:InfiniteScrollTokenResource SpinnerThickness}"
+                                                VerticalAlignment="Center"
+                                                IsVisible="False" />
+                                <TextBlock Name="PART_StatusText"
+                                           Foreground="{arc:ArcDesignTokenResource TextSecondary}"
+                                           FontSize="{arc:ArcDesignTokenResource TypeSM}"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:error /template/ TextBlock#PART_StatusText">
+            <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Danger}" />
+        </Style>
+
+        <Style Selector="^:error /template/ Border#PART_Footer">
+            <Setter Property="Cursor" Value="Hand" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

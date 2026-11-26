@@ -1,0 +1,82 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.ModalPageTheme">
+
+    <!-- ModalPage: full-screen or card-style modal page rising from the bottom over a Page.
+         Automatically respects Page.InheritedSafeArea and Page.KeyboardInset, and responds to Android system back. -->
+    <ControlTheme x:Key="{x:Type arcm:ModalPage}" TargetType="arcm:ModalPage">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:ModalPage">
+                <Grid Name="PART_Root">
+                    <Border Name="PART_Scrim"
+                            Background="{arcm:ModalPageTokenResource ScrimColor}"
+                            Opacity="0" />
+                    <Border Name="PART_Surface"
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            CornerRadius="{arcm:ModalPageTokenResource SheetRadius}"
+                            ClipToBounds="True"
+                            IsVisible="False">
+                        <Border Name="PART_Safe">
+                            <Grid RowDefinitions="Auto,Auto,*,Auto">
+                                <Border Name="PART_GrabberArea"
+                                        Grid.Row="0"
+                                        Background="Transparent"
+                                        Padding="0,8,0,4">
+                                    <Border Width="{arcm:ModalPageTokenResource GrabberWidth}"
+                                            Height="{arcm:ModalPageTokenResource GrabberHeight}"
+                                            CornerRadius="{arc:ArcDesignTokenResource RadiusPill}"
+                                            Background="{arc:ArcDesignTokenResource BorderStrong}"
+                                            HorizontalAlignment="Center" />
+                                </Border>
+                                <ContentPresenter Name="PART_Header"
+                                                  Grid.Row="1"
+                                                  Content="{TemplateBinding Header}" />
+                                <ScrollViewer Name="PART_Scroller"
+                                              Grid.Row="2"
+                                              HorizontalScrollBarVisibility="Disabled"
+                                              VerticalScrollBarVisibility="Disabled">
+                                    <ContentPresenter Name="PART_ContentPresenter"
+                                                      Padding="{arcm:ModalPageTokenResource ContentInset}"
+                                                      Content="{TemplateBinding Content}"
+                                                      ContentTemplate="{TemplateBinding ContentTemplate}" />
+                                </ScrollViewer>
+                                <ContentPresenter Name="PART_Footer"
+                                                  Grid.Row="3"
+                                                  Content="{TemplateBinding Footer}" />
+                            </Grid>
+                        </Border>
+                    </Border>
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Background" Value="{arc:ArcDesignTokenResource Background}" />
+        <Setter Property="BorderBrush" Value="{arc:ArcDesignTokenResource Border}" />
+        <Setter Property="BorderThickness" Value="0,1,0,0" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Stretch" />
+        <Setter Property="IsHitTestVisible" Value="False" />
+
+        <Style Selector="^:scrollable /template/ ScrollViewer#PART_Scroller">
+            <Setter Property="VerticalScrollBarVisibility" Value="Auto" />
+        </Style>
+
+        <Style Selector="^:fullscreen /template/ Border#PART_Surface">
+            <Setter Property="CornerRadius" Value="0" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style Selector="^:fullscreen /template/ Border#PART_GrabberArea">
+            <Setter Property="IsVisible" Value="False" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

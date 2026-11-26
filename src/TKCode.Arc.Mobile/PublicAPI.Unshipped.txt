@@ -1,1 +1,671 @@
 #nullable enable
+TKCode.Arc.Mobile.BannerNotification
+TKCode.Arc.Mobile.BannerNotification.ActionCommand.get -> System.Windows.Input.ICommand?
+TKCode.Arc.Mobile.BannerNotification.ActionCommand.set -> void
+TKCode.Arc.Mobile.BannerNotification.ActionCommandParameter.get -> object?
+TKCode.Arc.Mobile.BannerNotification.ActionCommandParameter.set -> void
+TKCode.Arc.Mobile.BannerNotification.ActionInvoked -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.Mobile.BannerNotification.ActionText.get -> string?
+TKCode.Arc.Mobile.BannerNotification.ActionText.set -> void
+TKCode.Arc.Mobile.BannerNotification.BannerNotification() -> void
+TKCode.Arc.Mobile.BannerNotification.CardOffset.get -> double
+TKCode.Arc.Mobile.BannerNotification.Dismissed -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.Mobile.BannerNotification.Duration.get -> System.TimeSpan
+TKCode.Arc.Mobile.BannerNotification.Duration.set -> void
+TKCode.Arc.Mobile.BannerNotification.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.Mobile.BannerNotification.Icon.set -> void
+TKCode.Arc.Mobile.BannerNotification.IsDismissible.get -> bool
+TKCode.Arc.Mobile.BannerNotification.IsDismissible.set -> void
+TKCode.Arc.Mobile.BannerNotification.IsOpen.get -> bool
+TKCode.Arc.Mobile.BannerNotification.IsOpen.set -> void
+TKCode.Arc.Mobile.BannerNotification.Message.get -> string?
+TKCode.Arc.Mobile.BannerNotification.Message.set -> void
+TKCode.Arc.Mobile.BannerNotification.Show(string! title, string? message = null, TKCode.Arc.Mobile.BannerTone tone = TKCode.Arc.Mobile.BannerTone.Neutral, System.TimeSpan? duration = null) -> void
+TKCode.Arc.Mobile.BannerNotification.Title.get -> string?
+TKCode.Arc.Mobile.BannerNotification.Title.set -> void
+TKCode.Arc.Mobile.BannerNotification.Tone.get -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerNotification.Tone.set -> void
+TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerTone.Danger = 4 -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerTone.Info = 1 -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerTone.Neutral = 0 -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerTone.Success = 2 -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.BannerTone.Warning = 3 -> TKCode.Arc.Mobile.BannerTone
+TKCode.Arc.Mobile.CarouselPageChangedEventArgs
+TKCode.Arc.Mobile.CarouselPageChangedEventArgs.CarouselPageChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, int oldIndex, int newIndex) -> void
+TKCode.Arc.Mobile.CarouselPageChangedEventArgs.NewIndex.get -> int
+TKCode.Arc.Mobile.CarouselPageChangedEventArgs.OldIndex.get -> int
+TKCode.Arc.Mobile.CarouselPager
+TKCode.Arc.Mobile.CarouselPager.AutoPlayInterval.get -> System.TimeSpan
+TKCode.Arc.Mobile.CarouselPager.AutoPlayInterval.set -> void
+TKCode.Arc.Mobile.CarouselPager.CarouselPager() -> void
+TKCode.Arc.Mobile.CarouselPager.GoTo(int index) -> void
+TKCode.Arc.Mobile.CarouselPager.ItemTemplate.get -> Avalonia.Controls.Templates.IDataTemplate?
+TKCode.Arc.Mobile.CarouselPager.ItemTemplate.set -> void
+TKCode.Arc.Mobile.CarouselPager.Items.get -> Avalonia.Collections.AvaloniaList<object?>!
+TKCode.Arc.Mobile.CarouselPager.ItemsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.Mobile.CarouselPager.ItemsSource.set -> void
+TKCode.Arc.Mobile.CarouselPager.Loop.get -> bool
+TKCode.Arc.Mobile.CarouselPager.Loop.set -> void
+TKCode.Arc.Mobile.CarouselPager.Next() -> void
+TKCode.Arc.Mobile.CarouselPager.PageCount.get -> int
+TKCode.Arc.Mobile.CarouselPager.Previous() -> void
+TKCode.Arc.Mobile.CarouselPager.SelectedIndex.get -> int
+TKCode.Arc.Mobile.CarouselPager.SelectedIndex.set -> void
+TKCode.Arc.Mobile.CarouselPager.SelectionChanged -> System.EventHandler<TKCode.Arc.Mobile.CarouselPageChangedEventArgs!>?
+TKCode.Arc.Mobile.CarouselPager.ShowIndicators.get -> bool
+TKCode.Arc.Mobile.CarouselPager.ShowIndicators.set -> void
+TKCode.Arc.Mobile.CarouselPager.TrackOffset.get -> double
+TKCode.Arc.Mobile.DateWheelMode
+TKCode.Arc.Mobile.DateWheelMode.Date = 0 -> TKCode.Arc.Mobile.DateWheelMode
+TKCode.Arc.Mobile.DateWheelMode.DateTime = 2 -> TKCode.Arc.Mobile.DateWheelMode
+TKCode.Arc.Mobile.DateWheelMode.Time = 1 -> TKCode.Arc.Mobile.DateWheelMode
+TKCode.Arc.Mobile.DateWheelPicker
+TKCode.Arc.Mobile.DateWheelPicker.CancelText.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.CancelText.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.ConfirmText.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.ConfirmText.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.DateWheelPicker() -> void
+TKCode.Arc.Mobile.DateWheelPicker.DisplayText.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.FormatString.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.FormatString.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.IsOpen.get -> bool
+TKCode.Arc.Mobile.DateWheelPicker.IsOpen.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.MaxYear.get -> int
+TKCode.Arc.Mobile.DateWheelPicker.MaxYear.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.MinYear.get -> int
+TKCode.Arc.Mobile.DateWheelPicker.MinYear.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.MinuteInterval.get -> int
+TKCode.Arc.Mobile.DateWheelPicker.MinuteInterval.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.Mode.get -> TKCode.Arc.Mobile.DateWheelMode
+TKCode.Arc.Mobile.DateWheelPicker.Mode.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.PlaceholderText.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.PlaceholderText.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.SelectedDateTime.get -> System.DateTime?
+TKCode.Arc.Mobile.DateWheelPicker.SelectedDateTime.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.SheetTitle.get -> string?
+TKCode.Arc.Mobile.DateWheelPicker.SheetTitle.set -> void
+TKCode.Arc.Mobile.DateWheelPicker.ValueChanged -> System.EventHandler<TKCode.Arc.Mobile.DateWheelValueChangedEventArgs!>?
+TKCode.Arc.Mobile.DateWheelValueChangedEventArgs
+TKCode.Arc.Mobile.DateWheelValueChangedEventArgs.DateWheelValueChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, System.DateTime? oldValue, System.DateTime? newValue) -> void
+TKCode.Arc.Mobile.DateWheelValueChangedEventArgs.NewValue.get -> System.DateTime?
+TKCode.Arc.Mobile.DateWheelValueChangedEventArgs.OldValue.get -> System.DateTime?
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind.CardRadius = 3 -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind.HorizontalInset = 1 -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind.IconSize = 4 -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind.MaxWidth = 2 -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind.TopGap = 0 -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension.BannerNotificationTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension.BannerNotificationTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokens
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind.ActiveIndicatorWidth = 1 -> TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind.IndicatorSize = 0 -> TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind.IndicatorSpacing = 2 -> TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind.IndicatorStripHeight = 3 -> TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension.CarouselPagerTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension.CarouselPagerTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokens
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind.HeaderHeight = 1 -> TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind.ValueMaxWidth = 0 -> TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension.DateWheelPickerTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension.DateWheelPickerTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokens
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind.ContentGap = 3 -> TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind.FooterMinHeight = 0 -> TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind.SpinnerSize = 1 -> TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind.SpinnerThickness = 2 -> TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension.InfiniteScrollTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension.InfiniteScrollTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokens
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.ContentInset = 5 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.GrabberHeight = 4 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.GrabberWidth = 3 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.ScrimColor = 0 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.SheetRadius = 2 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind.SheetTopGap = 1 -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension.ModalPageTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension.ModalPageTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.ModalPageTokens
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind.DisabledOpacity = 4 -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind.IconExtent = 3 -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind.TouchTarget = 0 -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind.ValueMinWidth = 1 -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind.ValuePadding = 2 -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension.NumberStepperTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension.NumberStepperTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.NumberStepperTokens
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.ActiveBorderWidth = 4 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.BorderWidth = 3 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.CellHeight = 0 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.CellMaxWidth = 1 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.CellSpacing = 2 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind.DisabledOpacity = 5 -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension.PinInputTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension.PinInputTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.PinInputTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.PinInputTokens
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind.ContentInset = 3 -> TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind.DefaultWidth = 1 -> TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind.MaxWidthRatio = 2 -> TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind.ScrimColor = 0 -> TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension.SideDrawerTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenResourceExtension.SideDrawerTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.SideDrawerTokens
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind.ActionWidth = 0 -> TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind.DisabledOpacity = 3 -> TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind.IconExtent = 1 -> TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind.IconGap = 2 -> TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension.SwipeableRowTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenResourceExtension.SwipeableRowTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokens
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind.BorderWidth = 1 -> TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind.ContentPadding = 0 -> TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind.DisabledOpacity = 3 -> TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind.GlyphExtent = 2 -> TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension.TextAreaTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokenResourceExtension.TextAreaTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.TextAreaTokens
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind.DisabledOpacity = 3 -> TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind.ThumbSize = 2 -> TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind.TouchTarget = 0 -> TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind.TrackHeight = 1 -> TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension.TouchSliderTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenResourceExtension.TouchSliderTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.TouchSliderTokens
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind.BandInset = 1 -> TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind.DisabledOpacity = 2 -> TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind.ItemHeight = 0 -> TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension.Kind.get -> TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension.Kind.set -> void
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension.WheelPickerTokenResourceExtension() -> void
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenResourceExtension.WheelPickerTokenResourceExtension(TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind kind) -> void
+TKCode.Arc.Mobile.DesignTokens.WheelPickerTokens
+TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Error = 6 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Heavy = 3 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Light = 1 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Medium = 2 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Selection = 0 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Success = 4 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.HapticKind.Warning = 5 -> TKCode.Arc.Mobile.HapticKind
+TKCode.Arc.Mobile.Haptics
+TKCode.Arc.Mobile.IHapticsPlatform
+TKCode.Arc.Mobile.IHapticsPlatform.Trigger(TKCode.Arc.Mobile.HapticKind kind) -> void
+TKCode.Arc.Mobile.InfiniteScroll
+TKCode.Arc.Mobile.InfiniteScroll.Command.get -> System.Windows.Input.ICommand?
+TKCode.Arc.Mobile.InfiniteScroll.Command.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.CommandParameter.get -> object?
+TKCode.Arc.Mobile.InfiniteScroll.CommandParameter.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.ErrorText.get -> string?
+TKCode.Arc.Mobile.InfiniteScroll.ErrorText.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.FinishedText.get -> string?
+TKCode.Arc.Mobile.InfiniteScroll.FinishedText.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.HasError.get -> bool
+TKCode.Arc.Mobile.InfiniteScroll.HasError.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.HasMore.get -> bool
+TKCode.Arc.Mobile.InfiniteScroll.HasMore.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.InfiniteScroll() -> void
+TKCode.Arc.Mobile.InfiniteScroll.IsLoading.get -> bool
+TKCode.Arc.Mobile.InfiniteScroll.IsLoading.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.LoadMoreRequested -> System.EventHandler<TKCode.Arc.Mobile.LoadMoreRequestedEventArgs!>?
+TKCode.Arc.Mobile.InfiniteScroll.LoadingText.get -> string?
+TKCode.Arc.Mobile.InfiniteScroll.LoadingText.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.Retry() -> void
+TKCode.Arc.Mobile.InfiniteScroll.Threshold.get -> double
+TKCode.Arc.Mobile.InfiniteScroll.Threshold.set -> void
+TKCode.Arc.Mobile.InfiniteScroll.TryLoadMore() -> bool
+TKCode.Arc.Mobile.LoadMoreRequestedEventArgs
+TKCode.Arc.Mobile.LoadMoreRequestedEventArgs.GetDeferral() -> System.IDisposable!
+TKCode.Arc.Mobile.ModalPage
+TKCode.Arc.Mobile.ModalPage.AvoidKeyboard.get -> bool
+TKCode.Arc.Mobile.ModalPage.AvoidKeyboard.set -> void
+TKCode.Arc.Mobile.ModalPage.Footer.get -> object?
+TKCode.Arc.Mobile.ModalPage.Footer.set -> void
+TKCode.Arc.Mobile.ModalPage.Header.get -> object?
+TKCode.Arc.Mobile.ModalPage.Header.set -> void
+TKCode.Arc.Mobile.ModalPage.IsDismissible.get -> bool
+TKCode.Arc.Mobile.ModalPage.IsDismissible.set -> void
+TKCode.Arc.Mobile.ModalPage.IsOpen.get -> bool
+TKCode.Arc.Mobile.ModalPage.IsOpen.set -> void
+TKCode.Arc.Mobile.ModalPage.IsScrollable.get -> bool
+TKCode.Arc.Mobile.ModalPage.IsScrollable.set -> void
+TKCode.Arc.Mobile.ModalPage.ModalPage() -> void
+TKCode.Arc.Mobile.ModalPage.Presentation.get -> TKCode.Arc.Mobile.ModalPagePresentation
+TKCode.Arc.Mobile.ModalPage.Presentation.set -> void
+TKCode.Arc.Mobile.ModalPage.SurfaceOffset.get -> double
+TKCode.Arc.Mobile.ModalPagePresentation
+TKCode.Arc.Mobile.ModalPagePresentation.FullScreen = 1 -> TKCode.Arc.Mobile.ModalPagePresentation
+TKCode.Arc.Mobile.ModalPagePresentation.Sheet = 0 -> TKCode.Arc.Mobile.ModalPagePresentation
+TKCode.Arc.Mobile.NumberStepper
+TKCode.Arc.Mobile.NumberStepper.Decrement() -> void
+TKCode.Arc.Mobile.NumberStepper.FormatString.get -> string?
+TKCode.Arc.Mobile.NumberStepper.FormatString.set -> void
+TKCode.Arc.Mobile.NumberStepper.FormattedValue.get -> string!
+TKCode.Arc.Mobile.NumberStepper.Increment() -> void
+TKCode.Arc.Mobile.NumberStepper.IsWrapping.get -> bool
+TKCode.Arc.Mobile.NumberStepper.IsWrapping.set -> void
+TKCode.Arc.Mobile.NumberStepper.Maximum.get -> double
+TKCode.Arc.Mobile.NumberStepper.Maximum.set -> void
+TKCode.Arc.Mobile.NumberStepper.Minimum.get -> double
+TKCode.Arc.Mobile.NumberStepper.Minimum.set -> void
+TKCode.Arc.Mobile.NumberStepper.NumberStepper() -> void
+TKCode.Arc.Mobile.NumberStepper.Step.get -> double
+TKCode.Arc.Mobile.NumberStepper.Step.set -> void
+TKCode.Arc.Mobile.NumberStepper.Value.get -> double
+TKCode.Arc.Mobile.NumberStepper.Value.set -> void
+TKCode.Arc.Mobile.NumberStepper.ValueChanged -> System.EventHandler<TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs!>?
+TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs
+TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs.NewValue.get -> double
+TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs.NumberStepperValueChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, double oldValue, double newValue) -> void
+TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs.OldValue.get -> double
+TKCode.Arc.Mobile.PinCodeEventArgs
+TKCode.Arc.Mobile.PinCodeEventArgs.Code.get -> string!
+TKCode.Arc.Mobile.PinCodeEventArgs.PinCodeEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, string! code) -> void
+TKCode.Arc.Mobile.PinInput
+TKCode.Arc.Mobile.PinInput.Clear() -> void
+TKCode.Arc.Mobile.PinInput.Code.get -> string!
+TKCode.Arc.Mobile.PinInput.Code.set -> void
+TKCode.Arc.Mobile.PinInput.CodeChanged -> System.EventHandler<TKCode.Arc.Mobile.PinCodeEventArgs!>?
+TKCode.Arc.Mobile.PinInput.Completed -> System.EventHandler<TKCode.Arc.Mobile.PinCodeEventArgs!>?
+TKCode.Arc.Mobile.PinInput.FocusInput() -> void
+TKCode.Arc.Mobile.PinInput.HasError.get -> bool
+TKCode.Arc.Mobile.PinInput.HasError.set -> void
+TKCode.Arc.Mobile.PinInput.IsComplete.get -> bool
+TKCode.Arc.Mobile.PinInput.Length.get -> int
+TKCode.Arc.Mobile.PinInput.Length.set -> void
+TKCode.Arc.Mobile.PinInput.MaskChar.get -> char?
+TKCode.Arc.Mobile.PinInput.MaskChar.set -> void
+TKCode.Arc.Mobile.PinInput.NumericOnly.get -> bool
+TKCode.Arc.Mobile.PinInput.NumericOnly.set -> void
+TKCode.Arc.Mobile.PinInput.PinInput() -> void
+TKCode.Arc.Mobile.PinInput.Placeholder.get -> string?
+TKCode.Arc.Mobile.PinInput.Placeholder.set -> void
+TKCode.Arc.Mobile.SideDrawer
+TKCode.Arc.Mobile.SideDrawer.Closed -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.Mobile.SideDrawer.DrawerWidth.get -> double
+TKCode.Arc.Mobile.SideDrawer.DrawerWidth.set -> void
+TKCode.Arc.Mobile.SideDrawer.EnableSwipeToClose.get -> bool
+TKCode.Arc.Mobile.SideDrawer.EnableSwipeToClose.set -> void
+TKCode.Arc.Mobile.SideDrawer.Footer.get -> object?
+TKCode.Arc.Mobile.SideDrawer.Footer.set -> void
+TKCode.Arc.Mobile.SideDrawer.Header.get -> object?
+TKCode.Arc.Mobile.SideDrawer.Header.set -> void
+TKCode.Arc.Mobile.SideDrawer.IsDismissible.get -> bool
+TKCode.Arc.Mobile.SideDrawer.IsDismissible.set -> void
+TKCode.Arc.Mobile.SideDrawer.IsOpen.get -> bool
+TKCode.Arc.Mobile.SideDrawer.IsOpen.set -> void
+TKCode.Arc.Mobile.SideDrawer.Opened -> System.EventHandler<Avalonia.Interactivity.RoutedEventArgs!>?
+TKCode.Arc.Mobile.SideDrawer.PanelOffset.get -> double
+TKCode.Arc.Mobile.SideDrawer.Side.get -> TKCode.Arc.Mobile.SideDrawerSide
+TKCode.Arc.Mobile.SideDrawer.Side.set -> void
+TKCode.Arc.Mobile.SideDrawer.SideDrawer() -> void
+TKCode.Arc.Mobile.SideDrawerSide
+TKCode.Arc.Mobile.SideDrawerSide.Left = 0 -> TKCode.Arc.Mobile.SideDrawerSide
+TKCode.Arc.Mobile.SideDrawerSide.Right = 1 -> TKCode.Arc.Mobile.SideDrawerSide
+TKCode.Arc.Mobile.SwipeRowAction
+TKCode.Arc.Mobile.SwipeRowAction.ClosesOnInvoke.get -> bool
+TKCode.Arc.Mobile.SwipeRowAction.ClosesOnInvoke.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.Command.get -> System.Windows.Input.ICommand?
+TKCode.Arc.Mobile.SwipeRowAction.Command.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.CommandParameter.get -> object?
+TKCode.Arc.Mobile.SwipeRowAction.CommandParameter.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.Icon.get -> Avalonia.Media.Geometry?
+TKCode.Arc.Mobile.SwipeRowAction.Icon.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.IsEnabled.get -> bool
+TKCode.Arc.Mobile.SwipeRowAction.IsEnabled.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.IsVisible.get -> bool
+TKCode.Arc.Mobile.SwipeRowAction.IsVisible.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.Label.get -> string?
+TKCode.Arc.Mobile.SwipeRowAction.Label.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.Role.get -> TKCode.Arc.Mobile.SwipeRowActionRole
+TKCode.Arc.Mobile.SwipeRowAction.Role.set -> void
+TKCode.Arc.Mobile.SwipeRowAction.SwipeRowAction() -> void
+TKCode.Arc.Mobile.SwipeRowActionEventArgs
+TKCode.Arc.Mobile.SwipeRowActionEventArgs.Action.get -> TKCode.Arc.Mobile.SwipeRowAction!
+TKCode.Arc.Mobile.SwipeRowActionEventArgs.Side.get -> TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeRowActionEventArgs.SwipeRowActionEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, TKCode.Arc.Mobile.SwipeRowAction! action, TKCode.Arc.Mobile.SwipeRowSide side) -> void
+TKCode.Arc.Mobile.SwipeRowActionRole
+TKCode.Arc.Mobile.SwipeRowActionRole.Destructive = 2 -> TKCode.Arc.Mobile.SwipeRowActionRole
+TKCode.Arc.Mobile.SwipeRowActionRole.Normal = 0 -> TKCode.Arc.Mobile.SwipeRowActionRole
+TKCode.Arc.Mobile.SwipeRowActionRole.Primary = 1 -> TKCode.Arc.Mobile.SwipeRowActionRole
+TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeRowSide.Leading = 1 -> TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeRowSide.None = 0 -> TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeRowSide.Trailing = 2 -> TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeableRow
+TKCode.Arc.Mobile.SwipeableRow.ActionInvoked -> System.EventHandler<TKCode.Arc.Mobile.SwipeRowActionEventArgs!>?
+TKCode.Arc.Mobile.SwipeableRow.AllowFullSwipe.get -> bool
+TKCode.Arc.Mobile.SwipeableRow.AllowFullSwipe.set -> void
+TKCode.Arc.Mobile.SwipeableRow.Close() -> void
+TKCode.Arc.Mobile.SwipeableRow.IsOpen.get -> bool
+TKCode.Arc.Mobile.SwipeableRow.IsOpen.set -> void
+TKCode.Arc.Mobile.SwipeableRow.LeadingActions.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.Mobile.SwipeRowAction!>!
+TKCode.Arc.Mobile.SwipeableRow.OpenLeading() -> void
+TKCode.Arc.Mobile.SwipeableRow.OpenSide.get -> TKCode.Arc.Mobile.SwipeRowSide
+TKCode.Arc.Mobile.SwipeableRow.OpenTrailing() -> void
+TKCode.Arc.Mobile.SwipeableRow.SwipeOffset.get -> double
+TKCode.Arc.Mobile.SwipeableRow.SwipeableRow() -> void
+TKCode.Arc.Mobile.SwipeableRow.TrailingActions.get -> Avalonia.Collections.AvaloniaList<TKCode.Arc.Mobile.SwipeRowAction!>!
+TKCode.Arc.Mobile.TabbarItem.Badge.get -> string?
+TKCode.Arc.Mobile.TabbarItem.Badge.set -> void
+TKCode.Arc.Mobile.TabbarItem.ShowBadgeDot.get -> bool
+TKCode.Arc.Mobile.TabbarItem.ShowBadgeDot.set -> void
+TKCode.Arc.Mobile.TextArea
+TKCode.Arc.Mobile.TextArea.CounterText.get -> string?
+TKCode.Arc.Mobile.TextArea.IsClearVisible.get -> bool
+TKCode.Arc.Mobile.TextArea.IsCounterVisible.get -> bool
+TKCode.Arc.Mobile.TextArea.ShowClearButton.get -> bool
+TKCode.Arc.Mobile.TextArea.ShowClearButton.set -> void
+TKCode.Arc.Mobile.TextArea.ShowCounter.get -> bool
+TKCode.Arc.Mobile.TextArea.ShowCounter.set -> void
+TKCode.Arc.Mobile.TextArea.TextArea() -> void
+TKCode.Arc.Mobile.TouchSlider
+TKCode.Arc.Mobile.TouchSlider.FormatString.get -> string?
+TKCode.Arc.Mobile.TouchSlider.FormatString.set -> void
+TKCode.Arc.Mobile.TouchSlider.FormattedValue.get -> string!
+TKCode.Arc.Mobile.TouchSlider.IsDragging.get -> bool
+TKCode.Arc.Mobile.TouchSlider.Maximum.get -> double
+TKCode.Arc.Mobile.TouchSlider.Maximum.set -> void
+TKCode.Arc.Mobile.TouchSlider.Minimum.get -> double
+TKCode.Arc.Mobile.TouchSlider.Minimum.set -> void
+TKCode.Arc.Mobile.TouchSlider.ShowValueBubble.get -> bool
+TKCode.Arc.Mobile.TouchSlider.ShowValueBubble.set -> void
+TKCode.Arc.Mobile.TouchSlider.Step.get -> double
+TKCode.Arc.Mobile.TouchSlider.Step.set -> void
+TKCode.Arc.Mobile.TouchSlider.TouchSlider() -> void
+TKCode.Arc.Mobile.TouchSlider.Value.get -> double
+TKCode.Arc.Mobile.TouchSlider.Value.set -> void
+TKCode.Arc.Mobile.TouchSlider.ValueChanged -> System.EventHandler<TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs!>?
+TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs
+TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs.NewValue.get -> double
+TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs.OldValue.get -> double
+TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs.TouchSliderValueChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, double oldValue, double newValue) -> void
+TKCode.Arc.Mobile.WheelPicker
+TKCode.Arc.Mobile.WheelPicker.DisplayMemberBinding.get -> Avalonia.Data.BindingBase?
+TKCode.Arc.Mobile.WheelPicker.DisplayMemberBinding.set -> void
+TKCode.Arc.Mobile.WheelPicker.Items.get -> Avalonia.Collections.AvaloniaList<object?>!
+TKCode.Arc.Mobile.WheelPicker.ItemsSource.get -> System.Collections.IEnumerable?
+TKCode.Arc.Mobile.WheelPicker.ItemsSource.set -> void
+TKCode.Arc.Mobile.WheelPicker.ScrollOffset.get -> double
+TKCode.Arc.Mobile.WheelPicker.SelectedIndex.get -> int
+TKCode.Arc.Mobile.WheelPicker.SelectedIndex.set -> void
+TKCode.Arc.Mobile.WheelPicker.SelectedItem.get -> object?
+TKCode.Arc.Mobile.WheelPicker.SelectedItem.set -> void
+TKCode.Arc.Mobile.WheelPicker.SelectionChanged -> System.EventHandler<TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs!>?
+TKCode.Arc.Mobile.WheelPicker.VisibleItemCount.get -> int
+TKCode.Arc.Mobile.WheelPicker.VisibleItemCount.set -> void
+TKCode.Arc.Mobile.WheelPicker.WheelPicker() -> void
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs.NewIndex.get -> int
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs.NewItem.get -> object?
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs.OldIndex.get -> int
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs.OldItem.get -> object?
+TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs.WheelPickerSelectionChangedEventArgs(Avalonia.Interactivity.RoutedEvent! routedEvent, object? oldItem, object? newItem, int oldIndex, int newIndex) -> void
+const TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokens.Identity = "BannerNotification" -> string!
+const TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokens.Identity = "CarouselPager" -> string!
+const TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokens.Identity = "DateWheelPicker" -> string!
+const TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokens.Identity = "InfiniteScroll" -> string!
+const TKCode.Arc.Mobile.DesignTokens.ModalPageTokens.Identity = "ModalPage" -> string!
+const TKCode.Arc.Mobile.DesignTokens.NumberStepperTokens.Identity = "NumberStepper" -> string!
+const TKCode.Arc.Mobile.DesignTokens.PinInputTokens.Identity = "PinInput" -> string!
+const TKCode.Arc.Mobile.DesignTokens.SideDrawerTokens.Identity = "SideDrawer" -> string!
+const TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokens.Identity = "SwipeableRow" -> string!
+const TKCode.Arc.Mobile.DesignTokens.TextAreaTokens.Identity = "MobileTextArea" -> string!
+const TKCode.Arc.Mobile.DesignTokens.TouchSliderTokens.Identity = "TouchSlider" -> string!
+const TKCode.Arc.Mobile.DesignTokens.WheelPickerTokens.Identity = "WheelPicker" -> string!
+override TKCode.Arc.Mobile.BannerNotification.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.BannerNotification.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.BannerNotification.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.BannerNotification.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.BannerNotification.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.CarouselPager.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.CarouselPager.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.CarouselPager.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.CarouselPager.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.CarouselPager.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.CarouselPager.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.DateWheelPicker.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.DateWheelPicker.OnClick() -> void
+override TKCode.Arc.Mobile.DateWheelPicker.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.DateWheelPicker.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.DateWheelPicker.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.InfiniteScroll.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.InfiniteScroll.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.InfiniteScroll.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.ModalPage.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.ModalPage.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.ModalPage.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.ModalPage.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.Mobile.ModalPage.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.ModalPage.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.ModalPage.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.NumberStepper.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.NumberStepper.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.NumberStepper.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.NumberStepper.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.NumberStepper.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.PinInput.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.PinInput.OnGotFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.Mobile.PinInput.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.Mobile.PinInput.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.PinInput.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.SideDrawer.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.SideDrawer.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.SideDrawer.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.SideDrawer.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.SideDrawer.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.SideDrawer.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.SwipeableRow.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.SwipeableRow.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.SwipeableRow.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.SwipeableRow.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.SwipeableRow.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.TextArea.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.TextArea.OnLostFocus(Avalonia.Input.FocusChangedEventArgs! e) -> void
+override TKCode.Arc.Mobile.TextArea.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.TextArea.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.TouchSlider.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.TouchSlider.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.TouchSlider.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.TouchSlider.StyleKeyOverride.get -> System.Type!
+override TKCode.Arc.Mobile.WheelPicker.OnApplyTemplate(Avalonia.Controls.Primitives.TemplateAppliedEventArgs! e) -> void
+override TKCode.Arc.Mobile.WheelPicker.OnAttachedToVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.WheelPicker.OnDetachedFromVisualTree(Avalonia.VisualTreeAttachmentEventArgs! e) -> void
+override TKCode.Arc.Mobile.WheelPicker.OnKeyDown(Avalonia.Input.KeyEventArgs! e) -> void
+override TKCode.Arc.Mobile.WheelPicker.OnPropertyChanged(Avalonia.AvaloniaPropertyChangedEventArgs! change) -> void
+override TKCode.Arc.Mobile.WheelPicker.StyleKeyOverride.get -> System.Type!
+static TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokens.Key(TKCode.Arc.Mobile.DesignTokens.BannerNotificationTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokens.Key(TKCode.Arc.Mobile.DesignTokens.CarouselPagerTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokens.Key(TKCode.Arc.Mobile.DesignTokens.DateWheelPickerTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokens.Key(TKCode.Arc.Mobile.DesignTokens.InfiniteScrollTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.ModalPageTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.ModalPageTokens.Key(TKCode.Arc.Mobile.DesignTokens.ModalPageTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.NumberStepperTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.NumberStepperTokens.Key(TKCode.Arc.Mobile.DesignTokens.NumberStepperTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.PinInputTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.PinInputTokens.Key(TKCode.Arc.Mobile.DesignTokens.PinInputTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.SideDrawerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.SideDrawerTokens.Key(TKCode.Arc.Mobile.DesignTokens.SideDrawerTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokens.Key(TKCode.Arc.Mobile.DesignTokens.SwipeableRowTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.TextAreaTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.TextAreaTokens.Key(TKCode.Arc.Mobile.DesignTokens.TextAreaTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.TouchSliderTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.TouchSliderTokens.Key(TKCode.Arc.Mobile.DesignTokens.TouchSliderTokenKind kind) -> object!
+static TKCode.Arc.Mobile.DesignTokens.WheelPickerTokens.Descriptor.get -> TKCode.Arc.ArcTokenDescriptor!
+static TKCode.Arc.Mobile.DesignTokens.WheelPickerTokens.Key(TKCode.Arc.Mobile.DesignTokens.WheelPickerTokenKind kind) -> object!
+static TKCode.Arc.Mobile.Haptics.IsEnabled.get -> bool
+static TKCode.Arc.Mobile.Haptics.IsEnabled.set -> void
+static TKCode.Arc.Mobile.Haptics.Platform.get -> TKCode.Arc.Mobile.IHapticsPlatform?
+static TKCode.Arc.Mobile.Haptics.Platform.set -> void
+static TKCode.Arc.Mobile.Haptics.Trigger(TKCode.Arc.Mobile.HapticKind kind) -> void
+static readonly TKCode.Arc.Mobile.BannerNotification.ActionCommandParameterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.ActionCommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.ActionInvokedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.Mobile.BannerNotification.ActionTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.DismissedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.Mobile.BannerNotification.DurationProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.Mobile.BannerNotification.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.IsDismissibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.BannerNotification.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.BannerNotification.MessageProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.TitleProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.BannerNotification.ToneProperty -> Avalonia.StyledProperty<TKCode.Arc.Mobile.BannerTone>!
+static readonly TKCode.Arc.Mobile.CarouselPager.AutoPlayIntervalProperty -> Avalonia.StyledProperty<System.TimeSpan>!
+static readonly TKCode.Arc.Mobile.CarouselPager.ItemTemplateProperty -> Avalonia.StyledProperty<Avalonia.Controls.Templates.IDataTemplate?>!
+static readonly TKCode.Arc.Mobile.CarouselPager.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.Mobile.CarouselPager.LoopProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.CarouselPager.PageCountProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.CarouselPager!, int>!
+static readonly TKCode.Arc.Mobile.CarouselPager.SelectedIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.CarouselPager.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.CarouselPageChangedEventArgs!>!
+static readonly TKCode.Arc.Mobile.CarouselPager.ShowIndicatorsProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.CancelTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.ConfirmTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.DisplayTextProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.DateWheelPicker!, string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.FormatStringProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.MaxYearProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.MinYearProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.MinuteIntervalProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.ModeProperty -> Avalonia.StyledProperty<TKCode.Arc.Mobile.DateWheelMode>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.PlaceholderTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.SelectedDateTimeProperty -> Avalonia.StyledProperty<System.DateTime?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.SheetTitleProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.DateWheelPicker.ValueChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.DateWheelValueChangedEventArgs!>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.CommandParameterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.CommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.ErrorTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.FinishedTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.HasErrorProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.HasMoreProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.IsLoadingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.LoadingTextProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.InfiniteScroll.ThresholdProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.ModalPage.AvoidKeyboardProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.ModalPage.FooterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.ModalPage.HeaderProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.ModalPage.IsDismissibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.ModalPage.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.ModalPage.IsScrollableProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.ModalPage.PresentationProperty -> Avalonia.StyledProperty<TKCode.Arc.Mobile.ModalPagePresentation>!
+static readonly TKCode.Arc.Mobile.NumberStepper.FormatStringProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.NumberStepper.FormattedValueProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.NumberStepper!, string!>!
+static readonly TKCode.Arc.Mobile.NumberStepper.IsWrappingProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.NumberStepper.MaximumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.NumberStepper.MinimumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.NumberStepper.StepProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.NumberStepper.ValueChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.NumberStepperValueChangedEventArgs!>!
+static readonly TKCode.Arc.Mobile.NumberStepper.ValueProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.PinInput.CodeChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.PinCodeEventArgs!>!
+static readonly TKCode.Arc.Mobile.PinInput.CodeProperty -> Avalonia.StyledProperty<string!>!
+static readonly TKCode.Arc.Mobile.PinInput.CompletedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.PinCodeEventArgs!>!
+static readonly TKCode.Arc.Mobile.PinInput.HasErrorProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.PinInput.IsCompleteProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.PinInput!, bool>!
+static readonly TKCode.Arc.Mobile.PinInput.LengthProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.PinInput.MaskCharProperty -> Avalonia.StyledProperty<char?>!
+static readonly TKCode.Arc.Mobile.PinInput.NumericOnlyProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.PinInput.PlaceholderProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.SideDrawer.ClosedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.Mobile.SideDrawer.DrawerWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.SideDrawer.EnableSwipeToCloseProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SideDrawer.FooterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.SideDrawer.HeaderProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.SideDrawer.IsDismissibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SideDrawer.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SideDrawer.OpenedEvent -> Avalonia.Interactivity.RoutedEvent<Avalonia.Interactivity.RoutedEventArgs!>!
+static readonly TKCode.Arc.Mobile.SideDrawer.SideProperty -> Avalonia.StyledProperty<TKCode.Arc.Mobile.SideDrawerSide>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.ClosesOnInvokeProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.CommandParameterProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.CommandProperty -> Avalonia.StyledProperty<System.Windows.Input.ICommand?>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.IconProperty -> Avalonia.StyledProperty<Avalonia.Media.Geometry?>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.IsEnabledProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.IsVisibleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.LabelProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.SwipeRowAction.RoleProperty -> Avalonia.StyledProperty<TKCode.Arc.Mobile.SwipeRowActionRole>!
+static readonly TKCode.Arc.Mobile.SwipeableRow.ActionInvokedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.SwipeRowActionEventArgs!>!
+static readonly TKCode.Arc.Mobile.SwipeableRow.AllowFullSwipeProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SwipeableRow.IsOpenProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.SwipeableRow.OpenSideProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.SwipeableRow!, TKCode.Arc.Mobile.SwipeRowSide>!
+static readonly TKCode.Arc.Mobile.TabbarItem.BadgeProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.TabbarItem.ShowBadgeDotProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.TextArea.CounterTextProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.TextArea!, string?>!
+static readonly TKCode.Arc.Mobile.TextArea.IsClearVisibleProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.TextArea!, bool>!
+static readonly TKCode.Arc.Mobile.TextArea.IsCounterVisibleProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.TextArea!, bool>!
+static readonly TKCode.Arc.Mobile.TextArea.ShowClearButtonProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.TextArea.ShowCounterProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.TouchSlider.FormatStringProperty -> Avalonia.StyledProperty<string?>!
+static readonly TKCode.Arc.Mobile.TouchSlider.FormattedValueProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.TouchSlider!, string!>!
+static readonly TKCode.Arc.Mobile.TouchSlider.IsDraggingProperty -> Avalonia.DirectProperty<TKCode.Arc.Mobile.TouchSlider!, bool>!
+static readonly TKCode.Arc.Mobile.TouchSlider.MaximumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.TouchSlider.MinimumProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.TouchSlider.ShowValueBubbleProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Mobile.TouchSlider.StepProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.TouchSlider.ValueChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.TouchSliderValueChangedEventArgs!>!
+static readonly TKCode.Arc.Mobile.TouchSlider.ValueProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Mobile.WheelPicker.DisplayMemberBindingProperty -> Avalonia.StyledProperty<Avalonia.Data.BindingBase?>!
+static readonly TKCode.Arc.Mobile.WheelPicker.ItemsSourceProperty -> Avalonia.StyledProperty<System.Collections.IEnumerable?>!
+static readonly TKCode.Arc.Mobile.WheelPicker.SelectedIndexProperty -> Avalonia.StyledProperty<int>!
+static readonly TKCode.Arc.Mobile.WheelPicker.SelectedItemProperty -> Avalonia.StyledProperty<object?>!
+static readonly TKCode.Arc.Mobile.WheelPicker.SelectionChangedEvent -> Avalonia.Interactivity.RoutedEvent<TKCode.Arc.Mobile.WheelPickerSelectionChangedEventArgs!>!
+static readonly TKCode.Arc.Mobile.WheelPicker.VisibleItemCountProperty -> Avalonia.StyledProperty<int>!

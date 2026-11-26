@@ -107,6 +107,10 @@ public class ActionSheet : Sheet
         }
         if (!ReferenceEquals(item, _cancel))
         {
+            if (item.IsDestructive)
+            {
+                Haptics.Trigger(HapticKind.Warning);
+            }
             ActionInvoked?.Invoke(this, new ActionSheetActionEventArgs(item));
         }
         IsOpen = false;

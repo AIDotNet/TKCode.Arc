@@ -1,0 +1,43 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.PinInputTheme">
+
+    <!-- PinInput: single hidden TextField backing input + visual grid of touch-sized character cells. -->
+    <ControlTheme x:Key="{x:Type arcm:PinInput}" TargetType="arcm:PinInput">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeXL}" />
+        <Setter Property="FontWeight" Value="{arc:ArcDesignTokenResource WeightMedium}" />
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:PinInput">
+                <Panel Name="PART_Root"
+                       Background="Transparent"
+                       MinHeight="{arcm:PinInputTokenResource CellHeight}">
+                    <arcm:TextField Name="PART_Input"
+                                    Opacity="0"
+                                    IsHitTestVisible="False"
+                                    ShowClearButton="False"
+                                    ContextFlyout="{x:Null}"
+                                    AcceptsReturn="False"
+                                    MinHeight="0"
+                                    Height="1"
+                                    Width="1"
+                                    HorizontalAlignment="Left"
+                                    VerticalAlignment="Top" />
+                    <Grid Name="PART_Cells"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center" />
+                </Panel>
+            </ControlTemplate>
+        </Setter>
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:PinInputTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>

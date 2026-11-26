@@ -1,0 +1,38 @@
+<ResourceDictionary xmlns="https://github.com/avaloniaui"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:arc="https://github.com/AIDotNet/TKCode.Arc"
+                    xmlns:arcm="https://github.com/AIDotNet/TKCode.Arc.Mobile"
+                    x:ClassModifier="internal"
+                    x:Class="TKCode.Arc.Mobile.WheelPickerTheme">
+
+    <!-- WheelPicker: iOS-style vertical inertia wheel with a centered SurfaceMuted selection band, rubber-band bounds
+         and distance-faded rows. -->
+    <ControlTheme x:Key="{x:Type arcm:WheelPicker}" TargetType="arcm:WheelPicker">
+        <Setter Property="Focusable" Value="True" />
+        <Setter Property="Template">
+            <ControlTemplate TargetType="arcm:WheelPicker">
+                <Grid Name="PART_Root"
+                      Background="Transparent"
+                      ClipToBounds="True">
+                    <Border Name="PART_Band"
+                            Height="{arcm:WheelPickerTokenResource ItemHeight}"
+                            VerticalAlignment="Center"
+                            Background="{arc:ArcDesignTokenResource SurfaceMuted}"
+                            CornerRadius="{arc:ArcDesignTokenResource RadiusControl}"
+                            IsHitTestVisible="False" />
+                    <Canvas Name="PART_Track"
+                            ClipToBounds="True" />
+                </Grid>
+            </ControlTemplate>
+        </Setter>
+
+        <Setter Property="Foreground" Value="{arc:ArcDesignTokenResource Foreground}" />
+        <Setter Property="FontFamily" Value="{arc:ArcDesignTokenResource BodyFontFamily}" />
+        <Setter Property="FontSize" Value="{arc:ArcDesignTokenResource TypeBase}" />
+        <Setter Property="HorizontalAlignment" Value="Stretch" />
+
+        <Style Selector="^:disabled">
+            <Setter Property="Opacity" Value="{arcm:WheelPickerTokenResource DisabledOpacity}" />
+        </Style>
+    </ControlTheme>
+</ResourceDictionary>
