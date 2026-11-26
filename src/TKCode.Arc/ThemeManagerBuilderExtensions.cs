@@ -9,5 +9,6 @@ public static class ArcBuilderExtensions
     /// </summary>
     public static ArcBuilder UseArcControls(this ArcBuilder builder)
         => builder.UsePackage(ArcGeneratedAssets.PackageId, static package => ArcGeneratedAssets.AddTo(package
-            .DependsOn(static b => b.UseArcCore())));
+            .DependsOn(static b => b.UseArcCore()))
+            .OnCommit(static _ => TextContextMenu.Register()));
 }
