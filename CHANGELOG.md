@@ -10,7 +10,9 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
-## Unreleased
+## 1.3.2-preview.6 - 2026-11-27
+
+A patch preview for [#211](https://github.com/AIDotNet/TKCode.Arc/issues/211), [#212](https://github.com/AIDotNet/TKCode.Arc/issues/212), [#213](https://github.com/AIDotNet/TKCode.Arc/issues/213), [#214](https://github.com/AIDotNet/TKCode.Arc/issues/214) and [#215](https://github.com/AIDotNet/TKCode.Arc/issues/215), plus mobile, localization and rendering updates: expands `TKCode.Arc.Mobile` with 12 new touch controls, `TabbarItem` badges, Android back coordination, soft-keyboard avoidance and cross-platform `Haptics`; adds JSON language file support to `TKCode.Arc.Foundation` localization; adds default right-click context menus to text inputs, auto-widening select menus with trimmed-option tooltips, localized `RichTextEditor` UI and per-step `WorkflowNode.PortLayout`; and cuts per-frame work and memory for AI mascots in `TKCode.Arc.Special`. No existing public API changes. Install it with `--version 1.3.2-preview.6` (or `--prerelease`).
 
 ### Added
 
@@ -27,7 +29,6 @@ Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode
 
 - `Select`, `Combobox`, `MultiSelect` and `TreeSelect` menus are no longer exactly as wide as the field: they widen to fit their widest option (the first 200 are measured, with row padding, icon and check slot), at least as wide as the field and `MenuMinWidth`, at most `MenuMaxWidth` and the window width less 16 on each side. The field keeps its own size ([#212](https://github.com/AIDotNet/TKCode.Arc/issues/212), [#214](https://github.com/AIDotNet/TKCode.Arc/issues/214)).
 - `RichTextEditor` (`TKCode.Arc`): its menus (slash commands, turn-into, table, code language), toolbar and find bar text, the default placeholder and block hint, accessible names and screen-reader announcements are localized resources that follow `ArcLanguage` (en-US, zh-CN, zh-TW); slash search matches the localized label and keywords as well as the English ones. An app-set `Placeholder` or `BlockHint` is shown unchanged. New generated catalog `RichTextEditorLangResourceKind` ([#215](https://github.com/AIDotNet/TKCode.Arc/issues/215)).
-
 - AI mascots (`TKCode.Arc.Special`) draw with less work per frame and keep less memory; how they look is unchanged apart from anti-aliased edge pixels. `AiMascot` draws its form shade as one fixed crescent instead of clipping an ellipse to the body every frame (2x CPU raster time per frame down 24-40% in every status, 100 animated mascots 5.4 to 3.5 ms a frame). `PixelMascot` draws its 24 x 24 sprite as one bitmap with nearest-neighbor scaling instead of about a hundred rectangles (managed memory per mascot 43 to 13 KB, and a cheaper frame on a 1x window; a sprite change costs about 10-15 us more to rasterize on the 2x CPU path). `CubeMascot` draws each face as a unit square through the face's frame instead of rebuilding its path every frame (about 2 KB less allocated per frame, 21 to 16 KB per mascot). `GhostMascot` strokes its thinking swirl as one path instead of twenty segments. `AiSpark`'s Mark and Avatar variants no longer build the Pill's label parts (47 to 32 KB per spark); switching `Variant` to or from Pill at run time now applies the Pill's own template, so the mark restarts its motion from the current status. No public API changes.
 
 ## 1.3.2-preview.5 - 2026-11-26
@@ -2737,6 +2738,9 @@ ArcTheme.Apply(t => t
 
 First preview release.
 
+[1.3.2-preview.6]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.5...v1.3.2-preview.6
+[1.3.2-preview.5]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.4...v1.3.2-preview.5
+[1.3.2-preview.4]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.3...v1.3.2-preview.4
 [1.3.2-preview.3]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.2...v1.3.2-preview.3
 [1.3.2-preview.2]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.2-preview.1...v1.3.2-preview.2
 [1.3.2-preview.1]: https://github.com/AIDotNet/TKCode.Arc/compare/v1.3.1...v1.3.2-preview.1
