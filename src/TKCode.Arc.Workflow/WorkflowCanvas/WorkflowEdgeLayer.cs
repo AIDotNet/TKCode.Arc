@@ -261,15 +261,32 @@ internal sealed class WorkflowEdgeVisual
     /// rounded corners; a straight edge is one line.
     /// </summary>
     public void Place(Point p0, Point p3, WorkflowLayoutDirection direction, WorkflowEdgeStyle style, double minHandle,
-                      double cornerRadius)
+                      double cornerRadius) => Place(p0, p3, direction, direction, style, minHandle, cornerRadius);
+
+    /// <summary>
+    /// As above, with each end following its own card's side layout: the edge leaves the source along
+    /// <paramref name="outDirection"/>'s output side and enters the target along <paramref name="inDirection"/>'s input
+    /// side. Mixed ends get handles along each end's own normal (a curve) or one elbow (a step).
+    /// </summary>
+    public void Place(Point p0, Point p3, WorkflowLayoutDirection outDirection, WorkflowLayoutDirection inDirection,
+                      WorkflowEdgeStyle style, double minHandle, double cornerRadius)
     {
-        var vertical = direction == WorkflowLayoutDirection.TopToBottom;
+        var outVertical = outDirection == WorkflowLayoutDirection.TopToBottom;
+        var inVertical = inDirection == WorkflowLayoutDirection.TopToBottom;
+        var vertical = outVertical;
+        var mixed = outVertical != inVertical;
         Point p1, p2;
         if (style == WorkflowEdgeStyle.Bezier)
         {
-            var m = Handle(vertical ? p3.Y - p0.Y : p3.X - p0.X, minHandle);
-            p1 = vertical ? new Point(p0.X, p0.Y + m) : new Point(p0.X + m, p0.Y);
-            p2 = vertical ? new Point(p3.X, p3.Y - m) : new Point(p3.X - m, p3.Y);
+            var mOut = Handle(outVertical ? p3.Y - p0.Y : p3.X - p0.X, minHandle);
+            var mIn = Handle(inVertical ? p3.Y - p0.Y : p3.X - p0.X, minHandle);
+            p1 = outVertical ? new Point(p0.X, p0.Y + mOut) : new Point(p0.X + mOut, p0.Y);
+            p2 = inVertical ? new Point(p3.X, p3.Y - mIn) : new Point(p3.X - mIn, p3.Y);
+        }
+        else if (mixed)
+        {
+            // One elbow: out along the source's normal until level with the target, then in along the target's.
+            p1 = p2 = outVertical ? new Point(p0.X, p3.Y) : new Point(p3.X, p0.Y);
         }
         else
         {
@@ -302,7 +319,9 @@ internal sealed class WorkflowEdgeVisual
             }
             return;
         }
-        _polyline = style == WorkflowEdgeStyle.Straight ? [p0, p3] : Step(p0, p1, p2, p3, cornerRadius);
+        _polyline = style == WorkflowEdgeStyle.Straight ? [p0, p3]
+            : mixed ? Elbow(p0, p1, p3, cornerRadius)
+            : Step(p0, p1, p2, p3, cornerRadius);
         _polylineLengths = new double[_polyline.Length];
         for (var i = 1; i < _polyline.Length; i++)
         {
@@ -392,6 +411,19 @@ internal sealed class WorkflowEdgeVisual
         var points = new List<Point>(4 + 2 * CornerSegments) { a };
         AddCorner(points, a, b, c, r);
         AddCorner(points, b, c, d, r);
+        points.Add(d);
+        return points.ToArray();
+    }
+
+    /// <summary>A route with one corner at <paramref name="corner"/>, rounded with up to <paramref name="radius"/>.</summary>
+    private static Point[] Elbow(Point a, Point corner, Point d, double radius)
+    {
+        if (Distance(a, corner) < 0.5 || Distance(corner, d) < 0.5)
+        {
+            return [a, d];
+        }
+        var points = new List<Point>(3 + CornerSegments) { a };
+        AddCorner(points, a, corner, d, Math.Min(radius, Math.Min(Distance(a, corner), Distance(corner, d))));
         points.Add(d);
         return points.ToArray();
     }

@@ -91,6 +91,7 @@ internal sealed class WorkflowFragment
             Position = node.Position,
             Size = node.Size,
             Appearance = node.Appearance,
+            PortLayout = node.PortLayout,
             HasDefaultInput = node.HasDefaultInput,
             IsLocked = node.IsLocked
         };
@@ -144,6 +145,7 @@ internal sealed class WorkflowFragment
                 Width = node.Size?.Width,
                 Height = node.Size?.Height,
                 Appearance = node.Appearance,
+                PortLayout = node.PortLayout,
                 HasDefaultInput = node.HasDefaultInput ? null : false,
                 IsLocked = node.IsLocked ? true : null,
                 Inputs = Ports(node.Inputs),
@@ -193,6 +195,7 @@ internal sealed class WorkflowFragment
                 Position = new Point(item.X ?? double.NaN, item.Y ?? double.NaN),
                 Size = item is { Width: > 0, Height: > 0 } ? new Size(item.Width.Value, item.Height.Value) : null,
                 Appearance = item.Appearance,
+                PortLayout = item.PortLayout,
                 HasDefaultInput = item.HasDefaultInput ?? true,
                 IsLocked = item.IsLocked ?? false
             };
@@ -275,6 +278,8 @@ internal sealed class WorkflowClipboardNode
     public double? Height { get; set; }
 
     public WorkflowNodeAppearance Appearance { get; set; }
+
+    public WorkflowLayoutDirection? PortLayout { get; set; }
 
     public bool? HasDefaultInput { get; set; }
 

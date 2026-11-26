@@ -179,6 +179,15 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         AvaloniaProperty.Register<TreeSelect, double>(nameof(MaxDropDownHeight), 320);
 
+    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<TreeSelect>();
+
+    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<TreeSelect>();
+
+    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
+    public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<TreeSelect>();
+
     /// <summary>Raised when <see cref="SelectedItems"/> changes: by the user, by a binding or by clearing.</summary>
     public static readonly RoutedEvent<TreeSelectSelectionChangedEventArgs> SelectionChangedEvent =
         RoutedEvent.Register<TreeSelect, TreeSelectSelectionChangedEventArgs>(nameof(SelectionChanged), RoutingStrategies.Bubble);
@@ -302,6 +311,15 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
 
     /// <inheritdoc cref="MaxDropDownHeightProperty"/>
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
+
+    /// <summary>The narrowest the menu gets (default 0; the theme's popup minimum applies as well). The menu is as wide as its widest row needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.</summary>
+    public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
+
+    /// <summary>The widest the menu gets (default infinity: bounded only by the window). Rows wider than this are trimmed.</summary>
+    public double MenuMaxWidth { get => GetValue(MenuMaxWidthProperty); set => SetValue(MenuMaxWidthProperty, value); }
+
+    /// <summary>Whether a row whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
+    public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
 
     /// <summary>Raised when <see cref="SelectedItems"/> changes: by the user, by a binding or by clearing.</summary>
     public event EventHandler<TreeSelectSelectionChangedEventArgs>? SelectionChanged
@@ -726,6 +744,10 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
         {
             UpdateClear();
         }
+        else if (property == MenuMinWidthProperty || property == MenuMaxWidthProperty)
+        {
+            UpdateSurfaceWidth();
+        }
         else if (property == MaxDropDownHeightProperty && _scroll is not null)
         {
             _scroll.MaxHeight = ScrollHeightLimit();
@@ -741,6 +763,7 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
         else if (Array.IndexOf(s_paletteProperties, property) >= 0)
         {
             UpdatePalette();
+            UpdateSurfaceWidth();
         }
     }
 

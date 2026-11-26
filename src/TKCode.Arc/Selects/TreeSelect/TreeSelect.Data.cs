@@ -97,6 +97,7 @@ public partial class TreeSelect
             RebuildRows(animate: false);
         }
         UpdatePalette();
+        UpdateSurfaceWidth();
     }
 
     private void Build(IEnumerable? source, TreeSelectNode? parent, int depth, List<TreeSelectNode> into,

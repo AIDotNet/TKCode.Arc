@@ -5,6 +5,7 @@ using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
 using Avalonia.Automation.Provider;
+using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Media.TextFormatting;
@@ -192,6 +193,7 @@ internal sealed class TreeSelectRow : TablesTreeRow
             return;
         }
         Cursor = node.IsDisabled && !node.HasChildren ? null : s_hand;
+        ToolTip.SetTip(this, null);
         var full = IsLoaded && ArcMotion.GetEffectiveLevel(this) == ArcMotionLevel.Full;
         var angle = node.IsExpanded ? 90.0 : 0.0;
         if (sameKey && node.IsExpanded != _wasExpanded && full)
@@ -254,6 +256,24 @@ internal sealed class TreeSelectRow : TablesTreeRow
         {
             Owner?.OnRowHovered(this);
         }
+        ToolTip.SetTip(this, Owner?.ShowTrimmedOptionToolTip == true ? TrimmedText : null);
+    }
+
+    /// <summary>The full label when the row shows it trimmed, else null.</summary>
+    internal string? TrimmedText
+    {
+        get
+        {
+            if (Palette is not { } p || Node is not { } node || Bounds.Width <= 0)
+            {
+                return null;
+            }
+            var available = Bounds.Width - LabelX(p, node) - (p.InlinePadding + (IsSelected ? 16 + p.Gap : 0));
+            var typeface = new Typeface(p.FontFamily, FontStyle.Normal, FontWeight.Normal);
+            using var full = new TextLayout(node.Label, typeface, p.FontSize, null, TextAlignment.Left, TextWrapping.NoWrap,
+                TextTrimming.None, null, FlowDirection.LeftToRight, double.PositiveInfinity, double.PositiveInfinity);
+            return full.WidthIncludingTrailingWhitespace > available + 0.5 ? node.Label : null;
+        }
     }
 
     protected override void OnPointerExited(PointerEventArgs e)
@@ -313,7 +333,7 @@ internal sealed class TreeSelectRow : TablesTreeRow
     private static double IconLeft(TreeSelectPalette p, TreeSelectNode node) =>
         CheckboxLeft(p, node) + (p.ShowCheckboxes ? p.CheckboxSize + p.Gap : 0);
 
-    private static double LabelX(TreeSelectPalette p, TreeSelectNode node) =>
+    internal static double LabelX(TreeSelectPalette p, TreeSelectNode node) =>
         IconLeft(p, node) + (p.ShowIcons && node.Icon is not null ? p.IconSize + p.Gap : 0);
 
     /// <summary>Left edge of the label (tests).</summary>

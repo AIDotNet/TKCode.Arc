@@ -72,6 +72,15 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<int> MaxVisibleChipsProperty =
         AvaloniaProperty.Register<MultiSelect, int>(nameof(MaxVisibleChips), 2);
 
+    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<MultiSelect>();
+
+    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<MultiSelect>();
+
+    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
+    public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<MultiSelect>();
+
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         Select.MaxDropDownHeightProperty.AddOwner<MultiSelect>(new StyledPropertyMetadata<double>(double.PositiveInfinity));
 
@@ -147,6 +156,15 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public int MaxVisibleChips { get => GetValue(MaxVisibleChipsProperty); set => SetValue(MaxVisibleChipsProperty, value); }
 
     /// <summary>Tallest the menu gets before it scrolls. Arc's menu has no limit (the screen bounds it).</summary>
+    /// <summary>The narrowest the menu gets (default 0). The menu is as wide as its widest option needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.</summary>
+    public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
+
+    /// <summary>The widest the menu gets (default infinity: bounded only by the window). Options wider than this are trimmed.</summary>
+    public double MenuMaxWidth { get => GetValue(MenuMaxWidthProperty); set => SetValue(MenuMaxWidthProperty, value); }
+
+    /// <summary>Whether an option whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
+    public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
+
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
 
     /// <inheritdoc cref="Select.TextSelector"/>
@@ -285,6 +303,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _trigger.PointerPressed -= OnTriggerPressed;
             _trigger.PointerReleased -= OnTriggerReleased;
             _trigger.PointerCaptureLost -= OnTriggerCaptureLost;
+            _trigger.SizeChanged -= OnTriggerSizeChanged;
         }
         _clear?.Click -= OnClearClick;
         _popup?.Closed -= OnPopupClosed;
@@ -315,6 +334,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _trigger.PointerPressed += OnTriggerPressed;
             _trigger.PointerReleased += OnTriggerReleased;
             _trigger.PointerCaptureLost += OnTriggerCaptureLost;
+            _trigger.SizeChanged += OnTriggerSizeChanged;
         }
         _clear?.Click += OnClearClick;
         if (_popup is not null)
@@ -325,6 +345,10 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             _popup.Closed += OnPopupClosed;
         }
         _options?.Host = this;
+        if (_options is not null)
+        {
+            _options.Bind(SelectOptionView.ShowTrimmedToolTipProperty, this.GetObservable(ShowTrimmedOptionToolTipProperty));
+        }
         _menuDock = null;
         _scroll?.MaxHeight = MaxDropDownHeight;
         PseudoClasses.Set(SearchablePseudoClass, IsSearchable);
@@ -335,7 +359,12 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsOpenProperty)
+        if (change.Property == MenuMinWidthProperty || change.Property == MenuMaxWidthProperty ||
+            change.Property == FontSizeProperty || change.Property == FontFamilyProperty)
+        {
+            UpdateSurfaceWidth();
+        }
+        else if (change.Property == IsOpenProperty)
         {
             var open = change.GetNewValue<bool>();
             PseudoClasses.Set(OpenPseudoClass, open);
@@ -394,6 +423,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         if (IsOpen)
         {
             Refilter();
+            UpdateSurfaceWidth();
         }
         // Coalesce: several entry changes before the queue drains need one refresh; the post is dropped when the
         // control leaves the tree (a pending closure would root it).
@@ -511,6 +541,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
             .Token(Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
         _popup.Child = _surface;
         _options.Host = this;
+        _options.Bind(SelectOptionView.ShowTrimmedToolTipProperty, this.GetObservable(ShowTrimmedOptionToolTipProperty));
     }
 
     /// <summary>The search box exists only for a searchable field, from its first open.</summary>
@@ -568,10 +599,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         }
         EnsureMenu();
         EnsureSearch();
-        if (_surface is not null && _trigger is not null && _trigger.Bounds.Width > 0)
-        {
-            _surface.Width = _trigger.Bounds.Width;
-        }
+        UpdateSurfaceWidth();
         SetQuery(string.Empty);
         Refilter();
         if (!_popup.IsOpen)
@@ -582,6 +610,21 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
         {
             Dispatcher.UIThread.Post(() => _search?.Focus(NavigationMethod.Tab), DispatcherPriority.Loaded);
         }
+    }
+
+    private void OnTriggerSizeChanged(object? sender, SizeChangedEventArgs e) => UpdateSurfaceWidth();
+
+    /// <summary>The menu is as wide as its widest option needs: at least the field, at most <see cref="MenuMaxWidth"/> and the window.</summary>
+    private void UpdateSurfaceWidth()
+    {
+        if (_surface is null || _trigger is null || _trigger.Bounds.Width <= 0)
+        {
+            return;
+        }
+        var content = _options is null ? 0 : _options.MeasureContentWidth(this, SelectMenuSizing.MeasuredOptions)
+                                              + SelectMenuSizing.Chrome(_surface, _scroll);
+        _surface.Width = SelectMenuSizing.Resolve(_trigger.Bounds.Width, MenuMinWidth, MenuMaxWidth, content,
+            SelectMenuSizing.Available(this));
     }
 
     private void ClosePopup()

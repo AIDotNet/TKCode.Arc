@@ -127,6 +127,12 @@ internal sealed class SelectOptionView : Control
     public static readonly StyledProperty<double> MetaFontSizeProperty =
         AvaloniaProperty.Register<SelectOptionView, double>(nameof(MetaFontSize), 12);
 
+    /// <summary>Shows the full text of an option as a tooltip while the pointer is over a row whose label is trimmed.</summary>
+    public static readonly StyledProperty<bool> ShowTrimmedToolTipProperty =
+        AvaloniaProperty.Register<SelectOptionView, bool>(nameof(ShowTrimmedToolTip));
+
+    public bool ShowTrimmedToolTip { get => GetValue(ShowTrimmedToolTipProperty); set => SetValue(ShowTrimmedToolTipProperty, value); }
+
     public double RowHeight { get => GetValue(RowHeightProperty); set => SetValue(RowHeightProperty, value); }
     public double RowSpacing { get => GetValue(RowSpacingProperty); set => SetValue(RowSpacingProperty, value); }
     public CornerRadius RowCornerRadius { get => GetValue(RowCornerRadiusProperty); set => SetValue(RowCornerRadiusProperty, value); }
@@ -487,15 +493,114 @@ internal sealed class SelectOptionView : Control
             return;
         }
         var position = PositionAt(e.GetPosition(this));
+        UpdateToolTip(position);
         if (position >= 0 && position != _active && IsEnabledPosition(position))
         {
             _host.OnOptionHovered(position);
         }
     }
 
+    internal void UpdateToolTip(int position)
+    {
+        var tip = ShowTrimmedToolTip ? TrimmedTextAt(position) : null;
+        if (!Equals(ToolTip.GetTip(this), tip))
+        {
+            ToolTip.SetTip(this, tip);
+        }
+    }
+
+    /// <summary>The full label of the option at <paramref name="position"/> when the row shows it trimmed, else null.</summary>
+    internal string? TrimmedTextAt(int position)
+    {
+        var host = _host;
+        var entryIndex = EntryAt(position);
+        if (host is null || entryIndex < 0 || entryIndex >= host.Entries.Count || Bounds.Width <= 0)
+        {
+            return null;
+        }
+        var entry = host.Entries[entryIndex];
+        var available = LabelWidthFor(entry, entryIndex, Bounds.Width, host.IsEntrySelected(entryIndex));
+        var full = MeasureText(entry.Text, TextElement.GetFontFamily(this), LabelFontWeight, TextElement.GetFontSize(this));
+        return full > available + 0.5 ? entry.Text : null;
+    }
+
+    /// <summary>Width the label of <paramref name="entry"/> gets in a row <paramref name="width"/> wide (mirrors the drawing).</summary>
+    private double LabelWidthFor(SelectEntry entry, int entryIndex, double width, bool selected)
+    {
+        var padding = RowPadding;
+        var x = padding.Left + (entry.Icon is not null ? 28 : 0);
+        var right = width - padding.Right;
+        var branch = (_host as ISelectOptionBranchHost)?.IsBranch(entryIndex) == true;
+        var progress = CheckMode == SelectCheckMode.None || branch ? 0 : CheckProgress(entryIndex, selected);
+        if (double.IsNaN(CheckInset) && CheckMode != SelectCheckMode.None && (ReserveCheck || progress > 0 || selected))
+        {
+            right -= 16 + ContentSpacing;
+        }
+        if (!string.IsNullOrEmpty(entry.Meta))
+        {
+            var meta = GetText(entryIndex, 2, entry.Meta, Math.Max(0, right - x) / 2, MutedForeground ?? Foreground, FontWeight.Normal, MetaFontSize, tabular: true);
+            right -= meta.WidthIncludingTrailingWhitespace + ContentSpacing;
+        }
+        return Math.Max(0, right - x);
+    }
+
+    private static double MeasureText(string text, FontFamily family, FontWeight weight, double size, bool tabular = false)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return 0;
+        }
+        var layout = new TextLayout(text, new Typeface(family, FontStyle.Normal, weight), size, null, TextAlignment.Left,
+            TextWrapping.NoWrap, TextTrimming.None, null, FlowDirection.LeftToRight, double.PositiveInfinity,
+            double.PositiveInfinity, double.NaN, 0, 1, tabular ? s_tabular : null);
+        return layout.WidthIncludingTrailingWhitespace;
+    }
+
+    /// <summary>
+    /// Width a row needs to show the widest of the first <paramref name="maxItems"/> entries untrimmed: the text, the icon,
+    /// the meta text, the check slot and the row padding. <paramref name="fontSource"/> supplies the font while the list
+    /// is not in the visual tree yet.
+    /// </summary>
+    internal double MeasureContentWidth(Control? fontSource = null, int maxItems = 200)
+    {
+        var host = _host;
+        if (host is null)
+        {
+            return 0;
+        }
+        var source = this.IsAttachedToVisualTree() || fontSource is null ? this : fontSource;
+        var family = TextElement.GetFontFamily(source);
+        var size = TextElement.GetFontSize(source);
+        var entries = host.Entries;
+        var padding = RowPadding;
+        var widest = 0.0;
+        // The entries, not the filtered rows: typing in a searchable menu must not make it jump in width.
+        var count = Math.Min(entries.Count, maxItems);
+        for (var entryIndex = 0; entryIndex < count; entryIndex++)
+        {
+            var entry = entries[entryIndex];
+            var width = MeasureText(entry.Text, family, LabelFontWeight, size);
+            if (entry.Icon is not null)
+            {
+                width += 28;
+            }
+            if (!string.IsNullOrEmpty(entry.Meta))
+            {
+                width += MeasureText(entry.Meta, family, FontWeight.Normal, MetaFontSize, tabular: true) + ContentSpacing;
+            }
+            if (CheckMode != SelectCheckMode.None && double.IsNaN(CheckInset))
+            {
+                width += 16 + ContentSpacing;
+            }
+            widest = Math.Max(widest, width);
+        }
+        return widest + padding.Left + padding.Right;
+    }
+
     protected override void OnPointerExited(PointerEventArgs e)
     {
         base.OnPointerExited(e);
+        ToolTip.SetTip(this, null);
         _host?.OnOptionsPointerExited();
     }
 

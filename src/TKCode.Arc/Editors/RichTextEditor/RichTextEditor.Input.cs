@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
@@ -44,7 +45,7 @@ public partial class RichTextEditor
         }
         if (result.Converted)
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
         }
         if (result.SlashTyped)
         {
@@ -136,7 +137,7 @@ public partial class RichTextEditor
         {
             if (_engine.MoveUnitBy(_engine.Selection.Focus.Block, key == Key.Up ? -1 : 1))
             {
-                Announce("Block moved");
+                Announce(RichTextEditorStrings.Get(K.AnnounceBlockMoved));
             }
             e.Handled = true;
             return;

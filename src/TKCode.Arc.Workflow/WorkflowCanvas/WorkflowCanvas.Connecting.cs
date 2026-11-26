@@ -95,6 +95,9 @@ public partial class WorkflowCanvas
 
     // Ports ------------------------------------------------------------------------------------------------------------
 
+    /// <summary>The side layout of <paramref name="node"/>'s ports: its own <see cref="WorkflowNode.PortLayout"/>, else the canvas's.</summary>
+    internal WorkflowLayoutDirection PortSideOf(WorkflowNode node) => node.PortLayout ?? LayoutDirection;
+
     /// <summary>Where a port of <paramref name="node"/> sits (null is the implicit one): spread evenly along its card's side.</summary>
     internal Point PortPoint(WorkflowNode node, WorkflowPort? port, bool output)
     {
@@ -102,7 +105,7 @@ public partial class WorkflowCanvas
         var list = output ? node.Outputs : node.Inputs;
         var index = port is null ? -1 : list.IndexOf(port);
         var share = index < 0 ? 0.5 : (index + 1.0) / (list.Count + 1);
-        return LayoutDirection == WorkflowLayoutDirection.TopToBottom
+        return PortSideOf(node) == WorkflowLayoutDirection.TopToBottom
             ? new Point(rect.X + rect.Width * share, output ? rect.Bottom : rect.Top)
             : new Point(output ? rect.Right : rect.X, rect.Y + rect.Height * share);
     }
@@ -210,9 +213,9 @@ public partial class WorkflowCanvas
             return;
         }
         _portLayer.Marks.Clear();
-        var vertical = LayoutDirection == WorkflowLayoutDirection.TopToBottom;
         foreach (var node in _cards.Keys)
         {
+            var vertical = PortSideOf(node) == WorkflowLayoutDirection.TopToBottom;
             var show = IsEditable && (IsConnecting || ReferenceEquals(node, _hoverNode) || _selection.Contains(node) ||
                                       _cards[node].IsFocused);
             foreach (var (port, output) in PortsOf(node))
@@ -232,7 +235,8 @@ public partial class WorkflowCanvas
             var start = PortPoint(from, _connectFromPort, true);
             var end = _connectTarget is { } t ? PortPoint(t.Node, t.Port, false) : _connectPointer;
             var preview = _connectPreview ??= new WorkflowEdgeVisual(new WorkflowEdge(from, from));
-            preview.Place(start, end, LayoutDirection, EdgeStyle, _edgeLayer?.BezierMinHandle ?? 40, _edgeLayer?.StepCornerRadius ?? 8);
+            preview.Place(start, end, PortSideOf(from),
+                _connectTarget is { } tt ? PortSideOf(tt.Node) : PortSideOf(from), EdgeStyle, _edgeLayer?.BezierMinHandle ?? 40, _edgeLayer?.StepCornerRadius ?? 8);
             _portLayer.Preview = preview.Wire;
             _portLayer.PreviewSnapped = _connectTarget is not null;
         }

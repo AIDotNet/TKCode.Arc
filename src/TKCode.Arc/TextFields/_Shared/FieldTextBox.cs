@@ -90,6 +90,17 @@ public abstract class FieldTextBox : AvaloniaTextBox
     public static readonly AttachedProperty<FontWeight?> LabelFontWeightProperty =
         Field.LabelFontWeightProperty.AddOwner<FieldTextBox>();
 
+    /// <inheritdoc cref="TextContextMenu.IsEnabledProperty"/>
+    public static readonly AttachedProperty<bool> IsDefaultContextMenuEnabledProperty =
+        TextContextMenu.IsEnabledProperty.AddOwner<FieldTextBox>();
+
+    /// <summary>
+    /// Whether right-click (and the ContextMenu key / Shift+F10) opens the default Cut / Copy / Paste menu (default true).
+    /// Inherited, so a window or form can switch it off for every input inside; a <c>ContextMenu</c> or <c>ContextFlyout</c>
+    /// set on the input always replaces it.
+    /// </summary>
+    public bool IsDefaultContextMenuEnabled { get => GetValue(IsDefaultContextMenuEnabledProperty); set => SetValue(IsDefaultContextMenuEnabledProperty, value); }
+
     /// <summary>Where the label sits: Top (default) or Left of the frame. Inherited from <c>arc:Field.LabelPlacement</c> on a container.</summary>
     public FormLabelPlacement LabelPlacement { get => GetValue(LabelPlacementProperty); set => SetValue(LabelPlacementProperty, value); }
 
@@ -171,6 +182,7 @@ public abstract class FieldTextBox : AvaloniaTextBox
     protected FieldTextBox()
     {
         UpdateSizePseudoClasses();
+        AddHandler(ContextRequestedEvent, (_, e) => TextContextMenu.Handle(this, e));
     }
 
     private void UpdateSizePseudoClasses()

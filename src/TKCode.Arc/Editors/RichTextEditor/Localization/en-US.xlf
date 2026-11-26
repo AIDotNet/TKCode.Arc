@@ -1,0 +1,790 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.RichTextEditorLangResourceKind">
+    <unit id="AddBlock">
+      <segment>
+        <source>Add block</source>
+      </segment>
+    </unit>
+    <unit id="AddBlockBelow">
+      <segment>
+        <source>Add block below</source>
+      </segment>
+    </unit>
+    <unit id="AddBlockTip">
+      <segment>
+        <source>Insert a block</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockAdded">
+      <segment>
+        <source>{0} added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockDeleted">
+      <segment>
+        <source>Block deleted</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockDuplicated">
+      <segment>
+        <source>Block duplicated</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockMoved">
+      <segment>
+        <source>Block moved</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellColorChanged">
+      <segment>
+        <source>Cell color changed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellSplit">
+      <segment>
+        <source>Cell split</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellsMerged">
+      <segment>
+        <source>Cells merged</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceChecked">
+      <segment>
+        <source>Checked</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceCollapsed">
+      <segment>
+        <source>Collapsed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnAdded">
+      <segment>
+        <source>Column added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnDeleted">
+      <segment>
+        <source>Column deleted</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnMoved">
+      <segment>
+        <source>Column moved</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnSelected">
+      <segment>
+        <source>Column selected</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnsDistributed">
+      <segment>
+        <source>Columns distributed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceExpanded">
+      <segment>
+        <source>Expanded</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceFormatted">
+      <segment>
+        <source>Formatted</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderColumnOff">
+      <segment>
+        <source>Header column off</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderColumnOn">
+      <segment>
+        <source>Header column on</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderRowOff">
+      <segment>
+        <source>Header row off</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderRowOn">
+      <segment>
+        <source>Header row on</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceImageAdded">
+      <segment>
+        <source>Image added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceLinkAdded">
+      <segment>
+        <source>Link added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceLinkRemoved">
+      <segment>
+        <source>Link removed</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRedone">
+      <segment>
+        <source>Redone</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplaced">
+      <segment>
+        <source>Replaced</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplacedOne">
+      <segment>
+        <source>1 replaced</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplacedOther">
+      <segment>
+        <source>{0} replaced</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowAdded">
+      <segment>
+        <source>Row added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowDeleted">
+      <segment>
+        <source>Row deleted</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowMoved">
+      <segment>
+        <source>Row moved</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowSelected">
+      <segment>
+        <source>Row selected</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceTableAdded">
+      <segment>
+        <source>Table added</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceTableDeleted">
+      <segment>
+        <source>Table deleted</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceUnchecked">
+      <segment>
+        <source>Unchecked</source>
+      </segment>
+    </unit>
+    <unit id="AnnounceUndone">
+      <segment>
+        <source>Undone</source>
+      </segment>
+    </unit>
+    <unit id="BlockActions">
+      <segment>
+        <source>Block actions</source>
+      </segment>
+    </unit>
+    <unit id="BlockActionsTip">
+      <segment>
+        <source>Drag to move, click for actions</source>
+      </segment>
+    </unit>
+    <unit id="BlockBulletedList">
+      <segment>
+        <source>Bulleted list</source>
+      </segment>
+    </unit>
+    <unit id="BlockCallout">
+      <segment>
+        <source>Callout</source>
+      </segment>
+    </unit>
+    <unit id="BlockCodeBlock">
+      <segment>
+        <source>Code block</source>
+      </segment>
+    </unit>
+    <unit id="BlockDivider">
+      <segment>
+        <source>Divider</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading1">
+      <segment>
+        <source>Heading 1</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading2">
+      <segment>
+        <source>Heading 2</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading3">
+      <segment>
+        <source>Heading 3</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading4">
+      <segment>
+        <source>Heading 4</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading5">
+      <segment>
+        <source>Heading 5</source>
+      </segment>
+    </unit>
+    <unit id="BlockHeading6">
+      <segment>
+        <source>Heading 6</source>
+      </segment>
+    </unit>
+    <unit id="BlockHintDefault">
+      <segment>
+        <source>Type / for blocks</source>
+      </segment>
+    </unit>
+    <unit id="BlockImage">
+      <segment>
+        <source>Image</source>
+      </segment>
+    </unit>
+    <unit id="BlockNumberedList">
+      <segment>
+        <source>Numbered list</source>
+      </segment>
+    </unit>
+    <unit id="BlockQuote">
+      <segment>
+        <source>Quote</source>
+      </segment>
+    </unit>
+    <unit id="BlockTable">
+      <segment>
+        <source>Table</source>
+      </segment>
+    </unit>
+    <unit id="BlockText">
+      <segment>
+        <source>Text</source>
+      </segment>
+    </unit>
+    <unit id="BlockTodoList">
+      <segment>
+        <source>To-do list</source>
+      </segment>
+    </unit>
+    <unit id="BlockToggleList">
+      <segment>
+        <source>Toggle list</source>
+      </segment>
+    </unit>
+    <unit id="BlocksName">
+      <segment>
+        <source>Blocks</source>
+      </segment>
+    </unit>
+    <unit id="CodeLanguage">
+      <segment>
+        <source>Code language</source>
+      </segment>
+    </unit>
+    <unit id="ColorBlue">
+      <segment>
+        <source>Blue</source>
+      </segment>
+    </unit>
+    <unit id="ColorGray">
+      <segment>
+        <source>Gray</source>
+      </segment>
+    </unit>
+    <unit id="ColorGreen">
+      <segment>
+        <source>Green</source>
+      </segment>
+    </unit>
+    <unit id="ColorNamed">
+      <segment>
+        <source>Color: {0}</source>
+      </segment>
+    </unit>
+    <unit id="ColorNone">
+      <segment>
+        <source>None</source>
+      </segment>
+    </unit>
+    <unit id="ColorOrange">
+      <segment>
+        <source>Orange</source>
+      </segment>
+    </unit>
+    <unit id="ColorPurple">
+      <segment>
+        <source>Purple</source>
+      </segment>
+    </unit>
+    <unit id="ColorRed">
+      <segment>
+        <source>Red</source>
+      </segment>
+    </unit>
+    <unit id="ColorYellow">
+      <segment>
+        <source>Yellow</source>
+      </segment>
+    </unit>
+    <unit id="CustomLanguageItem">
+      <segment>
+        <source>Custom…</source>
+      </segment>
+    </unit>
+    <unit id="CustomLanguageName">
+      <segment>
+        <source>Custom language</source>
+      </segment>
+    </unit>
+    <unit id="CustomLanguagePlaceholder">
+      <segment>
+        <source>Language, such as csharp</source>
+      </segment>
+    </unit>
+    <unit id="Delete">
+      <segment>
+        <source>Delete</source>
+      </segment>
+    </unit>
+    <unit id="DeleteColumn">
+      <segment>
+        <source>Delete column</source>
+      </segment>
+    </unit>
+    <unit id="DeleteRow">
+      <segment>
+        <source>Delete row</source>
+      </segment>
+    </unit>
+    <unit id="DeleteTable">
+      <segment>
+        <source>Delete table</source>
+      </segment>
+    </unit>
+    <unit id="DistributeColumns">
+      <segment>
+        <source>Distribute columns</source>
+      </segment>
+    </unit>
+    <unit id="Duplicate">
+      <segment>
+        <source>Duplicate</source>
+      </segment>
+    </unit>
+    <unit id="EditorName">
+      <segment>
+        <source>Editor</source>
+      </segment>
+    </unit>
+    <unit id="FindAndReplace">
+      <segment>
+        <source>Find and replace</source>
+      </segment>
+    </unit>
+    <unit id="FindClose">
+      <segment>
+        <source>Close</source>
+      </segment>
+    </unit>
+    <unit id="FindCloseName">
+      <segment>
+        <source>Close find</source>
+      </segment>
+    </unit>
+    <unit id="FindPlaceholder">
+      <segment>
+        <source>Find</source>
+      </segment>
+    </unit>
+    <unit id="FormattingName">
+      <segment>
+        <source>Formatting</source>
+      </segment>
+    </unit>
+    <unit id="HeaderColumn">
+      <segment>
+        <source>Header column</source>
+      </segment>
+    </unit>
+    <unit id="HeaderRow">
+      <segment>
+        <source>Header row</source>
+      </segment>
+    </unit>
+    <unit id="HighlightNamed">
+      <segment>
+        <source>Highlight: {0}</source>
+      </segment>
+    </unit>
+    <unit id="IconNamed">
+      <segment>
+        <source>Icon: {0}</source>
+      </segment>
+    </unit>
+    <unit id="ImageLoading">
+      <segment>
+        <source>Loading image…</source>
+      </segment>
+    </unit>
+    <unit id="ImageUnavailable">
+      <segment>
+        <source>Image unavailable</source>
+      </segment>
+    </unit>
+    <unit id="InsertColumnLeft">
+      <segment>
+        <source>Insert column left</source>
+      </segment>
+    </unit>
+    <unit id="InsertColumnRight">
+      <segment>
+        <source>Insert column right</source>
+      </segment>
+    </unit>
+    <unit id="InsertImageTitle">
+      <segment>
+        <source>Insert image</source>
+      </segment>
+    </unit>
+    <unit id="InsertRowAbove">
+      <segment>
+        <source>Insert row above</source>
+      </segment>
+    </unit>
+    <unit id="InsertRowBelow">
+      <segment>
+        <source>Insert row below</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsBulletedList">
+      <segment>
+        <source>bullet unordered ul points</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsCallout">
+      <segment>
+        <source>callout note tip warning highlight alert admonition</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsCodeBlock">
+      <segment>
+        <source>pre snippet monospace</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsDivider">
+      <segment>
+        <source>rule hr line separator</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading1">
+      <segment>
+        <source>title h1 large</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading2">
+      <segment>
+        <source>subtitle h2 section</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading3">
+      <segment>
+        <source>h3 small</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading4">
+      <segment>
+        <source>h4 subheading</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading5">
+      <segment>
+        <source>h5</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading6">
+      <segment>
+        <source>h6 smallest</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsImage">
+      <segment>
+        <source>picture photo img upload file</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsNumberedList">
+      <segment>
+        <source>ordered ol steps numbers</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsQuote">
+      <segment>
+        <source>blockquote citation</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsTable">
+      <segment>
+        <source>grid cells rows columns</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsText">
+      <segment>
+        <source>paragraph plain body</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsTodoList">
+      <segment>
+        <source>todo task checkbox checklist</source>
+      </segment>
+    </unit>
+    <unit id="KeywordsToggleList">
+      <segment>
+        <source>toggle collapse fold expand details disclosure</source>
+      </segment>
+    </unit>
+    <unit id="LineSpacingNamed">
+      <segment>
+        <source>Line spacing: {0}</source>
+      </segment>
+    </unit>
+    <unit id="LinkAddress">
+      <segment>
+        <source>Link address</source>
+      </segment>
+    </unit>
+    <unit id="LinkPlaceholder">
+      <segment>
+        <source>Paste or type a link</source>
+      </segment>
+    </unit>
+    <unit id="MatchCase">
+      <segment>
+        <source>Match case</source>
+      </segment>
+    </unit>
+    <unit id="MatchPosition">
+      <segment>
+        <source>{0} of {1}</source>
+      </segment>
+    </unit>
+    <unit id="MergeCells">
+      <segment>
+        <source>Merge cells</source>
+      </segment>
+    </unit>
+    <unit id="MoveColumnLeft">
+      <segment>
+        <source>Move column left</source>
+      </segment>
+    </unit>
+    <unit id="MoveColumnRight">
+      <segment>
+        <source>Move column right</source>
+      </segment>
+    </unit>
+    <unit id="MoveRowDown">
+      <segment>
+        <source>Move row down</source>
+      </segment>
+    </unit>
+    <unit id="MoveRowUp">
+      <segment>
+        <source>Move row up</source>
+      </segment>
+    </unit>
+    <unit id="NextMatch">
+      <segment>
+        <source>Next match</source>
+      </segment>
+    </unit>
+    <unit id="NoResults">
+      <segment>
+        <source>No results</source>
+      </segment>
+    </unit>
+    <unit id="PlaceholderDefault">
+      <segment>
+        <source>Start writing</source>
+      </segment>
+    </unit>
+    <unit id="PlainText">
+      <segment>
+        <source>Plain text</source>
+      </segment>
+    </unit>
+    <unit id="PreviousMatch">
+      <segment>
+        <source>Previous match</source>
+      </segment>
+    </unit>
+    <unit id="ReplaceAll">
+      <segment>
+        <source>Replace all</source>
+      </segment>
+    </unit>
+    <unit id="ReplaceMatch">
+      <segment>
+        <source>Replace match</source>
+      </segment>
+    </unit>
+    <unit id="ReplaceName">
+      <segment>
+        <source>Replace</source>
+      </segment>
+    </unit>
+    <unit id="ReplacePlaceholder">
+      <segment>
+        <source>Replace with</source>
+      </segment>
+    </unit>
+    <unit id="SizeDefault">
+      <segment>
+        <source>Default</source>
+      </segment>
+    </unit>
+    <unit id="SizeExtraLarge">
+      <segment>
+        <source>Extra large</source>
+      </segment>
+    </unit>
+    <unit id="SizeLarge">
+      <segment>
+        <source>Large</source>
+      </segment>
+    </unit>
+    <unit id="SizeSmall">
+      <segment>
+        <source>Small</source>
+      </segment>
+    </unit>
+    <unit id="SpacingCompact">
+      <segment>
+        <source>Compact</source>
+      </segment>
+    </unit>
+    <unit id="SpacingDefault">
+      <segment>
+        <source>Default</source>
+      </segment>
+    </unit>
+    <unit id="SpacingLoose">
+      <segment>
+        <source>Loose</source>
+      </segment>
+    </unit>
+    <unit id="SpacingRelaxed">
+      <segment>
+        <source>Relaxed</source>
+      </segment>
+    </unit>
+    <unit id="SplitCell">
+      <segment>
+        <source>Split cell</source>
+      </segment>
+    </unit>
+    <unit id="TextColorNamed">
+      <segment>
+        <source>Text color: {0}</source>
+      </segment>
+    </unit>
+    <unit id="TextSizeNamed">
+      <segment>
+        <source>Text size: {0}</source>
+      </segment>
+    </unit>
+    <unit id="ToolApplyLink">
+      <segment>
+        <source>Apply link</source>
+      </segment>
+    </unit>
+    <unit id="ToolBack">
+      <segment>
+        <source>Back to formatting</source>
+      </segment>
+    </unit>
+    <unit id="ToolBold">
+      <segment>
+        <source>Bold</source>
+      </segment>
+    </unit>
+    <unit id="ToolEditLink">
+      <segment>
+        <source>Edit link</source>
+      </segment>
+    </unit>
+    <unit id="ToolInlineCode">
+      <segment>
+        <source>Inline code</source>
+      </segment>
+    </unit>
+    <unit id="ToolItalic">
+      <segment>
+        <source>Italic</source>
+      </segment>
+    </unit>
+    <unit id="ToolLink">
+      <segment>
+        <source>Link</source>
+      </segment>
+    </unit>
+    <unit id="ToolRemoveLink">
+      <segment>
+        <source>Remove link</source>
+      </segment>
+    </unit>
+    <unit id="ToolStrikethrough">
+      <segment>
+        <source>Strikethrough</source>
+      </segment>
+    </unit>
+    <unit id="ToolSubscript">
+      <segment>
+        <source>Subscript</source>
+      </segment>
+    </unit>
+    <unit id="ToolSuperscript">
+      <segment>
+        <source>Superscript</source>
+      </segment>
+    </unit>
+    <unit id="ToolTextColor">
+      <segment>
+        <source>Text color</source>
+      </segment>
+    </unit>
+    <unit id="ToolTextSize">
+      <segment>
+        <source>Text size</source>
+      </segment>
+    </unit>
+    <unit id="ToolUnderline">
+      <segment>
+        <source>Underline</source>
+      </segment>
+    </unit>
+    <unit id="TooltipShortcut">
+      <segment>
+        <source>{0} ({1})</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

@@ -13,6 +13,7 @@ using Avalonia.Data;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.Media;
+using Avalonia.Media.TextFormatting;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using AvaloniaButton = Avalonia.Controls.Button;
@@ -140,7 +141,30 @@ public partial class TreeSelect
         }
         var min = this.TryFindResource(TreeSelectTokens.Key(TreeSelectTokenKind.PopupMinWidth), out var value) && value is double d ? d : 240;
         var trigger = _trigger?.Bounds.Width ?? 0;
-        _surface.Width = Math.Max(min, trigger);
+        _surface.Width = SelectMenuSizing.Resolve(Math.Max(min, trigger), MenuMinWidth, MenuMaxWidth, MeasureRowsWidth(),
+            SelectMenuSizing.Available(this));
+    }
+
+    /// <summary>Width the widest of the first rows needs (indent, chevron, checkbox, icon, label, check), plus the menu chrome.</summary>
+    private double MeasureRowsWidth()
+    {
+        var p = Palette;
+        var typeface = new Typeface(p.FontFamily, FontStyle.Normal, FontWeight.Normal);
+        var widest = 0.0;
+        var count = 0;
+        foreach (var node in _nodes.Values)
+        {
+            if (count++ >= SelectMenuSizing.MeasuredOptions)
+            {
+                break;
+            }
+            var text = new TextLayout(node.Label, typeface, p.FontSize, null, TextAlignment.Left, TextWrapping.NoWrap,
+                TextTrimming.None, null, FlowDirection.LeftToRight, double.PositiveInfinity, double.PositiveInfinity);
+            var row = TreeSelectRow.LabelX(p, node) + text.WidthIncludingTrailingWhitespace + p.InlinePadding
+                      + (SelectionMode == TreeSelectMode.Single ? 16 + p.Gap : 0);
+            widest = Math.Max(widest, row);
+        }
+        return widest + SelectMenuSizing.Chrome(_surface, _scroll);
     }
 
     #endregion

@@ -71,6 +71,30 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<Select, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
 
+    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMinWidthProperty =
+        AvaloniaProperty.Register<Select, double>(nameof(MenuMinWidth), 0d);
+
+    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMaxWidthProperty =
+        AvaloniaProperty.Register<Select, double>(nameof(MenuMaxWidth), double.PositiveInfinity);
+
+    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
+    public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty =
+        AvaloniaProperty.Register<Select, bool>(nameof(ShowTrimmedOptionToolTip), true);
+
+    /// <summary>
+    /// The narrowest the menu gets (default 0: no minimum beyond the field's own width). The menu is as wide as its widest
+    /// option needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.
+    /// </summary>
+    public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
+
+    /// <summary>The widest the menu gets (default infinity: bounded only by the window). Options wider than this are trimmed.</summary>
+    public double MenuMaxWidth { get => GetValue(MenuMaxWidthProperty); set => SetValue(MenuMaxWidthProperty, value); }
+
+    /// <summary>Whether an option whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
+    public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
+
     /// <summary>Defines the <see cref="MaxDropDownHeight"/> property.</summary>
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         AvaloniaProperty.Register<Select, double>(nameof(MaxDropDownHeight), 320);
@@ -333,6 +357,11 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         {
             UpdateScrollMaxHeight();
         }
+        else if (change.Property == MenuMinWidthProperty || change.Property == MenuMaxWidthProperty ||
+                 change.Property == FontSizeProperty || change.Property == FontFamilyProperty)
+        {
+            UpdateSurfaceWidth();
+        }
         else if (change.Property == IsEffectivelyEnabledProperty && !IsEffectivelyEnabled)
         {
             SetCurrentValue(IsOpenProperty, false);
@@ -369,13 +398,14 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         _optionsDirty = false;
         _entries.Filter(null, null, _all);
         _options.SetOptions(_all);
+        if (IsOpen)
+        {
+            UpdateSurfaceWidth();
+        }
     }
 
     /// <summary>The text the closed field shows for an item when it differs from the menu's (<see cref="TextSelector"/>).</summary>
     internal Func<object?, string?>? FieldTextSelector { get; set; }
-
-    /// <summary>Narrowest the menu gets, for a field too narrow for its options' text. By default it is as wide as the field.</summary>
-    internal double MenuMinWidth { get; set; }
 
     private void UpdateValue(bool animate)
     {
@@ -434,6 +464,7 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
         if (_options is not null)
         {
             _options.Host = this;
+            _options.Bind(SelectOptionView.ShowTrimmedToolTipProperty, this.GetObservable(ShowTrimmedOptionToolTipProperty));
             _optionsDirty = true;
         }
         AttachScrollButtons();
@@ -514,8 +545,11 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     {
         if (_surface is not null && _trigger is not null && _trigger.Bounds.Width > 0)
         {
-            // Radix: the content is exactly as wide as the trigger.
-            _surface.Width = Math.Max(_trigger.Bounds.Width, MenuMinWidth);
+            // At least as wide as the trigger (Radix), wider for the widest option, within MenuMaxWidth and the window.
+            var content = _options is null ? 0 : _options.MeasureContentWidth(this, SelectMenuSizing.MeasuredOptions)
+                                                  + SelectMenuSizing.Chrome(_surface, _scroll);
+            _surface.Width = SelectMenuSizing.Resolve(_trigger.Bounds.Width, MenuMinWidth, MenuMaxWidth, content,
+                SelectMenuSizing.Available(this));
         }
     }
 

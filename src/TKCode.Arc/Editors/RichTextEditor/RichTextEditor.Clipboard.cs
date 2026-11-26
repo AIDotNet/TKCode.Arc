@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
@@ -244,31 +245,6 @@ public partial class RichTextEditor
             _tableAnchor = new Border { Background = Brushes.Transparent, IsHitTestVisible = false, Width = 1, Height = 1 };
             _overlay!.Children.Add(_tableAnchor);
             _tableMenu = new MenuSurface { Variant = MenuSurfaceVariant.Dropdown, Alignment = MenuAlignment.Start, AnchorGap = 4 };
-            AutomationProperties.SetName(_tableMenu, "Table");
-            _tableMenu.Items.Add(new MenuEntry { Header = "Insert row above", Tag = "row-above" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Insert row below", Tag = "row-below" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Insert column left", Tag = "column-left" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Insert column right", Tag = "column-right" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Move row up", Tag = "row-up", HasSeparatorBefore = true });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Move row down", Tag = "row-down" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Move column left", Tag = "column-move-left" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Move column right", Tag = "column-move-right" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Merge cells", Tag = "cells-merge", HasSeparatorBefore = true });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Split cell", Tag = "cell-split" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Header row", Tag = "header-row", ToggleType = MenuEntryToggleType.CheckBox, HasSeparatorBefore = true });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Header column", Tag = "header-column", ToggleType = MenuEntryToggleType.CheckBox });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Distribute columns", Tag = "columns-even" });
-            foreach (var color in Enum.GetValues<RichTextColor>())
-            {
-                _tableMenu.Items.Add(new MenuEntry
-                {
-                    Header = "Color: " + (color == RichTextColor.Default ? "None" : color.ToString()), Tag = color, ToggleType = MenuEntryToggleType.Radio,
-                    GroupName = "cell-color", HasSeparatorBefore = color == RichTextColor.Default
-                });
-            }
-            _tableMenu.Items.Add(new MenuEntry { Header = "Delete row", Tag = "row-delete", HasSeparatorBefore = true });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Delete column", Tag = "column-delete" });
-            _tableMenu.Items.Add(new MenuEntry { Header = "Delete table", Tag = "table-delete" });
             _tableMenu.ItemClicked += (_, args) =>
             {
                 if (args.Entry.Tag is RichTextColor color)
@@ -331,6 +307,8 @@ public partial class RichTextEditor
                 FocusEditor();
             };
         }
+        // Rebuilt on every open so the text follows the current language.
+        FillTableMenu(_tableMenu);
         var cellColor = TableCellColor;
         foreach (var entry in _tableMenu.Items.OfType<MenuEntry>())
         {
@@ -355,5 +333,35 @@ public partial class RichTextEditor
         var origin = _surface.TranslatePoint(point, this) ?? default;
         _tableAnchor!.RenderTransform = new TranslateTransform(origin.X, origin.Y);
         _tableMenu.Open(_tableAnchor);
+    }
+
+    private static void FillTableMenu(MenuSurface menu)
+    {
+        AutomationProperties.SetName(menu, RichTextEditorStrings.Get(K.BlockTable));
+        menu.Items.Clear();
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.InsertRowAbove), Tag = "row-above" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.InsertRowBelow), Tag = "row-below" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.InsertColumnLeft), Tag = "column-left" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.InsertColumnRight), Tag = "column-right" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.MoveRowUp), Tag = "row-up", HasSeparatorBefore = true });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.MoveRowDown), Tag = "row-down" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.MoveColumnLeft), Tag = "column-move-left" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.MoveColumnRight), Tag = "column-move-right" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.MergeCells), Tag = "cells-merge", HasSeparatorBefore = true });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.SplitCell), Tag = "cell-split" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.HeaderRow), Tag = "header-row", ToggleType = MenuEntryToggleType.CheckBox, HasSeparatorBefore = true });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.HeaderColumn), Tag = "header-column", ToggleType = MenuEntryToggleType.CheckBox });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.DistributeColumns), Tag = "columns-even" });
+        foreach (var color in Enum.GetValues<RichTextColor>())
+        {
+            menu.Items.Add(new MenuEntry
+            {
+                Header = RichTextEditorStrings.Format(K.ColorNamed, RichTextEditorStrings.ColorName(color)), Tag = color, ToggleType = MenuEntryToggleType.Radio,
+                GroupName = "cell-color", HasSeparatorBefore = color == RichTextColor.Default
+            });
+        }
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.DeleteRow), Tag = "row-delete", HasSeparatorBefore = true });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.DeleteColumn), Tag = "column-delete" });
+        menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.DeleteTable), Tag = "table-delete" });
     }
 }

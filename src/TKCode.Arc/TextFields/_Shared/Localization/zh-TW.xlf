@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.TextContextMenuLangResourceKind">
+    <unit id="Cut">
+      <segment>
+        <source>Cut</source>
+        <target state="translated">剪下</target>
+      </segment>
+    </unit>
+    <unit id="Copy">
+      <segment>
+        <source>Copy</source>
+        <target state="translated">複製</target>
+      </segment>
+    </unit>
+    <unit id="Paste">
+      <segment>
+        <source>Paste</source>
+        <target state="translated">貼上</target>
+      </segment>
+    </unit>
+    <unit id="SelectAll">
+      <segment>
+        <source>Select all</source>
+        <target state="translated">全選</target>
+      </segment>
+    </unit>
+    <unit id="Undo">
+      <segment>
+        <source>Undo</source>
+        <target state="translated">復原</target>
+      </segment>
+    </unit>
+    <unit id="Redo">
+      <segment>
+        <source>Redo</source>
+        <target state="translated">取消復原</target>
+      </segment>
+    </unit>
+    <unit id="TextMenu">
+      <segment>
+        <source>Text menu</source>
+        <target state="translated">文字選單</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

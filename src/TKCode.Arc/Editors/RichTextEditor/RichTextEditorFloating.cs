@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Automation.Peers;
@@ -288,40 +289,26 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
 
     public RichTextEditorToolbar()
     {
-        Bold = new RichTextEditorToolButton(ArcIcons.Bold, "Bold", true);
-        Italic = new RichTextEditorToolButton(ArcIcons.Italic, "Italic", true);
-        Strike = new RichTextEditorToolButton(ArcIcons.Strikethrough, "Strikethrough", true);
-        Underline = new RichTextEditorToolButton(ArcIcons.Underline, "Underline", true) { IsVisible = false };
-        Code = new RichTextEditorToolButton(ArcIcons.Code, "Inline code", true);
-        Superscript = new RichTextEditorToolButton(ArcIcons.Superscript, "Superscript", true) { IsVisible = false };
-        Subscript = new RichTextEditorToolButton(ArcIcons.Subscript, "Subscript", true) { IsVisible = false };
-        Palette = new RichTextEditorToolButton(ArcIcons.Palette, "Text color") { IsVisible = false };
-        TextSize = new RichTextEditorToolButton(ArcIcons.ALargeSmall, "Text size") { IsVisible = false };
-        SizeBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, "Back to formatting");
-        Todo = new RichTextEditorToolButton(ArcIcons.ListTodo, "To-do list", true) { IsVisible = false };
-        ColorBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, "Back to formatting");
-        Link = new RichTextEditorToolButton(ArcIcons.Link, "Link", true);
-        Heading1 = new RichTextEditorToolButton(ArcIcons.Heading1, "Heading 1", true);
-        Heading2 = new RichTextEditorToolButton(ArcIcons.Heading2, "Heading 2", true);
-        Quote = new RichTextEditorToolButton(ArcIcons.Quote, "Quote", true);
-        Back = new RichTextEditorToolButton(ArcIcons.ArrowLeft, "Back to formatting");
-        Unlink = new RichTextEditorToolButton(ArcIcons.Unlink, "Remove link") { IsVisible = false };
-        Apply = new RichTextEditorToolButton(ArcIcons.Check, "Apply link") { Classes = { "apply" } };
+        Bold = new RichTextEditorToolButton(ArcIcons.Bold, string.Empty, true);
+        Italic = new RichTextEditorToolButton(ArcIcons.Italic, string.Empty, true);
+        Strike = new RichTextEditorToolButton(ArcIcons.Strikethrough, string.Empty, true);
+        Underline = new RichTextEditorToolButton(ArcIcons.Underline, string.Empty, true) { IsVisible = false };
+        Code = new RichTextEditorToolButton(ArcIcons.Code, string.Empty, true);
+        Superscript = new RichTextEditorToolButton(ArcIcons.Superscript, string.Empty, true) { IsVisible = false };
+        Subscript = new RichTextEditorToolButton(ArcIcons.Subscript, string.Empty, true) { IsVisible = false };
+        Palette = new RichTextEditorToolButton(ArcIcons.Palette, string.Empty) { IsVisible = false };
+        TextSize = new RichTextEditorToolButton(ArcIcons.ALargeSmall, string.Empty) { IsVisible = false };
+        SizeBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, string.Empty);
+        Todo = new RichTextEditorToolButton(ArcIcons.ListTodo, string.Empty, true) { IsVisible = false };
+        ColorBack = new RichTextEditorToolButton(ArcIcons.ArrowLeft, string.Empty);
+        Link = new RichTextEditorToolButton(ArcIcons.Link, string.Empty, true);
+        Heading1 = new RichTextEditorToolButton(ArcIcons.Heading1, string.Empty, true);
+        Heading2 = new RichTextEditorToolButton(ArcIcons.Heading2, string.Empty, true);
+        Quote = new RichTextEditorToolButton(ArcIcons.Quote, string.Empty, true);
+        Back = new RichTextEditorToolButton(ArcIcons.ArrowLeft, string.Empty);
+        Unlink = new RichTextEditorToolButton(ArcIcons.Unlink, string.Empty) { IsVisible = false };
+        Apply = new RichTextEditorToolButton(ArcIcons.Check, string.Empty) { Classes = { "apply" } };
         ((ArcGlyph)Apply.Content!).StrokeThickness = 2;
-        SetTip(Bold, "Bold (⌘B)");
-        SetTip(Italic, "Italic (⌘I)");
-        SetTip(Strike, "Strikethrough (⌘⇧X)");
-        SetTip(Underline, "Underline (⌘U)");
-        SetTip(Superscript, "Superscript (⌘.)");
-        SetTip(Subscript, "Subscript (⌘,)");
-        SetTip(Palette, "Text color");
-        SetTip(TextSize, "Text size");
-        SetTip(Todo, "To-do list");
-        SetTip(Code, "Inline code (⌘E)");
-        SetTip(Link, "Link (⌘K)");
-        SetTip(Heading1, "Heading 1");
-        SetTip(Heading2, "Heading 2");
-        SetTip(Quote, "Quote");
 
         Divider = new Border { Width = 1, Height = 18, Margin = new Thickness(4, 0) };
         ArcTokens.Bind(Divider, Border.BackgroundProperty, DesignTokens.ArcDesignTokenKind.Border);
@@ -341,11 +328,9 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
             Children = { ColorBack, TextSwatches, colorDivider, FillSwatches }
         };
         SizeOptions = new StackPanel { Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2 };
-        foreach (var (size, label, fontSize) in new[] { (RichTextSize.Small, "Small", 11d), (RichTextSize.Default, "Default", 13d), (RichTextSize.Large, "Large", 16d), (RichTextSize.ExtraLarge, "Extra large", 19d) })
+        foreach (var (size, fontSize) in new[] { (RichTextSize.Small, 11d), (RichTextSize.Default, 13d), (RichTextSize.Large, 16d), (RichTextSize.ExtraLarge, 19d) })
         {
             var option = new RichTextEditorToolButton { IsToggle = true, Tag = size, Content = new TextBlock { Text = "A", FontSize = fontSize, FontWeight = FontWeight.Medium } };
-            AutomationProperties.SetName(option, "Text size: " + label);
-            Tooltip.SetTip(option, label);
             option.Click += (_, _) => SizeChosen?.Invoke(size);
             SizeOptions.Children.Add(option);
         }
@@ -358,9 +343,7 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         LinkBox.Width = 240;
         LinkBox.Height = 32;
         LinkBox.Padding = new Thickness(8, 0);
-        LinkBox.PlaceholderText = "Paste or type a link";
         LinkBox.Classes.Add("rich-text-link-input");
-        AutomationProperties.SetName(LinkBox, "Link address");
         var linkRow = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2, Margin = new Thickness(4),
@@ -393,11 +376,60 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         _offsetY.Changed += _ => UpdatePlacement();
         _opacity.Changed += value => Opacity = value;
         Opacity = 0;
-        AutomationProperties.SetName(this, "Formatting");
         AutomationProperties.SetAccessibilityView(this, AccessibilityView.Content);
+        ApplyText();
     }
 
     private static void SetTip(Control control, string tip) => Tooltip.SetTip(control, tip);
+
+    private static void ApplyName(Control control, K kind, string? shortcut = null)
+    {
+        var text = RichTextEditorStrings.Get(kind);
+        AutomationProperties.SetName(control, text);
+        SetTip(control, shortcut is null ? text : RichTextEditorStrings.WithShortcut(kind, shortcut));
+    }
+
+    /// <summary>Sets every name, tip and placeholder in the current language (the constructor and a language change call it).</summary>
+    public void ApplyText()
+    {
+        ApplyName(Bold, K.ToolBold, "⌘B");
+        ApplyName(Italic, K.ToolItalic, "⌘I");
+        ApplyName(Strike, K.ToolStrikethrough, "⌘⇧X");
+        ApplyName(Underline, K.ToolUnderline, "⌘U");
+        ApplyName(Code, K.ToolInlineCode, "⌘E");
+        ApplyName(Superscript, K.ToolSuperscript, "⌘.");
+        ApplyName(Subscript, K.ToolSubscript, "⌘,");
+        ApplyName(Palette, K.ToolTextColor);
+        ApplyName(TextSize, K.ToolTextSize);
+        ApplyName(SizeBack, K.ToolBack);
+        ApplyName(ColorBack, K.ToolBack);
+        ApplyName(Back, K.ToolBack);
+        ApplyName(Todo, K.BlockTodoList);
+        ApplyName(Link, K.ToolLink, "⌘K");
+        ApplyName(Heading1, K.BlockHeading1);
+        ApplyName(Heading2, K.BlockHeading2);
+        ApplyName(Quote, K.BlockQuote);
+        ApplyName(Unlink, K.ToolRemoveLink);
+        ApplyName(Apply, K.ToolApplyLink);
+        foreach (var child in SizeOptions.Children)
+        {
+            if (child is RichTextEditorToolButton { Tag: RichTextSize size } option)
+            {
+                var label = RichTextEditorStrings.Get(size switch
+                {
+                    RichTextSize.Small => K.SizeSmall,
+                    RichTextSize.Large => K.SizeLarge,
+                    RichTextSize.ExtraLarge => K.SizeExtraLarge,
+                    _ => K.SizeDefault
+                });
+                AutomationProperties.SetName(option, RichTextEditorStrings.Format(K.TextSizeNamed, label));
+                SetTip(option, label);
+            }
+        }
+        LinkBox.PlaceholderText = RichTextEditorStrings.Get(K.LinkPlaceholder);
+        AutomationProperties.SetName(LinkBox, RichTextEditorStrings.Get(K.LinkAddress));
+        AutomationProperties.SetName(this, RichTextEditorStrings.Get(K.FormattingName));
+    }
 
     public RichTextEditorToolButton Bold { get; }
     public RichTextEditorToolButton Italic { get; }
@@ -484,7 +516,7 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
         row.Children.Clear();
         foreach (var color in Enum.GetValues<RichTextColor>())
         {
-            var label = (isHighlight ? "Highlight: " : "Text color: ") + (color == RichTextColor.Default ? "None" : color.ToString());
+            var label = RichTextEditorStrings.Format(isHighlight ? K.HighlightNamed : K.TextColorNamed, RichTextEditorStrings.ColorName(color));
             var button = new RichTextEditorToolButton { IsToggle = false };
             AutomationProperties.SetName(button, label);
             Tooltip.SetTip(button, label);
@@ -825,27 +857,33 @@ internal sealed class RichTextEditorToolbar : RichTextEditorFloatingSurface
 }
 
 /// <summary>A row of the slash menu: icon, label and the Markdown it stands for.</summary>
-internal sealed record RichTextEditorSlashItem(RichTextBlockType Type, string Label, string Hint, string Keywords, Geometry Icon)
+internal sealed record RichTextEditorSlashItem(RichTextBlockType Type, K LabelKind, string Hint, K KeywordsKind, Geometry Icon)
 {
+    /// <summary>The label in the current language.</summary>
+    public string Label => RichTextEditorStrings.Get(LabelKind);
+
+    /// <summary>The search words in the current language (they include the English ones).</summary>
+    public string Keywords => RichTextEditorStrings.Get(KeywordsKind);
+
     public static readonly RichTextEditorSlashItem[] All =
     {
-        new(RichTextBlockType.Paragraph, "Text", string.Empty, "paragraph plain body", ArcIcons.Pilcrow),
-        new(RichTextBlockType.Heading1, "Heading 1", "#", "title h1 large", ArcIcons.Heading1),
-        new(RichTextBlockType.Heading2, "Heading 2", "##", "subtitle h2 section", ArcIcons.Heading2),
-        new(RichTextBlockType.Heading3, "Heading 3", "###", "h3 small", ArcIcons.Heading3),
-        new(RichTextBlockType.Heading4, "Heading 4", "####", "h4 subheading", ArcIcons.Heading4),
-        new(RichTextBlockType.Heading5, "Heading 5", "#####", "h5", ArcIcons.Heading5),
-        new(RichTextBlockType.Heading6, "Heading 6", "######", "h6 smallest", ArcIcons.Heading6),
-        new(RichTextBlockType.BulletedList, "Bulleted list", "-", "bullet unordered ul points", ArcIcons.List),
-        new(RichTextBlockType.NumberedList, "Numbered list", "1.", "ordered ol steps numbers", ArcIcons.ListOrdered),
-        new(RichTextBlockType.TodoList, "To-do list", "[]", "todo task checkbox checklist", ArcIcons.ListTodo),
-        new(RichTextBlockType.Toggle, "Toggle list", string.Empty, "toggle collapse fold expand details disclosure", ArcIcons.ChevronRight),
-        new(RichTextBlockType.Quote, "Quote", ">", "blockquote citation", ArcIcons.Quote),
-        new(RichTextBlockType.Callout, "Callout", "!", "callout note tip warning highlight alert admonition", ArcIcons.Lightbulb),
-        new(RichTextBlockType.CodeBlock, "Code block", "```", "pre snippet monospace", ArcIcons.SquareCode),
-        new(RichTextBlockType.Divider, "Divider", "---", "rule hr line separator", ArcIcons.Minus),
-        new(RichTextBlockType.Image, "Image", "![]()", "picture photo img upload file", ArcIcons.Image),
-        new(RichTextBlockType.TableCell, "Table", "| |", "grid cells rows columns", ArcIcons.Table)
+        new(RichTextBlockType.Paragraph, K.BlockText, string.Empty, K.KeywordsText, ArcIcons.Pilcrow),
+        new(RichTextBlockType.Heading1, K.BlockHeading1, "#", K.KeywordsHeading1, ArcIcons.Heading1),
+        new(RichTextBlockType.Heading2, K.BlockHeading2, "##", K.KeywordsHeading2, ArcIcons.Heading2),
+        new(RichTextBlockType.Heading3, K.BlockHeading3, "###", K.KeywordsHeading3, ArcIcons.Heading3),
+        new(RichTextBlockType.Heading4, K.BlockHeading4, "####", K.KeywordsHeading4, ArcIcons.Heading4),
+        new(RichTextBlockType.Heading5, K.BlockHeading5, "#####", K.KeywordsHeading5, ArcIcons.Heading5),
+        new(RichTextBlockType.Heading6, K.BlockHeading6, "######", K.KeywordsHeading6, ArcIcons.Heading6),
+        new(RichTextBlockType.BulletedList, K.BlockBulletedList, "-", K.KeywordsBulletedList, ArcIcons.List),
+        new(RichTextBlockType.NumberedList, K.BlockNumberedList, "1.", K.KeywordsNumberedList, ArcIcons.ListOrdered),
+        new(RichTextBlockType.TodoList, K.BlockTodoList, "[]", K.KeywordsTodoList, ArcIcons.ListTodo),
+        new(RichTextBlockType.Toggle, K.BlockToggleList, string.Empty, K.KeywordsToggleList, ArcIcons.ChevronRight),
+        new(RichTextBlockType.Quote, K.BlockQuote, ">", K.KeywordsQuote, ArcIcons.Quote),
+        new(RichTextBlockType.Callout, K.BlockCallout, "!", K.KeywordsCallout, ArcIcons.Lightbulb),
+        new(RichTextBlockType.CodeBlock, K.BlockCodeBlock, "```", K.KeywordsCodeBlock, ArcIcons.SquareCode),
+        new(RichTextBlockType.Divider, K.BlockDivider, "---", K.KeywordsDivider, ArcIcons.Minus),
+        new(RichTextBlockType.Image, K.BlockImage, "![]()", K.KeywordsImage, ArcIcons.Image),
+        new(RichTextBlockType.TableCell, K.BlockTable, "| |", K.KeywordsTable, ArcIcons.Table)
     };
 
     /// <summary>Arc's filter: a word of the label or keywords starts with the query, or the label contains it.</summary>
@@ -894,6 +932,13 @@ internal sealed class RichTextEditorSlashRow : TemplatedControl
     }
 
     public RichTextEditorSlashItem Item { get; }
+
+    /// <summary>Shows the item's label in the current language.</summary>
+    public void RefreshText()
+    {
+        Label = Item.Label;
+        AutomationProperties.SetName(this, Item.Label);
+    }
 
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
@@ -981,7 +1026,7 @@ internal sealed class RichTextEditorSlashMenu : RichTextEditorFloatingSurface
         _offsetY.Changed += _ => UpdatePlacement();
         _opacity.Changed += value => Opacity = value;
         Opacity = 0;
-        AutomationProperties.SetName(this, "Blocks");
+        AutomationProperties.SetName(this, RichTextEditorStrings.Get(K.BlocksName));
         PointerWheelChanged += (_, e) =>
         {
             _scroll -= e.Delta.Y * 40;
@@ -1016,6 +1061,7 @@ internal sealed class RichTextEditorSlashMenu : RichTextEditorFloatingSurface
         _maxHeight = maxHeight;
         _width = Math.Max(120, Math.Min(PanelWidth, maxWidth));
         var changed = !_items.SequenceEqual(items);
+        AutomationProperties.SetName(this, RichTextEditorStrings.Get(K.BlocksName));
         _items = items.ToList();
         foreach (var row in _rows.Values)
         {
@@ -1024,6 +1070,7 @@ internal sealed class RichTextEditorSlashMenu : RichTextEditorFloatingSurface
         foreach (var item in _items)
         {
             _rows[item.Type].IsVisible = true;
+            _rows[item.Type].RefreshText();
         }
         _active = Math.Clamp(active, 0, Math.Max(0, _items.Count - 1));
         for (var i = 0; i < _items.Count; i++)

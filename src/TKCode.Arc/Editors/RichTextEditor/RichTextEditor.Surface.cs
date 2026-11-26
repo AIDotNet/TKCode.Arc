@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
@@ -35,7 +36,7 @@ public partial class RichTextEditor
         var collapse = !_engine.Blocks[block].IsCollapsed;
         if (_engine.SetCollapsed(block, collapse))
         {
-            Announce(collapse ? "Collapsed" : "Expanded");
+            Announce(collapse ? RichTextEditorStrings.Get(K.AnnounceCollapsed) : RichTextEditorStrings.Get(K.AnnounceExpanded));
         }
     }
 
@@ -56,7 +57,7 @@ public partial class RichTextEditor
         {
             return false;
         }
-        Announce(collapse ? "Collapsed" : "Expanded");
+        Announce(collapse ? RichTextEditorStrings.Get(K.AnnounceCollapsed) : RichTextEditorStrings.Get(K.AnnounceExpanded));
         return true;
     }
 
@@ -69,7 +70,7 @@ public partial class RichTextEditor
         var item = _engine.Blocks[block];
         if (_engine.SetChecked(block, !item.IsChecked))
         {
-            Announce(item.IsChecked ? "Unchecked" : "Checked");
+            Announce(item.IsChecked ? RichTextEditorStrings.Get(K.AnnounceUnchecked) : RichTextEditorStrings.Get(K.AnnounceChecked));
         }
     }
 

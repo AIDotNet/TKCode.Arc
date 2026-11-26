@@ -65,6 +65,15 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
 
     public static readonly StyledProperty<bool> IsOpenProperty = Select.IsOpenProperty.AddOwner<Combobox>();
 
+    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<Combobox>();
+
+    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
+    public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<Combobox>();
+
+    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
+    public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<Combobox>();
+
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         Select.MaxDropDownHeightProperty.AddOwner<Combobox>(new StyledPropertyMetadata<double>(300));
 
@@ -128,6 +137,15 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
     /// <summary>Tallest the list gets (Arc: min(300px, 40% of the window)).</summary>
+    /// <summary>The narrowest the menu gets (default 0). The menu is as wide as its widest option needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.</summary>
+    public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
+
+    /// <summary>The widest the menu gets (default infinity: bounded only by the window). Options wider than this are trimmed.</summary>
+    public double MenuMaxWidth { get => GetValue(MenuMaxWidthProperty); set => SetValue(MenuMaxWidthProperty, value); }
+
+    /// <summary>Whether an option whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
+    public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
+
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
 
     /// <inheritdoc cref="Select.TextSelector"/>
@@ -245,6 +263,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             _input.GotFocus -= OnInputGotFocus;
             _inputHost!.Child = null;
         }
+        _frame?.SizeChanged -= OnFrameSizeChanged;
         _clear?.Click -= OnClearClick;
         _chevronButton?.Click -= OnChevronClick;
         _popup?.Closed -= OnPopupClosed;
@@ -274,6 +293,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             _settleShift = new TranslateTransform();
             _input.RenderTransform = _settleShift;
         }
+        _frame?.SizeChanged += OnFrameSizeChanged;
         _clear?.Click += OnClearClick;
         _chevronButton?.Click += OnChevronClick;
         if (_popup is not null)
@@ -282,6 +302,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             _popup.Closed += OnPopupClosed;
         }
         _options?.Host = this;
+        if (_options is not null)
+        {
+            _options.Bind(SelectOptionView.ShowTrimmedToolTipProperty, this.GetObservable(ShowTrimmedOptionToolTipProperty));
+        }
         SyncInput();
         UpdateClear();
     }
@@ -289,7 +313,12 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == IsOpenProperty)
+        if (change.Property == MenuMinWidthProperty || change.Property == MenuMaxWidthProperty ||
+            change.Property == FontSizeProperty || change.Property == FontFamilyProperty)
+        {
+            UpdateSurfaceWidth();
+        }
+        else if (change.Property == IsOpenProperty)
         {
             var open = change.GetNewValue<bool>();
             PseudoClasses.Set(OpenPseudoClass, open);
@@ -348,6 +377,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         if (IsOpen)
         {
             Refilter();
+            UpdateSurfaceWidth();
         }
         // Coalesce: several entry changes before the queue drains need one refresh, and the post is dropped when the
         // control leaves the tree (a pending closure would root it).
@@ -466,6 +496,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
             .Token(Border.CornerRadiusProperty, ArcDesignTokenKind.RadiusPanel);
         _popup.Child = _surface;
         _options.Host = this;
+        _options.Bind(SelectOptionView.ShowTrimmedToolTipProperty, this.GetObservable(ShowTrimmedOptionToolTipProperty));
     }
 
     private void OpenPopup()
@@ -481,10 +512,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         EnsureMenu();
         // Arc positions the popover 8px under the whole field, so it hangs below the description when there is one.
         _popup.PlacementTarget = _description is { IsVisible: true } ? _description : _frame;
-        if (_surface is not null && _frame is not null && _frame.Bounds.Width > 0)
-        {
-            _surface.Width = _frame.Bounds.Width;
-        }
+        UpdateSurfaceWidth();
         if (_scroll is not null)
         {
             var window = ArcViewport.GetSize(this)?.Height ?? double.PositiveInfinity;
@@ -495,6 +523,21 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
         {
             _popup.IsOpen = true;
         }
+    }
+
+    private void OnFrameSizeChanged(object? sender, SizeChangedEventArgs e) => UpdateSurfaceWidth();
+
+    /// <summary>The menu is as wide as its widest option needs: at least the field, at most <see cref="MenuMaxWidth"/> and the window.</summary>
+    private void UpdateSurfaceWidth()
+    {
+        if (_surface is null || _frame is null || _frame.Bounds.Width <= 0)
+        {
+            return;
+        }
+        var content = _options is null ? 0 : _options.MeasureContentWidth(this, SelectMenuSizing.MeasuredOptions)
+                                              + SelectMenuSizing.Chrome(_surface, _scroll);
+        _surface.Width = SelectMenuSizing.Resolve(_frame.Bounds.Width, MenuMinWidth, MenuMaxWidth, content,
+            SelectMenuSizing.Available(this));
     }
 
     private void ClosePopup()

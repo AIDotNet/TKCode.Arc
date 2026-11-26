@@ -1,1 +1,4 @@
 #nullable enable
+static readonly TKCode.Arc.WorkflowNode.PortLayoutProperty -> Avalonia.StyledProperty<TKCode.Arc.WorkflowLayoutDirection?>!
+TKCode.Arc.WorkflowNode.PortLayout.get -> TKCode.Arc.WorkflowLayoutDirection?
+TKCode.Arc.WorkflowNode.PortLayout.set -> void

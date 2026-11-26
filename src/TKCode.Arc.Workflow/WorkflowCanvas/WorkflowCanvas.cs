@@ -567,6 +567,10 @@ public partial class WorkflowCanvas : TemplatedControl
         {
             InvalidateMeasure();
         }
+        else if (e.Property == WorkflowNode.PortLayoutProperty)
+        {
+            UpdateEdges();
+        }
         else if (e.Property == WorkflowNode.KindProperty && sender is WorkflowNode node && _cards.TryGetValue(node, out var card))
         {
             card.ContentTemplate = TemplateFor(node);

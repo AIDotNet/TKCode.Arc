@@ -54,6 +54,15 @@ public sealed class WorkflowNode : AvaloniaObject
     public static readonly StyledProperty<WorkflowNodeAppearance> AppearanceProperty =
         AvaloniaProperty.Register<WorkflowNode, WorkflowNodeAppearance>(nameof(Appearance));
 
+    /// <summary>
+    /// Which sides of the card its ports are on: <see cref="WorkflowLayoutDirection.TopToBottom"/> takes data in at the
+    /// top and sends it out at the bottom, <see cref="WorkflowLayoutDirection.LeftToRight"/> in at the left and out at
+    /// the right. Null (the default) follows <see cref="WorkflowCanvas.LayoutDirection"/>. Auto layout always follows the
+    /// canvas.
+    /// </summary>
+    public static readonly StyledProperty<WorkflowLayoutDirection?> PortLayoutProperty =
+        AvaloniaProperty.Register<WorkflowNode, WorkflowLayoutDirection?>(nameof(PortLayout));
+
     /// <summary>Where the step stands in the current run (<see cref="WorkflowNodeState.Idle"/> when there is no run).</summary>
     public static readonly StyledProperty<WorkflowNodeState> StateProperty =
         AvaloniaProperty.Register<WorkflowNode, WorkflowNodeState>(nameof(State));
@@ -187,6 +196,13 @@ public sealed class WorkflowNode : AvaloniaObject
     {
         get => GetValue(AppearanceProperty);
         set => SetValue(AppearanceProperty, value);
+    }
+
+    /// <inheritdoc cref="PortLayoutProperty"/>
+    public WorkflowLayoutDirection? PortLayout
+    {
+        get => GetValue(PortLayoutProperty);
+        set => SetValue(PortLayoutProperty, value);
     }
 
     /// <inheritdoc cref="StateProperty"/>

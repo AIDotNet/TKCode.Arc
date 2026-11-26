@@ -1,3 +1,5 @@
+using TKCode.Arc.Localization;
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
@@ -48,10 +50,10 @@ public partial class RichTextEditor : TemplatedControl
         AvaloniaProperty.Register<RichTextEditor, string?>(nameof(Markdown), defaultBindingMode: BindingMode.TwoWay);
 
     public static readonly StyledProperty<string> PlaceholderProperty =
-        AvaloniaProperty.Register<RichTextEditor, string>(nameof(Placeholder), "Start writing");
+        AvaloniaProperty.Register<RichTextEditor, string>(nameof(Placeholder), DefaultPlaceholder);
 
     public static readonly StyledProperty<string> BlockHintProperty =
-        AvaloniaProperty.Register<RichTextEditor, string>(nameof(BlockHint), "Type / for blocks");
+        AvaloniaProperty.Register<RichTextEditor, string>(nameof(BlockHint), DefaultBlockHint);
 
     /// <summary>The feature set: <c>Arc</c> (the default) keeps Arc's blocks and marks; <c>Docs</c> adds underline, text and highlight colors, to-do lists, text alignment and a language label on code blocks.</summary>
     public static readonly StyledProperty<RichTextEditorProfile> ProfileProperty =
@@ -106,6 +108,16 @@ public partial class RichTextEditor : TemplatedControl
     private int _slashActive;
     private RichTextEditorSelection? _savedLinkRange;
     private TopLevel? _linkWatchRoot;
+
+    // The English defaults of Placeholder and BlockHint: left untouched, they show in the current language.
+    private const string DefaultPlaceholder = "Start writing";
+    private const string DefaultBlockHint = "Type / for blocks";
+
+    /// <summary>The placeholder as shown: the localized text while <see cref="Placeholder"/> still has its default.</summary>
+    internal string DisplayPlaceholder => Placeholder == DefaultPlaceholder ? RichTextEditorStrings.Get(K.PlaceholderDefault) : Placeholder;
+
+    /// <summary>The empty-line hint as shown: the localized text while <see cref="BlockHint"/> still has its default.</summary>
+    internal string DisplayBlockHint => BlockHint == DefaultBlockHint ? RichTextEditorStrings.Get(K.BlockHintDefault) : BlockHint;
 
     static RichTextEditor()
     {
@@ -257,7 +269,7 @@ public partial class RichTextEditor : TemplatedControl
         CloseSlash();
         if (_engine.Undo())
         {
-            Announce("Undone");
+            Announce(RichTextEditorStrings.Get(K.AnnounceUndone));
         }
     }
 
@@ -267,7 +279,7 @@ public partial class RichTextEditor : TemplatedControl
         CloseSlash();
         if (_engine.Redo())
         {
-            Announce("Redone");
+            Announce(RichTextEditorStrings.Get(K.AnnounceRedone));
         }
     }
 
@@ -294,7 +306,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetTextColor(color))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -305,7 +317,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetHighlight(color))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -320,7 +332,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetSize(size))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -333,7 +345,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetLineSpacing(spacing))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -343,7 +355,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetAlign(align))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -354,7 +366,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && _engine.SetCallout(_engine.Selection.Focus.Block, color, null))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -365,7 +377,7 @@ public partial class RichTextEditor : TemplatedControl
     {
         if (!IsReadOnly && !string.IsNullOrWhiteSpace(icon) && _engine.SetCallout(_engine.Selection.Focus.Block, null, icon))
         {
-            Announce("Formatted");
+            Announce(RichTextEditorStrings.Get(K.AnnounceFormatted));
             FocusEditor();
         }
     }
@@ -406,7 +418,7 @@ public partial class RichTextEditor : TemplatedControl
         }
         var normalized = RichTextEditorMarkdown.NormalizeUrl(url);
         _engine.SetLink(range.Value, normalized);
-        Announce(normalized.Length == 0 ? "Link removed" : "Link added");
+        Announce(normalized.Length == 0 ? RichTextEditorStrings.Get(K.AnnounceLinkRemoved) : RichTextEditorStrings.Get(K.AnnounceLinkAdded));
         FocusEditor();
     }
 
@@ -427,7 +439,7 @@ public partial class RichTextEditor : TemplatedControl
             return false;
         }
         CloseSlash();
-        Announce("Image added");
+        Announce(RichTextEditorStrings.Get(K.AnnounceImageAdded));
         FocusEditor();
         return true;
     }
@@ -443,7 +455,7 @@ public partial class RichTextEditor : TemplatedControl
         }
         var files = await storage.OpenFilePickerAsync(new FilePickerOpenOptions
         {
-            Title = "Insert image",
+            Title = RichTextEditorStrings.Get(K.InsertImageTitle),
             AllowMultiple = true,
             FileTypeFilter = new[] { FilePickerFileTypes.ImageAll }
         });
@@ -471,7 +483,7 @@ public partial class RichTextEditor : TemplatedControl
             return false;
         }
         CloseSlash();
-        Announce("Table added");
+        Announce(RichTextEditorStrings.Get(K.AnnounceTableAdded));
         FocusEditor();
         return true;
     }
@@ -480,16 +492,16 @@ public partial class RichTextEditor : TemplatedControl
     public bool IsInTable => _engine.IsInTable;
 
     /// <summary>Adds an empty row below (or above) the caret's row; above the header row is the same as below it.</summary>
-    public bool AddTableRow(bool below = true) => EditTable(_engine.AddTableRow(below), "Row added");
+    public bool AddTableRow(bool below = true) => EditTable(_engine.AddTableRow(below), RichTextEditorStrings.Get(K.AnnounceRowAdded));
 
     /// <summary>Adds an empty column after (or before) the caret's column.</summary>
-    public bool AddTableColumn(bool after = true) => EditTable(_engine.AddTableColumn(after), "Column added");
+    public bool AddTableColumn(bool after = true) => EditTable(_engine.AddTableColumn(after), RichTextEditorStrings.Get(K.AnnounceColumnAdded));
 
     /// <summary>Deletes the caret's row; the only row takes the whole table with it.</summary>
-    public bool DeleteTableRow() => !IsReadOnly && EditTable(_engine.DeleteTableRow(), "Row deleted");
+    public bool DeleteTableRow() => !IsReadOnly && EditTable(_engine.DeleteTableRow(), RichTextEditorStrings.Get(K.AnnounceRowDeleted));
 
     /// <summary>Deletes the caret's column; the only column takes the whole table with it.</summary>
-    public bool DeleteTableColumn() => !IsReadOnly && EditTable(_engine.DeleteTableColumn(), "Column deleted");
+    public bool DeleteTableColumn() => !IsReadOnly && EditTable(_engine.DeleteTableColumn(), RichTextEditorStrings.Get(K.AnnounceColumnDeleted));
 
     /// <summary>True when the selection reaches two or more cells of one table, so <see cref="MergeTableCells"/> can merge them.</summary>
     public bool CanMergeTableCells => !IsReadOnly && _engine.CanMergeCells;
@@ -503,11 +515,11 @@ public partial class RichTextEditor : TemplatedControl
     /// the Markdown output has no merged cells and writes the covered cells empty.
     /// </summary>
     /// <returns>True when cells were merged.</returns>
-    public bool MergeTableCells() => !IsReadOnly && EditTable(_engine.MergeCells(), "Cells merged");
+    public bool MergeTableCells() => !IsReadOnly && EditTable(_engine.MergeCells(), RichTextEditorStrings.Get(K.AnnounceCellsMerged));
 
     /// <summary>Splits the merged cell at the caret back into single cells; its text stays in the first one.</summary>
     /// <returns>True when a merged cell was split.</returns>
-    public bool SplitTableCell() => !IsReadOnly && EditTable(_engine.SplitCell(), "Cell split");
+    public bool SplitTableCell() => !IsReadOnly && EditTable(_engine.SplitCell(), RichTextEditorStrings.Get(K.AnnounceCellSplit));
 
     /// <summary>True when the table at the caret draws its first row as a header (tinted, medium weight); new tables start with one.</summary>
     public bool TableHasHeaderRow => _engine.HasHeaderRow;
@@ -520,11 +532,11 @@ public partial class RichTextEditor : TemplatedControl
     /// have a header row.
     /// </summary>
     /// <returns>True when the table changed.</returns>
-    public bool SetTableHeaderRow(bool on) => !IsReadOnly && EditTable(_engine.SetTableHeader(column: false, on), on ? "Header row on" : "Header row off");
+    public bool SetTableHeaderRow(bool on) => !IsReadOnly && EditTable(_engine.SetTableHeader(column: false, on), on ? RichTextEditorStrings.Get(K.AnnounceHeaderRowOn) : RichTextEditorStrings.Get(K.AnnounceHeaderRowOff));
 
     /// <summary>Turns the header column of the table at the caret on or off.</summary>
     /// <returns>True when the table changed.</returns>
-    public bool SetTableHeaderColumn(bool on) => !IsReadOnly && EditTable(_engine.SetTableHeader(column: true, on), on ? "Header column on" : "Header column off");
+    public bool SetTableHeaderColumn(bool on) => !IsReadOnly && EditTable(_engine.SetTableHeader(column: true, on), on ? RichTextEditorStrings.Get(K.AnnounceHeaderColumnOn) : RichTextEditorStrings.Get(K.AnnounceHeaderColumnOff));
 
     /// <summary>The background shared by the cells the selection reaches, or <see cref="RichTextColor.Default"/> when they have none or several.</summary>
     public RichTextColor TableCellColor => _engine.CellTone;
@@ -534,14 +546,14 @@ public partial class RichTextEditor : TemplatedControl
     /// <c>data-bg</c>; Markdown has no cell colors.
     /// </summary>
     /// <returns>True when a cell changed.</returns>
-    public bool SetTableCellColor(RichTextColor color) => !IsReadOnly && EditTable(_engine.SetCellTone(color), "Cell color changed");
+    public bool SetTableCellColor(RichTextColor color) => !IsReadOnly && EditTable(_engine.SetCellTone(color), RichTextEditorStrings.Get(K.AnnounceCellColorChanged));
 
     /// <summary>
     /// Shares the width of the table at the caret evenly between its columns again (dragging a column border, or double-clicking it,
     /// sets widths too). The Html output writes widths as <c>col</c> elements.
     /// </summary>
     /// <returns>True when the widths changed.</returns>
-    public bool DistributeTableColumns() => !IsReadOnly && IsInTable && EditTable(_engine.SetColumnWidths(_engine.Selection.Focus.Block, Array.Empty<int>()), "Columns distributed");
+    public bool DistributeTableColumns() => !IsReadOnly && IsInTable && EditTable(_engine.SetColumnWidths(_engine.Selection.Focus.Block, Array.Empty<int>()), RichTextEditorStrings.Get(K.AnnounceColumnsDistributed));
 
     /// <summary>
     /// Selects every cell of the caret's row. A selection from one cell to another picks the rectangle between them: deleting empties
@@ -585,7 +597,7 @@ public partial class RichTextEditor : TemplatedControl
             return false;
         }
         var row = _engine.Blocks[_engine.Selection.Focus.Block].Row;
-        return EditTable(_engine.MoveTableRow(row, down ? row + 2 : row - 1), "Row moved");
+        return EditTable(_engine.MoveTableRow(row, down ? row + 2 : row - 1), RichTextEditorStrings.Get(K.AnnounceRowMoved));
     }
 
     /// <summary>Moves the caret's column one place right (or left) with its width; dragging a column's grip (top in the table) moves it further.</summary>
@@ -597,11 +609,11 @@ public partial class RichTextEditor : TemplatedControl
             return false;
         }
         var col = _engine.Blocks[_engine.Selection.Focus.Block].Col;
-        return EditTable(_engine.MoveTableColumn(col, right ? col + 2 : col - 1), "Column moved");
+        return EditTable(_engine.MoveTableColumn(col, right ? col + 2 : col - 1), RichTextEditorStrings.Get(K.AnnounceColumnMoved));
     }
 
     /// <summary>Deletes the whole table the caret is in.</summary>
-    public bool DeleteTable() => !IsReadOnly && EditTable(_engine.DeleteTable(), "Table deleted");
+    public bool DeleteTable() => !IsReadOnly && EditTable(_engine.DeleteTable(), RichTextEditorStrings.Get(K.AnnounceTableDeleted));
 
     private bool EditTable(bool changed, string message)
     {
@@ -713,6 +725,10 @@ public partial class RichTextEditor : TemplatedControl
     protected override void OnLoaded(RoutedEventArgs e)
     {
         base.OnLoaded(e);
+        // Loaded can fire again after a detach; unsubscribe first so the handler is never added twice.
+        ArcLanguage.Changed -= OnLanguageChanged;
+        ArcLanguage.Changed += OnLanguageChanged;
+        RefreshLanguage();
         if (IsAutoFocusEnabled && !IsReadOnly)
         {
             _engine.SetSelection(RichTextEditorSelection.Caret(RichTextEditorEngine.End(_engine.Blocks)));
@@ -722,6 +738,7 @@ public partial class RichTextEditor : TemplatedControl
 
     protected override void OnDetachedFromVisualTree(VisualTreeAttachmentEventArgs e)
     {
+        ArcLanguage.Changed -= OnLanguageChanged;
         base.OnDetachedFromVisualTree(e);
         StopLinkWatch();
         FlushPending();

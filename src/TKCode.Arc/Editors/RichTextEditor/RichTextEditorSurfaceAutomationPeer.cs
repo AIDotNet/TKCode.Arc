@@ -25,7 +25,7 @@ internal sealed class RichTextEditorSurfaceAutomationPeer : ControlAutomationPee
 
     protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Edit;
 
-    protected override string? GetNameCore() => Editor is { } editor ? Avalonia.Automation.AutomationProperties.GetName(editor) ?? "Editor" : base.GetNameCore();
+    protected override string? GetNameCore() => Editor is { } editor ? Avalonia.Automation.AutomationProperties.GetName(editor) ?? RichTextEditorStrings.Get(TKCode.Arc.Localization.RichTextEditorLangResourceKind.EditorName) : base.GetNameCore();
 
     protected override string? GetHelpTextCore() => Editor is { } editor ? Avalonia.Automation.AutomationProperties.GetHelpText(editor) : base.GetHelpTextCore();
 

@@ -422,7 +422,8 @@ public partial class WorkflowCanvas
                 continue;
             }
             visual.Place(PortPoint(visual.Edge.Source, visual.Edge.SourcePort, true),
-                PortPoint(visual.Edge.Target, visual.Edge.TargetPort, false), LayoutDirection, EdgeStyle, minHandle, corner);
+                PortPoint(visual.Edge.Target, visual.Edge.TargetPort, false), PortSideOf(visual.Edge.Source),
+                PortSideOf(visual.Edge.Target), EdgeStyle, minHandle, corner);
             extent = extent is { } e ? e.Union(visual.Bounds) : visual.Bounds;
         }
         // Room for the strokes' width and a selected edge's halo.

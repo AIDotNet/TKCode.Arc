@@ -1,0 +1,947 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff version="2.1" srcLang="en-US" trgLang="zh-TW" xmlns="urn:oasis:names:tc:xliff:document:2.0">
+  <file id="TKCode.Arc.Localization.RichTextEditorLangResourceKind">
+    <unit id="AddBlock">
+      <segment>
+        <source>Add block</source>
+        <target state="translated">新增區塊</target>
+      </segment>
+    </unit>
+    <unit id="AddBlockBelow">
+      <segment>
+        <source>Add block below</source>
+        <target state="translated">在下方新增區塊</target>
+      </segment>
+    </unit>
+    <unit id="AddBlockTip">
+      <segment>
+        <source>Insert a block</source>
+        <target state="translated">插入區塊</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockAdded">
+      <segment>
+        <source>{0} added</source>
+        <target state="translated">已新增{0}</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockDeleted">
+      <segment>
+        <source>Block deleted</source>
+        <target state="translated">區塊已刪除</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockDuplicated">
+      <segment>
+        <source>Block duplicated</source>
+        <target state="translated">區塊已複製</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceBlockMoved">
+      <segment>
+        <source>Block moved</source>
+        <target state="translated">區塊已移動</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellColorChanged">
+      <segment>
+        <source>Cell color changed</source>
+        <target state="translated">儲存格色彩已變更</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellSplit">
+      <segment>
+        <source>Cell split</source>
+        <target state="translated">儲存格已分割</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCellsMerged">
+      <segment>
+        <source>Cells merged</source>
+        <target state="translated">儲存格已合併</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceChecked">
+      <segment>
+        <source>Checked</source>
+        <target state="translated">已勾選</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceCollapsed">
+      <segment>
+        <source>Collapsed</source>
+        <target state="translated">已摺疊</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnAdded">
+      <segment>
+        <source>Column added</source>
+        <target state="translated">已新增欄</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnDeleted">
+      <segment>
+        <source>Column deleted</source>
+        <target state="translated">已刪除欄</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnMoved">
+      <segment>
+        <source>Column moved</source>
+        <target state="translated">欄已移動</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnSelected">
+      <segment>
+        <source>Column selected</source>
+        <target state="translated">已選取欄</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceColumnsDistributed">
+      <segment>
+        <source>Columns distributed</source>
+        <target state="translated">欄寬已平均分配</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceExpanded">
+      <segment>
+        <source>Expanded</source>
+        <target state="translated">已展開</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceFormatted">
+      <segment>
+        <source>Formatted</source>
+        <target state="translated">已套用格式</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderColumnOff">
+      <segment>
+        <source>Header column off</source>
+        <target state="translated">標題欄已關閉</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderColumnOn">
+      <segment>
+        <source>Header column on</source>
+        <target state="translated">標題欄已開啟</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderRowOff">
+      <segment>
+        <source>Header row off</source>
+        <target state="translated">標題列已關閉</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceHeaderRowOn">
+      <segment>
+        <source>Header row on</source>
+        <target state="translated">標題列已開啟</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceImageAdded">
+      <segment>
+        <source>Image added</source>
+        <target state="translated">圖片已新增</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceLinkAdded">
+      <segment>
+        <source>Link added</source>
+        <target state="translated">連結已新增</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceLinkRemoved">
+      <segment>
+        <source>Link removed</source>
+        <target state="translated">連結已移除</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRedone">
+      <segment>
+        <source>Redone</source>
+        <target state="translated">已重做</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplaced">
+      <segment>
+        <source>Replaced</source>
+        <target state="translated">已取代</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplacedOne">
+      <segment>
+        <source>1 replaced</source>
+        <target state="translated">已取代 1 處</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceReplacedOther">
+      <segment>
+        <source>{0} replaced</source>
+        <target state="translated">已取代 {0} 處</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowAdded">
+      <segment>
+        <source>Row added</source>
+        <target state="translated">已新增列</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowDeleted">
+      <segment>
+        <source>Row deleted</source>
+        <target state="translated">已刪除列</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowMoved">
+      <segment>
+        <source>Row moved</source>
+        <target state="translated">列已移動</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceRowSelected">
+      <segment>
+        <source>Row selected</source>
+        <target state="translated">已選取列</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceTableAdded">
+      <segment>
+        <source>Table added</source>
+        <target state="translated">表格已新增</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceTableDeleted">
+      <segment>
+        <source>Table deleted</source>
+        <target state="translated">表格已刪除</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceUnchecked">
+      <segment>
+        <source>Unchecked</source>
+        <target state="translated">已取消勾選</target>
+      </segment>
+    </unit>
+    <unit id="AnnounceUndone">
+      <segment>
+        <source>Undone</source>
+        <target state="translated">已復原</target>
+      </segment>
+    </unit>
+    <unit id="BlockActions">
+      <segment>
+        <source>Block actions</source>
+        <target state="translated">區塊動作</target>
+      </segment>
+    </unit>
+    <unit id="BlockActionsTip">
+      <segment>
+        <source>Drag to move, click for actions</source>
+        <target state="translated">拖曳以移動，點擊以檢視動作</target>
+      </segment>
+    </unit>
+    <unit id="BlockBulletedList">
+      <segment>
+        <source>Bulleted list</source>
+        <target state="translated">項目符號清單</target>
+      </segment>
+    </unit>
+    <unit id="BlockCallout">
+      <segment>
+        <source>Callout</source>
+        <target state="translated">標註</target>
+      </segment>
+    </unit>
+    <unit id="BlockCodeBlock">
+      <segment>
+        <source>Code block</source>
+        <target state="translated">程式碼區塊</target>
+      </segment>
+    </unit>
+    <unit id="BlockDivider">
+      <segment>
+        <source>Divider</source>
+        <target state="translated">分隔線</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading1">
+      <segment>
+        <source>Heading 1</source>
+        <target state="translated">標題 1</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading2">
+      <segment>
+        <source>Heading 2</source>
+        <target state="translated">標題 2</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading3">
+      <segment>
+        <source>Heading 3</source>
+        <target state="translated">標題 3</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading4">
+      <segment>
+        <source>Heading 4</source>
+        <target state="translated">標題 4</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading5">
+      <segment>
+        <source>Heading 5</source>
+        <target state="translated">標題 5</target>
+      </segment>
+    </unit>
+    <unit id="BlockHeading6">
+      <segment>
+        <source>Heading 6</source>
+        <target state="translated">標題 6</target>
+      </segment>
+    </unit>
+    <unit id="BlockHintDefault">
+      <segment>
+        <source>Type / for blocks</source>
+        <target state="translated">輸入 / 插入區塊</target>
+      </segment>
+    </unit>
+    <unit id="BlockImage">
+      <segment>
+        <source>Image</source>
+        <target state="translated">圖片</target>
+      </segment>
+    </unit>
+    <unit id="BlockNumberedList">
+      <segment>
+        <source>Numbered list</source>
+        <target state="translated">編號清單</target>
+      </segment>
+    </unit>
+    <unit id="BlockQuote">
+      <segment>
+        <source>Quote</source>
+        <target state="translated">引用</target>
+      </segment>
+    </unit>
+    <unit id="BlockTable">
+      <segment>
+        <source>Table</source>
+        <target state="translated">表格</target>
+      </segment>
+    </unit>
+    <unit id="BlockText">
+      <segment>
+        <source>Text</source>
+        <target state="translated">內文</target>
+      </segment>
+    </unit>
+    <unit id="BlockTodoList">
+      <segment>
+        <source>To-do list</source>
+        <target state="translated">待辦清單</target>
+      </segment>
+    </unit>
+    <unit id="BlockToggleList">
+      <segment>
+        <source>Toggle list</source>
+        <target state="translated">摺疊清單</target>
+      </segment>
+    </unit>
+    <unit id="BlocksName">
+      <segment>
+        <source>Blocks</source>
+        <target state="translated">區塊</target>
+      </segment>
+    </unit>
+    <unit id="CodeLanguage">
+      <segment>
+        <source>Code language</source>
+        <target state="translated">程式碼語言</target>
+      </segment>
+    </unit>
+    <unit id="ColorBlue">
+      <segment>
+        <source>Blue</source>
+        <target state="translated">藍色</target>
+      </segment>
+    </unit>
+    <unit id="ColorGray">
+      <segment>
+        <source>Gray</source>
+        <target state="translated">灰色</target>
+      </segment>
+    </unit>
+    <unit id="ColorGreen">
+      <segment>
+        <source>Green</source>
+        <target state="translated">綠色</target>
+      </segment>
+    </unit>
+    <unit id="ColorNamed">
+      <segment>
+        <source>Color: {0}</source>
+        <target state="translated">色彩：{0}</target>
+      </segment>
+    </unit>
+    <unit id="ColorNone">
+      <segment>
+        <source>None</source>
+        <target state="translated">無</target>
+      </segment>
+    </unit>
+    <unit id="ColorOrange">
+      <segment>
+        <source>Orange</source>
+        <target state="translated">橘色</target>
+      </segment>
+    </unit>
+    <unit id="ColorPurple">
+      <segment>
+        <source>Purple</source>
+        <target state="translated">紫色</target>
+      </segment>
+    </unit>
+    <unit id="ColorRed">
+      <segment>
+        <source>Red</source>
+        <target state="translated">紅色</target>
+      </segment>
+    </unit>
+    <unit id="ColorYellow">
+      <segment>
+        <source>Yellow</source>
+        <target state="translated">黃色</target>
+      </segment>
+    </unit>
+    <unit id="CustomLanguageItem">
+      <segment>
+        <source>Custom…</source>
+        <target state="translated">自訂…</target>
+      </segment>
+    </unit>
+    <unit id="CustomLanguageName">
+      <segment>
+        <source>Custom language</source>
+        <target state="translated">自訂語言</target>
+      </segment>
+    </unit>
+    <unit id="CustomLanguagePlaceholder">
+      <segment>
+        <source>Language, such as csharp</source>
+        <target state="translated">語言，例如 csharp</target>
+      </segment>
+    </unit>
+    <unit id="Delete">
+      <segment>
+        <source>Delete</source>
+        <target state="translated">刪除</target>
+      </segment>
+    </unit>
+    <unit id="DeleteColumn">
+      <segment>
+        <source>Delete column</source>
+        <target state="translated">刪除欄</target>
+      </segment>
+    </unit>
+    <unit id="DeleteRow">
+      <segment>
+        <source>Delete row</source>
+        <target state="translated">刪除列</target>
+      </segment>
+    </unit>
+    <unit id="DeleteTable">
+      <segment>
+        <source>Delete table</source>
+        <target state="translated">刪除表格</target>
+      </segment>
+    </unit>
+    <unit id="DistributeColumns">
+      <segment>
+        <source>Distribute columns</source>
+        <target state="translated">平均分配欄寬</target>
+      </segment>
+    </unit>
+    <unit id="Duplicate">
+      <segment>
+        <source>Duplicate</source>
+        <target state="translated">複製</target>
+      </segment>
+    </unit>
+    <unit id="EditorName">
+      <segment>
+        <source>Editor</source>
+        <target state="translated">編輯器</target>
+      </segment>
+    </unit>
+    <unit id="FindAndReplace">
+      <segment>
+        <source>Find and replace</source>
+        <target state="translated">尋找與取代</target>
+      </segment>
+    </unit>
+    <unit id="FindClose">
+      <segment>
+        <source>Close</source>
+        <target state="translated">關閉</target>
+      </segment>
+    </unit>
+    <unit id="FindCloseName">
+      <segment>
+        <source>Close find</source>
+        <target state="translated">關閉尋找</target>
+      </segment>
+    </unit>
+    <unit id="FindPlaceholder">
+      <segment>
+        <source>Find</source>
+        <target state="translated">尋找</target>
+      </segment>
+    </unit>
+    <unit id="FormattingName">
+      <segment>
+        <source>Formatting</source>
+        <target state="translated">格式設定</target>
+      </segment>
+    </unit>
+    <unit id="HeaderColumn">
+      <segment>
+        <source>Header column</source>
+        <target state="translated">標題欄</target>
+      </segment>
+    </unit>
+    <unit id="HeaderRow">
+      <segment>
+        <source>Header row</source>
+        <target state="translated">標題列</target>
+      </segment>
+    </unit>
+    <unit id="HighlightNamed">
+      <segment>
+        <source>Highlight: {0}</source>
+        <target state="translated">醒目提示：{0}</target>
+      </segment>
+    </unit>
+    <unit id="IconNamed">
+      <segment>
+        <source>Icon: {0}</source>
+        <target state="translated">圖示：{0}</target>
+      </segment>
+    </unit>
+    <unit id="ImageLoading">
+      <segment>
+        <source>Loading image…</source>
+        <target state="translated">正在載入圖片…</target>
+      </segment>
+    </unit>
+    <unit id="ImageUnavailable">
+      <segment>
+        <source>Image unavailable</source>
+        <target state="translated">圖片無法使用</target>
+      </segment>
+    </unit>
+    <unit id="InsertColumnLeft">
+      <segment>
+        <source>Insert column left</source>
+        <target state="translated">在左側插入欄</target>
+      </segment>
+    </unit>
+    <unit id="InsertColumnRight">
+      <segment>
+        <source>Insert column right</source>
+        <target state="translated">在右側插入欄</target>
+      </segment>
+    </unit>
+    <unit id="InsertImageTitle">
+      <segment>
+        <source>Insert image</source>
+        <target state="translated">插入圖片</target>
+      </segment>
+    </unit>
+    <unit id="InsertRowAbove">
+      <segment>
+        <source>Insert row above</source>
+        <target state="translated">在上方插入列</target>
+      </segment>
+    </unit>
+    <unit id="InsertRowBelow">
+      <segment>
+        <source>Insert row below</source>
+        <target state="translated">在下方插入列</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsBulletedList">
+      <segment>
+        <source>bullet unordered ul points</source>
+        <target state="translated">Bulleted list bullet unordered ul points 清單 項目符號 圓點</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsCallout">
+      <segment>
+        <source>callout note tip warning highlight alert admonition</source>
+        <target state="translated">Callout callout note tip warning highlight alert admonition 提示 注意 警告 醒目提示 備註</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsCodeBlock">
+      <segment>
+        <source>pre snippet monospace</source>
+        <target state="translated">Code block pre snippet monospace 程式碼 程式碼片段 等寬</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsDivider">
+      <segment>
+        <source>rule hr line separator</source>
+        <target state="translated">Divider rule hr line separator 分隔線 橫線 水平線</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading1">
+      <segment>
+        <source>title h1 large</source>
+        <target state="translated">Heading 1 title h1 large 標題 大標題 一級標題</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading2">
+      <segment>
+        <source>subtitle h2 section</source>
+        <target state="translated">Heading 2 subtitle h2 section 副標題 二級標題 章節</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading3">
+      <segment>
+        <source>h3 small</source>
+        <target state="translated">Heading 3 h3 small 小標題 三級標題</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading4">
+      <segment>
+        <source>h4 subheading</source>
+        <target state="translated">Heading 4 h4 subheading 四級標題 子標題</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading5">
+      <segment>
+        <source>h5</source>
+        <target state="translated">Heading 5 h5 五級標題</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsHeading6">
+      <segment>
+        <source>h6 smallest</source>
+        <target state="translated">Heading 6 h6 smallest 六級標題</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsImage">
+      <segment>
+        <source>picture photo img upload file</source>
+        <target state="translated">Image picture photo img upload file 照片 上傳 檔案</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsNumberedList">
+      <segment>
+        <source>ordered ol steps numbers</source>
+        <target state="translated">Numbered list ordered ol steps numbers 清單 編號 步驟 數字</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsQuote">
+      <segment>
+        <source>blockquote citation</source>
+        <target state="translated">Quote blockquote citation 引文 區塊引用</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsTable">
+      <segment>
+        <source>grid cells rows columns</source>
+        <target state="translated">Table grid cells rows columns 儲存格 列 欄</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsText">
+      <segment>
+        <source>paragraph plain body</source>
+        <target state="translated">Text paragraph plain body 段落 文字 純文字</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsTodoList">
+      <segment>
+        <source>todo task checkbox checklist</source>
+        <target state="translated">To-do list todo task checkbox checklist 任務 核取方塊 待辦</target>
+      </segment>
+    </unit>
+    <unit id="KeywordsToggleList">
+      <segment>
+        <source>toggle collapse fold expand details disclosure</source>
+        <target state="translated">Toggle list toggle collapse fold expand details disclosure 摺疊 展開 詳細資料</target>
+      </segment>
+    </unit>
+    <unit id="LineSpacingNamed">
+      <segment>
+        <source>Line spacing: {0}</source>
+        <target state="translated">行距：{0}</target>
+      </segment>
+    </unit>
+    <unit id="LinkAddress">
+      <segment>
+        <source>Link address</source>
+        <target state="translated">連結位址</target>
+      </segment>
+    </unit>
+    <unit id="LinkPlaceholder">
+      <segment>
+        <source>Paste or type a link</source>
+        <target state="translated">貼上或輸入連結</target>
+      </segment>
+    </unit>
+    <unit id="MatchCase">
+      <segment>
+        <source>Match case</source>
+        <target state="translated">區分大小寫</target>
+      </segment>
+    </unit>
+    <unit id="MatchPosition">
+      <segment>
+        <source>{0} of {1}</source>
+        <target state="translated">第 {0} 筆，共 {1} 筆</target>
+      </segment>
+    </unit>
+    <unit id="MergeCells">
+      <segment>
+        <source>Merge cells</source>
+        <target state="translated">合併儲存格</target>
+      </segment>
+    </unit>
+    <unit id="MoveColumnLeft">
+      <segment>
+        <source>Move column left</source>
+        <target state="translated">左移欄</target>
+      </segment>
+    </unit>
+    <unit id="MoveColumnRight">
+      <segment>
+        <source>Move column right</source>
+        <target state="translated">右移欄</target>
+      </segment>
+    </unit>
+    <unit id="MoveRowDown">
+      <segment>
+        <source>Move row down</source>
+        <target state="translated">下移列</target>
+      </segment>
+    </unit>
+    <unit id="MoveRowUp">
+      <segment>
+        <source>Move row up</source>
+        <target state="translated">上移列</target>
+      </segment>
+    </unit>
+    <unit id="NextMatch">
+      <segment>
+        <source>Next match</source>
+        <target state="translated">下一個相符項目</target>
+      </segment>
+    </unit>
+    <unit id="NoResults">
+      <segment>
+        <source>No results</source>
+        <target state="translated">沒有結果</target>
+      </segment>
+    </unit>
+    <unit id="PlaceholderDefault">
+      <segment>
+        <source>Start writing</source>
+        <target state="translated">開始書寫</target>
+      </segment>
+    </unit>
+    <unit id="PlainText">
+      <segment>
+        <source>Plain text</source>
+        <target state="translated">純文字</target>
+      </segment>
+    </unit>
+    <unit id="PreviousMatch">
+      <segment>
+        <source>Previous match</source>
+        <target state="translated">上一個相符項目</target>
+      </segment>
+    </unit>
+    <unit id="ReplaceAll">
+      <segment>
+        <source>Replace all</source>
+        <target state="translated">全部取代</target>
+      </segment>
+    </unit>
+    <unit id="ReplaceMatch">
+      <segment>
+        <source>Replace match</source>
+        <target state="translated">取代相符項目</target>
+      </segment>
+    </unit>
+    <unit id="ReplaceName">
+      <segment>
+        <source>Replace</source>
+        <target state="translated">取代</target>
+      </segment>
+    </unit>
+    <unit id="ReplacePlaceholder">
+      <segment>
+        <source>Replace with</source>
+        <target state="translated">取代為</target>
+      </segment>
+    </unit>
+    <unit id="SizeDefault">
+      <segment>
+        <source>Default</source>
+        <target state="translated">預設</target>
+      </segment>
+    </unit>
+    <unit id="SizeExtraLarge">
+      <segment>
+        <source>Extra large</source>
+        <target state="translated">特大</target>
+      </segment>
+    </unit>
+    <unit id="SizeLarge">
+      <segment>
+        <source>Large</source>
+        <target state="translated">大</target>
+      </segment>
+    </unit>
+    <unit id="SizeSmall">
+      <segment>
+        <source>Small</source>
+        <target state="translated">小</target>
+      </segment>
+    </unit>
+    <unit id="SpacingCompact">
+      <segment>
+        <source>Compact</source>
+        <target state="translated">緊湊</target>
+      </segment>
+    </unit>
+    <unit id="SpacingDefault">
+      <segment>
+        <source>Default</source>
+        <target state="translated">預設</target>
+      </segment>
+    </unit>
+    <unit id="SpacingLoose">
+      <segment>
+        <source>Loose</source>
+        <target state="translated">極寬鬆</target>
+      </segment>
+    </unit>
+    <unit id="SpacingRelaxed">
+      <segment>
+        <source>Relaxed</source>
+        <target state="translated">寬鬆</target>
+      </segment>
+    </unit>
+    <unit id="SplitCell">
+      <segment>
+        <source>Split cell</source>
+        <target state="translated">分割儲存格</target>
+      </segment>
+    </unit>
+    <unit id="TextColorNamed">
+      <segment>
+        <source>Text color: {0}</source>
+        <target state="translated">文字顏色：{0}</target>
+      </segment>
+    </unit>
+    <unit id="TextSizeNamed">
+      <segment>
+        <source>Text size: {0}</source>
+        <target state="translated">文字大小：{0}</target>
+      </segment>
+    </unit>
+    <unit id="ToolApplyLink">
+      <segment>
+        <source>Apply link</source>
+        <target state="translated">套用連結</target>
+      </segment>
+    </unit>
+    <unit id="ToolBack">
+      <segment>
+        <source>Back to formatting</source>
+        <target state="translated">返回格式設定</target>
+      </segment>
+    </unit>
+    <unit id="ToolBold">
+      <segment>
+        <source>Bold</source>
+        <target state="translated">粗體</target>
+      </segment>
+    </unit>
+    <unit id="ToolEditLink">
+      <segment>
+        <source>Edit link</source>
+        <target state="translated">編輯連結</target>
+      </segment>
+    </unit>
+    <unit id="ToolInlineCode">
+      <segment>
+        <source>Inline code</source>
+        <target state="translated">行內程式碼</target>
+      </segment>
+    </unit>
+    <unit id="ToolItalic">
+      <segment>
+        <source>Italic</source>
+        <target state="translated">斜體</target>
+      </segment>
+    </unit>
+    <unit id="ToolLink">
+      <segment>
+        <source>Link</source>
+        <target state="translated">連結</target>
+      </segment>
+    </unit>
+    <unit id="ToolRemoveLink">
+      <segment>
+        <source>Remove link</source>
+        <target state="translated">移除連結</target>
+      </segment>
+    </unit>
+    <unit id="ToolStrikethrough">
+      <segment>
+        <source>Strikethrough</source>
+        <target state="translated">刪除線</target>
+      </segment>
+    </unit>
+    <unit id="ToolSubscript">
+      <segment>
+        <source>Subscript</source>
+        <target state="translated">下標</target>
+      </segment>
+    </unit>
+    <unit id="ToolSuperscript">
+      <segment>
+        <source>Superscript</source>
+        <target state="translated">上標</target>
+      </segment>
+    </unit>
+    <unit id="ToolTextColor">
+      <segment>
+        <source>Text color</source>
+        <target state="translated">文字顏色</target>
+      </segment>
+    </unit>
+    <unit id="ToolTextSize">
+      <segment>
+        <source>Text size</source>
+        <target state="translated">文字大小</target>
+      </segment>
+    </unit>
+    <unit id="ToolUnderline">
+      <segment>
+        <source>Underline</source>
+        <target state="translated">底線</target>
+      </segment>
+    </unit>
+    <unit id="TooltipShortcut">
+      <segment>
+        <source>{0} ({1})</source>
+        <target state="translated">{0}（{1}）</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

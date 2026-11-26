@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using System.Collections.Immutable;
 using Avalonia;
 using Avalonia.Automation.Peers;
@@ -161,7 +162,7 @@ internal partial class RichTextEditorSurface
                 context.DrawRectangle(CodeBackground, pen, new RoundedRect(new Rect(0.5, top + 0.5, Math.Max(0, width - 1), Math.Max(0, view.Height - 1)), 14));
                 if (HasCodeHeader(block) && MutedBrush is { } muted)
                 {
-                    var language = block.Language ?? "Plain text";
+                    var language = block.Language ?? RichTextEditorStrings.Get(K.PlainText);
                     var key = "lang:" + language;
                     if (!_markerLayouts.TryGetValue(key, out var label))
                     {
@@ -235,7 +236,7 @@ internal partial class RichTextEditorSurface
             context.DrawRectangle(CodeBackground, pen, new RoundedRect(rect.Deflate(0.5), 8));
             if (MutedBrush is { } muted)
             {
-                var label = entry is { State: RichTextEditorImageState.Failed } ? view.Block.Alt ?? "Image unavailable" : "Loading image…";
+                var label = entry is { State: RichTextEditorImageState.Failed } ? view.Block.Alt ?? RichTextEditorStrings.Get(K.ImageUnavailable) : RichTextEditorStrings.Get(K.ImageLoading);
                 var key = "image:" + label;
                 if (!_markerLayouts.TryGetValue(key, out var layout))
                 {
@@ -489,7 +490,7 @@ internal partial class RichTextEditorSurface
     /// <summary>The clickable language label of a code block, in surface coordinates.</summary>
     internal Rect CodeHeaderRect(int block)
     {
-        var key = "lang:" + (_views[block].Block.Language ?? "Plain text");
+        var key = "lang:" + (_views[block].Block.Language ?? RichTextEditorStrings.Get(K.PlainText));
         var width = _markerLayouts.TryGetValue(key, out var label) ? label.WidthIncludingTrailingWhitespace + 24 : 96;
         return new Rect(9, _tops[block] + 3, width, 24);
     }
@@ -544,11 +545,11 @@ internal partial class RichTextEditorSurface
         string? text = null;
         if (empty && (index == 0 || hinted))
         {
-            text = owner.Placeholder;
+            text = owner.DisplayPlaceholder;
         }
         else if (hinted)
         {
-            text = owner.BlockHint;
+            text = owner.DisplayBlockHint;
         }
         if (string.IsNullOrEmpty(text) || MutedBrush is not { } brush)
         {

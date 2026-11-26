@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -28,13 +29,13 @@ internal sealed class RichTextEditorBlockHandle
     private const double AimSlack = 24;
     // Only the last stretch toward the handle holds it; anywhere else in the text the handle follows the pointer at once.
     private const double AimReach = 140;
-    private static readonly (string Label, RichTextBlockType Type)[] s_turnInto =
+    private static readonly (K Label, RichTextBlockType Type)[] s_turnInto =
     {
-        ("Text", RichTextBlockType.Paragraph), ("Heading 1", RichTextBlockType.Heading1), ("Heading 2", RichTextBlockType.Heading2),
-        ("Heading 3", RichTextBlockType.Heading3), ("Heading 4", RichTextBlockType.Heading4), ("Heading 5", RichTextBlockType.Heading5),
-        ("Heading 6", RichTextBlockType.Heading6), ("Bulleted list", RichTextBlockType.BulletedList), ("Numbered list", RichTextBlockType.NumberedList),
-        ("To-do list", RichTextBlockType.TodoList), ("Toggle list", RichTextBlockType.Toggle), ("Quote", RichTextBlockType.Quote), ("Callout", RichTextBlockType.Callout),
-        ("Code block", RichTextBlockType.CodeBlock)
+        (K.BlockText, RichTextBlockType.Paragraph), (K.BlockHeading1, RichTextBlockType.Heading1), (K.BlockHeading2, RichTextBlockType.Heading2),
+        (K.BlockHeading3, RichTextBlockType.Heading3), (K.BlockHeading4, RichTextBlockType.Heading4), (K.BlockHeading5, RichTextBlockType.Heading5),
+        (K.BlockHeading6, RichTextBlockType.Heading6), (K.BlockBulletedList, RichTextBlockType.BulletedList), (K.BlockNumberedList, RichTextBlockType.NumberedList),
+        (K.BlockTodoList, RichTextBlockType.TodoList), (K.BlockToggleList, RichTextBlockType.Toggle), (K.BlockQuote, RichTextBlockType.Quote), (K.BlockCallout, RichTextBlockType.Callout),
+        (K.BlockCodeBlock, RichTextBlockType.CodeBlock)
     };
 
     private static readonly string[] s_calloutIcons = { "💡", "ℹ️", "✅", "⚠️", "🚫", "📌", "🔥", "❓" };
@@ -74,9 +75,10 @@ internal sealed class RichTextEditorBlockHandle
     public RichTextEditorBlockHandle(RichTextEditor owner, Panel overlay)
     {
         _owner = owner;
-        _add = Button(ArcIcons.Plus, "Add block", "Insert a block");
+        _add = Button(ArcIcons.Plus, string.Empty, string.Empty);
         _add.Width = ButtonSize;
-        _grip = Button(ArcIcons.GripVertical, "Block actions", "Drag to move, click for actions");
+        _grip = Button(ArcIcons.GripVertical, string.Empty, string.Empty);
+        ApplyText();
         _grip.Width = GripWidth;
         _grip.Content = new StackPanel
         {
@@ -165,6 +167,19 @@ internal sealed class RichTextEditorBlockHandle
     public int Block => _block;
 
     public bool IsDragging => _dragging;
+
+    /// <summary>Sets the handle's names and tips in the current language.</summary>
+    internal void ApplyText()
+    {
+        AutomationProperties.SetName(_add, RichTextEditorStrings.Get(K.AddBlock));
+        Tooltip.SetTip(_add, RichTextEditorStrings.Get(K.AddBlockTip));
+        AutomationProperties.SetName(_grip, RichTextEditorStrings.Get(K.BlockActions));
+        Tooltip.SetTip(_grip, RichTextEditorStrings.Get(K.BlockActionsTip));
+        if (_menu is not null)
+        {
+            AutomationProperties.SetName(_menu, RichTextEditorStrings.Get(K.BlockActions));
+        }
+    }
 
     private static RichTextEditorToolButton Button(Avalonia.Media.Geometry icon, string name, string tip)
     {
@@ -419,7 +434,7 @@ internal sealed class RichTextEditorBlockHandle
         }
         if (commit && block >= 0 && gap >= 0 && Engine.MoveUnit(block, gap))
         {
-            _owner.Announce("Block moved");
+            _owner.Announce(RichTextEditorStrings.Get(K.AnnounceBlockMoved));
             _block = -1;
         }
     }
@@ -457,7 +472,7 @@ internal sealed class RichTextEditorBlockHandle
         if (_menu is null)
         {
             _menu = new MenuSurface { Variant = MenuSurfaceVariant.Dropdown, Alignment = MenuAlignment.Start, AnchorGap = 4 };
-            AutomationProperties.SetName(_menu, "Block actions");
+            AutomationProperties.SetName(_menu, RichTextEditorStrings.Get(K.BlockActions));
             _menu.ItemClicked += (_, args) => OnMenuChosen(args.Entry.Tag);
             _menu.Closed += (_, _) =>
             {
@@ -470,11 +485,11 @@ internal sealed class RichTextEditorBlockHandle
         _menu.Items.Clear();
         if (block.IsTextual && !block.IsCell)
         {
-            foreach (var (label, type) in s_turnInto)
+            foreach (var (labelKind, type) in s_turnInto)
             {
                 _menu.Items.Add(new MenuEntry
                 {
-                    Header = label, Tag = type, ToggleType = MenuEntryToggleType.Radio, GroupName = "turn-into",
+                    Header = RichTextEditorStrings.Get(labelKind), Tag = type, ToggleType = MenuEntryToggleType.Radio, GroupName = "turn-into",
                     IsChecked = block.Type == type, HasSeparatorBefore = false
                 });
             }
@@ -485,7 +500,7 @@ internal sealed class RichTextEditorBlockHandle
             {
                 _menu.Items.Add(new MenuEntry
                 {
-                    Header = "Color: " + (color == RichTextColor.Default ? "None" : color.ToString()), Tag = new CalloutTone(color), ToggleType = MenuEntryToggleType.Radio,
+                    Header = RichTextEditorStrings.Format(K.ColorNamed, RichTextEditorStrings.ColorName(color)), Tag = new CalloutTone(color), ToggleType = MenuEntryToggleType.Radio,
                     GroupName = "callout-color", IsChecked = block.Tone == color, HasSeparatorBefore = color == RichTextColor.Default
                 });
             }
@@ -493,7 +508,7 @@ internal sealed class RichTextEditorBlockHandle
             {
                 _menu.Items.Add(new MenuEntry
                 {
-                    Header = "Icon: " + icon, Tag = new CalloutIcon(icon), ToggleType = MenuEntryToggleType.Radio, GroupName = "callout-icon",
+                    Header = RichTextEditorStrings.Format(K.IconNamed, icon), Tag = new CalloutIcon(icon), ToggleType = MenuEntryToggleType.Radio, GroupName = "callout-icon",
                     IsChecked = block.Icon == icon, HasSeparatorBefore = icon == s_calloutIcons[0]
                 });
             }
@@ -504,14 +519,14 @@ internal sealed class RichTextEditorBlockHandle
             {
                 _menu.Items.Add(new MenuEntry
                 {
-                    Header = "Line spacing: " + spacing, Tag = new LineSpacingChoice(spacing), ToggleType = MenuEntryToggleType.Radio,
+                    Header = RichTextEditorStrings.Format(K.LineSpacingNamed, RichTextEditorStrings.SpacingName(spacing)), Tag = new LineSpacingChoice(spacing), ToggleType = MenuEntryToggleType.Radio,
                     GroupName = "line-spacing", IsChecked = block.Spacing == spacing, HasSeparatorBefore = spacing == RichTextLineSpacing.Default
                 });
             }
         }
-        _menu.Items.Add(new MenuEntry { Header = "Add block below", Tag = "add", Icon = ArcIcons.Plus, HasSeparatorBefore = _menu.Items.Count > 0 });
-        _menu.Items.Add(new MenuEntry { Header = "Duplicate", Tag = "duplicate", Icon = ArcIcons.Copy });
-        _menu.Items.Add(new MenuEntry { Header = "Delete", Tag = "delete", Icon = ArcIcons.Trash2, IsDestructive = true });
+        _menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.AddBlockBelow), Tag = "add", Icon = ArcIcons.Plus, HasSeparatorBefore = _menu.Items.Count > 0 });
+        _menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.Duplicate), Tag = "duplicate", Icon = ArcIcons.Copy });
+        _menu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.Delete), Tag = "delete", Icon = ArcIcons.Trash2, IsDestructive = true });
         _menu.Open(_grip);
     }
 
@@ -542,11 +557,11 @@ internal sealed class RichTextEditorBlockHandle
                 return;
             case "duplicate":
                 Engine.DuplicateUnit(block);
-                _owner.Announce("Block duplicated");
+                _owner.Announce(RichTextEditorStrings.Get(K.AnnounceBlockDuplicated));
                 break;
             case "delete":
                 Engine.DeleteUnit(block);
-                _owner.Announce("Block deleted");
+                _owner.Announce(RichTextEditorStrings.Get(K.AnnounceBlockDeleted));
                 break;
         }
         _block = -1;

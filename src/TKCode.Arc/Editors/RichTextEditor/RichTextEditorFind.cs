@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using Avalonia;
 using Avalonia.Automation;
 using Avalonia.Controls;
@@ -18,24 +19,17 @@ internal sealed class RichTextEditorFindBar : RichTextEditorFloatingSurface
 
     public RichTextEditorFindBar()
     {
-        FindBox = NewBox("Find", "Find");
-        ReplaceBox = NewBox("Replace with", "Replace");
+        FindBox = NewBox();
+        ReplaceBox = NewBox();
         Count = new TextBlock { MinWidth = 52, Margin = new Thickness(6, 0), VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center, TextAlignment = TextAlignment.Right };
         ArcTokens.Bind(Count, TextBlock.ForegroundProperty, DesignTokens.ArcDesignTokenKind.TextMuted);
-        MatchCase = new RichTextEditorToolButton(ArcIcons.ALargeSmall, "Match case", true);
-        Previous = new RichTextEditorToolButton(ArcIcons.ArrowUp, "Previous match");
-        Next = new RichTextEditorToolButton(ArcIcons.ArrowDown, "Next match");
-        ToggleReplace = new RichTextEditorToolButton(ArcIcons.Replace, "Replace", true);
-        Close = new RichTextEditorToolButton(ArcIcons.X, "Close find");
-        ReplaceOne = new RichTextEditorToolButton(ArcIcons.Replace, "Replace match");
-        ReplaceEvery = new RichTextEditorToolButton(ArcIcons.ReplaceAll, "Replace all");
-        Tooltip.SetTip(MatchCase, "Match case");
-        Tooltip.SetTip(Previous, "Previous match (⇧Enter)");
-        Tooltip.SetTip(Next, "Next match (Enter)");
-        Tooltip.SetTip(ToggleReplace, "Replace (⌘H)");
-        Tooltip.SetTip(Close, "Close (Esc)");
-        Tooltip.SetTip(ReplaceOne, "Replace (Enter)");
-        Tooltip.SetTip(ReplaceEvery, "Replace all");
+        MatchCase = new RichTextEditorToolButton(ArcIcons.ALargeSmall, string.Empty, true);
+        Previous = new RichTextEditorToolButton(ArcIcons.ArrowUp, string.Empty);
+        Next = new RichTextEditorToolButton(ArcIcons.ArrowDown, string.Empty);
+        ToggleReplace = new RichTextEditorToolButton(ArcIcons.Replace, string.Empty, true);
+        Close = new RichTextEditorToolButton(ArcIcons.X, string.Empty);
+        ReplaceOne = new RichTextEditorToolButton(ArcIcons.Replace, string.Empty);
+        ReplaceEvery = new RichTextEditorToolButton(ArcIcons.ReplaceAll, string.Empty);
         var findRow = new StackPanel
         {
             Orientation = Avalonia.Layout.Orientation.Horizontal, Spacing = 2,
@@ -48,18 +42,41 @@ internal sealed class RichTextEditorFindBar : RichTextEditorFloatingSurface
         };
         _content = new StackPanel { Spacing = 4, Margin = new Thickness(6), Children = { findRow, _replaceRow } };
         Host.Children.Add(_content);
-        AutomationProperties.SetName(this, "Find and replace");
+        ApplyText();
     }
 
-    private static TextBox NewBox(string placeholder, string name)
+    /// <summary>Sets every name, tip and placeholder in the current language.</summary>
+    public void ApplyText()
+    {
+        ApplyName(MatchCase, K.MatchCase, null);
+        ApplyName(Previous, K.PreviousMatch, "⇧Enter");
+        ApplyName(Next, K.NextMatch, "Enter");
+        ApplyName(ToggleReplace, K.ReplaceName, "⌘H");
+        ApplyName(Close, K.FindCloseName, null, K.FindClose, "Esc");
+        ApplyName(ReplaceOne, K.ReplaceMatch, null, K.ReplaceName, "Enter");
+        ApplyName(ReplaceEvery, K.ReplaceAll, null);
+        FindBox.PlaceholderText = RichTextEditorStrings.Get(K.FindPlaceholder);
+        AutomationProperties.SetName(FindBox, RichTextEditorStrings.Get(K.FindPlaceholder));
+        ReplaceBox.PlaceholderText = RichTextEditorStrings.Get(K.ReplacePlaceholder);
+        AutomationProperties.SetName(ReplaceBox, RichTextEditorStrings.Get(K.ReplaceName));
+        AutomationProperties.SetName(this, RichTextEditorStrings.Get(K.FindAndReplace));
+    }
+
+    private static void ApplyName(Control control, K nameKind, string? shortcut, K? tipKind = null, string? tipShortcut = null)
+    {
+        AutomationProperties.SetName(control, RichTextEditorStrings.Get(nameKind));
+        var tip = tipKind ?? nameKind;
+        var key = tipShortcut ?? shortcut;
+        Tooltip.SetTip(control, key is null ? RichTextEditorStrings.Get(tip) : RichTextEditorStrings.WithShortcut(tip, key));
+    }
+
+    private static TextBox NewBox()
     {
         var box = SelectInputBox.Create();
         box.Width = 200;
         box.Height = 30;
         box.Padding = new Thickness(8, 0);
-        box.PlaceholderText = placeholder;
         box.Classes.Add("rich-text-link-input");
-        AutomationProperties.SetName(box, name);
         return box;
     }
 
@@ -174,7 +191,7 @@ public partial class RichTextEditor
         var count = _engine.ReplaceAll(text, replacement ?? string.Empty, matchCase);
         if (count > 0)
         {
-            Announce(count == 1 ? "1 replaced" : $"{count} replaced");
+            Announce(count == 1 ? RichTextEditorStrings.Get(K.AnnounceReplacedOne) : RichTextEditorStrings.Format(K.AnnounceReplacedOther, count));
         }
         return count;
     }
@@ -280,7 +297,7 @@ public partial class RichTextEditor
         RevealCaret();
         if (announce)
         {
-            Announce($"{index + 1} of {_matches.Count}");
+            Announce(RichTextEditorStrings.Format(K.MatchPosition, index + 1, _matches.Count));
         }
     }
 
@@ -302,7 +319,7 @@ public partial class RichTextEditor
             RefreshMatches(select: true);
             return;
         }
-        Announce("Replaced");
+        Announce(RichTextEditorStrings.Get(K.AnnounceReplaced));
         _matches = _engine.FindAll(query, bar.MatchCase.IsChecked);
         _matchIndex = _engine.MatchFrom(_matches, _engine.Selection.End);
         if (_matchIndex >= 0)
@@ -323,8 +340,8 @@ public partial class RichTextEditor
         }
         var query = bar.FindBox.Text ?? string.Empty;
         bar.Count.Text = query.Length == 0 ? string.Empty
-            : _matches.Count == 0 ? "No results"
-            : _matchIndex >= 0 ? $"{_matchIndex + 1} of {_matches.Count}"
+            : _matches.Count == 0 ? RichTextEditorStrings.Get(K.NoResults)
+            : _matchIndex >= 0 ? RichTextEditorStrings.Format(K.MatchPosition, _matchIndex + 1, _matches.Count)
             : $"{_matches.Count}";
         bar.Previous.IsEnabled = _matches.Count > 0;
         bar.Next.IsEnabled = _matches.Count > 0;

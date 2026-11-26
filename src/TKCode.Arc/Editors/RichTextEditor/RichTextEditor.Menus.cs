@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using TKCode.Arc.Primitives;
 using System.Collections.Immutable;
 using System.Windows.Input;
@@ -79,7 +80,7 @@ public partial class RichTextEditor
         _slash = null;
         _slashMenu?.Dismiss();
         _engine.ApplySlashChoice(slash.Block, slash.Offset, caret, item.Type);
-        Announce($"{item.Label} added");
+        Announce(RichTextEditorStrings.Format(K.AnnounceBlockAdded, item.Label));
         if (item.Type == RichTextBlockType.Image)
         {
             _ = PickImageAsync();
@@ -196,7 +197,7 @@ public partial class RichTextEditor
             _languageAnchor = new Border { Background = Brushes.Transparent, IsHitTestVisible = false };
             _overlay!.Children.Add(_languageAnchor);
             _languageMenu = new MenuSurface { Variant = MenuSurfaceVariant.Dropdown, Alignment = MenuAlignment.Start, AnchorGap = 4 };
-            AutomationProperties.SetName(_languageMenu, "Code language");
+            AutomationProperties.SetName(_languageMenu, RichTextEditorStrings.Get(K.CodeLanguage));
             _languageMenu.ItemClicked += (_, args) =>
             {
                 if (args.Entry.Tag is CustomLanguageMarker)
@@ -220,12 +221,12 @@ public partial class RichTextEditor
         {
             _languageMenu.Items.Add(new MenuEntry
             {
-                Header = language.Label, Tag = language.Id, ToggleType = MenuEntryToggleType.Radio, GroupName = "language",
+                Header = RichTextEditorStrings.CodeLanguageLabel(language), Tag = language.Id, ToggleType = MenuEntryToggleType.Radio, GroupName = "language",
                 IsChecked = string.Equals(language.Id, current, StringComparison.Ordinal),
                 HasSeparatorBefore = language.Id is not null && ReferenceEquals(language, languages.FirstOrDefault(l => l.Id is not null))
             });
         }
-        _languageMenu.Items.Add(new MenuEntry { Header = "Custom…", Tag = CustomLanguageMarker.Instance, HasSeparatorBefore = true });
+        _languageMenu.Items.Add(new MenuEntry { Header = RichTextEditorStrings.Get(K.CustomLanguageItem), Tag = CustomLanguageMarker.Instance, HasSeparatorBefore = true });
         var origin = surface.TranslatePoint(labelRect.TopLeft, this) ?? default;
         _languageAnchor!.Width = labelRect.Width;
         _languageAnchor.Height = labelRect.Height;
@@ -251,8 +252,8 @@ public partial class RichTextEditor
             _customLanguageBox.Width = 200;
             _customLanguageBox.Height = 32;
             _customLanguageBox.Padding = new Thickness(8, 0);
-            _customLanguageBox.PlaceholderText = "Language, such as csharp";
-            AutomationProperties.SetName(_customLanguageBox, "Custom language");
+            _customLanguageBox.PlaceholderText = RichTextEditorStrings.Get(K.CustomLanguagePlaceholder);
+            AutomationProperties.SetName(_customLanguageBox, RichTextEditorStrings.Get(K.CustomLanguageName));
             _customLanguageBox.KeyDown += (_, e) =>
             {
                 if (e.Key == Key.Enter)
@@ -301,6 +302,34 @@ public partial class RichTextEditor
         }
         toolbar.SetPalette(surface.TextBrushOf, surface.FillBrushOf);
         toolbar.SetColorFace(true);
+    }
+
+    // The name the editor got from the language (the default "Editor" until the first refresh); a name the app sets is left alone.
+    private string _autoName = "Editor";
+
+    private void OnLanguageChanged(object? sender, EventArgs e) => RefreshLanguage();
+
+    /// <summary>Puts the text of the floating layers and menus that already exist into the current language; menus built per open read it then.</summary>
+    private void RefreshLanguage()
+    {
+        var name = RichTextEditorStrings.Get(K.EditorName);
+        if (AutomationProperties.GetName(this) == _autoName)
+        {
+            SetCurrentValue(AutomationProperties.NameProperty, name);
+        }
+        _autoName = name;
+        _toolbar?.ApplyText();
+        _findBar?.ApplyText();
+        _blockHandle?.ApplyText();
+        if (_slashMenu is not null)
+        {
+            AutomationProperties.SetName(_slashMenu, RichTextEditorStrings.Get(K.BlocksName));
+        }
+        if (_languageMenu is not null)
+        {
+            AutomationProperties.SetName(_languageMenu, RichTextEditorStrings.Get(K.CodeLanguage));
+        }
+        _surface?.InvalidateVisual();
     }
 
     private void UpdateApplyReady()
@@ -409,7 +438,7 @@ public partial class RichTextEditor
         _engine.SetLink(range.Value, url);
         toolbar.SetLinkFace(false, animate: false);
         toolbar.Dismiss();
-        Announce(url.Length == 0 ? "Link removed" : "Link added");
+        Announce(url.Length == 0 ? RichTextEditorStrings.Get(K.AnnounceLinkRemoved) : RichTextEditorStrings.Get(K.AnnounceLinkAdded));
     }
 
     /// <summary>While the link field is open, a press anywhere outside the toolbar closes it (Arc's document pointerdown).</summary>
@@ -528,9 +557,9 @@ public partial class RichTextEditor
         toolbar.Strike.IsChecked = formats.IsStrikethrough;
         toolbar.Code.IsChecked = formats.IsCode;
         toolbar.Link.IsChecked = formats.Link is not null;
-        var linkLabel = formats.Link is null ? "Link" : "Edit link";
+        var linkLabel = RichTextEditorStrings.Get(formats.Link is null ? K.ToolLink : K.ToolEditLink);
         AutomationProperties.SetName(toolbar.Link, linkLabel);
-        Tooltip.SetTip(toolbar.Link, linkLabel + " (⌘K)");
+        Tooltip.SetTip(toolbar.Link, RichTextEditorStrings.Format(K.TooltipShortcut, linkLabel, "⌘K"));
         toolbar.SetDocs(_engine.Docs);
         toolbar.Underline.IsChecked = formats.IsUnderline;
         toolbar.Superscript.IsChecked = formats.IsSuperscript;

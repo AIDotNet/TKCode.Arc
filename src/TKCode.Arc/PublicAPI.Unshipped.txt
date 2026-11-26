@@ -243,3 +243,236 @@ static readonly TKCode.Arc.ProgressRing.SizeProperty -> Avalonia.StyledProperty<
 static readonly TKCode.Arc.ProgressRing.ThicknessProperty -> Avalonia.StyledProperty<double>!
 static readonly TKCode.Arc.RadioGroup.OrientationProperty -> Avalonia.StyledProperty<Avalonia.Layout.Orientation>!
 static readonly TKCode.Arc.RadioGroup.VariantProperty -> Avalonia.StyledProperty<TKCode.Arc.RadioGroupVariant>!
+static readonly TKCode.Arc.Combobox.MenuMaxWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Combobox.MenuMinWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Combobox.ShowTrimmedOptionToolTipProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.MultiSelect.MenuMaxWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.MultiSelect.MenuMinWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.MultiSelect.ShowTrimmedOptionToolTipProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.Select.MenuMaxWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Select.MenuMinWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.Select.ShowTrimmedOptionToolTipProperty -> Avalonia.StyledProperty<bool>!
+static readonly TKCode.Arc.TreeSelect.MenuMaxWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.TreeSelect.MenuMinWidthProperty -> Avalonia.StyledProperty<double>!
+static readonly TKCode.Arc.TreeSelect.ShowTrimmedOptionToolTipProperty -> Avalonia.StyledProperty<bool>!
+TKCode.Arc.Combobox.MenuMaxWidth.get -> double
+TKCode.Arc.Combobox.MenuMaxWidth.set -> void
+TKCode.Arc.Combobox.MenuMinWidth.get -> double
+TKCode.Arc.Combobox.MenuMinWidth.set -> void
+TKCode.Arc.Combobox.ShowTrimmedOptionToolTip.get -> bool
+TKCode.Arc.Combobox.ShowTrimmedOptionToolTip.set -> void
+TKCode.Arc.MultiSelect.MenuMaxWidth.get -> double
+TKCode.Arc.MultiSelect.MenuMaxWidth.set -> void
+TKCode.Arc.MultiSelect.MenuMinWidth.get -> double
+TKCode.Arc.MultiSelect.MenuMinWidth.set -> void
+TKCode.Arc.MultiSelect.ShowTrimmedOptionToolTip.get -> bool
+TKCode.Arc.MultiSelect.ShowTrimmedOptionToolTip.set -> void
+TKCode.Arc.Select.MenuMaxWidth.get -> double
+TKCode.Arc.Select.MenuMaxWidth.set -> void
+TKCode.Arc.Select.MenuMinWidth.get -> double
+TKCode.Arc.Select.MenuMinWidth.set -> void
+TKCode.Arc.Select.ShowTrimmedOptionToolTip.get -> bool
+TKCode.Arc.Select.ShowTrimmedOptionToolTip.set -> void
+TKCode.Arc.TreeSelect.MenuMaxWidth.get -> double
+TKCode.Arc.TreeSelect.MenuMaxWidth.set -> void
+TKCode.Arc.TreeSelect.MenuMinWidth.get -> double
+TKCode.Arc.TreeSelect.MenuMinWidth.set -> void
+TKCode.Arc.TreeSelect.ShowTrimmedOptionToolTip.get -> bool
+TKCode.Arc.TreeSelect.ShowTrimmedOptionToolTip.set -> void
+static TKCode.Arc.Localization.RichTextEditorLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension.RichTextEditorLangResourceExtension() -> void
+TKCode.Arc.Localization.RichTextEditorLangResources
+static TKCode.Arc.Localization.RichTextEditorLangResources.Format(TKCode.Arc.Localization.RichTextEditorLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.RichTextEditorLangResources.Get(TKCode.Arc.Localization.RichTextEditorLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.RichTextEditorLangResources.Index(TKCode.Arc.Localization.RichTextEditorLangResourceKind kind) -> int
+static TKCode.Arc.Localization.RichTextEditorLangResources.Key(TKCode.Arc.Localization.RichTextEditorLangResourceKind kind) -> object!
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension.Kind.get -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceExtension.RichTextEditorLangResourceExtension(TKCode.Arc.Localization.RichTextEditorLangResourceKind kind) -> void
+TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AddBlock = 0 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AddBlockBelow = 1 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AddBlockTip = 2 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceBlockAdded = 3 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceBlockDeleted = 4 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceBlockDuplicated = 5 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceBlockMoved = 6 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceCellColorChanged = 7 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceCellsMerged = 9 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceCellSplit = 8 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceChecked = 10 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceCollapsed = 11 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceColumnAdded = 12 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceColumnDeleted = 13 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceColumnMoved = 14 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceColumnsDistributed = 16 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceColumnSelected = 15 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceExpanded = 17 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceFormatted = 18 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceHeaderColumnOff = 19 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceHeaderColumnOn = 20 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceHeaderRowOff = 21 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceHeaderRowOn = 22 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceImageAdded = 23 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceLinkAdded = 24 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceLinkRemoved = 25 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceRedone = 26 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceReplaced = 27 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceReplacedOne = 28 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceReplacedOther = 29 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceRowAdded = 30 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceRowDeleted = 31 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceRowMoved = 32 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceRowSelected = 33 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceTableAdded = 34 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceTableDeleted = 35 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceUnchecked = 36 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.AnnounceUndone = 37 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockActions = 38 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockActionsTip = 39 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockBulletedList = 40 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockCallout = 41 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockCodeBlock = 42 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockDivider = 43 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading1 = 44 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading2 = 45 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading3 = 46 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading4 = 47 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading5 = 48 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHeading6 = 49 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockHintDefault = 50 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockImage = 51 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockNumberedList = 52 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockQuote = 53 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlocksName = 58 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockTable = 54 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockText = 55 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockTodoList = 56 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.BlockToggleList = 57 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.CodeLanguage = 59 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorBlue = 60 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorGray = 61 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorGreen = 62 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorNamed = 63 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorNone = 64 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorOrange = 65 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorPurple = 66 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorRed = 67 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ColorYellow = 68 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.CustomLanguageItem = 69 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.CustomLanguageName = 70 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.CustomLanguagePlaceholder = 71 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.Delete = 72 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.DeleteColumn = 73 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.DeleteRow = 74 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.DeleteTable = 75 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.DistributeColumns = 76 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.Duplicate = 77 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.EditorName = 78 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.FindAndReplace = 79 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.FindClose = 80 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.FindCloseName = 81 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.FindPlaceholder = 82 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.FormattingName = 83 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.HeaderColumn = 84 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.HeaderRow = 85 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.HighlightNamed = 86 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.IconNamed = 87 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ImageLoading = 88 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ImageUnavailable = 89 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.InsertColumnLeft = 90 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.InsertColumnRight = 91 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.InsertImageTitle = 92 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.InsertRowAbove = 93 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.InsertRowBelow = 94 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsBulletedList = 95 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsCallout = 96 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsCodeBlock = 97 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsDivider = 98 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading1 = 99 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading2 = 100 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading3 = 101 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading4 = 102 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading5 = 103 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsHeading6 = 104 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsImage = 105 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsNumberedList = 106 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsQuote = 107 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsTable = 108 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsText = 109 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsTodoList = 110 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.KeywordsToggleList = 111 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.LineSpacingNamed = 112 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.LinkAddress = 113 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.LinkPlaceholder = 114 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MatchCase = 115 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MatchPosition = 116 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MergeCells = 117 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MoveColumnLeft = 118 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MoveColumnRight = 119 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MoveRowDown = 120 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.MoveRowUp = 121 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.NextMatch = 122 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.NoResults = 123 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.PlaceholderDefault = 124 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.PlainText = 125 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.PreviousMatch = 126 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ReplaceAll = 127 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ReplaceMatch = 128 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ReplaceName = 129 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ReplacePlaceholder = 130 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SizeDefault = 131 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SizeExtraLarge = 132 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SizeLarge = 133 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SizeSmall = 134 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SpacingCompact = 135 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SpacingDefault = 136 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SpacingLoose = 137 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SpacingRelaxed = 138 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.SplitCell = 139 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.TextColorNamed = 140 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.TextSizeNamed = 141 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolApplyLink = 142 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolBack = 143 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolBold = 144 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolEditLink = 145 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolInlineCode = 146 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolItalic = 147 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolLink = 148 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolRemoveLink = 149 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolStrikethrough = 150 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolSubscript = 151 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolSuperscript = 152 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolTextColor = 153 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolTextSize = 154 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.TooltipShortcut = 156 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.Localization.RichTextEditorLangResourceKind.ToolUnderline = 155 -> TKCode.Arc.Localization.RichTextEditorLangResourceKind
+TKCode.Arc.FieldTextBox.IsDefaultContextMenuEnabled.get -> bool
+TKCode.Arc.FieldTextBox.IsDefaultContextMenuEnabled.set -> void
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension.Kind.get -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension.Kind.set -> void
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension.ProvideValue(System.IServiceProvider! serviceProvider) -> object!
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension.TextContextMenuLangResourceExtension() -> void
+TKCode.Arc.Localization.TextContextMenuLangResourceExtension.TextContextMenuLangResourceExtension(TKCode.Arc.Localization.TextContextMenuLangResourceKind kind) -> void
+TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.Copy = 1 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.Cut = 0 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.Paste = 2 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.Redo = 5 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.SelectAll = 3 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.TextMenu = 6 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResourceKind.Undo = 4 -> TKCode.Arc.Localization.TextContextMenuLangResourceKind
+TKCode.Arc.Localization.TextContextMenuLangResources
+TKCode.Arc.TextContextMenu
+static TKCode.Arc.Localization.TextContextMenuLangResources.Catalog.get -> TKCode.Arc.Localization.ArcLanguageCatalog!
+static TKCode.Arc.Localization.TextContextMenuLangResources.Format(TKCode.Arc.Localization.TextContextMenuLangResourceKind kind, params object?[]! arguments) -> string!
+static TKCode.Arc.Localization.TextContextMenuLangResources.Get(TKCode.Arc.Localization.TextContextMenuLangResourceKind kind) -> string!
+static TKCode.Arc.Localization.TextContextMenuLangResources.Index(TKCode.Arc.Localization.TextContextMenuLangResourceKind kind) -> int
+static TKCode.Arc.Localization.TextContextMenuLangResources.Key(TKCode.Arc.Localization.TextContextMenuLangResourceKind kind) -> object!
+static TKCode.Arc.TextContextMenu.GetIsEnabled(Avalonia.AvaloniaObject! element) -> bool
+static TKCode.Arc.TextContextMenu.SetIsEnabled(Avalonia.AvaloniaObject! element, bool value) -> void
+static readonly TKCode.Arc.FieldTextBox.IsDefaultContextMenuEnabledProperty -> Avalonia.AttachedProperty<bool>!
+static readonly TKCode.Arc.TextContextMenu.IsEnabledProperty -> Avalonia.AttachedProperty<bool>!

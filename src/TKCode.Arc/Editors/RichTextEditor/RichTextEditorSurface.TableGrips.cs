@@ -1,3 +1,4 @@
+using K = TKCode.Arc.Localization.RichTextEditorLangResourceKind;
 using System.Collections.Immutable;
 using Avalonia;
 using Avalonia.Automation.Peers;
@@ -237,7 +238,7 @@ internal partial class RichTextEditorSurface
         if (!drag.Moved)
         {
             engine.SelectTableCells(drag.Start, drag.Column ? -1 : drag.Index, drag.Column ? drag.Index : -1);
-            owner.Announce(drag.Column ? "Column selected" : "Row selected");
+            owner.Announce(drag.Column ? RichTextEditorStrings.Get(K.AnnounceColumnSelected) : RichTextEditorStrings.Get(K.AnnounceRowSelected));
             return;
         }
         if (drag.Gap < 0)
@@ -250,7 +251,7 @@ internal partial class RichTextEditorSurface
         var moved = drag.Column ? engine.MoveTableColumn(drag.Index, drag.Gap) : engine.MoveTableRow(drag.Index, drag.Gap);
         if (moved)
         {
-            owner.Announce(drag.Column ? "Column moved" : "Row moved");
+            owner.Announce(drag.Column ? RichTextEditorStrings.Get(K.AnnounceColumnMoved) : RichTextEditorStrings.Get(K.AnnounceRowMoved));
         }
     }
 
