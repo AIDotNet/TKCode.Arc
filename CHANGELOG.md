@@ -12,6 +12,10 @@ Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode
 
 ## Unreleased
 
+### Added
+
+- `SelectableTextBlock` (`TKCode.Arc`, including `DecoratedTextBlock` and `CodeBlock`): shows the default localized Arc right-click / context-menu-key menu (`TextContextMenu`) with Copy and Select all, preserving selection while the menu is open. An app `ContextMenu`, `ContextFlyout` or `arc:ContextMenu.Menu` replaces it, and the inherited `TextContextMenu.IsEnabled` turns it off ([#211](https://github.com/AIDotNet/TKCode.Arc/issues/211)).
+
 ### Fixed
 
 - `Select`, `Combobox`, `MultiSelect` and `TreeSelect` (`TKCode.Arc`): the menu's width cap is now the viewport (`ArcViewport`: an `ArcViewportHost` such as a phone preview, otherwise the window) less 16 px on each side, instead of always the window, so a menu inside a narrow host no longer grows past it. The new menu-width properties also show their real descriptions in the API docs ([#212](https://github.com/AIDotNet/TKCode.Arc/issues/212), [#214](https://github.com/AIDotNet/TKCode.Arc/issues/214)).
