@@ -65,13 +65,10 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
 
     public static readonly StyledProperty<bool> IsOpenProperty = Select.IsOpenProperty.AddOwner<Combobox>();
 
-    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<Combobox>();
 
-    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<Combobox>();
 
-    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
     public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<Combobox>();
 
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
@@ -136,7 +133,6 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     /// <summary>Whether the list is open (two-way).</summary>
     public bool IsOpen { get => GetValue(IsOpenProperty); set => SetValue(IsOpenProperty, value); }
 
-    /// <summary>Tallest the list gets (Arc: min(300px, 40% of the window)).</summary>
     /// <summary>The narrowest the menu gets (default 0). The menu is as wide as its widest option needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.</summary>
     public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
 
@@ -146,6 +142,7 @@ public class Combobox : SelectingItemsControl, ISelectOptionHost, ISelectFieldAu
     /// <summary>Whether an option whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
     public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
 
+    /// <summary>Tallest the list gets (Arc: min(300px, 40% of the window)).</summary>
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
 
     /// <inheritdoc cref="Select.TextSelector"/>

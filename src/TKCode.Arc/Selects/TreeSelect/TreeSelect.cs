@@ -179,13 +179,10 @@ public partial class TreeSelect : TemplatedControl, ISelectFieldAutomation
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
         AvaloniaProperty.Register<TreeSelect, double>(nameof(MaxDropDownHeight), 320);
 
-    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<TreeSelect>();
 
-    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<TreeSelect>();
 
-    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
     public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<TreeSelect>();
 
     /// <summary>Raised when <see cref="SelectedItems"/> changes: by the user, by a binding or by clearing.</summary>

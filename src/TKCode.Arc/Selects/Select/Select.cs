@@ -71,15 +71,12 @@ public class Select : SelectingItemsControl, ISelectOptionHost, ISelectFieldAuto
     public static readonly StyledProperty<bool> IsOpenProperty =
         AvaloniaProperty.Register<Select, bool>(nameof(IsOpen), defaultBindingMode: BindingMode.TwoWay);
 
-    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMinWidthProperty =
         AvaloniaProperty.Register<Select, double>(nameof(MenuMinWidth), 0d);
 
-    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMaxWidthProperty =
         AvaloniaProperty.Register<Select, double>(nameof(MenuMaxWidth), double.PositiveInfinity);
 
-    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
     public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty =
         AvaloniaProperty.Register<Select, bool>(nameof(ShowTrimmedOptionToolTip), true);
 

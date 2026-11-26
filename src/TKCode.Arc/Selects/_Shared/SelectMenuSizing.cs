@@ -1,5 +1,6 @@
 using Avalonia;
 using Avalonia.Controls;
+using TKCode.Arc.Primitives;
 
 namespace TKCode.Arc;
 
@@ -30,10 +31,13 @@ internal static class SelectMenuSizing
         return width;
     }
 
-    /// <summary>Width of the top-level minus the margin, or infinity when unknown.</summary>
+    /// <summary>
+    /// Width of the viewport (its <see cref="ArcViewportHost"/>, such as a phone preview, otherwise the window) minus the
+    /// margin, or infinity when unknown.
+    /// </summary>
     public static double Available(Visual? visual)
     {
-        var width = visual is null ? 0 : TopLevel.GetTopLevel(visual)?.ClientSize.Width ?? 0;
+        var width = visual is null ? 0 : ArcViewport.GetSize(visual)?.Width ?? 0;
         return width > 0 ? Math.Max(0, width - 2 * WindowMargin) : double.PositiveInfinity;
     }
 

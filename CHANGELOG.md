@@ -10,6 +10,12 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Fixed
+
+- `Select`, `Combobox`, `MultiSelect` and `TreeSelect` (`TKCode.Arc`): the menu's width cap is now the viewport (`ArcViewport`: an `ArcViewportHost` such as a phone preview, otherwise the window) less 16 px on each side, instead of always the window, so a menu inside a narrow host no longer grows past it. The new menu-width properties also show their real descriptions in the API docs ([#212](https://github.com/AIDotNet/TKCode.Arc/issues/212), [#214](https://github.com/AIDotNet/TKCode.Arc/issues/214)).
+
 ## 1.3.2-preview.6 - 2026-11-27
 
 A patch preview for [#211](https://github.com/AIDotNet/TKCode.Arc/issues/211), [#212](https://github.com/AIDotNet/TKCode.Arc/issues/212), [#213](https://github.com/AIDotNet/TKCode.Arc/issues/213), [#214](https://github.com/AIDotNet/TKCode.Arc/issues/214) and [#215](https://github.com/AIDotNet/TKCode.Arc/issues/215), plus mobile, localization and rendering updates: expands `TKCode.Arc.Mobile` with 12 new touch controls, `TabbarItem` badges, Android back coordination, soft-keyboard avoidance and cross-platform `Haptics`; adds JSON language file support to `TKCode.Arc.Foundation` localization; adds default right-click context menus to text inputs, auto-widening select menus with trimmed-option tooltips, localized `RichTextEditor` UI and per-step `WorkflowNode.PortLayout`; and cuts per-frame work and memory for AI mascots in `TKCode.Arc.Special`. No existing public API changes. Install it with `--version 1.3.2-preview.6` (or `--prerelease`).

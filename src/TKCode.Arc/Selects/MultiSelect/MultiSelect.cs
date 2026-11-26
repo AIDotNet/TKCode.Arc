@@ -72,13 +72,10 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     public static readonly StyledProperty<int> MaxVisibleChipsProperty =
         AvaloniaProperty.Register<MultiSelect, int>(nameof(MaxVisibleChips), 2);
 
-    /// <summary>Defines the <see cref="MenuMinWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMinWidthProperty = Select.MenuMinWidthProperty.AddOwner<MultiSelect>();
 
-    /// <summary>Defines the <see cref="MenuMaxWidth"/> property.</summary>
     public static readonly StyledProperty<double> MenuMaxWidthProperty = Select.MenuMaxWidthProperty.AddOwner<MultiSelect>();
 
-    /// <summary>Defines the <see cref="ShowTrimmedOptionToolTip"/> property.</summary>
     public static readonly StyledProperty<bool> ShowTrimmedOptionToolTipProperty = Select.ShowTrimmedOptionToolTipProperty.AddOwner<MultiSelect>();
 
     public static readonly StyledProperty<double> MaxDropDownHeightProperty =
@@ -155,7 +152,6 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     /// <summary>Chips shown before the rest fold into "+N" (Arc: 2).</summary>
     public int MaxVisibleChips { get => GetValue(MaxVisibleChipsProperty); set => SetValue(MaxVisibleChipsProperty, value); }
 
-    /// <summary>Tallest the menu gets before it scrolls. Arc's menu has no limit (the screen bounds it).</summary>
     /// <summary>The narrowest the menu gets (default 0). The menu is as wide as its widest option needs, never narrower than the field or this value, and never wider than <see cref="MenuMaxWidth"/> or the window.</summary>
     public double MenuMinWidth { get => GetValue(MenuMinWidthProperty); set => SetValue(MenuMinWidthProperty, value); }
 
@@ -165,6 +161,7 @@ public class MultiSelect : SelectingItemsControl, ISelectOptionHost, ISelectFiel
     /// <summary>Whether an option whose text is trimmed shows its full text in a tooltip on hover (default true).</summary>
     public bool ShowTrimmedOptionToolTip { get => GetValue(ShowTrimmedOptionToolTipProperty); set => SetValue(ShowTrimmedOptionToolTipProperty, value); }
 
+    /// <summary>Tallest the menu gets before it scrolls. Arc's menu has no limit (the screen bounds it).</summary>
     public double MaxDropDownHeight { get => GetValue(MaxDropDownHeightProperty); set => SetValue(MaxDropDownHeightProperty, value); }
 
     /// <inheritdoc cref="Select.TextSelector"/>
