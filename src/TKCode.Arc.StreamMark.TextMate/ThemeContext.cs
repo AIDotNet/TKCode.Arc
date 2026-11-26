@@ -156,11 +156,63 @@ internal sealed class ThemeContext
     /// <summary>
     /// 共享同一个（只读的）<see cref="RegistryOptions"/>，只替换默认主题，避免为每个主题重复解析全部 package.json。
     /// </summary>
-    private sealed class ThemedRegistryOptions(RegistryOptions inner, ThemeName theme) : IRegistryOptions
+    /// <remarks>
+    /// 返回的原始语法会去掉对 <see cref="MarkdownScope"/> 的内嵌引用（markdown 自身除外）。TextMateSharp 编译一个语法时
+    /// 会把它能引用到的全部外部语法一并编译，而 markdown 为围栏代码内嵌了约 48 种语言：shell 的 heredoc、ruby、fsharp
+    /// 的文档注释都内嵌 markdown，于是高亮一段 shell 要编译约 2 万条规则、约 66 MB 托管内存，去掉后约 4800 条、14 MB。
+    /// 失去的只是这些宿主里嵌入的 markdown 片段的着色；markdown 本身作为根语法时不受影响。
+    /// <see cref="RegistryOptions.GetGrammar"/> 每次都重新解析资源，返回的对象归调用方所有，可以原地修改。
+    /// </remarks>
+    internal sealed class ThemedRegistryOptions(RegistryOptions inner, ThemeName theme) : IRegistryOptions
     {
+        internal const string MarkdownScope = "text.html.markdown";
+
         public IRawTheme GetTheme(string scopeName) => inner.GetTheme(scopeName);
 
-        public IRawGrammar GetGrammar(string scopeName) => inner.GetGrammar(scopeName);
+        public IRawGrammar GetGrammar(string scopeName)
+        {
+            IRawGrammar grammar = inner.GetGrammar(scopeName);
+            if (grammar is not null && !string.Equals(scopeName, MarkdownScope, StringComparison.Ordinal))
+            {
+                RemoveMarkdownIncludes(grammar);
+            }
+
+            return grammar!;
+        }
+
+        /// <summary>从规则列表里移除 <c>include: text.html.markdown[#…]</c>，递归处理 patterns、repository 与 captures。</summary>
+        private static void RemoveMarkdownIncludes(object? node)
+        {
+            switch (node)
+            {
+                case IDictionary<string, object> rule:
+                    foreach (object value in rule.Values)
+                    {
+                        RemoveMarkdownIncludes(value);
+                    }
+
+                    break;
+                case System.Collections.IList list:
+                    for (int i = list.Count - 1; i >= 0; i--)
+                    {
+                        if (IsMarkdownInclude(list[i]))
+                        {
+                            list.RemoveAt(i);
+                        }
+                        else
+                        {
+                            RemoveMarkdownIncludes(list[i]);
+                        }
+                    }
+
+                    break;
+            }
+        }
+
+        private static bool IsMarkdownInclude(object? node) =>
+            node is IDictionary<string, object> rule && rule.TryGetValue("include", out object? include) && include is string target &&
+            (string.Equals(target, MarkdownScope, StringComparison.Ordinal) ||
+             target.StartsWith(MarkdownScope + "#", StringComparison.Ordinal));
 
         public ICollection<string> GetInjections(string scopeName) => inner.GetInjections(scopeName);
 

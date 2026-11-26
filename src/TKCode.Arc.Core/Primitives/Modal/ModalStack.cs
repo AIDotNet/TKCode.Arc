@@ -6,14 +6,15 @@ using Avalonia.Controls.Primitives;
 using Avalonia.Input;
 using Avalonia.Interactivity;
 using Avalonia.LogicalTree;
-using Avalonia.Media;
+using Avalonia.Threading;
 using Avalonia.VisualTree;
 
 namespace TKCode.Arc.Primitives;
 
 /// <summary>
 /// Per-TopLevel stack of mounted modals: routes Escape to the topmost one, keeps focus inside it, and owns the
-/// backdrop blur on the window content (one blur for the whole stack, the strongest modal wins).
+/// blurred backdrop over the window content (one <see cref="ModalBackdrop"/> for the whole stack, the strongest modal
+/// wins).
 /// </summary>
 internal sealed class ModalStack
 {
@@ -21,9 +22,10 @@ internal sealed class ModalStack
 
     private readonly TopLevel _topLevel;
     private readonly List<ModalPresence> _items = new();
-    private IEffect? _blur;
+    private ModalBackdrop? _backdrop;
     private Visual? _blurTarget;
-    private IEffect? _previousEffect;
+    private Panel? _backdropLayer;
+    private bool _recapturePending;
     private bool _hooked;
 
     private ModalStack(TopLevel topLevel) => _topLevel = topLevel;
@@ -98,53 +100,117 @@ internal sealed class ModalStack
         }
     }
 
-    /// <summary>Applies the strongest backdrop blur of the stack to the window content under the overlay layer.</summary>
+    /// <summary>
+    /// Shows the strongest backdrop blur of the stack over the window content under the overlay layer: a
+    /// <see cref="ModalBackdrop"/> taken once (again when the strongest blur grows, the content is resized or the blur
+    /// moves to another layer) and faded with the scrim; removed and released when no modal blurs any more.
+    /// </summary>
+    /// <remarks>Runs on every frame of the scrim tween: past the first frame it only sets the backdrop's opacity.</remarks>
     public void UpdateBlur()
     {
         double radius = 0;
+        double strength = 0;
         Visual? target = null;
+        Panel? layer = null;
         foreach (var item in _items)
         {
             var r = item.CurrentBackdropBlur;
+            if (r <= 0)
+            {
+                continue;
+            }
+            // The snapshot is blurred by the strongest full radius in the stack, so a second modal does not take another.
+            strength = Math.Max(strength, item.BackdropBlur);
             if (r > radius)
             {
                 radius = r;
                 target = item.BlurTarget;
+                layer = item.MountLayer;
             }
         }
-        if (radius < 0.05 || target is null)
+        if (radius < 0.05 || target is null || layer is null)
         {
             ClearBlur();
             return;
         }
-        if (!ReferenceEquals(target, _blurTarget))
+        var stale = !ReferenceEquals(target, _blurTarget) || !ReferenceEquals(layer, _backdropLayer) ||
+                    (_backdrop is { } current && (strength > current.Radius + 0.01 || target.Bounds.Size != current.ContentSize));
+        if (stale || (_backdrop is null && !_captureFailed))
         {
-            ClearBlur();
-            _blurTarget = target;
-            _previousEffect = target.Effect;
+            Capture(target, layer, strength);
         }
-        // A cached immutable step per 0.25px: the scrim tween changes the radius on every frame, and a mutable effect
-        // would allocate a new compositor copy each time (a blur of the whole window content).
-        var effect = ArcBlur.Get(radius);
-        if (!ReferenceEquals(effect, _blur))
+        if (_backdrop is { } backdrop)
         {
-            _blur = effect;
-            target.Effect = effect;
+            backdrop.Opacity = Math.Clamp(radius / backdrop.Radius, 0, 1);
         }
     }
 
+    private bool _captureFailed;
+
+    private void Capture(Visual target, Panel layer, double radius)
+    {
+        ClearBlur();
+        _blurTarget = target;
+        _backdropLayer = layer;
+        target.PropertyChanged += OnBlurTargetPropertyChanged;
+        var backdrop = ModalBackdrop.Capture(target, radius);
+        if (backdrop is null)
+        {
+            // Not retried every frame: only when the content is resized.
+            _captureFailed = true;
+            return;
+        }
+        backdrop.Width = target.Bounds.Width;
+        backdrop.Height = target.Bounds.Height;
+        PlaceBackdrop(backdrop, target, layer);
+        // Under every modal (and anything else) on the layer: before, those were never blurred either.
+        layer.Children.Insert(0, backdrop);
+        _backdrop = backdrop;
+    }
+
+    private static void PlaceBackdrop(ModalBackdrop backdrop, Visual target, Panel layer)
+    {
+        var offset = target.TranslatePoint(default, layer) ?? default;
+        Canvas.SetLeft(backdrop, offset.X);
+        Canvas.SetTop(backdrop, offset.Y);
+    }
+
+    private void OnBlurTargetPropertyChanged(object? sender, AvaloniaPropertyChangedEventArgs e)
+    {
+        if (e.Property != Visual.BoundsProperty || _recapturePending)
+        {
+            return;
+        }
+        // Coalesce a resize into one new snapshot after layout has settled.
+        _recapturePending = true;
+        Dispatcher.UIThread.Post(() =>
+        {
+            _recapturePending = false;
+            _captureFailed = false;
+            if (_backdrop is { } backdrop && _blurTarget is { } target && _backdropLayer is { } layer)
+            {
+                PlaceBackdrop(backdrop, target, layer);
+            }
+            UpdateBlur();
+        }, DispatcherPriority.Background);
+    }
+
+    /// <summary>Removes the backdrop and releases its bitmap.</summary>
     private void ClearBlur()
     {
         if (_blurTarget is { } target)
         {
-            if (ReferenceEquals(target.Effect, _blur))
-            {
-                target.Effect = _previousEffect;
-            }
-            _blurTarget = null;
-            _previousEffect = null;
+            target.PropertyChanged -= OnBlurTargetPropertyChanged;
         }
-        _blur = null;
+        if (_backdrop is { } backdrop)
+        {
+            _backdropLayer?.Children.Remove(backdrop);
+            backdrop.Release();
+        }
+        _backdrop = null;
+        _blurTarget = null;
+        _backdropLayer = null;
+        _captureFailed = false;
     }
 
     /// <summary>Content root under the layer that hosts modals: the child of the owning visual layer manager.</summary>

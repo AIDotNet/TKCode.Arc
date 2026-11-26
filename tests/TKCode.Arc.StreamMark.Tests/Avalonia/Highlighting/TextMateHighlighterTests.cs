@@ -448,4 +448,49 @@ public sealed class TextMateHighlighterTests
         Assert.False(weak.IsAlive);
         GC.KeepAlive(highlighter);
     }
+
+    // ---------- 内嵌 markdown ----------
+
+    private static bool IncludesScope(object? node, string scope) => node switch
+    {
+        IDictionary<string, object> rule => (rule.TryGetValue("include", out object? include) && include is string target &&
+                                             (target == scope || target.StartsWith(scope + "#", StringComparison.Ordinal))) ||
+                                            rule.Values.Any(v => IncludesScope(v, scope)),
+        System.Collections.IEnumerable list and not string => list.Cast<object?>().Any(v => IncludesScope(v, scope)),
+        _ => false,
+    };
+
+    [Theory]
+    [InlineData("source.shell")]
+    [InlineData("source.fsharp")]
+    public void EmbeddedMarkdown_IsRemovedFromHostGrammars(string scope)
+    {
+        var raw = new TextMateSharp.Grammars.RegistryOptions(TextMateSharp.Grammars.ThemeName.DarkPlus);
+        var options = new ThemeContext.ThemedRegistryOptions(raw, TextMateSharp.Grammars.ThemeName.DarkPlus);
+
+        // 前提：原始语法确实内嵌 markdown（若上游语法改了，这条测试需要跟着看一下）。
+        Assert.True(IncludesScope(raw.GetGrammar(scope), ThemeContext.ThemedRegistryOptions.MarkdownScope));
+        Assert.False(IncludesScope(options.GetGrammar(scope), ThemeContext.ThemedRegistryOptions.MarkdownScope));
+    }
+
+    [Fact]
+    public void EmbeddedMarkdown_MarkdownItselfKeepsItsFencedLanguages()
+    {
+        var raw = new TextMateSharp.Grammars.RegistryOptions(TextMateSharp.Grammars.ThemeName.DarkPlus);
+        var options = new ThemeContext.ThemedRegistryOptions(raw, TextMateSharp.Grammars.ThemeName.DarkPlus);
+
+        Assert.True(IncludesScope(options.GetGrammar("text.html.markdown"), "source.shell"));
+    }
+
+    [Fact]
+    public void Shell_StillHighlightsAfterMarkdownIsRemoved()
+    {
+        const string sh = "#!/bin/sh\n# comment\necho \"hello $USER\" | grep -v foo\ncat <<EOF\nplain heredoc\nEOF\n";
+        var lines = Highlight("bash", sh);
+        AssertWellFormed(sh, lines);
+
+        Assert.NotEqual(0u, ColorOf(lines, sh, "# comment"));
+        Assert.NotEqual(0u, ColorOf(lines, sh, "\"hello"));
+        Assert.NotEqual(ColorOf(lines, sh, "# comment"), ColorOf(lines, sh, "\"hello"));
+    }
 }

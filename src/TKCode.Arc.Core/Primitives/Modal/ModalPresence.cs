@@ -171,7 +171,8 @@ public sealed class ModalPresence : IDisposable
     /// <summary>
     /// Backdrop blur radius in px applied to the window content while the scrim is shown (Arc: dialog 7, drawer 4;
     /// tokens <c>BackdropBlurDialog</c> / <c>BackdropBlurDrawer</c>). Ignored when the <c>ReduceTransparency</c>
-    /// token is on, and inside an <see cref="ArcOverlayHost"/>.
+    /// token is on, and inside an <see cref="ArcOverlayHost"/>. The blur is a snapshot of the content taken when the
+    /// modal opens (and again when the content is resized), so the content behind it does not update while it is shown.
     /// </summary>
     public double BackdropBlur { get; set; }
 
@@ -644,6 +645,9 @@ public sealed class ModalPresence : IDisposable
         : _layer is null ? null : ModalStack.FindBlurTarget(_layer);
 
     private Visual? _blurTargetCache;
+
+    /// <summary>The layer the modal is mounted on (the blurred backdrop goes at its bottom); null when not mounted.</summary>
+    internal Panel? MountLayer => _layer;
 
     private void ApplyScrim()
     {

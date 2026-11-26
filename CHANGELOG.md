@@ -10,6 +10,16 @@ NuGet packages published with each release: `TKCode.Arc`, `TKCode.Arc.Core`, `TK
 Also, as previews that follow the main version: `TKCode.Arc.Graphics3D`, `TKCode.Arc.Graphics3D.WebGpu`, `TKCode.Arc.Graphics3D.Controls` and
 `TKCode.Arc.Graphics3D.Browser` (from 1.2.0-preview.3).
 
+## Unreleased
+
+### Changed
+
+- Modal backdrop blur (`TKCode.Arc.Core`; `Dialog`, `Drawer`, `Card`, `CommandPaletteDialog` and every `ModalPresence` with a `BackdropBlur`): instead of setting a blur `Effect` on the window content, which re-blurs the whole window on every frame, the modal stack now takes one half-size snapshot of the content when the first blurring modal opens, blurs it once (with its edges extended so the window edges stay covered) and shows it scaled up at the bottom of the overlay layer, fading it with the scrim. On a Retina Metal window the old blur took several window-sized scratch textures per frame (3072x2048, about 24 MB each) that the Metal driver kept after the modal closed, about 100 MB of GPU memory in a long session; the snapshot is about 1.5 MB and is released when the last blurring modal closes. Stacked modals share one snapshot, blurred by the strongest radius; a new snapshot is taken when the content is resized. The content behind a blurred backdrop no longer updates while the modal is open. No public API changes.
+
+### Fixed
+
+- `TKCode.Arc.StreamMark.TextMate`: grammars other than Markdown no longer embed `text.html.markdown`. TextMate compiles every grammar a grammar can reach, and Markdown embeds about 48 fenced-code languages, so highlighting a shell snippet (whose heredocs embed Markdown, Ruby, Python and HTML) compiled 49 grammars and about 20,600 rules, about 66 MB of managed memory; it now compiles about 4,800 rules, about 14 MB (F#: 20,700 rules to 335). Only the colouring of Markdown embedded in other languages (shell heredocs, F# doc comments) is lost; Markdown itself still highlights its fenced code.
+
 ## 1.3.2-preview.4 - 2026-11-26
 
 A patch preview for [#202](https://github.com/AIDotNet/TKCode.Arc/issues/202), [#204](https://github.com/AIDotNet/TKCode.Arc/issues/204), [#205](https://github.com/AIDotNet/TKCode.Arc/issues/205), [#207](https://github.com/AIDotNet/TKCode.Arc/issues/207), [#208](https://github.com/AIDotNet/TKCode.Arc/issues/208), [#209](https://github.com/AIDotNet/TKCode.Arc/issues/209) and [#210](https://github.com/AIDotNet/TKCode.Arc/issues/210): fixes memory and disposal retention in `TKCode.Arc.Dock`, `MenuSurface`, `TKCode.Arc.StreamMark` and `TKCode.Arc.StreamMark.TextMate`, exposes the shared TextMate highlighter in `TKCode.Arc.Highlighting`, adds NativeAOT/trim-safe selective registration for `TKCode.Arc.Blocks` and `TKCode.Arc.Special`, and ships Compact density (`ArcDensity`), `ProgressRing`, and horizontal/borderless `RadioGroup` modes. No existing public API changes. Install it with `--version 1.3.2-preview.4` (or `--prerelease`).

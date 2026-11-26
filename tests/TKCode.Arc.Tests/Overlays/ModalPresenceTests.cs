@@ -80,10 +80,90 @@ public class ModalPresenceTests
             Dispatcher.UIThread.RunJobs();
             var layers = window.GetVisualDescendants().OfType<Avalonia.Controls.Primitives.VisualLayerManager>().Single(m => m.Name == "PART_VisualLayerManager");
             layers.Child!.GetVisualDescendants().ShouldContain(anchor);
-            layers.Child!.Effect.ShouldBeAssignableTo<Avalonia.Media.IBlurEffect>()!.Radius.ShouldBe(7, 0.01);
+            // A blurred snapshot at the bottom of the modal's layer, not an Effect on the content.
+            layers.Child!.Effect.ShouldBeNull();
+            var layer = (Panel)modal.Host.GetVisualParent()!;
+            var backdrop = layer.Children[0].ShouldBeOfType<ModalBackdrop>();
+            backdrop.Radius.ShouldBe(7, 0.01);
+            backdrop.Opacity.ShouldBe(1, 0.01);
+            backdrop.IsHitTestVisible.ShouldBeFalse();
+            backdrop.ContentSize.ShouldBe(layers.Child.Bounds.Size);
             modal.Close();
             Dispatcher.UIThread.RunJobs();
+            layer.Children.OfType<ModalBackdrop>().ShouldBeEmpty();
             layers.Child.Effect.ShouldBeNull();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Backdrop_Is_Taken_Again_When_The_Content_Is_Resized()
+    {
+        var anchor = new Border();
+        var window = new Window { Content = anchor, Width = 400, Height = 300 };
+        ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var modal = new ModalPresence(new Border { Width = 100, Height = 100 }, anchor) { BackdropBlur = 7 };
+            modal.Open();
+            Dispatcher.UIThread.RunJobs();
+            var layer = (Panel)modal.Host.GetVisualParent()!;
+            var first = layer.Children.OfType<ModalBackdrop>().Single();
+            first.ContentSize.Width.ShouldBe(400, 0.5);
+
+            window.Width = 500;
+            Dispatcher.UIThread.RunJobs();
+            var second = layer.Children.OfType<ModalBackdrop>().Single();
+            second.ShouldNotBeSameAs(first);
+            second.ContentSize.Width.ShouldBe(500, 0.5);
+            second.Width.ShouldBe(500, 0.5);
+
+            modal.Close();
+            Dispatcher.UIThread.RunJobs();
+            layer.Children.OfType<ModalBackdrop>().ShouldBeEmpty();
+        }
+        finally
+        {
+            window.Close();
+        }
+    }
+
+    [AvaloniaFact]
+    public void Stacked_Modals_Share_One_Backdrop_Blurred_By_The_Strongest()
+    {
+        var anchor = new Border();
+        var window = new Window { Content = anchor, Width = 400, Height = 300 };
+        ArcMotion.SetLevel(window, ArcMotionLevel.Off);
+        window.Show();
+        Dispatcher.UIThread.RunJobs();
+        try
+        {
+            var drawer = new ModalPresence(new Border { Width = 100, Height = 100 }, anchor) { BackdropBlur = 4 };
+            drawer.Open();
+            Dispatcher.UIThread.RunJobs();
+            var layer = (Panel)drawer.Host.GetVisualParent()!;
+            layer.Children.OfType<ModalBackdrop>().Single().Radius.ShouldBe(4, 0.01);
+
+            var dialog = new ModalPresence(new Border { Width = 50, Height = 50 }, anchor) { BackdropBlur = 7 };
+            dialog.Open();
+            Dispatcher.UIThread.RunJobs();
+            var backdrop = layer.Children.OfType<ModalBackdrop>().Single();
+            backdrop.Radius.ShouldBe(7, 0.01);
+            layer.Children[0].ShouldBeSameAs(backdrop);
+
+            dialog.Close();
+            Dispatcher.UIThread.RunJobs();
+            // Still blurred for the drawer: 4 of the 7 the snapshot was blurred with.
+            layer.Children.OfType<ModalBackdrop>().Single().Opacity.ShouldBe(4.0 / 7, 0.01);
+
+            drawer.Close();
+            Dispatcher.UIThread.RunJobs();
+            layer.Children.OfType<ModalBackdrop>().ShouldBeEmpty();
         }
         finally
         {
